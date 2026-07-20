@@ -1,6 +1,7 @@
 # macOS
 .DS_Store
+**/.DS_Store
 
-# Video reels are too large for GitHub (>100MB limit) and for static hosting.
-# Host these on a CDN / YouTube / Vimeo, or compress before committing.
+# Video reels are hosted on Supabase Storage — never commit them to the repo.
 *.mp4
+web/

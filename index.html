@@ -38,7 +38,7 @@
 
   /* ---------- RAIL ---------- */
   .rail{
-    flex:1;display:flex;align-items:center;
+    flex:1;display:flex;align-items:safe center;   /* 'safe' lets a tall open card scroll instead of clipping the top */
     overflow-x:auto;overflow-y:hidden;
     perspective:1900px;scrollbar-width:none;   /* CSS snap removed — it fought manual/trackpad scroll; we snap in JS on idle */
     opacity:0;transform:translateY(16px);
@@ -47,21 +47,34 @@
     overscroll-behavior:contain;            /* stop trackpad h-swipe from triggering browser back-nav */
   }
   .rail.ready{opacity:1;transform:none}
-  .rail.dragging{cursor:grabbing;scroll-snap-type:none}
+  .rail.dragging{cursor:grabbing}
   .rail::-webkit-scrollbar{display:none}
+  /* reading state (a card is open): freeze horizontal, allow vertical scroll for the dropdown */
+  #stage.reading .rail{overflow-x:hidden;overflow-y:auto;cursor:default;touch-action:pan-y}
 
   .slide{
-    flex:0 0 var(--cw);height:var(--ch);
-    scroll-snap-align:center;
+    flex:0 0 var(--cw);
     perspective:1900px;transform-style:preserve-3d;
-    will-change:transform,filter,opacity;position:relative;
+    will-change:transform;position:relative;
+    display:flex;flex-direction:column;align-items:center;
   }
 
   .card{
-    position:absolute;inset:0;transform-style:preserve-3d;
+    position:relative;width:100%;height:var(--ch);
+    transform-style:preserve-3d;
     opacity:0;animation:cardin .8s var(--ease) both;
     animation-delay:calc(var(--i) * 70ms + 260ms);
   }
+  /* title lives BELOW the card now (posters carry their own titles) */
+  .slidecap{
+    margin-top:16px;text-align:left;width:100%;padding-left:2px;
+    display:flex;flex-direction:column;gap:4px;align-items:flex-start;
+    opacity:0;animation:cardin .8s var(--ease) both;
+    animation-delay:calc(var(--i) * 70ms + 340ms);
+    transition:opacity .35s var(--ease);
+  }
+  .slidecap .title{margin:0;font-weight:600;letter-spacing:.01em;font-size:17px;line-height:1.25;color:rgba(244,246,250,.82);text-wrap:balance}
+  .slidecap .cat{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:color-mix(in srgb,var(--accent) 70%, transparent);font-weight:600}
   @keyframes cardin{from{opacity:0}to{opacity:1}}
 
   /* ---------- FACES (front on top, back beneath) ---------- */
@@ -75,6 +88,8 @@
     will-change:transform,opacity,clip-path,filter;
     transition:opacity .3s var(--ease);
   }
+  /* once revealed, the (hidden) cover must let clicks through to the reel/scrubber */
+  .card.open .front{pointer-events:none}
   .back{z-index:1;background:#050608}
 
   /* ---------- FRONT / COVER ---------- */
@@ -105,33 +120,20 @@
       rgba(5,6,10,.35) 0%, rgba(5,6,10,0) 26%, rgba(5,6,10,0) 48%,
       rgba(5,6,10,.7) 80%, rgba(5,6,10,.96) 100%);
   }
-  /* cover art is the hero — let it speak; keep only a compact caption bar */
-  .front.covered .role{display:none}
-  .front.covered .title{font-size:clamp(19px,2.8vh,28px);text-shadow:0 2px 14px rgba(0,0,0,.6)}
-  .front.covered .cat{text-shadow:0 1px 8px rgba(0,0,0,.6)}
-  .front.covered .idx{opacity:.6}
-
-  .frame{position:absolute;inset:0;z-index:2;padding:30px;display:flex;flex-direction:column;justify-content:space-between}
-  .bottom{display:flex;flex-direction:column;gap:20px}
+  .frame{position:absolute;inset:0;z-index:2;padding:30px 30px 17px;display:flex;flex-direction:column;justify-content:space-between}
   .idx{
     font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
     font-size:clamp(64px,11vh,120px);line-height:.8;font-weight:300;
     color:transparent;-webkit-text-stroke:1px color-mix(in srgb,var(--accent) 55%, #fff 8%);
     letter-spacing:-.03em;opacity:.85;align-self:flex-start;
   }
-  .caption{display:flex;flex-direction:column;gap:10px}
-  .cat{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--accent);font-weight:600}
-  .title{margin:0;font-weight:600;letter-spacing:-.02em;font-size:clamp(30px,5vh,46px);line-height:1.02;text-wrap:balance;color:#f4f6fa}
-  .role{font-size:13px;color:var(--muted);letter-spacing:.01em;max-width:34ch}
   .playcue{
-    display:flex;align-items:center;gap:12px;
+    align-self:center;margin-top:auto;        /* centred, pinned to the bottom inside the card */
+    display:flex;align-items:center;justify-content:center;
     font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);
     opacity:0;transform:translateY(6px);transition:opacity .5s var(--ease),transform .5s var(--ease);
   }
   .is-center .playcue{opacity:1;transform:none}
-  .playcue .disc{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
-    border:1px solid color-mix(in srgb,var(--accent) 60%, transparent);color:var(--accent)}
-  .playcue .disc svg{width:12px;height:12px;transform:translateX(1px)}
 
   /* ---------- BACK / VIDEO REEL ---------- */
   .screen{position:absolute;inset:0;z-index:1;overflow:hidden;background:
@@ -149,7 +151,7 @@
     border:1.5px solid color-mix(in srgb,var(--accent) 85%, transparent);
     color:var(--accent);backdrop-filter:blur(4px);
     box-shadow:0 10px 44px -10px color-mix(in srgb,var(--accent) 60%, transparent), 0 0 0 0 color-mix(in srgb,var(--accent) 45%, transparent);
-    animation:pulse 2.6s var(--ease) infinite;
+    animation:pulse 2.6s var(--ease) infinite;cursor:pointer;
   }
   .bigplay svg{width:28px;height:28px;transform:translateX(2px);filter:drop-shadow(0 1px 4px rgba(0,0,0,.5))}
   @keyframes pulse{
@@ -158,17 +160,45 @@
     100%{box-shadow:0 10px 44px -10px color-mix(in srgb,var(--accent) 55%, transparent), 0 0 0 0 transparent}}
   .playing .bigplay{opacity:0;pointer-events:none;transition:opacity .4s}
   .hud-b{position:absolute;z-index:4;left:0;right:0;bottom:0;padding:22px 26px;display:flex;align-items:center;gap:16px;
-    background:linear-gradient(0deg, rgba(3,4,6,.82), transparent)}
-  .bar{flex:1;height:2px;background:rgba(255,255,255,.14);border-radius:2px;overflow:hidden}
-  .bar span{display:block;height:100%;width:38%;background:var(--accent)}
-  .tc{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted);letter-spacing:.04em}
-  .b-title{position:absolute;z-index:4;top:24px;left:26px;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted)}
-  .close{position:absolute;z-index:5;top:18px;right:18px;width:38px;height:38px;border-radius:50%;
-    border:1px solid var(--line);background:rgba(0,0,0,.4);color:var(--ink);display:grid;place-items:center;cursor:pointer;
-    backdrop-filter:blur(4px);transition:border-color .3s,background .3s;opacity:0;transition:opacity .3s .2s}
-  .card.open .close{opacity:1}
-  .close:hover{border-color:color-mix(in srgb,var(--accent) 60%, transparent);background:rgba(0,0,0,.6)}
-  .close svg{width:14px;height:14px}
+    background:linear-gradient(0deg, rgba(3,4,6,.82), transparent);cursor:pointer}
+  .bar{flex:1;height:3px;background:rgba(255,255,255,.16);border-radius:3px;overflow:hidden;transition:height .15s ease}
+  .hud-b:hover .bar{height:5px}
+  .bar span{display:block;height:100%;width:0;background:var(--accent);transition:width .12s linear}
+  .tc{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+  /* description dropdown — extends BELOW the card frame, opens on reveal */
+  .below{width:100%}
+  .drawer{max-height:0;opacity:0;overflow:hidden;
+    transition:max-height .5s var(--ease), opacity .4s var(--ease), margin-top .5s var(--ease)}
+  .slide.revealed .drawer{max-height:240px;opacity:1;margin-top:12px}
+  .drawer-in{display:flex;flex-direction:column;gap:12px;align-items:flex-start;padding:2px 0 8px}
+  .drawer .desc{margin:0;font-size:13.5px;line-height:1.6;color:rgba(233,237,245,.72);max-width:62ch}
+  .drawer .tabs{display:flex;gap:7px}
+  .drawer .tab{font:600 10px/1 ui-monospace,SFMono-Regular,monospace;letter-spacing:.18em;text-transform:uppercase;
+    padding:7px 13px;border-radius:999px;cursor:pointer;
+    color:var(--muted);background:rgba(255,255,255,.05);border:1px solid var(--line);
+    transition:color .25s var(--ease),background .25s var(--ease),border-color .25s var(--ease)}
+  .drawer .tab:hover{color:var(--ink);border-color:color-mix(in srgb,var(--accent) 50%, transparent)}
+  .drawer .tab.on{color:#06070a;background:var(--accent);border-color:transparent}
+  /* close — top-right of the card frame, shown while reading */
+  .close{position:absolute;z-index:6;top:16px;right:16px;width:40px;height:40px;border-radius:50%;
+    border:1px solid var(--line);background:rgba(10,11,14,.5);color:var(--ink);display:grid;place-items:center;
+    cursor:pointer;backdrop-filter:blur(6px);opacity:0;pointer-events:none;
+    transition:opacity .3s var(--ease) .15s,border-color .25s,background .25s}
+  .card.open .close{opacity:1;pointer-events:auto}
+  .close:hover{border-color:color-mix(in srgb,var(--accent) 60%, transparent);background:rgba(10,11,14,.8)}
+  .close svg{width:15px;height:15px}
+
+  /* minimalist scroll arrows — suggest horizontal browsing, hidden while reading */
+  .nav-arrow{position:absolute;z-index:12;top:50%;transform:translateY(-50%);
+    width:44px;height:44px;display:grid;place-items:center;cursor:pointer;background:none;border:0;
+    color:var(--muted);opacity:.5;transition:opacity .3s var(--ease),color .25s,transform .25s var(--ease)}
+  .nav-arrow.left{left:12px}
+  .nav-arrow.right{right:12px}
+  .nav-arrow:hover{opacity:1;color:var(--ink)}
+  .nav-arrow.left:hover{transform:translateY(-50%) translateX(-3px)}
+  .nav-arrow.right:hover{transform:translateY(-50%) translateX(3px)}
+  .nav-arrow svg{width:26px;height:26px}
+  #stage.reading .nav-arrow{opacity:0;pointer-events:none}
 
   /* ============================================================= *
    *  REVEAL FX — the front's exit animation, switchable per mode
@@ -201,26 +231,44 @@
   @keyframes wobble{0%{transform:skew(0,0)}30%{transform:skew(1.5deg,.6deg)}60%{transform:skew(-1deg,-.4deg)}100%{transform:skew(0,0)}}
 
   /* 4 · GLITCH — digital slice-tear */
-  .card[data-fx="glitch"].open .front{animation:glitchout .5s steps(2,end) forwards}
-  .card[data-fx="glitch"].glitchback .front{animation:glitchin .5s steps(2,end)}
+  .card[data-fx="glitch"].open .front{animation:glitchout .58s steps(3,end) forwards}
+  .card[data-fx="glitch"].glitchback .front{animation:glitchin .58s steps(3,end)}
+  /* finer slicing + RGB channel split (drop-shadows) + invert/hue flashes */
   @keyframes glitchout{
-    0%{clip-path:inset(0 0 0 0);transform:translate(0,0);filter:none}
-    10%{clip-path:inset(0 0 62% 0);transform:translate(-9px,0)}
-    22%{clip-path:inset(46% 0 8% 0);transform:translate(11px,0);filter:hue-rotate(70deg) saturate(1.7)}
-    34%{clip-path:inset(12% 0 40% 0);transform:translate(-7px,0)}
-    48%{clip-path:inset(72% 0 0 0);transform:translate(8px,0);filter:contrast(1.6)}
-    62%{clip-path:inset(0 0 22% 0);transform:translate(-4px,0);opacity:.75}
-    80%{opacity:.4;transform:translate(3px,0)}
+    0%{clip-path:inset(0 0 0 0);transform:translate(0,0);filter:none;opacity:1}
+    7%{clip-path:inset(0 0 70% 0);transform:translate(-11px,0);filter:hue-rotate(-40deg) saturate(1.9) drop-shadow(3px 0 rgba(255,0,90,.65)) drop-shadow(-3px 0 rgba(0,210,255,.6))}
+    14%{clip-path:inset(38% 0 16% 0);transform:translate(13px,0)}
+    22%{clip-path:inset(6% 0 58% 0);transform:translate(-15px,0);filter:invert(1) hue-rotate(90deg)}
+    30%{clip-path:inset(74% 0 4% 0);transform:translate(10px,0);filter:contrast(1.9) drop-shadow(-4px 0 rgba(0,220,255,.75))}
+    38%{clip-path:inset(22% 0 44% 0);transform:translate(-7px,0)}
+    47%{clip-path:inset(0 0 18% 0);transform:translate(6px,0);opacity:.9;filter:hue-rotate(60deg) saturate(2.1) drop-shadow(4px 0 rgba(255,0,90,.6))}
+    58%{clip-path:inset(90% 0 0 0);transform:translate(-9px,0);opacity:.72}
+    70%{clip-path:inset(0 0 78% 0);transform:translate(5px,0);opacity:.5;filter:brightness(1.7)}
+    84%{opacity:.26;transform:translate(-2px,0)}
     100%{opacity:0;transform:translate(0,0)}}
   /* glitch back in — cover tears its way back over the reel */
   @keyframes glitchin{
-    0%{opacity:0;clip-path:inset(0 0 100% 0);transform:translate(0,0);filter:none}
-    14%{opacity:.5;clip-path:inset(0 0 34% 0);transform:translate(10px,0);filter:hue-rotate(60deg) saturate(1.7)}
-    28%{opacity:.6;clip-path:inset(44% 0 10% 0);transform:translate(-11px,0)}
-    42%{opacity:.8;clip-path:inset(8% 0 48% 0);transform:translate(7px,0);filter:contrast(1.6)}
-    58%{clip-path:inset(64% 0 0 0);transform:translate(-5px,0)}
-    78%{opacity:1;clip-path:inset(0 0 0 0);transform:translate(4px,0)}
+    0%{opacity:0;clip-path:inset(0 0 100% 0);transform:translate(0,0);filter:brightness(1.7)}
+    10%{opacity:.42;clip-path:inset(0 0 42% 0);transform:translate(13px,0);filter:hue-rotate(70deg) saturate(1.9) drop-shadow(3px 0 rgba(255,0,90,.6))}
+    20%{opacity:.55;clip-path:inset(46% 0 14% 0);transform:translate(-14px,0);filter:invert(1)}
+    30%{opacity:.7;clip-path:inset(10% 0 54% 0);transform:translate(9px,0);filter:contrast(1.85) drop-shadow(-4px 0 rgba(0,220,255,.75))}
+    42%{clip-path:inset(68% 0 0 0);transform:translate(-6px,0)}
+    55%{clip-path:inset(0 0 28% 0);transform:translate(6px,0);opacity:.9;filter:hue-rotate(40deg) saturate(1.6)}
+    72%{opacity:1;clip-path:inset(0 0 6% 0);transform:translate(3px,0)}
     100%{opacity:1;clip-path:inset(0 0 0 0);transform:translate(0,0);filter:none}}
+  /* RGB scanline overlay that flickers during the tear */
+  .glitchfx{position:absolute;inset:0;z-index:6;pointer-events:none;opacity:0;mix-blend-mode:screen;
+    background:repeating-linear-gradient(0deg, rgba(255,0,90,.13) 0 2px, rgba(0,220,255,.11) 2px 4px, transparent 4px 7px)}
+  .card[data-fx="glitch"].open .glitchfx,
+  .card[data-fx="glitch"].glitchback .glitchfx{animation:glitchfx .58s steps(3,end)}
+  @keyframes glitchfx{
+    0%{opacity:0;transform:translateY(0) scaleY(1)}
+    12%{opacity:.85;transform:translateY(-7px) scaleY(1.04)}
+    26%{opacity:.25;transform:translateY(9px)}
+    40%{opacity:.8;transform:translateY(-4px)}
+    55%{opacity:.35;transform:translateY(5px)}
+    72%{opacity:.6;transform:translateY(-2px)}
+    100%{opacity:0;transform:translateY(0)}}
 
   /* ---------- HUD ---------- */
   .hud{position:relative;z-index:6;display:flex;align-items:center;justify-content:center;gap:26px;padding:0 24px 26px;height:64px}
@@ -272,11 +320,16 @@
   </svg>
 
   <main id="stage">
+    <button class="nav-arrow left" id="navPrev" aria-label="Previous">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <button class="nav-arrow right" id="navNext" aria-label="Next">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
     <div class="rail" id="rail" aria-label="Portfolio gallery"></div>
     <div class="hud">
       <div class="counter"><span id="cur">01</span><span class="sep">/</span><span id="tot">05</span></div>
       <div class="dots" id="dots"></div>
-      <div class="hint" id="hint">drag · click to play</div>
     </div>
   </main>
 
@@ -286,10 +339,23 @@
  *  video: put your files in /videos and reference them here.
  *         (left blank => the styled reel placeholder shows instead.)
  * ------------------------------------------------------------------ */
+/* Reels hosted on Supabase Storage (public bucket). Swap this base if you move hosts. */
+const REELS = "https://recrjycnqclmqvbcryya.supabase.co/storage/v1/object/public/reels";
 const PIECES = [
-  { title:"Recurve",                  cat:"Puzzle Game Demo", role:"Recall reverse-entropy arrows to fix objects. Completed demo level in Unity.",                    accent:"#6be3c9", cover:"",                       video:"recurve/recurve_gamevid.mp4" },
-  { title:"Assassin's Weakness is Love", cat:"Rhythm Game",   role:"Rhythm game switching between FPS and third-person slashing perspectives. Two levels, made in Unity.", accent:"#b98cff", cover:"assassin/awil_cover.png",  video:"assassin/l1_vid.mp4" },
-  { title:"Niflheim Highway",         cat:"Racing Game",      role:"A scene-switching mechanic spawns obstacles to react to — a tribute to Dragon Raja.",           accent:"#7aa2f7", cover:"niflheim/racing_cover.png", video:"niflheim/racing_vid.mp4" },
+  { title:"Recurve", cat:"Puzzle Game Demo", accent:"#6be3c9", cover:"recurve/recurve_coverbg.png", video:REELS+"/recurve.mp4",
+    desc:"Recall reverse-entropy arrows to repair broken objects and open a path forward — a complete, playable puzzle level built in Unity." },
+  { title:"Assassin's Weakness is Love", cat:"Rhythm Game", accent:"#b98cff", cover:"assassin/awil_cover.png", video:REELS+"/assassin-l1.mp4",
+    desc:"A rhythm-action game that switches between first-person aiming and third-person sword combat, every hit landing on the beat.",
+    levels:[
+      { label:"Level 1", video:REELS+"/assassin-l1.mp4", desc:"Level 1 — first-person perspective. Line up your shots and fire on the downbeat." },
+      { label:"Level 2", video:REELS+"/assassin-l2.mp4", desc:"Level 2 — third-person slashing. Chain sword combos in time with the rhythm." }
+    ] },
+  { title:"Niflheim Highway", cat:"Racing Game", accent:"#7aa2f7", cover:"niflheim/racing_cover.png", video:REELS+"/niflheim.mp4",
+    desc:"An endless, rain-slicked night race with a scene-switching mechanic that spawns obstacles to read and react to. A tribute to Dragon Raja." },
+  { title:"Toad Defense Tactics", cat:"Tower Defense", accent:"#8fd66b", cover:"", video:"",
+    desc:"Hold the line with a squad of toads and smart tower placement in this compact tower-defense build." },
+  { title:"A Bot Can Do Better", cat:"AI Party Game", accent:"#e0a35e", cover:"drawguess/drawguess_cover.png", video:"",
+    desc:"A fast draw-and-guess party game where an AI bot plays alongside — and against — real players." },
 ];
 
 /* Reveal modes.  Change DEFAULT_FX to set which one loads first. */
@@ -303,10 +369,12 @@ const DEFAULT_FX = "glitch";
 let mode = DEFAULT_FX;
 
 const rail = document.getElementById('rail');
+const stage = document.getElementById('stage');
 const dotsWrap = document.getElementById('dots');
 const curEl = document.getElementById('cur');
 const totEl = document.getElementById('tot');
 const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+const isReading = () => stage.classList.contains('reading');   // a card is open
 const pad2 = n => String(n+1).padStart(2,'0');
 
 const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
@@ -316,28 +384,32 @@ const ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strok
 const N = PIECES.length;
 const COPIES = 3;
 function slideHTML(p,i){ return `
-    <div class="card" data-fx="${mode}" style="--accent:${p.accent};--i:${i}">
+    <div class="card" data-fx="${mode}">
       <div class="face back">
         <div class="screen">
-          <div class="b-title">${p.title}</div>
           <video class="clip" muted loop playsinline preload="none" ${p.video?`data-src="${p.video}"`:''}></video>
           <div class="bigplay">${ICON_PLAY}</div>
-          <div class="hud-b"><span class="tc">00:00</span><div class="bar"><span></span></div><span class="tc">reel</span></div>
+          <div class="hud-b"><span class="tc tc-cur">0:00</span><div class="bar"><span></span></div><span class="tc tc-dur">0:00</span></div>
         </div>
         <button class="close" aria-label="Close">${ICON_X}</button>
       </div>
-      <div class="face front${p.cover?' covered':''}">
+      <div class="face front">
         <div class="art${p.cover?' has-cover':''}">${p.cover?`<img class="cover-img" src="${p.cover}" alt="" loading="lazy"><div class="scrim"></div>`:''}</div>
         <div class="frame">
-          <span class="idx">${pad2(i)}</span>
-          <div class="bottom">
-            <div class="caption">
-              <span class="cat">${p.cat}</span>
-              <h2 class="title">${p.title}</h2>
-              <p class="role">${p.role}</p>
-            </div>
-            <div class="playcue"><span class="disc">${ICON_PLAY}</span> click to reveal</div>
-          </div>
+          <div class="playcue">click to reveal</div>
+        </div>
+      </div>
+      <div class="glitchfx"></div>
+    </div>
+    <div class="below">
+      <div class="slidecap">
+        <span class="cat">${p.cat}</span>
+        <h3 class="title">${p.title}</h3>
+      </div>
+      <div class="drawer">
+        <div class="drawer-in">
+          ${p.levels?`<div class="tabs">${p.levels.map((L,li)=>`<button class="tab${li===0?' on':''}" data-video="${L.video}" data-desc="${(L.desc||'').replace(/"/g,'&quot;')}">${L.label}</button>`).join('')}</div>`:''}
+          <p class="desc">${p.levels?p.levels[0].desc:(p.desc||'')}</p>
         </div>
       </div>
     </div>`; }
@@ -346,6 +418,8 @@ for(let copy=0; copy<COPIES; copy++){
     const slide = document.createElement('article');
     slide.className = 'slide';
     slide.dataset.piece = i;
+    slide.style.setProperty('--accent', p.accent);   // shared by card + caption
+    slide.style.setProperty('--i', i);
     slide.innerHTML = slideHTML(p,i);
     rail.appendChild(slide);
   });
@@ -423,8 +497,9 @@ function render(){
     const op = Math.max(.18, 1 - ad*0.42);
     const blur = ad*3.2;
     const isC = Math.abs(d) < .5;
-    let t = `translateY(${ty}px) scale(${scale})`;
-    if(isC && !reduce){ t += ` rotateX(${tiltX}deg) rotateY(${tiltY}deg)`; }
+    const opened = s.querySelector('.card').classList.contains('open');
+    let t = opened ? 'translateY(0) scale(1)' : `translateY(${ty}px) scale(${scale})`;
+    if(isC && !reduce && !opened){ t += ` rotateX(${tiltX}deg) rotateY(${tiltY}deg)`; }  // no 3D tilt while in the video
     s.style.transform = t;
     s.style.zIndex = String(200 - Math.round(ad*20));
     /* de-emphasis on the slide; 'none' at centre keeps its 3D unflattened */
@@ -459,11 +534,12 @@ rail.addEventListener('pointermove',e=>{
 });
 rail.addEventListener('pointerleave',()=>{ tiltX=tiltY=0; render(); });
 
-/* ---------- wheel: vertical -> horizontal ---------- */
+/* ---------- wheel: only a horizontal gesture moves the gallery ----------
+   Vertical wheel/trackpad is left alone so it scrolls the page (never sideways). */
 rail.addEventListener('wheel',e=>{
-  if(e.ctrlKey) return;
-  const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-  if(delta){ rail.scrollLeft += delta; loopReposition(); scheduleSnap(120); e.preventDefault(); }
+  if(e.ctrlKey || isReading()) return;                         // frozen while reading
+  if(Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;         // vertical intent -> let the page scroll
+  rail.scrollLeft += e.deltaX; loopReposition(); scheduleSnap(120); e.preventDefault();
 },{passive:false});
 
 /* ---------- drag to scroll (distinguish from click) ----------
@@ -472,7 +548,8 @@ rail.addEventListener('wheel',e=>{
    `closest('.slide')` return null and swallowed the reveal tap. */
 let press = null, dragMoved = 0;
 rail.addEventListener('pointerdown',e=>{
-  if(e.target.closest('.close')) return;
+  if(isReading()) return;                                                // no sideways drag while reading
+  if(e.target.closest('.close') || e.target.closest('.hud-b')) return;   // scrubber handles its own drags
   press = {x:e.clientX, s:rail.scrollLeft, moved:0, id:e.pointerId, dragging:false};
 });
 rail.addEventListener('pointermove',e=>{
@@ -496,15 +573,43 @@ function endPress(){
 rail.addEventListener('pointerup',endPress);
 rail.addEventListener('pointercancel',endPress);
 
-/* ---------- click: open/close centred, or centre others ---------- */
+/* ---------- click ---------- */
 rail.addEventListener('click',e=>{
   if(dragMoved > 8){ dragMoved = 0; return; }    // that click ended a drag
+  const tab = e.target.closest('.tab');
+  if(tab){ e.stopPropagation(); switchLevel(tab); return; }   // level tab
+  if(e.target.closest('.drawer')){ return; }                  // description — ignore
+  if(e.target.closest('.hud-b')){ return; }                   // timeline seeks (its own handler)
   const slide = e.target.closest('.slide'); if(!slide) return;
+  const card = slide.querySelector('.card');
+  if(e.target.closest('.close')){ closeCard(slide); return; }           // X closes
+  if(card.classList.contains('open')){ toggleVideo(slide); return; }   // reel click = play/pause
   const i = slides.indexOf(slide);
   if(i!==centerIndex){ centerOn(i); return; }
-  const card = slide.querySelector('.card');
-  card.classList.contains('open') ? closeCard(slide) : openCard(slide, e);
+  openCard(slide, e);
 });
+/* play / pause the reel (no autoplay — user starts it) */
+function toggleVideo(slide){
+  const v = slide.querySelector('.clip'), screen = slide.querySelector('.screen');
+  if(!v || !v.dataset.src) return;
+  if(v.paused){ v.play().then(()=>{screen.classList.add('playing');v.classList.add('live');}).catch(()=>{}); }
+  else { v.pause(); screen.classList.remove('playing'); }
+}
+/* switch the reel + description between levels (e.g. Assassin L1 / L2) */
+function switchLevel(tab){
+  const slide = tab.closest('.slide');
+  if(tab.classList.contains('on')) return;
+  slide.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t===tab));
+  const d = slide.querySelector('.drawer .desc');
+  if(d && tab.dataset.desc) d.textContent = tab.dataset.desc;
+  const v = slide.querySelector('.clip'), fill = slide.querySelector('.bar span');
+  if(v && tab.dataset.video){
+    v.classList.remove('live'); if(fill) fill.style.width='0%';
+    v.src = tab.dataset.video;
+    v.play().then(()=>v.classList.add('live')).catch(()=>{});
+    v.addEventListener('playing',()=>v.classList.add('live'),{once:true});
+  }
+}
 
 /* ---------- open / close (per-mode) ---------- */
 function openCard(slide, ev){
@@ -517,13 +622,19 @@ function openCard(slide, ev){
     front.style.setProperty('--cy', ((ev.clientY-r.top)/r.height*100).toFixed(1)+'%');
   }
   card.classList.add('open');
+  slide.classList.add('revealed');               // drop the description dropdown below the frame
+  stage.classList.add('reading');                // freeze sideways scroll, allow vertical, show close-X
+  rail.scrollTop = 0;
   if(mode==='ripple' && !reduce) rippleBurst(card, ev);
-  playVideo(slide);
+  loadVideo(slide);                              // load the reel but DON'T autoplay
+  render();                                       // flatten the opened card (no 3D)
 }
 function closeCard(slide){
   const card = slide.querySelector('.card');
   if(!card.classList.contains('open')) return;
   card.classList.remove('open');
+  slide.classList.remove('revealed');              // retract the dropdown
+  if(!slides.some(s=>s.querySelector('.card').classList.contains('open'))) stage.classList.remove('reading');
   if(card.dataset.fx==='glitch' && !reduce){       // glitch the cover back in
     card.classList.add('glitchback');
     clearTimeout(card._gb);
@@ -531,6 +642,7 @@ function closeCard(slide){
   }
   if(card.dataset.fx==='ripple' && !reduce) rippleBurst(card, null);   // ripple back in
   pauseVideo(slide);
+  render();
 }
 function closeAll(){ slides.forEach(closeCard); }
 
@@ -560,12 +672,33 @@ function animateDisp(from, to, dur, done){
 }
 
 /* ---------- video ---------- */
-function playVideo(slide){
+function fmt(t){ t=Math.max(0,Math.floor(t||0)); const m=Math.floor(t/60), s=t%60; return m+':'+String(s).padStart(2,'0'); }
+function wireScrubber(slide, v){
+  if(v.dataset.wired) return; v.dataset.wired='1';
+  const fill=slide.querySelector('.bar span'), bar=slide.querySelector('.bar'), row=slide.querySelector('.hud-b');
+  const cur=slide.querySelector('.tc-cur'), dur=slide.querySelector('.tc-dur');
+  const showDur=()=>{ if(isFinite(v.duration)&&v.duration>0) dur.textContent=fmt(v.duration); };
+  v.addEventListener('loadedmetadata', showDur); showDur();
+  v.addEventListener('timeupdate', ()=>{
+    const p = v.duration ? v.currentTime/v.duration : 0;
+    fill.style.width=(p*100).toFixed(2)+'%';
+    cur.textContent=fmt(v.currentTime);
+  });
+  const seek=x=>{ const r=bar.getBoundingClientRect(); if(isFinite(v.duration)) v.currentTime=Math.min(1,Math.max(0,(x-r.left)/r.width))*v.duration; };
+  let scrubbing=false;
+  row.addEventListener('pointerdown', e=>{ e.stopPropagation(); scrubbing=true; try{row.setPointerCapture(e.pointerId)}catch(_){} seek(e.clientX); });
+  row.addEventListener('pointermove', e=>{ if(scrubbing) seek(e.clientX); });
+  row.addEventListener('pointerup',   e=>{ scrubbing=false; try{row.releasePointerCapture(e.pointerId)}catch(_){} });
+  row.addEventListener('click', e=>e.stopPropagation());   // don't let a seek close the card
+}
+function loadVideo(slide){   // load the reel + wire the scrubber, but do NOT autoplay
   const v=slide.querySelector('.clip'), screen=slide.querySelector('.screen');
   if(v && v.dataset.src){
     if(!v.src) v.src=v.dataset.src;
-    v.play().then(()=>{screen.classList.add('playing');v.classList.add('live');}).catch(()=>{});
-    v.addEventListener('playing',()=>{screen.classList.add('playing');v.classList.add('live');},{once:true});
+    wireScrubber(slide, v);
+    v.load();
+    // show the first frame once available so it isn't a black box before play
+    v.addEventListener('playing',()=>v.classList.add('live'),{once:true});
   }
 }
 function pauseVideo(slide){
@@ -593,19 +726,29 @@ function scheduleSnap(delay){
 }
 /* jump to the nearest instance of a real piece (shortest way round the loop) */
 function goToPiece(pi){
+  if(isReading()) return;
   const cur = ((centerIndex % N) + N) % N;
   let delta = pi - cur;
   if(delta >  N/2) delta -= N;
   if(delta < -N/2) delta += N;
   centerOn(centerIndex + delta);
 }
+function openSlide(){ return slides.find(s=>s.querySelector('.card').classList.contains('open')); }
 addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ const o=openSlide(); if(o){ closeCard(o); e.preventDefault(); } return; }
+  if(isReading()){                                    // in the reel: space toggles play, no sideways nav
+    if(e.key==='Enter'||e.key===' '){ toggleVideo(openSlide()); e.preventDefault(); }
+    return;
+  }
   if(e.key==='ArrowRight'){ centerOn(centerIndex+1); e.preventDefault(); }
   else if(e.key==='ArrowLeft'){ centerOn(centerIndex-1); e.preventDefault(); }
-  else if(e.key==='Enter'||e.key===' '){ const s=slides[centerIndex];
-    s.querySelector('.card').classList.contains('open')?closeCard(s):openCard(s); e.preventDefault(); }
+  else if(e.key==='Enter'||e.key===' '){ openCard(slides[centerIndex]); e.preventDefault(); }
   else if(e.key>='1'&&e.key<='9'){ const idx=+e.key-1; if(MODES[idx]) setMode(MODES[idx].id); }
 });
+
+/* side arrows */
+document.getElementById('navPrev').addEventListener('click',()=>{ if(!isReading()) centerOn(centerIndex-1); });
+document.getElementById('navNext').addEventListener('click',()=>{ if(!isReading()) centerOn(centerIndex+1); });
 
 /* ---------- boot ---------- */
 function boot(){ measure(); centerSlideInstant(N); render(); requestAnimationFrame(()=>rail.classList.add('ready')); }
