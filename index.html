@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Portfolio — Game Design</title>
+<style>
+  :root{
+    --bg:#0a0b0e;
+    --ink:#eceef2;
+    --muted:#71767f;
+    --line:rgba(255,255,255,.09);
+    --card:#101217;
+    --accent:#6be3c9;               /* overridden per-card */
+    --accent-ui:#7df2e6;            /* fixed UI accent (switcher) */
+    --cw:min(66vw, 1060px, calc(82vh * 16 / 9));  /* landscape 16:9, width-driven, height-capped */
+    --ch:calc(var(--cw) * 9 / 16);
+    --ease:cubic-bezier(.16,.84,.24,1);
+    --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:radial-gradient(120% 90% at 50% -10%, #14161c 0%, var(--bg) 55%), var(--bg);
+    color:var(--ink);
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow:hidden;overscroll-behavior:none;
+  }
+  body::after{ /* vignette */
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:5;
+    background:radial-gradient(140% 120% at 50% 50%, transparent 58%, rgba(0,0,0,.55) 100%);
+  }
+
+  #stage{position:fixed;inset:0;display:flex;flex-direction:column}
+
+  /* ---------- RAIL ---------- */
+  .rail{
+    flex:1;display:flex;align-items:center;
+    overflow-x:auto;overflow-y:hidden;
+    perspective:1900px;scrollbar-width:none;   /* CSS snap removed — it fought manual/trackpad scroll; we snap in JS on idle */
+    opacity:0;transform:translateY(16px);
+    transition:opacity .9s var(--ease), transform .9s var(--ease);
+    cursor:grab;touch-action:pan-x;gap:3.4vw;
+    overscroll-behavior:contain;            /* stop trackpad h-swipe from triggering browser back-nav */
+  }
+  .rail.ready{opacity:1;transform:none}
+  .rail.dragging{cursor:grabbing;scroll-snap-type:none}
+  .rail::-webkit-scrollbar{display:none}
+
+  .slide{
+    flex:0 0 var(--cw);height:var(--ch);
+    scroll-snap-align:center;
+    perspective:1900px;transform-style:preserve-3d;
+    will-change:transform,filter,opacity;position:relative;
+  }
+
+  .card{
+    position:absolute;inset:0;transform-style:preserve-3d;
+    opacity:0;animation:cardin .8s var(--ease) both;
+    animation-delay:calc(var(--i) * 70ms + 260ms);
+  }
+  @keyframes cardin{from{opacity:0}to{opacity:1}}
+
+  /* ---------- FACES (front on top, back beneath) ---------- */
+  .face{
+    position:absolute;inset:0;border-radius:18px;overflow:hidden;
+    border:1px solid var(--line);
+    box-shadow:0 40px 90px -40px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  .front{
+    z-index:2;background:var(--card);transform-origin:50% 50%;
+    will-change:transform,opacity,clip-path,filter;
+    transition:opacity .3s var(--ease);
+  }
+  .back{z-index:1;background:#050608}
+
+  /* ---------- FRONT / COVER ---------- */
+  .art{
+    position:absolute;inset:0;z-index:0;
+    background:
+      radial-gradient(90% 60% at var(--mx,50%) var(--my,32%),
+          color-mix(in srgb, var(--accent) 42%, transparent) 0%, transparent 60%),
+      linear-gradient(200deg,
+          color-mix(in srgb, var(--accent) 20%, #05060a) 0%, #06070a 46%, #050609 100%);
+  }
+  .art::before{ /* structural sheen */
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(115deg, transparent 44%, color-mix(in srgb,var(--accent) 26%, transparent) 50%, transparent 56%);
+    mix-blend-mode:screen;opacity:.5;
+  }
+  .art::after{ /* grain */
+    content:"";position:absolute;inset:-20%;
+    background-image:var(--grain);background-size:180px;mix-blend-mode:soft-light;opacity:.22;
+  }
+
+  .frame{position:absolute;inset:0;z-index:2;padding:30px;display:flex;flex-direction:column;justify-content:space-between}
+  .bottom{display:flex;flex-direction:column;gap:20px}
+  .idx{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:clamp(64px,11vh,120px);line-height:.8;font-weight:300;
+    color:transparent;-webkit-text-stroke:1px color-mix(in srgb,var(--accent) 55%, #fff 8%);
+    letter-spacing:-.03em;opacity:.85;align-self:flex-start;
+  }
+  .caption{display:flex;flex-direction:column;gap:10px}
+  .cat{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--accent);font-weight:600}
+  .title{margin:0;font-weight:600;letter-spacing:-.02em;font-size:clamp(30px,5vh,46px);line-height:1.02;text-wrap:balance;color:#f4f6fa}
+  .role{font-size:13px;color:var(--muted);letter-spacing:.01em;max-width:34ch}
+  .playcue{
+    display:flex;align-items:center;gap:12px;
+    font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);
+    opacity:0;transform:translateY(6px);transition:opacity .5s var(--ease),transform .5s var(--ease);
+  }
+  .is-center .playcue{opacity:1;transform:none}
+  .playcue .disc{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+    border:1px solid color-mix(in srgb,var(--accent) 60%, transparent);color:var(--accent)}
+  .playcue .disc svg{width:12px;height:12px;transform:translateX(1px)}
+
+  /* ---------- BACK / VIDEO REEL ---------- */
+  .screen{position:absolute;inset:0;z-index:1;overflow:hidden;background:
+      radial-gradient(90% 58% at 50% 34%, color-mix(in srgb,var(--accent) 30%, transparent) 0%, transparent 62%),
+      linear-gradient(200deg, color-mix(in srgb,var(--accent) 15%, #05060a) 0%, #04050a 58%, #030408 100%);}
+  .screen::after{content:"";position:absolute;inset:-20%;background-image:var(--grain);background-size:180px;mix-blend-mode:soft-light;opacity:.18}
+  .screen::before{content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 3px);mix-blend-mode:overlay;opacity:.5}
+  .clip{position:absolute;inset:0;z-index:2;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s ease}
+  .clip.live{opacity:1}
+  .bigplay{
+    position:absolute;z-index:3;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;
+    display:grid;place-items:center;
+    background:color-mix(in srgb,var(--accent) 22%, rgba(0,0,0,.4));
+    border:1.5px solid color-mix(in srgb,var(--accent) 85%, transparent);
+    color:var(--accent);backdrop-filter:blur(4px);
+    box-shadow:0 10px 44px -10px color-mix(in srgb,var(--accent) 60%, transparent), 0 0 0 0 color-mix(in srgb,var(--accent) 45%, transparent);
+    animation:pulse 2.6s var(--ease) infinite;
+  }
+  .bigplay svg{width:28px;height:28px;transform:translateX(2px);filter:drop-shadow(0 1px 4px rgba(0,0,0,.5))}
+  @keyframes pulse{
+    0%{box-shadow:0 10px 44px -10px color-mix(in srgb,var(--accent) 55%, transparent), 0 0 0 0 color-mix(in srgb,var(--accent) 42%, transparent)}
+    70%{box-shadow:0 10px 44px -10px color-mix(in srgb,var(--accent) 55%, transparent), 0 0 0 24px transparent}
+    100%{box-shadow:0 10px 44px -10px color-mix(in srgb,var(--accent) 55%, transparent), 0 0 0 0 transparent}}
+  .playing .bigplay{opacity:0;pointer-events:none;transition:opacity .4s}
+  .hud-b{position:absolute;z-index:4;left:0;right:0;bottom:0;padding:22px 26px;display:flex;align-items:center;gap:16px;
+    background:linear-gradient(0deg, rgba(3,4,6,.82), transparent)}
+  .bar{flex:1;height:2px;background:rgba(255,255,255,.14);border-radius:2px;overflow:hidden}
+  .bar span{display:block;height:100%;width:38%;background:var(--accent)}
+  .tc{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted);letter-spacing:.04em}
+  .b-title{position:absolute;z-index:4;top:24px;left:26px;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted)}
+  .close{position:absolute;z-index:5;top:18px;right:18px;width:38px;height:38px;border-radius:50%;
+    border:1px solid var(--line);background:rgba(0,0,0,.4);color:var(--ink);display:grid;place-items:center;cursor:pointer;
+    backdrop-filter:blur(4px);transition:border-color .3s,background .3s;opacity:0;transition:opacity .3s .2s}
+  .card.open .close{opacity:1}
+  .close:hover{border-color:color-mix(in srgb,var(--accent) 60%, transparent);background:rgba(0,0,0,.6)}
+  .close svg{width:14px;height:14px}
+
+  /* ============================================================= *
+   *  REVEAL FX — the front's exit animation, switchable per mode
+   * ============================================================= */
+
+  /* 1 · INK — soft organic bloom that spreads from the click point */
+  @property --ink{ syntax:'<percentage>'; inherits:false; initial-value:0%; }
+  .card[data-fx="ink"] .front{
+    -webkit-mask:radial-gradient(circle at var(--cx,50%) var(--cy,50%), transparent 0, transparent calc(var(--ink) - 18%), #000 var(--ink));
+            mask:radial-gradient(circle at var(--cx,50%) var(--cy,50%), transparent 0, transparent calc(var(--ink) - 18%), #000 var(--ink));
+    transition:--ink .95s var(--ease);
+  }
+  .card[data-fx="ink"].open .front{ --ink:175%; }
+  .card[data-fx="ink"].open .art{ animation:inkbleed .95s var(--ease) }
+  @keyframes inkbleed{0%{filter:none}45%{filter:blur(2.5px) brightness(1.12) saturate(1.2)}100%{filter:none}}
+
+  /* 2 · RIPPLE — water surface: SVG displacement + a spreading ring (scale driven in JS) */
+  .card[data-fx="ripple"] .front{transition:opacity .7s var(--ease) .1s}
+  .card[data-fx="ripple"].open .front{opacity:0}
+  .card.rippling{filter:url(#rippleflt)}
+  .ripple-ring{position:absolute;z-index:5;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;
+    border:2px solid color-mix(in srgb,var(--accent) 75%, transparent);pointer-events:none;
+    box-shadow:0 0 26px color-mix(in srgb,var(--accent) 40%, transparent);animation:ringpulse .95s var(--ease) forwards}
+  @keyframes ringpulse{0%{transform:scale(.25);opacity:.9}70%{opacity:.32}100%{transform:scale(26);opacity:0}}
+
+  /* 3 · DISSOLVE (water) — bloom, blur and wash out */
+  .card[data-fx="dissolve"] .front{transition:opacity .7s var(--ease), transform .85s var(--ease), filter .7s var(--ease)}
+  .card[data-fx="dissolve"].open .front{opacity:0;transform:scale(1.09);filter:blur(18px) brightness(1.5) saturate(1.25)}
+  .card[data-fx="dissolve"].open .art{animation:wobble .8s var(--ease)}
+  @keyframes wobble{0%{transform:skew(0,0)}30%{transform:skew(1.5deg,.6deg)}60%{transform:skew(-1deg,-.4deg)}100%{transform:skew(0,0)}}
+
+  /* 4 · GLITCH — digital slice-tear */
+  .card[data-fx="glitch"].open .front{animation:glitchout .5s steps(2,end) forwards}
+  .card[data-fx="glitch"].glitchback .front{animation:glitchin .5s steps(2,end)}
+  @keyframes glitchout{
+    0%{clip-path:inset(0 0 0 0);transform:translate(0,0);filter:none}
+    10%{clip-path:inset(0 0 62% 0);transform:translate(-9px,0)}
+    22%{clip-path:inset(46% 0 8% 0);transform:translate(11px,0);filter:hue-rotate(70deg) saturate(1.7)}
+    34%{clip-path:inset(12% 0 40% 0);transform:translate(-7px,0)}
+    48%{clip-path:inset(72% 0 0 0);transform:translate(8px,0);filter:contrast(1.6)}
+    62%{clip-path:inset(0 0 22% 0);transform:translate(-4px,0);opacity:.75}
+    80%{opacity:.4;transform:translate(3px,0)}
+    100%{opacity:0;transform:translate(0,0)}}
+  /* glitch back in — cover tears its way back over the reel */
+  @keyframes glitchin{
+    0%{opacity:0;clip-path:inset(0 0 100% 0);transform:translate(0,0);filter:none}
+    14%{opacity:.5;clip-path:inset(0 0 34% 0);transform:translate(10px,0);filter:hue-rotate(60deg) saturate(1.7)}
+    28%{opacity:.6;clip-path:inset(44% 0 10% 0);transform:translate(-11px,0)}
+    42%{opacity:.8;clip-path:inset(8% 0 48% 0);transform:translate(7px,0);filter:contrast(1.6)}
+    58%{clip-path:inset(64% 0 0 0);transform:translate(-5px,0)}
+    78%{opacity:1;clip-path:inset(0 0 0 0);transform:translate(4px,0)}
+    100%{opacity:1;clip-path:inset(0 0 0 0);transform:translate(0,0);filter:none}}
+
+  /* ---------- HUD ---------- */
+  .hud{position:relative;z-index:6;display:flex;align-items:center;justify-content:center;gap:26px;padding:0 24px 26px;height:64px}
+  .counter{font-family:ui-monospace,monospace;font-size:13px;letter-spacing:.12em;color:var(--muted);font-variant-numeric:tabular-nums;min-width:66px}
+  .counter #cur{color:var(--ink)}
+  .counter .sep{margin:0 6px;opacity:.5}
+  .dots{display:flex;gap:10px}
+  .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18);border:0;padding:0;cursor:pointer;transition:transform .3s var(--ease),background .3s}
+  .dot:hover{background:rgba(255,255,255,.4)}
+  .dot.on{background:var(--accent);transform:scale(1.5)}
+  .hint{font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);min-width:96px;text-align:right}
+
+  /* ---------- FX SWITCHER (testing tool) ---------- */
+  .fx-switch{position:fixed;top:18px;left:18px;z-index:20;display:flex;flex-direction:column;gap:8px;
+    padding:12px 14px 11px;border:1px solid var(--line);border-radius:12px;background:rgba(10,11,14,.6);
+    backdrop-filter:blur(10px);font-family:ui-monospace,monospace;transition:opacity .3s,transform .3s}
+  .fx-switch.hidden{opacity:0;transform:translateX(-14px);pointer-events:none}
+  .fx-title{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted)}
+  .fx-list{display:flex;flex-direction:column;gap:2px}
+  .fx-opt{display:flex;align-items:center;gap:10px;background:none;border:0;cursor:pointer;color:var(--muted);
+    font:inherit;font-size:12px;padding:5px 6px;border-radius:7px;text-align:left;letter-spacing:.02em;transition:background .2s,color .2s}
+  .fx-opt:hover{color:var(--ink);background:rgba(255,255,255,.04)}
+  .fx-opt.on{color:var(--ink);background:rgba(255,255,255,.06)}
+  .fx-opt .k{display:inline-grid;place-items:center;width:16px;height:16px;font-size:10px;color:var(--muted);opacity:.7}
+  .fx-opt.on .k{color:var(--accent-ui)}
+  .fx-note{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);opacity:.6}
+
+  @media (max-width:640px){
+    :root{--cw:min(90vw,560px);--ch:calc(var(--cw) * 9 / 16)}
+    .hint{display:none}.rail{gap:6vw}
+    .fx-switch{top:12px;left:12px;padding:9px 10px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .card{animation:none;opacity:1}
+    .rail{transition:none;opacity:1;transform:none}
+    .bigplay{animation:none}
+    .card .front{transition:opacity .2s !important}
+    *{scroll-behavior:auto !important}
+  }
+</style>
+</head>
+<body>
+  <!-- water-displacement filter for the Ripple reveal (scale animated in JS) -->
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <filter id="rippleflt" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap id="rippleDisp" in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+
+  <main id="stage">
+    <div class="rail" id="rail" aria-label="Portfolio gallery"></div>
+    <div class="hud">
+      <div class="counter"><span id="cur">01</span><span class="sep">/</span><span id="tot">05</span></div>
+      <div class="dots" id="dots"></div>
+      <div class="hint" id="hint">drag · click to play</div>
+    </div>
+  </main>
+
+<script>
+/* ------------------------------------------------------------------ *
+ *  PORTFOLIO PIECES — edit this list.
+ *  video: put your files in /videos and reference them here.
+ *         (left blank => the styled reel placeholder shows instead.)
+ * ------------------------------------------------------------------ */
+const PIECES = [
+  { title:"Recurve",                  cat:"Puzzle Game Demo", role:"Recall reverse-entropy arrows to fix objects. Completed demo level in Unity.",                    accent:"#6be3c9", video:"videos/recurve.mp4" },
+  { title:"Assassin's Weakness is Love", cat:"Rhythm Game",   role:"Rhythm game switching between FPS and third-person slashing perspectives. Two levels, made in Unity.", accent:"#b98cff", video:"videos/assassins-weakness.mp4" },
+  { title:"Niflheim Highway",         cat:"Racing Game",      role:"A scene-switching mechanic spawns obstacles to react to — a tribute to Dragon Raja.",           accent:"#7aa2f7", video:"videos/niflheim-highway.mp4" },
+];
+
+/* Reveal modes.  Change DEFAULT_FX to set which one loads first. */
+const MODES = [
+  { id:"ink",      label:"Ink" },
+  { id:"ripple",   label:"Ripple" },
+  { id:"dissolve", label:"Dissolve" },
+  { id:"glitch",   label:"Glitch" },
+];
+const DEFAULT_FX = "glitch";
+let mode = DEFAULT_FX;
+
+const rail = document.getElementById('rail');
+const dotsWrap = document.getElementById('dots');
+const curEl = document.getElementById('cur');
+const totEl = document.getElementById('tot');
+const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+const pad2 = n => String(n+1).padStart(2,'0');
+
+const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+const ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+/* build slides — N pieces cloned into COPIES sets so the strip loops seamlessly */
+const N = PIECES.length;
+const COPIES = 3;
+function slideHTML(p,i){ return `
+    <div class="card" data-fx="${mode}" style="--accent:${p.accent};--i:${i}">
+      <div class="face back">
+        <div class="screen">
+          <div class="b-title">${p.title}</div>
+          <video class="clip" muted loop playsinline preload="none" ${p.video?`data-src="${p.video}"`:''}></video>
+          <div class="bigplay">${ICON_PLAY}</div>
+          <div class="hud-b"><span class="tc">00:00</span><div class="bar"><span></span></div><span class="tc">reel</span></div>
+        </div>
+        <button class="close" aria-label="Close">${ICON_X}</button>
+      </div>
+      <div class="face front">
+        <div class="art"></div>
+        <div class="frame">
+          <span class="idx">${pad2(i)}</span>
+          <div class="bottom">
+            <div class="caption">
+              <span class="cat">${p.cat}</span>
+              <h2 class="title">${p.title}</h2>
+              <p class="role">${p.role}</p>
+            </div>
+            <div class="playcue"><span class="disc">${ICON_PLAY}</span> click to reveal</div>
+          </div>
+        </div>
+      </div>
+    </div>`; }
+for(let copy=0; copy<COPIES; copy++){
+  PIECES.forEach((p,i)=>{
+    const slide = document.createElement('article');
+    slide.className = 'slide';
+    slide.dataset.piece = i;
+    slide.innerHTML = slideHTML(p,i);
+    rail.appendChild(slide);
+  });
+}
+
+const slides = [...rail.querySelectorAll('.slide')];
+totEl.textContent = pad2(N-1);
+
+/* dots — one per real piece */
+PIECES.forEach((p,i)=>{
+  const b = document.createElement('button');
+  b.className='dot'; b.style.setProperty('--accent',p.accent);
+  b.setAttribute('aria-label',`Go to ${p.title}`);
+  b.addEventListener('click',()=>goToPiece(i));
+  dotsWrap.appendChild(b);
+});
+const dots = [...dotsWrap.children];
+
+/* effect switching — the on-screen panel is removed; number keys 1–4 still
+   switch effects for quick testing. To change the shipped effect, edit DEFAULT_FX. */
+function setMode(m){
+  if(!MODES.some(x=>x.id===m)) return;
+  closeAll();
+  mode=m;
+  slides.forEach(s=>{ s.querySelector('.card').dataset.fx=m; });
+}
+
+/* ---------- layout + infinite-loop plumbing ---------- */
+let cardW = 0, stride = 0, copyW = 0;
+function measure(){
+  cardW = slides[0].getBoundingClientRect().width;
+  rail.style.paddingLeft = '0px';
+  rail.style.paddingRight = '0px';
+  rail.style.scrollPaddingLeft = '0px';
+  stride = slides[1].offsetLeft - slides[0].offsetLeft;   // card + gap
+  copyW  = stride * N;                                     // width of one full set
+}
+function centerSlideInstant(i){
+  const s = slides[i]; if(!s) return;
+  rail.scrollLeft = s.offsetLeft + s.clientWidth/2 - rail.clientWidth/2;
+}
+/* keep the scroll position inside the middle copy; jump by a whole copy when it
+   drifts out, so there's always a full set of cards on either side to wrap into */
+function loopReposition(){
+  if(!copyW || !slides.length) return;
+  // Key off which card is centred (not raw scrollLeft): cards are narrower than
+  // the viewport, so a centred edge card would trip a raw-scrollLeft threshold and
+  // jump mid-snap, leaving the card off-centre. Keep the centred card in the middle copy.
+  const mid = rail.getBoundingClientRect().left + rail.clientWidth/2;
+  let best = Infinity, bi = 0;
+  for(let i=0;i<slides.length;i++){
+    const r = slides[i].getBoundingClientRect();
+    const d = Math.abs((r.left + r.width/2) - mid);
+    if(d < best){ best = d; bi = i; }
+  }
+  let moved = 0;
+  if(bi < N) moved = copyW;                          // drifted into the leading copy
+  else if(bi >= slides.length - N) moved = -copyW;   // drifted into the trailing copy
+  if(moved){ rail.scrollLeft += moved; if(press) press.s += moved; }
+}
+
+/* ---------- coverflow + tilt ---------- */
+let tiltX=0, tiltY=0, centerIndex=-1;
+function render(){
+  loopReposition();
+  const mid = rail.getBoundingClientRect().left + rail.clientWidth/2;
+  let best=Infinity, bi=0;
+  slides.forEach((s,i)=>{
+    const r = s.getBoundingClientRect();
+    const c = r.left + r.width/2;
+    const d = (c-mid)/cardW;
+    const ad = Math.min(Math.abs(d),2.2);
+    const scale = 1 - ad*0.13;
+    const ty = ad*ad*10;
+    const op = Math.max(.18, 1 - ad*0.42);
+    const blur = ad*3.2;
+    const isC = Math.abs(d) < .5;
+    let t = `translateY(${ty}px) scale(${scale})`;
+    if(isC && !reduce){ t += ` rotateX(${tiltX}deg) rotateY(${tiltY}deg)`; }
+    s.style.transform = t;
+    s.style.zIndex = String(200 - Math.round(ad*20));
+    /* de-emphasis on the slide; 'none' at centre keeps its 3D unflattened */
+    s.style.filter = ad < 0.06 ? 'none' : `blur(${blur.toFixed(2)}px) brightness(${(1-ad*0.28).toFixed(3)})`;
+    s.style.opacity = op.toFixed(3);
+    s.classList.toggle('is-center', isC);
+    if(ad<best){best=ad;bi=i;}
+  });
+  if(bi!==centerIndex){
+    centerIndex=bi;
+    const real = ((bi % N) + N) % N;                       // clone -> real piece
+    curEl.textContent=pad2(real);
+    dots.forEach((d,i)=>d.classList.toggle('on',i===real));
+    slides.forEach((s,i)=>{ if(i!==bi) closeCard(s); });   // close any off-centre card
+  }
+}
+let raf=null;
+rail.addEventListener('scroll',()=>{ if(raf)return; raf=requestAnimationFrame(()=>{raf=null;render();}); },{passive:true});
+
+/* ---------- mouse tilt on centered card ---------- */
+rail.addEventListener('pointermove',e=>{
+  if(reduce || (press && press.dragging)) return;
+  const s = slides[centerIndex]; if(!s) return;
+  const r = s.getBoundingClientRect();
+  const nx = (e.clientX - (r.left+r.width/2))/(r.width/2);
+  const ny = (e.clientY - (r.top+r.height/2))/(r.height/2);
+  tiltY = Math.max(-1,Math.min(1,nx)) * 6.5;
+  tiltX = Math.max(-1,Math.min(1,ny)) * -5;
+  const art = s.querySelector('.art');
+  if(art){ art.style.setProperty('--mx',(50+nx*22)+'%'); art.style.setProperty('--my',(32+ny*20)+'%'); }
+  render();
+});
+rail.addEventListener('pointerleave',()=>{ tiltX=tiltY=0; render(); });
+
+/* ---------- wheel: vertical -> horizontal ---------- */
+rail.addEventListener('wheel',e=>{
+  if(e.ctrlKey) return;
+  const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+  if(delta){ rail.scrollLeft += delta; loopReposition(); scheduleSnap(120); e.preventDefault(); }
+},{passive:false});
+
+/* ---------- drag to scroll (distinguish from click) ----------
+   Capture is deferred until an actual drag begins. Capturing on every
+   pointerdown retargets the following `click` to the rail, which made
+   `closest('.slide')` return null and swallowed the reveal tap. */
+let press = null, dragMoved = 0;
+rail.addEventListener('pointerdown',e=>{
+  if(e.target.closest('.close')) return;
+  press = {x:e.clientX, s:rail.scrollLeft, moved:0, id:e.pointerId, dragging:false};
+});
+rail.addEventListener('pointermove',e=>{
+  if(!press) return;
+  const dx = e.clientX - press.x;
+  press.moved = Math.max(press.moved, Math.abs(dx));
+  if(!press.dragging && press.moved > 6){        // only now is it a drag
+    press.dragging = true; rail.classList.add('dragging');
+    try{rail.setPointerCapture(press.id)}catch(_){}
+  }
+  if(press.dragging){ rail.scrollLeft = press.s - dx; loopReposition(); }
+});
+function endPress(){
+  if(!press) return;
+  dragMoved = press.moved;
+  const wasDrag = press.dragging;
+  if(press.dragging){ rail.classList.remove('dragging'); try{rail.releasePointerCapture(press.id)}catch(_){} }
+  press = null;
+  if(wasDrag) scheduleSnap(60);   // settle onto the nearest card after a drag
+}
+rail.addEventListener('pointerup',endPress);
+rail.addEventListener('pointercancel',endPress);
+
+/* ---------- click: open/close centred, or centre others ---------- */
+rail.addEventListener('click',e=>{
+  if(dragMoved > 8){ dragMoved = 0; return; }    // that click ended a drag
+  const slide = e.target.closest('.slide'); if(!slide) return;
+  const i = slides.indexOf(slide);
+  if(i!==centerIndex){ centerOn(i); return; }
+  const card = slide.querySelector('.card');
+  card.classList.contains('open') ? closeCard(slide) : openCard(slide, e);
+});
+
+/* ---------- open / close (per-mode) ---------- */
+function openCard(slide, ev){
+  const card = slide.querySelector('.card');
+  if(card.classList.contains('open')) return;
+  const front = card.querySelector('.front');
+  if(ev){
+    const r = card.getBoundingClientRect();
+    front.style.setProperty('--cx', ((ev.clientX-r.left)/r.width*100).toFixed(1)+'%');
+    front.style.setProperty('--cy', ((ev.clientY-r.top)/r.height*100).toFixed(1)+'%');
+  }
+  card.classList.add('open');
+  if(mode==='ripple' && !reduce) rippleBurst(card, ev);
+  playVideo(slide);
+}
+function closeCard(slide){
+  const card = slide.querySelector('.card');
+  if(!card.classList.contains('open')) return;
+  card.classList.remove('open');
+  if(card.dataset.fx==='glitch' && !reduce){       // glitch the cover back in
+    card.classList.add('glitchback');
+    clearTimeout(card._gb);
+    card._gb = setTimeout(()=>card.classList.remove('glitchback'), 520);
+  }
+  if(card.dataset.fx==='ripple' && !reduce) rippleBurst(card, null);   // ripple back in
+  pauseVideo(slide);
+}
+function closeAll(){ slides.forEach(closeCard); }
+
+/* ---------- ripple: SVG displacement pulse + spreading ring ---------- */
+const rippleDisp = document.getElementById('rippleDisp');
+function rippleBurst(card, ev){
+  card.classList.add('rippling');
+  const r = card.getBoundingClientRect();
+  const rx = ev ? (ev.clientX-r.left)/r.width*100 : 50;
+  const ry = ev ? (ev.clientY-r.top)/r.height*100 : 50;
+  const ring = document.createElement('div');
+  ring.className = 'ripple-ring';
+  ring.style.left = rx+'%'; ring.style.top = ry+'%';
+  card.appendChild(ring);
+  setTimeout(()=>ring.remove(), 960);
+  animateDisp(30, 0, 900, ()=>card.classList.remove('rippling'));
+}
+function animateDisp(from, to, dur, done){
+  if(!rippleDisp){ done && done(); return; }
+  const t0 = performance.now();
+  (function step(now){
+    const p = Math.min(1,(now-t0)/dur);
+    const e = 1 - Math.pow(1-p, 3);               // easeOut so ripples settle
+    rippleDisp.setAttribute('scale', (from + (to-from)*e).toFixed(2));
+    p<1 ? requestAnimationFrame(step) : (done && done());
+  })(t0);
+}
+
+/* ---------- video ---------- */
+function playVideo(slide){
+  const v=slide.querySelector('.clip'), screen=slide.querySelector('.screen');
+  if(v && v.dataset.src){
+    if(!v.src) v.src=v.dataset.src;
+    v.play().then(()=>{screen.classList.add('playing');v.classList.add('live');}).catch(()=>{});
+    v.addEventListener('playing',()=>{screen.classList.add('playing');v.classList.add('live');},{once:true});
+  }
+}
+function pauseVideo(slide){
+  const v=slide.querySelector('.clip'), screen=slide.querySelector('.screen');
+  if(v){ v.pause(); v.classList.remove('live'); screen.classList.remove('playing'); }
+}
+
+/* ---------- navigation ---------- */
+function centerOn(i){
+  const s = slides[i]; if(!s) return;
+  rail.scrollTo({left: s.offsetLeft + s.clientWidth/2 - rail.clientWidth/2, behavior: reduce?'auto':'smooth'});
+}
+/* JS snap: after free scrolling (wheel/trackpad/drag) settles, glide to the
+   nearest card. Replaces CSS scroll-snap, which blocked manual scrolling. */
+let snapTimer = null;
+function scheduleSnap(delay){
+  clearTimeout(snapTimer);
+  snapTimer = setTimeout(()=>{
+    if(press) return;                          // still dragging — wait
+    const mid = rail.getBoundingClientRect().left + rail.clientWidth/2;
+    let best = Infinity, bi = 0;
+    slides.forEach((s,i)=>{ const r=s.getBoundingClientRect(); const d=Math.abs((r.left+r.width/2)-mid); if(d<best){best=d;bi=i;} });
+    centerOn(bi);
+  }, delay);
+}
+/* jump to the nearest instance of a real piece (shortest way round the loop) */
+function goToPiece(pi){
+  const cur = ((centerIndex % N) + N) % N;
+  let delta = pi - cur;
+  if(delta >  N/2) delta -= N;
+  if(delta < -N/2) delta += N;
+  centerOn(centerIndex + delta);
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'){ centerOn(centerIndex+1); e.preventDefault(); }
+  else if(e.key==='ArrowLeft'){ centerOn(centerIndex-1); e.preventDefault(); }
+  else if(e.key==='Enter'||e.key===' '){ const s=slides[centerIndex];
+    s.querySelector('.card').classList.contains('open')?closeCard(s):openCard(s); e.preventDefault(); }
+  else if(e.key>='1'&&e.key<='9'){ const idx=+e.key-1; if(MODES[idx]) setMode(MODES[idx].id); }
+});
+
+/* ---------- boot ---------- */
+function boot(){ measure(); centerSlideInstant(N); render(); requestAnimationFrame(()=>rail.classList.add('ready')); }
+addEventListener('resize',()=>{ measure(); centerSlideInstant(centerIndex<0?N:centerIndex); render(); });
+window.addEventListener('load',boot);
+boot();
+</script>
+</body>
+</html>
