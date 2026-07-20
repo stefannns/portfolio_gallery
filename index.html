@@ -95,6 +95,21 @@
     content:"";position:absolute;inset:-20%;
     background-image:var(--grain);background-size:180px;mix-blend-mode:soft-light;opacity:.22;
   }
+  /* real cover artwork */
+  .art.has-cover{background:#05060a}
+  .art.has-cover::before{opacity:.2}          /* soften the sheen over a photo */
+  .cover-img{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;display:block}
+  .art .scrim{                                 /* keep title/number legible over any image */
+    position:absolute;inset:0;z-index:1;
+    background:linear-gradient(180deg,
+      rgba(5,6,10,.35) 0%, rgba(5,6,10,0) 26%, rgba(5,6,10,0) 48%,
+      rgba(5,6,10,.7) 80%, rgba(5,6,10,.96) 100%);
+  }
+  /* cover art is the hero — let it speak; keep only a compact caption bar */
+  .front.covered .role{display:none}
+  .front.covered .title{font-size:clamp(19px,2.8vh,28px);text-shadow:0 2px 14px rgba(0,0,0,.6)}
+  .front.covered .cat{text-shadow:0 1px 8px rgba(0,0,0,.6)}
+  .front.covered .idx{opacity:.6}
 
   .frame{position:absolute;inset:0;z-index:2;padding:30px;display:flex;flex-direction:column;justify-content:space-between}
   .bottom{display:flex;flex-direction:column;gap:20px}
@@ -272,9 +287,9 @@
  *         (left blank => the styled reel placeholder shows instead.)
  * ------------------------------------------------------------------ */
 const PIECES = [
-  { title:"Recurve",                  cat:"Puzzle Game Demo", role:"Recall reverse-entropy arrows to fix objects. Completed demo level in Unity.",                    accent:"#6be3c9", video:"videos/recurve.mp4" },
-  { title:"Assassin's Weakness is Love", cat:"Rhythm Game",   role:"Rhythm game switching between FPS and third-person slashing perspectives. Two levels, made in Unity.", accent:"#b98cff", video:"videos/assassins-weakness.mp4" },
-  { title:"Niflheim Highway",         cat:"Racing Game",      role:"A scene-switching mechanic spawns obstacles to react to — a tribute to Dragon Raja.",           accent:"#7aa2f7", video:"videos/niflheim-highway.mp4" },
+  { title:"Recurve",                  cat:"Puzzle Game Demo", role:"Recall reverse-entropy arrows to fix objects. Completed demo level in Unity.",                    accent:"#6be3c9", cover:"",                       video:"recurve/recurve_gamevid.mp4" },
+  { title:"Assassin's Weakness is Love", cat:"Rhythm Game",   role:"Rhythm game switching between FPS and third-person slashing perspectives. Two levels, made in Unity.", accent:"#b98cff", cover:"assassin/awil_cover.png",  video:"assassin/l1_vid.mp4" },
+  { title:"Niflheim Highway",         cat:"Racing Game",      role:"A scene-switching mechanic spawns obstacles to react to — a tribute to Dragon Raja.",           accent:"#7aa2f7", cover:"niflheim/racing_cover.png", video:"niflheim/racing_vid.mp4" },
 ];
 
 /* Reveal modes.  Change DEFAULT_FX to set which one loads first. */
@@ -311,8 +326,8 @@ function slideHTML(p,i){ return `
         </div>
         <button class="close" aria-label="Close">${ICON_X}</button>
       </div>
-      <div class="face front">
-        <div class="art"></div>
+      <div class="face front${p.cover?' covered':''}">
+        <div class="art${p.cover?' has-cover':''}">${p.cover?`<img class="cover-img" src="${p.cover}" alt="" loading="lazy"><div class="scrim"></div>`:''}</div>
         <div class="frame">
           <span class="idx">${pad2(i)}</span>
           <div class="bottom">
