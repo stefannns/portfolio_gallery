@@ -126,6 +126,10 @@
   .art.has-cover{background:#05060a}
   .art.has-cover::before{opacity:.2}          /* soften the sheen over a photo */
   .cover-img{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;display:block}
+  /* hover-to-preview clip — fades in over the cover while the centred card is hovered */
+  .hover-clip{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;
+    opacity:0;transition:opacity .5s var(--ease)}
+  .slide.hovering .hover-clip{opacity:1}
   .art .scrim{                                 /* keep title/number legible over any image */
     position:absolute;inset:0;z-index:1;
     background:linear-gradient(180deg,
@@ -394,7 +398,7 @@ const PIECES = [
       { label:"Level 1", video:REELS+"/assassin-l1.mp4", note:"♪ Love Confession （告白气球） — Jay Chou" },
       { label:"Level 2", video:REELS+"/assassin-l2.mp4", note:"♪ That Girl — Olly Murs" }
     ] },
-  { title:"Niflheim Highway", cat:"Racing Experience · Dragon Raja （龙族） novel scene recreation", date:"Sept 2025", accent:"#7aa2f7", cover:"niflheim/niflheim_cover.png", video:REELS+"/niflheim.mp4",
+  { title:"Niflheim Highway", cat:"Racing Experience · Dragon Raja （龙族） novel scene recreation", date:"Sept 2025", accent:"#7aa2f7", cover:"niflheim/niflheim_cover.png", video:REELS+"/niflheim.mp4", hover:REELS+"/niflheim_loop_cover.mp4",
     desc:"A tribute to the Dragon Raja scene where a character drives a Maybach out of Niflheim, a god realm ruled by Odin. The road keeps flipping between the ordinary highway and Niflheim's ruined, obstacle-strewn version — you have to react to each shift in time to avoid crashing. Undead warriors chase from behind too: linger too close for a few seconds and they drag you down, forcing a restart." },
   { title:"Toad Defense Tactics", cat:"Tower Defense / Roguelike Game", date:"April 2026", accent:"#8fd66b", cover:"tdt/tdt_cover.png", video:"",
     desc:"Deploy, merge, and evolve an army of frogs to fend off relentless waves in this high-stakes tower-defense roguelike. Every tower is a different class of frog with its own attack; merging duplicates evolves them into stronger, higher-tier versions and hands you random buffs to draft between for roguelike progression. Frogs come from a rarity-based shop of four slots you can reroll for a fresh set." },
@@ -443,7 +447,7 @@ function slideHTML(p,i){ return `
         <button class="close" aria-label="Close">${ICON_X}</button>
       </div>
       <div class="face front">
-        <div class="art${p.cover?' has-cover':''}">${p.cover?`<img class="cover-img" src="${p.cover}" alt="" loading="lazy"><div class="scrim"></div>`:''}</div>
+        <div class="art${p.cover?' has-cover':''}">${p.cover?`<img class="cover-img" src="${p.cover}" alt="" loading="lazy">${p.hover?`<video class="hover-clip" muted loop playsinline preload="none" data-src="${p.hover}"></video>`:''}<div class="scrim"></div>`:''}</div>
         <div class="frame">
           <div class="playcue">click to reveal</div>
         </div>
@@ -490,6 +494,28 @@ PIECES.forEach((p,i)=>{
   dotsWrap.appendChild(b);
 });
 const dots = [...dotsWrap.children];
+
+/* hover-to-preview: play a muted clip over the cover while the centred card is hovered */
+function startHover(slide){
+  const hv = slide.querySelector('.hover-clip'); if(!hv) return;
+  if(!hv.src && hv.dataset.src) hv.src = hv.dataset.src;
+  slide.classList.add('hovering');
+  try{ hv.currentTime = 0; }catch(_){}
+  hv.play().catch(()=>{});
+}
+function stopHover(slide){
+  const hv = slide.querySelector('.hover-clip'); if(!hv) return;
+  slide.classList.remove('hovering');
+  hv.pause();
+}
+slides.forEach(s=>{
+  if(!s.querySelector('.hover-clip')) return;
+  const card = s.querySelector('.card');
+  card.addEventListener('pointerenter', ()=>{
+    if(!isReading() && s.classList.contains('is-center') && !card.classList.contains('open')) startHover(s);
+  });
+  card.addEventListener('pointerleave', ()=>stopHover(s));
+});
 
 /* effect switching — the on-screen panel is removed; number keys 1–4 still
    switch effects for quick testing. To change the shipped effect, edit DEFAULT_FX. */
@@ -577,7 +603,7 @@ function render(){
     const real = ((bi % N) + N) % N;                       // clone -> real piece
     curEl.textContent=pad2(real);
     dots.forEach((d,i)=>d.classList.toggle('on',i===real));
-    slides.forEach((s,i)=>{ if(i!==bi) closeCard(s); });   // close any off-centre card
+    slides.forEach((s,i)=>{ if(i!==bi){ closeCard(s); stopHover(s); } });   // close / un-hover off-centre cards
   }
 }
 let raf=null;
@@ -664,7 +690,8 @@ function toggleVideo(slide){
   else { v.pause(); screen.classList.remove('playing'); }
 }
 /* sound on/off — reel autoplays muted (browser rule); this unmutes after the fact */
-let wantSound = false;
+let wantSound = true;                       // sound ON by default (falls back to muted if a browser blocks it)
+stage.classList.toggle('sound-on', wantSound);
 function toggleMute(slide){
   wantSound = !wantSound;
   stage.classList.toggle('sound-on', wantSound);
@@ -698,6 +725,7 @@ function openCard(slide, ev){
     front.style.setProperty('--cx', ((ev.clientX-r.left)/r.width*100).toFixed(1)+'%');
     front.style.setProperty('--cy', ((ev.clientY-r.top)/r.height*100).toFixed(1)+'%');
   }
+  stopHover(slide);                              // stop the hover preview; the reel takes over
   card.classList.add('open');
   slide.classList.add('revealed');               // drop the description dropdown below the frame
   stage.classList.add('reading');                // freeze sideways scroll, allow vertical, show close-X
@@ -777,9 +805,10 @@ function loadVideo(slide){   // load the reel and autoplay (muted) as soon as th
   if(v && v.dataset.src){
     if(!v.src) v.src=v.dataset.src;
     wireScrubber(slide, v);
-    v.muted = true;   // start muted so autoplay is allowed
-    v.play().then(()=>{screen.classList.add('playing');v.classList.add('live'); if(wantSound) v.muted=false;}).catch(()=>{});
-    v.addEventListener('playing',()=>{screen.classList.add('playing');v.classList.add('live');},{once:true});
+    const lit=()=>{screen.classList.add('playing');v.classList.add('live');};
+    v.muted = !wantSound;                               // try with sound (opening is a user gesture)
+    v.play().then(lit).catch(()=>{ v.muted = true; stage.classList.remove('sound-on'); wantSound = false; v.play().then(lit).catch(()=>{}); });
+    v.addEventListener('playing', lit, {once:true});
   }
 }
 function pauseVideo(slide){
