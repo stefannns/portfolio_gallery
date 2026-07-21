@@ -74,6 +74,7 @@
     transition:opacity .35s var(--ease);
   }
   .slidecap .title{margin:0;font-weight:600;letter-spacing:.01em;font-size:17px;line-height:1.25;color:rgba(244,246,250,.82);text-wrap:balance}
+  .slidecap .title-cn{margin-left:10px;font-weight:500;font-size:13.5px;letter-spacing:.08em;color:color-mix(in srgb,var(--accent) 38%,#9a9ea6);white-space:nowrap}
   .slidecap .cap-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;width:100%}
   .slidecap .cat{font-size:11px;letter-spacing:.22em;text-transform:uppercase;line-height:1.5;
     color:color-mix(in srgb,var(--accent) 70%, transparent);font-weight:600;flex:1;min-width:0}
@@ -392,20 +393,20 @@
 /* Reels hosted on Supabase Storage (public bucket). Swap this base if you move hosts. */
 const REELS = "https://recrjycnqclmqvbcryya.supabase.co/storage/v1/object/public/reels";
 const PIECES = [
-  { title:"Assassin's Weakness is Love", cat:"Rhythm Game", date:"May 2025", accent:"#b98cff", cover:"assassin/awil_cover.png", video:REELS+"/assassin-l1.mp4",
+  { title:"Assassin's Weakness is Love", cn:"心动刺客", cat:"Rhythm Game", date:"May 2025", accent:"#b98cff", cover:"assassin/awil_cover.png", video:REELS+"/assassin-l1.mp4",
     desc:"A rhythm game about an assassin who keeps getting distracted from the job by his feelings for a girl. It flips between two modes — in third-person you run, jump, and duck to slash incoming hearts on the beat; in first-person you pick them off with ranged kunais. Every heart hit scores, and the goal is the highest score.",
     levels:[
       { label:"Level 1", video:REELS+"/assassin-l1.mp4", note:"♪ Love Confession （告白气球） — Jay Chou" },
       { label:"Level 2", video:REELS+"/assassin-l2.mp4", note:"♪ That Girl — Olly Murs" }
     ] },
-  { title:"Niflheim Highway", cat:"Racing Experience · Dragon Raja （龙族） novel scene recreation", date:"Sept 2025", accent:"#7aa2f7", cover:"niflheim/niflheim_cover.png", video:REELS+"/niflheim.mp4", hover:REELS+"/niflheim_loop_cover.mp4",
+  { title:"Niflheim Highway", cn:"尼伯龙根", cat:"Racing Experience · Dragon Raja （龙族） novel scene recreation", date:"Sept 2025", accent:"#7aa2f7", cover:"niflheim/niflheim_cover.png", video:REELS+"/niflheim.mp4", hover:REELS+"/niflheim_loop_cover.mp4",
     desc:"A tribute to the Dragon Raja scene where a character drives a Maybach out of Niflheim, a god realm ruled by Odin. The road keeps flipping between the ordinary highway and Niflheim's ruined, obstacle-strewn version — you have to react to each shift in time to avoid crashing. Undead warriors chase from behind too: linger too close for a few seconds and they drag you down, forcing a restart." },
-  { title:"Toad Defense Tactics", cat:"Tower Defense / Roguelike Game", date:"April 2026", accent:"#8fd66b", cover:"tdt/tdt_cover.png", video:REELS+"/tdt_video.mp4",
+  { title:"Toad Defense Tactics", cn:"蛙蛙保卫队", cat:"Tower Defense / Roguelike Game", date:"April 2026", accent:"#8fd66b", cover:"tdt/tdt_cover.png", video:REELS+"/tdt_video.mp4",
     desc:"Deploy, merge, and evolve an army of frogs to fend off relentless waves in this high-stakes tower-defense roguelike. Every tower is a different class of frog with its own attack; merging duplicates evolves them into stronger, higher-tier versions and hands you random buffs to draft between for roguelike progression. Frogs come from a rarity-based shop of four slots you can reroll for a fresh set.",
     desc2:"A big solo project — I built the entire tower-defense system myself: 12 different characters, each with their own attack, 3 trait effects, and 40 waves of enemies." },
-  { title:"A Bot Can Do Better", cat:"AI Comedy Game Demo", date:"Mar 2026", accent:"#e0a35e", cover:"drawguess/drawguess_cover.png", video:REELS+"/drawguess.mp4",
+  { title:"A Bot Can Do Better", cn:"不如人机", cat:"AI Comedy Game Demo", date:"Mar 2026", accent:"#e0a35e", cover:"drawguess/drawguess_cover.png", video:REELS+"/drawguess.mp4",
     desc:"A demo where you're handed a prompt and a short timer to draw it — then an AI bot roasts your drawing, harshly and hilariously. Powered by Gemini's API for the image analysis and the roast." },
-  { title:"Recurve", cat:"Puzzle Game Demo", date:"Oct 2025", accent:"#6be3c9", cover:"recurve/recurve_coverbg.png", video:REELS+"/recurve.mp4",
+  { title:"Recurve", cn:"逆弦", cat:"Puzzle Game Demo", date:"Oct 2025", accent:"#6be3c9", cover:"recurve/recurve_coverbg.png", video:REELS+"/recurve.mp4",
     desc:"A puzzle game built on reverse-time archery — inspired by weapons that repair instead of destroy (and the film Tenet). Each arrow mends whatever it passes through on the way back. I switched from bullets to arrows so the flight path reads clearly, then designed scenes that ask you to use those reversing shots in different ways — fixing the environment to get past obstacles and reach the target." },
 ];
 
@@ -463,7 +464,7 @@ function slideHTML(p,i){ return `
           <span class="cat">${p.cat}</span>
           ${p.date?`<span class="date">${p.date}</span>`:''}
         </div>
-        <h3 class="title">${p.title}</h3>
+        <h3 class="title">${p.title}${p.cn?`<span class="title-cn">${p.cn}</span>`:''}</h3>
       </div>
       <div class="drawer">
         <div class="drawer-in">
