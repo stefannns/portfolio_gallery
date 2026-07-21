@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stefan — Lanyard Badge</title>
+<style>
+  :root{
+    --bg:#0b0b0d;
+    --text:#f4f6fa;
+    --muted:#9297a3;
+    --faint:#5b5f6b;
+    --accent:#b98cff;
+    --line:rgba(255,255,255,.09);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg);color:var(--text);min-height:100%;overflow-x:hidden;
+    font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"PingFang SC","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex;align-items:center;justify-content:center;padding:32px;
+  }
+  .wrap{display:flex;align-items:stretch;gap:40px;width:100%;max-width:1140px}
+
+  /* ---- interactive stage (left) ---- */
+  .stage{
+    position:relative;flex:0 0 460px;height:640px;overflow:visible;perspective:1100px;
+    user-select:none;-webkit-user-select:none;touch-action:none;
+  }
+  .hint{position:absolute;left:0;right:0;bottom:6px;text-align:center;font-size:10.5px;
+    letter-spacing:.22em;text-transform:uppercase;color:var(--faint);pointer-events:none;transition:opacity .5s}
+  .hint.gone{opacity:0}
+  .peg{position:absolute;left:0;top:0;width:70px;height:13px;border-radius:7px;
+    background:linear-gradient(180deg,#3a3a44,#20222a);box-shadow:0 2px 6px rgba(0,0,0,.5);
+    transform:translate(-50%,-50%);z-index:4}
+  .peg::after{content:"";position:absolute;left:50%;top:9px;transform:translateX(-50%);
+    width:15px;height:15px;border-radius:50%;border:2px solid #3a3a44;background:var(--bg)}
+  svg.rope{position:absolute;inset:0;width:100%;height:100%;z-index:1;overflow:visible;pointer-events:none}
+
+  .badge{position:absolute;top:0;left:0;width:266px;aspect-ratio:560/871;z-index:2;cursor:grab;will-change:transform;transform-style:preserve-3d}
+  .badge.grabbing{cursor:grabbing}
+  /* dark card sitting inside the clear holder window */
+  .badge .face{position:absolute;left:10%;right:10%;top:20%;bottom:12%;border-radius:12px;
+    background:#0f1118;border:1px solid rgba(255,255,255,.06);box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+  .badge .content{position:absolute;left:10%;right:10%;top:20%;bottom:12%;padding:20px 18px 16px;
+    display:flex;flex-direction:column;z-index:2}
+  .badge .shell{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;z-index:3;
+    filter:drop-shadow(0 22px 30px rgba(0,0,0,.55))}
+  .badge .glare{position:absolute;left:10%;right:10%;top:20%;bottom:12%;border-radius:12px;pointer-events:none;
+    opacity:0;transition:opacity .3s;z-index:4;mix-blend-mode:screen;
+    background:radial-gradient(150px 150px at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.18),transparent 60%)}
+  .badge:hover .glare{opacity:1}
+
+  .badge .avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+    background:radial-gradient(120% 120% at 30% 25%,color-mix(in srgb,var(--accent) 55%,#2a2340),#191426);
+    border:1px solid color-mix(in srgb,var(--accent) 40%,transparent);font-size:20px;font-weight:700;color:#fff}
+  .badge .nm{margin-top:14px;font-size:23px;font-weight:700;letter-spacing:-.01em;line-height:1}
+  .badge .rl{margin-top:8px;font-size:11px;font-weight:600;letter-spacing:.06em;line-height:1.4;color:var(--accent)}
+  .badge .spacer{flex:1}
+  .badge .foot{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+  .badge .org{font-size:11px;letter-spacing:.04em;color:var(--muted);line-height:1.35}
+  .badge .barcode{height:30px;width:66px;opacity:.55;flex:none;background:
+    repeating-linear-gradient(90deg,var(--muted) 0 1px,transparent 1px 3px,var(--muted) 3px 4px,transparent 4px 7px,var(--muted) 7px 9px,transparent 9px 11px)}
+
+  /* ---- info (right) ---- */
+  .info{flex:1;align-self:center;max-width:520px}
+  .intro{margin:0;color:rgba(244,246,250,.8);font-size:15px;line-height:1.72}
+  .sec-title{font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--faint);font-weight:600;margin:34px 0 14px}
+  .skills{display:flex;flex-wrap:wrap;gap:9px}
+  .chip{font-size:12.5px;color:rgba(244,246,250,.9);padding:7px 15px;border-radius:999px;border:1px solid var(--line);background:transparent}
+  .info .intro,.info .chip{transform-origin:right center;will-change:transform}
+
+  @media (max-width:880px){
+    .wrap{flex-direction:column;gap:28px;max-width:520px}
+    .stage{flex:none;width:100%;height:600px}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- LEFT: draggable lanyard badge -->
+    <div class="stage" id="stage">
+      <svg class="rope" id="rope">
+        <defs>
+          <pattern id="strapTex" patternUnits="userSpaceOnUse" width="24" height="224">
+            <image href="strap.png" x="0" y="0" width="24" height="224" preserveAspectRatio="xMidYMid slice"/>
+          </pattern>
+        </defs>
+        <path id="ropeBack" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path id="ropeTex"  fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="peg" id="peg"></div>
+
+      <div class="badge" id="badge">
+        <div class="face"></div>
+        <div class="content">
+          <div class="avatar">S</div>
+          <div class="nm">Stefan</div>
+          <div class="rl">Game Designer / AIGC Designer</div>
+          <div class="spacer"></div>
+          <div class="foot">
+            <div class="org">USC School of<br>Cinematic Arts</div>
+            <div class="barcode"></div>
+          </div>
+        </div>
+        <img class="shell" src="shell.png" alt="">
+        <div class="glare" id="glare"></div>
+      </div>
+
+      <div class="hint" id="hint">Grab the badge · drag &amp; throw</div>
+    </div>
+
+    <!-- RIGHT: intro + skills -->
+    <section class="info">
+      <p class="intro">
+        Hi, I'm Stefan — a game designer and AI-driven creator studying Game Design at USC with a minor in
+        AI Applications. I love building interactive experiences with AI-powered development tools, from indie
+        student projects to large-scale commercial titles like Golden Spatula (30M+ MAUs). I'm excited
+        for the future of AI-assisted design and development.
+      </p>
+      <p class="sec-title">Core Skills</p>
+      <div class="skills">
+        <span class="chip">Vibe Coding</span>
+        <span class="chip">AI生图和视频</span>
+        <span class="chip">游戏策划与开发</span>
+        <span class="chip">ComfyUI</span>
+        <span class="chip">Unity引擎</span>
+      </div>
+    </section>
+  </div>
+
+<script>
+(function(){
+  var stage=document.getElementById('stage'),
+      badge=document.getElementById('badge'),
+      pathBack=document.getElementById('ropeBack'),
+      pathTex=document.getElementById('ropeTex'),
+      peg=document.getElementById('peg'),
+      glare=document.getElementById('glare'),
+      hint=document.getElementById('hint');
+
+  var BADGEW=266, BADGEH=BADGEW*871/560, SLOT=BADGEH*0.09;   // slot = rope attach point on the card
+  var W=0,H=0,anchor={x:0,y:-78};                            // anchor sits ABOVE the frame top
+  var R=11, CARDTOP=R+1, CARDBOT=R+2, P=[],C=[],SEG,CARDH=BADGEH*0.82;
+  var dragging=false,grabDX=0,grabDY=0,mouse={x:0,y:0};
+  var GRAV=0.5,DAMP=0.99,ITER=22;
+  var HMAX=12, htX=0,htY=0, hRX=0,hRY=0;
+
+  function init(){
+    W=stage.clientWidth;H=stage.clientHeight;
+    anchor.x=W/2; anchor.y=-78;
+    var topY=H*0.30;
+    SEG=(topY-anchor.y)/(R+1);
+    P=[]; P.push({x:anchor.x,y:anchor.y,ox:anchor.x,oy:anchor.y,pin:true});
+    for(var i=1;i<=R;i++){var y=anchor.y+SEG*i;P.push({x:anchor.x,y:y,ox:anchor.x,oy:y});}
+    P.push({x:anchor.x,y:topY,ox:anchor.x,oy:topY});                 // CARDTOP (slot)
+    P.push({x:anchor.x,y:topY+CARDH,ox:anchor.x-6,oy:topY+CARDH});   // CARDBOT
+    C=[]; for(var j=0;j<=R;j++)C.push([j,j+1,SEG]);
+    C.push([CARDTOP,CARDBOT,CARDH]);
+    C.push([R,CARDBOT,SEG+CARDH*0.96]);
+    peg.style.left=anchor.x+'px'; peg.style.top=anchor.y+'px';
+  }
+
+  function step(){
+    for(var i=0;i<P.length;i++){var p=P[i];
+      if(p.pin||(dragging&&p.drag))continue;
+      var vx=(p.x-p.ox)*DAMP,vy=(p.y-p.oy)*DAMP;
+      p.ox=p.x;p.oy=p.y;p.x+=vx;p.y+=vy+GRAV;
+    }
+    if(dragging){
+      var cx=mouse.x-grabDX,cy=mouse.y-grabDY,t=P[CARDTOP],b=P[CARDBOT];
+      var curX=(t.x+b.x)/2,curY=(t.y+b.y)/2,ddx=cx-curX,ddy=cy-curY;
+      t.x+=ddx;t.y+=ddy;b.x+=ddx;b.y+=ddy;
+    }
+    for(var k=0;k<ITER;k++){
+      for(var c=0;c<C.length;c++){
+        var a=P[C[c][0]],bb=P[C[c][1]],rest=C[c][2];
+        var dx=bb.x-a.x,dy=bb.y-a.y,d=Math.sqrt(dx*dx+dy*dy)||.001;
+        var diff=(rest-d)/d*0.5,ox=dx*diff,oy=dy*diff;
+        var am=a.pin?0:1,bm=bb.pin?0:1;
+        if(dragging){if(a.drag)am=0;if(bb.drag)bm=0;}
+        if(am+bm===0)continue;
+        if(am&&bm){a.x-=ox;a.y-=oy;bb.x+=ox;bb.y+=oy;}
+        else if(am){a.x-=ox*2;a.y-=oy*2;}else{bb.x+=ox*2;bb.y+=oy*2;}
+      }
+      for(var m=CARDTOP;m<=CARDBOT;m++){
+        if(P[m].x<95)P[m].x=95;if(P[m].x>W-95)P[m].x=W-95;
+        if(P[m].y>H-16)P[m].y=H-16;
+      }
+    }
+  }
+
+  function ropeD(){
+    var d='M '+P[0].x.toFixed(1)+' '+P[0].y.toFixed(1);
+    for(var i=0;i<CARDTOP;i++){
+      var p0=P[i-1]||P[i],p1=P[i],p2=P[i+1],p3=P[i+2]||P[i+1];
+      var c1x=p1.x+(p2.x-p0.x)/6,c1y=p1.y+(p2.y-p0.y)/6;
+      var c2x=p2.x-(p3.x-p1.x)/6,c2y=p2.y-(p3.y-p1.y)/6;
+      d+=' C '+c1x.toFixed(1)+' '+c1y.toFixed(1)+' '+c2x.toFixed(1)+' '+c2y.toFixed(1)+' '+p2.x.toFixed(1)+' '+p2.y.toFixed(1);
+    }
+    return d;
+  }
+
+  function render(){
+    var d=ropeD();
+    pathBack.setAttribute('d',d);pathBack.setAttribute('stroke','#0a3a8f');pathBack.setAttribute('stroke-width','28');
+    pathTex.setAttribute('d',d);pathTex.setAttribute('stroke','url(#strapTex)');pathTex.setAttribute('stroke-width','24');
+    var t=P[CARDTOP],b=P[CARDBOT];
+    var ang=Math.atan2(b.y-t.y,b.x-t.x)*180/Math.PI-90;
+    badge.style.transformOrigin=(BADGEW/2)+'px '+SLOT+'px';
+    badge.style.transform='translate('+(t.x-BADGEW/2)+'px,'+(t.y-SLOT)+'px) rotate('+ang+'deg)'
+      +' rotateX('+hRX.toFixed(2)+'deg) rotateY('+hRY.toFixed(2)+'deg)';
+  }
+
+  function loop(){
+    step();
+    hRX+=(htX-hRX)*0.14; hRY+=(htY-hRY)*0.14;
+    render(); repel();
+    requestAnimationFrame(loop);
+  }
+
+  // ---- intro + chips shoved/squished right by the badge ----
+  var targets=[], R_REP=300, PUSH=66;
+  function setupTargets(){
+    var els=[document.querySelector('.intro')];
+    var chips=document.querySelectorAll('.info .chip');
+    for(var i=0;i<chips.length;i++)els.push(chips[i]);
+    targets=[];
+    for(var a=0;a<els.length;a++){if(els[a])els[a].style.transform='';}
+    for(var b2=0;b2<els.length;b2++){if(!els[b2])continue;var r=els[b2].getBoundingClientRect();
+      targets.push({el:els[b2],l:r.left,t:r.top,rt:r.right,bt:r.bottom,tx:0});}
+  }
+  function repel(){
+    if(!targets.length)return;
+    var br=badge.getBoundingClientRect();var bx=br.left+br.width/2,by=br.top+br.height/2;
+    for(var i=0;i<targets.length;i++){var o=targets[i];
+      var nx=Math.max(o.l,Math.min(bx,o.rt)),ny=Math.max(o.t,Math.min(by,o.bt));
+      var dx=bx-nx,dy=by-ny,dist=Math.sqrt(dx*dx+dy*dy);
+      var target=dist<R_REP?(1-dist/R_REP)*PUSH:0;
+      o.tx+=(target-o.tx)*0.18;
+      if(o.tx>0.3){var sq=1-Math.min(o.tx/PUSH,1)*0.10;o.el.style.transform='translateX('+o.tx.toFixed(1)+'px) scaleX('+sq.toFixed(3)+')';}
+      else o.el.style.transform='';
+    }
+  }
+
+  function pt(e){var r=stage.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top};}
+  badge.addEventListener('pointerdown',function(e){
+    dragging=true;badge.classList.add('grabbing');hint.classList.add('gone');
+    P[CARDTOP].drag=true;P[CARDBOT].drag=true;mouse=pt(e);
+    var cx=(P[CARDTOP].x+P[CARDBOT].x)/2,cy=(P[CARDTOP].y+P[CARDBOT].y)/2;
+    grabDX=mouse.x-cx;grabDY=mouse.y-cy;
+    try{badge.setPointerCapture(e.pointerId);}catch(_){}
+    e.preventDefault();
+  });
+  window.addEventListener('pointermove',function(e){if(dragging)mouse=pt(e);});
+  window.addEventListener('pointerup',function(){if(!dragging)return;dragging=false;badge.classList.remove('grabbing');P[CARDTOP].drag=false;P[CARDBOT].drag=false;});
+
+  badge.addEventListener('pointermove',function(e){
+    if(dragging)return;
+    var r=badge.getBoundingClientRect();
+    var px=(e.clientX-(r.left+r.width/2))/(r.width/2),py=(e.clientY-(r.top+r.height/2))/(r.height/2);
+    px=Math.max(-1,Math.min(1,px));py=Math.max(-1,Math.min(1,py));
+    htY=px*HMAX;htX=-py*HMAX;
+    glare.style.setProperty('--gx',(50+px*50).toFixed(1)+'%');glare.style.setProperty('--gy',(50+py*50).toFixed(1)+'%');
+  });
+  badge.addEventListener('pointerleave',function(){htX=0;htY=0;});
+
+  window.addEventListener('resize',function(){init();setupTargets();});
+  init();setupTargets();loop();
+
+  window.__lanyard={step:step,render:render,repel:repel,P:function(){return P;},
+    tick:function(){step();render();repel();},isDragging:function(){return dragging;},
+    drag:function(x,y){dragging=true;P[CARDTOP].drag=true;P[CARDBOT].drag=true;grabDX=0;grabDY=0;mouse={x:x,y:y};},
+    release:function(){dragging=false;P[CARDTOP].drag=false;P[CARDBOT].drag=false;}};
+})();
+</script>
+</body>
+</html>
