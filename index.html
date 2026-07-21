@@ -178,6 +178,8 @@
   .slide.revealed .drawer{max-height:240px;opacity:1;margin-top:12px}
   .drawer-in{display:flex;flex-direction:column;gap:12px;align-items:flex-start;padding:2px 0 8px}
   .drawer .desc{margin:0;font-size:13.5px;line-height:1.6;color:rgba(233,237,245,.72);max-width:62ch}
+  .drawer .level-note{margin:0;font-size:12px;letter-spacing:.02em;
+    color:color-mix(in srgb,var(--accent) 78%, #fff 6%);font-weight:500}
   .drawer .tabs{display:flex;gap:7px}
   .drawer .tab{font:600 10px/1 ui-monospace,SFMono-Regular,monospace;letter-spacing:.18em;text-transform:uppercase;
     padding:7px 13px;border-radius:999px;cursor:pointer;
@@ -366,19 +368,19 @@
 const REELS = "https://recrjycnqclmqvbcryya.supabase.co/storage/v1/object/public/reels";
 const PIECES = [
   { title:"Recurve", cat:"Puzzle Game Demo", date:"Oct 2025", accent:"#6be3c9", cover:"recurve/recurve_coverbg.png", video:REELS+"/recurve.mp4",
-    desc:"Recall reverse-entropy arrows to repair broken objects and open a path forward — a complete, playable puzzle level built in Unity." },
+    desc:"A puzzle game built on reverse-time archery — inspired by weapons that repair instead of destroy (and the film Tenet). Each arrow mends whatever it passes through on the way back. I switched from bullets to arrows so the flight path reads clearly, then designed scenes that ask you to use those reversing shots in different ways — fixing the environment to get past obstacles and reach the target." },
   { title:"Assassin's Weakness is Love", cat:"Rhythm Game", date:"May 2025", accent:"#b98cff", cover:"assassin/awil_cover.png", video:REELS+"/assassin-l1.mp4",
-    desc:"A rhythm-action game that switches between first-person aiming and third-person sword combat, every hit landing on the beat.",
+    desc:"A rhythm game about an assassin who keeps getting distracted from the job by his feelings for a girl. It flips between two modes — in third-person you run, jump, and duck to slash incoming hearts on the beat; in first-person you pick them off with ranged kunais. Every heart hit scores, and the goal is the highest score.",
     levels:[
-      { label:"Level 1", video:REELS+"/assassin-l1.mp4", desc:"Level 1 — first-person perspective. Line up your shots and fire on the downbeat." },
-      { label:"Level 2", video:REELS+"/assassin-l2.mp4", desc:"Level 2 — third-person slashing. Chain sword combos in time with the rhythm." }
+      { label:"Level 1", video:REELS+"/assassin-l1.mp4", note:"♪ Love Confession （告白气球） — Jay Chou" },
+      { label:"Level 2", video:REELS+"/assassin-l2.mp4", note:"♪ That Girl — Olly Murs" }
     ] },
   { title:"Niflheim Highway", cat:"Racing Experience · Dragon Raja （龙族） novel scene recreation", date:"Sept 2025", accent:"#7aa2f7", cover:"niflheim/niflheim_cover.png", video:REELS+"/niflheim.mp4",
-    desc:"An endless, rain-slicked night race with a scene-switching mechanic that spawns obstacles to read and react to. A tribute to Dragon Raja." },
+    desc:"A tribute to the Dragon Raja scene where a character drives a Maybach out of Niflheim, a god realm ruled by Odin. The road keeps flipping between the ordinary highway and Niflheim's ruined, obstacle-strewn version — you have to react to each shift in time to avoid crashing. Undead warriors chase from behind too: linger too close for a few seconds and they drag you down, forcing a restart." },
   { title:"Toad Defense Tactics", cat:"Tower Defense / Roguelike Game", date:"April 2026", accent:"#8fd66b", cover:"tdt/tdt_cover.png", video:"",
-    desc:"Hold the line with a squad of toads and smart tower placement in this compact tower-defense build." },
+    desc:"Deploy, merge, and evolve an army of frogs to fend off relentless waves in this high-stakes tower-defense roguelike. Every tower is a different class of frog with its own attack; merging duplicates evolves them into stronger, higher-tier versions and hands you random buffs to draft between for roguelike progression. Frogs come from a rarity-based shop of four slots you can reroll for a fresh set." },
   { title:"A Bot Can Do Better", cat:"AI Comedy Game Demo", date:"Mar 2026", accent:"#e0a35e", cover:"drawguess/drawguess_cover.png", video:"",
-    desc:"A fast draw-and-guess party game where an AI bot plays alongside — and against — real players." },
+    desc:"A demo where you're handed a prompt and a short timer to draw it — then an AI bot roasts your drawing, harshly and hilariously. Powered by Gemini's API for the image analysis and the roast." },
 ];
 
 /* Reveal modes.  Change DEFAULT_FX to set which one loads first. */
@@ -405,7 +407,9 @@ const ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strok
 
 /* build slides — N pieces cloned into COPIES sets so the strip loops seamlessly */
 const N = PIECES.length;
-const COPIES = 3;
+const COPIES = 5;   // wider strip: the centred card sits mid-band, so single steps
+                    // (incl. the 5<->1 wrap) never cross the loop boundary mid-glide
+const MID = Math.floor(COPIES/2) * N;   // first slide of the middle copy
 function slideHTML(p,i){ return `
     <div class="card" data-fx="${mode}">
       <div class="face back">
@@ -434,8 +438,9 @@ function slideHTML(p,i){ return `
       </div>
       <div class="drawer">
         <div class="drawer-in">
-          ${p.levels?`<div class="tabs">${p.levels.map((L,li)=>`<button class="tab${li===0?' on':''}" data-video="${L.video}" data-desc="${(L.desc||'').replace(/"/g,'&quot;')}">${L.label}</button>`).join('')}</div>`:''}
-          <p class="desc">${p.levels?p.levels[0].desc:(p.desc||'')}</p>
+          ${p.levels?`<div class="tabs">${p.levels.map((L,li)=>`<button class="tab${li===0?' on':''}" data-video="${L.video}" data-note="${(L.note||'').replace(/"/g,'&quot;')}">${L.label}</button>`).join('')}</div>`:''}
+          <p class="desc">${p.desc||''}</p>
+          ${p.levels?`<p class="level-note">${p.levels[0].note||''}</p>`:''}
         </div>
       </div>
     </div>`; }
@@ -475,11 +480,11 @@ function setMode(m){
 
 /* ---------- layout + infinite-loop plumbing ---------- */
 let cardW = 0, stride = 0, copyW = 0;
-let navLock = false, navTimer = null;                // true while a nav scroll is settling
-function cancelNav(){ navLock = false; clearTimeout(navTimer); navTimer = null; }
-function finalizeNav(){                               // run once the nav scroll has landed
+let navLock = false, navPoll = null;                 // true while a nav scroll is settling
+function cancelNav(){ navLock = false; clearInterval(navPoll); navPoll = null; }
+function finalizeNav(){                               // run once the nav scroll has actually landed
   if(!navLock) return;
-  navLock = false; clearTimeout(navTimer); navTimer = null;
+  navLock = false; clearInterval(navPoll); navPoll = null;
   loopReposition(); render();                         // the single, seamless loop-jump
 }
 function measure(){
@@ -508,9 +513,13 @@ function loopReposition(){
     const d = Math.abs((r.left + r.width/2) - mid);
     if(d < best){ best = d; bi = i; }
   }
-  let moved = 0;
-  if(bi < N) moved = copyW;                          // drifted into the leading copy
-  else if(bi >= slides.length - N) moved = -copyW;   // drifted into the trailing copy
+  // only act when the centred card drifts into the outer buffer copies; then jump by
+  // WHOLE copies (seamless — identical pieces every N slides) to recentre it in the
+  // middle copy, giving maximum room before the next boundary either way.
+  if(bi >= N && bi < slides.length - N) return;      // inside the wide band — leave it
+  let moved = 0, guard = 0;
+  while(bi < MID && guard++ < COPIES){ moved += copyW; bi += N; }
+  while(bi >= MID + N && guard++ < COPIES){ moved -= copyW; bi -= N; }
   if(moved){ rail.scrollLeft += moved; if(press) press.s += moved; }
 }
 
@@ -636,8 +645,8 @@ function switchLevel(tab){
   const slide = tab.closest('.slide');
   if(tab.classList.contains('on')) return;
   slide.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t===tab));
-  const d = slide.querySelector('.drawer .desc');
-  if(d && tab.dataset.desc) d.textContent = tab.dataset.desc;
+  const note = slide.querySelector('.drawer .level-note');
+  if(note && tab.dataset.note) note.textContent = tab.dataset.note;
   const v = slide.querySelector('.clip'), fill = slide.querySelector('.bar span');
   if(v && tab.dataset.video){
     v.classList.remove('live'); if(fill) fill.style.width='0%';
@@ -753,9 +762,16 @@ function centerOn(i){
   if(reduce){ rail.scrollLeft = target; loopReposition(); render(); return; }
   navLock = true;                                     // suppress loop-jump until the scroll settles
   rail.scrollTo({left: target, behavior:'smooth'});
-  navTimer = setTimeout(finalizeNav, 650);            // fallback in case scrollend doesn't fire
+  // finalize only once the glide has actually stopped moving — never mid-scroll
+  let last = rail.scrollLeft, stable = 0, ticks = 0;
+  navPoll = setInterval(()=>{
+    const now = rail.scrollLeft;
+    stable = Math.abs(now - last) < 1.5 ? stable + 1 : 0;
+    last = now;
+    if(stable >= 3 || ++ticks > 60) finalizeNav();    // ~150ms with no movement, or 3s hard cap
+  }, 50);
 }
-rail.addEventListener('scrollend', finalizeNav);      // seamless loop-jump once the glide lands
+rail.addEventListener('scrollend', finalizeNav);      // fast path where supported
 /* JS snap: after free scrolling (wheel/trackpad/drag) settles, glide to the
    nearest card. Replaces CSS scroll-snap, which blocked manual scrolling. */
 let snapTimer = null;
@@ -796,8 +812,14 @@ document.getElementById('navPrev').addEventListener('click',()=>{ if(!isReading(
 document.getElementById('navNext').addEventListener('click',()=>{ if(!isReading()) centerOn(centerIndex+1); });
 
 /* ---------- boot ---------- */
-function boot(){ measure(); centerSlideInstant(N); render(); requestAnimationFrame(()=>rail.classList.add('ready')); }
-addEventListener('resize',()=>{ measure(); centerSlideInstant(centerIndex<0?N:centerIndex); render(); });
+function boot(){
+  measure();
+  if(copyW) centerSlideInstant(MID);                   // centre the middle copy once layout is ready
+  render();
+  setTimeout(()=>rail.classList.add('ready'), 30);     // always reveal the gallery (setTimeout, not rAF)
+  if(!copyW) setTimeout(boot, 80);                      // layout wasn't ready — retry the centring
+}
+addEventListener('resize',()=>{ measure(); centerSlideInstant(centerIndex<0?MID:centerIndex); render(); });
 window.addEventListener('load',boot);
 boot();
 </script>
