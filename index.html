@@ -190,6 +190,9 @@
   .slide.revealed .drawer{max-height:240px;opacity:1;margin-top:12px}
   .drawer-in{display:flex;flex-direction:column;gap:12px;align-items:flex-start;padding:2px 0 8px}
   .drawer .desc{margin:0;font-size:13.5px;line-height:1.6;color:rgba(233,237,245,.72);max-width:62ch}
+  .drawer .desc2{margin:0;font-size:13px;line-height:1.6;max-width:62ch;font-weight:500;
+    color:color-mix(in srgb,var(--accent) 30%, rgba(233,237,245,.85));padding-left:12px;
+    border-left:2px solid color-mix(in srgb,var(--accent) 55%, transparent)}
   .drawer .level-note{margin:0;font-size:12px;letter-spacing:.02em;
     color:color-mix(in srgb,var(--accent) 78%, #fff 6%);font-weight:500}
   .drawer .tabs{display:flex;gap:7px}
@@ -229,7 +232,6 @@
   .nav-arrow.left:hover{transform:translateY(-50%) translateX(-3px)}
   .nav-arrow.right:hover{transform:translateY(-50%) translateX(3px)}
   .nav-arrow svg{width:26px;height:26px}
-  #stage.reading .nav-arrow{opacity:0;pointer-events:none}
 
   /* "scroll for details" hint — over the reel while reading, until the user scrolls */
   .scroll-hint{position:fixed;z-index:20;left:50%;bottom:88px;
@@ -398,9 +400,10 @@ const PIECES = [
     ] },
   { title:"Niflheim Highway", cat:"Racing Experience · Dragon Raja （龙族） novel scene recreation", date:"Sept 2025", accent:"#7aa2f7", cover:"niflheim/niflheim_cover.png", video:REELS+"/niflheim.mp4", hover:REELS+"/niflheim_loop_cover.mp4",
     desc:"A tribute to the Dragon Raja scene where a character drives a Maybach out of Niflheim, a god realm ruled by Odin. The road keeps flipping between the ordinary highway and Niflheim's ruined, obstacle-strewn version — you have to react to each shift in time to avoid crashing. Undead warriors chase from behind too: linger too close for a few seconds and they drag you down, forcing a restart." },
-  { title:"Toad Defense Tactics", cat:"Tower Defense / Roguelike Game", date:"April 2026", accent:"#8fd66b", cover:"tdt/tdt_cover.png", video:"",
-    desc:"Deploy, merge, and evolve an army of frogs to fend off relentless waves in this high-stakes tower-defense roguelike. Every tower is a different class of frog with its own attack; merging duplicates evolves them into stronger, higher-tier versions and hands you random buffs to draft between for roguelike progression. Frogs come from a rarity-based shop of four slots you can reroll for a fresh set." },
-  { title:"A Bot Can Do Better", cat:"AI Comedy Game Demo", date:"Mar 2026", accent:"#e0a35e", cover:"drawguess/drawguess_cover.png", video:"",
+  { title:"Toad Defense Tactics", cat:"Tower Defense / Roguelike Game", date:"April 2026", accent:"#8fd66b", cover:"tdt/tdt_cover.png", video:REELS+"/tdt_video.mp4",
+    desc:"Deploy, merge, and evolve an army of frogs to fend off relentless waves in this high-stakes tower-defense roguelike. Every tower is a different class of frog with its own attack; merging duplicates evolves them into stronger, higher-tier versions and hands you random buffs to draft between for roguelike progression. Frogs come from a rarity-based shop of four slots you can reroll for a fresh set.",
+    desc2:"A big solo project — I built the entire tower-defense system myself: 12 different characters, each with their own attack, 3 trait effects, and 40 waves of enemies." },
+  { title:"A Bot Can Do Better", cat:"AI Comedy Game Demo", date:"Mar 2026", accent:"#e0a35e", cover:"drawguess/drawguess_cover.png", video:REELS+"/drawguess.mp4",
     desc:"A demo where you're handed a prompt and a short timer to draw it — then an AI bot roasts your drawing, harshly and hilariously. Powered by Gemini's API for the image analysis and the roast." },
   { title:"Recurve", cat:"Puzzle Game Demo", date:"Oct 2025", accent:"#6be3c9", cover:"recurve/recurve_coverbg.png", video:REELS+"/recurve.mp4",
     desc:"A puzzle game built on reverse-time archery — inspired by weapons that repair instead of destroy (and the film Tenet). Each arrow mends whatever it passes through on the way back. I switched from bullets to arrows so the flight path reads clearly, then designed scenes that ask you to use those reversing shots in different ways — fixing the environment to get past obstacles and reach the target." },
@@ -466,6 +469,7 @@ function slideHTML(p,i){ return `
         <div class="drawer-in">
           ${p.levels?`<div class="tabs">${p.levels.map((L,li)=>`<button class="tab${li===0?' on':''}" data-video="${L.video}" data-note="${(L.note||'').replace(/"/g,'&quot;')}">${L.label}</button>`).join('')}</div>`:''}
           <p class="desc">${p.desc||''}</p>
+          ${p.desc2?`<p class="desc2">${p.desc2}</p>`:''}
           ${p.levels?`<p class="level-note">${p.levels[0].note||''}</p>`:''}
         </div>
       </div>
@@ -870,8 +874,17 @@ addEventListener('keydown',e=>{
 });
 
 /* side arrows */
-document.getElementById('navPrev').addEventListener('click',()=>{ if(!isReading()) centerOn(centerIndex-1); });
-document.getElementById('navNext').addEventListener('click',()=>{ if(!isReading()) centerOn(centerIndex+1); });
+/* while reading, arrows flip straight to the adjacent reel (browse reels without closing) */
+function readingNav(dir){
+  const o = openSlide(); if(!o) return;
+  closeCard(o);
+  const s = slides[centerIndex + dir]; if(!s) return;
+  rail.scrollLeft = s.offsetLeft + s.clientWidth/2 - rail.clientWidth/2;   // instant, avoids smooth timing
+  loopReposition(); render();
+  openCard(slides[centerIndex]);
+}
+document.getElementById('navPrev').addEventListener('click',()=>{ isReading() ? readingNav(-1) : centerOn(centerIndex-1); });
+document.getElementById('navNext').addEventListener('click',()=>{ isReading() ? readingNav(+1) : centerOn(centerIndex+1); });
 
 /* ---------- boot ---------- */
 function boot(){

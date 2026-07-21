@@ -4,4 +4,7 @@
 
 # Video reels are hosted on Supabase Storage — never commit them to the repo.
 *.mp4
+*.mov
+*.webm
+*.mkv
 web/
