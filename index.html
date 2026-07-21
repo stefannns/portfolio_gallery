@@ -85,7 +85,15 @@
   .face{
     position:absolute;inset:0;border-radius:18px;overflow:hidden;
     border:1px solid var(--line);
-    box-shadow:0 40px 90px -40px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.04);
+    box-shadow:0 40px 90px -40px rgba(0,0,0,.9),
+               0 0 6px -1px color-mix(in srgb,var(--accent) 7%, transparent),   /* barely-there edge */
+               inset 0 1px 0 rgba(255,255,255,.04);
+    transition:box-shadow .4s var(--ease);
+  }
+  .is-center .face{
+    box-shadow:0 40px 90px -40px rgba(0,0,0,.9),
+               0 0 9px -1px color-mix(in srgb,var(--accent) 11%, transparent),   /* just a whisper on the centred card */
+               inset 0 1px 0 rgba(255,255,255,.05);
   }
   .front{
     z-index:2;background:var(--card);transform-origin:50% 50%;
@@ -195,13 +203,24 @@
   .card.open .close{opacity:1;pointer-events:auto}
   .close:hover{border-color:color-mix(in srgb,var(--accent) 60%, transparent);background:rgba(10,11,14,.8)}
   .close svg{width:15px;height:15px}
+  /* mute / unmute — top-left of the reel (autoplays muted; click to hear it) */
+  .mute{position:absolute;z-index:6;top:16px;left:16px;width:40px;height:40px;border-radius:50%;
+    border:1px solid var(--line);background:rgba(10,11,14,.5);color:#fff;display:grid;place-items:center;
+    cursor:pointer;backdrop-filter:blur(6px);opacity:0;pointer-events:none;
+    transition:opacity .3s var(--ease) .15s,border-color .25s,background .25s}
+  .card.open .mute{opacity:1;pointer-events:auto}
+  .mute:hover{border-color:color-mix(in srgb,var(--accent) 60%, transparent);background:rgba(10,11,14,.8)}
+  .mute svg{width:18px;height:18px}
+  .mute .i-sound{display:none}
+  #stage.sound-on .mute .i-muted{display:none}
+  #stage.sound-on .mute .i-sound{display:block}
 
   /* minimalist scroll arrows — suggest horizontal browsing, hidden while reading */
   .nav-arrow{position:absolute;z-index:12;top:50%;transform:translateY(-50%);
     width:44px;height:44px;display:grid;place-items:center;cursor:pointer;background:none;border:0;
     color:var(--muted);opacity:.5;transition:opacity .3s var(--ease),color .25s,transform .25s var(--ease)}
-  .nav-arrow.left{left:12px}
-  .nav-arrow.right{right:12px}
+  .nav-arrow.left{left:6vw}
+  .nav-arrow.right{right:6vw}
   .nav-arrow:hover{opacity:1;color:var(--ink)}
   .nav-arrow.left:hover{transform:translateY(-50%) translateX(-3px)}
   .nav-arrow.right:hover{transform:translateY(-50%) translateX(3px)}
@@ -404,6 +423,8 @@ const pad2 = n => String(n+1).padStart(2,'0');
 
 const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
 const ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const ICON_MUTED = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 9.5l5 5m0-5l-5 5"/></svg>';
+const ICON_SOUND = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9.2a4 4 0 010 5.6"/><path d="M18.5 7a7.5 7.5 0 010 10"/></svg>';
 
 /* build slides — N pieces cloned into COPIES sets so the strip loops seamlessly */
 const N = PIECES.length;
@@ -418,6 +439,7 @@ function slideHTML(p,i){ return `
           <div class="bigplay">${ICON_PLAY}</div>
           <div class="hud-b"><span class="tc tc-cur">0:00</span><div class="bar"><span></span></div><span class="tc tc-dur">0:00</span></div>
         </div>
+        ${p.video?`<button class="mute" aria-label="Toggle sound"><span class="i-muted">${ICON_MUTED}</span><span class="i-sound">${ICON_SOUND}</span></button>`:''}
         <button class="close" aria-label="Close">${ICON_X}</button>
       </div>
       <div class="face front">
@@ -628,17 +650,26 @@ rail.addEventListener('click',e=>{
   const slide = e.target.closest('.slide'); if(!slide) return;
   const card = slide.querySelector('.card');
   if(e.target.closest('.close')){ closeCard(slide); return; }           // X closes
+  if(e.target.closest('.mute')){ toggleMute(slide); return; }           // sound on/off
   if(card.classList.contains('open')){ toggleVideo(slide); return; }   // reel click = play/pause
   const i = slides.indexOf(slide);
   if(i!==centerIndex){ centerOn(i); return; }
   openCard(slide, e);
 });
-/* play / pause the reel (no autoplay — user starts it) */
+/* play / pause the reel */
 function toggleVideo(slide){
   const v = slide.querySelector('.clip'), screen = slide.querySelector('.screen');
   if(!v || !v.dataset.src) return;
   if(v.paused){ v.play().then(()=>{screen.classList.add('playing');v.classList.add('live');}).catch(()=>{}); }
   else { v.pause(); screen.classList.remove('playing'); }
+}
+/* sound on/off — reel autoplays muted (browser rule); this unmutes after the fact */
+let wantSound = false;
+function toggleMute(slide){
+  wantSound = !wantSound;
+  stage.classList.toggle('sound-on', wantSound);
+  const v = (slide || openSlide())?.querySelector('.clip');
+  if(v) v.muted = !wantSound;
 }
 /* switch the reel + description between levels (e.g. Assassin L1 / L2) */
 function switchLevel(tab){
@@ -651,7 +682,8 @@ function switchLevel(tab){
   if(v && tab.dataset.video){
     v.classList.remove('live'); if(fill) fill.style.width='0%';
     v.src = tab.dataset.video;
-    v.play().then(()=>v.classList.add('live')).catch(()=>{});
+    v.muted = true;
+    v.play().then(()=>{ v.classList.add('live'); if(wantSound) v.muted=false; }).catch(()=>{});
     v.addEventListener('playing',()=>v.classList.add('live'),{once:true});
   }
 }
@@ -745,7 +777,8 @@ function loadVideo(slide){   // load the reel and autoplay (muted) as soon as th
   if(v && v.dataset.src){
     if(!v.src) v.src=v.dataset.src;
     wireScrubber(slide, v);
-    v.play().then(()=>{screen.classList.add('playing');v.classList.add('live');}).catch(()=>{});
+    v.muted = true;   // start muted so autoplay is allowed
+    v.play().then(()=>{screen.classList.add('playing');v.classList.add('live'); if(wantSound) v.muted=false;}).catch(()=>{});
     v.addEventListener('playing',()=>{screen.classList.add('playing');v.classList.add('live');},{once:true});
   }
 }
