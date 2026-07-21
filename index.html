@@ -50,7 +50,7 @@
   .rail.dragging{cursor:grabbing}
   .rail::-webkit-scrollbar{display:none}
   /* reading state (a card is open): freeze horizontal, allow vertical scroll for the dropdown */
-  #stage.reading .rail{overflow-x:hidden;overflow-y:auto;cursor:default;touch-action:pan-y}
+  #stage.reading .rail{overflow-x:hidden;overflow-y:auto;align-items:center;cursor:default;touch-action:pan-y}
 
   .slide{
     flex:0 0 var(--cw);
@@ -74,7 +74,11 @@
     transition:opacity .35s var(--ease);
   }
   .slidecap .title{margin:0;font-weight:600;letter-spacing:.01em;font-size:17px;line-height:1.25;color:rgba(244,246,250,.82);text-wrap:balance}
-  .slidecap .cat{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:color-mix(in srgb,var(--accent) 70%, transparent);font-weight:600}
+  .slidecap .cap-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;width:100%}
+  .slidecap .cat{font-size:11px;letter-spacing:.22em;text-transform:uppercase;line-height:1.5;
+    color:color-mix(in srgb,var(--accent) 70%, transparent);font-weight:600;flex:1;min-width:0}
+  .slidecap .date{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;
+    font-variant-numeric:tabular-nums;white-space:nowrap;flex:none;padding-top:2px}
   @keyframes cardin{from{opacity:0}to{opacity:1}}
 
   /* ---------- FACES (front on top, back beneath) ---------- */
@@ -166,7 +170,9 @@
   .bar span{display:block;height:100%;width:0;background:var(--accent);transition:width .12s linear}
   .tc{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted);letter-spacing:.04em;font-variant-numeric:tabular-nums}
   /* description dropdown — extends BELOW the card frame, opens on reveal */
-  .below{width:100%}
+  /* caption + dropdown hang BELOW the card, out of flow — so opening (which expands
+     the dropdown) never grows the slide or shoves the card up off the top edge */
+  .below{position:absolute;top:100%;left:0;right:0;width:100%}
   .drawer{max-height:0;opacity:0;overflow:hidden;
     transition:max-height .5s var(--ease), opacity .4s var(--ease), margin-top .5s var(--ease)}
   .slide.revealed .drawer{max-height:240px;opacity:1;margin-top:12px}
@@ -181,7 +187,7 @@
   .drawer .tab.on{color:#06070a;background:var(--accent);border-color:transparent}
   /* close — top-right of the card frame, shown while reading */
   .close{position:absolute;z-index:6;top:16px;right:16px;width:40px;height:40px;border-radius:50%;
-    border:1px solid var(--line);background:rgba(10,11,14,.5);color:var(--ink);display:grid;place-items:center;
+    border:1px solid var(--line);background:rgba(10,11,14,.5);color:#fff;display:grid;place-items:center;
     cursor:pointer;backdrop-filter:blur(6px);opacity:0;pointer-events:none;
     transition:opacity .3s var(--ease) .15s,border-color .25s,background .25s}
   .card.open .close{opacity:1;pointer-events:auto}
@@ -199,6 +205,19 @@
   .nav-arrow.right:hover{transform:translateY(-50%) translateX(3px)}
   .nav-arrow svg{width:26px;height:26px}
   #stage.reading .nav-arrow{opacity:0;pointer-events:none}
+
+  /* "scroll for details" hint — over the reel while reading, until the user scrolls */
+  .scroll-hint{position:fixed;z-index:20;left:50%;bottom:88px;
+    display:flex;align-items:center;gap:9px;padding:9px 16px;border-radius:999px;
+    border:1px solid var(--line);background:rgba(10,11,14,.62);backdrop-filter:blur(10px);
+    font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);white-space:nowrap;
+    opacity:0;pointer-events:none;transform:translate(-50%,10px);
+    transition:opacity .4s var(--ease),transform .4s var(--ease)}
+  .scroll-hint svg{width:15px;height:15px;color:var(--accent)}
+  #stage.reading.can-scroll .scroll-hint{opacity:1;transform:translate(-50%,0);animation:hintbob 1.7s var(--ease) infinite}
+  #stage.reading.can-scroll.scrolled .scroll-hint{opacity:0;transform:translate(-50%,10px);animation:none}
+  @keyframes hintbob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,5px)}}
+  @media (prefers-reduced-motion:reduce){ #stage.reading.can-scroll .scroll-hint{animation:none} }
 
   /* ============================================================= *
    *  REVEAL FX — the front's exit animation, switchable per mode
@@ -331,6 +350,10 @@
       <div class="counter"><span id="cur">01</span><span class="sep">/</span><span id="tot">05</span></div>
       <div class="dots" id="dots"></div>
     </div>
+    <div class="scroll-hint" id="scrollHint" aria-hidden="true">
+      <span>scroll for details</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
   </main>
 
 <script>
@@ -342,19 +365,19 @@
 /* Reels hosted on Supabase Storage (public bucket). Swap this base if you move hosts. */
 const REELS = "https://recrjycnqclmqvbcryya.supabase.co/storage/v1/object/public/reels";
 const PIECES = [
-  { title:"Recurve", cat:"Puzzle Game Demo", accent:"#6be3c9", cover:"recurve/recurve_coverbg.png", video:REELS+"/recurve.mp4",
+  { title:"Recurve", cat:"Puzzle Game Demo", date:"Oct 2025", accent:"#6be3c9", cover:"recurve/recurve_coverbg.png", video:REELS+"/recurve.mp4",
     desc:"Recall reverse-entropy arrows to repair broken objects and open a path forward — a complete, playable puzzle level built in Unity." },
-  { title:"Assassin's Weakness is Love", cat:"Rhythm Game", accent:"#b98cff", cover:"assassin/awil_cover.png", video:REELS+"/assassin-l1.mp4",
+  { title:"Assassin's Weakness is Love", cat:"Rhythm Game", date:"May 2025", accent:"#b98cff", cover:"assassin/awil_cover.png", video:REELS+"/assassin-l1.mp4",
     desc:"A rhythm-action game that switches between first-person aiming and third-person sword combat, every hit landing on the beat.",
     levels:[
       { label:"Level 1", video:REELS+"/assassin-l1.mp4", desc:"Level 1 — first-person perspective. Line up your shots and fire on the downbeat." },
       { label:"Level 2", video:REELS+"/assassin-l2.mp4", desc:"Level 2 — third-person slashing. Chain sword combos in time with the rhythm." }
     ] },
-  { title:"Niflheim Highway", cat:"Racing Game", accent:"#7aa2f7", cover:"niflheim/racing_cover.png", video:REELS+"/niflheim.mp4",
+  { title:"Niflheim Highway", cat:"Racing Experience · Dragon Raja （龙族） novel scene recreation", date:"Sept 2025", accent:"#7aa2f7", cover:"niflheim/niflheim_cover.png", video:REELS+"/niflheim.mp4",
     desc:"An endless, rain-slicked night race with a scene-switching mechanic that spawns obstacles to read and react to. A tribute to Dragon Raja." },
-  { title:"Toad Defense Tactics", cat:"Tower Defense", accent:"#8fd66b", cover:"", video:"",
+  { title:"Toad Defense Tactics", cat:"Tower Defense / Roguelike Game", date:"April 2026", accent:"#8fd66b", cover:"tdt/tdt_cover.png", video:"",
     desc:"Hold the line with a squad of toads and smart tower placement in this compact tower-defense build." },
-  { title:"A Bot Can Do Better", cat:"AI Party Game", accent:"#e0a35e", cover:"drawguess/drawguess_cover.png", video:"",
+  { title:"A Bot Can Do Better", cat:"AI Comedy Game Demo", date:"Mar 2026", accent:"#e0a35e", cover:"drawguess/drawguess_cover.png", video:"",
     desc:"A fast draw-and-guess party game where an AI bot plays alongside — and against — real players." },
 ];
 
@@ -403,7 +426,10 @@ function slideHTML(p,i){ return `
     </div>
     <div class="below">
       <div class="slidecap">
-        <span class="cat">${p.cat}</span>
+        <div class="cap-top">
+          <span class="cat">${p.cat}</span>
+          ${p.date?`<span class="date">${p.date}</span>`:''}
+        </div>
         <h3 class="title">${p.title}</h3>
       </div>
       <div class="drawer">
@@ -449,6 +475,13 @@ function setMode(m){
 
 /* ---------- layout + infinite-loop plumbing ---------- */
 let cardW = 0, stride = 0, copyW = 0;
+let navLock = false, navTimer = null;                // true while a nav scroll is settling
+function cancelNav(){ navLock = false; clearTimeout(navTimer); navTimer = null; }
+function finalizeNav(){                               // run once the nav scroll has landed
+  if(!navLock) return;
+  navLock = false; clearTimeout(navTimer); navTimer = null;
+  loopReposition(); render();                         // the single, seamless loop-jump
+}
 function measure(){
   cardW = slides[0].getBoundingClientRect().width;
   rail.style.paddingLeft = '0px';
@@ -464,7 +497,7 @@ function centerSlideInstant(i){
 /* keep the scroll position inside the middle copy; jump by a whole copy when it
    drifts out, so there's always a full set of cards on either side to wrap into */
 function loopReposition(){
-  if(!copyW || !slides.length) return;
+  if(!copyW || !slides.length || navLock) return;   // don't jump mid nav-animation (caused 1<->5 stick)
   // Key off which card is centred (not raw scrollLeft): cards are narrower than
   // the viewport, so a centred edge card would trip a raw-scrollLeft threshold and
   // jump mid-snap, leaving the card off-centre. Keep the centred card in the middle copy.
@@ -518,6 +551,7 @@ function render(){
 }
 let raf=null;
 rail.addEventListener('scroll',()=>{ if(raf)return; raf=requestAnimationFrame(()=>{raf=null;render();}); },{passive:true});
+rail.addEventListener('scroll',()=>{ if(isReading() && rail.scrollTop > 24) stage.classList.add('scrolled'); },{passive:true});   // dismiss the scroll hint
 
 /* ---------- mouse tilt on centered card ---------- */
 rail.addEventListener('pointermove',e=>{
@@ -539,6 +573,7 @@ rail.addEventListener('pointerleave',()=>{ tiltX=tiltY=0; render(); });
 rail.addEventListener('wheel',e=>{
   if(e.ctrlKey || isReading()) return;                         // frozen while reading
   if(Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;         // vertical intent -> let the page scroll
+  cancelNav();
   rail.scrollLeft += e.deltaX; loopReposition(); scheduleSnap(120); e.preventDefault();
 },{passive:false});
 
@@ -550,6 +585,7 @@ let press = null, dragMoved = 0;
 rail.addEventListener('pointerdown',e=>{
   if(isReading()) return;                                                // no sideways drag while reading
   if(e.target.closest('.close') || e.target.closest('.hud-b')) return;   // scrubber handles its own drags
+  cancelNav();
   press = {x:e.clientX, s:rail.scrollLeft, moved:0, id:e.pointerId, dragging:false};
 });
 rail.addEventListener('pointermove',e=>{
@@ -624,17 +660,21 @@ function openCard(slide, ev){
   card.classList.add('open');
   slide.classList.add('revealed');               // drop the description dropdown below the frame
   stage.classList.add('reading');                // freeze sideways scroll, allow vertical, show close-X
+  stage.classList.remove('scrolled','can-scroll');
   rail.scrollTop = 0;
   if(mode==='ripple' && !reduce) rippleBurst(card, ev);
-  loadVideo(slide);                              // load the reel but DON'T autoplay
+  loadVideo(slide);                              // autoplay the reel
   render();                                       // flatten the opened card (no 3D)
+  // show the scroll hint only once the dropdown has expanded AND there's overflow to scroll
+  clearTimeout(stage._hintT);
+  stage._hintT = setTimeout(()=>{ if(isReading()) stage.classList.toggle('can-scroll', rail.scrollHeight > rail.clientHeight + 8); }, 560);
 }
 function closeCard(slide){
   const card = slide.querySelector('.card');
   if(!card.classList.contains('open')) return;
   card.classList.remove('open');
   slide.classList.remove('revealed');              // retract the dropdown
-  if(!slides.some(s=>s.querySelector('.card').classList.contains('open'))) stage.classList.remove('reading');
+  if(!slides.some(s=>s.querySelector('.card').classList.contains('open'))) stage.classList.remove('reading','can-scroll','scrolled');
   if(card.dataset.fx==='glitch' && !reduce){       // glitch the cover back in
     card.classList.add('glitchback');
     clearTimeout(card._gb);
@@ -691,14 +731,13 @@ function wireScrubber(slide, v){
   row.addEventListener('pointerup',   e=>{ scrubbing=false; try{row.releasePointerCapture(e.pointerId)}catch(_){} });
   row.addEventListener('click', e=>e.stopPropagation());   // don't let a seek close the card
 }
-function loadVideo(slide){   // load the reel + wire the scrubber, but do NOT autoplay
+function loadVideo(slide){   // load the reel and autoplay (muted) as soon as the slide opens
   const v=slide.querySelector('.clip'), screen=slide.querySelector('.screen');
   if(v && v.dataset.src){
     if(!v.src) v.src=v.dataset.src;
     wireScrubber(slide, v);
-    v.load();
-    // show the first frame once available so it isn't a black box before play
-    v.addEventListener('playing',()=>v.classList.add('live'),{once:true});
+    v.play().then(()=>{screen.classList.add('playing');v.classList.add('live');}).catch(()=>{});
+    v.addEventListener('playing',()=>{screen.classList.add('playing');v.classList.add('live');},{once:true});
   }
 }
 function pauseVideo(slide){
@@ -709,8 +748,14 @@ function pauseVideo(slide){
 /* ---------- navigation ---------- */
 function centerOn(i){
   const s = slides[i]; if(!s) return;
-  rail.scrollTo({left: s.offsetLeft + s.clientWidth/2 - rail.clientWidth/2, behavior: reduce?'auto':'smooth'});
+  const target = s.offsetLeft + s.clientWidth/2 - rail.clientWidth/2;
+  cancelNav();
+  if(reduce){ rail.scrollLeft = target; loopReposition(); render(); return; }
+  navLock = true;                                     // suppress loop-jump until the scroll settles
+  rail.scrollTo({left: target, behavior:'smooth'});
+  navTimer = setTimeout(finalizeNav, 650);            // fallback in case scrollend doesn't fire
 }
+rail.addEventListener('scrollend', finalizeNav);      // seamless loop-jump once the glide lands
 /* JS snap: after free scrolling (wheel/trackpad/drag) settles, glide to the
    nearest card. Replaces CSS scroll-snap, which blocked manual scrolling. */
 let snapTimer = null;
