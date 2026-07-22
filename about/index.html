@@ -25,18 +25,20 @@
 
   /* ---- interactive stage (left) ---- */
   .stage{
-    position:relative;flex:0 0 460px;height:640px;overflow:visible;perspective:1100px;
+    position:relative;flex:0 0 460px;height:640px;overflow:visible;perspective:820px;
     user-select:none;-webkit-user-select:none;touch-action:none;
   }
   .hint{position:absolute;left:0;right:0;bottom:6px;text-align:center;font-size:10.5px;
     letter-spacing:.22em;text-transform:uppercase;color:var(--faint);pointer-events:none;transition:opacity .5s}
   .hint.gone{opacity:0}
-  svg.rope{position:absolute;inset:0;width:100%;height:100%;z-index:1;overflow:visible;pointer-events:none}
+  svg.rope{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
   svg.rope path{stroke-linecap:butt}   /* flat ribbon ends, not rounded */
-  #ropeBack{stroke:#0a3378}            /* dark woven selvage edges */
-  #ropeMain{stroke:#1f60c4}            /* flat ribbon face */
-  #ropeWeave{stroke:#123f8c;opacity:.5}   /* fine weft weave lines (dashed in JS) */
-  #ropeSheen{stroke:#7aa8ee;opacity:.3}   /* broad, soft satin sheen */
+  svg.ropeback{z-index:1}    /* short bit that tucks behind the slot */
+  svg.ropefront{z-index:6}   /* the rest of the strap, always in front */
+  #ropeBack,#ropeBackB{stroke:#0a3378}     /* dark woven selvage edges */
+  #ropeMain,#ropeMainB{stroke:#1f60c4}     /* flat ribbon face */
+  #ropeWeave{stroke:#123f8c;opacity:.5}    /* fine weft weave lines (dashed in JS) */
+  #ropeSheen{stroke:#7aa8ee;opacity:.3}    /* broad, soft satin sheen */
 
   .badge{position:absolute;top:0;left:0;width:266px;aspect-ratio:560/871;z-index:2;cursor:grab;will-change:transform;transform-style:preserve-3d}
   .badge.grabbing{cursor:grabbing}
@@ -95,7 +97,11 @@
   <div class="wrap">
     <!-- LEFT: draggable lanyard badge -->
     <div class="stage" id="stage">
-      <svg class="rope" id="rope">
+      <svg class="rope ropeback">
+        <path id="ropeBackB" fill="none" stroke-linejoin="round"/>
+        <path id="ropeMainB" fill="none" stroke-linejoin="round"/>
+      </svg>
+      <svg class="rope ropefront">
         <path id="ropeBack"  fill="none" stroke-linejoin="round"/>
         <path id="ropeMain"  fill="none" stroke-linejoin="round"/>
         <path id="ropeWeave" fill="none" stroke-linejoin="round"/>
@@ -124,7 +130,7 @@
       <p class="intro">
         Hi, I'm Stefan — a game designer and AI-driven creator studying Game Design at USC with a minor in
         AI Applications. I love building interactive experiences with AI-powered development tools, from indie
-        student projects to large-scale commercial titles like Golden Spatula (30M+ MAUs). I'm excited
+        student projects to large-scale commercial titles like Golden Spatula with 30M+ MAUs. I'm excited
         for the future of AI-assisted design and development.
       </p>
       <p class="sec-title">Core Skills</p>
@@ -144,6 +150,8 @@
       badge=document.getElementById('badge'),
       ropeBack=document.getElementById('ropeBack'),
       ropeMain=document.getElementById('ropeMain'),
+      ropeBackB=document.getElementById('ropeBackB'),
+      ropeMainB=document.getElementById('ropeMainB'),
       ropeSheen=document.getElementById('ropeSheen'),
       hint=document.getElementById('hint');
 
@@ -152,7 +160,7 @@
   var R=11, CARDTOP=R+1, CARDBOT=R+2, P=[],C=[],SEG,CARDH=BADGEH*0.82,SCALE=1,TOPY=0;
   var dragging=false,grabDX=0,grabDY=0,mouse={x:0,y:0};
   var GRAV=0.5,DAMP=0.99,ITER=22;
-  var HMAX=12, htX=0,htY=0, hRX=0,hRY=0;
+  var HMAX=24, htX=0,htY=0, hRX=0,hRY=0;
 
   function init(){
     W=stage.clientWidth;H=stage.clientHeight;
@@ -207,10 +215,17 @@
 
   // one continuous Catmull-Rom path (clamped to the rope points so the end
   // tangent isn't pulled toward the card bottom), stroked as a smooth satin ribbon
-  function ropeD(){
-    var d='M '+P[0].x.toFixed(1)+' '+P[0].y.toFixed(1);
-    for(var i=0;i<CARDTOP;i++){
-      var p0=P[i-1<0?0:i-1],p1=P[i],p2=P[i+1],p3=P[i+2>CARDTOP?CARDTOP:i+2];
+  // soft hover reaction (weighted deformation): only the lower strap leans with the card;
+  // the weight fades cubically to ~0 toward the top so most of the strap stays soft.
+  function tp(i){
+    var p=P[i], w=i/CARDTOP; w=w*w*w; var x=p.x, y=p.y;
+    if(i===CARDTOP){ var a=P[CARDTOP-1]; x=a.x+(p.x-a.x)*0.85; y=a.y+(p.y-a.y)*0.85; } // reach into the slot, but not overhang below it
+    return {x:x+hRY*0.30*w, y:y-hRX*0.12*w};
+  }
+  function buildPath(a,b){
+    var s=tp(a), d='M '+s.x.toFixed(1)+' '+s.y.toFixed(1);
+    for(var i=a;i<b;i++){
+      var p0=tp(i-1<0?0:i-1),p1=tp(i),p2=tp(i+1),p3=tp(i+2>CARDTOP?CARDTOP:i+2);
       var c1x=p1.x+(p2.x-p0.x)/6,c1y=p1.y+(p2.y-p0.y)/6;
       var c2x=p2.x-(p3.x-p1.x)/6,c2y=p2.y-(p3.y-p1.y)/6;
       d+=' C '+c1x.toFixed(1)+' '+c1y.toFixed(1)+' '+c2x.toFixed(1)+' '+c2y.toFixed(1)+' '+p2.x.toFixed(1)+' '+p2.y.toFixed(1);
@@ -218,12 +233,15 @@
     return d;
   }
   function renderStrap(){
-    var d=ropeD();
+    // single solid strap, fully in front, ending right at the slot opening
+    var d=buildPath(0, CARDTOP);
+    var wM=(29*SCALE).toFixed(1);
     ropeBack.setAttribute('d',d);  ropeBack.setAttribute('stroke-width',(32*SCALE).toFixed(1));
-    ropeMain.setAttribute('d',d);  ropeMain.setAttribute('stroke-width',(29*SCALE).toFixed(1));
-    ropeWeave.setAttribute('d',d); ropeWeave.setAttribute('stroke-width',(29*SCALE).toFixed(1));
-    ropeWeave.setAttribute('stroke-dasharray',(1.3*SCALE).toFixed(2)+' '+(1.5*SCALE).toFixed(2));  // fine weft lines follow the curve
+    ropeMain.setAttribute('d',d);  ropeMain.setAttribute('stroke-width',wM);
+    ropeWeave.setAttribute('d',d); ropeWeave.setAttribute('stroke-width',wM);
+    ropeWeave.setAttribute('stroke-dasharray',(1.3*SCALE).toFixed(2)+' '+(1.5*SCALE).toFixed(2));
     ropeSheen.setAttribute('d',d); ropeSheen.setAttribute('stroke-width',(14*SCALE).toFixed(1));
+    ropeBackB.setAttribute('d',''); ropeMainB.setAttribute('d','');
   }
 
   function render(){
@@ -231,8 +249,9 @@
     var t=P[CARDTOP],b=P[CARDBOT];
     var ang=Math.atan2(b.y-t.y,b.x-t.x)*180/Math.PI-90;
     badge.style.transformOrigin=(BADGEW/2)+'px '+SLOT+'px';
-    badge.style.transform='translate('+(t.x-BADGEW/2)+'px,'+(t.y-SLOT)+'px) rotate('+ang+'deg) scale('+SCALE.toFixed(3)+')'
-      +' rotateX('+hRX.toFixed(2)+'deg) rotateY('+hRY.toFixed(2)+'deg)';
+    // card tilts in place (pivot at the slot); the strap's soft reaction is handled per-point in ropeD()
+    badge.style.transformOrigin=(BADGEW/2)+'px '+SLOT+'px';
+    badge.style.transform='translate('+(t.x-BADGEW/2)+'px,'+(t.y-SLOT)+'px) rotate('+ang+'deg) scale('+SCALE.toFixed(3)+') rotateX('+hRX.toFixed(2)+'deg) rotateY('+hRY.toFixed(2)+'deg)';
   }
 
   function loop(){
