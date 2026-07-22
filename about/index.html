@@ -208,7 +208,7 @@
       // never let the card invert over the top (only when not dragging, so drags stay smooth)
       if(!dragging && P[CARDBOT].y<P[CARDTOP].y)P[CARDBOT].y=P[CARDTOP].y;
       for(var m=CARDTOP;m<=CARDBOT;m++){
-        if(P[m].x<95)P[m].x=95;if(P[m].x>W-40)P[m].x=W-40;
+        if(P[m].x<95)P[m].x=95;if(P[m].x>W-22)P[m].x=W-22;
         if(P[m].y>H-16)P[m].y=H-16;
       }
     }
@@ -264,7 +264,7 @@
 
   // ---- intro + chips shoved/squished right by the badge ----
   // each intro line + each chip reacts individually to the badge's proximity (a ripple)
-  var targets=[], rows=[], PUSHMAX=60, THRESH=30, VRANGE=150, wrapEl=document.querySelector('.wrap');
+  var targets=[], rows=[], PUSHMAX=85, HRANGE=250, VRANGE=180, wrapEl=document.querySelector('.wrap');
   function setupTargets(){
     var intro=document.querySelector('.intro');
     if(!intro.dataset.orig) intro.dataset.orig=intro.textContent.replace(/\s+/g,' ').trim();
@@ -300,13 +300,20 @@
     if(!targets.length)return;
     var br=badge.getBoundingClientRect();
     var maxRight=wrapEl.getBoundingClientRect().right-4;
-    // 1) each element's own proximity push
+    // 1) each element's own proximity push — measured from the badge CENTER so there's a real
+    //    approach range as the card is dragged/swung toward the text (edge-based had almost none)
+    var bcx=br.left+br.width/2;
+    // gate on how far the badge has been dragged toward the text from its rest (stage-center) position.
+    // this is layout-independent, so it's 0 at rest on every viewport and ramps as you drag right.
+    var sr=stage.getBoundingClientRect(), restBcx=sr.left+stage.clientWidth/2;
+    var sw=stage.clientWidth;
+    var gate=Math.max(0,Math.min(1,(bcx-restBcx)/(sw*0.42)));
     for(var i=0;i<targets.length;i++){var o=targets[i];
-      var gap=o.l-br.right;
-      var hfac=Math.max(0,Math.min(1,(THRESH-gap)/THRESH));
       var vy=(o.cy<br.top)?br.top-o.cy:(o.cy>br.bottom?o.cy-br.bottom:0);
       var vfac=Math.max(0,1-vy/VRANGE);
-      o.raw=Math.min(PUSHMAX*hfac*vfac, Math.max(0,maxRight-o.rt));
+      var indiv=Math.max(0.4,Math.min(1,1-(o.l-bcx)/(sw*1.4)));  // elements closer to the badge react a bit more (individual)
+      o.force=PUSHMAX*gate*vfac*indiv;                    // full desired push
+      o.raw=Math.min(o.force, Math.max(0,maxRight-o.rt)); // translate part (capped to container room)
     }
     // 2) resolve overlaps within a row: a pushed element shoves the ones to its right
     for(var r=0;r<rows.length;r++){var row=rows[r];
@@ -315,10 +322,11 @@
         if(row[j].raw<need)row[j].raw=need;
       }
     }
-    // 3) ease + apply
+    // 3) ease + apply — translate where there's room, plus compress (so it still reacts when the column fills the width)
     for(var k=0;k<targets.length;k++){var o2=targets[k];
       o2.tx+=(o2.raw-o2.tx)*0.2;
-      o2.el.style.transform=o2.tx>0.3?('translateX('+o2.tx.toFixed(1)+'px)'):'';
+      o2.sq=(o2.sq||1)+((1-Math.min((o2.force||0)/PUSHMAX,1)*0.14)-(o2.sq||1))*0.2;
+      o2.el.style.transform=(o2.tx>0.3||o2.sq<0.995)?('translateX('+o2.tx.toFixed(1)+'px) scaleX('+o2.sq.toFixed(3)+')'):'';
     }
   }
 
