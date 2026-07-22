@@ -159,7 +159,7 @@
     SCALE=Math.max(0.5,Math.min(1,(W-12)/BADGEW));   // shrink the badge to fit narrow stages
     CARDH=BADGEH*0.82*SCALE;
     anchor.x=W/2; anchor.y=-110;
-    var topY=H*0.30; TOPY=topY;
+    var topY=H*0.24; TOPY=topY;
     SEG=(topY-anchor.y)/(R+1);
     P=[]; P.push({x:anchor.x,y:anchor.y,ox:anchor.x,oy:anchor.y,pin:true});
     for(var i=1;i<=R;i++){var y=anchor.y+SEG*i;P.push({x:anchor.x,y:y,ox:anchor.x,oy:y});}
