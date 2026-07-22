@@ -68,12 +68,13 @@
     repeating-linear-gradient(90deg,var(--muted) 0 1px,transparent 1px 3px,var(--muted) 3px 4px,transparent 4px 7px,var(--muted) 7px 9px,transparent 9px 11px)}
 
   /* ---- info (right) ---- */
-  .info{flex:1;min-width:0;align-self:center;max-width:520px}
+  .info{flex:1;min-width:0;align-self:center;max-width:520px;transform-origin:right center;will-change:transform}
   .intro{margin:0;color:rgba(244,246,250,.8);font-size:15px;line-height:1.72}
   .sec-title{font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--faint);font-weight:600;margin:34px 0 14px}
   .skills{display:flex;flex-wrap:wrap;gap:9px}
   .chip{font-size:12.5px;color:rgba(244,246,250,.9);padding:7px 15px;border-radius:999px;border:1px solid var(--line);background:transparent}
-  .info .intro,.info .chip,.info .sec-title{transform-origin:right center;will-change:transform}
+  .info .ln{display:block}
+  .info .ln,.info .chip,.info .sec-title{transform-origin:right center;will-change:transform}
 
   /* stay two-column so the text is NEVER under the badge — the badge scales to fit */
   @media (max-width:900px){
@@ -207,7 +208,7 @@
       // never let the card invert over the top (only when not dragging, so drags stay smooth)
       if(!dragging && P[CARDBOT].y<P[CARDTOP].y)P[CARDBOT].y=P[CARDTOP].y;
       for(var m=CARDTOP;m<=CARDBOT;m++){
-        if(P[m].x<95)P[m].x=95;if(P[m].x>W-95)P[m].x=W-95;
+        if(P[m].x<95)P[m].x=95;if(P[m].x>W-40)P[m].x=W-40;
         if(P[m].y>H-16)P[m].y=H-16;
       }
     }
@@ -262,33 +263,62 @@
   }
 
   // ---- intro + chips shoved/squished right by the badge ----
-  var targets=[], PUSHMAX=90, VRANGE=180, wrapEl=document.querySelector('.wrap');
+  // each intro line + each chip reacts individually to the badge's proximity (a ripple)
+  var targets=[], rows=[], PUSHMAX=60, THRESH=30, VRANGE=150, wrapEl=document.querySelector('.wrap');
   function setupTargets(){
-    var els=[document.querySelector('.intro'),document.querySelector('.sec-title')];
-    var chips=document.querySelectorAll('.info .chip');
-    for(var i=0;i<chips.length;i++)els.push(chips[i]);
+    var intro=document.querySelector('.intro');
+    if(!intro.dataset.orig) intro.dataset.orig=intro.textContent.replace(/\s+/g,' ').trim();
+    document.querySelector('.info').style.transform='';
+    // split into words, group into visual lines by offsetTop, rebuild as block line-spans
+    var words=intro.dataset.orig.split(' ');
+    intro.innerHTML=words.map(function(w){return '<span class="w">'+w+'</span>';}).join(' ');
+    var ws=intro.querySelectorAll('.w'), lines=[], cur=[], top=null;
+    for(var i=0;i<ws.length;i++){var ot=ws[i].offsetTop;
+      if(top===null){top=ot;cur=[ws[i].textContent];}
+      else if(Math.abs(ot-top)<4){cur.push(ws[i].textContent);}
+      else{lines.push(cur.join(' '));cur=[ws[i].textContent];top=ot;}}
+    if(cur.length)lines.push(cur.join(' '));
+    intro.innerHTML=lines.map(function(t){return '<span class="ln">'+t+'</span>';}).join('');
+    // targets = each line + label + each chip
+    var els=[];
+    var lnEls=intro.querySelectorAll('.ln'); for(var a=0;a<lnEls.length;a++)els.push(lnEls[a]);
+    var sec=document.querySelector('.sec-title'); if(sec)els.push(sec);
+    var chips=document.querySelectorAll('.info .chip'); for(var c=0;c<chips.length;c++)els.push(chips[c]);
     targets=[];
-    for(var a=0;a<els.length;a++){if(els[a])els[a].style.transform='';}
-    for(var b2=0;b2<els.length;b2++){if(!els[b2])continue;var r=els[b2].getBoundingClientRect();
-      targets.push({el:els[b2],l:r.left,t:r.top,rt:r.right,bt:r.bottom,tx:0});}
+    for(var m=0;m<els.length;m++)els[m].style.transform='';
+    for(var n=0;n<els.length;n++){var r=els[n].getBoundingClientRect();
+      targets.push({el:els[n],l:r.left,rt:r.right,cy:(r.top+r.bottom)/2,raw:0,tx:0});}
+    // group targets into rows (same line) so chips in a row shove each other instead of overlapping
+    var sorted=targets.slice().sort(function(a,b){return (a.cy-b.cy)||(a.l-b.l);});
+    rows=[]; var rr=[], rcy=null;
+    for(var s=0;s<sorted.length;s++){var t=sorted[s];
+      if(rcy===null||Math.abs(t.cy-rcy)<12){rr.push(t); if(rcy===null)rcy=t.cy;}
+      else{rows.push(rr); rr=[t]; rcy=t.cy;}}
+    if(rr.length)rows.push(rr);
   }
   function repel(){
     if(!targets.length)return;
     var br=badge.getBoundingClientRect();
-    var bRight=br.right, bcY=br.top+br.height/2;
-    var maxRight=wrapEl.getBoundingClientRect().right-4;   // never cross the container edge
+    var maxRight=wrapEl.getBoundingClientRect().right-4;
+    // 1) each element's own proximity push
     for(var i=0;i<targets.length;i++){var o=targets[i];
-      // vertical falloff: only elements near the badge's height react
-      var vy=bcY<o.t?o.t-bcY:(bcY>o.bt?bcY-o.bt:0);
+      var gap=o.l-br.right;
+      var hfac=Math.max(0,Math.min(1,(THRESH-gap)/THRESH));
+      var vy=(o.cy<br.top)?br.top-o.cy:(o.cy>br.bottom?o.cy-br.bottom:0);
       var vfac=Math.max(0,1-vy/VRANGE);
-      // horizontal intrusion: how far the badge's right edge has passed the element's left (0 at rest)
-      var intr=bRight-o.l+12;
-      var target=(intr>0?Math.min(intr,PUSHMAX):0)*vfac;
-      var cap=Math.max(0,maxRight-o.rt);   // clamp so the element stays inside the container
-      if(target>cap)target=cap;
-      o.tx+=(target-o.tx)*0.2;
-      if(o.tx>0.3){var sq=1-Math.min(o.tx/PUSHMAX,1)*0.10;o.el.style.transform='translateX('+o.tx.toFixed(1)+'px) scaleX('+sq.toFixed(3)+')';}
-      else o.el.style.transform='';
+      o.raw=Math.min(PUSHMAX*hfac*vfac, Math.max(0,maxRight-o.rt));
+    }
+    // 2) resolve overlaps within a row: a pushed element shoves the ones to its right
+    for(var r=0;r<rows.length;r++){var row=rows[r];
+      for(var j=1;j<row.length;j++){
+        var need=row[j-1].raw-(row[j].l-row[j-1].rt)+6;   // keep a 6px gap from the previous, pushed element
+        if(row[j].raw<need)row[j].raw=need;
+      }
+    }
+    // 3) ease + apply
+    for(var k=0;k<targets.length;k++){var o2=targets[k];
+      o2.tx+=(o2.raw-o2.tx)*0.2;
+      o2.el.style.transform=o2.tx>0.3?('translateX('+o2.tx.toFixed(1)+'px)'):'';
     }
   }
 
