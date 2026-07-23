@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Animal Stacker - Web Mode</title>
+    <style>
+        @font-face {
+            font-family: 'Rubik';
+            src: url('libs/fonts/Rubik-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #222;
+        }
+        #stage {
+            position: relative;
+            width: 360px;
+            height: 640px;
+        }
+        #cam {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #555;
+        }
+        canvas {
+            position: absolute;
+            inset: 0;
+            display: block;
+            width: 360px;
+            height: 640px;
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div id="stage">
+        <!-- preview stand-in for the effect pack's camera feed -->
+        <video id="cam" autoplay playsinline muted></video>
+        <canvas id="gameCanvas" width="1080" height="1920"></canvas>
+    </div>
+    <script src="./tempsdk.js"></script>
+    <script src="libs/js-yaml.js"></script>
+    <script src="libs/phaser.js"></script>
+    <!-- poly-decomp: Phaser's Bodies.fromVertices reads window.decomp to split
+         concave outline colliders into convex parts -->
+    <script src="libs/decomp.js"></script>
+    <script>
+        (function () {
+            // webcam preview (pack runtime provides the real camera behind the canvas)
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true }).then(function (s) {
+                    document.getElementById('cam').srcObject = s;
+                }).catch(function () { /* preview fallback: grey */ });
+            }
+            var boot = function () {
+                var s = document.createElement('script');
+                s.src = 'game.js';
+                document.body.appendChild(s);
+            };
+            // BLOCK on the font: Phaser bakes text at creation, so booting before the
+            // ttf arrives would permanently render Arial. Generous 5s failsafe only.
+            if (document.fonts && document.fonts.load) {
+                Promise.race([
+                    document.fonts.load("normal 16px 'Rubik'").then(function () { return document.fonts.ready; }),
+                    new Promise(function (r) { setTimeout(r, 5000); })
+                ]).then(boot, boot);
+            } else boot();
+        })();
+    </script>
+</body>
+</html>
