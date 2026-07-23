@@ -12,9 +12,14 @@ const GROUND_SURFACE_Y = 1650;          // world-y of the flat surface top
 const GROUND_THICKNESS = 240;           // shorter slab platform (was a tall block)
 const GROUND_WIDTH = 880;               // wider surface -> more landing room
 const DROP_GAP = 430;                   // held animal hovers this far above the tower top
-const CLAW_FRAC = 0.14;                 // claw pivot screen position from the top (camera follows it)
+// The held animal sits at screen y = ARM_LEN + CLAW_FRAC*height, and the tower top
+// DROP_GAP below that — so these two together decide how much tower is visible above
+// the DROP button. They were tuned for a low button; raising it for the TikTok safe
+// area meant pulling the whole frame up so the button stopped covering the stack.
+// Camera framing only — neither affects the physics or the drop height.
+const CLAW_FRAC = 0.09;                 // claw pivot screen position from the top (camera follows it)
 
-const ARM_LEN = 300;                    // vertical offset of the hold row from the camera top
+const ARM_LEN = 240;                    // vertical offset of the hold row from the camera top
 
 const ROT_STEP = Math.PI / 6;           // 30 deg per tap while holding
 const ROT_HINT_TAPS = 1;                // hide the rotate hint after this many taps
@@ -137,7 +142,7 @@ class TitleScene extends Phaser.Scene {
         // Decorative tower: a real-looking stack sitting on a plinth of the same ground
         // art as the play surface. Anchored to the TikTok safe line rather than the
         // screen bottom, so TikTok's record button never covers it.
-        this.buildDecoStack(cx, windowHeight - TIKTOK_SAFE_BOTTOM, playY + BTN_H / 2 + 50);
+        this.buildDecoStack(cx, windowHeight - TIKTOK_SAFE_BOTTOM, playY + BTN_H / 2 + 75);
 
         const logo = this.add.image(cx, windowHeight * 0.25, 'title').setOrigin(0.5);
         const logoW = windowWidth * 0.82;
@@ -172,15 +177,15 @@ class TitleScene extends Phaser.Scene {
     // so the tower rocks about its base, with a small counter-tilt per animal.
     buildDecoStack(cx, baseY, topY) {
         const stack = ['crocodile', 'hippo', 'gorilla', 'cat', 'penguin'];
-        const PLINTH_W = 430, PLINTH_H = 54, OVERLAP = 0.84;
-
-        // static plinth
-        const g = this.add.graphics();
-        drawGround(g, cx - PLINTH_W / 2, baseY - PLINTH_H, PLINTH_W, PLINTH_H);
+        const PLINTH_H = 64, OVERLAP = 0.84;
 
         const sizes = stack.map(k => ANIMALS.find(o => o.key === k) || { w: 160, h: 120 });
         const rawH = sizes.reduce((s, a) => s + a.h * OVERLAP, 0);
         const scale = Math.min(0.85, (baseY - PLINTH_H - topY) / rawH);
+
+        // plinth is sized off the finished tower so it reads as its base, not a stray bar
+        const plinthW = Math.max(...sizes.map(a => a.w)) * scale + 110;
+        drawGround(this.add.graphics(), cx - plinthW / 2, baseY - PLINTH_H, plinthW, PLINTH_H);
 
         // pivot on the plinth top so the rock reads as the whole tower leaning
         const tower = this.add.container(cx, baseY - PLINTH_H);
@@ -669,34 +674,27 @@ class GameOverScene extends Phaser.Scene {
     create(data) {
         this.add.graphics().fillStyle(0x0a2233, 0.55).fillRect(0, 0, windowWidth, windowHeight).setDepth(0);
 
+        // Just the score and a RETRY, in the same cartoon-outline chrome as the rest of
+        // the game: white panel with the bold dark sticker border, and the shared pill.
         const cx = windowWidth / 2;
-        const panelY = windowHeight * 0.30;
+        const PANEL_W = 760, PANEL_H = 520;
+        const panelY = windowHeight * 0.33;
+        const scoreY = panelY + 185;
+        const btnY = panelY + PANEL_H - 130;
+
         const g = this.add.graphics().setDepth(1);
         g.fillStyle(0xffffff, 1);
-        g.fillRoundedRect(cx - 380, panelY, 760, 620, 40);
+        g.fillRoundedRect(cx - PANEL_W / 2, panelY, PANEL_W, PANEL_H, 40);
+        g.lineStyle(10, BTN_OUTLINE, 1);
+        g.strokeRoundedRect(cx - PANEL_W / 2, panelY, PANEL_W, PANEL_H, 40);
 
-        const title = data.isBest ? 'NEW BEST!' : 'TOPPLED!';
-        this.add.text(cx, panelY + 90, title, {
-            fontFamily: FONT, fontSize: '68px', color: data.isBest ? '#2b9d5b' : '#c2453a',
-            fontStyle: 'bold', align: 'center'
-        }).setOrigin(0.5).setDepth(2);
-
-        this.add.text(cx, panelY + 228, data.score + ' cm', {
+        this.add.text(cx, scoreY, data.score + ' cm', {
             fontFamily: FONT, fontSize: '150px', color: '#1d3b5a', fontStyle: 'bold'
         }).setOrigin(0.5).setDepth(2);
-        this.add.text(cx, panelY + 330, 'MAX HEIGHT', {
-            fontFamily: FONT, fontSize: '44px', color: '#3a5a78', fontStyle: 'bold'
-        }).setOrigin(0.5).setDepth(2);
 
-        this.add.text(cx, panelY + 410, 'best  ' + data.best + ' cm', {
-            fontFamily: FONT, fontSize: '52px', color: '#3b6ea8', fontStyle: 'bold'
-        }).setOrigin(0.5).setDepth(2);
-
-        const btn = this.add.graphics().setDepth(2);
-        btn.fillStyle(0x54b04a, 1);
-        btn.fillRoundedRect(cx - 240, panelY + 470, 480, 120, 28);
-        this.add.text(cx, panelY + 530, 'RETRY', {
-            fontFamily: FONT, fontSize: '64px', color: '#ffffff', fontStyle: 'bold'
+        drawButton(this.add.graphics().setDepth(2), cx, btnY);
+        this.add.text(cx, btnY, 'RETRY', {
+            fontFamily: FONT, fontSize: BTN_FONT_SIZE, color: '#ffffff', fontStyle: 'bold'
         }).setOrigin(0.5).setDepth(3);
 
         // retry the same mode that was just played
