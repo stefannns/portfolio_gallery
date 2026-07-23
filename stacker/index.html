@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Deployed under /stacker. Vercel serves this file at BOTH /stacker and /stacker/,
+         and without the trailing slash every relative path (game.js, libs/, assets/) would
+         resolve against the site root and 404 — leaving a blank canvas over the camera.
+         This pins the base so relative URLs work either way. -->
+    <base href="/stacker/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Animal Stacker - Web Mode</title>
     <style>
