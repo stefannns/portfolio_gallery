@@ -2,18 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Deployed under /stacker. Vercel serves this file at BOTH /stacker and /stacker/,
-         and without the trailing slash every relative path (game.js, libs/, assets/) would
-         resolve against the site root and 404 — leaving a blank canvas over the camera.
-         This pins the base so relative URLs work either way. -->
+    <!-- deploy-only: Vercel serves this at /stacker (no trailing slash);
+         pin the base so relative paths resolve. -->
     <base href="/stacker/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Animal Stacker - Web Mode</title>
     <style>
+        /* Rubik-Regular.ttf is a VARIABLE font whose default instance is Light 300, and
+           a @font-face pinned to one weight never drives the wght axis — so every
+           'bold' string in the game rendered as Rubik Light. Rubik-Bold.ttf is that
+           variable font instanced at wght=700 (static), which is what the game
+           actually asks for everywhere. */
         @font-face {
             font-family: 'Rubik';
-            src: url('libs/fonts/Rubik-Regular.ttf') format('truetype');
-            font-weight: normal;
+            src: url('libs/fonts/Rubik-Bold.ttf') format('truetype');
+            font-weight: bold;
             font-style: normal;
         }
         body {
@@ -78,7 +81,7 @@
             // ttf arrives would permanently render Arial. Generous 5s failsafe only.
             if (document.fonts && document.fonts.load) {
                 Promise.race([
-                    document.fonts.load("normal 16px 'Rubik'").then(function () { return document.fonts.ready; }),
+                    document.fonts.load("bold 16px 'Rubik'").then(function () { return document.fonts.ready; }),
                     new Promise(function (r) { setTimeout(r, 5000); })
                 ]).then(boot, boot);
             } else boot();

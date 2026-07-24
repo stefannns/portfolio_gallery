@@ -40,7 +40,47 @@ const PX_PER_CM = 6;                    // world px -> "cm" for the height score
 const SETTLE_MS = 350;                  // still this long -> counts as settled
 const SETTLE_TIMEOUT = 5000;            // failsafe: always settle eventually
 const RESPAWN_DELAY = 260;              // grace before the next animal loads
-const MAX_FALL_SPEED = 9;               // terminal fall speed (limits impact penetration)
+// Global physics rate. Matter multiplies each step's integration delta by the engine's
+// timing.timeScale, so this is a true fast-forward: gravity, impacts, settling and
+// damping all speed up together, with no change to the tuning above.
+const PHYSICS_SPEED = 1.25;
+
+// Terminal fall speed, as a safety net for pathological falls only. A normal drop
+// covers DROP_GAP and free-falls to ~15 px/step, so anything at or below ~15 clips the
+// back half of every drop to a constant speed — which reads as the animal easing off
+// mid-air. The per-frame landing clamp below is what actually prevents penetration;
+// this cap is not load-bearing for that.
+// Per-step, so it has to scale with PHYSICS_SPEED or the cap starts clipping again.
+// Expressed per BASE_STEP_MS and rescaled each frame, since the step is now the real
+// frame delta rather than a fixed 1/60.
+const MAX_FALL_SPEED = 18 * PHYSICS_SPEED * PHYSICS_SPEED;
+
+// Physics advances exactly one step per rendered frame, using that frame's delta.
+// Matter's own runner instead accumulates real time and drains it in fixed 1/60 chunks,
+// so unless the display is exactly 60Hz it steps twice on one frame and once on the
+// next: the animal jumps a big distance, then a small one, every other frame. That
+// uneven stepping is what reads as stuttering / slowing down in mid-air (measured
+// 1.72 steps/frame in a 2,1,2,2,1 pattern at a 34Hz render rate; a 120Hz display gets
+// the opposite, 0,1,0,1, where every other frame doesn't move at all).
+// Max camera pan speed, px per BASE_STEP_MS. The camera chases the tower top with an
+// exponential ease, which lurches hardest right after an animal lands — exactly when
+// the next one is falling. Screen motion is fall + pan, so a big *decaying* pan
+// cancels out the fall's acceleration and the animal looks like it's slowing in
+// mid-air (measured: pan 27px/frame decaying while the fall rose 2->9, giving a flat
+// ~28px/frame on screen). Capping the pan keeps its contribution roughly constant
+// while catching up, so the fall's acceleration stays visible. Keep this below ~9:
+// the ease-out decay rate is speed*(delta/220), which must stay under the fall's
+// ~0.8px/frame^2 acceleration or the cancellation comes back.
+const CAM_MAX_PAN = 9;
+// ...and how fast that pan speed may itself change, px per BASE_STEP_MS squared. This
+// is the number that actually matters: a falling animal accelerates ~0.75px/frame^2, so
+// as long as the pan's rate of change stays well under that, apparent speed keeps
+// rising and the fall never looks like it eases off.
+const CAM_MAX_PAN_ACCEL = 0.25;
+
+const BASE_STEP_MS = 1000 / 60;
+const MIN_STEP_MS = 1000 / 144;         // guard against absurdly small deltas
+const MAX_STEP_MS = 1000 / 30;          // cap a frame hitch so one step can't tunnel
 const FALL_OFF_Y = GROUND_SURFACE_Y + 160;  // past this = fell off -> game over
 
 // TikTok reserves the bottom strip of the screen for its own capture UI (record
@@ -53,15 +93,21 @@ const BTN_W = 440, BTN_H = 130, BTN_R = 30;
 const BTN_FILL = 0x54b04a, BTN_OUTLINE = 0x1c1c22, BTN_OUTLINE_W = 8;
 const BTN_FONT_SIZE = '64px';
 
-const ANIMAL_SCALE = 0.78;              // shrink every animal (art + collider together)
+// Scales every animal's art AND its traced collider together, since the collider is
+// derived from the display size at spawn.
+const ANIMAL_SIZE_BOOST = 1.15;
 const BEST_KEY = 'animalStackerBestHeight';
 
-// UI font. Rubik loads via @font-face in the browser preview and via tt.loadFont
-// in the effect pack (the returned runtime id must be used as the family name).
+// UI font. Rubik loads via @font-face in the browser preview and via tt.loadFont in
+// the effect pack (the returned runtime id must be used as the family name).
+// Load the BOLD face, not Rubik-Regular.ttf: that file is a variable font whose
+// default instance is Light 300, and neither loader drives the wght axis — so every
+// text object here (all of them are fontStyle:'bold') came out Rubik Light.
+// Rubik-Bold.ttf is the same font instanced at wght=700.
 let FONT = "Rubik, Arial, sans-serif";
 try {
     if (typeof tt !== 'undefined' && tt && typeof tt.loadFont === 'function') {
-        const id = tt.loadFont('libs/fonts/Rubik-Regular.ttf');
+        const id = tt.loadFont('libs/fonts/Rubik-Bold.ttf');
         if (id) FONT = id + ', Rubik, Arial, sans-serif';
     }
 } catch (e) {}
@@ -102,7 +148,7 @@ class BootScene extends Phaser.Scene {
         // derive display size (and thus collider size) per animal from its image
         ANIMAL_KEYS.forEach(k => {
             const s = this.textures.get(k).getSourceImage();
-            const sc = Math.min(210 / s.width, 250 / s.height, 1.2);
+            const sc = Math.min(210 / s.width, 250 / s.height, 1.2) * ANIMAL_SIZE_BOOST;
             ANIMALS.push({ key: k, w: Math.round(s.width * sc), h: Math.round(s.height * sc) });
         });
         this.buildDustTexture();
@@ -148,27 +194,22 @@ class TitleScene extends Phaser.Scene {
         const logoW = windowWidth * 0.82;
         const lt = this.textures.get('title').getSourceImage();
         logo.setDisplaySize(logoW, logoW * lt.height / lt.width);
-        this.tweens.add({
-            targets: logo, scale: logo.scale * 1.03,
-            duration: 1400, yoyo: true, repeat: -1, ease: 'Sine.inOut'
-        });
 
-        // pick a mode. Same chrome as the in-game DROP button (drawButton), wrapped in a
-        // container so the idle pulse scales the pill and its label together.
+        // Same chrome and the same graphics + text + zone structure as the in-game DROP
+        // button. Do NOT rebuild this as an interactive Container: Phaser normalises the
+        // hit-test point by displayOrigin, so a centre-origin hit rect on a sized
+        // Container lands offset by half the button and most of the pill goes dead.
         const mkBtn = (y, label, mode) => {
-            const g = this.add.graphics();
-            drawButton(g, 0, 0);
-            const t = this.add.text(0, 0, label, {
+            drawButton(this.add.graphics().setDepth(60), cx, y);
+            this.add.text(cx, y, label, {
                 fontFamily: FONT, fontSize: BTN_FONT_SIZE, color: '#ffffff', fontStyle: 'bold'
-            }).setOrigin(0.5);
-            const btn = this.add.container(cx, y, [g, t]).setSize(BTN_W, BTN_H)
-                .setInteractive(new Phaser.Geom.Rectangle(-BTN_W / 2, -BTN_H / 2, BTN_W, BTN_H),
-                    Phaser.Geom.Rectangle.Contains, { useHandCursor: true });
-            btn.on('pointerdown', () => this.scene.start('GameScene', { mode: mode }));
-            return btn;
+            }).setOrigin(0.5).setDepth(61);
+            const zone = this.add.zone(cx, y, BTN_W, BTN_H).setDepth(62)
+                .setInteractive({ useHandCursor: true });
+            zone.on('pointerdown', () => this.scene.start('GameScene', { mode: mode }));
+            return zone;
         };
-        const play = mkBtn(playY, 'PLAY', 'drag');
-        this.tweens.add({ targets: play, scale: 1.05, duration: 800, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+        mkBtn(playY, 'PLAY', 'drag');
     }
 
     // Wide-to-narrow tower standing on a plinth of the same ground art as the play
@@ -230,6 +271,12 @@ class GameScene extends Phaser.Scene {
         // claw / dropper state
         this.claw = { gfx: null, animal: null, type: null, state: 'idle', t: 0, lastX: 0, lastY: 0, vx: 0, vy: 0 };
 
+        this.matter.world.engine.timing.timeScale = PHYSICS_SPEED;
+        // drive the step from update() instead of Matter's time-accumulating runner
+        this.matter.world.autoUpdate = false;
+        this.stepScale = 1;
+        this.camVel = 0;            // rate-limited camera pan speed, px/step
+
         paintSky(this, windowWidth, windowHeight);
         addGlass(this, windowWidth, windowHeight);
         this.buildGround();
@@ -263,8 +310,7 @@ class GameScene extends Phaser.Scene {
         const mk = this.textures.get('heightmarker').getSourceImage();
         this.maxMarker.setDisplaySize(windowWidth, mk.height * windowWidth / mk.width);
         this.maxLabel = this.add.text(28, 0, '', {
-            fontFamily: FONT, fontSize: '52px', color: '#ffffff', fontStyle: 'bold',
-            stroke: '#1d3b5a', strokeThickness: 6
+            fontFamily: FONT, fontSize: '52px', color: '#ffffff', fontStyle: 'bold'
         }).setDepth(-3).setOrigin(0, 1).setAlpha(0);
     }
 
@@ -272,7 +318,8 @@ class GameScene extends Phaser.Scene {
         if (this.maxHeightCm <= 0) { this.maxMarker.setVisible(false); this.maxLabel.setAlpha(0); return; }
         const y = GROUND_SURFACE_Y - this.maxHeightCm * PX_PER_CM;
         this.maxMarker.setPosition(windowWidth / 2, y).setVisible(true);
-        this.maxLabel.setText(String(this.maxHeightCm)).setPosition(28, y - 46).setAlpha(1);
+        // bottom-aligned just above the marker line (origin 0,1), so it sits close to it
+        this.maxLabel.setText(String(this.maxHeightCm)).setPosition(28, y - 8).setAlpha(1);
     }
 
     // click/tap to rotate the held animal; DROP button releases it
@@ -561,6 +608,11 @@ class GameScene extends Phaser.Scene {
     }
 
     update(time, delta) {
+        // exactly one physics step per rendered frame -> even on-screen motion
+        const stepMs = Phaser.Math.Clamp(delta, MIN_STEP_MS, MAX_STEP_MS);
+        this.stepScale = stepMs / BASE_STEP_MS;
+        this.matter.world.step(stepMs);
+
         const pivotX = windowWidth / 2;
         const pivotY = this.dropY() - ARM_LEN;
 
@@ -587,9 +639,11 @@ class GameScene extends Phaser.Scene {
             const b = this.animals[i];
             if (!b.body) { this.animals.splice(i, 1); continue; }
 
-            // terminal fall speed keeps single-frame impact penetration small
-            if (b.body.velocity.y > MAX_FALL_SPEED) {
-                b.setVelocity(b.body.velocity.x, MAX_FALL_SPEED);
+            // terminal fall speed keeps single-frame impact penetration small.
+            // px-per-step, so it tracks the actual step length.
+            const fallCap = MAX_FALL_SPEED * this.stepScale;
+            if (b.body.velocity.y > fallCap) {
+                b.setVelocity(b.body.velocity.x, fallCap);
             }
             // landing clamp: never overshoot the surface below in a single frame —
             // full speed until the last frame, then land flush (no punch-in/pop-out)
@@ -633,10 +687,19 @@ class GameScene extends Phaser.Scene {
         this.updateRespawn();
         this.positionRotArrows();
 
-        // camera follows the dropper so it stays pinned near the top as the tower grows
-        const targetY = this.camTargetY();
+        // Camera follows the dropper so it stays pinned near the top as the tower grows.
+        // What the eye sees is fall + pan, and the original plain ease lurched hardest
+        // right after a landing — exactly while the next animal was falling — so its
+        // decay cancelled out the fall's acceleration and the animal looked like it
+        // slowed in mid-air. Panning is fine; changing the pan speed quickly is not.
+        // So the pan speed is both capped and rate-limited, which keeps its contribution
+        // near-constant across a drop while still converging on the target.
         const cam = this.cameras.main;
-        cam.scrollY += (targetY - cam.scrollY) * Math.min(1, delta / 220);
+        const maxPan = CAM_MAX_PAN * this.stepScale;
+        const wanted = Phaser.Math.Clamp((this.camTargetY() - cam.scrollY) * 0.08, -maxPan, maxPan);
+        const panAccel = CAM_MAX_PAN_ACCEL * this.stepScale;
+        this.camVel += Phaser.Math.Clamp(wanted - this.camVel, -panAccel, panAccel);
+        cam.scrollY += this.camVel;
     }
 
     // --- ending ------------------------------------------------------------
@@ -672,14 +735,17 @@ class GameOverScene extends Phaser.Scene {
     constructor() { super('GameOverScene'); }
 
     create(data) {
-        this.add.graphics().fillStyle(0x0a2233, 0.55).fillRect(0, 0, windowWidth, windowHeight).setDepth(0);
+        // same blue sky + glass as the rest of the game, not a dark scrim
+        paintSky(this, windowWidth, windowHeight);
+        addGlass(this, windowWidth, windowHeight);
 
         // Just the score and a RETRY, in the same cartoon-outline chrome as the rest of
         // the game: white panel with the bold dark sticker border, and the shared pill.
         const cx = windowWidth / 2;
-        const PANEL_W = 760, PANEL_H = 520;
+        const PANEL_W = 760, PANEL_H = 560;
         const panelY = windowHeight * 0.33;
-        const scoreY = panelY + 185;
+        const labelY = panelY + 105;
+        const scoreY = panelY + 240;
         const btnY = panelY + PANEL_H - 130;
 
         const g = this.add.graphics().setDepth(1);
@@ -688,7 +754,11 @@ class GameOverScene extends Phaser.Scene {
         g.lineStyle(10, BTN_OUTLINE, 1);
         g.strokeRoundedRect(cx - PANEL_W / 2, panelY, PANEL_W, PANEL_H, 40);
 
-        this.add.text(cx, scoreY, data.score + ' cm', {
+        this.add.text(cx, labelY, 'Height:', {
+            fontFamily: FONT, fontSize: '56px', color: '#3a5a78', fontStyle: 'bold'
+        }).setOrigin(0.5).setDepth(2);
+
+        this.add.text(cx, scoreY, String(data.score), {
             fontFamily: FONT, fontSize: '150px', color: '#1d3b5a', fontStyle: 'bold'
         }).setOrigin(0.5).setDepth(2);
 
