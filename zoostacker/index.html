@@ -20,20 +20,28 @@
             font-weight: bold;
             font-style: normal;
         }
-        body {
+        html, body {
             margin: 0;
             padding: 0;
+            height: 100%;
+        }
+        body {
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background-color: #222;
+            overflow: hidden;
         }
+        /* Responsive stage: fill the embed/iframe while keeping the game's 9:16 portrait
+           aspect ratio, so it scales to any Lark embed size instead of a fixed 360x640.
+           height = the largest that still fits BOTH the viewport height (100vh) and, via
+           the 9:16 ratio, its width (100vw). Whichever dimension is the constraint wins. */
         #stage {
             position: relative;
-            width: 360px;
-            height: 640px;
+            aspect-ratio: 9 / 16;
+            height: min(100vh, 100vw * 16 / 9);
+            max-width: 100vw;
         }
         #cam {
             position: absolute;
@@ -47,8 +55,8 @@
             position: absolute;
             inset: 0;
             display: block;
-            width: 360px;
-            height: 640px;
+            width: 100%;
+            height: 100%;
             background-color: transparent;
         }
     </style>
