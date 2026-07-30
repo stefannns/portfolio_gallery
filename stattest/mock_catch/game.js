@@ -2,9 +2,18 @@ require('libs/tt-adapter.js');
 const Phaser = require('libs/phaser.js');
 
 const res = tt.getSystemInfoSync();
-const windowWidth  = res.screenWidth;
-const windowHeight = res.screenHeight;
-const W = windowWidth, H = windowHeight;
+const H  = res.screenHeight;
+const GW = res.screenWidth;
+const PW = Math.round(res.screenWidth * 0.52);
+const GX0 = PW;
+const W  = GX0 + GW;
+const windowWidth = W, windowHeight = H;
+if (typeof window !== 'undefined' && window.canvas && window.canvas.style) {
+    window.canvas.width = W; window.canvas.height = H;
+    const dh = 640, dw = Math.round(dh * W / H);
+    window.canvas.style.width = dw + 'px'; window.canvas.style.height = dh + 'px';
+}
+const GCX = GX0 + GW/2;
 
 // ─────────────────────────────────────────────────────────────────
 // CATCH FALLING — LIVE TUNING.  Reach model (same as the dodge field-cross):
@@ -25,13 +34,12 @@ const LIVE = {
 
 const EASY_SPD  = 1.60, HARD_SPD  = 1.20;   // ×reach-floor (faster catcher = easier)
 const EASY_FALL = 0.60, HARD_FALL = 0.85;   // ×fall-max    (faster fall = harder)
-const PANEL_BOTTOM = H * 0.37 - 82;   // panel is flush to the top
-const SKY_TOP   = PANEL_BOTTOM;
+const SKY_TOP   = H * 0.03;
 const SKY_BOT   = H - 161;
 const CATCH_H   = H * 0.03;
 const ITEM_H    = H * 0.05;
 const CATCH_Y   = SKY_BOT - CATCH_H/2 - H*0.01;
-const PLAY_W    = W * 0.96;
+const PLAY_W    = GW * 0.96;
 const PLAY_H    = SKY_BOT - SKY_TOP;
 const ITEM_COLORS = [0xffc24d, 0xff8fa3, 0x63d19b, 0x5ec8ff, 0xb79bff];
 
@@ -46,9 +54,10 @@ class LiveScene extends Phaser.Scene {
         this.bandEasy = 0; this.bandHard = 0;
         this.bandT = 0; this.draggingRun = false;
 
-        this.add.rectangle(W/2, H/2, W, H, 0x0d1a2e).setDepth(0);
+        this.add.rectangle(W/2, H/2, W, H, 0x161a26).setDepth(0);
+        this.add.rectangle(GCX, H/2, GW, H, 0x0d1a2e).setDepth(0.4);
 
-        this.catchX    = W/2;
+        this.catchX    = GCX;
         this.moveDir   = 0;
         this.items     = [];
         this.sinceSpawn = 1e9;
@@ -58,8 +67,8 @@ class LiveScene extends Phaser.Scene {
         this.itemGfx  = this.add.graphics().setDepth(4);
         this.catchGfx = this.add.graphics().setDepth(6);
 
-        this.btnLeft  = this.ctrlBtn(W*0.13, H*0.93, '◀', () => this.moveDir = -1, () => this.moveDir = 0);
-        this.btnRight = this.ctrlBtn(W*0.87, H*0.93, '▶', () => this.moveDir =  1, () => this.moveDir = 0);
+        this.btnLeft  = this.ctrlBtn(GX0 + GW*0.13, H*0.93, '◀', () => this.moveDir = -1, () => this.moveDir = 0);
+        this.btnRight = this.ctrlBtn(GX0 + GW*0.87, H*0.93, '▶', () => this.moveDir =  1, () => this.moveDir = 0);
         if (this.input.keyboard) {
             const kb = this.input.keyboard;
             kb.on('keydown-LEFT',  () => this.moveDir = -1); kb.on('keyup-LEFT',  () => { if (this.moveDir<0) this.moveDir = 0; });
@@ -68,9 +77,7 @@ class LiveScene extends Phaser.Scene {
             kb.on('keydown-D',     () => this.moveDir =  1); kb.on('keyup-D',     () => { if (this.moveDir>0) this.moveDir = 0; });
         }
 
-        this.readout = this.add.text(W*0.05, PANEL_BOTTOM + H*0.012, '', {
-            fontSize: `${W*0.026}px`, color: '#979aa8', lineSpacing: 5
-        }).setOrigin(0, 0).setDepth(48);
+        this.readout = { setText: (t) => { if (typeof window !== 'undefined') window.__genreStats = t; return this.readout; }, setColor: () => this.readout, y: 0 };
 
         this.panelObjs = [];
         this.buildPanel();
@@ -175,17 +182,17 @@ class LiveScene extends Phaser.Scene {
     }
 
     recompute() {
-        const catcherW = W * LIVE.catcherWRatio, itemW = W * LIVE.itemWRatio;
-        const crossDist = Math.max(W*0.10, PLAY_W - catcherW - itemW);
+        const catcherW = GW * LIVE.catcherWRatio, itemW = GW * LIVE.itemWRatio;
+        const crossDist = Math.max(GW*0.10, PLAY_W - catcherW - itemW);
         if (this.mode === 'move') {
             const fallSpeed = H * LIVE.fallSpeedRatio;
             const floor = crossDist * fallSpeed / PLAY_H;
-            this.bandEasy = Phaser.Math.Clamp(floor * EASY_SPD / W, 0.12, 0.85);
-            this.bandHard = Phaser.Math.Clamp(floor * HARD_SPD / W, 0.12, 0.85);
-            this.derivedOK = (floor * HARD_SPD / W) <= 0.85;
+            this.bandEasy = Phaser.Math.Clamp(floor * EASY_SPD / GW, 0.12, 0.85);
+            this.bandHard = Phaser.Math.Clamp(floor * HARD_SPD / GW, 0.12, 0.85);
+            this.derivedOK = (floor * HARD_SPD / GW) <= 0.85;
             LIVE.catcherSpeedRatio = this.bandEasy + (this.bandHard - this.bandEasy) * this.bandT;
         } else {
-            const moveSpeed = W * LIVE.catcherSpeedRatio;
+            const moveSpeed = GW * LIVE.catcherSpeedRatio;
             const fallMax = PLAY_H * moveSpeed / crossDist;
             this.bandEasy = Phaser.Math.Clamp(fallMax * EASY_FALL / H, 0.06, 0.40);
             this.bandHard = Phaser.Math.Clamp(fallMax * HARD_FALL / H, 0.06, 0.40);
@@ -198,16 +205,16 @@ class LiveScene extends Phaser.Scene {
         const dt = Math.min(delta / 1000, 0.05);
         this.recompute();
 
-        const moveSpeed = W * LIVE.catcherSpeedRatio;
+        const moveSpeed = GW * LIVE.catcherSpeedRatio;
         const fallSpeed = H * LIVE.fallSpeedRatio;
-        const catcherW = W * LIVE.catcherWRatio, itemW = W * LIVE.itemWRatio;
+        const catcherW = GW * LIVE.catcherWRatio, itemW = GW * LIVE.itemWRatio;
 
-        this.catchX = Phaser.Math.Clamp(this.catchX + this.moveDir * moveSpeed * dt, catcherW/2 + W*0.02, W - catcherW/2 - W*0.02);
+        this.catchX = Phaser.Math.Clamp(this.catchX + this.moveDir * moveSpeed * dt, GX0 + catcherW/2 + GW*0.02, W - catcherW/2 - GW*0.02);
 
         this.sinceSpawn += delta;
         if (this.sinceSpawn >= LIVE.spawnRate) {
             this.sinceSpawn = 0;
-            const x = itemW/2 + W*0.02 + Math.random() * (W - itemW - W*0.04);
+            const x = GX0 + itemW/2 + GW*0.02 + Math.random() * (GW - itemW - GW*0.04);
             this.items.push({ x, y: SKY_TOP - ITEM_H, col: ITEM_COLORS[Math.floor(Math.random()*ITEM_COLORS.length)], state: 'pending' });
         }
 
@@ -261,23 +268,20 @@ class LiveScene extends Phaser.Scene {
     }
 
     buildPanel() {
-        const HY = H*0.023, PB = this.collapsed ? H*0.054 : PANEL_BOTTOM;
-        this.reg(this.add.rectangle(W/2, (PB)/2, W, PB, 0x17181f, 0.96).setDepth(50));
-        this.reg(this.add.rectangle(W/2, PB, W, 1.5, 0x24262f).setDepth(50));
-        this.mkCollapse(W*0.055, HY);
-        const _t = this.reg(this.add.text(W*0.115, HY, '⚙ CATCH', {
-            fontSize: `${W*0.030}px`, color: '#e8e9ef', fontStyle: 'bold'
+        this.reg(this.add.rectangle(PW/2, H/2, PW, H, 0x17181f, 0.98).setDepth(50));
+        this.reg(this.add.rectangle(PW, H/2, 1.5, H, 0x24262f).setDepth(50));
+        const _t = this.reg(this.add.text(PW*0.06, H*0.03, '⚙ CATCH', {
+            fontSize: `${GW*0.030}px`, color: '#e8e9ef', fontStyle: 'bold'
         }).setOrigin(0, 0.5).setDepth(60));
-        const _cnTitle = this.reg(this.add.text(_t.x + _t.width + W*0.022, HY, '接落物', {
-            fontSize: `${W*0.024}px`, color: '#6d7080'
+        this.reg(this.add.text(_t.x + _t.width + GW*0.02, H*0.03, '接落物', {
+            fontSize: `${GW*0.022}px`, color: '#6d7080'
         }).setOrigin(0, 0.5).setDepth(60));
-        if (this.collapsed) return;
 
         const modeStr = this.mode === 'move' ? 'COMPUTE ▶ CATCHER SPEED' : 'COMPUTE ▶ FALL SPEED';
-        const btn = this.reg(this.add.rectangle(W*0.97, HY, W*0.54, H*0.030, 0x24262f)
-            .setStrokeStyle(1.5, 0x3a3d4a).setInteractive().setDepth(60).setOrigin(1, 0.5));
-        this.reg(this.add.text(W*0.97 - W*0.27, HY, modeStr, {
-            fontSize: `${W*0.024}px`, color: '#e8e9ef', fontStyle: 'bold'
+        const btn = this.reg(this.add.rectangle(PW*0.5, H*0.076, PW*0.88, H*0.032, 0x24262f)
+            .setStrokeStyle(1.5, 0x3a3d4a).setInteractive().setDepth(60));
+        this.reg(this.add.text(PW*0.5, H*0.076, modeStr, {
+            fontSize: `${GW*0.021}px`, color: '#e8e9ef', fontStyle: 'bold'
         }).setOrigin(0.5).setDepth(61));
         btn.on('pointerup', () => { this.mode = this.mode === 'move' ? 'fall' : 'move'; this.rebuildPanel(); });
 
@@ -291,8 +295,8 @@ class LiveScene extends Phaser.Scene {
         ];
         const derivedKey = this.mode;
 
-        let sy = H*0.072;
-        const gap = H*0.038;
+        let sy = H*0.14;
+        const gap = H*0.05;
         for (const r of rows) {
             if (r.key === derivedKey) this.renderDerived(r, sy);
             else                      this.mkSlider(r, sy);
@@ -308,28 +312,26 @@ class LiveScene extends Phaser.Scene {
     }
 
     mkSlider(r, y) {
-        const x0 = W*0.42, x1 = W*0.80, trackW = x1 - x0;
-        this.reg(this.add.text(W*0.05, y, r.label, { fontSize: `${W*0.027}px`, color: '#979aa8' }).setOrigin(0, 0.5).setDepth(60));
-        const valTxt = this.reg(this.add.text(W*0.965, y, r.fmt(r.get()), { fontSize: `${W*0.027}px`, color: '#e8e9ef' }).setOrigin(1, 0.5).setDepth(60));
+        const tx0 = PW*0.06, tx1 = PW*0.94, trackW = tx1 - tx0, ty = y + H*0.02;
+        this.reg(this.add.text(tx0, y, r.label, { fontSize: `${GW*0.024}px`, color: '#9aa0b4' }).setOrigin(0, 0.5).setDepth(60));
+        const valTxt = this.reg(this.add.text(tx1, y, r.fmt(r.get()), { fontSize: `${GW*0.024}px`, color: '#e8e9ef' }).setOrigin(1, 0.5).setDepth(60));
         const g = this.reg(this.add.graphics().setDepth(59));
-        this.diffTrack(g, r, x0, x1, y); this.dirTag(r, y);
-        const knob = this.reg(this.add.circle(x0 + (r.get() - r.min)/(r.max - r.min) * trackW, y, W*0.020, 0xf0a324)
+        this.diffTrack(g, r, tx0, tx1, ty);
+        const knob = this.reg(this.add.circle(tx0 + (r.get() - r.min)/(r.max - r.min) * trackW, ty, GW*0.020, 0xf0a324)
             .setStrokeStyle(2, 0x17181f).setInteractive({ draggable: true }).setDepth(61));
         this.input.setDraggable(knob);
         knob.on('drag', (ptr, dragX) => {
-            const cx = Phaser.Math.Clamp(dragX, x0, x1);
-            knob.x = cx;
-            const v = r.min + (cx - x0)/trackW * (r.max - r.min);
-            valTxt.setText(r.fmt(v));
-            r.set(v);
+            const cx = Phaser.Math.Clamp(dragX, tx0, tx1); knob.x = cx;
+            const v = r.min + (cx - tx0)/trackW * (r.max - r.min);
+            valTxt.setText(r.fmt(v)); r.set(v);
         });
     }
 
     renderDerived(r, y) {
-        const x0 = W*0.42, x1 = W*0.80;
-        this.reg(this.add.text(W*0.05, y, r.label + '  ▸AUTO', { fontSize: `${W*0.027}px`, color: '#e8e9ef' }).setOrigin(0, 0.5).setDepth(60));
-        const text = this.reg(this.add.text(W*0.965, y, '', { fontSize: `${W*0.024}px`, color: '#e8e9ef', fontStyle: 'bold' }).setOrigin(1, 0.5).setDepth(60));
-        const g = this.reg(this.add.graphics().setDepth(59));        const handle  = this.reg(this.add.circle(x0, y, W*0.024, 0xffffff).setStrokeStyle(3, 0xf1014).setInteractive({ draggable: true }).setDepth(62));
+        const x0 = PW*0.06, x1 = PW*0.94, ty = y + H*0.02;
+        this.reg(this.add.text(x0, y, r.label + '  ▸AUTO', { fontSize: `${GW*0.024}px`, color: '#e8e9ef' }).setOrigin(0, 0.5).setDepth(60));
+        const text = this.reg(this.add.text(x1, y, '', { fontSize: `${GW*0.023}px`, color: '#e8e9ef', fontStyle: 'bold' }).setOrigin(1, 0.5).setDepth(60));
+        const g = this.reg(this.add.graphics().setDepth(59));        const handle  = this.reg(this.add.circle(x0, ty, GW*0.024, 0xffffff).setStrokeStyle(3, 0x17181f).setInteractive({ draggable: true }).setDepth(62));
         this.input.setDraggable(handle);
         const xOf = ratio => x0 + (Phaser.Math.Clamp(ratio, r.min, r.max) - r.min)/(r.max - r.min) * (x1 - x0);
         handle.on('dragstart', () => { this.draggingRun = true; });
@@ -342,7 +344,7 @@ class LiveScene extends Phaser.Scene {
             const sp = hxPos - exPos;
             this.bandT = Math.abs(sp) < 1 ? 0 : Phaser.Math.Clamp((cx - exPos)/sp, 0, 1);
         });
-        this.derived = { r, g, text, handle, x0, x1, y };
+        this.derived = { r, g, text, handle, x0, x1, y: ty };
         this.refreshDerived();
     }
 

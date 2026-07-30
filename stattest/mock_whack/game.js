@@ -2,9 +2,18 @@ require('libs/tt-adapter.js');
 const Phaser = require('libs/phaser.js');
 
 const res = tt.getSystemInfoSync();
-const windowWidth  = res.screenWidth;
-const windowHeight = res.screenHeight;
-const W = windowWidth, H = windowHeight;
+const H  = res.screenHeight;
+const GW = res.screenWidth;
+const PW = Math.round(res.screenWidth * 0.52);
+const GX0 = PW;
+const W  = GX0 + GW;
+const windowWidth = W, windowHeight = H;
+if (typeof window !== 'undefined' && window.canvas && window.canvas.style) {
+    window.canvas.width = W; window.canvas.height = H;
+    const dh = 640, dw = Math.round(dh * W / H);
+    window.canvas.style.width = dw + 'px'; window.canvas.style.height = dh + 'px';
+}
+const GCX = GX0 + GW/2;
 
 // ─────────────────────────────────────────────────────────────────
 // WHACK-A-MOLE — LIVE TUNING.  Reaction model:
@@ -34,11 +43,12 @@ class LiveScene extends Phaser.Scene {
         this.bandEasy = 0; this.bandHard = 0;
         this.bandT = 0; this.draggingRun = false;
 
-        this.add.rectangle(W/2, H/2, W, H, 0x2d1b00).setDepth(0);
+        this.add.rectangle(W/2, H/2, W, H, 0x161a26).setDepth(0);
+        this.add.rectangle(GCX, H/2, GW, H, 0x2d1b00).setDepth(0.4);
 
         this.holes = [];
-        const gx0 = W*0.18, gy0 = PANEL_BOTTOM + (H - 161 - PANEL_BOTTOM)*0.22;
-        const dx = (W*0.64)/(COLS-1), dy = (H - 161 - gy0)*0.42;
+        const gx0 = GX0 + GW*0.18, gy0 = H*0.03 + (H - 161 - H*0.03)*0.22;
+        const dx = (GW*0.64)/(COLS-1), dy = (H - 161 - gy0)*0.42;
         for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
             this.holes.push({ x: gx0 + c*dx, y: gy0 + r*dy, active: false, timer: 0, hitFlash: 0 });
         }
@@ -48,12 +58,10 @@ class LiveScene extends Phaser.Scene {
 
         this.holeGfx = this.add.graphics().setDepth(4);
 
-        const tapZone = this.add.rectangle(W/2, (PANEL_BOTTOM + H)/2, W, H - PANEL_BOTTOM, 0x000000, 0).setInteractive().setDepth(2);
+        const tapZone = this.add.rectangle(GCX, H/2, GW, H, 0x000000, 0).setInteractive().setDepth(2);
         tapZone.on('pointerdown', (ptr) => this.whack(ptr.x, ptr.y));
 
-        this.readout = this.add.text(W*0.05, PANEL_BOTTOM + H*0.012, '', {
-            fontSize: `${W*0.026}px`, color: '#979aa8', lineSpacing: 5
-        }).setOrigin(0, 0).setDepth(48);
+        this.readout = { setText: (t) => { if (typeof window !== 'undefined') window.__genreStats = t; return this.readout; }, setColor: () => this.readout, y: 0 };
 
         this.panelObjs = [];
         this.buildPanel();
@@ -149,7 +157,7 @@ class LiveScene extends Phaser.Scene {
 
 
     whack(px, py) {
-        const r = W * LIVE.holeRatio;
+        const r = GW * LIVE.holeRatio;
         for (const h of this.holes) {
             if (h.active && Math.hypot(px - h.x, py - h.y) < r) {
                 h.active = false; h.hitFlash = 200; this.hits++; return;
@@ -193,7 +201,7 @@ class LiveScene extends Phaser.Scene {
         const g = this.holeGfx; g.clear();
         this.hideChars();                 // several moles can be up at once → sprite pool
         let ci = 0;
-        const r = W * LIVE.holeRatio;
+        const r = GW * LIVE.holeRatio;
         for (const h of this.holes) {
             g.fillStyle(0x1a0d00); g.fillEllipse(h.x, h.y + r*0.2, r*2, r*0.9);
             if (h.active) {
@@ -222,20 +230,17 @@ class LiveScene extends Phaser.Scene {
     }
 
     buildPanel() {
-        const HY = H*0.023, PB = this.collapsed ? H*0.054 : PANEL_BOTTOM;
-        this.reg(this.add.rectangle(W/2, (PB)/2, W, PB, 0x17181f, 0.96).setDepth(50));
-        this.reg(this.add.rectangle(W/2, PB, W, 1.5, 0x24262f).setDepth(50));
-        this.mkCollapse(W*0.055, HY);
-        const _t = this.reg(this.add.text(W*0.115, HY, '⚙ WHACK', {
-            fontSize: `${W*0.030}px`, color: '#e8e9ef', fontStyle: 'bold'
+        this.reg(this.add.rectangle(PW/2, H/2, PW, H, 0x17181f, 0.98).setDepth(50));
+        this.reg(this.add.rectangle(PW, H/2, 1.5, H, 0x24262f).setDepth(50));
+        const _t = this.reg(this.add.text(PW*0.06, H*0.03, '⚙ WHACK', {
+            fontSize: `${GW*0.030}px`, color: '#e8e9ef', fontStyle: 'bold'
         }).setOrigin(0, 0.5).setDepth(60));
-        const _cnTitle = this.reg(this.add.text(_t.x + _t.width + W*0.022, HY, '打地鼠', {
-            fontSize: `${W*0.024}px`, color: '#6d7080'
+        this.reg(this.add.text(_t.x + _t.width + GW*0.02, H*0.03, '打地鼠', {
+            fontSize: `${GW*0.022}px`, color: '#6d7080'
         }).setOrigin(0, 0.5).setDepth(60));
-        if (this.collapsed) return;
-        this.reg(this.add.text(W*0.97, HY, 'AUTO ▶ MOLE VISIBLE TIME', {
-            fontSize: `${W*0.024}px`, color: '#979aa8'
-        }).setOrigin(1, 0.5).setDepth(60));
+        this.reg(this.add.text(PW*0.06, H*0.066, 'AUTO ▶ MOLE VISIBLE TIME', {
+            fontSize: `${GW*0.020}px`, color: '#979aa8'
+        }).setOrigin(0, 0.5).setDepth(60));
 
         const rows = [
             { key: 'appear', label: 'Mole Visible', min: 300, max: 2200, get: () => LIVE.appearMs,     set: v => LIVE.appearMs     = v, fmt: v => `${Math.round(v)}ms` },
@@ -245,8 +250,8 @@ class LiveScene extends Phaser.Scene {
         ];
         const derivedKey = 'appear';
 
-        let sy = H*0.078;
-        const gap = H*0.044;
+        let sy = H*0.14;
+        const gap = H*0.05;
         for (const r of rows) {
             if (r.key === derivedKey) this.renderDerived(r, sy);
             else                      this.mkSlider(r, sy);
@@ -262,28 +267,26 @@ class LiveScene extends Phaser.Scene {
     }
 
     mkSlider(r, y) {
-        const x0 = W*0.42, x1 = W*0.80, trackW = x1 - x0;
-        this.reg(this.add.text(W*0.05, y, r.label, { fontSize: `${W*0.027}px`, color: '#979aa8' }).setOrigin(0, 0.5).setDepth(60));
-        const valTxt = this.reg(this.add.text(W*0.965, y, r.fmt(r.get()), { fontSize: `${W*0.027}px`, color: '#e8e9ef' }).setOrigin(1, 0.5).setDepth(60));
+        const tx0 = PW*0.06, tx1 = PW*0.94, trackW = tx1 - tx0, ty = y + H*0.02;
+        this.reg(this.add.text(tx0, y, r.label, { fontSize: `${GW*0.024}px`, color: '#9aa0b4' }).setOrigin(0, 0.5).setDepth(60));
+        const valTxt = this.reg(this.add.text(tx1, y, r.fmt(r.get()), { fontSize: `${GW*0.024}px`, color: '#e8e9ef' }).setOrigin(1, 0.5).setDepth(60));
         const g = this.reg(this.add.graphics().setDepth(59));
-        this.diffTrack(g, r, x0, x1, y); this.dirTag(r, y);
-        const knob = this.reg(this.add.circle(x0 + (r.get() - r.min)/(r.max - r.min) * trackW, y, W*0.020, 0xf0a324)
+        this.diffTrack(g, r, tx0, tx1, ty);
+        const knob = this.reg(this.add.circle(tx0 + (r.get() - r.min)/(r.max - r.min) * trackW, ty, GW*0.020, 0xf0a324)
             .setStrokeStyle(2, 0x17181f).setInteractive({ draggable: true }).setDepth(61));
         this.input.setDraggable(knob);
         knob.on('drag', (ptr, dragX) => {
-            const cx = Phaser.Math.Clamp(dragX, x0, x1);
-            knob.x = cx;
-            const v = r.min + (cx - x0)/trackW * (r.max - r.min);
-            valTxt.setText(r.fmt(v));
-            r.set(v);
+            const cx = Phaser.Math.Clamp(dragX, tx0, tx1); knob.x = cx;
+            const v = r.min + (cx - tx0)/trackW * (r.max - r.min);
+            valTxt.setText(r.fmt(v)); r.set(v);
         });
     }
 
     renderDerived(r, y) {
-        const x0 = W*0.42, x1 = W*0.80;
-        this.reg(this.add.text(W*0.05, y, r.label + '  ▸AUTO', { fontSize: `${W*0.027}px`, color: '#e8e9ef' }).setOrigin(0, 0.5).setDepth(60));
-        const text = this.reg(this.add.text(W*0.965, y, '', { fontSize: `${W*0.024}px`, color: '#e8e9ef', fontStyle: 'bold' }).setOrigin(1, 0.5).setDepth(60));
-        const g = this.reg(this.add.graphics().setDepth(59));        const handle  = this.reg(this.add.circle(x0, y, W*0.024, 0xffffff).setStrokeStyle(3, 0xf1014).setInteractive({ draggable: true }).setDepth(62));
+        const x0 = PW*0.06, x1 = PW*0.94, ty = y + H*0.02;
+        this.reg(this.add.text(x0, y, r.label + '  ▸AUTO', { fontSize: `${GW*0.024}px`, color: '#e8e9ef' }).setOrigin(0, 0.5).setDepth(60));
+        const text = this.reg(this.add.text(x1, y, '', { fontSize: `${GW*0.023}px`, color: '#e8e9ef', fontStyle: 'bold' }).setOrigin(1, 0.5).setDepth(60));
+        const g = this.reg(this.add.graphics().setDepth(59));        const handle  = this.reg(this.add.circle(x0, ty, GW*0.024, 0xffffff).setStrokeStyle(3, 0x17181f).setInteractive({ draggable: true }).setDepth(62));
         this.input.setDraggable(handle);
         const xOf = ratio => x0 + (Phaser.Math.Clamp(ratio, r.min, r.max) - r.min)/(r.max - r.min) * (x1 - x0);
         handle.on('dragstart', () => { this.draggingRun = true; });
@@ -296,7 +299,7 @@ class LiveScene extends Phaser.Scene {
             const sp = hxPos - exPos;
             this.bandT = Math.abs(sp) < 1 ? 0 : Phaser.Math.Clamp((cx - exPos)/sp, 0, 1);
         });
-        this.derived = { r, g, text, handle, x0, x1, y };
+        this.derived = { r, g, text, handle, x0, x1, y: ty };
         this.refreshDerived();
     }
 

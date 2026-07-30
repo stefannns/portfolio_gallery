@@ -2,9 +2,18 @@ require('libs/tt-adapter.js');
 const Phaser = require('libs/phaser.js');
 
 const res = tt.getSystemInfoSync();
-const windowWidth  = res.screenWidth;
-const windowHeight = res.screenHeight;
-const W = windowWidth, H = windowHeight;
+const H  = res.screenHeight;
+const GW = res.screenWidth;
+const PW = Math.round(res.screenWidth * 0.52);
+const GX0 = PW;
+const W  = GX0 + GW;
+const windowWidth = W, windowHeight = H;
+if (typeof window !== 'undefined' && window.canvas && window.canvas.style) {
+    window.canvas.width = W; window.canvas.height = H;
+    const dh = 640, dw = Math.round(dh * W / H);
+    window.canvas.style.width = dw + 'px'; window.canvas.style.height = dh + 'px';
+}
+const GCX = GX0 + GW/2;
 
 // ─────────────────────────────────────────────────────────────────
 // RUNNER / PLATFORMER — same jump-clearance physics, two control modes:
@@ -36,7 +45,7 @@ const JUMP_EASY    = 1.80;       // ×clearance-floor → Easy (tall, forgiving)
 const JUMP_HARD    = 1.30;       // ×clearance-floor → Hard (still a fair human margin, not razor-edge)
 const GROUND_Y     = H * 0.80;
 const PANEL_BOTTOM = H * 0.37 - 82;   // panel is flush to the top
-const PLAYER_X     = W * 0.25;     // player's fixed screen x (camera follows in manual)
+const PLAYER_X     = GX0 + GW * 0.25;     // player's fixed screen x (camera follows in manual)
 const PLAYER_VIS_H = H * 0.11;
 
 class LiveScene extends Phaser.Scene {
@@ -50,9 +59,10 @@ class LiveScene extends Phaser.Scene {
         this.collapsed = false;
         this.initCharacter(8);
 
-        this.add.rectangle(W/2, H/2, W, H, 0x1a1a2e).setDepth(0);
-        this.add.rectangle(W/2, (GROUND_Y + H)/2, W, H - GROUND_Y, 0x14241a).setDepth(0);
-        this.add.rectangle(W/2, GROUND_Y, W, 4, 0x4a7fa5).setDepth(1);
+        this.add.rectangle(W/2, H/2, W, H, 0x161a26).setDepth(0);
+        this.add.rectangle(GCX, H/2, GW, H, 0x1a1a2e).setDepth(0.3);
+        this.add.rectangle(GCX, (GROUND_Y + H)/2, GW, H - GROUND_Y, 0x14241a).setDepth(0.4);
+        this.add.rectangle(GCX, GROUND_Y, GW, 4, 0x4a7fa5).setDepth(1);
 
         // world / camera
         this.cameraX      = 0;
@@ -72,14 +82,14 @@ class LiveScene extends Phaser.Scene {
         this.playerGfx = this.add.graphics().setDepth(6);
 
         // tap-empty-to-jump (works in both modes)
-        const jumpZone = this.add.rectangle(W/2, (PANEL_BOTTOM + H)/2, W, H - PANEL_BOTTOM, 0x000000, 0)
+        const jumpZone = this.add.rectangle(GCX, H/2, GW, H, 0x000000, 0)
             .setInteractive().setDepth(2);
         jumpZone.on('pointerdown', () => this.jump());
 
         // on-screen controls
-        this.btnLeft  = this.ctrlBtn(W*0.12, H*0.90, '◀', () => this.moveDir = -1, () => this.moveDir = 0);
-        this.btnRight = this.ctrlBtn(W*0.30, H*0.90, '▶', () => this.moveDir =  1, () => this.moveDir = 0);
-        this.btnJump  = this.ctrlBtn(W*0.86, H*0.90, '▲', () => this.jump(), () => {});
+        this.btnLeft  = this.ctrlBtn(GX0 + GW*0.12, H*0.90, '◀', () => this.moveDir = -1, () => this.moveDir = 0);
+        this.btnRight = this.ctrlBtn(GX0 + GW*0.30, H*0.90, '▶', () => this.moveDir =  1, () => this.moveDir = 0);
+        this.btnJump  = this.ctrlBtn(GX0 + GW*0.86, H*0.90, '▲', () => this.jump(), () => {});
         if (this.input.keyboard) {
             const kb = this.input.keyboard;
             kb.on('keydown-LEFT',  () => this.moveDir = -1); kb.on('keyup-LEFT',  () => { if (this.moveDir<0) this.moveDir = 0; });
@@ -90,9 +100,7 @@ class LiveScene extends Phaser.Scene {
             kb.on('keydown-UP',    () => this.jump());
         }
 
-        this.readout = this.add.text(W*0.05, PANEL_BOTTOM + H*0.012, '', {
-            fontSize: `${W*0.028}px`, color: '#979aa8', lineSpacing: 5
-        }).setOrigin(0, 0).setDepth(48);
+        this.readout = { setText: (t) => { if (typeof window !== 'undefined') window.__genreStats = t; return this.readout; }, setColor: () => this.readout, y: 0 };
 
         this.bandEasy = LIVE.moveSpeedRatio;
         this.bandHard = LIVE.moveSpeedRatio * 1.5;
@@ -170,7 +178,7 @@ class LiveScene extends Phaser.Scene {
         b.on('pointerup', () => {
             this.collapsed = !this.collapsed;
             // keep the readout tucked under whichever edge the panel now ends at
-            if (this.readout) this.readout.y = (this.collapsed ? H*0.054 : PANEL_BOTTOM) + H*0.012;
+            if (this.readout) this.readout.y = (this.collapsed ? H*0.054 : H*0.37) + H*0.012;
             this.rebuildPanel();
         });
     }
@@ -219,14 +227,14 @@ class LiveScene extends Phaser.Scene {
     recompute() {
         const T  = LIVE.airTime;
         const h  = H * LIVE.obsHRatio;
-        const w  = W * LIVE.obsWRatio;
-        const wp = W * LIVE.playerWRatio;
+        const w  = GW * LIVE.obsWRatio;
+        const wp = GW * LIVE.playerWRatio;
 
         if (this.mode === 'jump') {
             // DIFFICULTY axis: jump height. Taller = more clearance margin = easier, and it
             // does NOT change how fast obstacles arrive — so it's a clean, monotonic difficulty dial.
             // Easy = tall (forgiving), Hard = near the clearance floor. Draggable band.
-            const v = W * LIVE.moveSpeedRatio;
+            const v = GW * LIVE.moveSpeedRatio;
             const R = (w + wp) / (v * T);                       // razor-edge timing fraction
             if (R >= 1) {                                       // width can't be crossed in the air time
                 this.derivedOK = false;
@@ -246,7 +254,7 @@ class LiveScene extends Phaser.Scene {
             if (Hmax <= h) { this.derivedOK = false; LIVE.moveSpeedRatio = 0.70; }
             else {
                 const vmin = (w + wp) / (K_MARGIN * T * Math.sqrt(1 - h/Hmax));
-                const ratio = vmin / W;
+                const ratio = vmin / GW;
                 this.derivedOK = ratio <= 0.70;
                 LIVE.moveSpeedRatio = Phaser.Math.Clamp(ratio, 0.12, 0.70);
             }
@@ -259,8 +267,8 @@ class LiveScene extends Phaser.Scene {
 
         const Hmax  = H * LIVE.jumpHeightRatio, T = LIVE.airTime;
         const grav  = 8 * Hmax / (T * T);
-        const speed = W * LIVE.moveSpeedRatio;
-        const charW = W * LIVE.playerWRatio;
+        const speed = GW * LIVE.moveSpeedRatio;
+        const charW = GW * LIVE.playerWRatio;
 
         // horizontal — auto scroll vs manual drive (both keep player at screen PLAYER_X)
         if (this.control === 'auto') {
@@ -296,8 +304,8 @@ class LiveScene extends Phaser.Scene {
             if (this.platformMode) {
                 // Ascending staircase of long landable platforms + an optional upper tier.
                 // Each platform rises ~"Step Up" (obsHRatio) above the last; reset to base at the ceiling.
-                const platLen  = Phaser.Math.Clamp(W * LIVE.obsWRatio * 4, W*0.20, W*0.70);
-                const gapEmpty = Math.max(W*0.12, speed * T * 0.75);
+                const platLen  = Phaser.Math.Clamp(GW * LIVE.obsWRatio * 4, GW*0.20, GW*0.70);
+                const gapEmpty = Math.max(GW*0.12, speed * T * 0.75);
                 const step     = LIVE.obsHRatio;                 // rise per platform (×H)
                 const baseH = 0.05, ceilH = 0.42;
 
@@ -318,8 +326,8 @@ class LiveScene extends Phaser.Scene {
 
                 this.nextSpawnX += platLen + gapEmpty + (Math.random() - 0.5) * gapEmpty * 0.4;  // spacing jitter
             } else {
-                const gap = Math.max(W*0.30, speed * T * 1.4) + W * LIVE.obsWRatio;
-                this.obstacles.push({ worldX: this.nextSpawnX, w: W*LIVE.obsWRatio, h: H*LIVE.obsHRatio, state: 'pending' });
+                const gap = Math.max(GW*0.30, speed * T * 1.4) + GW * LIVE.obsWRatio;
+                this.obstacles.push({ worldX: this.nextSpawnX, w: GW*LIVE.obsWRatio, h: H*LIVE.obsHRatio, state: 'pending' });
                 this.nextSpawnX += gap;
             }
         }
@@ -359,7 +367,7 @@ class LiveScene extends Phaser.Scene {
                 const base = o.state === 'hit' ? 0xef6b6b : o.state === 'cleared' ? 0x63d19b : 0xff8fa3;
                 const rr = Math.min(o.w*0.3, o.h*0.3, H*0.022);
                 g.fillStyle(base); g.fillRoundedRect(sx - o.w/2, oTop, o.w, o.h, rr);
-                if (o.h > H*0.04 && o.w > W*0.055) {
+                if (o.h > H*0.04 && o.w > GW*0.055) {
                     const fr = Math.min(o.w, o.h)*0.5, fy = oTop + Math.min(o.h*0.42, o.w*0.5);
                     g.fillStyle(0x3a2e33); g.fillCircle(sx - fr*0.3, fy, fr*0.13); g.fillCircle(sx + fr*0.3, fy, fr*0.13);
                     g.lineStyle(Math.max(2, fr*0.1), 0x3a2e33, 1);
@@ -398,42 +406,36 @@ class LiveScene extends Phaser.Scene {
     }
 
     buildPanel() {
-        const HY = H*0.023, PB = this.collapsed ? H*0.054 : PANEL_BOTTOM;
-        this.reg(this.add.rectangle(W/2, (PB)/2, W, PB, 0x17181f, 0.96).setDepth(50));
-        this.reg(this.add.rectangle(W/2, PB, W, 1.5, 0x24262f).setDepth(50));
-        this.mkCollapse(W*0.055, HY);
-        const _t = this.reg(this.add.text(W*0.115, HY, '⚙ RUNNER', {
-            fontSize: `${W*0.028}px`, color: '#e8e9ef', fontStyle: 'bold'
+        this.reg(this.add.rectangle(PW/2, H/2, PW, H, 0x17181f, 0.98).setDepth(50));
+        this.reg(this.add.rectangle(PW, H/2, 1.5, H, 0x24262f).setDepth(50));
+        const _t = this.reg(this.add.text(PW*0.06, H*0.028, '⚙ RUNNER', {
+            fontSize: `${GW*0.028}px`, color: '#e8e9ef', fontStyle: 'bold'
         }).setOrigin(0, 0.5).setDepth(60));
-        const _cnTitle = this.reg(this.add.text(_t.x + _t.width + W*0.022, HY, '无尽跑酷', {
-            fontSize: `${W*0.024}px`, color: '#6d7080'
+        this.reg(this.add.text(_t.x + _t.width + GW*0.02, H*0.028, '无尽跑酷', {
+            fontSize: `${GW*0.02}px`, color: '#6d7080'
         }).setOrigin(0, 0.5).setDepth(60));
-        if (this.collapsed) return;
 
-        // blocks-role toggle (title row, right) — obstacles you jump OVER vs platforms you land ON
         const blkStr = this.platformMode ? 'MODE: PLATFORMS ▣' : 'MODE: OBSTACLES ▮';
-        const blkBtn = this.reg(this.add.rectangle(W*0.97, HY, W*0.42, H*0.028, 0x24262f)
-            .setStrokeStyle(1.5, this.platformMode ? 0x2ecc71 : 0xe67e22).setInteractive().setDepth(60).setOrigin(1, 0.5));
-        this.reg(this.add.text(W*0.97 - W*0.23, HY, blkStr, {
-            fontSize: `${W*0.023}px`, color: '#e8e9ef', fontStyle: 'bold'
+        const blkBtn = this.reg(this.add.rectangle(PW*0.5, H*0.064, PW*0.88, H*0.032, 0x24262f)
+            .setStrokeStyle(1.5, this.platformMode ? 0x2ecc71 : 0xe67e22).setInteractive().setDepth(60));
+        this.reg(this.add.text(PW*0.5, H*0.064, blkStr, {
+            fontSize: `${GW*0.02}px`, color: '#e8e9ef', fontStyle: 'bold'
         }).setOrigin(0.5).setDepth(61));
         blkBtn.on('pointerup', () => this.togglePlatformMode());
 
-        // control toggle (row 2, left)
         const ctlStr = this.control === 'manual' ? 'RUN: MANUAL' : 'RUN: AUTO';
-        const cbtn = this.reg(this.add.rectangle(W*0.05, H*0.060, W*0.34, H*0.026, 0x24262f)
-            .setStrokeStyle(1.5, 0x3a3d4a).setInteractive().setDepth(60).setOrigin(0, 0.5));
-        this.reg(this.add.text(W*0.05 + W*0.17, H*0.060, ctlStr, {
-            fontSize: `${W*0.024}px`, color: '#e8e9ef', fontStyle: 'bold'
+        const cbtn = this.reg(this.add.rectangle(PW*0.28, H*0.106, PW*0.42, H*0.032, 0x24262f)
+            .setStrokeStyle(1.5, 0x3a3d4a).setInteractive().setDepth(60));
+        this.reg(this.add.text(PW*0.28, H*0.106, ctlStr, {
+            fontSize: `${GW*0.019}px`, color: '#e8e9ef', fontStyle: 'bold'
         }).setOrigin(0.5).setDepth(61));
         cbtn.on('pointerup', () => { this.control = this.control === 'manual' ? 'auto' : 'manual'; this.rebuildPanel(); this.applyControlVisibility(); });
 
-        // compute toggle (row 2, right)
         const modeStr = this.mode === 'jump' ? 'COMPUTE ▶ JUMP' : 'COMPUTE ▶ SPEED';
-        const btn = this.reg(this.add.rectangle(W*0.97, H*0.060, W*0.42, H*0.026, 0x24262f)
-            .setStrokeStyle(1.5, 0x3a3d4a).setInteractive().setDepth(60).setOrigin(1, 0.5));
-        this.reg(this.add.text(W*0.97 - W*0.21, H*0.060, modeStr, {
-            fontSize: `${W*0.024}px`, color: '#e8e9ef', fontStyle: 'bold'
+        const btn = this.reg(this.add.rectangle(PW*0.72, H*0.106, PW*0.42, H*0.032, 0x24262f)
+            .setStrokeStyle(1.5, 0x3a3d4a).setInteractive().setDepth(60));
+        this.reg(this.add.text(PW*0.72, H*0.106, modeStr, {
+            fontSize: `${GW*0.019}px`, color: '#e8e9ef', fontStyle: 'bold'
         }).setOrigin(0.5).setDepth(61));
         btn.on('pointerup', () => { this.mode = this.mode === 'jump' ? 'speed' : 'jump'; this.rebuildPanel(); });
 
@@ -448,8 +450,8 @@ class LiveScene extends Phaser.Scene {
         ];
         const derivedKey = this.mode === 'jump' ? 'jump' : 'speed';
 
-        let sy = H*0.086;
-        const gap = H*0.0292;
+        let sy = H*0.17;
+        const gap = H*0.05;
         for (const r of rows) {
             if (r.key === derivedKey) this.renderDerived(r, sy);
             else                      this.mkSlider(r, sy);
@@ -457,16 +459,17 @@ class LiveScene extends Phaser.Scene {
         }
 
         // DIFFICULTY presets — snap the jump-height handle (Easy↔Hard). Feel presets = the Air-Time markers.
-        const py = H*0.298;
-        this.reg(this.add.text(W*0.05, py, 'DIFFICULTY', { fontSize: `${W*0.024}px`, color: '#979aa8', fontStyle: 'bold' }).setOrigin(0, 0.5).setDepth(60));
-        this.presetBtn('EASY',   W*0.46, py, 0x2ecc71, () => { this.bandT = 0;   });
-        this.presetBtn('NORMAL', W*0.66, py, 0xf1c40f, () => { this.bandT = 0.5; });
-        this.presetBtn('HARD',   W*0.86, py, 0xe74c3c, () => { this.bandT = 1;   });
+        sy += H*0.01;
+        this.reg(this.add.text(PW*0.06, sy, 'DIFFICULTY', { fontSize: `${GW*0.022}px`, color: '#979aa8', fontStyle: 'bold' }).setOrigin(0, 0.5).setDepth(60));
+        sy += H*0.038;
+        this.presetBtn('EASY',   PW*0.20, sy, 0x2ecc71, () => { this.bandT = 0;   });
+        this.presetBtn('NORMAL', PW*0.5,  sy, 0xf1c40f, () => { this.bandT = 0.5; });
+        this.presetBtn('HARD',   PW*0.80, sy, 0xe74c3c, () => { this.bandT = 1;   });
     }
 
     presetBtn(label, x, y, col, cb) {
-        const b = this.reg(this.add.rectangle(x, y, W*0.18, H*0.027, 0x24262f).setStrokeStyle(1.5, col).setInteractive().setDepth(60));
-        this.reg(this.add.text(x, y, label, { fontSize: `${W*0.020}px`, color: '#' + col.toString(16).padStart(6,'0'), fontStyle: 'bold' }).setOrigin(0.5).setDepth(61));
+        const b = this.reg(this.add.rectangle(x, y, PW*0.26, H*0.032, 0x24262f).setStrokeStyle(1.5, col).setInteractive().setDepth(60));
+        this.reg(this.add.text(x, y, label, { fontSize: `${GW*0.019}px`, color: '#' + col.toString(16).padStart(6,'0'), fontStyle: 'bold' }).setOrigin(0.5).setDepth(61));
         b.on('pointerup', cb);
     }
 
@@ -489,38 +492,36 @@ class LiveScene extends Phaser.Scene {
     }
 
     mkSlider(r, y) {
-        const x0 = W*0.42, x1 = W*0.80, trackW = x1 - x0;
-        this.reg(this.add.text(W*0.05, y, r.label, { fontSize: `${W*0.027}px`, color: '#979aa8' }).setOrigin(0, 0.5).setDepth(60));
-        const valTxt = this.reg(this.add.text(W*0.965, y, r.fmt(r.get()), { fontSize: `${W*0.027}px`, color: '#e8e9ef' }).setOrigin(1, 0.5).setDepth(60));
+        const tx0 = PW*0.06, tx1 = PW*0.94, trackW = tx1 - tx0, ty = y + H*0.018;
+        this.reg(this.add.text(tx0, y, r.label, { fontSize: `${GW*0.022}px`, color: '#9aa0b4' }).setOrigin(0, 0.5).setDepth(60));
+        const valTxt = this.reg(this.add.text(tx1, y, r.fmt(r.get()), { fontSize: `${GW*0.022}px`, color: '#e8e9ef' }).setOrigin(1, 0.5).setDepth(60));
         const g = this.reg(this.add.graphics().setDepth(59));
-        this.diffTrack(g, r, x0, x1, y); this.dirTag(r, y);
+        this.diffTrack(g, r, tx0, tx1, ty);
         if (r.markers) {
             for (const m of r.markers) {
-                const mx = x0 + (m.value - r.min)/(r.max - r.min) * trackW;
-                g.lineStyle(2, 0x6c9fff, 0.8); g.lineBetween(mx, y - H*0.010, mx, y + H*0.010);
-                this.reg(this.add.text(mx, y + H*0.011, m.label, { fontSize: `${W*0.019}px`, color: '#6c9fff' }).setOrigin(0.5, 0).setDepth(60));
+                const mx = tx0 + (m.value - r.min)/(r.max - r.min) * trackW;
+                g.lineStyle(2, 0x6c9fff, 0.8); g.lineBetween(mx, ty - H*0.008, mx, ty + H*0.008);
+                this.reg(this.add.text(mx, ty + H*0.009, m.label, { fontSize: `${GW*0.015}px`, color: '#6c9fff' }).setOrigin(0.5, 0).setDepth(60));
             }
         }
-        const knob = this.reg(this.add.circle(x0 + (r.get() - r.min)/(r.max - r.min) * trackW, y, W*0.020, 0xf0a324)
+        const knob = this.reg(this.add.circle(tx0 + (r.get() - r.min)/(r.max - r.min) * trackW, ty, GW*0.019, 0xf0a324)
             .setStrokeStyle(2, 0x17181f).setInteractive({ draggable: true }).setDepth(61));
         this.input.setDraggable(knob);
         knob.on('drag', (ptr, dragX) => {
-            const cx = Phaser.Math.Clamp(dragX, x0, x1);
-            knob.x = cx;
-            const v = r.min + (cx - x0)/trackW * (r.max - r.min);
-            valTxt.setText(r.fmt(v));
-            r.set(v);
+            const cx = Phaser.Math.Clamp(dragX, tx0, tx1); knob.x = cx;
+            const v = r.min + (cx - tx0)/trackW * (r.max - r.min);
+            valTxt.setText(r.fmt(v)); r.set(v);
         });
     }
 
     renderDerived(r, y) {
-        const x0 = W*0.42, x1 = W*0.80;
-        this.reg(this.add.text(W*0.05, y, r.label + '  ▸AUTO', { fontSize: `${W*0.027}px`, color: '#e8e9ef' }).setOrigin(0, 0.5).setDepth(60));
-        const text = this.reg(this.add.text(W*0.965, y, '', { fontSize: `${W*0.025}px`, color: '#e8e9ef', fontStyle: 'bold' }).setOrigin(1, 0.5).setDepth(60));
+        const x0 = PW*0.06, x1 = PW*0.94, ty = y + H*0.018;
+        this.reg(this.add.text(x0, y, r.label + '  ▸AUTO', { fontSize: `${GW*0.022}px`, color: '#e8e9ef' }).setOrigin(0, 0.5).setDepth(60));
+        const text = this.reg(this.add.text(x1, y, '', { fontSize: `${GW*0.021}px`, color: '#e8e9ef', fontStyle: 'bold' }).setOrigin(1, 0.5).setDepth(60));
         const g = this.reg(this.add.graphics().setDepth(59));
 
-        if (r.key === 'jump') {            // draggable difficulty handle — pick where in the Easy↔Hard jump-height band the game runs
-            const handle = this.reg(this.add.circle(x0, y, W*0.024, 0xffffff).setStrokeStyle(3, 0xf1014).setInteractive({ draggable: true }).setDepth(62));
+        if (r.key === 'jump') {
+            const handle = this.reg(this.add.circle(x0, ty, GW*0.022, 0xffffff).setStrokeStyle(3, 0x17181f).setInteractive({ draggable: true }).setDepth(62));
             this.input.setDraggable(handle);
             const xOf = ratio => x0 + (Phaser.Math.Clamp(ratio, r.min, r.max) - r.min)/(r.max - r.min) * (x1 - x0);
             handle.on('dragstart', () => { this.draggingRun = true; });
@@ -533,11 +534,11 @@ class LiveScene extends Phaser.Scene {
                 const span = hxPos - exPos;
                 this.bandT = Math.abs(span) < 1 ? 0 : Phaser.Math.Clamp((cx - exPos)/span, 0, 1);
             });
-            this.derived = { type: 'range', r, g, text, handle, x0, x1, y };
+            this.derived = { type: 'range', r, g, text, handle, x0, x1, y: ty };
         } else {
-            g.lineStyle(4, 0x2e313c); g.lineBetween(x0, y, x1, y);
-            const marker = this.reg(this.add.circle(x0, y, W*0.018, 0xf0a324).setStrokeStyle(2, 0xffffff).setDepth(61));
-            this.derived = { type: 'point', r, marker, text, x0, x1, y };
+            g.lineStyle(4, 0x2e313c); g.lineBetween(x0, ty, x1, ty);
+            const marker = this.reg(this.add.circle(x0, ty, GW*0.018, 0xf0a324).setStrokeStyle(2, 0xffffff).setDepth(61));
+            this.derived = { type: 'point', r, marker, text, x0, x1, y: ty };
         }
         this.refreshDerived();
     }

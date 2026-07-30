@@ -1,10 +1,20 @@
 require('libs/tt-adapter.js');
 const Phaser = require('libs/phaser.js');
 
+// Widen canvas: left control strip [0..PW] + native gameplay region [GX0..W].
 const res = tt.getSystemInfoSync();
-const windowWidth  = res.screenWidth;
-const windowHeight = res.screenHeight;
-const W = windowWidth, H = windowHeight;
+const H  = res.screenHeight;
+const GW = res.screenWidth;                        // native gameplay width
+const PW = Math.round(res.screenWidth * 0.52);     // left control strip
+const GX0 = PW;
+const W  = GX0 + GW;
+const windowWidth = W, windowHeight = H;
+if (typeof window !== 'undefined' && window.canvas && window.canvas.style) {
+    window.canvas.width = W; window.canvas.height = H;
+    const dh = 640, dw = Math.round(dh * W / H);
+    window.canvas.style.width = dw + 'px'; window.canvas.style.height = dh + 'px';
+}
+const GCX = GX0 + GW/2;
 
 // ─────────────────────────────────────────────────────────────────
 // FLAPPY — LIVE TUNING.  Sliders write LIVE; gameplay reads it each frame.
@@ -27,8 +37,8 @@ const GAP_FLOOR_MUL = 1.0;    // gap floor = birdH + GAP_FLOOR_MUL·flapArc
 const EASY_GAP = 1.6, HARD_GAP = 1.25;     // ×gap-floor  (bigger gap = easier)
 const EASY_SPD = 0.60, HARD_SPD = 0.95;    // ×speed-max  (faster = harder)
 const PANEL_BOTTOM = H * 0.37 - 82;   // panel is flush to the top
-const BIRD_X       = W * 0.30;
-const SKY_TOP      = PANEL_BOTTOM;
+const BIRD_X       = GX0 + GW * 0.30;
+const SKY_TOP      = H * 0.03;
 const SKY_BOT      = H - 161;
 
 class LiveScene extends Phaser.Scene {
@@ -43,13 +53,14 @@ class LiveScene extends Phaser.Scene {
         this.bandT = 0;        // 0 = Easy, 1 = Hard (draggable handle on the band)
         this.draggingRun = false;
 
-        this.add.rectangle(W/2, H/2, W, H, 0x4a86c8).setDepth(0);
-        this.add.rectangle(W/2, (SKY_BOT + H)/2, W, H - SKY_BOT, 0x5a8a30).setDepth(1);
+        this.add.rectangle(W/2, H/2, W, H, 0x161a26).setDepth(0);
+        this.add.rectangle(GCX, H/2, GW, H, 0x4a86c8).setDepth(0.5);
+        this.add.rectangle(GCX, (SKY_BOT + H)/2, GW, H - SKY_BOT, 0x5a8a30).setDepth(1);
 
         this.birdY      = (SKY_TOP + SKY_BOT)/2;
         this.velY       = 0;
         this.worldX     = 0;
-        this.nextPipeX  = W * 0.9;
+        this.nextPipeX  = GW * 0.9;
         this.pipes      = [];
         this.passed     = 0;
         this.hits       = 0;
@@ -57,20 +68,18 @@ class LiveScene extends Phaser.Scene {
         this.pipeGfx = this.add.graphics().setDepth(4);
         this.birdGfx = this.add.graphics().setDepth(6);
 
-        const flapZone = this.add.rectangle(W/2, (PANEL_BOTTOM + H)/2, W, H - PANEL_BOTTOM, 0x000000, 0)
+        const flapZone = this.add.rectangle(GCX, H/2, GW, H, 0x000000, 0)
             .setInteractive().setDepth(2);
         flapZone.on('pointerdown', () => this.flap());
-        this.add.text(W/2, SKY_BOT - H*0.04, 'TAP TO FLAP', {
-            fontSize: `${W*0.034}px`, color: '#ffffff'
+        this.add.text(GCX, SKY_BOT - H*0.04, 'TAP TO FLAP', {
+            fontSize: `${GW*0.034}px`, color: '#ffffff'
         }).setOrigin(0.5).setAlpha(0.2).setDepth(2);
         if (this.input.keyboard) {
             this.input.keyboard.on('keydown-SPACE', () => this.flap());
             this.input.keyboard.on('keydown-UP',    () => this.flap());
         }
 
-        this.readout = this.add.text(W*0.05, PANEL_BOTTOM + H*0.012, '', {
-            fontSize: `${W*0.026}px`, color: '#979aa8', lineSpacing: 5
-        }).setOrigin(0, 0).setDepth(48);
+        this.readout = { setText: (t) => { if (typeof window !== 'undefined') window.__genreStats = t; return this.readout; }, setColor: () => this.readout, y: 0 };
 
         this.panelObjs = [];
         this.buildPanel();
@@ -181,10 +190,10 @@ class LiveScene extends Phaser.Scene {
         } else {
             // Scroll speed is PACING, not difficulty (faster only cuts reaction time — it doesn't
             // change whether the bird fits). Compute the fastest fair speed; run at a comfortable 0.7×.
-            const spacing = W * LIVE.pipeSpacingRatio;
+            const spacing = GW * LIVE.pipeSpacingRatio;
             const spdMax  = spacing / (K_REACT * this.flapCycle());       // px/s, fastest fair
             this.derivedOK = true;
-            LIVE.scrollSpeedRatio = Phaser.Math.Clamp(0.7 * spdMax / W, 0.12, 0.70);
+            LIVE.scrollSpeedRatio = Phaser.Math.Clamp(0.7 * spdMax / GW, 0.12, 0.70);
         }
     }
 
@@ -193,7 +202,7 @@ class LiveScene extends Phaser.Scene {
         this.recompute();
 
         const g     = H * LIVE.gravityRatio;
-        const speed = W * LIVE.scrollSpeedRatio;
+        const speed = GW * LIVE.scrollSpeedRatio;
         const gap   = H * LIVE.gapHeightRatio;
         const birdR = H * LIVE.birdSizeRatio / 2;
 
@@ -203,18 +212,18 @@ class LiveScene extends Phaser.Scene {
         if (this.birdY > SKY_BOT - birdR) { this.birdY = SKY_BOT - birdR; this.velY = 0; }
 
         this.worldX += speed * dt;
-        const spacing = W * LIVE.pipeSpacingRatio;
-        while (this.nextPipeX < this.worldX + W * 1.2) {
+        const spacing = GW * LIVE.pipeSpacingRatio;
+        while (this.nextPipeX < this.worldX + GW * 1.2) {
             const margin = gap/2 + H*0.04;
             const center = SKY_TOP + margin + Math.random() * Math.max(1, (SKY_BOT - SKY_TOP) - 2*margin);
             this.pipes.push({ worldX: this.nextPipeX, gapC: center, state: 'pending' });
             this.nextPipeX += spacing;
         }
 
-        const pipeW = W * 0.10;
+        const pipeW = GW * 0.10;
         for (let i = this.pipes.length - 1; i >= 0; i--) {
             const p = this.pipes[i];
-            const sx = p.worldX - this.worldX;
+            const sx = GX0 + (p.worldX - this.worldX);
             const half = gap/2;
             if (BIRD_X + birdR > sx - pipeW/2 && BIRD_X - birdR < sx + pipeW/2) {
                 if ((this.birdY - birdR < p.gapC - half || this.birdY + birdR > p.gapC + half) && p.state !== 'hit') {
@@ -222,7 +231,7 @@ class LiveScene extends Phaser.Scene {
                 }
             }
             if (sx + pipeW/2 < BIRD_X - birdR && p.state === 'pending') { p.state = 'passed'; this.passed++; }
-            if (sx < -pipeW) this.pipes.splice(i, 1);
+            if (sx < GX0 - pipeW) this.pipes.splice(i, 1);
         }
 
         this.drawPipes(pipeW, gap);
@@ -234,8 +243,8 @@ class LiveScene extends Phaser.Scene {
     drawPipes(pipeW, gap) {
         const g = this.pipeGfx; g.clear();
         for (const p of this.pipes) {
-            const sx = p.worldX - this.worldX;
-            if (sx + pipeW/2 < -10 || sx - pipeW/2 > W + 10) continue;
+            const sx = GX0 + (p.worldX - this.worldX);
+            if (sx + pipeW/2 < GX0 - 10 || sx - pipeW/2 > W + 10) continue;
             const top = p.gapC - gap/2, bot = p.gapC + gap/2;
             const base = p.state === 'hit' ? 0xef6b6b : p.state === 'passed' ? 0x63d19b : 0x74c98a;
             const cap  = p.state === 'hit' ? 0xd94f4f : p.state === 'passed' ? 0x4cba86 : 0x5fb877;
@@ -269,24 +278,14 @@ class LiveScene extends Phaser.Scene {
     }
 
     buildPanel() {
-        const HY = H*0.023, PB = this.collapsed ? H*0.054 : PANEL_BOTTOM;
-        this.reg(this.add.rectangle(W/2, (PB)/2, W, PB, 0x17181f, 0.96).setDepth(50));
-        this.reg(this.add.rectangle(W/2, PB, W, 1.5, 0x24262f).setDepth(50));
-        this.mkCollapse(W*0.055, HY);
-        const _t = this.reg(this.add.text(W*0.115, HY, '⚙ FLAPPY', {
-            fontSize: `${W*0.032}px`, color: '#e8e9ef', fontStyle: 'bold'
-        }).setOrigin(0, 0.5).setDepth(60));
-        const _cnTitle = this.reg(this.add.text(_t.x + _t.width + W*0.022, HY, '飞翔小鸟', {
-            fontSize: `${W*0.024}px`, color: '#6d7080'
-        }).setOrigin(0, 0.5).setDepth(60));
-        if (this.collapsed) return;
+        this.reg(this.add.rectangle(PW/2, H/2, PW, H, 0x17181f, 0.98).setDepth(50));
+        this.reg(this.add.rectangle(PW, H/2, 1.5, H, 0x24262f).setDepth(50));
+        const _t = this.reg(this.add.text(PW*0.06, H*0.03, '⚙ FLAPPY', { fontSize: `${GW*0.030}px`, color: '#e8e9ef', fontStyle: 'bold' }).setOrigin(0, 0.5).setDepth(60));
+        this.reg(this.add.text(_t.x + _t.width + GW*0.02, H*0.03, '飞翔小鸟', { fontSize: `${GW*0.022}px`, color: '#6d7080' }).setOrigin(0, 0.5).setDepth(60));
 
         const modeStr = this.mode === 'gap' ? 'COMPUTE ▶ GAP HEIGHT' : 'COMPUTE ▶ SCROLL SPEED';
-        const btn = this.reg(this.add.rectangle(W*0.97, HY, W*0.52, H*0.030, 0x24262f)
-            .setStrokeStyle(1.5, 0x3a3d4a).setInteractive().setDepth(60).setOrigin(1, 0.5));
-        this.reg(this.add.text(W*0.97 - W*0.26, HY, modeStr, {
-            fontSize: `${W*0.025}px`, color: '#e8e9ef', fontStyle: 'bold'
-        }).setOrigin(0.5).setDepth(61));
+        const btn = this.reg(this.add.rectangle(PW*0.5, H*0.076, PW*0.88, H*0.032, 0x24262f).setStrokeStyle(1.5, 0x3a3d4a).setInteractive().setDepth(60));
+        this.reg(this.add.text(PW*0.5, H*0.076, modeStr, { fontSize: `${GW*0.021}px`, color: '#e8e9ef', fontStyle: 'bold' }).setOrigin(0.5).setDepth(61));
         btn.on('pointerup', () => { this.mode = this.mode === 'gap' ? 'speed' : 'gap'; this.rebuildPanel(); });
 
         const rows = [
@@ -297,15 +296,9 @@ class LiveScene extends Phaser.Scene {
             { key: 'space', label: 'Pipe Spacing',  min: 0.30, max: 0.80, get: () => LIVE.pipeSpacingRatio, set: v => LIVE.pipeSpacingRatio = v, fmt: v => `${(v*100).toFixed(0)}%W` },
             { key: 'speed', label: 'Scroll Speed',  min: 0.12, max: 0.70, get: () => LIVE.scrollSpeedRatio, set: v => LIVE.scrollSpeedRatio = v, fmt: v => `${v.toFixed(2)}W` },
         ];
-        const derivedKey = this.mode;   // 'gap' or 'speed'
-
-        let sy = H*0.066;
-        const gap = H*0.0335;
-        for (const r of rows) {
-            if (r.key === derivedKey) this.renderDerived(r, sy);
-            else                      this.mkSlider(r, sy);
-            sy += gap;
-        }
+        const derivedKey = this.mode;
+        let cy = H*0.14; const gap = H*0.055;
+        for (const r of rows) { if (r.key === derivedKey) this.renderDerived(r, cy); else this.mkSlider(r, cy); cy += gap; }
     }
 
     rebuildPanel() {
@@ -316,30 +309,29 @@ class LiveScene extends Phaser.Scene {
     }
 
     mkSlider(r, y) {
-        const x0 = W*0.42, x1 = W*0.80, trackW = x1 - x0;
-        this.reg(this.add.text(W*0.05, y, r.label, { fontSize: `${W*0.027}px`, color: '#979aa8' }).setOrigin(0, 0.5).setDepth(60));
-        const valTxt = this.reg(this.add.text(W*0.965, y, r.fmt(r.get()), { fontSize: `${W*0.027}px`, color: '#e8e9ef' }).setOrigin(1, 0.5).setDepth(60));
+        const tx0 = PW*0.06, tx1 = PW*0.94, trackW = tx1 - tx0, ty = y + H*0.02;
+        this.reg(this.add.text(tx0, y, r.label, { fontSize: `${GW*0.024}px`, color: '#9aa0b4' }).setOrigin(0, 0.5).setDepth(60));
+        const valTxt = this.reg(this.add.text(tx1, y, r.fmt(r.get()), { fontSize: `${GW*0.024}px`, color: '#e8e9ef' }).setOrigin(1, 0.5).setDepth(60));
         const g = this.reg(this.add.graphics().setDepth(59));
-        this.diffTrack(g, r, x0, x1, y); this.dirTag(r, y);
-        const knob = this.reg(this.add.circle(x0 + (r.get() - r.min)/(r.max - r.min) * trackW, y, W*0.020, 0xf0a324)
+        this.diffTrack(g, r, tx0, tx1, ty);
+        const knob = this.reg(this.add.circle(tx0 + (r.get() - r.min)/(r.max - r.min) * trackW, ty, GW*0.020, 0xf0a324)
             .setStrokeStyle(2, 0x17181f).setInteractive({ draggable: true }).setDepth(61));
         this.input.setDraggable(knob);
         knob.on('drag', (ptr, dragX) => {
-            const cx = Phaser.Math.Clamp(dragX, x0, x1);
-            knob.x = cx;
-            const v = r.min + (cx - x0)/trackW * (r.max - r.min);
-            valTxt.setText(r.fmt(v));
-            r.set(v);
+            const cx = Phaser.Math.Clamp(dragX, tx0, tx1); knob.x = cx;
+            const v = r.min + (cx - tx0)/trackW * (r.max - r.min);
+            valTxt.setText(r.fmt(v)); r.set(v);
         });
     }
 
-    // Gap mode → Easy/Hard difficulty band (draggable). Speed mode → pacing point (not difficulty).
+    // Gap mode → Easy/Hard difficulty band (draggable). Speed mode → pacing point.
     renderDerived(r, y) {
-        const x0 = W*0.42, x1 = W*0.80;
-        this.reg(this.add.text(W*0.05, y, r.label + '  ▸AUTO', { fontSize: `${W*0.027}px`, color: '#e8e9ef' }).setOrigin(0, 0.5).setDepth(60));
-        const text = this.reg(this.add.text(W*0.965, y, '', { fontSize: `${W*0.024}px`, color: '#e8e9ef', fontStyle: 'bold' }).setOrigin(1, 0.5).setDepth(60));
+        const x0 = PW*0.06, x1 = PW*0.94, ty = y + H*0.02;
+        this.reg(this.add.text(x0, y, r.label + '  ▸AUTO', { fontSize: `${GW*0.024}px`, color: '#e8e9ef' }).setOrigin(0, 0.5).setDepth(60));
+        const text = this.reg(this.add.text(x1, y, '', { fontSize: `${GW*0.023}px`, color: '#e8e9ef', fontStyle: 'bold' }).setOrigin(1, 0.5).setDepth(60));
         const g = this.reg(this.add.graphics().setDepth(59));
-        if (r.key === 'gap') {            const handle = this.reg(this.add.circle(x0, y, W*0.024, 0xffffff).setStrokeStyle(3, 0xf1014).setInteractive({ draggable: true }).setDepth(62));
+        if (r.key === 'gap') {
+            const handle = this.reg(this.add.circle(x0, ty, GW*0.024, 0xffffff).setStrokeStyle(3, 0x17181f).setInteractive({ draggable: true }).setDepth(62));
             this.input.setDraggable(handle);
             const xOf = ratio => x0 + (Phaser.Math.Clamp(ratio, r.min, r.max) - r.min)/(r.max - r.min) * (x1 - x0);
             handle.on('dragstart', () => { this.draggingRun = true; });
@@ -347,16 +339,15 @@ class LiveScene extends Phaser.Scene {
             handle.on('drag', (ptr, dragX) => {
                 const exPos = xOf(this.bandEasy), hxPos = xOf(this.bandHard);
                 const lo = Math.min(exPos, hxPos), hi = Math.max(exPos, hxPos);
-                const cx = Phaser.Math.Clamp(dragX, lo, hi);
-                handle.x = cx;
+                const cx = Phaser.Math.Clamp(dragX, lo, hi); handle.x = cx;
                 const sp = hxPos - exPos;
                 this.bandT = Math.abs(sp) < 1 ? 0 : Phaser.Math.Clamp((cx - exPos)/sp, 0, 1);
             });
-            this.derived = { type: 'range', r, g, text, handle, x0, x1, y };
+            this.derived = { type: 'range', r, g, text, handle, x0, x1, y: ty };
         } else {
-            g.lineStyle(4, 0x2e313c); g.lineBetween(x0, y, x1, y);
-            const marker = this.reg(this.add.circle(x0, y, W*0.018, 0xf0a324).setStrokeStyle(2, 0xffffff).setDepth(61));
-            this.derived = { type: 'point', r, marker, text, x0, x1, y };
+            g.lineStyle(5, 0x2e313c); g.lineBetween(x0, ty, x1, ty);
+            const marker = this.reg(this.add.circle(x0, ty, GW*0.018, 0xf0a324).setStrokeStyle(2, 0xffffff).setDepth(61));
+            this.derived = { type: 'point', r, marker, text, x0, x1, y: ty };
         }
         this.refreshDerived();
     }

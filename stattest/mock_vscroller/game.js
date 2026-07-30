@@ -2,9 +2,18 @@ require('libs/tt-adapter.js');
 const Phaser = require('libs/phaser.js');
 
 const res = tt.getSystemInfoSync();
-const windowWidth  = res.screenWidth;
-const windowHeight = res.screenHeight;
-const W = windowWidth, H = windowHeight;
+const H  = res.screenHeight;
+const GW = res.screenWidth;
+const PW = Math.round(res.screenWidth * 0.52);
+const GX0 = PW;
+const W  = GX0 + GW;
+const windowWidth = W, windowHeight = H;
+if (typeof window !== 'undefined' && window.canvas && window.canvas.style) {
+    window.canvas.width = W; window.canvas.height = H;
+    const dh = 640, dw = Math.round(dh * W / H);
+    window.canvas.style.width = dw + 'px'; window.canvas.style.height = dh + 'px';
+}
+const GCX = GX0 + GW/2;
 
 // ─────────────────────────────────────────────────────────────────
 // VERTICAL SCROLLER — LIVE TUNING.  Dodge-capability model:
@@ -26,13 +35,12 @@ const LIVE = {
 
 const EASY_SPD  = 1.60, HARD_SPD  = 1.20;   // ×dodge-floor  (faster ship = easier to dodge)
 const EASY_ENEM = 0.90, HARD_ENEM = 1.50;   // ×enemy-max    (faster enemy = harder)
-const PANEL_BOTTOM = H * 0.37 - 82;   // panel is flush to the top
-const SKY_TOP   = PANEL_BOTTOM;
+const SKY_TOP   = H * 0.03;
 const SKY_BOT   = H - 161;
 const SHIP_H    = H * 0.07;
 const ENEMY_H   = H * 0.05;
 const SHIP_Y    = SKY_BOT - SHIP_H/2 - H*0.01;
-const PLAY_W    = W * 0.96;
+const PLAY_W    = GW * 0.96;
 const PLAY_H    = SKY_BOT - SKY_TOP;
 
 class LiveScene extends Phaser.Scene {
@@ -47,11 +55,12 @@ class LiveScene extends Phaser.Scene {
         this.bandT = 0.5;      // opens mid-band (field-cross max is conservative → push faster)
         this.draggingRun = false;
 
-        this.add.rectangle(W/2, H/2, W, H, 0x0a0a1e).setDepth(0);
-        const starG = this.add.graphics().setDepth(0);
-        for (let i = 0; i < 70; i++) { starG.fillStyle(0xffffff, 0.2 + Math.random()*0.5); starG.fillCircle(Math.random()*W, SKY_TOP + Math.random()*(SKY_BOT-SKY_TOP), Math.random()*2+1); }
+        this.add.rectangle(W/2, H/2, W, H, 0x161a26).setDepth(0);
+        this.add.rectangle(GCX, H/2, GW, H, 0x0a0a1e).setDepth(0.4);
+        const starG = this.add.graphics().setDepth(0.5);
+        for (let i = 0; i < 70; i++) { starG.fillStyle(0xffffff, 0.2 + Math.random()*0.5); starG.fillCircle(GX0 + Math.random()*GW, SKY_TOP + Math.random()*(SKY_BOT-SKY_TOP), Math.random()*2+1); }
 
-        this.shipX     = W/2;
+        this.shipX     = GCX;
         this.moveDir   = 0;
         this.enemies   = [];
         this.sinceSpawn = 1e9;
@@ -61,8 +70,8 @@ class LiveScene extends Phaser.Scene {
         this.enemyGfx = this.add.graphics().setDepth(4);
         this.shipGfx  = this.add.graphics().setDepth(6);
 
-        this.btnLeft  = this.ctrlBtn(W*0.13, H*0.93, '◀', () => this.moveDir = -1, () => this.moveDir = 0);
-        this.btnRight = this.ctrlBtn(W*0.87, H*0.93, '▶', () => this.moveDir =  1, () => this.moveDir = 0);
+        this.btnLeft  = this.ctrlBtn(GX0 + GW*0.13, H*0.93, '◀', () => this.moveDir = -1, () => this.moveDir = 0);
+        this.btnRight = this.ctrlBtn(GX0 + GW*0.87, H*0.93, '▶', () => this.moveDir =  1, () => this.moveDir = 0);
         if (this.input.keyboard) {
             const kb = this.input.keyboard;
             kb.on('keydown-LEFT',  () => this.moveDir = -1); kb.on('keyup-LEFT',  () => { if (this.moveDir<0) this.moveDir = 0; });
@@ -71,9 +80,7 @@ class LiveScene extends Phaser.Scene {
             kb.on('keydown-D',     () => this.moveDir =  1); kb.on('keyup-D',     () => { if (this.moveDir>0) this.moveDir = 0; });
         }
 
-        this.readout = this.add.text(W*0.05, PANEL_BOTTOM + H*0.012, '', {
-            fontSize: `${W*0.026}px`, color: '#979aa8', lineSpacing: 5
-        }).setOrigin(0, 0).setDepth(48);
+        this.readout = { setText: (t) => { if (typeof window !== 'undefined') window.__genreStats = t; return this.readout; }, setColor: () => this.readout, y: 0 };
 
         this.panelObjs = [];
         this.buildPanel();
@@ -146,7 +153,7 @@ class LiveScene extends Phaser.Scene {
         b.on('pointerup', () => {
             this.collapsed = !this.collapsed;
             // keep the readout tucked under whichever edge the panel now ends at
-            if (this.readout) this.readout.y = (this.collapsed ? H*0.054 : PANEL_BOTTOM) + H*0.012;
+            if (this.readout) this.readout.y = (this.collapsed ? H*0.054 : H*0.37) + H*0.012;
             this.rebuildPanel();
         });
     }
@@ -183,16 +190,16 @@ class LiveScene extends Phaser.Scene {
         if (this.mode === 'move') {
             const enemySpeed = H * LIVE.enemySpeedRatio;
             const floor = crossDist * enemySpeed / PLAY_H;                  // px/s to cross within one descent
-            this.bandEasy = Phaser.Math.Clamp(floor * EASY_SPD / W, 0.12, 0.80);
-            this.bandHard = Phaser.Math.Clamp(floor * HARD_SPD / W, 0.12, 0.80);
-            this.derivedOK = (floor * HARD_SPD / W) <= 0.80;
+            this.bandEasy = Phaser.Math.Clamp(floor * EASY_SPD / GW, 0.12, 0.80);
+            this.bandHard = Phaser.Math.Clamp(floor * HARD_SPD / GW, 0.12, 0.80);
+            this.derivedOK = (floor * HARD_SPD / GW) <= 0.80;
             LIVE.moveSpeedRatio = this.bandEasy + (this.bandHard - this.bandEasy) * this.bandT;
         } else {
-            const moveSpeed = W * LIVE.moveSpeedRatio;
+            const moveSpeed = GW * LIVE.moveSpeedRatio;
             const enemyMax = PLAY_H * moveSpeed / crossDist;                // px/s
-            this.bandEasy = Phaser.Math.Clamp(enemyMax * EASY_ENEM / H, 0.08, 0.40);
-            this.bandHard = Phaser.Math.Clamp(enemyMax * HARD_ENEM / H, 0.08, 0.40);
-            this.derivedOK = (enemyMax * EASY_ENEM / H) <= 0.40;
+            this.bandEasy = Phaser.Math.Clamp(enemyMax * EASY_ENEM / H, 0.08, 0.60);
+            this.bandHard = Phaser.Math.Clamp(enemyMax * HARD_ENEM / H, 0.08, 0.60);
+            this.derivedOK = (enemyMax * EASY_ENEM / H) <= 0.60;
             LIVE.enemySpeedRatio = this.bandEasy + (this.bandHard - this.bandEasy) * this.bandT;
         }
     }
@@ -201,16 +208,16 @@ class LiveScene extends Phaser.Scene {
         const dt = Math.min(delta / 1000, 0.05);
         this.recompute();
 
-        const moveSpeed = W * LIVE.moveSpeedRatio;
+        const moveSpeed = GW * LIVE.moveSpeedRatio;
         const enemySpeed = H * LIVE.enemySpeedRatio;
-        const shipW = W * LIVE.shipWRatio, enemyW = W * LIVE.enemyWRatio;
+        const shipW = GW * LIVE.shipWRatio, enemyW = GW * LIVE.enemyWRatio;
 
-        this.shipX = Phaser.Math.Clamp(this.shipX + this.moveDir * moveSpeed * dt, shipW/2 + W*0.02, W - shipW/2 - W*0.02);
+        this.shipX = Phaser.Math.Clamp(this.shipX + this.moveDir * moveSpeed * dt, GX0 + shipW/2 + GW*0.02, W - shipW/2 - GW*0.02);
 
         this.sinceSpawn += delta;
         if (this.sinceSpawn >= LIVE.spawnRate) {
             this.sinceSpawn = 0;
-            const x = enemyW/2 + W*0.02 + Math.random() * (W - enemyW - W*0.04);
+            const x = GX0 + enemyW/2 + GW*0.02 + Math.random() * (GW - enemyW - GW*0.04);
             this.enemies.push({ x, y: SKY_TOP - ENEMY_H, state: 'pending' });
         }
 
@@ -268,29 +275,26 @@ class LiveScene extends Phaser.Scene {
     }
 
     buildPanel() {
-        const HY = H*0.023, PB = this.collapsed ? H*0.054 : PANEL_BOTTOM;
-        this.reg(this.add.rectangle(W/2, (PB)/2, W, PB, 0x17181f, 0.96).setDepth(50));
-        this.reg(this.add.rectangle(W/2, PB, W, 1.5, 0x24262f).setDepth(50));
-        this.mkCollapse(W*0.055, HY);
-        const _t = this.reg(this.add.text(W*0.115, HY, '⚙ SCROLLER', {
-            fontSize: `${W*0.030}px`, color: '#e8e9ef', fontStyle: 'bold'
+        this.reg(this.add.rectangle(PW/2, H/2, PW, H, 0x17181f, 0.98).setDepth(50));
+        this.reg(this.add.rectangle(PW, H/2, 1.5, H, 0x24262f).setDepth(50));
+        const _t = this.reg(this.add.text(PW*0.06, H*0.03, '⚙ SCROLLER', {
+            fontSize: `${GW*0.030}px`, color: '#e8e9ef', fontStyle: 'bold'
         }).setOrigin(0, 0.5).setDepth(60));
-        const _cnTitle = this.reg(this.add.text(_t.x + _t.width + W*0.022, HY, '竖版飞行', {
-            fontSize: `${W*0.024}px`, color: '#6d7080'
+        this.reg(this.add.text(_t.x + _t.width + GW*0.02, H*0.03, '竖版飞行', {
+            fontSize: `${GW*0.022}px`, color: '#6d7080'
         }).setOrigin(0, 0.5).setDepth(60));
-        if (this.collapsed) return;
 
         const modeStr = this.mode === 'move' ? 'COMPUTE ▶ SHIP SPEED' : 'COMPUTE ▶ ENEMY SPEED';
-        const btn = this.reg(this.add.rectangle(W*0.97, HY, W*0.52, H*0.030, 0x24262f)
-            .setStrokeStyle(1.5, 0x3a3d4a).setInteractive().setDepth(60).setOrigin(1, 0.5));
-        this.reg(this.add.text(W*0.97 - W*0.26, HY, modeStr, {
-            fontSize: `${W*0.025}px`, color: '#e8e9ef', fontStyle: 'bold'
+        const btn = this.reg(this.add.rectangle(PW*0.5, H*0.076, PW*0.88, H*0.032, 0x24262f)
+            .setStrokeStyle(1.5, 0x3a3d4a).setInteractive().setDepth(60));
+        this.reg(this.add.text(PW*0.5, H*0.076, modeStr, {
+            fontSize: `${GW*0.021}px`, color: '#e8e9ef', fontStyle: 'bold'
         }).setOrigin(0.5).setDepth(61));
         btn.on('pointerup', () => { this.mode = this.mode === 'move' ? 'enemy' : 'move'; this.rebuildPanel(); });
 
         const rows = [
             { key: 'move',  label: 'Ship Speed',   min: 0.12, max: 0.80, get: () => LIVE.moveSpeedRatio,  set: v => LIVE.moveSpeedRatio  = v, fmt: v => `${v.toFixed(2)}W` },
-            { key: 'enemy', label: 'Enemy Speed',  min: 0.08, max: 0.40, get: () => LIVE.enemySpeedRatio, set: v => LIVE.enemySpeedRatio = v, fmt: v => `${(v*100).toFixed(0)}%H/s` },
+            { key: 'enemy', label: 'Enemy Speed',  min: 0.08, max: 0.60, get: () => LIVE.enemySpeedRatio, set: v => LIVE.enemySpeedRatio = v, fmt: v => `${(v*100).toFixed(0)}%H/s` },
             { key: 'enemyW',label: 'Enemy Width',  min: 0.04, max: 0.20, get: () => LIVE.enemyWRatio,     set: v => LIVE.enemyWRatio     = v, fmt: v => `${(v*100).toFixed(1)}%W` },
             { key: 'shipW', label: 'Ship Width',   min: 0.05, max: 0.18, get: () => LIVE.shipWRatio,      set: v => LIVE.shipWRatio      = v, fmt: v => `${(v*100).toFixed(1)}%W` },
             { key: 'shipH', label: 'Ship Height',  min: 0.04, max: 0.16, get: () => LIVE.shipHRatio,      set: v => LIVE.shipHRatio      = v, fmt: v => `${(v*100).toFixed(1)}%H` },
@@ -298,8 +302,8 @@ class LiveScene extends Phaser.Scene {
         ];
         const derivedKey = this.mode;   // 'move' or 'enemy'
 
-        let sy = H*0.072;
-        const gap = H*0.038;
+        let sy = H*0.14;
+        const gap = H*0.05;
         for (const r of rows) {
             if (r.key === derivedKey) this.renderDerived(r, sy);
             else                      this.mkSlider(r, sy);
@@ -315,29 +319,27 @@ class LiveScene extends Phaser.Scene {
     }
 
     mkSlider(r, y) {
-        const x0 = W*0.42, x1 = W*0.80, trackW = x1 - x0;
-        this.reg(this.add.text(W*0.05, y, r.label, { fontSize: `${W*0.027}px`, color: '#979aa8' }).setOrigin(0, 0.5).setDepth(60));
-        const valTxt = this.reg(this.add.text(W*0.965, y, r.fmt(r.get()), { fontSize: `${W*0.027}px`, color: '#e8e9ef' }).setOrigin(1, 0.5).setDepth(60));
+        const tx0 = PW*0.06, tx1 = PW*0.94, trackW = tx1 - tx0, ty = y + H*0.02;
+        this.reg(this.add.text(tx0, y, r.label, { fontSize: `${GW*0.024}px`, color: '#9aa0b4' }).setOrigin(0, 0.5).setDepth(60));
+        const valTxt = this.reg(this.add.text(tx1, y, r.fmt(r.get()), { fontSize: `${GW*0.024}px`, color: '#e8e9ef' }).setOrigin(1, 0.5).setDepth(60));
         const g = this.reg(this.add.graphics().setDepth(59));
-        this.diffTrack(g, r, x0, x1, y); this.dirTag(r, y);
-        const knob = this.reg(this.add.circle(x0 + (r.get() - r.min)/(r.max - r.min) * trackW, y, W*0.020, 0xf0a324)
+        this.diffTrack(g, r, tx0, tx1, ty);
+        const knob = this.reg(this.add.circle(tx0 + (r.get() - r.min)/(r.max - r.min) * trackW, ty, GW*0.020, 0xf0a324)
             .setStrokeStyle(2, 0x17181f).setInteractive({ draggable: true }).setDepth(61));
         this.input.setDraggable(knob);
         knob.on('drag', (ptr, dragX) => {
-            const cx = Phaser.Math.Clamp(dragX, x0, x1);
-            knob.x = cx;
-            const v = r.min + (cx - x0)/trackW * (r.max - r.min);
-            valTxt.setText(r.fmt(v));
-            r.set(v);
+            const cx = Phaser.Math.Clamp(dragX, tx0, tx1); knob.x = cx;
+            const v = r.min + (cx - tx0)/trackW * (r.max - r.min);
+            valTxt.setText(r.fmt(v)); r.set(v);
         });
     }
 
     renderDerived(r, y) {
-        const x0 = W*0.42, x1 = W*0.80;
-        this.reg(this.add.text(W*0.05, y, r.label + '  ▸AUTO', { fontSize: `${W*0.027}px`, color: '#e8e9ef' }).setOrigin(0, 0.5).setDepth(60));
-        const text = this.reg(this.add.text(W*0.965, y, '', { fontSize: `${W*0.024}px`, color: '#e8e9ef', fontStyle: 'bold' }).setOrigin(1, 0.5).setDepth(60));
+        const x0 = PW*0.06, x1 = PW*0.94, ty = y + H*0.02;
+        this.reg(this.add.text(x0, y, r.label + '  ▸AUTO', { fontSize: `${GW*0.024}px`, color: '#e8e9ef' }).setOrigin(0, 0.5).setDepth(60));
+        const text = this.reg(this.add.text(x1, y, '', { fontSize: `${GW*0.023}px`, color: '#e8e9ef', fontStyle: 'bold' }).setOrigin(1, 0.5).setDepth(60));
         const g = this.reg(this.add.graphics().setDepth(59));        // draggable difficulty handle — pick where in the Easy↔Hard band the game runs
-        const handle = this.reg(this.add.circle(x0, y, W*0.024, 0xffffff).setStrokeStyle(3, 0xf1014).setInteractive({ draggable: true }).setDepth(62));
+        const handle = this.reg(this.add.circle(x0, ty, GW*0.024, 0xffffff).setStrokeStyle(3, 0x17181f).setInteractive({ draggable: true }).setDepth(62));
         this.input.setDraggable(handle);
         const xOf = ratio => x0 + (Phaser.Math.Clamp(ratio, r.min, r.max) - r.min)/(r.max - r.min) * (x1 - x0);
         handle.on('dragstart', () => { this.draggingRun = true; });
@@ -350,7 +352,7 @@ class LiveScene extends Phaser.Scene {
             const sp = hxPos - exPos;
             this.bandT = Math.abs(sp) < 1 ? 0 : Phaser.Math.Clamp((cx - exPos)/sp, 0, 1);
         });
-        this.derived = { r, g, text, handle, x0, x1, y };
+        this.derived = { r, g, text, handle, x0, x1, y: ty };
         this.refreshDerived();
     }
 
