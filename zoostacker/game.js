@@ -320,16 +320,20 @@ class TitleScene extends Phaser.Scene {
         addPlatform(this, cx, TITLE_GROUND_Y, -5);
         this.buildDemoHand();
 
+        // Static timer badge, same art + position as the in-game stopwatch, showing the
+        // full time — so the top-left HUD is consistent from the title onward.
+        addTimerBadge(this, String(GAME_SECONDS));
+
         // How-to-play line (white with a black outline). Lives on the title only, so it
         // vanishes the moment PLAY starts the game.
-        this.add.text(cx, windowHeight * 0.40, 'Click to drop,\nfind the right spot, and\nsee who can stack the highest!', {
+        this.add.text(cx, windowHeight * 0.46, 'Click to drop,\nfind the right spot, and\nsee who can stack the\nhighest!', {
             fontFamily: FONT, fontSize: '58px', color: '#ffffff', fontStyle: 'bold',
             stroke: '#000000', strokeThickness: 9, align: 'center', lineSpacing: 10
         }).setOrigin(0.5).setDepth(5);
 
         // PLAY button (playbtn.png) that starts the game. Kept at the low TikTok-style
         // position (renders on top of the platform, depth 60).
-        this.buildPlayButton(cx, windowHeight - REC_BOTTOM_GAP);
+        this.buildPlayButton(cx, windowHeight - REC_BOTTOM_GAP - 90);
     }
 
     // Green PLAY pill (baked art). Gentle pulse for affordance; tap starts the game and
@@ -568,15 +572,16 @@ class GameScene extends Phaser.Scene {
         this.maxLabel = this.add.text(28, 0, '', {
             fontFamily: FONT, fontSize: '52px', color: '#ffffff', fontStyle: 'bold',
             stroke: '#000000', strokeThickness: 8
-        }).setDepth(-3).setOrigin(0, 1).setAlpha(0);
+        }).setDepth(40).setOrigin(0, 0).setAlpha(0);
     }
 
     redrawMaxLine() {
         if (this.maxHeightCm <= 0) { this.maxMarker.setVisible(false); this.maxLabel.setAlpha(0); return; }
         const y = GROUND_SURFACE_Y - this.maxHeightCm * PX_PER_CM;
         this.maxMarker.setPosition(windowWidth / 2, y).setVisible(true);
-        // bottom-aligned just above the marker line (origin 0,1), so it sits close to it
-        this.maxLabel.setText('Height ' + this.maxHeightCm + 'm').setPosition(28, y - 8).setAlpha(1);
+        // top-aligned just BELOW the marker line (origin 0,0), with a small gap so it
+        // clears the line
+        this.maxLabel.setText('Height ' + this.maxHeightCm + 'm').setPosition(28, y + 18).setAlpha(1);
     }
 
     // click/tap to rotate the held animal; DROP button releases it
@@ -737,14 +742,9 @@ class GameScene extends Phaser.Scene {
 
     buildHud() {
         // Countdown as a stopwatch icon in the top-left, with the seconds inside its dial.
-        const src = this.textures.get('timericon').getSourceImage();
-        const sc = TIMER_ICON_W / src.width;
-        const ix = 100, iy = 150 + windowHeight * 0.15;   // icon top-left
-        this.timerIcon = this.add.image(ix, iy, 'timericon').setOrigin(0, 0)
-            .setDisplaySize(TIMER_ICON_W, src.height * sc).setScrollFactor(0).setDepth(50);
-        this.timerText = this.add.text(ix + TIMER_DIAL_X * sc, iy + TIMER_DIAL_Y * sc, '', {
-            fontFamily: FONT, fontSize: Math.round(96 * sc) + 'px', color: TIMER_TEXT_DARK, fontStyle: 'bold'
-        }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
+        const badge = addTimerBadge(this, '');
+        this.timerIcon = badge.icon;
+        this.timerText = badge.text;
         this.updateTimer();
     }
 
@@ -1159,6 +1159,11 @@ class GameOverScene extends Phaser.Scene {
         // blue sky. Red top+bottom gradient only when the run FAILED (an animal fell off);
         // a clean time-up ending keeps the normal blue gradient.
         paintSky(this, windowWidth, windowHeight);
+        // hand at the top, same as every other stage (drawn before the gradients so a
+        // failed run's red tints it, matching the reference)
+        const pool = ANIMALS.filter(a => a.w >= a.h * 1.4);
+        const handKey = (Phaser.Utils.Array.GetRandom(pool) || { key: 'penguin' }).key;
+        addHeldHand(this, handKey, windowWidth / 2, TITLE_HAND_Y);
         if (data.failed) addFailGradient(this, windowWidth, windowHeight, false);
         else addBottomGradient(this, windowWidth, windowHeight);
 
@@ -1210,6 +1215,40 @@ function drawButton(g, cx, cy, w, h, fill) {
     g.fillRoundedRect(cx - w / 2, cy - h / 2, w, h, BTN_R);
     g.lineStyle(BTN_OUTLINE_W, BTN_OUTLINE, 1);
     g.strokeRoundedRect(cx - w / 2, cy - h / 2, w, h, BTN_R);
+}
+
+// Top-left stopwatch badge (icon + seconds in its dial), screen-fixed. Shared by the
+// live in-game countdown and the static title-screen badge so both sit identically.
+function addTimerBadge(scene, initial) {
+    const src = scene.textures.get('timericon').getSourceImage();
+    const sc = TIMER_ICON_W / src.width;
+    const ix = 100, iy = 150 + windowHeight * 0.15;   // icon top-left
+    const icon = scene.add.image(ix, iy, 'timericon').setOrigin(0, 0)
+        .setDisplaySize(TIMER_ICON_W, src.height * sc).setScrollFactor(0).setDepth(50);
+    const text = scene.add.text(ix + TIMER_DIAL_X * sc, iy + TIMER_DIAL_Y * sc, initial, {
+        fontFamily: FONT, fontSize: Math.round(96 * sc) + 'px', color: TIMER_TEXT_DARK, fontStyle: 'bold'
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
+    return { icon, text };
+}
+
+// Static pinching hand holding one animal, with its pinch at (sweepX, y) — the same
+// fixed-pinch scheme as the game/title. Used to keep the hand at the top across all
+// stages (title, play, result). Drawn under the edge gradients so they tint it.
+function addHeldHand(scene, key, sweepX, y) {
+    const src = scene.textures.get(key).getSourceImage();
+    const w = src.width * ANIMAL_SCALE, h = src.height * ANIMAL_SCALE;
+    const hb = scene.textures.get('handbelow').getSourceImage();
+    const ta = scene.textures.get('thumbabove').getSourceImage();
+    const handScale = HAND_W / hb.width;
+    const gripTop = HAND_GRIP_TOP[key] != null ? HAND_GRIP_TOP[key] : HAND_GRIP_TOP_DEFAULT;
+    const gripX = HAND_GRIP_X[key] != null ? HAND_GRIP_X[key] : HAND_GRIP_X_DEFAULT;
+    const px = sweepX - HAND_PINCH_X * handScale, py = y - HAND_PINCH_Y * handScale;
+    scene.add.image(px, py, 'handbelow').setOrigin(0, 0)
+        .setDisplaySize(hb.width * handScale, hb.height * handScale).setDepth(21);
+    scene.add.image(sweepX - w * gripX, y + h * (0.5 - gripTop), key)
+        .setDisplaySize(w, h).setDepth(22);
+    scene.add.image(px + THUMB_DX * handScale, py + THUMB_DY * handScale, 'thumbabove').setOrigin(0, 0)
+        .setDisplaySize(ta.width * handScale, ta.height * handScale).setDepth(23);
 }
 
 // Platform image (crate) whose flat tabletop is the landing surface. Placed origin
