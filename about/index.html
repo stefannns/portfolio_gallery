@@ -513,9 +513,12 @@
     setNDC(e); ray.setFromCamera(ndc,camera);
     if(!ray.ray.intersectPlane(dragPlane,_hit)) return;
     dragTarget.addVectors(_hit, dragOff);              // move relative to the grab, no snap
-    // keep the badge inside the canvas — otherwise it gets sliced off at the edge
+    // Limits are relative to where the CLIP actually rests on this rig. They were still set for
+    // the old loop (y >= 0.40, when the loop bottom sat near y = 2), so on the new rig grabbing
+    // the badge snapped it upwards — the drag felt broken rather than picked up.
+    const restY = buckle.y - P.DROP;
     dragTarget.x = cl(dragTarget.x, -1.75, 1.75);
-    dragTarget.y = cl(dragTarget.y,  0.40, 4.60);
+    dragTarget.y = cl(dragTarget.y, restY-2.6, restY+1.3);
     dragTarget.z = cl(dragTarget.z, -1.20, 1.20);
   });
   window.addEventListener('pointerup', ()=>{ dragging=false; orbiting=false; stage.classList.remove('grabbing'); });
