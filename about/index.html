@@ -197,11 +197,6 @@
     ls('1.4px'); g.fillStyle='#9297a3'; g.font='400 36px '+FONT; g.fillText('USC School of Cinematic Arts',padL,518);
     g.fillStyle='#5b5f6b'; g.font='400 33px '+FONT; g.fillText('Class of 2027',padL,579);
     ls('0px');
-    for(let x=padL,i=0; x<W-padL-40; i++){
-      const w=(i%3===0)?7:(i%4===0?4:2.5);
-      g.fillStyle='rgba(244,246,250,'+(0.18+(i%5)*0.05)+')';
-      g.fillRect(x,812,w,58); x+=w+5;
-    }
     return c;
   }
   const faceTex=new T.CanvasTexture(faceCanvas());
@@ -302,7 +297,8 @@
   }
 
   // ---------- simulation ----------
-  let dragging=false, orbiting=false, opx=0, opy=0; const dragTarget=new T.Vector3();
+  let dragging=false, orbiting=false, opx=0, opy=0;
+  const dragTarget=new T.Vector3(), dragSmooth=new T.Vector3();
   const _lp=new T.Vector3(), _iq=new T.Quaternion();
   // Hard guarantee that the strap never intersects the shell.
   //  - no point is exempt: points inside the slab are either kept INSIDE the slot opening
@@ -325,32 +321,41 @@
     // above is fine for deciding "clamp into the hole", but the between-sample guard must use this,
     // otherwise the strand exiting the slot slices through the bar just above it.
     const inHole=lp=>Math.abs(lp.x)<SLOTW/2 && Math.abs(lp.y-SLOT_Y)<SLOTH/2;
+    // Topological rule instead of "push to the nearest face". The cord is threaded once: it runs
+    // down the FRONT, through the slot, and up the BACK — so every point before MID belongs in
+    // front of the card and every point after it belongs behind, permanently. Enforcing that side
+    // is what makes penetration impossible: nearest-face ejection lets a fast drag tunnel through,
+    // and ejecting to the previous side traps points that are legitimately threading the hole.
+    // Only the couple of points at MID are allowed inside the slab, and only within the opening.
+    // HOLE_SPAN points straddle the opening. Two is enough to describe the path through it; a
+    // wider "funnel" that also herded the approaching points toward the slot was tried and made
+    // things far worse (it fought the distance constraints and shook the whole cord apart).
+    const HOLE_SPAN=2;
     for(let i=1;i<N-1;i++){
       toLocal(rope[i],_lp);
-      if(!inSlab(_lp)) continue;
-      // The card is positioned FROM rope[MID], so pushing MID (or its neighbours) along z moves the
-      // card, which pushes again next iteration — a feedback loop that walks the whole rig toward
-      // the camera. These points may only be clamped inside the hole, never shoved out of the slab.
-      const isSlotPoint = Math.abs(i-MID)<=1;
-      if(isSlotPoint || nearSlot(_lp)){                // threading the hole — keep it in the hole
-        _lp.x=clm(_lp.x,-sxIn,sxIn);
-        _lp.y=clm(_lp.y,SLOT_Y-syIn,SLOT_Y+syIn);
-      } else {
-        _lp.z=_lp.z>=0?HT:-HT;                         // solid plastic — pop out to the near face
+      if(!(Math.abs(_lp.x)<halfW && Math.abs(_lp.y)<halfH)) continue;   // beside the card: free
+      const d=i-MID;
+      if(Math.abs(d)<=HOLE_SPAN){                      // threading the opening
+        if(Math.abs(_lp.z)<HT){                        // ...only constrain it while it's in the slab
+          _lp.x=clm(_lp.x,-sxIn,sxIn);
+          _lp.y=clm(_lp.y,SLOT_Y-syIn,SLOT_Y+syIn);
+          toWorld(_lp,rope[i]);
+        }
+        continue;
       }
-      toWorld(_lp,rope[i]);
+      const side = d<0 ? 1 : -1;                       // before MID = front, after MID = back
+      if(side*_lp.z < HT){ _lp.z=side*HT; toWorld(_lp,rope[i]); }
     }
-    // between-sample guard: the straight path between two points must not cut through plastic
-    // either, so sample along each segment and lift both ends clear when it does.
+    // Same rule between samples, so the straight run into the slot can't clip the bar above it.
     for(let i=1;i<N-2;i++){
-      if(Math.abs(i-MID)<=1 || Math.abs(i+1-MID)<=1) continue;   // same feedback guard as above
+      const side = (i-MID)<0 ? 1 : -1;
+      if(Math.abs(i-MID)<=HOLE_SPAN || Math.abs(i+1-MID)<=HOLE_SPAN) continue;
       for(let s=1;s<=3;s++){
         _mp.lerpVectors(rope[i],rope[i+1],s/4);
         toLocal(_mp,_lp);
         if(!inSlab(_lp) || inHole(_lp)) continue;
-        const sgn=_lp.z>=0?1:-1;
-        toLocal(rope[i],_o1);   if(sgn*_o1.z<HT){ _o1.z=sgn*HT; toWorld(_o1,rope[i]); }
-        toLocal(rope[i+1],_o2); if(sgn*_o2.z<HT){ _o2.z=sgn*HT; toWorld(_o2,rope[i+1]); }
+        toLocal(rope[i],_o2);   if(side*_o2.z<HT){ _o2.z=side*HT; toWorld(_o2,rope[i]); }
+        toLocal(rope[i+1],_o2); if(side*_o2.z<HT){ _o2.z=side*HT; toWorld(_o2,rope[i+1]); }
       }
     }
   }
@@ -375,16 +380,10 @@
     _slotLocal.set(0,SLOT_Y,0).applyQuaternion(_q);   // slot stays pinned to the cord as it tilts
     card.position.copy(rope[MID]).sub(_slotLocal);
   }
-  function simulate(){
-    for(let i=1;i<N-1;i++){
-      const p=rope[i],pr=rprev[i];
-      let vx=(p.x-pr.x)*DAMP, vy=(p.y-pr.y)*DAMP, vz=(p.z-pr.z)*DAMP;
-      pr.copy(p); p.x+=vx; p.y+=vy-GRAV; p.z+=vz;
-    }
-    rope[MID].y-=P.CW;                                  // the card's weight sags the loop bottom
-    for(let k=0;k<ITER;k++){
+  function solveDistances(iters){
+    for(let k=0;k<iters;k++){
       rope[0].copy(anchorF); rope[N-1].copy(anchorB);
-      if(dragging) rope[MID].copy(dragTarget);
+      if(dragging) rope[MID].copy(dragSmooth);
       for(let i=0;i<N-1;i++){
         const a=rope[i],b=rope[i+1]; let dx=b.x-a.x,dy=b.y-a.y,dz=b.z-a.z;
         const d=Math.hypot(dx,dy,dz)||1e-6, diff=(d-SEG)/d;
@@ -395,7 +394,19 @@
         else { const h=diff*0.5; a.x+=dx*h;a.y+=dy*h;a.z+=dz*h; b.x-=dx*h;b.y-=dy*h;b.z-=dz*h; }
       }
     }
-    rope[0].copy(anchorF); rope[N-1].copy(anchorB); if(dragging) rope[MID].copy(dragTarget);
+  }
+  function simulate(){
+    for(let i=1;i<N-1;i++){
+      const p=rope[i],pr=rprev[i];
+      let vx=(p.x-pr.x)*DAMP, vy=(p.y-pr.y)*DAMP, vz=(p.z-pr.z)*DAMP;
+      pr.copy(p); p.x+=vx; p.y+=vy-GRAV; p.z+=vz;
+    }
+    rope[MID].y-=P.CW;                                  // the card's weight sags the loop bottom
+    // Ease the pinned point toward the cursor instead of snapping to it. A fast fling could move
+    // the cord further than the card is thick in a single step, which is how it tunnelled through.
+    if(dragging) dragSmooth.lerp(dragTarget, 0.34);
+    solveDistances(ITER);
+    rope[0].copy(anchorF); rope[N-1].copy(anchorB); if(dragging) rope[MID].copy(dragSmooth);
     if(!armSet){ swing.copy(rope[MID]); swing.y-=ARM; swingPrev.copy(swing); armSet=true; }
     const DAMPB=0.95;
     let vx=(swing.x-swingPrev.x)*DAMPB, vy=(swing.y-swingPrev.y)*DAMPB, vz=(swing.z-swingPrev.z)*DAMPB;
@@ -409,10 +420,19 @@
     swing.x+=(rope[MID].x-swing.x)*sr;
     swing.y+=((rope[MID].y-ARM)-swing.y)*sr;
     swing.z+=(rope[MID].z-swing.z)*sr;
-    // Collision resolves ONCE, against the final pose — not inside the constraint loop. Running it
-    // per-iteration made the clamp and the distance constraints fight each other 52x a frame, which
-    // never converged and showed up as a permanent jitter.
-    placeCard(); collideCard();
+    // Contact resolution. Two things matter here and both caused earlier bugs:
+    //  - the card pose is computed ONCE and held FIXED for the whole contact phase. Recomputing it
+    //    per iteration made collision chase a moving card, which never converged (violent jitter).
+    //  - collision and the distance constraints must ALTERNATE until they agree. Running collision
+    //    only once at the very end meant the next frame's 26 distance iterations dragged the strap
+    //    straight back into the shell, so it both penetrated and shimmered every frame.
+    placeCard();
+    for(let k=0;k<6;k++){ collideCard(); solveDistances(2); }
+    // Order matters: settle the card pose FIRST, then resolve against that final pose. Doing the
+    // last collideCard() before placeCard() left the card free to move afterwards, so contacts were
+    // resolved against a pose that no longer existed by render time — the residual penetration.
+    placeCard();
+    collideCard();
   }
 
   // ---------- drag the badge (no free orbit on the page) ----------
@@ -433,6 +453,7 @@
       // cursor instead of snapping its cord point to it
       dragOff.set(0,0,0);
       if(ray.ray.intersectPlane(dragPlane,_hit)) dragOff.subVectors(rope[MID],_hit);
+      dragTarget.copy(rope[MID]); dragSmooth.copy(rope[MID]);   // start the ease from where it is
       try{ renderer.domElement.setPointerCapture(e.pointerId); }catch(_){}
     } else {                                           // empty space → orbit to inspect
       orbiting=true; opx=e.clientX; opy=e.clientY;
