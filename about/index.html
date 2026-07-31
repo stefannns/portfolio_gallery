@@ -114,7 +114,7 @@
   // instead of clear. Giving the scene a solid backdrop the same colour as the page fixes that —
   // the canvas is then visually identical to the page, but the plastic has something to see through.
   scene.background = new T.Color(0x0b0b0d);       // must match --bg in the CSS above
-  const CAM_Z = 17.2;   // pulled back so the whole lanyard fits: neck V, buckle, strap, badge
+  const CAM_Z = 18.1;   // pulled back so the whole lanyard fits: neck V, buckle, strap, clip, badge
   const camera = new T.PerspectiveCamera(32, stage.clientWidth/stage.clientHeight, 0.1, 200);
 
   // studio environment (reflections only — never drawn as a background)
@@ -148,7 +148,8 @@
 
   // ---------- card (real slot hole) ----------
   const CW=3.4, CH=CW*871/560, CR=0.32;
-  const HOLE_Y=CH/2-0.34, HOLE_W=0.42, HOLE_H=0.30;   // the clip hooks through this
+  const HOLE_Y=CH/2-0.34, HOLE_W=0.74, HOLE_H=0.30;   // the clip hooks through this
+  const CLIP_LEN=0.52;                                // eye (top) to ring (bottom)
   function rrShape(w,h,r){ const s=new T.Shape(),x=-w/2,y=-h/2;
     s.moveTo(x+r,y); s.lineTo(x+w-r,y); s.quadraticCurveTo(x+w,y,x+w,y+r);
     s.lineTo(x+w,y+h-r); s.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
@@ -406,7 +407,8 @@
       _q.multiply(_tq.setFromEuler(_te));
     }
     card.quaternion.copy(_q);
-    _slotLocal.set(0,HOLE_Y,0).applyQuaternion(_q);   // hole stays on the clip as it tilts
+    _slotLocal.set(0,HOLE_Y+CLIP_LEN,0).applyQuaternion(_q);   // strap meets the clip's EYE,
+                                                     // so the clip body shows below it
     card.position.copy(rope[N-1]).sub(_slotLocal);
   }
   // SYMMETRIC Gauss-Seidel: each iteration sweeps the chain forwards, then backwards. Sweeping one
