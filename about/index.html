@@ -94,7 +94,7 @@
   "use strict";
   if (typeof THREE === 'undefined') return;      // fail quietly rather than blanking the page
   const T = THREE;
-  const P = { RW:0.60, DEP:0.85, SPX:0.95, REACH:7.20, CW:0.024 };   // SPX = how far the two anchors split apart in X
+  const P = { RW:0.60, DEP:0.85, REACH:7.20, CW:0.024 };
 
   const stage = document.getElementById('stage');
   const hint  = document.getElementById('hint');
@@ -104,20 +104,34 @@
   renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.15;
   stage.appendChild(renderer.domElement);
 
-  const scene = new T.Scene();                    // no background → the page shows through
+  const scene = new T.Scene();
+  // Transmission refracts whatever is BEHIND the glass. With a transparent canvas there is no
+  // backdrop at all, so the shell's border (which has no card behind it) renders as lit white
+  // instead of clear. Giving the scene a solid backdrop the same colour as the page fixes that —
+  // the canvas is then visually identical to the page, but the plastic has something to see through.
+  scene.background = new T.Color(0x0b0b0d);       // must match --bg in the CSS above
   const CAM_Z = 14.5;
   const camera = new T.PerspectiveCamera(32, stage.clientWidth/stage.clientHeight, 0.1, 200);
 
   // studio environment (reflections only — never drawn as a background)
+  // Highlights come from the ENVIRONMENT, not from lights. A dark, heavily-blurred env can only
+  // ever give a dull uniform smear — so this uses small, very bright, HARD-EDGED sources against a
+  // dark surround, and almost no PMREM blur, which is what produces crisp specular streaks.
   function envScene(){
     const s=new T.Scene();
-    const panel=(w,h,c,x,y,z)=>{ const m=new T.Mesh(new T.PlaneGeometry(w,h), new T.MeshBasicMaterial({color:c})); m.position.set(x,y,z); m.lookAt(0,0,0); s.add(m); };
-    s.add(new T.Mesh(new T.BoxGeometry(80,80,80), new T.MeshBasicMaterial({side:T.BackSide,color:0x14161c})));
-    panel(30,30,0xffffff,-14,16,12); panel(20,20,0x9fc0ff,18,-8,12); panel(12,12,0xffe4bd,8,14,-14);
+    const panel=(w,h,c,x,y,z)=>{ const m=new T.Mesh(new T.PlaneGeometry(w,h),
+      new T.MeshBasicMaterial({color:c})); m.position.set(x,y,z); m.lookAt(0,0,0); s.add(m); };
+    // The surround must stay VERY dark: the plastic reflects the whole environment, so a bright
+    // surround turns the entire shell white instead of letting you see through it.
+    s.add(new T.Mesh(new T.BoxGeometry(90,90,90), new T.MeshBasicMaterial({side:T.BackSide,color:0x05060a})));
+    panel(2.6,22,0xffffff,-11, 9,14);    // narrow softbox → the long streak down the plastic
+    panel(1.6,13,0xdfe9ff,  9, 5,14);    // second, tighter strip on the other side
+    panel(7,7,0x24406e,   16,-9,10);     // dim cool bounce
+    panel(5,5,0x3a2a18,   -6,15,-13);    // dim warm rim from behind
     return s;
   }
   const pmrem=new T.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(envScene(), 0.5).texture;
+  scene.environment = pmrem.fromScene(envScene(), 0.02).texture;   // near-zero blur = sharp highlights
   const key=new T.DirectionalLight(0xffffff,2.2); key.position.set(5,9,11); scene.add(key);
   const fill=new T.DirectionalLight(0xffffff,1.3); fill.position.set(-4,2,12); scene.add(fill);
   const spec=new T.PointLight(0xdcecff,90,60); spec.position.set(-5.5,6,7); scene.add(spec);  // tight highlight
@@ -141,12 +155,16 @@
   cardGeo.center();
   // clearer plastic: near-full transmission, thin so it barely tints, with a crisp clearcoat
   // highlight riding on top (that's what reads as "glossy" rather than "frosted")
+  // Two things this material genuinely needs, both found by measuring pixels:
+  //  - transparent:true — without it the shell writes RGB 255 at alpha 0.5, i.e. a white haze
+  //    instead of the refracted backdrop.
+  //  - FrontSide — DoubleSide renders the slab twice and doubles its specular, washing it out.
   const shellMat=new T.MeshPhysicalMaterial({
-    color:0xf4f9ff, metalness:0, roughness:0.035,
-    transmission:0.985, thickness:0.14, ior:1.48,
-    clearcoat:1, clearcoatRoughness:0.02,
-    specularIntensity:1, envMapIntensity:2.1,
-    transparent:true, side:T.DoubleSide});
+    color:0xffffff, metalness:0, roughness:0.02,
+    transmission:1.0, thickness:0.12, ior:1.5,
+    clearcoat:1, clearcoatRoughness:0.015,
+    specularIntensity:1, envMapIntensity:1.0,
+    transparent:true, opacity:0.45, side:T.FrontSide});   // opacity is what actually reads as "clear"
   const shell=new T.Mesh(cardGeo,shellMat);
 
   // printed face, drawn to a canvas and recessed behind the clear shell
@@ -185,7 +203,32 @@
     new T.MeshStandardMaterial({map:faceTex,roughness:0.82,metalness:0}));
   inner.position.set(0,-0.04*CH,-0.035);
 
-  const card=new T.Group(); card.add(shell); card.add(inner); scene.add(card);
+  // glass glare: a diagonal sheen sitting on the front face, added on top of whatever the
+  // transmission pass produces. This is the 3D stand-in for the 2D version's .gloss layer.
+  function glossCanvas(){
+    const W=512,H=760,c=document.createElement('canvas'); c.width=W; c.height=H;
+    const g=c.getContext('2d');
+    const grad=g.createLinearGradient(0,0,W*1.15,H*0.85);
+    grad.addColorStop(0.00,'rgba(255,255,255,0.00)');
+    grad.addColorStop(0.16,'rgba(255,255,255,0.26)');
+    grad.addColorStop(0.27,'rgba(255,255,255,0.05)');
+    grad.addColorStop(0.36,'rgba(255,255,255,0.16)');
+    grad.addColorStop(0.48,'rgba(255,255,255,0.00)');
+    grad.addColorStop(0.82,'rgba(255,255,255,0.00)');
+    grad.addColorStop(0.95,'rgba(255,255,255,0.11)');
+    grad.addColorStop(1.00,'rgba(255,255,255,0.00)');
+    g.fillStyle=grad; g.fillRect(0,0,W,H);
+    return c;
+  }
+  const glossTex=new T.CanvasTexture(glossCanvas());
+  if('colorSpace' in glossTex) glossTex.colorSpace=T.SRGBColorSpace;
+  const gloss=new T.Mesh(new T.PlaneGeometry(CW*0.99,CH*0.99),
+    new T.MeshBasicMaterial({map:glossTex, transparent:true, blending:T.AdditiveBlending,
+      depthWrite:false, opacity:0.55}));
+  gloss.position.z=0.135;                                 // just proud of the shell's front face
+  gloss.renderOrder=10;
+
+  const card=new T.Group(); card.add(shell); card.add(inner); card.add(gloss); scene.add(card);
   const dragProxy=new T.Mesh(new T.PlaneGeometry(CW,CH), new T.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}));
   card.add(dragProxy);
 
@@ -197,7 +240,7 @@
   for(let i=0;i<N;i++){ rope.push(new T.Vector3()); rprev.push(new T.Vector3()); }
   function layoutRope(){
     const yTop=SLOT_Y+P.REACH;
-    anchorF.set(-P.SPX,yTop,P.DEP); anchorB.set(P.SPX,yTop,-P.DEP);   // split in X so the strands form a V
+    anchorF.set(0,yTop,P.DEP); anchorB.set(0,yTop,-P.DEP);   // same x, split only in depth
     SEG=(P.REACH*2.05)/(N-1);
     for(let i=0;i<N;i++){ const t=i/(N-1);
       rope[i].lerpVectors(anchorF,anchorB,t);
@@ -269,13 +312,22 @@
   const _up=new T.Vector3(),_rt=new T.Vector3(),_fw=new T.Vector3(),_mtx=new T.Matrix4(),
         _q=new T.Quaternion(),_slotLocal=new T.Vector3();
   const ZAX=new T.Vector3(0,0,1), YUP=new T.Vector3(0,1,0), XAX=new T.Vector3(1,0,0);
+  // hover tilt — the badge leans toward the cursor. It pivots about its slot, and because the
+  // cord collides against this tilted pose, the strap reacts to the tilt too.
+  const hover={x:0,y:0,tx:0,ty:0,on:false};
+  const TILT=0.30;
+  const _tq=new T.Quaternion(), _te=new T.Euler();
   function placeCard(){
     _up.subVectors(rope[MID],swing); if(_up.lengthSq()<1e-6)_up.copy(YUP); else _up.normalize();
     _rt.crossVectors(_up,ZAX); if(_rt.lengthSq()<1e-6)_rt.copy(XAX); else _rt.normalize();
     _fw.crossVectors(_rt,_up).normalize();
     _mtx.makeBasis(_rt,_up,_fw); _q.setFromRotationMatrix(_mtx);
+    if(hover.x||hover.y){
+      _te.set(-hover.y*TILT, hover.x*TILT, 0);        // lean toward the cursor, about the card's own axes
+      _q.multiply(_tq.setFromEuler(_te));
+    }
     card.quaternion.copy(_q);
-    _slotLocal.set(0,SLOT_Y,0).applyQuaternion(_q);
+    _slotLocal.set(0,SLOT_Y,0).applyQuaternion(_q);   // slot stays pinned to the cord as it tilts
     card.position.copy(rope[MID]).sub(_slotLocal);
   }
   function simulate(){
@@ -330,8 +382,18 @@
     }
   });
   const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const _hp=new T.Vector3(), _hq=new T.Quaternion();
   window.addEventListener('pointermove', e=>{
-    if(!dragging) return;
+    if(!dragging){                                     // hover: how far the cursor sits from the card centre
+      setNDC(e); ray.setFromCamera(ndc,camera);
+      const hit=ray.intersectObject(dragProxy,false)[0];
+      if(hit){
+        _hp.copy(hit.point).sub(card.position).applyQuaternion(_hq.copy(card.quaternion).invert());
+        hover.tx=cl(_hp.x/(CW/2),-1,1); hover.ty=cl(_hp.y/(CH/2),-1,1); hover.on=true;
+        stage.style.cursor='grab';
+      } else { hover.tx=0; hover.ty=0; hover.on=false; stage.style.cursor=''; }
+      return;
+    }
     setNDC(e); ray.setFromCamera(ndc,camera);
     if(!ray.ray.intersectPlane(dragPlane,dragTarget)) return;
     // keep the badge inside the canvas — otherwise it gets sliced off at the edge
@@ -409,6 +471,9 @@
   // ---------- loop ----------
   const camTarget=new T.Vector3(0,-0.5,0);
   function frame(){
+    if(dragging){ hover.tx=0; hover.ty=0; }            // no hover lean while you're holding it
+    hover.x += (hover.tx-hover.x)*0.10;                // ease so the lean glides in and out
+    hover.y += (hover.ty-hover.y)*0.10;
     for(let s=0;s<2;s++) simulate();
     buildRibbon(); placeCard();
     if(!dragging){ camTarget.y += (card.position.y-camTarget.y)*0.04; camTarget.x += (0-camTarget.x)*0.04; }
