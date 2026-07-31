@@ -236,7 +236,7 @@
   card.add(dragProxy);
 
   // ---------- cord: one Verlet rope between a FRONT and BACK anchor (same x,y) ----------
-  const N=46, GRAV=0.010, DAMP=0.986, ITER=26, MID=N>>1;
+  const N=46, GRAV=0.010, DAMP=0.978, ITER=26, MID=N>>1;   // ITER now = 2 sweeps each (fwd+back)
   const anchorF=new T.Vector3(), anchorB=new T.Vector3();
   let SEG=0.32;
   const rope=[], rprev=[];
@@ -382,7 +382,10 @@
       if(!(Math.abs(_lp.x)<halfW && Math.abs(_lp.y)<halfH)) continue;   // beside the card: free
       const d=i-MID;
       if(Math.abs(d)<=HOLE_SPAN){                      // threading the opening
-        if(Math.abs(_lp.z)<HT){                        // ...only constrain it while it's in the slab
+        // x/y only. Clamping these points in card-local DEPTH as well was tried and is unsafe:
+        // the card is positioned from this very point, so a depth clamp moves the card, which
+        // re-clamps, and the whole rig walked back to z = -4.5.
+        if(Math.abs(_lp.z)<HT){
           _lp.x=clm(_lp.x,-sxIn,sxIn);
           _lp.y=clm(_lp.y,SLOT_Y-syIn,SLOT_Y+syIn);
           toWorld(_lp,rope[i]);
@@ -448,19 +451,25 @@
     _slotLocal.set(0,SLOT_Y,0).applyQuaternion(_q);   // slot stays pinned to the cord as it tilts
     card.position.copy(rope[MID]).sub(_slotLocal);
   }
+  // SYMMETRIC Gauss-Seidel: each iteration sweeps the chain forwards, then backwards. Sweeping one
+  // way only biases the solution toward the far end — that's why the loop bottom sat behind centre
+  // instead of on it — and it converges poorly, which showed up as the loop bottom bobbing
+  // vertically by a different amount every frame (the idle jitter).
+  function relaxLink(i){
+    const a=rope[i],b=rope[i+1]; let dx=b.x-a.x,dy=b.y-a.y,dz=b.z-a.z;
+    const d=Math.hypot(dx,dy,dz)||1e-6, diff=(d-SEG)/d;
+    const aPin=(i===0), bPin=(i+1===N-1)||(i+1===MID&&dragging);
+    if(aPin&&bPin) return;
+    if(aPin){ b.x-=dx*diff;b.y-=dy*diff;b.z-=dz*diff; }
+    else if(bPin){ a.x+=dx*diff;a.y+=dy*diff;a.z+=dz*diff; }
+    else { const h=diff*0.5; a.x+=dx*h;a.y+=dy*h;a.z+=dz*h; b.x-=dx*h;b.y-=dy*h;b.z-=dz*h; }
+  }
   function solveDistances(iters){
     for(let k=0;k<iters;k++){
       rope[0].copy(anchorF); rope[N-1].copy(anchorB);
       if(dragging) rope[MID].copy(dragSmooth);
-      for(let i=0;i<N-1;i++){
-        const a=rope[i],b=rope[i+1]; let dx=b.x-a.x,dy=b.y-a.y,dz=b.z-a.z;
-        const d=Math.hypot(dx,dy,dz)||1e-6, diff=(d-SEG)/d;
-        const aPin=(i===0), bPin=(i+1===N-1)||(i+1===MID&&dragging);
-        if(aPin&&bPin) continue;
-        if(aPin){ b.x-=dx*diff;b.y-=dy*diff;b.z-=dz*diff; }
-        else if(bPin){ a.x+=dx*diff;a.y+=dy*diff;a.z+=dz*diff; }
-        else { const h=diff*0.5; a.x+=dx*h;a.y+=dy*h;a.z+=dz*h; b.x-=dx*h;b.y-=dy*h;b.z-=dz*h; }
-      }
+      for(let i=0;i<N-1;i++) relaxLink(i);             // forward sweep
+      for(let i=N-2;i>=0;i--) relaxLink(i);            // and back, so neither end is favoured
     }
   }
   function simulate(){
@@ -521,7 +530,7 @@
   renderer.domElement.addEventListener('pointerdown', e=>{
     setNDC(e); ray.setFromCamera(ndc,camera);
     if(ray.intersectObject(dragProxy,false).length){
-      dragging=true; stage.classList.add('grabbing');
+      dragging=true; wake(); stage.classList.add('grabbing');
       if(hint) hint.classList.add('gone');
       camera.getWorldDirection(_cd);
       dragPlane.setFromNormalAndCoplanarPoint(_cd.negate(), rope[MID]);
@@ -532,7 +541,7 @@
       dragTarget.copy(rope[MID]); dragSmooth.copy(rope[MID]);   // start the ease from where it is
       try{ renderer.domElement.setPointerCapture(e.pointerId); }catch(_){}
     } else {                                           // empty space → orbit to inspect
-      orbiting=true; opx=e.clientX; opy=e.clientY;
+      orbiting=true; wake(); opx=e.clientX; opy=e.clientY;
       try{ renderer.domElement.setPointerCapture(e.pointerId); }catch(_){}
     }
   });
@@ -635,12 +644,37 @@
   // inspection orbit: drag empty space to rotate, scroll to zoom (theta/phi stay at the
   // front-on default until you actually move them, so the page still opens facing the badge)
   const orb={theta:0, phi:Math.PI/2, rad:CAM_Z};   // rad is fixed — zoom removed
+  // Sleep. A long slack Verlet chain never fully converges with a finite iteration budget, so the
+  // loop bottom keeps bobbing by a hair every frame — visible as idle jitter no matter how the
+  // constraints are tuned. Rather than chase convergence, detect "effectively at rest" and stop
+  // stepping the simulation, exactly as a physics engine sleeps a settled body. Any interaction
+  // wakes it instantly. This is what actually makes idle motion zero rather than merely small.
+  // "Settled" is measured as deviation from a running average, NOT per-frame velocity: the residual
+  // bob is a small oscillation about a fixed point, so its frame-to-frame velocity never falls low
+  // enough to trip a velocity threshold, but its distance from the average stays tiny. A real swing
+  // moves the average and fails the test, so it only sleeps when it genuinely has nowhere to go.
+  let stillFor=0, asleep=false;
+  const emaPos=new T.Vector3(); let emaInit=false;
+  function settledAmount(){
+    if(!emaInit){ emaPos.copy(card.position); emaInit=true; return 999; }
+    const dev=emaPos.distanceTo(card.position);
+    emaPos.lerp(card.position, 0.08);
+    return dev;
+  }
+  function wake(){ stillFor=0; asleep=false; emaInit=false; }
+  window.addEventListener('resize', wake);
+
   function frame(){
     if(dragging){ hover.tx=0; hover.ty=0; }            // no hover lean while you're holding it
     hover.x += (hover.tx-hover.x)*0.10;                // ease so the lean glides in and out
     hover.y += (hover.ty-hover.y)*0.10;
-    for(let s=0;s<2;s++) simulate();
-    buildRibbon(); placeCard();
+    // anything the user is doing counts as motion
+    if(dragging || orbiting || Math.abs(hover.x-hover.tx)>0.002 || Math.abs(hover.y-hover.ty)>0.002) wake();
+    if(!asleep){
+      for(let s=0;s<2;s++) simulate();
+      buildRibbon(); placeCard();
+      if(settledAmount() < 0.09){ if(++stillFor > 40) asleep=true; } else stillFor=0;
+    }
     if(!dragging){ camTarget.y += (card.position.y-camTarget.y)*0.04; camTarget.x += (0-camTarget.x)*0.04; }
     const sp=Math.sin(orb.phi), cp=Math.cos(orb.phi);
     camera.position.set(camTarget.x + orb.rad*sp*Math.sin(orb.theta),
