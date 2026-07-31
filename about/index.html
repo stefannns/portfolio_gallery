@@ -295,17 +295,53 @@
   // ---------- simulation ----------
   let dragging=false; const dragTarget=new T.Vector3();
   const _lp=new T.Vector3(), _iq=new T.Quaternion();
+  // Hard guarantee that the strap never intersects the shell.
+  //  - no point is exempt: points inside the slab are either kept INSIDE the slot opening
+  //    (they're threading it) or pushed out to the nearest face
+  //  - the slot clamp leaves room for the ribbon's half-width, so the strap can't overhang the
+  //    slot edge into the plastic
+  //  - segment midpoints are tested too, so the curve can't bow through between rope points
+  const _mp=new T.Vector3(), _o1=new T.Vector3(), _o2=new T.Vector3();
+  const clm=(v,a,b)=>v<a?a:(v>b?b:v);
+  function toLocal(v,out){ return out.copy(v).sub(card.position).applyQuaternion(_iq); }
+  function toWorld(lp,out){ return out.copy(lp).applyQuaternion(card.quaternion).add(card.position); }
   function collideCard(){
     _iq.copy(card.quaternion).invert();
-    const HT=0.15, halfW=CW/2, halfH=CH/2, sx=SLOTW/2-P.RW*0.12, sy=SLOTH/2;
+    const HT=0.17, halfW=CW/2+0.04, halfH=CH/2+0.04;   // slab + a little margin for the ribbon
+    const sxIn=SLOTW/2-P.RW*0.5-0.02;                  // keep the whole ribbon width inside the hole
+    const syIn=Math.max(0.02, SLOTH/2-0.04);
+    const inSlab=lp=>Math.abs(lp.x)<halfW && Math.abs(lp.y)<halfH && Math.abs(lp.z)<HT;
+    const nearSlot=lp=>Math.abs(lp.y-SLOT_Y)<SLOTH*1.4 && Math.abs(lp.x)<SLOTW*0.75;
+    // STRICT hole test — the only place material is actually absent. The generous nearSlot() band
+    // above is fine for deciding "clamp into the hole", but the between-sample guard must use this,
+    // otherwise the strand exiting the slot slices through the bar just above it.
+    const inHole=lp=>Math.abs(lp.x)<SLOTW/2 && Math.abs(lp.y-SLOT_Y)<SLOTH/2;
     for(let i=1;i<N-1;i++){
-      if(Math.abs(i-MID)<=1) continue;                 // these points ARE threading the slot
-      _lp.copy(rope[i]).sub(card.position).applyQuaternion(_iq);
-      if(Math.abs(_lp.x)<halfW && Math.abs(_lp.y)<halfH && Math.abs(_lp.z)<HT){
-        if(!(Math.abs(_lp.x)<sx && Math.abs(_lp.y-SLOT_Y)<sy)){
-          _lp.z=_lp.z>=0?HT:-HT;
-          rope[i].copy(_lp).applyQuaternion(card.quaternion).add(card.position);
-        }
+      toLocal(rope[i],_lp);
+      if(!inSlab(_lp)) continue;
+      // The card is positioned FROM rope[MID], so pushing MID (or its neighbours) along z moves the
+      // card, which pushes again next iteration — a feedback loop that walks the whole rig toward
+      // the camera. These points may only be clamped inside the hole, never shoved out of the slab.
+      const isSlotPoint = Math.abs(i-MID)<=1;
+      if(isSlotPoint || nearSlot(_lp)){                // threading the hole — keep it in the hole
+        _lp.x=clm(_lp.x,-sxIn,sxIn);
+        _lp.y=clm(_lp.y,SLOT_Y-syIn,SLOT_Y+syIn);
+      } else {
+        _lp.z=_lp.z>=0?HT:-HT;                         // solid plastic — pop out to the near face
+      }
+      toWorld(_lp,rope[i]);
+    }
+    // between-sample guard: the straight path between two points must not cut through plastic
+    // either, so sample along each segment and lift both ends clear when it does.
+    for(let i=1;i<N-2;i++){
+      if(Math.abs(i-MID)<=1 || Math.abs(i+1-MID)<=1) continue;   // same feedback guard as above
+      for(let s=1;s<=3;s++){
+        _mp.lerpVectors(rope[i],rope[i+1],s/4);
+        toLocal(_mp,_lp);
+        if(!inSlab(_lp) || inHole(_lp)) continue;
+        const sgn=_lp.z>=0?1:-1;
+        toLocal(rope[i],_o1);   if(sgn*_o1.z<HT){ _o1.z=sgn*HT; toWorld(_o1,rope[i]); }
+        toLocal(rope[i+1],_o2); if(sgn*_o2.z<HT){ _o2.z=sgn*HT; toWorld(_o2,rope[i+1]); }
       }
     }
   }
@@ -369,6 +405,9 @@
 
   // ---------- drag the badge (no free orbit on the page) ----------
   const ray=new T.Raycaster(), ndc=new T.Vector2(), dragPlane=new T.Plane(), _cd=new T.Vector3();
+  // offset between where you actually grabbed and the cord point being moved, so the badge
+  // doesn't snap its slot to the cursor — it moves relative to how far the pointer travels.
+  const dragOff=new T.Vector3(), _hit=new T.Vector3();
   function setNDC(e){ const r=stage.getBoundingClientRect();
     ndc.x=((e.clientX-r.left)/r.width)*2-1; ndc.y=-((e.clientY-r.top)/r.height)*2+1; }
   renderer.domElement.addEventListener('pointerdown', e=>{
@@ -378,6 +417,10 @@
       if(hint) hint.classList.add('gone');
       camera.getWorldDirection(_cd);
       dragPlane.setFromNormalAndCoplanarPoint(_cd.negate(), rope[MID]);
+      // remember where on the plane you grabbed, so the badge keeps its position under the
+      // cursor instead of snapping its cord point to it
+      dragOff.set(0,0,0);
+      if(ray.ray.intersectPlane(dragPlane,_hit)) dragOff.subVectors(rope[MID],_hit);
       try{ renderer.domElement.setPointerCapture(e.pointerId); }catch(_){}
     }
   });
@@ -395,7 +438,8 @@
       return;
     }
     setNDC(e); ray.setFromCamera(ndc,camera);
-    if(!ray.ray.intersectPlane(dragPlane,dragTarget)) return;
+    if(!ray.ray.intersectPlane(dragPlane,_hit)) return;
+    dragTarget.addVectors(_hit, dragOff);              // move relative to the grab, no snap
     // keep the badge inside the canvas — otherwise it gets sliced off at the edge
     dragTarget.x = cl(dragTarget.x, -1.30, 1.30);
     dragTarget.y = cl(dragTarget.y,  0.40, 4.60);
