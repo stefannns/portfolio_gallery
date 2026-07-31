@@ -25,11 +25,11 @@
     -webkit-font-smoothing:antialiased;
     display:flex;align-items:center;justify-content:center;padding:32px;
   }
-  .wrap{display:flex;align-items:stretch;gap:40px;width:100%;max-width:1140px}
+  .wrap{display:flex;align-items:stretch;gap:28px;width:100%;max-width:1140px}
 
   /* ---- 3D stage (left) ---- */
   .stage{
-    position:relative;flex:0 0 460px;height:640px;
+    position:relative;flex:0 0 545px;height:640px;
     user-select:none;-webkit-user-select:none;touch-action:none;
   }
   .stage.grabbing{cursor:grabbing}
@@ -98,7 +98,7 @@
   "use strict";
   if (typeof THREE === 'undefined') return;      // fail quietly rather than blanking the page
   const T = THREE;
-  const P = { RW:0.60, DEP:0.85, REACH:7.20, CW:0.024 };
+  const P = { RW:0.60, DEP:0.45, REACH:7.20, CW:0.024 };   // DEP: how far apart the two strands hang in depth
 
   const stage = document.getElementById('stage');
   const hint  = document.getElementById('hint');
@@ -335,17 +335,26 @@
   // the strap you can actually see rather than an infinitely thin line down its middle.
   const _tan=new T.Vector3(), _wv=new T.Vector3(), _ea=new T.Vector3(), _eb=new T.Vector3(),
         _viewZ=new T.Vector3(0,0,1);
+  // Width vectors are frozen once per contact phase. Recomputing them inside the solver was a
+  // feedback loop: pushing a point changes the tangent, which changes the width vector, which
+  // changes how far the point must be pushed — so it never settled and showed up as idle jitter.
+  let strapMoving=false;
+  const wvec=[]; for(let i=0;i<N;i++) wvec.push(new T.Vector3(1,0,0));
+  function freezeStrapFrames(){
+    for(let i=0;i<N;i++){
+      if(i<=0) _tan.subVectors(rope[1],rope[0]);
+      else if(i>=N-1) _tan.subVectors(rope[N-1],rope[N-2]);
+      else _tan.subVectors(rope[i+1],rope[i-1]);
+      if(_tan.lengthSq()<1e-10) _tan.set(0,1,0);
+      _tan.normalize();
+      _wv.crossVectors(_viewZ,_tan);
+      if(_wv.lengthSq()<1e-10) _wv.set(1,0,0);
+      wvec[i].copy(_wv.normalize()).multiplyScalar(P.RW*0.5);
+    }
+  }
   function strapEdges(i){
-    if(i<=0) _tan.subVectors(rope[1],rope[0]);
-    else if(i>=N-1) _tan.subVectors(rope[N-1],rope[N-2]);
-    else _tan.subVectors(rope[i+1],rope[i-1]);
-    if(_tan.lengthSq()<1e-10) _tan.set(0,1,0);
-    _tan.normalize();
-    _wv.crossVectors(_viewZ,_tan);
-    if(_wv.lengthSq()<1e-10) _wv.set(1,0,0);
-    _wv.normalize().multiplyScalar(P.RW*0.5);
-    _ea.copy(rope[i]).add(_wv);
-    _eb.copy(rope[i]).sub(_wv);
+    _ea.copy(rope[i]).add(wvec[i]);
+    _eb.copy(rope[i]).sub(wvec[i]);
   }
   function collideCard(){
     _iq.copy(card.quaternion).invert();
@@ -385,15 +394,24 @@
       // still buried in it, which is exactly what stayed visible. Test both edges as well and push
       // the centre out far enough that the worst of the three clears.
       const side = d<0 ? 1 : -1;                       // before MID = front, after MID = back
-      strapEdges(i);
+      // The edge test only runs while the strap is actually MOVING. Edge clearance and the rope's
+      // length can't always both be satisfied, and at rest that standoff oscillates forever (the
+      // idle jitter). Penetration only ever happens while it's being thrown around, so the extra
+      // constraint is only needed then; at rest the centreline test alone holds and it settles.
       let need=0;
-      for(let e=0;e<3;e++){
-        toLocal(e===0?rope[i]:(e===1?_ea:_eb), _o2);
-        if(Math.abs(_o2.x)<halfW && Math.abs(_o2.y)<halfH){
-          const req = HT - side*_o2.z;                 // how far this sample still needs to move
-          if(req>need) need=req;
+      if(strapMoving){
+        strapEdges(i);
+        for(let e=0;e<3;e++){
+          toLocal(e===0?rope[i]:(e===1?_ea:_eb), _o2);
+          if(Math.abs(_o2.x)<halfW && Math.abs(_o2.y)<halfH){
+            const req = HT - side*_o2.z;               // how far this sample still needs to move
+            if(req>need) need=req;
+          }
         }
-      }
+      } else if(side*_lp.z < HT){ need = HT - side*_lp.z; }
+      // Relax the correction rather than applying it whole. Pushing the full amount every pass put
+      // the edge-clearance requirement and the rope's length constraint in a tug-of-war that never
+      // settled (that was the idle jitter); a partial push converges to a compromise instead.
       if(need>0){ _lp.z += side*need; toWorld(_lp,rope[i]); }
     }
     // Same rule between samples, so the straight run into the slot can't clip the bar above it.
@@ -477,7 +495,15 @@
     //    only once at the very end meant the next frame's 26 distance iterations dragged the strap
     //    straight back into the shell, so it both penetrated and shimmered every frame.
     placeCard();
-    for(let k=0;k<12;k++){ collideCard(); solveDistances(2); }   // edges need more passes to converge
+    // is the strap actually in motion this step? (drives the edge test above)
+    strapMoving = dragging;
+    if(!strapMoving){
+      for(let i=1;i<N-1;i+=3){
+        if(Math.abs(rope[i].x-rprev[i].x)+Math.abs(rope[i].y-rprev[i].y)+Math.abs(rope[i].z-rprev[i].z) > 0.012){ strapMoving=true; break; }
+      }
+    }
+    freezeStrapFrames();                                // frames fixed for the whole contact phase
+    for(let k=0;k<12;k++){ collideCard(); solveDistances(2); }
     // Order matters: settle the card pose FIRST, then resolve against that final pose. Doing the
     // last collideCard() before placeCard() left the card free to move afterwards, so contacts were
     // resolved against a pose that no longer existed by render time — the residual penetration.
@@ -533,7 +559,7 @@
     if(!ray.ray.intersectPlane(dragPlane,_hit)) return;
     dragTarget.addVectors(_hit, dragOff);              // move relative to the grab, no snap
     // keep the badge inside the canvas — otherwise it gets sliced off at the edge
-    dragTarget.x = cl(dragTarget.x, -1.30, 1.30);
+    dragTarget.x = cl(dragTarget.x, -1.75, 1.75);
     dragTarget.y = cl(dragTarget.y,  0.40, 4.60);
     dragTarget.z = cl(dragTarget.z, -1.20, 1.20);
   });
