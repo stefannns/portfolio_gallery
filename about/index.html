@@ -241,8 +241,16 @@
   // Built the way a real lanyard is. This removes an entire class of bugs by construction: the
   // strap never passes through the card, so there is nothing to keep threaded inside a slot, no
   // cord-vs-shell collision, and no way for the two to intersect. The card hangs off the clip.
-  const GRAV=0.010, DAMP=0.978, ITER=22;
-  const N=26;                                        // points along the single lower strap
+  // Tuning follows the react-three-rapier reference implementations (Vercel's 3D event badge and
+  // React Bits' Lanyard) rather than being guessed: they simulate the band with just THREE rope
+  // segments and lean on heavy damping (Rapier linear/angular damping 4, i.e. about 0.94 of the
+  // velocity per frame), then draw a smooth Catmull-Rom curve THROUGH those few points.
+  // A 26-link chain was the real cause of the idle bob here: a long chain cannot converge within
+  // any sane iteration budget, so the bottom settled slightly differently every frame. Five points
+  // converge essentially exactly, and the visual smoothness comes from the curve resample, not
+  // from the number of simulated points.
+  const GRAV=0.010, DAMP=0.967, ITER=10;             // DAMP per substep ~= exp(-4/120)
+  const N=5;                                         // physics points on the strap (was 26)
   const rope=[], rprev=[];
   for(let i=0;i<N;i++){ rope.push(new T.Vector3()); rprev.push(new T.Vector3()); }
   const buckle=new T.Vector3(), neckL=new T.Vector3(), neckR=new T.Vector3();
