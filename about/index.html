@@ -297,7 +297,7 @@
   }
 
   // ---------- simulation ----------
-  let dragging=false; const dragTarget=new T.Vector3();
+  let dragging=false, orbiting=false, opx=0, opy=0; const dragTarget=new T.Vector3();
   const _lp=new T.Vector3(), _iq=new T.Quaternion();
   // Hard guarantee that the strap never intersects the shell.
   //  - no point is exempt: points inside the slab are either kept INSIDE the slot opening
@@ -389,7 +389,6 @@
         else if(bPin){ a.x+=dx*diff;a.y+=dy*diff;a.z+=dz*diff; }
         else { const h=diff*0.5; a.x+=dx*h;a.y+=dy*h;a.z+=dz*h; b.x-=dx*h;b.y-=dy*h;b.z-=dz*h; }
       }
-      placeCard(); collideCard();
     }
     rope[0].copy(anchorF); rope[N-1].copy(anchorB); if(dragging) rope[MID].copy(dragTarget);
     if(!armSet){ swing.copy(rope[MID]); swing.y-=ARM; swingPrev.copy(swing); armSet=true; }
@@ -405,6 +404,10 @@
     swing.x+=(rope[MID].x-swing.x)*sr;
     swing.y+=((rope[MID].y-ARM)-swing.y)*sr;
     swing.z+=(rope[MID].z-swing.z)*sr;
+    // Collision resolves ONCE, against the final pose — not inside the constraint loop. Running it
+    // per-iteration made the clamp and the distance constraints fight each other 52x a frame, which
+    // never converged and showed up as a permanent jitter.
+    placeCard(); collideCard();
   }
 
   // ---------- drag the badge (no free orbit on the page) ----------
@@ -426,11 +429,22 @@
       dragOff.set(0,0,0);
       if(ray.ray.intersectPlane(dragPlane,_hit)) dragOff.subVectors(rope[MID],_hit);
       try{ renderer.domElement.setPointerCapture(e.pointerId); }catch(_){}
+    } else {                                           // empty space → orbit to inspect
+      orbiting=true; opx=e.clientX; opy=e.clientY;
+      try{ renderer.domElement.setPointerCapture(e.pointerId); }catch(_){}
     }
   });
+  renderer.domElement.addEventListener('wheel', e=>{
+    e.preventDefault(); orb.rad=cl(orb.rad+e.deltaY*0.02, 6, 40);
+  }, {passive:false});
   const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
   const _hp=new T.Vector3(), _hq=new T.Quaternion();
   window.addEventListener('pointermove', e=>{
+    if(orbiting){                                      // rotate the view around the badge
+      orb.theta -= (e.clientX-opx)*0.006;
+      orb.phi = cl(orb.phi-(e.clientY-opy)*0.006, 0.15, Math.PI-0.15);
+      opx=e.clientX; opy=e.clientY; return;
+    }
     if(!dragging){                                     // hover: how far the cursor sits from the card centre
       setNDC(e); ray.setFromCamera(ndc,camera);
       const hit=ray.intersectObject(dragProxy,false)[0];
@@ -449,7 +463,7 @@
     dragTarget.y = cl(dragTarget.y,  0.40, 4.60);
     dragTarget.z = cl(dragTarget.z, -1.20, 1.20);
   });
-  window.addEventListener('pointerup', ()=>{ dragging=false; stage.classList.remove('grabbing'); });
+  window.addEventListener('pointerup', ()=>{ dragging=false; orbiting=false; stage.classList.remove('grabbing'); });
 
   // ---------- text gets shoved aside when the badge swings near it ----------
   const intro=document.querySelector('.intro');
@@ -518,6 +532,9 @@
 
   // ---------- loop ----------
   const camTarget=new T.Vector3(0,-0.5,0);
+  // inspection orbit: drag empty space to rotate, scroll to zoom (theta/phi stay at the
+  // front-on default until you actually move them, so the page still opens facing the badge)
+  const orb={theta:0, phi:Math.PI/2, rad:CAM_Z};
   function frame(){
     if(dragging){ hover.tx=0; hover.ty=0; }            // no hover lean while you're holding it
     hover.x += (hover.tx-hover.x)*0.10;                // ease so the lean glides in and out
@@ -525,7 +542,10 @@
     for(let s=0;s<2;s++) simulate();
     buildRibbon(); placeCard();
     if(!dragging){ camTarget.y += (card.position.y-camTarget.y)*0.04; camTarget.x += (0-camTarget.x)*0.04; }
-    camera.position.set(camTarget.x, camTarget.y, camTarget.z+CAM_Z);
+    const sp=Math.sin(orb.phi), cp=Math.cos(orb.phi);
+    camera.position.set(camTarget.x + orb.rad*sp*Math.sin(orb.theta),
+                        camTarget.y + orb.rad*cp,
+                        camTarget.z + orb.rad*sp*Math.cos(orb.theta));
     camera.lookAt(camTarget);
     repel();
     renderer.render(scene,camera);
