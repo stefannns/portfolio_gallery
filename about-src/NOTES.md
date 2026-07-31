@@ -46,9 +46,44 @@ itself is not.
 - A small angular-velocity nudge (`ang.y - rot.y * 0.25`) eases the card back toward facing
   the viewer instead of letting it spin freely.
 
-`cardTexture.js` draws both textures on a canvas at runtime — no image assets to ship. The card
-face carries the same content as the old 2D page: Stefan / AIGC/Game Designer / USC School of
-Cinematic Arts / Class of 2027.
+`clip.glb` is the metal hardware from the reference badge — the `clip` (the loop the strap runs
+through) and the `clamp` (the jaw gripping the card's top edge). It was extracted from Vercel's
+demo asset (`tag.glb`), with the card mesh and the embedded Vercel-branded card texture stripped
+out, leaving geometry only: 261 KB → 113 KB. It's authored at a scale where the card is 1 unit
+tall, so `HW_SCALE` 2.25 matches `CARD_H` and `HW_Y` -1.2 centres it on the rigid body, putting
+the clip's eye at the `[0, 1.45, 0]` joint anchor.
+
+`cardTexture.js` draws the card and strap textures on a canvas at runtime. The card face carries
+the same content as the old 2D page: Stefan / AIGC/Game Designer / USC School of Cinematic Arts /
+Class of 2027. The strap is charcoal webbing with `pattern.png` repeating along it.
+
+The strap texture has one non-obvious constraint. meshline draws with `sizeAttenuation` on, which
+offsets vertices by `0.5 * lineWidth` in *clip* space — so the strap's world width is
+`lineWidth * tan(fov/2)`, not `lineWidth`. Texture u runs along the strap and v across it, so a
+tile covers `ropeLength / BAND_REPEAT` by that width. Build the canvas at any other aspect and
+the mark comes out stretched — a square tile at repeat 3 stretched it 4.5x lengthwise. Hence
+`BAND_REPEAT` is chosen first (whole number, or a mark gets sliced where the texture wraps) and
+the tile aspect is derived back from it. The mark sits at the *start* of each tile, not the
+centre: only ~60% of the rope is on screen at rest, and centring put every mark above the frame.
+
+## Canvas overlay and text repel
+
+The canvas is **wider than the stage** (`.canvas-layer`, `width: 200%`) and painted above the
+copy. Sized to the stage it clipped the badge at the stage's right edge the moment it was
+dragged toward the text, which read as a black rectangle slicing the card in half. It stays
+`pointer-events: none` so the text is still selectable — R3F listens on `.wrap` instead via
+`eventSource` + `eventPrefix="client"`. Height still matches the stage, so vertical framing and
+badge size are unchanged.
+
+Because the canvas no longer lines up with the stage, `Band` slides `camera.position.x` on mount
+and resize so world x=0 still lands on the middle of the stage. That also means the drag can no
+longer use the reference's `|camera.position|` shortcut for the ray distance — it now
+intersects the z=0 plane properly, which is correct wherever the camera sits.
+
+`useTextRepel.js` pushes `.intro`, `.sec-title` and each `.chip` out of the badge's way, driven
+per frame from the card's projected screen position. Base positions are measured once (and on
+resize) with transforms cleared first — measuring with the offset still applied makes the
+elements creep across the page.
 
 ## Notes
 

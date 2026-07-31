@@ -1,15 +1,23 @@
 import * as THREE from 'three'
-import { useEffect, useRef, useState, useMemo } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, useMemo } from 'react'
 import { Canvas, extend, useFrame, useThree } from '@react-three/fiber'
-import { Environment, Lightformer } from '@react-three/drei'
+import { Environment, Lightformer, useGLTF } from '@react-three/drei'
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier'
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline'
-import { makeCardTexture, makeBandTexture } from './cardTexture.js'
+import { makeCardTexture, makeBandTexture, BAND_REPEAT, BAND_LINE_W, CAM_FOV, CAM_Z } from './cardTexture.js'
+import clipUrl from './clip.glb'
+import { useTextRepel } from './useTextRepel.js'
 
 extend({ MeshLineGeometry, MeshLineMaterial })
 
 // Card is 1.6 x 2.25, matching the reference's CuboidCollider [0.8, 1.125, 0.01].
 const CARD_W = 1.6, CARD_H = 2.25, CARD_T = 0.02
+
+// clip.glb is the reference badge's metal hardware — the 'clip' (the loop the strap runs
+// through) and the 'clamp' (the jaw that grips the card's top edge). Authored at a scale
+// where the card is 1 unit tall, so 2.25 matches CARD_H; -1.2 then centres the assembly on
+// the rigid body, putting the clip's eye right at the [0, 1.45, 0] spherical-joint anchor.
+const HW_SCALE = 2.25, HW_Y = -1.2
 
 function Band({ maxSpeed = 50, minSpeed = 10 }) {
   const band = useRef(), fixed = useRef(), j1 = useRef(), j2 = useRef(), j3 = useRef(), card = useRef()
@@ -26,8 +34,25 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 
   const cardTex = useMemo(() => makeCardTexture(), [])
   const bandTex = useMemo(() => makeBandTexture(), [])
+  const { nodes, materials } = useGLTF(clipUrl)
 
   const { width, height } = useThree((s) => s.size)
+  const gl = useThree((s) => s.gl)
+  const camera = useThree((s) => s.camera)
+  const repel = useTextRepel()
+
+  // The canvas is wider than the stage so the badge can travel over the text. Slide the camera
+  // so world x=0 still lands on the middle of the stage, whatever the canvas ends up being.
+  useLayoutEffect(() => {
+    const canvas = gl.domElement
+    const stage = canvas.closest('.stage')
+    const cr = canvas.getBoundingClientRect()
+    if (!stage || !cr.width) return
+    const sr = stage.getBoundingClientRect()
+    const worldH = 2 * CAM_Z * Math.tan((CAM_FOV / 2) * Math.PI / 180)
+    const worldW = worldH * (cr.width / cr.height)
+    camera.position.x = worldW * (0.5 - ((sr.left + sr.width / 2) - cr.left) / cr.width)
+  }, [width, height, camera, gl])
   const [curve] = useState(() => new THREE.CatmullRomCurve3([
     new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()
   ]))
@@ -50,9 +75,12 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 
   useFrame((state, delta) => {
     if (dragged) {
+      // Intersect the pointer ray with the z=0 plane. The reference used
+      // |camera.position| as the distance, which only works while the camera sits on the axis
+      // — the badge is now offset horizontally, so that shortcut would skew the drag.
       vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera)
       dir.copy(vec).sub(state.camera.position).normalize()
-      vec.add(dir.multiplyScalar(state.camera.position.length()))
+      vec.copy(state.camera.position).addScaledVector(dir, -state.camera.position.z / dir.z)
       ;[card, j1, j2, j3, fixed].forEach((r) => r.current?.wakeUp())
       card.current?.setNextKinematicTranslation({
         x: vec.x - dragged.x, y: vec.y - dragged.y, z: vec.z - dragged.z
@@ -70,10 +98,18 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
       curve.points[1].copy(j2.current.lerped)
       curve.points[2].copy(j1.current.lerped)
       curve.points[3].copy(fixed.current.translation())
-      band.current.geometry.setPoints(curve.getPoints(32))
+      // On the first frames every body still reports the same position. A chordal
+      // Catmull-Rom divides by the distance between control points, so a degenerate curve
+      // yields NaN vertices and a NaN bounding sphere. Skip until the rope has some length.
+      let spread = true
+      for (let i = 1; i < curve.points.length; i++) {
+        if (curve.points[i].distanceTo(curve.points[i - 1]) < 1e-4) { spread = false; break }
+      }
+      if (spread) band.current.geometry.setPoints(curve.getPoints(32))
       // ease the card back toward facing the viewer instead of spinning freely
       ang.copy(card.current.angvel()); rot.copy(card.current.rotation())
       card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z })
+      repel(card.current.translation(), state.camera, state.gl.domElement)
     }
   })
 
@@ -111,15 +147,11 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
               <meshPhysicalMaterial map={cardTex} clearcoat={1} clearcoatRoughness={0.15}
                 roughness={0.3} metalness={0.25} />
             </mesh>
-            {/* clip hardware at the top, where the joint anchor is */}
-            <mesh position={[0, CARD_H / 2 + 0.06, 0]}>
-              <boxGeometry args={[0.28, 0.12, 0.05]} />
-              <meshStandardMaterial color="#9aa2ad" metalness={1} roughness={0.28} />
-            </mesh>
-            <mesh position={[0, CARD_H / 2 + 0.2, 0]} rotation={[Math.PI / 2, 0, 0]}>
-              <torusGeometry args={[0.09, 0.022, 10, 24]} />
-              <meshStandardMaterial color="#9aa2ad" metalness={1} roughness={0.28} />
-            </mesh>
+            {/* the reference badge's actual clip + clamp geometry */}
+            <group scale={HW_SCALE} position={[0, HW_Y, 0]}>
+              <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
+              <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
+            </group>
           </group>
         </RigidBody>
       </group>
@@ -132,17 +164,18 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
           resolution={[width, height]}
           useMap
           map={bandTex}
-          repeat={[-3, 1]}
-          lineWidth={0.5}
+          repeat={[-BAND_REPEAT, 1]}
+          lineWidth={BAND_LINE_W}
         />
       </mesh>
     </>
   )
 }
 
-export default function Lanyard() {
+export default function Lanyard({ eventSource }) {
   return (
-    <Canvas camera={{ position: [0, 0, 13], fov: 25 }}>
+    <Canvas eventSource={eventSource} eventPrefix="client"
+      camera={{ position: [0, 0, CAM_Z], fov: CAM_FOV }}>
       <ambientLight intensity={Math.PI} />
       <Physics gravity={[0, -40, 0]} timeStep={1 / 60}>
         <Band />
@@ -156,3 +189,5 @@ export default function Lanyard() {
     </Canvas>
   )
 }
+
+useGLTF.preload(clipUrl)

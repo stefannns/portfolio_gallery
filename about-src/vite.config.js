@@ -8,6 +8,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: '/about/',
   plugins: [react()],
+  assetsInclude: ['**/*.glb'],   // not in Vite 5's default list; clip.glb is imported as a URL
   build: {
     outDir: '../about',
     emptyOutDir: false,   // about/index-2d.html is the old 2D page; keep it
