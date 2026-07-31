@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<!-- Vercel serves this file at BOTH /about and /about/ with no redirect. Without a trailing
+     slash, a relative src="three.min.js" resolves to /three.min.js and 404s, THREE stays
+     undefined and the stage renders empty. This pins the base so it works either way. -->
+<base href="/about/">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Stefan — Lanyard Badge</title>
 <style>
@@ -255,12 +259,13 @@
   const ARM=CH*0.5; let armSet=false;
 
   // ---------- ribbon (parallel-transport frame, high-res resample) ----------
-  // blue satin webbing: clearcoat + sheen give it moving highlights as it swings
+  // Matte woven webbing. Real lanyard fabric barely reflects: no clearcoat, high roughness and
+  // very little environment, with just a trace of sheen so the weave still catches the light.
   const ribbonMat=new T.MeshPhysicalMaterial({
-    color:0x3f6fd0, roughness:0.42, metalness:0,
-    clearcoat:0.55, clearcoatRoughness:0.22,
-    sheen:0.7, sheenColor:new T.Color(0x9dc0ff), sheenRoughness:0.5,
-    envMapIntensity:1.15, side:T.DoubleSide});
+    color:0x3f6fd0, roughness:0.92, metalness:0,
+    clearcoat:0, clearcoatRoughness:1,
+    sheen:0.22, sheenColor:new T.Color(0x8fb0e8), sheenRoughness:0.95,
+    envMapIntensity:0.12, side:T.DoubleSide});
   const DENSE=260;
   const fPos=new Float32Array(DENSE*2*3), fNor=new Float32Array(DENSE*2*3), fIdx=[];
   for(let i=0;i<DENSE-1;i++){ const a=i*2,b=i*2+1,c=(i+1)*2,d=(i+1)*2+1; fIdx.push(a,b,c,b,d,c); }
