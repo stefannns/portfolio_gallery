@@ -8,3 +8,6 @@
 *.webm
 *.mkv
 web/
+
+# vite build tooling for the /about lanyard page
+about-src/node_modules/
