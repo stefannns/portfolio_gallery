@@ -98,7 +98,7 @@
   "use strict";
   if (typeof THREE === 'undefined') return;      // fail quietly rather than blanking the page
   const T = THREE;
-  const P = { RW:0.60, DEP:0.45, REACH:7.20, CW:0.024 };   // DEP: how far apart the two strands hang in depth
+  const P = { RW:0.52, SPREAD:1.55, NECK:4.2, BUCKLE:1.15, DROP:1.5, CW:0.024 };
 
   const stage = document.getElementById('stage');
   const hint  = document.getElementById('hint');
@@ -114,7 +114,7 @@
   // instead of clear. Giving the scene a solid backdrop the same colour as the page fixes that —
   // the canvas is then visually identical to the page, but the plastic has something to see through.
   scene.background = new T.Color(0x0b0b0d);       // must match --bg in the CSS above
-  const CAM_Z = 14.5;
+  const CAM_Z = 17.2;   // pulled back so the whole lanyard fits: neck V, buckle, strap, badge
   const camera = new T.PerspectiveCamera(32, stage.clientWidth/stage.clientHeight, 0.1, 200);
 
   // studio environment (reflections only — never drawn as a background)
@@ -147,7 +147,8 @@
   scene.add(new T.AmbientLight(0xffffff,0.18));
 
   // ---------- card (real slot hole) ----------
-  const CW=3.4, CH=CW*871/560, CR=0.32, SLOT_Y=CH/2-0.5, SLOTW=1.3, SLOTH=0.42;
+  const CW=3.4, CH=CW*871/560, CR=0.32;
+  const HOLE_Y=CH/2-0.34, HOLE_W=0.42, HOLE_H=0.30;   // the clip hooks through this
   function rrShape(w,h,r){ const s=new T.Shape(),x=-w/2,y=-h/2;
     s.moveTo(x+r,y); s.lineTo(x+w-r,y); s.quadraticCurveTo(x+w,y,x+w,y+r);
     s.lineTo(x+w,y+h-r); s.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
@@ -158,7 +159,7 @@
     p.lineTo(x+w,y+h-r); p.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
     p.lineTo(x+r,y+h); p.quadraticCurveTo(x,y+h,x,y+h-r);
     p.lineTo(x,y+r); p.quadraticCurveTo(x,y,x+r,y); return p; }
-  const cardShape=rrShape(CW,CH,CR); cardShape.holes.push(slotPath(SLOTW,SLOTH,SLOTH/2,SLOT_Y));
+  const cardShape=rrShape(CW,CH,CR); cardShape.holes.push(slotPath(HOLE_W,HOLE_H,HOLE_H/2,HOLE_Y));
   const cardGeo=new T.ExtrudeGeometry(cardShape,{depth:0.16,bevelEnabled:true,bevelThickness:0.05,bevelSize:0.05,bevelSegments:4,curveSegments:22,steps:1});
   cardGeo.center();
   // clearer plastic: near-full transmission, thin so it barely tints, with a crisp clearcoat
@@ -235,23 +236,80 @@
   const dragProxy=new T.Mesh(new T.PlaneGeometry(CW,CH), new T.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}));
   card.add(dragProxy);
 
-  // ---------- cord: one Verlet rope between a FRONT and BACK anchor (same x,y) ----------
-  const N=46, GRAV=0.010, DAMP=0.978, ITER=26, MID=N>>1;   // ITER now = 2 sweeps each (fwd+back)
-  const anchorF=new T.Vector3(), anchorB=new T.Vector3();
-  let SEG=0.32;
+  // ---------- rig: two neck straps -> buckle -> ONE strap -> swivel clip -> card ----------
+  // Built the way a real lanyard is. This removes an entire class of bugs by construction: the
+  // strap never passes through the card, so there is nothing to keep threaded inside a slot, no
+  // cord-vs-shell collision, and no way for the two to intersect. The card hangs off the clip.
+  const GRAV=0.010, DAMP=0.978, ITER=22;
+  const N=26;                                        // points along the single lower strap
   const rope=[], rprev=[];
   for(let i=0;i<N;i++){ rope.push(new T.Vector3()); rprev.push(new T.Vector3()); }
+  const buckle=new T.Vector3(), neckL=new T.Vector3(), neckR=new T.Vector3();
+  let SEG=0.2;
   function layoutRope(){
-    const yTop=SLOT_Y+P.REACH;
-    anchorF.set(0,yTop,P.DEP); anchorB.set(0,yTop,-P.DEP);   // same x, split only in depth
-    SEG=(P.REACH*2.05)/(N-1);
-    for(let i=0;i<N;i++){ const t=i/(N-1);
-      rope[i].lerpVectors(anchorF,anchorB,t);
-      rope[i].y-=Math.sin(t*Math.PI)*P.REACH*0.9;
-      rprev[i].copy(rope[i]); }
+    buckle.set(0, P.BUCKLE, 0);
+    neckL.set(-P.SPREAD, P.BUCKLE+P.NECK, 0);
+    neckR.set( P.SPREAD, P.BUCKLE+P.NECK, 0);
+    SEG = P.DROP/(N-1);
+    for(let i=0;i<N;i++){ rope[i].set(0, buckle.y-SEG*i, 0); rprev[i].copy(rope[i]); }
   }
+  // the card hangs off the clip on a short pendulum, so it self-rights and swings a little
   const swing=new T.Vector3(), swingPrev=new T.Vector3();
   const ARM=CH*0.5; let armSet=false;
+
+  // ---------- hardware: buckle, swivel clip, and the two neck straps ----------
+  const metalMat=new T.MeshStandardMaterial({color:0xc8ccd4, metalness:1, roughness:0.26, envMapIntensity:1.1});
+  const plasticMat=new T.MeshStandardMaterial({color:0x0e1014, metalness:0, roughness:0.62, envMapIntensity:0.35});
+
+  // Buckle: the side-release clip where the neck loop meets the single strap. Fixed in place.
+  const buckleMesh=new T.Mesh(new T.BoxGeometry(P.RW*1.18, 0.44, 0.20), plasticMat);
+  scene.add(buckleMesh);
+
+  // Swivel clip. It is a CHILD OF THE CARD, sitting exactly on the card's hole, so the hook and
+  // the hole can never drift apart no matter how the badge swings — the misalignment that plagued
+  // the threaded version is impossible here.
+  const clip=new T.Group();
+  const ring=new T.Mesh(new T.TorusGeometry(0.20,0.045,10,26), metalMat);   // hook through the hole
+  ring.rotation.y=Math.PI/2;
+  const barrel=new T.Mesh(new T.CylinderGeometry(0.075,0.075,0.30,14), metalMat);
+  barrel.position.y=0.30;
+  const eye=new T.Mesh(new T.TorusGeometry(0.10,0.035,8,20), metalMat);
+  eye.position.y=0.48; eye.rotation.y=Math.PI/2;
+  clip.add(ring); clip.add(barrel); clip.add(eye);
+  clip.position.set(0, HOLE_Y, 0);
+  card.add(clip);
+
+  // The two neck straps are static geometry: they run from the neck down to the fixed buckle.
+  function neckStrap(from,to){
+    const pts=[from.clone(),
+      new T.Vector3((from.x+to.x)*0.5, (from.y+to.y)*0.5 - 0.25, 0),
+      to.clone()];
+    const curve=new T.CatmullRomCurve3(pts,false,'catmullrom',0.5);
+    const M=24, pos=new Float32Array(M*2*3), nor=new Float32Array(M*2*3), idx=[];
+    for(let i=0;i<M-1;i++){ const a=i*2,b=i*2+1,c=(i+1)*2,d=(i+1)*2+1; idx.push(a,b,c,b,d,c); }
+    const t=new T.Vector3(), w=new T.Vector3(), z=new T.Vector3(0,0,1), pt=new T.Vector3();
+    for(let i=0;i<M;i++){
+      const u=i/(M-1); pt.copy(curve.getPoint(u)); t.copy(curve.getTangent(u)).normalize();
+      w.crossVectors(z,t); if(w.lengthSq()<1e-8) w.set(1,0,0);
+      w.normalize().multiplyScalar(P.RW*0.5);
+      const o=i*6;
+      pos[o]=pt.x-w.x; pos[o+1]=pt.y-w.y; pos[o+2]=pt.z-w.z;
+      pos[o+3]=pt.x+w.x; pos[o+4]=pt.y+w.y; pos[o+5]=pt.z+w.z;
+      nor[o]=0;nor[o+1]=0;nor[o+2]=1; nor[o+3]=0;nor[o+4]=0;nor[o+5]=1;
+    }
+    const g=new T.BufferGeometry();
+    g.setAttribute('position',new T.BufferAttribute(pos,3));
+    g.setAttribute('normal',new T.BufferAttribute(nor,3));
+    g.setIndex(idx); return g;
+  }
+  let neckMeshes=[];
+  function buildNeck(){
+    neckMeshes.forEach(m=>{ scene.remove(m); m.geometry.dispose(); });
+    neckMeshes=[ new T.Mesh(neckStrap(neckL,buckle), ribbonMat),
+                 new T.Mesh(neckStrap(neckR,buckle), ribbonMat) ];
+    neckMeshes.forEach(m=>scene.add(m));
+    buckleMesh.position.copy(buckle);
+  }
 
   // ---------- ribbon (parallel-transport frame, high-res resample) ----------
   // Matte woven webbing. Real lanyard fabric barely reflects: no clearcoat, high roughness and
@@ -330,106 +388,6 @@
   const clm=(v,a,b)=>v<a?a:(v>b?b:v);
   function toLocal(v,out){ return out.copy(v).sub(card.position).applyQuaternion(_iq); }
   function toWorld(lp,out){ return out.copy(lp).applyQuaternion(card.quaternion).add(card.position); }
-  // World-space positions of the ribbon's two edges at rope point i. Mirrors the width vector the
-  // renderer uses (perpendicular to the tangent, turned to face the viewer) so the collider covers
-  // the strap you can actually see rather than an infinitely thin line down its middle.
-  const _tan=new T.Vector3(), _wv=new T.Vector3(), _ea=new T.Vector3(), _eb=new T.Vector3(),
-        _viewZ=new T.Vector3(0,0,1);
-  // Width vectors are frozen once per contact phase. Recomputing them inside the solver was a
-  // feedback loop: pushing a point changes the tangent, which changes the width vector, which
-  // changes how far the point must be pushed — so it never settled and showed up as idle jitter.
-  let strapMoving=false;
-  const wvec=[]; for(let i=0;i<N;i++) wvec.push(new T.Vector3(1,0,0));
-  function freezeStrapFrames(){
-    for(let i=0;i<N;i++){
-      if(i<=0) _tan.subVectors(rope[1],rope[0]);
-      else if(i>=N-1) _tan.subVectors(rope[N-1],rope[N-2]);
-      else _tan.subVectors(rope[i+1],rope[i-1]);
-      if(_tan.lengthSq()<1e-10) _tan.set(0,1,0);
-      _tan.normalize();
-      _wv.crossVectors(_viewZ,_tan);
-      if(_wv.lengthSq()<1e-10) _wv.set(1,0,0);
-      wvec[i].copy(_wv.normalize()).multiplyScalar(P.RW*0.5);
-    }
-  }
-  function strapEdges(i){
-    _ea.copy(rope[i]).add(wvec[i]);
-    _eb.copy(rope[i]).sub(wvec[i]);
-  }
-  function collideCard(){
-    _iq.copy(card.quaternion).invert();
-    const HT=0.17, halfW=CW/2+0.04, halfH=CH/2+0.04;   // slab + a little margin for the ribbon
-    const sxIn=SLOTW/2-P.RW*0.5-0.02;                  // keep the whole ribbon width inside the hole
-    const syIn=Math.max(0.02, SLOTH/2-0.04);
-    const inSlab=lp=>Math.abs(lp.x)<halfW && Math.abs(lp.y)<halfH && Math.abs(lp.z)<HT;
-    const nearSlot=lp=>Math.abs(lp.y-SLOT_Y)<SLOTH*1.4 && Math.abs(lp.x)<SLOTW*0.75;
-    // STRICT hole test — the only place material is actually absent. The generous nearSlot() band
-    // above is fine for deciding "clamp into the hole", but the between-sample guard must use this,
-    // otherwise the strand exiting the slot slices through the bar just above it.
-    const inHole=lp=>Math.abs(lp.x)<SLOTW/2 && Math.abs(lp.y-SLOT_Y)<SLOTH/2;
-    // Topological rule instead of "push to the nearest face". The cord is threaded once: it runs
-    // down the FRONT, through the slot, and up the BACK — so every point before MID belongs in
-    // front of the card and every point after it belongs behind, permanently. Enforcing that side
-    // is what makes penetration impossible: nearest-face ejection lets a fast drag tunnel through,
-    // and ejecting to the previous side traps points that are legitimately threading the hole.
-    // Only the couple of points at MID are allowed inside the slab, and only within the opening.
-    // HOLE_SPAN points straddle the opening. Two is enough to describe the path through it; a
-    // wider "funnel" that also herded the approaching points toward the slot was tried and made
-    // things far worse (it fought the distance constraints and shook the whole cord apart).
-    const HOLE_SPAN=2;
-    for(let i=1;i<N-1;i++){
-      toLocal(rope[i],_lp);
-      if(!(Math.abs(_lp.x)<halfW && Math.abs(_lp.y)<halfH)) continue;   // beside the card: free
-      const d=i-MID;
-      if(Math.abs(d)<=HOLE_SPAN){                      // threading the opening
-        // x/y only. Clamping these points in card-local DEPTH as well was tried and is unsafe:
-        // the card is positioned from this very point, so a depth clamp moves the card, which
-        // re-clamps, and the whole rig walked back to z = -4.5.
-        if(Math.abs(_lp.z)<HT){
-          _lp.x=clm(_lp.x,-sxIn,sxIn);
-          _lp.y=clm(_lp.y,SLOT_Y-syIn,SLOT_Y+syIn);
-          toWorld(_lp,rope[i]);
-        }
-        continue;
-      }
-      // Collide the WHOLE ribbon, not just its centreline. The strap is P.RW wide, so its edges
-      // reach half that to either side — the centre can be clear of the shell while an edge is
-      // still buried in it, which is exactly what stayed visible. Test both edges as well and push
-      // the centre out far enough that the worst of the three clears.
-      const side = d<0 ? 1 : -1;                       // before MID = front, after MID = back
-      // The edge test only runs while the strap is actually MOVING. Edge clearance and the rope's
-      // length can't always both be satisfied, and at rest that standoff oscillates forever (the
-      // idle jitter). Penetration only ever happens while it's being thrown around, so the extra
-      // constraint is only needed then; at rest the centreline test alone holds and it settles.
-      let need=0;
-      if(strapMoving){
-        strapEdges(i);
-        for(let e=0;e<3;e++){
-          toLocal(e===0?rope[i]:(e===1?_ea:_eb), _o2);
-          if(Math.abs(_o2.x)<halfW && Math.abs(_o2.y)<halfH){
-            const req = HT - side*_o2.z;               // how far this sample still needs to move
-            if(req>need) need=req;
-          }
-        }
-      } else if(side*_lp.z < HT){ need = HT - side*_lp.z; }
-      // Relax the correction rather than applying it whole. Pushing the full amount every pass put
-      // the edge-clearance requirement and the rope's length constraint in a tug-of-war that never
-      // settled (that was the idle jitter); a partial push converges to a compromise instead.
-      if(need>0){ _lp.z += side*need; toWorld(_lp,rope[i]); }
-    }
-    // Same rule between samples, so the straight run into the slot can't clip the bar above it.
-    for(let i=1;i<N-2;i++){
-      const side = (i-MID)<0 ? 1 : -1;
-      if(Math.abs(i-MID)<=HOLE_SPAN || Math.abs(i+1-MID)<=HOLE_SPAN) continue;
-      for(let s=1;s<=3;s++){
-        _mp.lerpVectors(rope[i],rope[i+1],s/4);
-        toLocal(_mp,_lp);
-        if(!inSlab(_lp) || inHole(_lp)) continue;
-        toLocal(rope[i],_o2);   if(side*_o2.z<HT){ _o2.z=side*HT; toWorld(_o2,rope[i]); }
-        toLocal(rope[i+1],_o2); if(side*_o2.z<HT){ _o2.z=side*HT; toWorld(_o2,rope[i+1]); }
-      }
-    }
-  }
   const _up=new T.Vector3(),_rt=new T.Vector3(),_fw=new T.Vector3(),_mtx=new T.Matrix4(),
         _q=new T.Quaternion(),_slotLocal=new T.Vector3();
   const ZAX=new T.Vector3(0,0,1), YUP=new T.Vector3(0,1,0), XAX=new T.Vector3(1,0,0);
@@ -439,7 +397,7 @@
   const TILT=0.30;
   const _tq=new T.Quaternion(), _te=new T.Euler();
   function placeCard(){
-    _up.subVectors(rope[MID],swing); if(_up.lengthSq()<1e-6)_up.copy(YUP); else _up.normalize();
+    _up.subVectors(rope[N-1],swing); if(_up.lengthSq()<1e-6)_up.copy(YUP); else _up.normalize();
     _rt.crossVectors(_up,ZAX); if(_rt.lengthSq()<1e-6)_rt.copy(XAX); else _rt.normalize();
     _fw.crossVectors(_rt,_up).normalize();
     _mtx.makeBasis(_rt,_up,_fw); _q.setFromRotationMatrix(_mtx);
@@ -448,8 +406,8 @@
       _q.multiply(_tq.setFromEuler(_te));
     }
     card.quaternion.copy(_q);
-    _slotLocal.set(0,SLOT_Y,0).applyQuaternion(_q);   // slot stays pinned to the cord as it tilts
-    card.position.copy(rope[MID]).sub(_slotLocal);
+    _slotLocal.set(0,HOLE_Y,0).applyQuaternion(_q);   // hole stays on the clip as it tilts
+    card.position.copy(rope[N-1]).sub(_slotLocal);
   }
   // SYMMETRIC Gauss-Seidel: each iteration sweeps the chain forwards, then backwards. Sweeping one
   // way only biases the solution toward the far end — that's why the loop bottom sat behind centre
@@ -458,7 +416,7 @@
   function relaxLink(i){
     const a=rope[i],b=rope[i+1]; let dx=b.x-a.x,dy=b.y-a.y,dz=b.z-a.z;
     const d=Math.hypot(dx,dy,dz)||1e-6, diff=(d-SEG)/d;
-    const aPin=(i===0), bPin=(i+1===N-1)||(i+1===MID&&dragging);
+    const aPin=(i===0), bPin=(i+1===N-1&&dragging);
     if(aPin&&bPin) return;
     if(aPin){ b.x-=dx*diff;b.y-=dy*diff;b.z-=dz*diff; }
     else if(bPin){ a.x+=dx*diff;a.y+=dy*diff;a.z+=dz*diff; }
@@ -466,8 +424,8 @@
   }
   function solveDistances(iters){
     for(let k=0;k<iters;k++){
-      rope[0].copy(anchorF); rope[N-1].copy(anchorB);
-      if(dragging) rope[MID].copy(dragSmooth);
+      rope[0].copy(buckle);
+      if(dragging) rope[N-1].copy(dragSmooth);
       for(let i=0;i<N-1;i++) relaxLink(i);             // forward sweep
       for(let i=N-2;i>=0;i--) relaxLink(i);            // and back, so neither end is favoured
     }
@@ -478,25 +436,25 @@
       let vx=(p.x-pr.x)*DAMP, vy=(p.y-pr.y)*DAMP, vz=(p.z-pr.z)*DAMP;
       pr.copy(p); p.x+=vx; p.y+=vy-GRAV; p.z+=vz;
     }
-    rope[MID].y-=P.CW;                                  // the card's weight sags the loop bottom
+    rope[N-1].y-=P.CW;                                  // the card's weight pulls the clip down
     // Ease the pinned point toward the cursor instead of snapping to it. A fast fling could move
     // the cord further than the card is thick in a single step, which is how it tunnelled through.
     if(dragging) dragSmooth.lerp(dragTarget, 0.34);
     solveDistances(ITER);
-    rope[0].copy(anchorF); rope[N-1].copy(anchorB); if(dragging) rope[MID].copy(dragSmooth);
-    if(!armSet){ swing.copy(rope[MID]); swing.y-=ARM; swingPrev.copy(swing); armSet=true; }
+    rope[0].copy(buckle); if(dragging) rope[N-1].copy(dragSmooth);
+    if(!armSet){ swing.copy(rope[N-1]); swing.y-=ARM; swingPrev.copy(swing); armSet=true; }
     const DAMPB=0.95;
     let vx=(swing.x-swingPrev.x)*DAMPB, vy=(swing.y-swingPrev.y)*DAMPB, vz=(swing.z-swingPrev.z)*DAMPB;
     swingPrev.copy(swing); swing.x+=vx; swing.y+=vy-GRAV*1.4; swing.z+=vz;
-    let dx=swing.x-rope[MID].x, dy=swing.y-rope[MID].y, dz=swing.z-rope[MID].z;
+    let dx=swing.x-rope[N-1].x, dy=swing.y-rope[N-1].y, dz=swing.z-rope[N-1].z;
     let d=Math.hypot(dx,dy,dz)||1e-6, f=(d-ARM)/d;
     swing.x-=dx*f; swing.y-=dy*f; swing.z-=dz*f;
     // self-righting (a real badge's weight hangs below the slot). Stronger while dragging so a
     // fast pull tilts it rather than whipping it fully sideways.
     const sr = dragging ? 0.10 : 0.02;
-    swing.x+=(rope[MID].x-swing.x)*sr;
-    swing.y+=((rope[MID].y-ARM)-swing.y)*sr;
-    swing.z+=(rope[MID].z-swing.z)*sr;
+    swing.x+=(rope[N-1].x-swing.x)*sr;
+    swing.y+=((rope[N-1].y-ARM)-swing.y)*sr;
+    swing.z+=(rope[N-1].z-swing.z)*sr;
     // Contact resolution. Two things matter here and both caused earlier bugs:
     //  - the card pose is computed ONCE and held FIXED for the whole contact phase. Recomputing it
     //    per iteration made collision chase a moving card, which never converged (violent jitter).
@@ -505,19 +463,7 @@
     //    straight back into the shell, so it both penetrated and shimmered every frame.
     placeCard();
     // is the strap actually in motion this step? (drives the edge test above)
-    strapMoving = dragging;
-    if(!strapMoving){
-      for(let i=1;i<N-1;i+=3){
-        if(Math.abs(rope[i].x-rprev[i].x)+Math.abs(rope[i].y-rprev[i].y)+Math.abs(rope[i].z-rprev[i].z) > 0.012){ strapMoving=true; break; }
-      }
-    }
-    freezeStrapFrames();                                // frames fixed for the whole contact phase
-    for(let k=0;k<12;k++){ collideCard(); solveDistances(2); }
-    // Order matters: settle the card pose FIRST, then resolve against that final pose. Doing the
-    // last collideCard() before placeCard() left the card free to move afterwards, so contacts were
-    // resolved against a pose that no longer existed by render time — the residual penetration.
     placeCard();
-    collideCard();
   }
 
   // ---------- drag the badge (no free orbit on the page) ----------
@@ -533,12 +479,12 @@
       dragging=true; wake(); stage.classList.add('grabbing');
       if(hint) hint.classList.add('gone');
       camera.getWorldDirection(_cd);
-      dragPlane.setFromNormalAndCoplanarPoint(_cd.negate(), rope[MID]);
+      dragPlane.setFromNormalAndCoplanarPoint(_cd.negate(), rope[N-1]);
       // remember where on the plane you grabbed, so the badge keeps its position under the
       // cursor instead of snapping its cord point to it
       dragOff.set(0,0,0);
-      if(ray.ray.intersectPlane(dragPlane,_hit)) dragOff.subVectors(rope[MID],_hit);
-      dragTarget.copy(rope[MID]); dragSmooth.copy(rope[MID]);   // start the ease from where it is
+      if(ray.ray.intersectPlane(dragPlane,_hit)) dragOff.subVectors(rope[N-1],_hit);
+      dragTarget.copy(rope[N-1]); dragSmooth.copy(rope[N-1]);   // start the ease from where it is
       try{ renderer.domElement.setPointerCapture(e.pointerId); }catch(_){}
     } else {                                           // empty space → orbit to inspect
       orbiting=true; wake(); opx=e.clientX; opy=e.clientY;
@@ -675,7 +621,11 @@
       buildRibbon(); placeCard();
       if(settledAmount() < 0.09){ if(++stillFor > 40) asleep=true; } else stillFor=0;
     }
-    if(!dragging){ camTarget.y += (card.position.y-camTarget.y)*0.04; camTarget.x += (0-camTarget.x)*0.04; }
+    if(!dragging){
+      const topY=buckle.y+P.NECK*0.55, botY=card.position.y-CH/2;
+      camTarget.y += (((topY+botY)*0.5)-camTarget.y)*0.04;
+      camTarget.x += (0-camTarget.x)*0.04;
+    }
     const sp=Math.sin(orb.phi), cp=Math.cos(orb.phi);
     camera.position.set(camTarget.x + orb.rad*sp*Math.sin(orb.theta),
                         camTarget.y + orb.rad*cp,
@@ -693,11 +643,11 @@
     measure();
   }
 
-  layoutRope(); armSet=false;
+  layoutRope(); buildNeck(); armSet=false;
   // quasi-static warm-up so the page opens already hanging straight, not mid-swing
   for(let i=0;i<500;i++){
     simulate();
-    swing.set(rope[MID].x, rope[MID].y-ARM, rope[MID].z); swingPrev.copy(swing);
+    swing.set(rope[N-1].x, rope[N-1].y-ARM, rope[N-1].z); swingPrev.copy(swing);
     placeCard();
     for(let k=0;k<N;k++) rprev[k].copy(rope[k]);
   }
