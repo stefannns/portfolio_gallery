@@ -124,17 +124,21 @@
     // The surround must stay VERY dark: the plastic reflects the whole environment, so a bright
     // surround turns the entire shell white instead of letting you see through it.
     s.add(new T.Mesh(new T.BoxGeometry(90,90,90), new T.MeshBasicMaterial({side:T.BackSide,color:0x05060a})));
-    panel(2.6,22,0xffffff,-11, 9,14);    // narrow softbox → the long streak down the plastic
-    panel(1.6,13,0xdfe9ff,  9, 5,14);    // second, tighter strip on the other side
+    // Softboxes sit high and in FRONT of the badge, matching the key light, so the streak reads
+    // as a top-front reflection running down the plastic rather than a side glance.
+    panel(3.0,20,0xffffff, -4.5,14,12);  // main softbox → the long streak down the plastic
+    panel(1.8,12,0xdfe9ff,  4.5,11,13);  // second, tighter strip on the other side
     panel(7,7,0x24406e,   16,-9,10);     // dim cool bounce
     panel(5,5,0x3a2a18,   -6,15,-13);    // dim warm rim from behind
     return s;
   }
   const pmrem=new T.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(envScene(), 0.02).texture;   // near-zero blur = sharp highlights
-  const key=new T.DirectionalLight(0xffffff,2.2); key.position.set(5,9,11); scene.add(key);
-  const fill=new T.DirectionalLight(0xffffff,1.3); fill.position.set(-4,2,12); scene.add(fill);
-  const spec=new T.PointLight(0xdcecff,90,60); spec.position.set(-5.5,6,7); scene.add(spec);  // tight highlight
+  // Lit from the front and above — the badge faces +Z, so the key sits high and well in front of
+  // it rather than off to the side, with a small x offset so the falloff isn't perfectly flat.
+  const key=new T.DirectionalLight(0xffffff,2.2); key.position.set(1.5,10,13); scene.add(key);
+  const fill=new T.DirectionalLight(0xffffff,1.3); fill.position.set(-3.5,3.5,13); scene.add(fill);
+  const spec=new T.PointLight(0xdcecff,90,60); spec.position.set(-1.5,7.5,9); scene.add(spec);  // tight highlight
   scene.add(new T.HemisphereLight(0xcfe0ff,0x2a2a2a,0.7));
   scene.add(new T.AmbientLight(0xffffff,0.18));
 
