@@ -261,7 +261,8 @@
     clearcoat:0, clearcoatRoughness:1,
     sheen:0.22, sheenColor:new T.Color(0x8fb0e8), sheenRoughness:0.95,
     envMapIntensity:0.12, side:T.DoubleSide});
-  const DENSE=260;
+  const DENSE=260, FLAT_SPAN=0.16;   // how much of the run flattens as it threads the slot
+  const _cx=new T.Vector3();
   const fPos=new Float32Array(DENSE*2*3), fNor=new Float32Array(DENSE*2*3), fIdx=[];
   for(let i=0;i<DENSE-1;i++){ const a=i*2,b=i*2+1,c=(i+1)*2,d=(i+1)*2+1; fIdx.push(a,b,c,b,d,c); }
   const fGeo=new T.BufferGeometry();
@@ -286,6 +287,25 @@
         if(sinA>1e-6){ _axis.multiplyScalar(1/sinA); _pN.applyAxisAngle(_axis,Math.atan2(sinA,cosA)); }
         _pN.addScaledVector(_t,-_pN.dot(_t)); _pN.normalize(); }
       _w.crossVectors(_pN,_t).normalize();
+      // Lie FLAT through the slot. The ribbon is wider than the slot is tall, so if it stays
+      // camera-facing while threading the hole its edges clip the slot's top and bottom — which
+      // was nearly all the remaining penetration (it was concentrated on the one point in the
+      // slot). Real webbing flattens as it passes through, so blend the width vector onto the
+      // card's own X axis near the middle of the run and rebuild the frame from that.
+      {
+        const u=Math.abs(i/(DENSE-1)-0.5)/FLAT_SPAN;   // 0 at the slot, 1 outside the blend
+        if(u<1){
+          const k=1-u*u*(3-2*u);                       // smoothstep so the twist eases in
+          _cx.set(1,0,0).applyQuaternion(card.quaternion);
+          _cx.addScaledVector(_t,-_cx.dot(_t));        // keep it perpendicular to the run
+          if(_cx.lengthSq()>1e-8){
+            _cx.normalize();
+            if(_cx.dot(_w)<0) _cx.negate();            // don't flip the ribbon over
+            _w.lerp(_cx,k).normalize();
+            _pN.crossVectors(_t,_w).normalize();
+          }
+        }
+      }
       _sn.copy(_pN); if(_sn.z<0)_sn.negate();
       const o=i*6,p=smp[i];
       fPos[o]=p.x-_w.x*hw; fPos[o+1]=p.y-_w.y*hw; fPos[o+2]=p.z-_w.z*hw;
@@ -310,6 +330,23 @@
   const clm=(v,a,b)=>v<a?a:(v>b?b:v);
   function toLocal(v,out){ return out.copy(v).sub(card.position).applyQuaternion(_iq); }
   function toWorld(lp,out){ return out.copy(lp).applyQuaternion(card.quaternion).add(card.position); }
+  // World-space positions of the ribbon's two edges at rope point i. Mirrors the width vector the
+  // renderer uses (perpendicular to the tangent, turned to face the viewer) so the collider covers
+  // the strap you can actually see rather than an infinitely thin line down its middle.
+  const _tan=new T.Vector3(), _wv=new T.Vector3(), _ea=new T.Vector3(), _eb=new T.Vector3(),
+        _viewZ=new T.Vector3(0,0,1);
+  function strapEdges(i){
+    if(i<=0) _tan.subVectors(rope[1],rope[0]);
+    else if(i>=N-1) _tan.subVectors(rope[N-1],rope[N-2]);
+    else _tan.subVectors(rope[i+1],rope[i-1]);
+    if(_tan.lengthSq()<1e-10) _tan.set(0,1,0);
+    _tan.normalize();
+    _wv.crossVectors(_viewZ,_tan);
+    if(_wv.lengthSq()<1e-10) _wv.set(1,0,0);
+    _wv.normalize().multiplyScalar(P.RW*0.5);
+    _ea.copy(rope[i]).add(_wv);
+    _eb.copy(rope[i]).sub(_wv);
+  }
   function collideCard(){
     _iq.copy(card.quaternion).invert();
     const HT=0.17, halfW=CW/2+0.04, halfH=CH/2+0.04;   // slab + a little margin for the ribbon
@@ -343,8 +380,21 @@
         }
         continue;
       }
+      // Collide the WHOLE ribbon, not just its centreline. The strap is P.RW wide, so its edges
+      // reach half that to either side — the centre can be clear of the shell while an edge is
+      // still buried in it, which is exactly what stayed visible. Test both edges as well and push
+      // the centre out far enough that the worst of the three clears.
       const side = d<0 ? 1 : -1;                       // before MID = front, after MID = back
-      if(side*_lp.z < HT){ _lp.z=side*HT; toWorld(_lp,rope[i]); }
+      strapEdges(i);
+      let need=0;
+      for(let e=0;e<3;e++){
+        toLocal(e===0?rope[i]:(e===1?_ea:_eb), _o2);
+        if(Math.abs(_o2.x)<halfW && Math.abs(_o2.y)<halfH){
+          const req = HT - side*_o2.z;                 // how far this sample still needs to move
+          if(req>need) need=req;
+        }
+      }
+      if(need>0){ _lp.z += side*need; toWorld(_lp,rope[i]); }
     }
     // Same rule between samples, so the straight run into the slot can't clip the bar above it.
     for(let i=1;i<N-2;i++){
@@ -427,7 +477,7 @@
     //    only once at the very end meant the next frame's 26 distance iterations dragged the strap
     //    straight back into the shell, so it both penetrated and shimmered every frame.
     placeCard();
-    for(let k=0;k<6;k++){ collideCard(); solveDistances(2); }
+    for(let k=0;k<12;k++){ collideCard(); solveDistances(2); }   // edges need more passes to converge
     // Order matters: settle the card pose FIRST, then resolve against that final pose. Doing the
     // last collideCard() before placeCard() left the card free to move afterwards, so contacts were
     // resolved against a pose that no longer existed by render time — the residual penetration.
@@ -460,9 +510,7 @@
       try{ renderer.domElement.setPointerCapture(e.pointerId); }catch(_){}
     }
   });
-  renderer.domElement.addEventListener('wheel', e=>{
-    e.preventDefault(); orb.rad=cl(orb.rad+e.deltaY*0.02, 6, 40);
-  }, {passive:false});
+  // No wheel handler: scrolling over the badge should scroll the PAGE, not zoom the camera.
   const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
   const _hp=new T.Vector3(), _hq=new T.Quaternion();
   window.addEventListener('pointermove', e=>{
@@ -560,7 +608,7 @@
   const camTarget=new T.Vector3(0,-0.5,0);
   // inspection orbit: drag empty space to rotate, scroll to zoom (theta/phi stay at the
   // front-on default until you actually move them, so the page still opens facing the badge)
-  const orb={theta:0, phi:Math.PI/2, rad:CAM_Z};
+  const orb={theta:0, phi:Math.PI/2, rad:CAM_Z};   // rad is fixed — zoom removed
   function frame(){
     if(dragging){ hover.tx=0; hover.ty=0; }            // no hover lean while you're holding it
     hover.x += (hover.tx-hover.x)*0.10;                // ease so the lean glides in and out
