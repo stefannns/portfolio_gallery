@@ -18,12 +18,12 @@ export function makeCardTexture(){
   const c=document.createElement('canvas'); c.width=W; c.height=H
   const g=c.getContext('2d')
 
-  rr(g,0,0,W,H,34); g.fillStyle='#31353d'; g.fill()          // holder body, dark grey
-  rr(g,26,150,W-52,H-210,20); g.fillStyle='#3a3f48'; g.fill() // printed card, recessed
+  rr(g,0,0,W,H,34); g.fillStyle='#1f2229'; g.fill()          // holder body, dark grey
+  rr(g,26,150,W-52,H-210,20); g.fillStyle='#262a32'; g.fill() // printed card, recessed
   g.lineWidth=2; g.strokeStyle='rgba(255,255,255,.10)'; g.stroke()
 
   const sheen=g.createLinearGradient(0,0,W*0.9,H*0.55)
-  sheen.addColorStop(0,'rgba(255,255,255,.10)'); sheen.addColorStop(.45,'rgba(255,255,255,0)')
+  sheen.addColorStop(0,'rgba(255,255,255,.06)'); sheen.addColorStop(.45,'rgba(255,255,255,0)')
   rr(g,0,0,W,H,34); g.fillStyle=sheen; g.fill()
 
   const padL=64
@@ -72,18 +72,17 @@ export function makeBandTexture(){
   const c=document.createElement('canvas'); c.width=W; c.height=H
   const g=c.getContext('2d')
 
-  // A true black strap is indistinguishable from the page (--bg is #0b0b0d), which left the
-  // webbing invisible between marks. This charcoal still reads as a black lanyard but
-  // separates from the background.
-  g.fillStyle='#191a20'; g.fillRect(0,0,W,H)
+  // Grey webbing. It also has to stay clear of the page colour (--bg is #0b0b0d) — an
+  // almost-black strap disappeared into the background between marks.
+  g.fillStyle='#4c515a'; g.fillRect(0,0,W,H)
 
   // woven weft, running across the strap
   g.strokeStyle='rgba(255,255,255,.035)'; g.lineWidth=1
   for(let x=0;x<W;x+=3){ g.beginPath(); g.moveTo(x+.5,0); g.lineTo(x+.5,H); g.stroke() }
   // darker selvage down both edges
   const edge=g.createLinearGradient(0,0,0,H)
-  edge.addColorStop(0,'rgba(0,0,0,.55)'); edge.addColorStop(.14,'rgba(0,0,0,0)')
-  edge.addColorStop(.86,'rgba(0,0,0,0)'); edge.addColorStop(1,'rgba(0,0,0,.55)')
+  edge.addColorStop(0,'rgba(0,0,0,.42)'); edge.addColorStop(.14,'rgba(0,0,0,0)')
+  edge.addColorStop(.86,'rgba(0,0,0,0)'); edge.addColorStop(1,'rgba(0,0,0,.42)')
   g.fillStyle=edge; g.fillRect(0,0,W,H)
   // catch-light down both long edges of the webbing, same idea as the card's rim
   g.fillStyle='rgba(255,255,255,.26)'; g.fillRect(0,0,W,2); g.fillRect(0,H-2,W,2)
