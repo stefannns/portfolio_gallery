@@ -1,16 +1,16 @@
-import { useRef } from 'react'
+import { useState } from 'react'
 import Lanyard from './Band.jsx'
 
 export default function App() {
-  // R3F listens on the wrap rather than the canvas: the canvas sits ON TOP of the text so the
-  // badge can be dragged across it, but it's pointer-events:none so the text stays selectable.
-  const wrap = useRef(null)
+  const [used, setUsed] = useState(false)
 
   return (
-    <div className="wrap" ref={wrap}>
+    <div className="wrap">
       <div className="stage">
-        <div className="canvas-layer"><Lanyard eventSource={wrap} /></div>
-        <div className="hint">drag the badge</div>
+        <div className="canvas-layer">
+          <Lanyard onFirstDrag={() => setUsed(true)} />
+        </div>
+        <div className={used ? 'hint is-used' : 'hint'}>drag the badge</div>
       </div>
       <section className="info">
         <p className="intro">

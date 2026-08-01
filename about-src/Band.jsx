@@ -19,12 +19,19 @@ const CARD_W = 1.6, CARD_H = 2.25, CARD_T = 0.02
 // the rigid body, putting the clip's eye right at the [0, 1.45, 0] spherical-joint anchor.
 const HW_SCALE = 2.25, HW_Y = -1.2
 
-function Band({ maxSpeed = 50, minSpeed = 10 }) {
+// Where the strap is pinned. Raising this lifts the whole badge in frame.
+const ANCHOR_Y = 4.55
+
+function Band({ maxSpeed = 50, minSpeed = 10, onFirstDrag }) {
   const band = useRef(), fixed = useRef(), j1 = useRef(), j2 = useRef(), j3 = useRef(), card = useRef()
   const vec = useMemo(() => new THREE.Vector3(), [])
   const ang = useMemo(() => new THREE.Vector3(), [])
   const rot = useMemo(() => new THREE.Vector3(), [])
   const dir = useMemo(() => new THREE.Vector3(), [])
+  const quat = useMemo(() => new THREE.Quaternion(), [])
+  // the card's four corners in world space, fed to the text repel each frame
+  const corners = useMemo(() => [[-1,-1],[1,-1],[1,1],[-1,1]].map(() => new THREE.Vector3()), [])
+  const CORNER_SIGNS = useMemo(() => [[-1,-1],[1,-1],[1,1],[-1,1]], [])
 
   // Heavy damping and sleeping, exactly as the reference configures its segments.
   const segmentProps = {
@@ -109,7 +116,14 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
       // ease the card back toward facing the viewer instead of spinning freely
       ang.copy(card.current.angvel()); rot.copy(card.current.rotation())
       card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z })
-      repel(card.current.translation(), state.camera, state.gl.domElement)
+      const ct = card.current.translation(), cq = card.current.rotation()
+      quat.set(cq.x, cq.y, cq.z, cq.w)
+      for (let i = 0; i < 4; i++) {
+        corners[i].set(CORNER_SIGNS[i][0] * CARD_W / 2, CORNER_SIGNS[i][1] * CARD_H / 2, 0)
+          .applyQuaternion(quat)
+        corners[i].x += ct.x; corners[i].y += ct.y; corners[i].z += ct.z
+      }
+      repel(corners, state.camera, state.gl.domElement)
     }
   })
 
@@ -117,7 +131,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 
   return (
     <>
-      <group position={[0, 4, 0]}>
+      <group position={[0, ANCHOR_Y, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
           <BallCollider args={[0.1]} />
@@ -139,13 +153,15 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             onPointerUp={(e) => { try { e.target.releasePointerCapture(e.pointerId) } catch (err) {}; drag(false) }}
             onPointerDown={(e) => {
               try { e.target.setPointerCapture(e.pointerId) } catch (err) { /* pointer capture is best-effort */ }
+              onFirstDrag?.()
               drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())))
             }}>
             {/* holder + printed card */}
             <mesh>
               <boxGeometry args={[CARD_W, CARD_H, CARD_T]} />
+              {/* metalness would grey a white card down — this is laminated card, not metal */}
               <meshPhysicalMaterial map={cardTex} clearcoat={1} clearcoatRoughness={0.15}
-                roughness={0.3} metalness={0.25} />
+                roughness={0.35} metalness={0} />
             </mesh>
             {/* the reference badge's actual clip + clamp geometry */}
             <group scale={HW_SCALE} position={[0, HW_Y, 0]}>
@@ -172,13 +188,16 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
   )
 }
 
-export default function Lanyard({ eventSource }) {
+// The canvas listens for its own events (R3F's default). Routing them from the wrap via
+// eventSource silently never wired up — drags fell through to the page and selected text — so
+// the canvas keeps pointer-events. It overhangs the copy, which costs text selection there;
+// the badge pushes the copy aside anyway, so it rarely covers anything.
+export default function Lanyard({ onFirstDrag }) {
   return (
-    <Canvas eventSource={eventSource} eventPrefix="client"
-      camera={{ position: [0, 0, CAM_Z], fov: CAM_FOV }}>
+    <Canvas camera={{ position: [0, 0, CAM_Z], fov: CAM_FOV }}>
       <ambientLight intensity={Math.PI} />
       <Physics gravity={[0, -40, 0]} timeStep={1 / 60}>
-        <Band />
+        <Band onFirstDrag={onFirstDrag} />
       </Physics>
       <Environment blur={0.75}>
         <Lightformer intensity={2} color="white" position={[0, -1, 5]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />

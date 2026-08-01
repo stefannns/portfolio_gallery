@@ -18,21 +18,25 @@ export function makeCardTexture(){
   const c=document.createElement('canvas'); c.width=W; c.height=H
   const g=c.getContext('2d')
 
-  rr(g,0,0,W,H,34); g.fillStyle='#14161c'; g.fill()          // holder body
-  rr(g,26,150,W-52,H-210,20); g.fillStyle='#0f1118'; g.fill() // printed card, recessed
-  g.lineWidth=2; g.strokeStyle='rgba(255,255,255,.06)'; g.stroke()
+  rr(g,0,0,W,H,34); g.fillStyle='#31353d'; g.fill()          // holder body, dark grey
+  rr(g,26,150,W-52,H-210,20); g.fillStyle='#3a3f48'; g.fill() // printed card, recessed
+  g.lineWidth=2; g.strokeStyle='rgba(255,255,255,.10)'; g.stroke()
 
   const sheen=g.createLinearGradient(0,0,W*0.9,H*0.55)
-  sheen.addColorStop(0,'rgba(255,255,255,.06)'); sheen.addColorStop(.45,'rgba(255,255,255,0)')
+  sheen.addColorStop(0,'rgba(255,255,255,.10)'); sheen.addColorStop(.45,'rgba(255,255,255,0)')
   rr(g,0,0,W,H,34); g.fillStyle=sheen; g.fill()
 
   const padL=64
   g.textBaseline='top'
   const ls=v=>{ if('letterSpacing' in g) g.letterSpacing=v }
   ls('0px');   g.fillStyle='#f4f6fa'; g.font='700 62px '+FONT; g.fillText('Stefan',padL,430)
-  ls('1.8px'); g.fillStyle='#b98cff'; g.font='600 29px '+FONT; g.fillText('AIGC/Game Designer',padL,512)
-  ls('1.1px'); g.fillStyle='#9297a3'; g.font='400 27px '+FONT; g.fillText('USC School of Cinematic Arts',padL,580)
-  ls('0px');   g.fillStyle='#5b5f6b'; g.font='400 25px '+FONT; g.fillText('Class of 2027',padL,624)
+  ls('1.8px'); g.fillStyle='#c9a9ff'; g.font='600 29px '+FONT; g.fillText('AIGC/Game Designer',padL,512)
+  ls('1.1px'); g.fillStyle='#cbd0d9'; g.font='400 27px '+FONT; g.fillText('USC School of Cinematic Arts',padL,580)
+  ls('0px');   g.fillStyle='#9aa1b0'; g.font='400 25px '+FONT; g.fillText('Class of 2027',padL,624)
+
+  // rim highlight so the card reads as a lit edge against the dark page
+  rr(g,2,2,W-4,H-4,32); g.lineWidth=4; g.strokeStyle='rgba(255,255,255,.30)'; g.stroke()
+  rr(g,6,6,W-12,H-12,29); g.lineWidth=2; g.strokeStyle='rgba(255,255,255,.08)'; g.stroke()
 
   const tex=new THREE.CanvasTexture(c)
   tex.colorSpace = THREE.SRGBColorSpace
@@ -81,6 +85,9 @@ export function makeBandTexture(){
   edge.addColorStop(0,'rgba(0,0,0,.55)'); edge.addColorStop(.14,'rgba(0,0,0,0)')
   edge.addColorStop(.86,'rgba(0,0,0,0)'); edge.addColorStop(1,'rgba(0,0,0,.55)')
   g.fillStyle=edge; g.fillRect(0,0,W,H)
+  // catch-light down both long edges of the webbing, same idea as the card's rim
+  g.fillStyle='rgba(255,255,255,.26)'; g.fillRect(0,0,W,2); g.fillRect(0,H-2,W,2)
+  g.fillStyle='rgba(255,255,255,.08)'; g.fillRect(0,2,W,2); g.fillRect(0,H-4,W,2)
 
   const tex=new THREE.CanvasTexture(c)
   tex.colorSpace = THREE.SRGBColorSpace
