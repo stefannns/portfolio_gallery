@@ -1,12 +1,48 @@
 import * as THREE from 'three'
 import { useEffect, useMemo, useRef } from 'react'
 
-const SELECTOR = '.info .intro, .info .sec-title, .info .chip'
+const SELECTOR = '.info .intro .line, .info .sec-title, .info .chip'
 const MARGIN = 14      // clearance kept between the badge and any element
 const GAP = 12         // clearance kept between two elements
 const EASE = 0.18      // per-frame approach, keeps the dodge from snapping
 const RELAX = 4        // separation passes per frame
 const MAX_PUSH = 300   // cap, so a wide block can't be shoved off the page
+const ROW_TOL = 2      // vertical overlap under this isn't a collision (see the relax pass)
+
+// Rebuilds the paragraph as one shrink-wrapped block per visual line, so each line can dodge
+// the badge on its own instead of the whole paragraph sliding sideways.
+//
+// The break points are the browser's own: every word goes in a probe span, the spans are
+// grouped by their top edge, and the paragraph is then re-emitted with those groups as blocks.
+// Since each block's text is exactly what fitted on that line, none of them re-wraps and the
+// paragraph looks untouched until something pushes it.
+function splitIntoLines (p, text) {
+  p.textContent = ''
+  const probes = text.split(' ').map((w) => {
+    const s = document.createElement('span')
+    s.textContent = w
+    p.append(s, document.createTextNode(' '))
+    return s
+  })
+
+  // read-only loop, so this costs one layout rather than one per word
+  const lines = []
+  let top = null
+  for (const s of probes) {
+    const t = s.getBoundingClientRect().top
+    if (top === null || t - top > 2) { lines.push([]); top = t }
+    lines[lines.length - 1].push(s.textContent)
+  }
+
+  p.textContent = ''
+  return lines.map((words) => {
+    const el = document.createElement('span')
+    el.className = 'line'
+    el.textContent = words.join(' ')
+    p.appendChild(el)
+    return el
+  })
+}
 
 // Moves the copy clear of the badge. The canvas sits over the text, so without this the card
 // just slides on top of the paragraph.
@@ -24,7 +60,13 @@ export function useTextRepel () {
   const v = useMemo(() => new THREE.Vector3(), [])
 
   useEffect(() => {
+    const intro = document.querySelector('.info .intro')
+    // kept so the paragraph can be re-flowed from scratch on resize, and put back on unmount
+    const text = intro ? intro.textContent.replace(/\s+/g, ' ').trim() : ''
+
     const measure = () => {
+      // re-flowed every time, so the lines follow the browser's breaks at the current width
+      if (intro) splitIntoLines(intro, text)
       const els = Array.from(document.querySelectorAll(SELECTOR))
       // Clear transforms before measuring, otherwise each pass reads the previous offset back
       // in and the elements creep across the page.
@@ -45,6 +87,7 @@ export function useTextRepel () {
       removeEventListener('resize', measure)
       items.current.forEach((it) => { it.el.style.transform = '' })
       items.current = []
+      if (intro) intro.textContent = text
     }
   }, [])
 
@@ -79,11 +122,14 @@ export function useTextRepel () {
 
     // 2. relax the elements against each other. Only pairs that share vertical space can
     //    collide, so rows are handled independently without needing to group them.
+    //    Stacked lines sit exactly edge to edge — their boxes are one line-height tall and one
+    //    line-height apart — so without the tolerance subpixel rects can read as an overlap and
+    //    two neighbouring lines shove each other apart sideways for no reason.
     for (let pass = 0; pass < RELAX; pass++) {
       for (let i = 0; i < list.length; i++) {
         for (let j = i + 1; j < list.length; j++) {
           const a = list[i], b = list[j]
-          if (Math.abs(a.cy - b.cy) >= a.hh + b.hh) continue
+          if (Math.abs(a.cy - b.cy) >= a.hh + b.hh - ROW_TOL) continue
           const d = (b.cx + b.tx) - (a.cx + a.tx)
           const pen = a.hw + b.hw + GAP - Math.abs(d)
           if (pen <= 0) continue

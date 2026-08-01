@@ -73,6 +73,11 @@ Everything the page layers on hangs off those two, in `App.jsx`:
 - **Text repel** (`useTextRepel.js`) — the copy dodges horizontally out of the badge's way and
   the elements also separate from each other, so a chip that moves doesn't land on its
   neighbour. Vertical dodging was tried and looked like the layout breaking.
+  The intro dodges **per line**: the hook re-emits the paragraph as one `span.line` per visual
+  line, split at the breaks the browser had already chosen, so each line clears the badge on
+  its own. `.line` must stay `width:fit-content` — as a full-width block its box would span the
+  whole column and the badge would push the entire paragraph again. The split is redone on
+  resize, and the plain paragraph is restored on unmount.
 - **Hover tilt** — the card turns toward the cursor. It retargets the rest angle the
   component's own self-righting term drives toward rather than adding a force, so it can't
   fight the solver.

@@ -43,8 +43,13 @@ body{
 
 .info{ position:relative; z-index:1; flex:1; min-width:0; align-self:center; max-width:520px }
 /* driven per-frame by the badge; declared here so they animate smoothly if JS is idle */
-.intro,.sec-title,.chip{ will-change:transform }
+.intro .line,.sec-title,.chip{ will-change:transform }
 .intro{ margin:0; color:rgba(244,246,250,.8); font-size:15px; line-height:1.72 }
+/* Each visual line of the intro is its own box so it can dodge the badge on its own. The spans
+   are created at runtime by useTextRepel, at the breaks the browser had already chosen.
+   fit-content is what makes this work: a plain block would be the full column width, so the
+   badge would push the whole paragraph again — exactly what the split is meant to avoid. */
+.intro .line{ display:block; width:fit-content }
 .sec-title{ font-size:12px; letter-spacing:.26em; text-transform:uppercase; color:var(--faint);
   font-weight:600; margin:34px 0 14px }
 .skills{ display:flex; flex-wrap:wrap; gap:9px }
