@@ -48,7 +48,7 @@ export const STRAP_COLOR = '#4c515a'
 
 // How many marks per texture tile. The component repeats the tile BAND_REPEAT times over the
 // rope, so total marks = this * BAND_REPEAT, of which roughly half are in view.
-const MARKS_PER_TILE = 3
+const MARKS_PER_TILE = 2
 
 function rr (g, x, y, w, h, r) {
   g.beginPath()
