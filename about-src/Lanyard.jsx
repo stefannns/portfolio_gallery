@@ -53,12 +53,18 @@ const BACK_UV_RECT = { x: 0.5, y: 0, w: 0.5, h: 0.757 };
 const TWIST_SPAN = 0.55;
 const TWIST_FALLOFF = 2;
 
-// The clip is modelled with a yaw of about 16 degrees about Y: fitting z against x over its
-// vertices in card.glb gives dz/dx = -0.29, so its right end sits back and its left end forward.
-// (The card itself is planar -- dz/dx = -0.0001 -- and every node in the file is identity, so
-// this is baked into the geometry, not something the scene graph is doing.) The strap's end is
-// rolled onto that same plane, so it meets the clip square instead of cutting across it.
-const CLIP_SLOPE = -0.2918;
+// The clip is modelled with a 20 degree yaw about Y, so its right end sits back and its left
+// end forward. The card itself is planar and every node in card.glb is identity, so the yaw is
+// baked into the geometry rather than being something the scene graph does. This cancels it, so
+// the clip faces front like the card and the strap -- whose end rolls onto the card's plane --
+// meets it square. Applied about the mesh's own origin, which the clip is already centred on in
+// x and z, so it turns in place without shifting.
+//
+// The value is the rotation that drives a least-squares fit of z against x over the clip's
+// vertices to zero (residual -0.07 degrees), found by scanning. Do NOT use -atan(slope) of the
+// unrotated mesh: the fit is attenuated by the clip's own depth, so that reads only -16.3 and
+// leaves 3 degrees of lean behind.
+const CLIP_YAW_FIX = -0.35;   // radians, -20.05 degrees
 
 // Two vertices per sample, a quad per segment. Allocated once and rewritten in place.
 function makeRibbon(seg) {
@@ -298,7 +304,7 @@ function Band({
 
     const r = card.current.rotation();
     quat.set(r.x, r.y, r.z, r.w);
-    cardSide.set(1, 0, CLIP_SLOPE).normalize().applyQuaternion(quat);   // the clip's own plane
+    cardSide.set(1, 0, 0).applyQuaternion(quat);   // the card's own width direction
 
     for (let i = 0; i <= seg; i++) {
       const p = pts[i];
@@ -406,7 +412,8 @@ function Band({
                 metalness={0.8}
               />
             </mesh>
-            <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
+            {/* local patch: rotation squares the clip up -- see CLIP_YAW_FIX */}
+            <mesh geometry={nodes.clip.geometry} rotation={[0, CLIP_YAW_FIX, 0]} material={materials.metal} material-roughness={0.3} />
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
           </group>
         </RigidBody>

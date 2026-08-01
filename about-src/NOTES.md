@@ -80,13 +80,20 @@ frame, whose width direction is rolled onto the card's own plane at the clip and
 camera-facing by `TWIST_SPAN` (measured: 11.4° of roll at the clip falling to 0 by t≈0.56).
 Under a pure hover yaw the roll at the clip equals the yaw angle.
 
-The strap's end is rolled onto the **clip's** plane, not the card's. The clip is modelled with
-a yaw of about 16° about Y — fitting z against x over its vertices in `card.glb` gives
-`dz/dx = -0.29`, so its right end sits back and its left end forward, while the card itself is
-planar (`dz/dx = -0.0001`) and every node in the file is identity. Ending the strap square to
-the card left it cutting across the turned clip. `CLIP_SLOPE` carries that number; measured at
-rest, the strap's bottom edge now sits at −16.30° against the clip's −16.27°, and the top of
-the strap is unaffected.
+### The clip is squared up
+
+The clip is modelled with a **20° yaw about Y**, so its right end sits back and its left end
+forward, while the card itself is planar and every node in `card.glb` is identity — the yaw is
+baked into the geometry. That left the strap, whose end rolls onto the card's plane, cutting
+across a clip that was turned away from it. `CLIP_YAW_FIX` cancels it on the mesh; measured on
+the rendered scene, the clip now sits at −0.07° against the card's 0.00°.
+
+Getting the number right needs care. `-atan(slope)` of a least-squares fit of z against x is
+**wrong** — the fit is attenuated by the clip's own depth, reads only −16.3°, and leaves ~3° of
+lean. The right value is the rotation that drives that fit to zero, found by scanning: −0.35 rad.
+
+The `clamp` below the clip is yawed ~55° and is deliberately left alone — it is a narrow part
+where the lean barely reads, and the fit is poorly conditioned across its ~0.05 of x.
 
 Two things there are deliberate and worth not "cleaning up":
 
