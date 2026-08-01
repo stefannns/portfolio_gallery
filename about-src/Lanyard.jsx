@@ -67,10 +67,12 @@ const TWIST_FALLOFF = 2;
 const CLIP_YAW_FIX = -0.35;   // radians, -20.05 degrees
 
 // How far back the strap's lower end is pushed, along the card's local -z. The joint puts it at
-// z = 0, which is the clip's front face (the clip spans -0.122 to 0.022), so the strap sat proud
-// of the ring and its cut end showed. This drops it to the clip's middle so the ring closes over
-// it. Depth only -- x and y stay on the joint, because moving those pulls the strap off the clip.
-const STRAP_END_Z = -0.05;
+// z = 0, the clip's front face, and the clip spans -0.122 to 0.022 with its middle at -0.05.
+// Sitting at the joint the strap stood proud of the ring; sunk to the middle it disappeared
+// inside it. This sits forward of the ring's centre, so the back of the ring passes behind the
+// strap and only its front lip crosses in front -- reading as threaded rather than buried.
+// Depth only -- x and y stay on the joint, because moving those pulls the strap off the clip.
+const STRAP_END_Z = -0.02;
 
 // Two vertices per sample, a quad per segment. Allocated once and rewritten in place.
 function makeRibbon(seg) {

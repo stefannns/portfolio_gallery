@@ -106,7 +106,9 @@ Two things there are deliberate and worth not "cleaning up":
 Depth testing, though, is **on**, unlike upstream. With it off the strap painted over the clip
 whatever the depths were, so its cut end showed on top of the ring instead of the ring closing
 over it. The clip's front lip reaches z = 0.022, ahead of the strap, so depth testing is what
-lets it occlude. `STRAP_END_Z` then sinks the strap's lower end to the clip's middle depth.
+lets it occlude. `STRAP_END_Z` sets how deep the strap sits: forward of the ring's centre, so the back of the
+ring passes behind it and only the front lip crosses in front. At the ring's centre (-0.05) it
+disappeared inside; at the joint (0) it stood proud.
 That offset is **z only** — moving x or y as well pulls the strap off the clip, which was tried
 and looked worse. A side effect of depth testing is that the strap is hidden where it swings
 behind the card, which is what should happen anyway.
