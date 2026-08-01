@@ -1,0 +1,46 @@
+{
+  "gameDescription": {
+    "gameName": "小羊跳跳",
+    "gameIntro": "点击屏幕控制小羊跳跃，躲避迎面滚来的木桶！",
+    "orientation": "portrait",
+    "thirdPartyLibraries": ["phaser"]
+  },
+  "gamePlayConfig": {
+    "jumpVelocity": {
+      "type": "int",
+      "range": [-2000, -500],
+      "displayName": "Jump Velocity",
+      "value": -1450
+    },
+    "gravity": {
+      "type": "int",
+      "range": [1000, 4000],
+      "displayName": "Gravity",
+      "value": 2800
+    },
+    "baseSpeed": {
+      "type": "int",
+      "range": [800, 1000],
+      "displayName": "Base Speed",
+      "value": 800
+    },
+    "maxSpeed": {
+      "type": "int",
+      "range": [800, 1500],
+      "displayName": "Max Speed",
+      "value": 1200
+    }
+  },
+  "dependencyInput": {
+    "device": {
+      "capabilities": ["touch"]
+    },
+    "algorithm": {
+      "capabilities": []
+    },
+    "audio": {
+      "capabilities": [],
+      "options": {}
+    }
+  }
+}
