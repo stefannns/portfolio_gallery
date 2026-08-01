@@ -115,6 +115,60 @@ export function makeStrapURL (patternUrl, canvasAspect) {
     const g = c.getContext('2d')
     g.fillStyle = STRAP_COLOR; g.fillRect(0, 0, W, H)
 
+    // Woven-webbing roughness. Both axes are minified about 9:1 here (a 1381x256 tile lands in
+    // roughly 150x28 screen px), so a feature needs ~19 texels to hold two screen pixels.
+    // Anything finer drops under Nyquist and crawls as the strap moves — that is exactly what
+    // the old 1px-per-3px weft did. So: coarse twill on a ~48 texel pitch, soft mottling, and
+    // a gradient across the width, all low contrast.
+
+    // deterministic, so the strap looks identical on every load
+    let seed = 20260731
+    const rnd = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296
+
+    // Twill ribs. The pitch is fitted to an exact divisor of W so the diagonal still lines up
+    // across the seam where the tile repeats.
+    const ribs = Math.max(1, Math.round(W / 48))
+    const pitchX = W / ribs
+    for (let i = 0; i < ribs; i++) {
+      const x = i * pitchX
+      for (const [off, col, wide] of [[0, 'rgba(255,255,255,.055)', 13], [pitchX * 0.5, 'rgba(0,0,0,.075)', 15]]) {
+        g.strokeStyle = col; g.lineWidth = wide
+        g.beginPath()
+        // 45 degrees, drawn a second time a tile-width back so the part that runs off the
+        // right edge reappears on the left
+        g.moveTo(x + off - H, -2); g.lineTo(x + off + H, H + 2)
+        g.moveTo(x + off - H - W, -2); g.lineTo(x + off + H - W, H + 2)
+        g.stroke()
+      }
+    }
+
+    // Soft mottling. Radii stay well above the 19 texel floor, and each blob is repeated a
+    // tile-width either side so none of them is cut off at the seam.
+    for (let i = 0; i < 90; i++) {
+      const bx = rnd() * W, by = rnd() * H
+      const r = 34 + rnd() * 90
+      const dark = rnd() < 0.5
+      for (const dx of [0, -W, W]) {
+        const grd = g.createRadialGradient(bx + dx, by, 0, bx + dx, by, r)
+        grd.addColorStop(0, dark ? 'rgba(0,0,0,.055)' : 'rgba(255,255,255,.045)')
+        grd.addColorStop(1, 'rgba(0,0,0,0)')
+        g.fillStyle = grd
+        g.fillRect(bx + dx - r, by - r, r * 2, r * 2)
+      }
+    }
+
+    // Across the width: dark selvage, a little sheen inboard. A gradient is inherently low
+    // frequency, so unlike the hard edge lines this used to have, it cannot alias.
+    const shade = g.createLinearGradient(0, 0, 0, H)
+    shade.addColorStop(0, 'rgba(0,0,0,.42)')
+    shade.addColorStop(.10, 'rgba(255,255,255,.10)')
+    shade.addColorStop(.32, 'rgba(255,255,255,.02)')
+    shade.addColorStop(.5, 'rgba(0,0,0,.05)')
+    shade.addColorStop(.68, 'rgba(255,255,255,.02)')
+    shade.addColorStop(.90, 'rgba(255,255,255,.10)')
+    shade.addColorStop(1, 'rgba(0,0,0,.42)')
+    g.fillStyle = shade; g.fillRect(0, 0, W, H)
+
     const img = new Image()
     img.onload = () => {
       // Drawn large — 78% of the strap's width — because a big shape is both more legible and
