@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import * as THREE from 'three'
 import Lanyard from './Lanyard.jsx'
 import { useTextRepel } from './useTextRepel.js'
-import { makeCardFrontURL, makeCardBackURL, makeStrapURL, CAM_FOV, CAM_Z, BAND_LINE_W } from './cardTexture.js'
+import { makeCardFrontURL, makeCardBackURL, makeStrapURL, CAM_FOV, CAM_Z, CAM_Y, BAND_LINE_W } from './cardTexture.js'
 import patternUrl from './pattern.png'
 
 // The card's physical extent, from the component's own CuboidCollider args [0.8, 1.125, 0.01].
@@ -68,7 +68,7 @@ export default function App () {
           {/* held until the strap art is ready, so the component's own band texture never flashes */}
           {strap && (
             <Lanyard
-              position={[0, 0, CAM_Z]}
+              position={[0, CAM_Y, CAM_Z]}
               fov={CAM_FOV}
               transparent
               frontImage={front}
