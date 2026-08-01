@@ -80,13 +80,6 @@ frame, whose width direction is rolled onto the card's own plane at the clip and
 camera-facing by `TWIST_SPAN` (measured: 11.4° of roll at the clip falling to 0 by t≈0.56).
 Under a pure hover yaw the roll at the clip equals the yaw angle.
 
-The strap also ends on the **clip**, not on the joint. The joint is at the card's local
-`(0, 1.5, 0)`, but the model renders inside a group that is scaled 2.25 and offset, so the clip
-actually sits at `(0, 1.441, -0.05)` — the strap used to stop 0.06 above it and float 0.05 in
-front, which read as the bottom corner standing proud of the clip once the ribbon could roll.
-`clipAnchor` derives that point from the clip geometry rather than hardcoding it, but it
-duplicates the group's scale/offset literals — change one and change the other.
-
 Two things there are deliberate and worth not "cleaning up":
 
 - The half-width reproduces meshline's exactly — `0.5 * lineWidth * tan(fov/2) * canvasAspect`,
