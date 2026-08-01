@@ -22,6 +22,9 @@ const HW_SCALE = 2.25, HW_Y = -1.2
 // Where the strap is pinned. Raising this lifts the whole badge in frame.
 const ANCHOR_Y = 4.55
 
+// how far the card turns toward the cursor on hover, radians
+const HOVER_YAW = 0.4
+
 function Band({ maxSpeed = 50, minSpeed = 10, onFirstDrag }) {
   const band = useRef(), fixed = useRef(), j1 = useRef(), j2 = useRef(), j3 = useRef(), card = useRef()
   const vec = useMemo(() => new THREE.Vector3(), [])
@@ -94,14 +97,21 @@ function Band({ maxSpeed = 50, minSpeed = 10, onFirstDrag }) {
       })
     }
     if (fixed.current) {
-      // The reference's own smoothing: lerp the intermediate points toward their physics
-      // positions, faster the further they have to travel. Without it the band flickers.
-      ;[j1, j2].forEach((r) => {
+      // Smoothing from the reference: lerp each point toward its physics position, faster the
+      // further it has to travel. j3 is included even though the reference leaves it raw —
+      // it's the bottom of the strap, and having it snap while its neighbour lagged was what
+      // made the bottom glitch during movement. The speed scales with distance, so it still
+      // tracks the clip tightly when the badge is thrown around.
+      ;[j1, j2, j3].forEach((r) => {
         if (!r.current.lerped) r.current.lerped = new THREE.Vector3().copy(r.current.translation())
         const dist = Math.max(0.1, Math.min(1, r.current.lerped.distanceTo(r.current.translation())))
-        r.current.lerped.lerp(r.current.translation(), delta * (minSpeed + dist * (maxSpeed - minSpeed)))
+        // Clamp to 1: Vector3.lerp EXTRAPOLATES past the target when alpha > 1, and
+        // delta * 50 exceeds 1 on any frame slower than 20ms. That overshoot is what threw
+        // the bottom of the strap out past the card on a stutter.
+        const alpha = Math.min(1, delta * (minSpeed + dist * (maxSpeed - minSpeed)))
+        r.current.lerped.lerp(r.current.translation(), alpha)
       })
-      curve.points[0].copy(j3.current.translation())
+      curve.points[0].copy(j3.current.lerped)
       curve.points[1].copy(j2.current.lerped)
       curve.points[2].copy(j1.current.lerped)
       curve.points[3].copy(fixed.current.translation())
@@ -113,10 +123,21 @@ function Band({ maxSpeed = 50, minSpeed = 10, onFirstDrag }) {
         if (curve.points[i].distanceTo(curve.points[i - 1]) < 1e-4) { spread = false; break }
       }
       if (spread) band.current.geometry.setPoints(curve.getPoints(32))
-      // ease the card back toward facing the viewer instead of spinning freely
+      // Hover: turn the card toward the cursor. This retargets the self-righting controller
+      // below rather than applying its own force, so it can't fight the solver or reintroduce
+      // jitter — the rest angle simply moves, and releasing the hover lets it swing back.
+      const ct = card.current.translation()
+      let restYaw = 0
+      if (hovered && !dragged) {
+        vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera)
+        dir.copy(vec).sub(state.camera.position).normalize()
+        vec.copy(state.camera.position).addScaledVector(dir, -state.camera.position.z / dir.z)
+        restYaw = Math.max(-HOVER_YAW, Math.min(HOVER_YAW, (vec.x - ct.x) * 0.55))
+      }
+      // ease the card back toward its rest angle instead of spinning freely
       ang.copy(card.current.angvel()); rot.copy(card.current.rotation())
-      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z })
-      const ct = card.current.translation(), cq = card.current.rotation()
+      card.current.setAngvel({ x: ang.x, y: ang.y - (rot.y - restYaw) * 0.25, z: ang.z })
+      const cq = card.current.rotation()
       quat.set(cq.x, cq.y, cq.z, cq.w)
       for (let i = 0; i < 4; i++) {
         corners[i].set(CORNER_SIGNS[i][0] * CARD_W / 2, CORNER_SIGNS[i][1] * CARD_H / 2, 0)
@@ -127,7 +148,10 @@ function Band({ maxSpeed = 50, minSpeed = 10, onFirstDrag }) {
     }
   })
 
-  curve.curveType = 'chordal'
+  // Centripetal, not chordal. Chordal parameterisation overshoots badly when one segment gets
+  // much shorter than its neighbours, which is exactly what happens at the bottom of the strap
+  // while the badge is moving. Centripetal is provably free of cusps and self-intersections.
+  curve.curveType = 'centripetal'
 
   return (
     <>
