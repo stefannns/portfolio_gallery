@@ -46,6 +46,10 @@ export function strapTileAspect (canvasAspect) {
 
 export const STRAP_COLOR = '#4c515a'
 
+// How many marks per texture tile. The component repeats the tile BAND_REPEAT times over the
+// rope, so total marks = this * BAND_REPEAT, of which roughly half are in view.
+const MARKS_PER_TILE = 3
+
 function rr (g, x, y, w, h, r) {
   g.beginPath()
   g.moveTo(x + r, y); g.lineTo(x + w - r, y); g.quadraticCurveTo(x + w, y, x + w, y + r)
@@ -118,13 +122,20 @@ export function makeStrapURL (patternUrl, canvasAspect) {
       const across = H * 0.78
       const k = across / img.width
       const along = img.height * k
-      g.save()
-      // A quarter turn: canvas +x runs ALONG the strap, so without it the mark lies on its side
-      // once the lanyard hangs. Uniform scale, so the artwork keeps its own aspect.
-      g.translate(along / 2 + H * 0.10, H / 2)
-      g.rotate(-Math.PI / 2)
-      g.drawImage(img, -img.width * k / 2, -img.height * k / 2, img.width * k, img.height * k)
-      g.restore()
+
+      // MARKS_PER_TILE of them, evenly spaced. The component repeats this tile 4 times over
+      // the rope, so this is the only lever on how many appear without patching it — and even
+      // spacing keeps the seam between tiles invisible.
+      const pitch = W / MARKS_PER_TILE
+      for (let i = 0; i < MARKS_PER_TILE; i++) {
+        g.save()
+        // A quarter turn: canvas +x runs ALONG the strap, so without it the mark lies on its
+        // side once the lanyard hangs. Uniform scale, so the artwork keeps its own aspect.
+        g.translate(i * pitch + pitch / 2, H / 2)
+        g.rotate(-Math.PI / 2)
+        g.drawImage(img, -img.width * k / 2, -img.height * k / 2, img.width * k, img.height * k)
+        g.restore()
+      }
       resolve(c.toDataURL('image/png'))
     }
     img.onerror = () => resolve(c.toDataURL('image/png'))   // plain strap rather than nothing
