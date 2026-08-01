@@ -53,6 +53,13 @@ const BACK_UV_RECT = { x: 0.5, y: 0, w: 0.5, h: 0.757 };
 const TWIST_SPAN = 0.55;
 const TWIST_FALLOFF = 2;
 
+// The clip is modelled with a yaw of about 16 degrees about Y: fitting z against x over its
+// vertices in card.glb gives dz/dx = -0.29, so its right end sits back and its left end forward.
+// (The card itself is planar -- dz/dx = -0.0001 -- and every node in the file is identity, so
+// this is baked into the geometry, not something the scene graph is doing.) The strap's end is
+// rolled onto that same plane, so it meets the clip square instead of cutting across it.
+const CLIP_SLOPE = -0.2918;
+
 // Two vertices per sample, a quad per segment. Allocated once and rewritten in place.
 function makeRibbon(seg) {
   const count = seg + 1;
@@ -291,7 +298,7 @@ function Band({
 
     const r = card.current.rotation();
     quat.set(r.x, r.y, r.z, r.w);
-    cardSide.set(1, 0, 0).applyQuaternion(quat);   // the card's own width direction
+    cardSide.set(1, 0, CLIP_SLOPE).normalize().applyQuaternion(quat);   // the clip's own plane
 
     for (let i = 0; i <= seg; i++) {
       const p = pts[i];

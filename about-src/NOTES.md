@@ -80,6 +80,14 @@ frame, whose width direction is rolled onto the card's own plane at the clip and
 camera-facing by `TWIST_SPAN` (measured: 11.4° of roll at the clip falling to 0 by t≈0.56).
 Under a pure hover yaw the roll at the clip equals the yaw angle.
 
+The strap's end is rolled onto the **clip's** plane, not the card's. The clip is modelled with
+a yaw of about 16° about Y — fitting z against x over its vertices in `card.glb` gives
+`dz/dx = -0.29`, so its right end sits back and its left end forward, while the card itself is
+planar (`dz/dx = -0.0001`) and every node in the file is identity. Ending the strap square to
+the card left it cutting across the turned clip. `CLIP_SLOPE` carries that number; measured at
+rest, the strap's bottom edge now sits at −16.30° against the clip's −16.27°, and the top of
+the strap is unaffected.
+
 Two things there are deliberate and worth not "cleaning up":
 
 - The half-width reproduces meshline's exactly — `0.5 * lineWidth * tan(fov/2) * canvasAspect`,
