@@ -44,7 +44,7 @@ export function strapTileAspect (canvasAspect) {
   return Math.max(1, Math.min(16, (ROPE_LEN / BAND_REPEAT) / strapW))
 }
 
-export const STRAP_COLOR = '#4c515a'
+export const STRAP_COLOR = '#1b1e23'
 
 // How many marks per texture tile. The component repeats the tile BAND_REPEAT times over the
 // rope, so total marks = this * BAND_REPEAT, of which roughly half are in view.
