@@ -9,11 +9,14 @@ body{
   font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"PingFang SC","Microsoft YaHei",sans-serif;
   -webkit-font-smoothing:antialiased;
 }
+/* Content-height rather than min-height:100%. Filling the viewport made the whole block sit
+   vertically centred, which pushed it down the page; sizing to the content lets it start at
+   the top instead. The stage and the copy stay centred against each other. */
 .wrap{
   position:relative;
   display:flex; align-items:stretch; gap:28px;
-  width:100%; max-width:1140px; min-height:100%;
-  margin:0 auto; padding:32px;
+  width:100%; max-width:1140px;
+  margin:0 auto; padding:16px 32px 32px;
 }
 .stage{ position:relative; flex:0 0 545px; height:640px; align-self:center;
   user-select:none; -webkit-user-select:none; touch-action:none; }
