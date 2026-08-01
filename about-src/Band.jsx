@@ -132,8 +132,23 @@ function Band({ maxSpeed = 50, minSpeed = 0, onFirstDrag }) {
         vec.copy(state.camera.position).addScaledVector(dir, -state.camera.position.z / dir.z)
         restYaw = Math.max(-HOVER_YAW, Math.min(HOVER_YAW, (vec.x - ct.x) * 0.55))
       }
+      // The ONE place the reference is frame-rate dependent, and the cause of the shimmer
+      // while the badge falls freely.
+      //
+      // This runs per RENDER frame but the solver only consumes the velocity per STEP. At
+      // 120Hz two frames land per step, and the second re-reads the angvel the first just
+      // wrote — so the correction compounds to 0.5*rot instead of 0.25*rot. Double the
+      // restoring torque makes the card overshoot and ring, and the strap vibrates with it.
+      //
+      // It matches what you see exactly: held, the card is kinematicPosition and ignores
+      // setAngvel, so no shimmer; at rest nothing moves, so no shimmer; only while it is
+      // dynamic AND moving does the controller run.
+      //
+      // Scaling by the frame's share of a 60Hz step makes the per-step total identical to
+      // the reference at any refresh rate. Capped at 1 so a stalled frame can't over-correct.
+      const stepShare = Math.min(1, delta * 60)
       ang.copy(card.current.angvel()); rot.copy(card.current.rotation())
-      card.current.setAngvel({ x: ang.x, y: ang.y - (rot.y - restYaw) * 0.25, z: ang.z })
+      card.current.setAngvel({ x: ang.x, y: ang.y - (rot.y - restYaw) * 0.25 * stepShare, z: ang.z })
 
       const cq = card.current.rotation()
       quat.set(cq.x, cq.y, cq.z, cq.w)
