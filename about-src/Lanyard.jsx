@@ -15,6 +15,17 @@ import './Lanyard.css';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
+/* ---------------------------------------------------------------------------------------
+   LOCAL PATCH (only edit in this file). Upstream copy kept alongside as Lanyard.upstream.jsx
+   -- diff against it before pulling a newer version.
+
+   Adds two optional callbacks so the page can react to the badge without forking the
+   simulation: onCardFrame(cardBody, state, delta, hovered, dragged) fires once per frame,
+   and onFirstDrag() fires on the first grab. Nothing else is changed; with both omitted the
+   component behaves exactly as shipped.
+   --------------------------------------------------------------------------------------- */
+
+
 // 1x1 transparent pixel — lets useTexture be called unconditionally when a
 // front/back image isn't supplied.
 const BLANK_PIXEL =
@@ -36,7 +47,9 @@ export default function Lanyard({
   backImage = null,
   imageFit = 'cover',
   lanyardImage = null,
-  lanyardWidth = 1
+  lanyardWidth = 1,
+  onCardFrame = null,   // local patch
+  onFirstDrag = null    // local patch
 }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
 
@@ -63,6 +76,8 @@ export default function Lanyard({
             imageFit={imageFit}
             lanyardImage={lanyardImage}
             lanyardWidth={lanyardWidth}
+            onCardFrame={onCardFrame}
+            onFirstDrag={onFirstDrag}
           />
         </Physics>
         <Environment blur={0.75}>
@@ -107,7 +122,9 @@ function Band({
   backImage = null,
   imageFit = 'cover',
   lanyardImage = null,
-  lanyardWidth = 1
+  lanyardWidth = 1,
+  onCardFrame = null,   // local patch
+  onFirstDrag = null    // local patch
 }) {
   const band = useRef(),
     fixed = useRef(),
@@ -220,6 +237,7 @@ function Band({
       ang.copy(card.current.angvel());
       rot.copy(card.current.rotation());
       card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
+      if (onCardFrame) onCardFrame(card.current, state, delta, hovered, dragged);   // local patch
     }
   });
 
@@ -248,6 +266,7 @@ function Band({
             onPointerOut={() => hover(false)}
             onPointerUp={e => (e.target.releasePointerCapture(e.pointerId), drag(false))}
             onPointerDown={e => (
+              onFirstDrag && onFirstDrag(),   // local patch
               e.target.setPointerCapture(e.pointerId),
               drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())))
             )}

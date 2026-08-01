@@ -11,7 +11,9 @@ export const CAM_FOV = 25       // passed to the component
 export const CAM_Z = 13
 const BAND_REPEAT = 4           // fixed inside the component's meshLineMaterial
 const ROPE_LEN = 3              // 3 rope joints of length 1, also fixed in the component
-const BAND_LINE_W = 1           // the component's lanyardWidth default
+// Passed to the component as lanyardWidth. It also feeds TILE_ASPECT below, so changing the
+// strap's width automatically reshapes the texture tile and the mark stays unstretched.
+export const BAND_LINE_W = 0.7
 
 // meshline offsets vertices by 0.5*lineWidth in CLIP space, so the strap's world width works
 // out to lineWidth * tan(fov/2). One texture tile covers ropeLength/repeat along the strap by

@@ -57,9 +57,27 @@ copy instead of being clipped at the stage edge. Centring it means world x=0 lan
 stage centre with no camera offset — worth knowing, because R3F only applies the `camera`
 prop at creation, so feeding it a measured offset later silently does nothing.
 
-## Not currently wired up
+## The local patch to Lanyard.jsx
 
-Dropped when the component was adopted wholesale, since they all need the card's transform
-and the component doesn't expose it: the text repel, the hover tilt, and hiding the "drag the
-badge" prompt after the first drag. Re-adding any of them means patching `Lanyard.jsx`, which
-costs its drop-in status.
+The component is upstream's apart from a 21-line additive patch, marked `// local patch`, with
+the pristine copy kept beside it as `Lanyard.upstream.jsx` — diff the two before pulling a
+newer version. It adds two optional callbacks and changes nothing else; omit both and the
+component behaves exactly as shipped:
+
+- `onCardFrame(cardBody, state, delta, hovered, dragged)` — once per frame, after the
+  component has finished with the card.
+- `onFirstDrag()` — on the first grab.
+
+Everything the page layers on hangs off those two, in `App.jsx`:
+
+- **Text repel** (`useTextRepel.js`) — the copy dodges horizontally out of the badge's way and
+  the elements also separate from each other, so a chip that moves doesn't land on its
+  neighbour. Vertical dodging was tried and looked like the layout breaking.
+- **Hover tilt** — the card turns toward the cursor. It retargets the rest angle the
+  component's own self-righting term drives toward rather than adding a force, so it can't
+  fight the solver.
+- **The prompt** hides after the first drag.
+
+One thing worth knowing if you touch the hover code: that term runs per RENDER frame but the
+solver only consumes velocity per STEP, so on a 120Hz display an unscaled correction lands
+twice per step and compounds into an overshoot. Hence the `stepShare` factor.
