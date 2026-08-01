@@ -106,12 +106,12 @@ function Band({ maxSpeed = 50, minSpeed = 0, onFirstDrag }) {
       })
     }
     if (fixed.current) {
-      // Smoothing from the reference: lerp each point toward its physics position, faster the
-      // further it has to travel. j3 is included even though the reference leaves it raw —
-      // it's the bottom of the strap, and having it snap while its neighbour lagged was what
-      // made the bottom glitch during movement. The speed scales with distance, so it still
-      // tracks the clip tightly when the badge is thrown around.
-      ;[j1, j2, j3].forEach((r) => {
+      // Only the INTERIOR points are smoothed. Both endpoints stay raw on purpose: points[0]
+      // is pinned to the clip and points[3] to the anchor, so smoothing either one lets the
+      // strap drift off the thing it's attached to. (I lerped j3 to chase a glitch and that
+      // is exactly what happened — with minSpeed 0 the lag is large.) Speed scales with
+      // distance, so a fast swing is tracked tightly and a slow settle is damped hard.
+      ;[j1, j2].forEach((r) => {
         if (!r.current.lerped) r.current.lerped = new THREE.Vector3().copy(r.current.translation())
         const dist = Math.max(0.1, Math.min(1, r.current.lerped.distanceTo(r.current.translation())))
         // Clamp to 1: Vector3.lerp EXTRAPOLATES past the target when alpha > 1, and
@@ -120,7 +120,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, onFirstDrag }) {
         const alpha = Math.min(1, dt * (minSpeed + dist * (maxSpeed - minSpeed)))
         r.current.lerped.lerp(r.current.translation(), alpha)
       })
-      curve.points[0].copy(j3.current.lerped)
+      curve.points[0].copy(j3.current.translation())
       curve.points[1].copy(j2.current.lerped)
       curve.points[2].copy(j1.current.lerped)
       curve.points[3].copy(fixed.current.translation())
@@ -157,10 +157,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, onFirstDrag }) {
     }
   })
 
-  // Centripetal, not chordal. Chordal parameterisation overshoots badly when one segment gets
-  // much shorter than its neighbours, which is exactly what happens at the bottom of the strap
-  // while the badge is moving. Centripetal is provably free of cusps and self-intersections.
-  curve.curveType = 'centripetal'
+  curve.curveType = 'chordal'
 
   return (
     <>
