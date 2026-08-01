@@ -27,7 +27,7 @@ if (typeof window !== 'undefined' && window.canvas && window.canvas.style) {
 //     Obstacle Height, Obstacle Gap. When platforms are on, obstacles sit
 //     ON platform surfaces. Plane SIDE (gravity+jump) | TOP (top-down).
 // ─────────────────────────────────────────────────────────────────
-const CFG = { plane: 'side', platforms: false, obstacles: true, auto: true, dir: 'right', moving: false };
+const CFG = { plane: 'side', platforms: false, obstacles: true, auto: true, dir: 'right', moving: false, motionAxis: 'vertical', maxJumps: 1 };
 
 const LIVE = {
     jumpHeight: 0.17,  airTime: 0.75,
@@ -87,7 +87,9 @@ class LiveScene extends Phaser.Scene {
 
         this.moveDir = 0;
         this.panelObjs = [];
-        this.applyPreset('RUNNER');
+        // hub can launch a specific variant via window.__genrePreset (subgroup card == preset)
+        const boot = (typeof window !== 'undefined' && window.__genrePreset && PRESETS[window.__genrePreset]) ? window.__genrePreset : 'RUNNER';
+        this.applyPreset(boot);
     }
 
     reg(o) { this.panelObjs.push(o); return o; }
@@ -123,7 +125,7 @@ class LiveScene extends Phaser.Scene {
 
     resetRun() {
         this.worldX = 0;
-        this.feetY = REST; this.velY = 0; this.onGround = true;
+        this.feetY = REST; this.velY = 0; this.onGround = true; this.jumpsUsed = 0;
         this.px = GX0 + GW/2;
         this.plats = []; this.obs = [];
         this.nextPlatX = -W*0.5; this.lastPlatTopY = GROUND_Y - H*0.06;
@@ -135,10 +137,13 @@ class LiveScene extends Phaser.Scene {
     }
 
     jump() {
-        if (CFG.plane !== 'side' || !this.onGround) return;
+        if (CFG.plane !== 'side') return;
+        if (this.onGround) this.jumpsUsed = 0;                 // fresh air-jump budget on the ground
+        if (this.jumpsUsed >= CFG.maxJumps) return;            // budget spent (CFG.maxJumps may be Infinity)
         const arc = H*LIVE.jumpHeight, T = Math.max(0.2, LIVE.airTime);
         this.velY = -(4*arc/T);
         this.onGround = false;
+        this.jumpsUsed++;
     }
 
     surfaceAt(wx) {
@@ -153,7 +158,7 @@ class LiveScene extends Phaser.Scene {
         for (const p of this.plats) if (p.worldX + p.len > this.worldX + W*0.1) { target = p; break; }
         if (target) { this.worldX = target.worldX + target.len*0.4; this.feetY = target.topY; }
         else { this.feetY = REST; }
-        this.velY = 0; this.onGround = true;
+        this.velY = 0; this.onGround = true; this.jumpsUsed = 0;
     }
 
     update(time, delta) {
@@ -188,7 +193,7 @@ class LiveScene extends Phaser.Scene {
 
         const surf = this.surfaceAt(this.worldX);
         this.velY += grav*dt; this.feetY += this.velY*dt;
-        if (surf != null && this.velY >= 0 && this.feetY >= surf) { this.feetY = surf; this.velY = 0; this.onGround = true; }
+        if (surf != null && this.velY >= 0 && this.feetY >= surf) { this.feetY = surf; this.velY = 0; this.onGround = true; this.jumpsUsed = 0; }
         else this.onGround = false;
         if (surf == null && this.feetY > H*1.04) this.respawnSide();
 
@@ -197,14 +202,19 @@ class LiveScene extends Phaser.Scene {
             while (this.nextObsX < this.worldX + W*1.4) {
                 const s = this.surfaceAt(this.nextObsX);
                 if (s != null) {
-                    const baseTop = CFG.moving ? s - h - H*0.16 : s - h;
-                    this.obs.push({ worldX: this.nextObsX, w, h, baseTop, topY: baseTop, phase: Math.random()*6.28, state: 'pending' });
+                    // vertical bob needs headroom above the surface; horizontal slide sits flush
+                    const vert = CFG.moving && CFG.motionAxis === 'vertical';
+                    const baseTop = vert ? s - h - H*0.16 : s - h;
+                    this.obs.push({ worldX: this.nextObsX, baseWorldX: this.nextObsX, w, h, baseTop, topY: baseTop, phase: Math.random()*6.28, state: 'pending' });
                 }
                 this.nextObsX += gap;
             }
             for (let i = this.obs.length - 1; i >= 0; i--) {
                 const o = this.obs[i];
-                if (CFG.moving) o.topY = o.baseTop + Math.sin(this.mt*3 + o.phase) * H*0.08;
+                if (CFG.moving) {
+                    if (CFG.motionAxis === 'vertical') o.topY = o.baseTop + Math.sin(this.mt*3 + o.phase) * H*0.08;
+                    else                               o.worldX = o.baseWorldX + Math.sin(this.mt*3 + o.phase) * W*0.05;
+                }
                 const dxw = Math.abs(this.worldX - o.worldX);
                 const xOver = dxw < (playerW + o.w)/2;
                 const yOver = this.feetY > o.topY && (this.feetY - playerH) < (o.topY + o.h);
@@ -233,12 +243,17 @@ class LiveScene extends Phaser.Scene {
                 this.sinceSpawn = 0;
                 const w = W*LIVE.obsW, h = H*LIVE.obsH;
                 const bx = GX0 + w/2 + GW*0.03 + Math.random()*(GW - w - GW*0.06);
-                this.obs.push({ x: bx, baseX: bx, y: down ? -h : H + h, w, h, phase: Math.random()*6.28, state: 'pending' });
+                const y0 = down ? -h : H + h;
+                this.obs.push({ x: bx, baseX: bx, y: y0, fy: y0, w, h, phase: Math.random()*6.28, state: 'pending' });
             }
             for (let i = this.obs.length - 1; i >= 0; i--) {
                 const e = this.obs[i];
-                if (advancing) e.y += (down ? 1 : -1) * fall * dt;
-                if (CFG.moving) e.x = Phaser.Math.Clamp(e.baseX + Math.sin(this.mt*2 + e.phase) * GW*0.14, GX0 + e.w/2, W - e.w/2);
+                if (advancing) e.fy += (down ? 1 : -1) * fall * dt;
+                // motion axis: horizontal sways across the fall; vertical wobbles the fall position
+                e.x = (CFG.moving && CFG.motionAxis === 'horizontal')
+                    ? Phaser.Math.Clamp(e.baseX + Math.sin(this.mt*2 + e.phase) * GW*0.14, GX0 + e.w/2, W - e.w/2)
+                    : e.baseX;
+                e.y = e.fy + ((CFG.moving && CFG.motionAxis === 'vertical') ? Math.sin(this.mt*2 + e.phase) * H*0.05 : 0);
                 if (e.state === 'pending' && Math.abs(e.x - this.px) < (e.w + playerW)/2 && Math.abs(e.y - playerY) < (e.h + playerH)/2) {
                     e.state = 'hit'; this.bad++; this.flash = 220; this.obs.splice(i, 1); continue;
                 }
@@ -339,38 +354,24 @@ class LiveScene extends Phaser.Scene {
 
         // presets — 2×2
         const names = Object.keys(PRESETS);
-        let cy = H*0.09;
+        let cy = H*0.066;
         names.forEach((name, i) => {
             const col = i % 2, row = (i / 2) | 0;
-            const bw = PW*0.42, cx = PW*0.05 + col*PW*0.48 + bw/2, py = cy + row*H*0.046;
+            const bw = PW*0.42, cx = PW*0.05 + col*PW*0.48 + bw/2, py = cy + row*H*0.043;
             const on = this.preset === name;
-            const b = this.reg(this.add.rectangle(cx, py, bw, H*0.036, on ? 0x2b3350 : 0x1f2230).setStrokeStyle(1.5, on ? 0xf0a324 : 0x3a3d4a).setInteractive().setDepth(60));
+            const b = this.reg(this.add.rectangle(cx, py, bw, H*0.034, on ? 0x2b3350 : 0x1f2230).setStrokeStyle(1.5, on ? 0xf0a324 : 0x3a3d4a).setInteractive().setDepth(60));
             this.reg(this.add.text(cx, py, name, { fontSize: `${W*0.018}px`, color: on ? '#f0a324' : '#c8ccda', fontStyle: 'bold' }).setOrigin(0.5).setDepth(61));
             b.on('pointerup', () => this.applyPreset(name));
         });
-        cy += 2*H*0.046 + H*0.018;
+        cy += 2*H*0.043 + H*0.005;
 
-        // toggles — 2 per row
         const side = CFG.plane === 'side';
-        const chips = [
-            { label:'Plane',     val: side?'SIDE':'TOP', en:true, tap:()=>{ CFG.plane = side?'top':'side'; CFG.dir = side?'down':'right'; } },
-            { label:'Platforms', val: CFG.platforms?'ON':'OFF', en:side, tap:()=>CFG.platforms=!CFG.platforms },
-            { label:'Obstacles', val: CFG.obstacles?'ON':'OFF', en:true, tap:()=>CFG.obstacles=!CFG.obstacles },
-            { label:'Scroll',    val: CFG.auto?'AUTO':'MAN', en:true, tap:()=>CFG.auto=!CFG.auto },
-            { label:'Direction', val: side?(CFG.dir==='right'?'→':'←'):(CFG.dir==='down'?'↓':'↑'), en:true, tap:()=> side ? (CFG.dir=CFG.dir==='right'?'left':'right') : (CFG.dir=CFG.dir==='down'?'up':'down') },
-            { label:'Motion',    val: CFG.moving?'MOVE':'STATIC', en:CFG.obstacles, tap:()=>CFG.moving=!CFG.moving },
-        ];
-        for (let i = 0; i < chips.length; i += 2) {
-            this.mkChip(chips[i], PW*0.05, cy, PW*0.435);
-            if (chips[i+1]) this.mkChip(chips[i+1], PW*0.515, cy, PW*0.435);
-            cy += H*0.046;
-        }
-        cy += H*0.012;
 
-        // sliders — all shown, N/A greyed
+        // sliders — all shown, N/A greyed (defined up front; rendered by section)
         const R = {
             jump:  { label:'Jump Height',    min:0.06, max:0.28, get:()=>LIVE.jumpHeight, set:v=>LIVE.jumpHeight=v, fmt:v=>`${(v*100)|0}%H`, dir:'easier' },
             air:   { label:'Air Time',       min:0.35, max:1.5,  get:()=>LIVE.airTime,    set:v=>LIVE.airTime=v,    fmt:v=>`${v.toFixed(2)}s`, dir:'feel' },
+            jumpN: { label:'Jump Count',     min:1,    max:8,     get:()=>CFG.maxJumps===Infinity?8:CFG.maxJumps, set:v=>{ const n=Math.round(v); CFG.maxJumps = n>=8?Infinity:n; }, fmt:v=>Math.round(v)>=8?'∞':`${Math.round(v)}×`, dir:'easier' },
             pLen:  { label:'Platform Length',min:0.15, max:0.5,  get:()=>LIVE.platLength, set:v=>LIVE.platLength=v, fmt:v=>`${(v*100)|0}%W`, dir:'easier' },
             pGap:  { label:'Platform Gap',   min:0.05, max:0.32, get:()=>LIVE.platGap,    set:v=>LIVE.platGap=v,    fmt:v=>`${(v*100)|0}%W`, dir:'harder' },
             pStep: { label:'Platform Step',  min:0.0,  max:0.14, get:()=>LIVE.platStep,   set:v=>LIVE.platStep=v,   fmt:v=>`${(v*100)|0}%H`, dir:'harder' },
@@ -382,14 +383,49 @@ class LiveScene extends Phaser.Scene {
             move:  { label: side?'Move Speed':'Dodge Speed', min:0.12, max:0.80, get:()=>LIVE.moveSpeed,  set:v=>LIVE.moveSpeed=v,  fmt:v=>`${v.toFixed(2)}`, dir:'neutral' },
             scr:   { label: side?'Scroll Speed':'Fall Speed', min:0.12, max:0.80, get:()=>LIVE.scrollSpeed, set:v=>LIVE.scrollSpeed=v, fmt:v=>`${v.toFixed(2)}`, dir:'harder' },
         };
-        R.jump.en = side; R.air.en = side;
+        R.jump.en = side; R.air.en = side; R.jumpN.en = side;
         R.pLen.en = side && CFG.platforms; R.pGap.en = side && CFG.platforms; R.pStep.en = side && CFG.platforms;
         R.oW.en = CFG.obstacles; R.oH.en = CFG.obstacles; R.oGap.en = CFG.obstacles;
         R.plW.en = true; R.plH.en = true;
         R.move.en = !(side && CFG.auto);
         R.scr.en  = !(side && !CFG.auto);
-        const rows = [R.jump, R.air, R.pLen, R.pGap, R.pStep, R.oW, R.oH, R.oGap, R.plW, R.plH, R.move, R.scr];
-        for (const r of rows) { this.mkSlider(r, cy); cy += H*0.049; }
+
+        // toggle chips — placed into their sections (not one confusing block)
+        const cPlane = { label:'Plane',     val: side?'SIDE':'TOP', en:true, tap:()=>{ CFG.plane = side?'top':'side'; CFG.dir = side?'down':'right'; } };
+        const cDir   = { label:'Direction', val: side?(CFG.dir==='right'?'→':'←'):(CFG.dir==='down'?'↓':'↑'), en:true, tap:()=> side ? (CFG.dir=CFG.dir==='right'?'left':'right') : (CFG.dir=CFG.dir==='down'?'up':'down') };
+        const cScroll= { label:'Scroll',    val: CFG.auto?'AUTO':'MAN', en:true, tap:()=>CFG.auto=!CFG.auto };
+        const cPlat  = { label:'Platforms', val: CFG.platforms?'ON':'OFF', en:side, tap:()=>CFG.platforms=!CFG.platforms };
+        const cObs   = { label:'Obstacles', val: CFG.obstacles?'ON':'OFF', en:true, tap:()=>CFG.obstacles=!CFG.obstacles };
+        const cMove  = { label:'Motion',    val: CFG.moving?'MOVE':'STATIC', en:CFG.obstacles, tap:()=>CFG.moving=!CFG.moving };
+        const cAxis  = { label:'Motion Axis', val: CFG.motionAxis==='vertical'?'VERT':'HORIZ', en:CFG.obstacles && CFG.moving, tap:()=>CFG.motionAxis = CFG.motionAxis==='vertical'?'horizontal':'vertical' };
+
+        // ── collapsible sections — each subgroup folds under its header bar ──
+        // foldState lives on the scene so it survives rebuildPanel() (toggles/presets)
+        this.foldState = this.foldState || { SETUP:false, JUMP:false, PLATFORMS:false, OBSTACLES:false, 'PLAYER & SPEED':false };
+        const chipRow = (arr) => {
+            for (let i = 0; i < arr.length; i += 2) {
+                this.mkChip(arr[i], PW*0.05, cy + H*0.020, PW*0.435);
+                if (arr[i+1]) this.mkChip(arr[i+1], PW*0.515, cy + H*0.020, PW*0.435);
+                cy += H*0.040;
+            }
+        };
+        const sliderRows = (arr) => { for (const r of arr) { this.mkSlider(r, cy + H*0.006); cy += H*0.037; } };
+        const section = (label, body) => {
+            const open = !this.foldState[label];
+            const bar = this.reg(this.add.rectangle(PW*0.5, cy + H*0.0125, PW*0.9, H*0.023, 0x22252f)
+                .setStrokeStyle(1, open ? 0x3a3d4a : 0x2e313c).setInteractive().setDepth(58));
+            this.reg(this.add.text(PW*0.075, cy + H*0.0125, (open ? '▾  ' : '▸  ') + label,
+                { fontSize: `${W*0.0155}px`, color: '#c8ccda', fontStyle: 'bold' }).setOrigin(0, 0.5).setDepth(60));
+            bar.on('pointerup', () => { this.foldState[label] = !this.foldState[label]; this.rebuildPanel(); });
+            cy += H*0.028;
+            if (open) body();
+        };
+
+        section('SETUP',          () => chipRow([cPlane, cDir, cScroll]));
+        section('JUMP',           () => sliderRows([R.jump, R.air, R.jumpN]));
+        section('PLATFORMS',      () => { chipRow([cPlat]); sliderRows([R.pLen, R.pGap, R.pStep]); });
+        section('OBSTACLES',      () => { chipRow([cObs, cMove, cAxis]); sliderRows([R.oW, R.oH, R.oGap]); });
+        section('PLAYER & SPEED', () => sliderRows([R.plW, R.plH, R.move, R.scr]));
     }
 
     rebuildPanel() { this.panelObjs.forEach(o => o.destroy()); this.panelObjs = []; this.buildPanel(); }

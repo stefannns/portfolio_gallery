@@ -104,17 +104,32 @@
   .swap { font-size: 11px; color: var(--ink-low); margin-top: 9px; }
   .swap b { color: var(--ink-mid); font-weight: 550; }
 
+  /* ── supergroup with foldable child genres ── */
+  .groupwrap { grid-column: 1 / -1; position: relative; display: flex; flex-direction: column; gap: 12px; }
+  .foldbtn { width: 100%; font: inherit; font-size: 12.5px; font-weight: 550; letter-spacing: .02em;
+             color: var(--accent); cursor: pointer; text-align: center;
+             background: color-mix(in srgb, var(--accent) 11%, var(--surface));
+             border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+             border-radius: 8px; padding: 10px 12px; transition: background-color .13s ease, border-color .13s ease; }
+  .foldbtn:hover { background: color-mix(in srgb, var(--accent) 18%, var(--surface)); border-color: var(--accent); }
+  .foldbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .subgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px;
+             margin-left: 6px; padding-left: 22px;
+             border-left: 2px solid color-mix(in srgb, var(--accent) 32%, transparent); }
+  .subgrid[hidden] { display: none; }
+  .subgrid .card { background: color-mix(in srgb, var(--accent) 3%, var(--surface)); }
+  .vbadge { color: var(--ink-mid); border-color: color-mix(in srgb, var(--ink-mid) 38%, transparent); }
+
   /* ── stage (a genre running) ── */
   #stage { display: none; flex-direction: column; align-items: center;
            justify-content: center; height: 100dvh; padding-top: 52px;
            box-sizing: border-box; overflow: hidden; }
   .play-row { display: flex; align-items: center; gap: 18px; max-width: 100vw; }
   /* Fit the game inside a Lark embed with nothing cut off. Phaser writes an inline
-     width/height onto the canvas, so !important is required to beat it. The canvas is a
-     replaced element with intrinsic dimensions, so width:auto + height:auto + a max on
-     each dimension scales it DOWN preserving its own booted aspect ratio (not always 9:16)
-     to fit within BOTH the window height (minus the 52px bar) and width. dvh tracks the
-     live embed viewport; the vh line is the fallback for browsers without dvh. */
+     width/height onto the canvas, so !important is required to beat it. width:auto +
+     height:auto + a max on each dimension scales it DOWN preserving its booted aspect
+     ratio to fit BOTH the window height (minus the 52px bar) and width. dvh tracks the
+     live embed viewport; the vh line is the fallback. */
   canvas { display: block;
            width: auto !important;
            height: auto !important;
@@ -122,9 +137,8 @@
            max-height: min(calc(100dvh - 64px), 640px) !important;
            max-width: 100vw !important;
            border: 1px solid var(--line); border-radius: 4px; background: #211f26; }
-  /* Too narrow to also fit the side panels beside the game → hide them so the game
-     stays correctly sized and centered instead of getting squeezed. The panels use
-     inline/JS display, so !important is needed here too. */
+  /* Too narrow to fit the side panels beside the game -> hide them so the game stays
+     correctly sized instead of squeezed. Panels use inline/JS display, so !important. */
   @media (max-width: 900px) {
     .statspanel, .charpanel { display: none !important; }
   }
@@ -215,52 +229,129 @@
 <script>
 // `char` = this genre draws a character you can replace with your own PNG.
 const GENRES = [
-  { id:'mock_movement',   name:'Movement', cn:'移动',             group:true, diff:'runner · platformer · scroller', feel:'presets + toggles', note:'Super Group — one engine spanning the movement family. Preset buttons on top; full toggle + slider set below.' },
-  { id:'mock_runner',     name:'Endless Runner', cn:'无尽跑酷',    diff:'jump height (arc)',      feel:'air time',       char:'runner' },
-  { id:'mock_platformer', name:'Platformer', cn:'平台跳跃',        diff:'jump height (arc)',      feel:'air time',       char:'player',  note:'Manual run, plus a PLATFORMS mode' },
+  { id:'mock_movement', name:'Movement/Dodge', cn:'移动 / 闪避', group:true,
+    diff:'runner · platformer · scroller', feel:'presets + toggles',
+    note:'Super Group — one engine spanning the movement family. Open a variant below, or launch the engine and switch presets live.',
+    presets:[
+      { key:'RUNNER',     name:'Endless Runner',   cn:'无尽跑酷', diff:'jump height (arc)', feel:'air time' },
+      { key:'PLATFORMER', name:'Platformer',       cn:'平台跳跃', diff:'jump height (arc)', feel:'air time' },
+      { key:'SPACE WARS', name:'Space Dodge',      cn:'太空闪避', diff:'enemy speed',       feel:null },
+      { key:'MOVING',     name:'Moving Obstacles', cn:'移动障碍', diff:'obstacle speed',    feel:null },
+    ] },
+  { id:'mock_aim', name:'Aim/Shooting', cn:'瞄准射击', group:true,
+    diff:'archery · sniper · skeet', feel:'presets + toggles',
+    note:'Super Group — aim a crosshair, launch a projectile with a travel time, hit the target. Presets span the aim family; toggle aim mode, target motion, arc & wind live.',
+    presets:[
+      { key:'ARCHERY', name:'Archery',         cn:'弓箭射击', diff:'target size',  feel:'wind / arc' },
+      { key:'SNIPER',  name:'Sniper / Flick',  cn:'狙击快射', diff:'target size',  feel:'breathing drift' },
+      { key:'SKEET',   name:'Skeet',           cn:'飞碟射击', diff:'lead + speed', feel:'travel time' },
+      { key:'GALLERY', name:'Shooting Gallery',cn:'打靶场',   diff:'target speed', feel:'tap timing' },
+      { key:'WHACK',   name:'Whack-a-Target', cn:'打靶地鼠', diff:'lifetime + count', feel:'grid pop-ups' },
+    ] },
   { id:'mock_flappy',     name:'Flappy Bird', cn:'飞翔小鸟',       diff:'gap height',             feel:'flap / gravity', char:'bird' },
   { id:'mock_dagger',     name:'Dagger Throwing', cn:'飞刀挑战',   diff:'spin + count (index D)', feel:'fly speed',      note:'Pop-up panel. Feel changes difficulty, so presets compensate.' },
-  { id:'mock_vscroller',  name:'Vertical Scroller', cn:'竖版飞行', diff:'enemy speed',            feel:null,             char:'ship' },
   { id:'mock_catch',      name:'Catch Falling', cn:'接落物',     diff:'fall speed',             feel:null,             char:'catcher' },
   { id:'mock_ball',       name:'Breakout', cn:'打砖块',          diff:'ball speed',             feel:'bounce / angle' },
   { id:'mock_timing',     name:'Precision Timing', cn:'精准时机',  diff:'target zone',            feel:'needle easing',  note:'Window = tolerance × sweep time' },
   { id:'mock_whack',      name:'Whack-a-Mole', cn:'打地鼠',      diff:'mole-visible time',      feel:'pop juice',      char:'mole',    note:'Floor scales with simultaneous count' },
   { id:'mock_memory',     name:'Memory Match', cn:'记忆翻牌',     diff:'pairs (rows × cols)',    feel:null,                             note:'Cognitive — recall span, not a reflex floor' },
-  { id:'mock_archery',    name:'Archery', cn:'弓箭射击',          diff:'target size / distance', feel:'wind / arrow speed',             note:'2.5D range; wind curves the arrow in flight' },
 ];
 
 const charKey = id => 'genrelab:char:' + id;
 const getChar = id => { try { return localStorage.getItem(charKey(id)); } catch (e) { return null; } };
 
-document.getElementById('count').textContent = GENRES.length + ' genres';
+document.getElementById('count').textContent =
+  GENRES.reduce((n, g) => n + (g.presets ? g.presets.length : 1), 0) + ' genres';
 
 const grid = document.getElementById('grid');
-for (const g of GENRES) {
+
+const cardHTML = (g) =>
+  `${g.group ? '<div class="badge mono">Super Group</div>' : ''}
+   <div class="name">${g.name}</div>
+   <div class="namecn">${g.cn}</div>
+   <div class="slug mono">${g.id}</div>
+   <dl class="spec">
+     <dt class="mono">${g.group ? 'Covers' : 'Difficulty'}</dt><dd>${g.diff}</dd>
+     <dt class="mono">${g.group ? 'Config' : 'Feel'}</dt><dd${g.feel ? '' : ' class="none"'}>${g.feel || 'none'}</dd>
+   </dl>
+   ${g.note ? `<div class="note">${g.note}</div>` : ''}
+   ${g.char ? `<div class="swap">${getChar(g.id) ? '<b>Custom ' + g.char + '</b> loaded' : 'Swap the <b>' + g.char + '</b> for your own art'}</div>` : ''}`;
+
+const makeCard = (g) => {
   const b = document.createElement('button');
   b.className = g.group ? 'card group' : 'card';
-  b.innerHTML =
-    `${g.group ? '<div class="badge mono">Super Group</div>' : ''}
-     <div class="name">${g.name}</div>
-     <div class="namecn">${g.cn}</div>
-     <div class="slug mono">${g.id}</div>
-     <dl class="spec">
-       <dt class="mono">${g.group ? 'Covers' : 'Difficulty'}</dt><dd>${g.diff}</dd>
-       <dt class="mono">${g.group ? 'Config' : 'Feel'}</dt><dd${g.feel ? '' : ' class="none"'}>${g.feel || 'none'}</dd>
-     </dl>
-     ${g.note ? `<div class="note">${g.note}</div>` : ''}
-     ${g.char ? `<div class="swap">${getChar(g.id) ? '<b>Custom ' + g.char + '</b> loaded' : 'Swap the <b>' + g.char + '</b> for your own art'}</div>` : ''}`;
+  b.innerHTML = cardHTML(g);
   b.onclick = () => { location.hash = g.id; location.reload(); };
-  grid.appendChild(b);
+  return b;
+};
+
+// A variant card == one engine preset. Clicking it launches the supergroup
+// engine with that preset preloaded (subgroups and presets are the same list).
+const makePresetCard = (group, p) => {
+  const b = document.createElement('button');
+  b.className = 'card';
+  b.innerHTML =
+    `<div class="badge mono vbadge">Variant</div>
+     <div class="name">${p.name}</div>
+     <div class="namecn">${p.cn}</div>
+     <div class="slug mono">${group.id} · ${p.key}</div>
+     <dl class="spec">
+       <dt class="mono">Difficulty</dt><dd>${p.diff}</dd>
+       <dt class="mono">Feel</dt><dd${p.feel ? '' : ' class="none"'}>${p.feel || 'none'}</dd>
+     </dl>`;
+  b.onclick = () => { location.hash = group.id + '=' + encodeURIComponent(p.key); location.reload(); };
+  return b;
+};
+
+for (const g of GENRES) {
+  const presets = g.presets || [];
+  if (!presets.length) { grid.appendChild(makeCard(g)); continue; }
+
+  // supergroup: launchable engine card + a fold toggle + an indented sub-grid of its presets
+  const wrap = document.createElement('div');
+  wrap.className = 'groupwrap';
+  wrap.appendChild(makeCard(g));
+
+  const sub = document.createElement('div');
+  sub.className = 'subgrid';
+  presets.forEach(p => sub.appendChild(makePresetCard(g, p)));
+
+  const foldKey = 'genrelab:fold:' + g.id;
+  let folded = false;
+  try { folded = localStorage.getItem(foldKey) === '1'; } catch (e) {}
+  const fold = document.createElement('button');
+  fold.className = 'foldbtn mono';
+  const paint = () => {
+    sub.hidden = folded;
+    fold.textContent = folded ? `▸  Show ${presets.length} variants` : `▾  Hide ${presets.length} variants`;
+  };
+  fold.onclick = (e) => {
+    e.stopPropagation();
+    folded = !folded;
+    try { localStorage.setItem(foldKey, folded ? '1' : '0'); } catch (e2) {}
+    paint();
+  };
+  paint();
+
+  wrap.appendChild(fold);
+  wrap.appendChild(sub);
+  grid.appendChild(wrap);
 }
 
-// Boot a genre when the hash names one. Every pick is a full page load, so the
+// Boot a genre when the hash names one. Hash is `id` or `id=PRESET` (a supergroup
+// launched at one of its presets). Every pick is a full page load, so the
 // per-game module-scope globals (LIVE, LiveScene, config) can never collide.
-const genre = GENRES.find(g => g.id === location.hash.slice(1));
+const rawHash = location.hash.slice(1);
+const eqi = rawHash.indexOf('=');
+const hashId = eqi >= 0 ? rawHash.slice(0, eqi) : rawHash;
+const hashPreset = eqi >= 0 ? decodeURIComponent(rawHash.slice(eqi + 1)) : null;
+const genre = GENRES.find(g => g.id === hashId);
 if (genre) {
+  if (hashPreset) window.__genrePreset = hashPreset;   // the game reads this in create()
   document.getElementById('menu').style.display = 'none';
   document.getElementById('stage').style.display = 'flex';
-  document.getElementById('running').textContent = genre.id;
-  document.title = genre.name + ' — Genre Skill Testing';
+  document.getElementById('running').textContent = genre.id + (hashPreset ? ' · ' + hashPreset : '');
+  document.title = (hashPreset ? hashPreset + ' — ' : '') + genre.name + ' — Genre Skill Testing';
 
   // ── live stats panel (left of the canvas) — the game writes window.__genreStats each frame ──
   window.__genreStats = '';
