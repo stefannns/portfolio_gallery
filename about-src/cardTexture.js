@@ -16,7 +16,11 @@ export const CAM_Y = 0
 
 // Where the rope hangs from and how long each of its three segments is. Longer than the
 // component's default 4 / 1 so the strap leaves the top of the frame with no visible end.
-export const ANCHOR_Y = 5.5
+//
+// The card rests at ANCHOR_Y - ROPE_LEN - 1.45, so lengthening the rope without raising the
+// anchor by as much drops the badge down the frame — which is what happened when the rope went
+// to 5.4 against an anchor of 5.5. Raised here to bring it back up.
+export const ANCHOR_Y = 6.1
 export const ROPE_SEG = 1.8
 const ROPE_LEN = ROPE_SEG * 3
 
