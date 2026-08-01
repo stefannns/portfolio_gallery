@@ -66,6 +66,12 @@ const TWIST_FALLOFF = 2;
 // leaves 3 degrees of lean behind.
 const CLIP_YAW_FIX = -0.35;   // radians, -20.05 degrees
 
+// How far back the strap's lower end is pushed, along the card's local -z. The joint puts it at
+// z = 0, which is the clip's front face (the clip spans -0.122 to 0.022), so the strap sat proud
+// of the ring and its cut end showed. This drops it to the clip's middle so the ring closes over
+// it. Depth only -- x and y stay on the joint, because moving those pulls the strap off the clip.
+const STRAP_END_Z = -0.05;
+
 // Two vertices per sample, a quad per segment. Allocated once and rewritten in place.
 function makeRibbon(seg) {
   const count = seg + 1;
@@ -270,6 +276,7 @@ function Band({
   const rib = useMemo(
     () => ({
       quat: new THREE.Quaternion(),
+      pos: new THREE.Vector3(),
       tan: new THREE.Vector3(),
       view: new THREE.Vector3(),
       face: new THREE.Vector3(),
@@ -361,6 +368,11 @@ function Band({
         );
       });
       curve.points[0].copy(j3.current.translation());
+      // local patch: sink the end back to the clip's depth (see STRAP_END_Z)
+      const cq = card.current.rotation();
+      curve.points[0].add(
+        rib.pos.set(0, 0, STRAP_END_Z).applyQuaternion(rib.quat.set(cq.x, cq.y, cq.z, cq.w))
+      );
       curve.points[1].copy(j2.current.lerped);
       curve.points[2].copy(j1.current.lerped);
       curve.points[3].copy(fixed.current.translation());
@@ -418,11 +430,16 @@ function Band({
           </group>
         </RigidBody>
       </group>
-      {/* local patch: a real ribbon in place of <meshLineGeometry/>, so it can twist. Unlit
-          and depth-tested off to match how meshline drew, and never culled since the geometry
-          is rewritten every frame and its bounds are not maintained. */}
+      {/* local patch: a real ribbon in place of <meshLineGeometry/>, so it can twist. Unlit to
+          match how meshline drew, and never culled since the geometry is rewritten every frame
+          and its bounds are not maintained.
+          Depth testing is ON, unlike upstream: with it off the strap painted over the clip
+          whatever the depths were, so its cut end showed on top of the ring instead of the ring
+          closing over it. The clip's front lip reaches z = 0.022, ahead of the strap, so this is
+          what lets it occlude. It also means the strap is hidden where it swings behind the
+          card, which is what should happen anyway. */}
       <mesh ref={band} geometry={ribbon.geometry} frustumCulled={false}>
-        <meshBasicMaterial map={texture} side={THREE.DoubleSide} depthTest={false} toneMapped={false} />
+        <meshBasicMaterial map={texture} side={THREE.DoubleSide} toneMapped={false} />
       </mesh>
     </>
   );

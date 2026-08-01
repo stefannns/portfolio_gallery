@@ -100,8 +100,16 @@ Two things there are deliberate and worth not "cleaning up":
 - The half-width reproduces meshline's exactly — `0.5 * lineWidth * tan(fov/2) * canvasAspect`,
   measured identical to 4 decimals — including its dependence on the canvas aspect, which is an
   artefact of the clip-space offset. The strap width was tuned by eye against that.
-- The material is `meshBasicMaterial` with `toneMapped={false}` and `depthTest={false}`, which
-  is how meshline's raw shader drew: unlit, no tone mapping, always on top.
+- The material is `meshBasicMaterial` with `toneMapped={false}`, which is how meshline's raw
+  shader drew: unlit, no tone mapping.
+
+Depth testing, though, is **on**, unlike upstream. With it off the strap painted over the clip
+whatever the depths were, so its cut end showed on top of the ring instead of the ring closing
+over it. The clip's front lip reaches z = 0.022, ahead of the strap, so depth testing is what
+lets it occlude. `STRAP_END_Z` then sinks the strap's lower end to the clip's middle depth.
+That offset is **z only** — moving x or y as well pulls the strap off the clip, which was tried
+and looked worse. A side effect of depth testing is that the strap is hidden where it swings
+behind the card, which is what should happen anyway.
 
 The `meshline` import and `extend` call are now unused by the band. They are left in place to
 keep the diff against `Lanyard.upstream.jsx` small.

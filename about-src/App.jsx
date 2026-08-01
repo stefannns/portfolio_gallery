@@ -95,7 +95,8 @@ export default function App () {
         <p className="intro">
           Hi, I'm Stefan — a game designer and AI-driven creator studying Game Design at USC with a
           minor in AI Applications. I love building interactive experiences with AI-powered
-          development tools, from indie student projects to large-scale commercial titles like
+          development tools, with experience in projects from indie student projects to
+          large-scale commercial titles like
           Golden Spatula with 30M+ MAUs. I'm excited for the future of AI-assisted design and
           development.
         </p>
