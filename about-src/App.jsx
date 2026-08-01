@@ -1,16 +1,36 @@
-import { useState } from 'react'
-import Lanyard from './Band.jsx'
+import { useEffect, useMemo, useState } from 'react'
+import Lanyard from './Lanyard.jsx'
+import { makeCardFrontURL, makeCardBackURL, makeStrapURL, CAM_FOV, CAM_Z } from './cardTexture.js'
+import patternUrl from './pattern.png'
 
-export default function App() {
-  const [used, setUsed] = useState(false)
+export default function App () {
+  const front = useMemo(makeCardFrontURL, [])
+  const back = useMemo(makeCardBackURL, [])
+  const [strap, setStrap] = useState(null)
+
+  useEffect(() => {
+    let alive = true
+    makeStrapURL(patternUrl).then(url => { if (alive) setStrap(url) })
+    return () => { alive = false }
+  }, [])
 
   return (
     <div className="wrap">
       <div className="stage">
         <div className="canvas-layer">
-          <Lanyard onFirstDrag={() => setUsed(true)} />
+          {/* held until the strap art is ready, so the component's own band texture never flashes */}
+          {strap && (
+            <Lanyard
+              position={[0, 0, CAM_Z]}
+              fov={CAM_FOV}
+              transparent
+              frontImage={front}
+              backImage={back}
+              lanyardImage={strap}
+            />
+          )}
         </div>
-        <div className={used ? 'hint is-used' : 'hint'}>drag the badge</div>
+        <div className="hint">drag the badge</div>
       </div>
       <section className="info">
         <p className="intro">
