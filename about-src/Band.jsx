@@ -25,7 +25,11 @@ const ANCHOR_Y = 4.55
 // how far the card turns toward the cursor on hover, radians
 const HOVER_YAW = 0.4
 
-function Band({ maxSpeed = 50, minSpeed = 10, onFirstDrag }) {
+// minSpeed 0 is what the reference uses, and it matters: the lerp factor is
+// delta * (minSpeed + dist * (maxSpeed - minSpeed)), so at low velocity minSpeed IS the
+// smoothing. At 10 the factor was ~3x higher than the reference exactly while the card was
+// settling, which let the raw physics stair-step through as jitter.
+function Band({ maxSpeed = 50, minSpeed = 0, onFirstDrag }) {
   const band = useRef(), fixed = useRef(), j1 = useRef(), j2 = useRef(), j3 = useRef(), card = useRef()
   const vec = useMemo(() => new THREE.Vector3(), [])
   const ang = useMemo(() => new THREE.Vector3(), [])
@@ -84,6 +88,11 @@ function Band({ maxSpeed = 50, minSpeed = 10, onFirstDrag }) {
   }, [hovered, dragged])
 
   useFrame((state, delta) => {
+    // Rapier steps at a fixed 1/60 but the page may render at 120Hz+, so anything applied per
+    // RENDER frame lands twice as often on a high-refresh display. dt60 normalises those to
+    // one 60Hz step; the cap also stops a stalled frame from delivering one huge correction.
+    const dt = Math.min(delta, 1 / 30)
+    const dt60 = dt * 60
     if (dragged) {
       // Intersect the pointer ray with the z=0 plane. The reference used
       // |camera.position| as the distance, which only works while the camera sits on the axis
@@ -108,7 +117,7 @@ function Band({ maxSpeed = 50, minSpeed = 10, onFirstDrag }) {
         // Clamp to 1: Vector3.lerp EXTRAPOLATES past the target when alpha > 1, and
         // delta * 50 exceeds 1 on any frame slower than 20ms. That overshoot is what threw
         // the bottom of the strap out past the card on a stutter.
-        const alpha = Math.min(1, delta * (minSpeed + dist * (maxSpeed - minSpeed)))
+        const alpha = Math.min(1, dt * (minSpeed + dist * (maxSpeed - minSpeed)))
         r.current.lerped.lerp(r.current.translation(), alpha)
       })
       curve.points[0].copy(j3.current.lerped)
@@ -136,7 +145,7 @@ function Band({ maxSpeed = 50, minSpeed = 10, onFirstDrag }) {
       }
       // ease the card back toward its rest angle instead of spinning freely
       ang.copy(card.current.angvel()); rot.copy(card.current.rotation())
-      card.current.setAngvel({ x: ang.x, y: ang.y - (rot.y - restYaw) * 0.25, z: ang.z })
+      card.current.setAngvel({ x: ang.x, y: ang.y - (rot.y - restYaw) * 0.25 * dt60, z: ang.z })
       const cq = card.current.rotation()
       quat.set(cq.x, cq.y, cq.z, cq.w)
       for (let i = 0; i < 4; i++) {
