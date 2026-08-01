@@ -9,7 +9,9 @@ import patternUrl from './pattern.png'
 const CARD_HW = 0.8, CARD_HH = 1.125
 const CORNER_SIGNS = [[-1, -1], [1, -1], [1, 1], [-1, 1]]
 
-const HOVER_YAW = 0.4   // how far the card turns toward the cursor, radians
+const HOVER_YAW = 0.4    // how far the card turns toward the cursor
+const HOVER_SNAP = 14    // rad/s per unit of yaw error — higher follows the cursor quicker
+const HOVER_MAX_W = 6    // rad/s ceiling, so a big jump can't fling it
 
 export default function App () {
   const front = useMemo(makeCardFrontURL, [])
@@ -49,20 +51,20 @@ export default function App () {
     }
     repel(corners, state.camera, state.gl.domElement)
 
-    // Hover: turn the card toward the cursor by retargeting the rest angle that the
-    // component's own self-righting term drives toward, rather than adding a force of our
-    // own — so it can't fight the solver. Let go and it swings back to square.
+    // Hover: turn the card toward the cursor. This SETS the angular velocity needed to close
+    // the remaining angle rather than shaving a fraction off the existing one each step —
+    // the old version only ever removed 25% of the error per step, so it drifted toward the
+    // target instead of tracking the cursor. Setting it outright also makes the term
+    // frame-rate independent by construction: the value depends on the current error, not on
+    // how many times it has been applied.
     if (hovered && !dragged) {
       vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera)
       dir.copy(vec).sub(state.camera.position).normalize()
       vec.copy(state.camera.position).addScaledVector(dir, -state.camera.position.z / dir.z)
       const target = Math.max(-HOVER_YAW, Math.min(HOVER_YAW, (vec.x - t.x) * 0.55))
       const av = body.angvel()
-      // Scaled by the frame's share of a 60Hz step: this runs per RENDER frame but the solver
-      // only consumes velocity per STEP, so on a 120Hz display an unscaled term would land
-      // twice per step and compound into an overshoot.
-      const stepShare = Math.min(1, delta * 60)
-      body.setAngvel({ x: av.x, y: av.y - (q.y - target) * 0.25 * stepShare, z: av.z }, true)
+      const w = Math.max(-HOVER_MAX_W, Math.min(HOVER_MAX_W, (target - q.y) * HOVER_SNAP))
+      body.setAngvel({ x: av.x, y: w, z: av.z }, true)
     }
   }, [repel, scratch])
 
