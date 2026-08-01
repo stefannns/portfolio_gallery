@@ -80,7 +80,7 @@ export function makeCardFrontURL () {
   const ls = v => { if ('letterSpacing' in g) g.letterSpacing = v }
   g.textBaseline = 'top'
   ls('0px');   g.fillStyle = '#f4f6fa'; g.font = `700 ${62 * s}px ${FONT}`; g.fillText('Stefan', padL, CARD_H * 0.478)
-  ls('1.8px'); g.fillStyle = '#c9a9ff'; g.font = `600 ${29 * s}px ${FONT}`; g.fillText('AIGC/Game Designer', padL, CARD_H * 0.569)
+  ls('1.8px'); g.fillStyle = '#5fa8ff'; g.font = `600 ${29 * s}px ${FONT}`; g.fillText('AIGC/Game Designer', padL, CARD_H * 0.569)
   ls('1.1px'); g.fillStyle = '#cbd0d9'; g.font = `400 ${27 * s}px ${FONT}`; g.fillText('USC School of Cinematic Arts', padL, CARD_H * 0.644)
   ls('0px');   g.fillStyle = '#9aa1b0'; g.font = `400 ${25 * s}px ${FONT}`; g.fillText('Class of 2027', padL, CARD_H * 0.693)
 
