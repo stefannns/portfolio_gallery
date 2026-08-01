@@ -131,7 +131,7 @@ export function makeStrapURL (patternUrl, canvasAspect) {
     const pitchX = W / ribs
     for (let i = 0; i < ribs; i++) {
       const x = i * pitchX
-      for (const [off, col, wide] of [[0, 'rgba(255,255,255,.055)', 13], [pitchX * 0.5, 'rgba(0,0,0,.075)', 15]]) {
+      for (const [off, col, wide] of [[0, 'rgba(255,255,255,.028)', 13], [pitchX * 0.5, 'rgba(0,0,0,.038)', 15]]) {
         g.strokeStyle = col; g.lineWidth = wide
         g.beginPath()
         // 45 degrees, drawn a second time a tile-width back so the part that runs off the
@@ -142,15 +142,16 @@ export function makeStrapURL (patternUrl, canvasAspect) {
       }
     }
 
-    // Soft mottling. Radii stay well above the 19 texel floor, and each blob is repeated a
-    // tile-width either side so none of them is cut off at the seam.
-    for (let i = 0; i < 90; i++) {
+    // Soft mottling. Kept faint — at higher contrast it reads as wear and grime rather than
+    // cloth. Radii stay well above the 19 texel floor, and each blob is repeated a tile-width
+    // either side so none of them is cut off at the seam.
+    for (let i = 0; i < 55; i++) {
       const bx = rnd() * W, by = rnd() * H
       const r = 34 + rnd() * 90
       const dark = rnd() < 0.5
       for (const dx of [0, -W, W]) {
         const grd = g.createRadialGradient(bx + dx, by, 0, bx + dx, by, r)
-        grd.addColorStop(0, dark ? 'rgba(0,0,0,.055)' : 'rgba(255,255,255,.045)')
+        grd.addColorStop(0, dark ? 'rgba(0,0,0,.026)' : 'rgba(255,255,255,.022)')
         grd.addColorStop(1, 'rgba(0,0,0,0)')
         g.fillStyle = grd
         g.fillRect(bx + dx - r, by - r, r * 2, r * 2)
