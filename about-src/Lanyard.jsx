@@ -49,7 +49,9 @@ export default function Lanyard({
   lanyardImage = null,
   lanyardWidth = 1,
   onCardFrame = null,   // local patch
-  onFirstDrag = null    // local patch
+  onFirstDrag = null,   // local patch
+  anchorY = 4,          // local patch
+  ropeSeg = 1           // local patch
 }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
 
@@ -78,6 +80,8 @@ export default function Lanyard({
             lanyardWidth={lanyardWidth}
             onCardFrame={onCardFrame}
             onFirstDrag={onFirstDrag}
+            anchorY={anchorY}
+            ropeSeg={ropeSeg}
           />
         </Physics>
         <Environment blur={0.75}>
@@ -124,7 +128,9 @@ function Band({
   lanyardImage = null,
   lanyardWidth = 1,
   onCardFrame = null,   // local patch
-  onFirstDrag = null    // local patch
+  onFirstDrag = null,   // local patch
+  anchorY = 4,          // local patch
+  ropeSeg = 1           // local patch
 }) {
   const band = useRef(),
     fixed = useRef(),
@@ -197,9 +203,9 @@ function Band({
   const [dragged, drag] = useState(false);
   const [hovered, hover] = useState(false);
 
-  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
-  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
-  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
+  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], ropeSeg]);   // local patch
+  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], ropeSeg]);      // local patch
+  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], ropeSeg]);      // local patch
   useSphericalJoint(j3, card, [
     [0, 0, 0],
     [0, 1.5, 0]
@@ -246,18 +252,18 @@ function Band({
 
   return (
     <>
-      <group position={[0, 4, 0]}>
+      <group position={[0, anchorY, 0]}>   {/* local patch */}
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
-        <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
+        <RigidBody position={[ropeSeg * 0.5, 0, 0]} ref={j1} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps}>
+        <RigidBody position={[ropeSeg, 0, 0]} ref={j2} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps}>
+        <RigidBody position={[ropeSeg * 1.5, 0, 0]} ref={j3} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
+        <RigidBody position={[ropeSeg * 2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
           <CuboidCollider args={[0.8, 1.125, 0.01]} />
           <group
             scale={2.25}

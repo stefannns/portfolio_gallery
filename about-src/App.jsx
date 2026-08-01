@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import * as THREE from 'three'
 import Lanyard from './Lanyard.jsx'
 import { useTextRepel } from './useTextRepel.js'
-import { makeCardFrontURL, makeCardBackURL, makeStrapURL, CAM_FOV, CAM_Z, CAM_Y, BAND_LINE_W } from './cardTexture.js'
+import { makeCardFrontURL, makeCardBackURL, makeStrapURL, CAM_FOV, CAM_Z, CAM_Y, BAND_LINE_W, ANCHOR_Y, ROPE_SEG } from './cardTexture.js'
 import patternUrl from './pattern.png'
 
 // The card's physical extent, from the component's own CuboidCollider args [0.8, 1.125, 0.01].
@@ -27,7 +27,12 @@ export default function App () {
 
   useEffect(() => {
     let alive = true
-    makeStrapURL(patternUrl).then(url => { if (alive) setStrap(url) })
+    // The strap's world width scales with the canvas aspect (see strapTileAspect), so the
+    // tile can only be shaped correctly once the layer has been laid out.
+    const r = document.querySelector('.canvas-layer')?.getBoundingClientRect()
+    const aspect = r && r.width > 0 && r.height > 0 ? r.width / r.height : null
+    window.__strapAspect = aspect
+    makeStrapURL(patternUrl, aspect).then(url => { if (alive) setStrap(url) })
     return () => { alive = false }
   }, [])
 
@@ -75,6 +80,8 @@ export default function App () {
               backImage={back}
               lanyardImage={strap}
               lanyardWidth={BAND_LINE_W}
+              anchorY={ANCHOR_Y}
+              ropeSeg={ROPE_SEG}
               onCardFrame={onCardFrame}
               onFirstDrag={() => setUsed(true)}
             />

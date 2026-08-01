@@ -8,22 +8,41 @@ const FONT = '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial
 const CARD_W = 512, CARD_H = 773
 
 export const CAM_FOV = 25       // passed to the component
-export const CAM_Z = 13
-// Camera sits slightly low so the badge rides higher in the frame. Moving the camera down
-// shifts the view down, which lifts everything in it.
-export const CAM_Y = 0            // reference value
-const BAND_REPEAT = 4           // fixed inside the component's meshLineMaterial
-const ROPE_LEN = 3              // 3 rope joints of length 1, also fixed in the component
-// Passed to the component as lanyardWidth. It also feeds TILE_ASPECT below, so changing the
-// strap's width automatically reshapes the texture tile and the mark stays unstretched.
-export const BAND_LINE_W = 0.44   // 12% under half the reference's 1
+// Canvas is taller than the stage now (see .canvas-layer), and the badge's on-screen size is
+// canvasHeight / visibleWorldHeight — so the camera pulls back by the same ratio to keep it
+// the size it was.
+export const CAM_Z = 17.1
+export const CAM_Y = 0
 
-// meshline offsets vertices by 0.5*lineWidth in CLIP space, so the strap's world width works
-// out to lineWidth * tan(fov/2). One texture tile covers ropeLength/repeat along the strap by
-// that much across it — matching the canvas to the same shape is what keeps the mark from
-// being stretched lengthwise.
-const STRAP_W = BAND_LINE_W * Math.tan((CAM_FOV / 2) * Math.PI / 180)
-const TILE_ASPECT = (ROPE_LEN / BAND_REPEAT) / STRAP_W
+// Where the rope hangs from and how long each of its three segments is. Longer than the
+// component's default 4 / 1 so the strap leaves the top of the frame with no visible end.
+export const ANCHOR_Y = 5.5
+export const ROPE_SEG = 1.8
+const ROPE_LEN = ROPE_SEG * 3
+
+const BAND_REPEAT = 4           // fixed inside the component's meshLineMaterial
+// Strap width you approved, in on-screen terms. It has to be restated here because the true
+// width is lineWidth * tan(fov/2) * canvasAspect — so making the canvas taller (which changed
+// its aspect) would otherwise have quietly narrowed the strap by ~24%.
+export const BAND_LINE_W = 0.58 // passed as lanyardWidth
+
+// The strap's world width is NOT lineWidth * tan(fov/2). meshline takes its `aspect` from the
+// resolution uniform, which the component pins to [1000, 1000] — so aspect is 1, the width
+// offset is applied in raw clip-x, and the result scales with the CANVAS aspect ratio:
+//
+//   world width = lineWidth * tan(fov/2) * canvasAspect
+//
+// Miss that factor and the texture tile comes out the wrong shape, which stretches the mark
+// along the strap. It was invisible while the canvas was roughly stage-shaped and became
+// obvious once .canvas-layer went to 300% width.
+export function strapTileAspect (canvasAspect) {
+  // Guarded: a zero/NaN aspect would make the tile infinitely long, and a canvas with an
+  // invalid width serialises to "data:," which the texture loader then rejects and takes the
+  // whole tree down with it.
+  const a = Number.isFinite(canvasAspect) && canvasAspect > 0 ? canvasAspect : 2
+  const strapW = BAND_LINE_W * Math.tan((CAM_FOV / 2) * Math.PI / 180) * a
+  return Math.max(1, Math.min(16, (ROPE_LEN / BAND_REPEAT) / strapW))
+}
 
 export const STRAP_COLOR = '#4c515a'
 
@@ -85,9 +104,9 @@ export function makeCardBackURL () {
 // Flat webbing plus the mark, and nothing else. Fine detail cannot survive here: the strap
 // renders roughly 30px wide, so this 256px axis is minified about 9:1 and anything approaching
 // a single texel lands inside a fraction of a screen pixel and crawls as the strap moves.
-export function makeStrapURL (patternUrl) {
+export function makeStrapURL (patternUrl, canvasAspect) {
   return new Promise((resolve) => {
-    const H = 256, W = Math.round(H * TILE_ASPECT)
+    const H = 256, W = Math.round(H * strapTileAspect(canvasAspect))
     const c = document.createElement('canvas'); c.width = W; c.height = H
     const g = c.getContext('2d')
     g.fillStyle = STRAP_COLOR; g.fillRect(0, 0, W, H)
