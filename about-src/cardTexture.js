@@ -76,22 +76,31 @@ export function makeBandTexture(){
   // almost-black strap disappeared into the background between marks.
   g.fillStyle='#4c515a'; g.fillRect(0,0,W,H)
 
-  // woven weft, running across the strap
-  g.strokeStyle='rgba(255,255,255,.035)'; g.lineWidth=1
-  for(let x=0;x<W;x+=3){ g.beginPath(); g.moveTo(x+.5,0); g.lineTo(x+.5,H); g.stroke() }
-  // darker selvage down both edges
-  const edge=g.createLinearGradient(0,0,0,H)
-  edge.addColorStop(0,'rgba(0,0,0,.42)'); edge.addColorStop(.14,'rgba(0,0,0,0)')
-  edge.addColorStop(.86,'rgba(0,0,0,0)'); edge.addColorStop(1,'rgba(0,0,0,.42)')
-  g.fillStyle=edge; g.fillRect(0,0,W,H)
-  // catch-light down both long edges of the webbing, same idea as the card's rim
-  g.fillStyle='rgba(255,255,255,.26)'; g.fillRect(0,0,W,2); g.fillRect(0,H-2,W,2)
-  g.fillStyle='rgba(255,255,255,.08)'; g.fillRect(0,2,W,2); g.fillRect(0,H-4,W,2)
+  // NOTHING here may be high-frequency. The strap renders about 30px wide, so this 256px
+  // axis is minified ~8.6:1 and a 1px feature lands in ~0.12 of a screen pixel. A woven weft
+  // drawn as a 1px line every 3px, and hard 2px catch-lights on the extreme edges, both did
+  // exactly that — and a sub-pixel pattern on a moving surface crawls. That was the shimmer,
+  // and no amount of solver work could have fixed it. The reference sidesteps it entirely by
+  // giving the band no texture detail at all.
+  //
+  // Same look, built from one smooth gradient across the strap: dark selvage at the edges,
+  // a soft catch-light just inside them, a faint hollow down the middle.
+  const across=g.createLinearGradient(0,0,0,H)
+  across.addColorStop(0,   'rgba(0,0,0,.45)')
+  across.addColorStop(.09, 'rgba(255,255,255,.15)')
+  across.addColorStop(.28, 'rgba(255,255,255,.03)')
+  across.addColorStop(.5,  'rgba(0,0,0,.07)')
+  across.addColorStop(.72, 'rgba(255,255,255,.03)')
+  across.addColorStop(.91, 'rgba(255,255,255,.15)')
+  across.addColorStop(1,   'rgba(0,0,0,.45)')
+  g.fillStyle=across; g.fillRect(0,0,W,H)
 
   const tex=new THREE.CanvasTexture(c)
   tex.colorSpace = THREE.SRGBColorSpace
   tex.wrapS = tex.wrapT = THREE.RepeatWrapping
-  tex.anisotropy = 16
+  // Keep this low. High anisotropy preserves detail along the minified axis, which is the
+  // opposite of what a strap squeezed to ~30px wants — let the mipmaps average instead.
+  tex.anisotropy = 2
 
   // The mark loads async; draw it in when it arrives and flag the texture dirty. Rotated a
   // quarter turn because canvas +x runs ALONG the strap — without it the mark would lie on
