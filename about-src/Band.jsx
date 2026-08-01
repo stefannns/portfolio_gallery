@@ -22,6 +22,10 @@ const HW_SCALE = 2.25, HW_Y = -1.2
 // Where the strap is pinned. Raising this lifts the whole badge in frame.
 const ANCHOR_Y = 4.55
 
+// Endpoint filter time constant: one physics step. Long enough to blend the raw 60Hz
+// staircase on a 120Hz display, short enough that the strap stays visually on the clip.
+const ENDPOINT_TAU = 1 / 60
+
 // how far the card turns toward the cursor on hover, radians
 const HOVER_YAW = 0.4
 
@@ -120,7 +124,18 @@ function Band({ maxSpeed = 50, minSpeed = 0, onFirstDrag }) {
         const alpha = Math.min(1, dt * (minSpeed + dist * (maxSpeed - minSpeed)))
         r.current.lerped.lerp(r.current.translation(), alpha)
       })
-      curve.points[0].copy(j3.current.translation())
+      // The endpoints read translation() -- raw physics, which only changes every OTHER frame
+      // on a 120Hz display against the fixed 1/60 step, while the interior points are lerped
+      // every frame. That mismatch is the shimmer at the clip end.
+      //
+      // So the endpoint is filtered too, but with a time constant of ONE physics step rather
+      // than the interior points' heavy smoothing. That's enough to blend the 2-frame
+      // staircase while lagging by well under a frame of travel, so it still reads as welded
+      // to the clip. (Smoothing it at the interior rate is what made it float off before.)
+      // A big delta drives alpha to 1, so it snaps to truth rather than drifting.
+      if (!j3.current.smoothed) j3.current.smoothed = new THREE.Vector3().copy(j3.current.translation())
+      j3.current.smoothed.lerp(j3.current.translation(), 1 - Math.exp(-dt / ENDPOINT_TAU))
+      curve.points[0].copy(j3.current.smoothed)
       curve.points[1].copy(j2.current.lerped)
       curve.points[2].copy(j1.current.lerped)
       curve.points[3].copy(fixed.current.translation())
