@@ -4,7 +4,7 @@ import { Canvas, extend, useFrame, useThree } from '@react-three/fiber'
 import { Environment, Lightformer, useGLTF } from '@react-three/drei'
 import { BallCollider, CuboidCollider, Physics, RigidBody, useRopeJoint, useSphericalJoint } from '@react-three/rapier'
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline'
-import { makeCardTexture, makeBandTexture, BAND_REPEAT, BAND_LINE_W, CAM_FOV, CAM_Z } from './cardTexture.js'
+import { makeCardTexture, makeBandTexture, BAND_REPEAT, BAND_LINE_W, CAM_FOV, CAM_Z, ROPE_LEN } from './cardTexture.js'
 import clipUrl from './clip.glb'
 import { useTextRepel } from './useTextRepel.js'
 
@@ -19,12 +19,12 @@ const CARD_W = 1.6, CARD_H = 2.25, CARD_T = 0.02
 // the rigid body, putting the clip's eye right at the [0, 1.45, 0] spherical-joint anchor.
 const HW_SCALE = 2.25, HW_Y = -1.2
 
-// Where the strap is pinned. Raising this lifts the whole badge in frame.
-const ANCHOR_Y = 4.55
-
-// Endpoint filter time constant: one physics step. Long enough to blend the raw 60Hz
-// staircase on a 120Hz display, short enough that the strap stays visually on the clip.
-const ENDPOINT_TAU = 1 / 60
+// The rope is longer than the reference's 3.0 so the strap leaves the top of the frame with
+// no visible end. SEG is per joint; ANCHOR_Y is then derived to hold the card at the same
+// height it sat at before — raising the anchor alone would just lift the whole badge.
+const SEG = ROPE_LEN / 3
+const CARD_REST_Y = 0.1                    // where the card centre should hang
+const ANCHOR_Y = ROPE_LEN + 1.45 + CARD_REST_Y
 
 // how far the card turns toward the cursor on hover, radians
 const HOVER_YAW = 0.4
@@ -79,9 +79,9 @@ function Band({ maxSpeed = 50, minSpeed = 0, onFirstDrag }) {
 
   // Three rope segments hanging off a fixed point, then the card on a spherical joint whose
   // anchor sits ABOVE the card's centre — that offset is what makes it hang and self-right.
-  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1])
-  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1])
-  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1])
+  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], SEG])
+  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], SEG])
+  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], SEG])
   useSphericalJoint(j3, card, [[0, 0, 0], [0, 1.45, 0]])
 
   useEffect(() => {
@@ -91,16 +91,13 @@ function Band({ maxSpeed = 50, minSpeed = 0, onFirstDrag }) {
     }
   }, [hovered, dragged])
 
+  // This block is the reference implementation (React Bits' Lanyard) as-is. The only
+  // additions are the exact z=0 plane intersection for the drag (the camera is offset
+  // horizontally here, so their |camera.position| shortcut would skew it), the degenerate
+  // curve guard, the hover rest angle, and the text repel. With restYaw at 0 the angular
+  // line below is character-for-character theirs.
   useFrame((state, delta) => {
-    // Rapier steps at a fixed 1/60 but the page may render at 120Hz+, so anything applied per
-    // RENDER frame lands twice as often on a high-refresh display. dt60 normalises those to
-    // one 60Hz step; the cap also stops a stalled frame from delivering one huge correction.
-    const dt = Math.min(delta, 1 / 30)
-    const dt60 = dt * 60
     if (dragged) {
-      // Intersect the pointer ray with the z=0 plane. The reference used
-      // |camera.position| as the distance, which only works while the camera sits on the axis
-      // — the badge is now offset horizontally, so that shortcut would skew the drag.
       vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera)
       dir.copy(vec).sub(state.camera.position).normalize()
       vec.copy(state.camera.position).addScaledVector(dir, -state.camera.position.z / dir.z)
@@ -110,46 +107,23 @@ function Band({ maxSpeed = 50, minSpeed = 0, onFirstDrag }) {
       })
     }
     if (fixed.current) {
-      // Only the INTERIOR points are smoothed. Both endpoints stay raw on purpose: points[0]
-      // is pinned to the clip and points[3] to the anchor, so smoothing either one lets the
-      // strap drift off the thing it's attached to. (I lerped j3 to chase a glitch and that
-      // is exactly what happened — with minSpeed 0 the lag is large.) Speed scales with
-      // distance, so a fast swing is tracked tightly and a slow settle is damped hard.
       ;[j1, j2].forEach((r) => {
         if (!r.current.lerped) r.current.lerped = new THREE.Vector3().copy(r.current.translation())
-        const dist = Math.max(0.1, Math.min(1, r.current.lerped.distanceTo(r.current.translation())))
-        // Clamp to 1: Vector3.lerp EXTRAPOLATES past the target when alpha > 1, and
-        // delta * 50 exceeds 1 on any frame slower than 20ms. That overshoot is what threw
-        // the bottom of the strap out past the card on a stutter.
-        const alpha = Math.min(1, dt * (minSpeed + dist * (maxSpeed - minSpeed)))
-        r.current.lerped.lerp(r.current.translation(), alpha)
+        const clampedDistance = Math.max(0.1, Math.min(1, r.current.lerped.distanceTo(r.current.translation())))
+        r.current.lerped.lerp(r.current.translation(), delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed)))
       })
-      // The endpoints read translation() -- raw physics, which only changes every OTHER frame
-      // on a 120Hz display against the fixed 1/60 step, while the interior points are lerped
-      // every frame. That mismatch is the shimmer at the clip end.
-      //
-      // So the endpoint is filtered too, but with a time constant of ONE physics step rather
-      // than the interior points' heavy smoothing. That's enough to blend the 2-frame
-      // staircase while lagging by well under a frame of travel, so it still reads as welded
-      // to the clip. (Smoothing it at the interior rate is what made it float off before.)
-      // A big delta drives alpha to 1, so it snaps to truth rather than drifting.
-      if (!j3.current.smoothed) j3.current.smoothed = new THREE.Vector3().copy(j3.current.translation())
-      j3.current.smoothed.lerp(j3.current.translation(), 1 - Math.exp(-dt / ENDPOINT_TAU))
-      curve.points[0].copy(j3.current.smoothed)
+      curve.points[0].copy(j3.current.translation())
       curve.points[1].copy(j2.current.lerped)
       curve.points[2].copy(j1.current.lerped)
       curve.points[3].copy(fixed.current.translation())
-      // On the first frames every body still reports the same position. A chordal
-      // Catmull-Rom divides by the distance between control points, so a degenerate curve
-      // yields NaN vertices and a NaN bounding sphere. Skip until the rope has some length.
+      // guard only: on the first frames every body reports the same position, and a chordal
+      // Catmull-Rom divides by the gap between control points -> NaN vertices.
       let spread = true
       for (let i = 1; i < curve.points.length; i++) {
         if (curve.points[i].distanceTo(curve.points[i - 1]) < 1e-4) { spread = false; break }
       }
       if (spread) band.current.geometry.setPoints(curve.getPoints(32))
-      // Hover: turn the card toward the cursor. This retargets the self-righting controller
-      // below rather than applying its own force, so it can't fight the solver or reintroduce
-      // jitter — the rest angle simply moves, and releasing the hover lets it swing back.
+
       const ct = card.current.translation()
       let restYaw = 0
       if (hovered && !dragged) {
@@ -158,9 +132,9 @@ function Band({ maxSpeed = 50, minSpeed = 0, onFirstDrag }) {
         vec.copy(state.camera.position).addScaledVector(dir, -state.camera.position.z / dir.z)
         restYaw = Math.max(-HOVER_YAW, Math.min(HOVER_YAW, (vec.x - ct.x) * 0.55))
       }
-      // ease the card back toward its rest angle instead of spinning freely
       ang.copy(card.current.angvel()); rot.copy(card.current.rotation())
-      card.current.setAngvel({ x: ang.x, y: ang.y - (rot.y - restYaw) * 0.25 * dt60, z: ang.z })
+      card.current.setAngvel({ x: ang.x, y: ang.y - (rot.y - restYaw) * 0.25, z: ang.z })
+
       const cq = card.current.rotation()
       quat.set(cq.x, cq.y, cq.z, cq.w)
       for (let i = 0; i < 4; i++) {
@@ -178,17 +152,17 @@ function Band({ maxSpeed = 50, minSpeed = 0, onFirstDrag }) {
     <>
       <group position={[0, ANCHOR_Y, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
-        <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
+        <RigidBody position={[SEG * 0.5, 0, 0]} ref={j1} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps}>
+        <RigidBody position={[SEG, 0, 0]} ref={j2} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps}>
+        <RigidBody position={[SEG * 1.5, 0, 0]} ref={j3} {...segmentProps}>
           <BallCollider args={[0.1]} />
         </RigidBody>
 
-        <RigidBody position={[2, 0, 0]} ref={card} {...segmentProps}
+        <RigidBody position={[SEG * 2, 0, 0]} ref={card} {...segmentProps}
           type={dragged ? 'kinematicPosition' : 'dynamic'}>
           <CuboidCollider args={[CARD_W / 2, CARD_H / 2, 0.01]} />
           <group

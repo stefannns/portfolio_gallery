@@ -52,11 +52,12 @@ export function makeCardTexture(){
 // lineWidth * tan(fov/2), independent of depth. Texture u runs ALONG the strap and v across
 // it, so one tile covers (ropeLength / repeat) along by STRAP_W across. Setting the canvas
 // to the same aspect makes the mark come out true.
+export const STRAP_COLOR = '#4c515a'   // grey webbing
 export const BAND_LINE_W = 1                           // meshLineMaterial lineWidth
 export const CAM_FOV = 25                              // camera fov, degrees
 export const CAM_Z = 13                                // camera distance
 const FOV = CAM_FOV
-const ROPE_LEN = 3                                     // 3 rope joints, length 1 each
+export const ROPE_LEN = 4.35                           // total rope; 3 joints of ROPE_LEN/3
 const STRAP_W = BAND_LINE_W * Math.tan((FOV / 2) * Math.PI / 180)
 
 // Roughly three marks in view. Only about 60% of the rope is on screen once the badge settles
@@ -64,7 +65,7 @@ const STRAP_W = BAND_LINE_W * Math.tan((FOV / 2) * Math.PI / 180)
 // A whole number matters: a fractional repeat would slice a mark in half where the texture
 // wraps. The tile's true aspect then falls out of that choice and the canvas is built to match,
 // so the spare length shows up as spacing between marks rather than as stretch across them.
-export const BAND_REPEAT = 5
+export const BAND_REPEAT = 7
 const TILE_ASPECT = (ROPE_LEN / BAND_REPEAT) / STRAP_W
 
 export function makeBandTexture(){
@@ -72,49 +73,33 @@ export function makeBandTexture(){
   const c=document.createElement('canvas'); c.width=W; c.height=H
   const g=c.getContext('2d')
 
-  // Grey webbing. It also has to stay clear of the page colour (--bg is #0b0b0d) — an
-  // almost-black strap disappeared into the background between marks.
-  g.fillStyle='#4c515a'; g.fillRect(0,0,W,H)
-
-  // NOTHING here may be high-frequency. The strap renders about 30px wide, so this 256px
-  // axis is minified ~8.6:1 and a 1px feature lands in ~0.12 of a screen pixel. A woven weft
-  // drawn as a 1px line every 3px, and hard 2px catch-lights on the extreme edges, both did
-  // exactly that — and a sub-pixel pattern on a moving surface crawls. That was the shimmer,
-  // and no amount of solver work could have fixed it. The reference sidesteps it entirely by
-  // giving the band no texture detail at all.
-  //
-  // Same look, built from one smooth gradient across the strap: dark selvage at the edges,
-  // a soft catch-light just inside them, a faint hollow down the middle.
-  const across=g.createLinearGradient(0,0,0,H)
-  across.addColorStop(0,   'rgba(0,0,0,.45)')
-  across.addColorStop(.09, 'rgba(255,255,255,.15)')
-  across.addColorStop(.28, 'rgba(255,255,255,.03)')
-  across.addColorStop(.5,  'rgba(0,0,0,.07)')
-  across.addColorStop(.72, 'rgba(255,255,255,.03)')
-  across.addColorStop(.91, 'rgba(255,255,255,.15)')
-  across.addColorStop(1,   'rgba(0,0,0,.45)')
-  g.fillStyle=across; g.fillRect(0,0,W,H)
+  // Flat fill and the mark, and nothing else. The reference's band carries no texture detail
+  // at all, and that is deliberate: the strap renders ~30px wide, so this 256px axis is
+  // minified ~9:1 and any fine detail (a woven weft, a hard edge highlight) lands inside a
+  // fraction of a screen pixel and crawls as the strap moves. Everything here has to stay
+  // large and soft.
+  g.fillStyle=STRAP_COLOR; g.fillRect(0,0,W,H)
 
   const tex=new THREE.CanvasTexture(c)
   tex.colorSpace = THREE.SRGBColorSpace
   tex.wrapS = tex.wrapT = THREE.RepeatWrapping
-  // Keep this low. High anisotropy preserves detail along the minified axis, which is the
-  // opposite of what a strap squeezed to ~30px wants — let the mipmaps average instead.
-  tex.anisotropy = 2
+  // Anisotropy 2 was too low: at ~9:1 minification the sampler picked a blurry mip and
+  // averaged the mark straight into the flat grey, so the icon vanished. The mark is a big
+  // smooth shape, not the 1px weft that caused the shimmer — it can take sharper filtering.
+  tex.anisotropy = 8
 
   // The mark loads async; draw it in when it arrives and flag the texture dirty. Rotated a
   // quarter turn because canvas +x runs ALONG the strap — without it the mark would lie on
   // its side once the lanyard hangs. Scale is uniform, so the artwork keeps its own aspect.
   const img = new Image()
   img.onload = () => {
-    const across = H * 0.60          // fraction of the strap's width the mark covers
+    const across = H * 0.78          // fraction of the strap's width the mark covers
     const s = across / img.width     // uniform: img width ends up across, height along
     const along = img.height * s
-    // Sit the mark at the START of the tile rather than its centre. u=0 is the card end of the
-    // strap, so this puts one mark just above the clip and the rest stepping up from there —
-    // centring them instead left every mark above the top of the frame once the badge settled.
+    // Sit the mark at the START of the tile rather than its centre — only part of the rope is
+    // on screen, and centring put every mark above the top of the frame once it settled.
     g.save()
-    g.translate(along / 2 + H * 0.08, H / 2)
+    g.translate(along / 2 + H * 0.10, H / 2)
     g.rotate(-Math.PI / 2)
     g.drawImage(img, -img.width * s / 2, -img.height * s / 2, img.width * s, img.height * s)
     g.restore()
