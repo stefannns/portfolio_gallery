@@ -257,6 +257,7 @@ function Band({
   const rib = useMemo(
     () => ({
       quat: new THREE.Quaternion(),
+      pos: new THREE.Vector3(),
       tan: new THREE.Vector3(),
       view: new THREE.Vector3(),
       face: new THREE.Vector3(),
@@ -265,6 +266,17 @@ function Band({
     }),
     []
   );
+
+  // local patch: where the clip actually renders, in the card body's frame. The strap's joint
+  // is at the card's local (0, 1.5, 0), but the card model is drawn by a group that is scaled
+  // and offset, so the clip is really at (0, 1.441, -0.05) -- the strap used to end 0.06 above
+  // it and float 0.05 in front, which showed as the bottom corner sitting proud of the clip
+  // once the ribbon could roll. Mirrors the <group scale/position> below; keep the two in step.
+  const clipAnchor = useMemo(() => {
+    const g = nodes.clip.geometry;
+    if (!g.boundingBox) g.computeBoundingBox();
+    return g.boundingBox.getCenter(new THREE.Vector3()).multiplyScalar(2.25).add(new THREE.Vector3(0, -1.2, -0.05));
+  }, [nodes.clip.geometry]);
 
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], ropeSeg]);   // local patch
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], ropeSeg]);      // local patch
@@ -347,7 +359,13 @@ function Band({
           delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
         );
       });
-      curve.points[0].copy(j3.current.translation());
+      // local patch: end the strap on the clip instead of on j3, which sits at the bare joint
+      const cq = card.current.rotation();
+      const ct = card.current.translation();
+      curve.points[0]
+        .copy(clipAnchor)
+        .applyQuaternion(rib.quat.set(cq.x, cq.y, cq.z, cq.w))
+        .add(rib.pos.set(ct.x, ct.y, ct.z));
       curve.points[1].copy(j2.current.lerped);
       curve.points[2].copy(j1.current.lerped);
       curve.points[3].copy(fixed.current.translation());
