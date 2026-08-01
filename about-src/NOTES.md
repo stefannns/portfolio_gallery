@@ -68,6 +68,29 @@ component behaves exactly as shipped:
   component has finished with the card.
 - `onFirstDrag()` — on the first grab.
 
+### The band is a real ribbon, not meshline
+
+Upstream draws the strap with `meshline`, which offsets its vertices in **clip** space — so the
+band is a camera-facing billboard that cannot roll. The strap's lower joint is also attached at
+the card's local `(0, 1.5, 0)`, which sits exactly on the hover yaw axis. Between the two,
+turning the card moved the strap not at all.
+
+`makeRibbon` / `buildRibbon` replace it with a generated ribbon, rewritten from the curve each
+frame, whose width direction is rolled onto the card's own plane at the clip and eased back to
+camera-facing by `TWIST_SPAN` (measured: 11.4° of roll at the clip falling to 0 by t≈0.56).
+Under a pure hover yaw the roll at the clip equals the yaw angle.
+
+Two things there are deliberate and worth not "cleaning up":
+
+- The half-width reproduces meshline's exactly — `0.5 * lineWidth * tan(fov/2) * canvasAspect`,
+  measured identical to 4 decimals — including its dependence on the canvas aspect, which is an
+  artefact of the clip-space offset. The strap width was tuned by eye against that.
+- The material is `meshBasicMaterial` with `toneMapped={false}` and `depthTest={false}`, which
+  is how meshline's raw shader drew: unlit, no tone mapping, always on top.
+
+The `meshline` import and `extend` call are now unused by the band. They are left in place to
+keep the diff against `Lanyard.upstream.jsx` small.
+
 Everything the page layers on hangs off those two, in `App.jsx`:
 
 - **Text repel** (`useTextRepel.js`) — the copy dodges horizontally out of the badge's way and

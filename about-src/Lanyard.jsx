@@ -21,8 +21,15 @@ extend({ MeshLineGeometry, MeshLineMaterial });
 
    Adds two optional callbacks so the page can react to the badge without forking the
    simulation: onCardFrame(cardBody, state, delta, hovered, dragged) fires once per frame,
-   and onFirstDrag() fires on the first grab. Nothing else is changed; with both omitted the
-   component behaves exactly as shipped.
+   and onFirstDrag() fires on the first grab.
+
+   The band is also drawn as a real ribbon instead of upstream's meshline. meshline offsets
+   its vertices in CLIP space, so the strap is a camera-facing billboard that cannot roll --
+   and the strap's lower joint is attached at the card's local (0, 1.5, 0), which lies exactly
+   on the hover yaw axis. Between the two, turning the card moved the strap not at all. The
+   ribbon here carries a twist that matches the card's own facing at the clip and eases back
+   to camera-facing further up. Its width reproduces meshline's exactly (see makeRibbon), so
+   nothing about the resting look changes.
    --------------------------------------------------------------------------------------- */
 
 
@@ -37,6 +44,48 @@ const BLANK_PIXEL =
 // independently, aspect-preserving (no stretching).
 const FRONT_UV_RECT = { x: 0, y: 0, w: 0.5, h: 0.755 };
 const BACK_UV_RECT = { x: 0.5, y: 0, w: 0.5, h: 0.757 };
+
+/* ---- local patch: the band ribbon ---------------------------------------------------- */
+
+// How far up the strap the card's twist reaches, and how sharply it lets go. The whole twist
+// lives in the lower part of the band: a lanyard is stiff enough to carry the clip's angle a
+// little way but the top hangs however it hangs.
+const TWIST_SPAN = 0.55;
+const TWIST_FALLOFF = 2;
+
+// Two vertices per sample, a quad per segment. Allocated once and rewritten in place.
+function makeRibbon(seg) {
+  const count = seg + 1;
+  const geometry = new THREE.BufferGeometry();
+  const position = new Float32Array(count * 2 * 3);
+  const uv = new Float32Array(count * 2 * 2);
+  const index = [];
+  for (let i = 0; i < seg; i++) {
+    const a = i * 2;
+    index.push(a, a + 1, a + 2, a + 2, a + 1, a + 3);
+  }
+  for (let i = 0; i < count; i++) {
+    // u runs -4 over the length and v across the width, which is what upstream's
+    // repeat={[-4, 1]} did to meshline's own UVs -- baked in here instead of a uniform.
+    const u = (i / seg) * -4;
+    uv[i * 4] = u;
+    uv[i * 4 + 1] = 0;
+    uv[i * 4 + 2] = u;
+    uv[i * 4 + 3] = 1;
+  }
+  geometry.setAttribute('position', new THREE.BufferAttribute(position, 3));
+  geometry.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+  geometry.setIndex(index);
+  return { geometry, position, seg };
+}
+
+// meshline's world width, reproduced. With sizeAttenuation on it adds 0.5 * lineWidth to the
+// vertex in CLIP space, and clip x of 1 is d * tan(fov/2) * canvasAspect of world at any
+// depth d -- the distance cancels, leaving a width that depends on the canvas aspect. Keeping
+// the quirk is deliberate: the strap width was tuned by eye against it.
+function ribbonHalfWidth(lineWidth, camera, size) {
+  return 0.5 * lineWidth * Math.tan(((camera.fov * Math.PI) / 180) / 2) * (size.width / size.height);
+}
 
 export default function Lanyard({
   position = [0, 0, 30],
@@ -203,6 +252,20 @@ function Band({
   const [dragged, drag] = useState(false);
   const [hovered, hover] = useState(false);
 
+  // local patch: ribbon buffers, and scratch vectors so the per-frame rebuild allocates nothing
+  const ribbon = useMemo(() => makeRibbon(isMobile ? 16 : 32), [isMobile]);
+  const rib = useMemo(
+    () => ({
+      quat: new THREE.Quaternion(),
+      tan: new THREE.Vector3(),
+      view: new THREE.Vector3(),
+      face: new THREE.Vector3(),
+      cardSide: new THREE.Vector3(),
+      side: new THREE.Vector3()
+    }),
+    []
+  );
+
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], ropeSeg]);   // local patch
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], ropeSeg]);      // local patch
   useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], ropeSeg]);      // local patch
@@ -217,6 +280,55 @@ function Band({
       return () => void (document.body.style.cursor = 'auto');
     }
   }, [hovered, dragged]);
+
+  // local patch: rewrite the ribbon from the curve, rolling its lower part onto the card's
+  // own plane. curve.points[0] is j3, the clip end, so t runs 0 -> 1 up the strap.
+  const buildRibbon = state => {
+    const { seg, position } = ribbon;
+    const { quat, tan, view, face, cardSide, side } = rib;
+    const pts = curve.getPoints(seg);
+    const half = ribbonHalfWidth(lanyardWidth, state.camera, state.size);
+
+    const r = card.current.rotation();
+    quat.set(r.x, r.y, r.z, r.w);
+    cardSide.set(1, 0, 0).applyQuaternion(quat);   // the card's own width direction
+
+    for (let i = 0; i <= seg; i++) {
+      const p = pts[i];
+      tan.copy(pts[Math.min(i + 1, seg)]).sub(pts[Math.max(i - 1, 0)]);
+      if (tan.lengthSq() < 1e-10) tan.set(0, 1, 0);
+      tan.normalize();
+
+      // camera-facing, which is what meshline gave us at every point
+      view.copy(p).sub(state.camera.position).normalize();
+      face.crossVectors(tan, view);
+      if (face.lengthSq() < 1e-10) face.set(1, 0, 0);
+      face.normalize();
+
+      const t = i / seg;
+      const blend = t < TWIST_SPAN ? Math.pow(1 - t / TWIST_SPAN, TWIST_FALLOFF) : 0;
+      if (blend > 0) {
+        // whichever way round the card's edge points, or the ribbon turns itself inside out
+        if (cardSide.dot(face) < 0) side.copy(cardSide).negate();
+        else side.copy(cardSide);
+        side.sub(face).multiplyScalar(blend).add(face);   // = face + blend * (cardSide - face)
+        side.addScaledVector(tan, -side.dot(tan));        // keep it square to the strap
+        if (side.lengthSq() < 1e-10) side.copy(face);
+        else side.normalize();
+      } else {
+        side.copy(face);
+      }
+
+      const a = i * 6;
+      position[a] = p.x - side.x * half;
+      position[a + 1] = p.y - side.y * half;
+      position[a + 2] = p.z - side.z * half;
+      position[a + 3] = p.x + side.x * half;
+      position[a + 4] = p.y + side.y * half;
+      position[a + 5] = p.z + side.z * half;
+    }
+    ribbon.geometry.attributes.position.needsUpdate = true;
+  };
 
   useFrame((state, delta) => {
     if (dragged) {
@@ -239,7 +351,7 @@ function Band({
       curve.points[1].copy(j2.current.lerped);
       curve.points[2].copy(j1.current.lerped);
       curve.points[3].copy(fixed.current.translation());
-      band.current.geometry.setPoints(curve.getPoints(isMobile ? 16 : 32));
+      buildRibbon(state);   // local patch, replaces band.current.geometry.setPoints(...)
       ang.copy(card.current.angvel());
       rot.copy(card.current.rotation());
       card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
@@ -292,17 +404,11 @@ function Band({
           </group>
         </RigidBody>
       </group>
-      <mesh ref={band}>
-        <meshLineGeometry />
-        <meshLineMaterial
-          color="white"
-          depthTest={false}
-          resolution={isMobile ? [1000, 2000] : [1000, 1000]}
-          useMap
-          map={texture}
-          repeat={[-4, 1]}
-          lineWidth={lanyardWidth}
-        />
+      {/* local patch: a real ribbon in place of <meshLineGeometry/>, so it can twist. Unlit
+          and depth-tested off to match how meshline drew, and never culled since the geometry
+          is rewritten every frame and its bounds are not maintained. */}
+      <mesh ref={band} geometry={ribbon.geometry} frustumCulled={false}>
+        <meshBasicMaterial map={texture} side={THREE.DoubleSide} depthTest={false} toneMapped={false} />
       </mesh>
     </>
   );
