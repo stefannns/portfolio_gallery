@@ -75,6 +75,7 @@ const SCENE_GROUND_SRC = 549;
 // bottom, and its ground line sits on GROUND_Y.
 const SCENE_SCALE = (H - GROUND_Y) / (SCENE_SRC_H - SCENE_GROUND_SRC);
 const SCENE_Y = H - SCENE_SRC_H * SCENE_SCALE;
+const SCENE_W = 5533 * SCENE_SCALE;            // one full copy, in design px
 
 function label(scene, x, y, str, size, color, originX, originY) {
     const t = scene.add.text(x, y, str, {
@@ -259,12 +260,18 @@ class GameScene extends Phaser.Scene {
     // face. Only the horizon strip, the ground and the props are solid.
     buildBackdrop() {
         // The strip carries the ground and everything under it, so it scrolls at
-        // full world speed — a lagging floor reads wrong in a runner. A tileSprite
-        // rather than an image so it can run for any distance without ending.
-        this.scene1 = this.add.tileSprite(0, SCENE_Y, W, H - SCENE_Y, 'scene').setOrigin(0, 0);
-        this.scene1.tileScaleX = SCENE_SCALE;
-        this.scene1.tileScaleY = SCENE_SCALE;
-        this.world.add(this.scene1);
+        // full world speed — a lagging floor reads wrong in a runner.
+        //
+        // TWO recycling images rather than a tileSprite. A tileSprite wraps with
+        // GL_REPEAT, and this texture has opaque cloud tips on its very top rows
+        // while its bottom row is solid underground blue, so linear filtering
+        // blended the two at the seam — a blue line straight across the middle of
+        // the screen. Plain images have no wrap to bleed.
+        this.strip = [
+            this.add.image(0, SCENE_Y, 'scene').setOrigin(0, 0).setScale(SCENE_SCALE),
+            this.add.image(SCENE_W, SCENE_Y, 'scene').setOrigin(0, 0).setScale(SCENE_SCALE)
+        ];
+        this.world.add(this.strip);
 
         // Dotted marker for the height cap. Nearly invisible while the dog is
         // low, brightening as he closes on it, so it only asks for attention
@@ -381,7 +388,8 @@ class GameScene extends Phaser.Scene {
         this.reseatBlocks();
         this.playerCol.y = GROUND_Y;
         this.playerCol.x = PLAYER_X;
-        this.scene1.tilePositionX = 0;
+        this.strip[0].x = 0;
+        this.strip[1].x = SCENE_W;
         this.dim.setAlpha(1);
         this.capRoom = -1;
         this.drawCapLine();
@@ -963,7 +971,11 @@ class GameScene extends Phaser.Scene {
         const step = speed * dt;
         this.distance += step;
 
-        this.scene1.tilePositionX += step / SCENE_SCALE;
+        for (let i = 0; i < this.strip.length; i++) {
+            const im = this.strip[i];
+            im.x -= step;
+            if (im.x + SCENE_W <= 0) im.x += SCENE_W * this.strip.length;
+        }
         this.drawCapLine();
 
         for (let i = this.obstacles.length - 1; i >= 0; i--) {
@@ -1099,8 +1111,8 @@ class GameScene extends Phaser.Scene {
         const f = 1 - room / 4;                        // 0 far away, 1 at the cap
         const g = this.capLine;
         g.clear();
-        g.fillStyle(0x1f5fd8, 0.14 + 0.62 * f * f);
-        const r = 4 + 4 * f;
+        g.fillStyle(0xff2f5e, 0.30 + 0.60 * f * f);   // red: it marks a limit
+        const r = 5 + 4 * f;
         for (let x = 10; x < W; x += 34) g.fillCircle(x, CEIL_Y, r);
     }
 
@@ -1131,10 +1143,7 @@ class EndScene extends Phaser.Scene {
         const world = this.add.container(OX, OY).setScale(S);
 
         // Sky stays empty here too so the camera keeps showing behind the panel.
-        const scene1 = this.add.tileSprite(0, SCENE_Y, W, H - SCENE_Y, 'scene').setOrigin(0, 0);
-        scene1.tileScaleX = SCENE_SCALE;
-        scene1.tileScaleY = SCENE_SCALE;
-        world.add(scene1);
+        world.add(this.add.image(0, SCENE_Y, 'scene').setOrigin(0, 0).setScale(SCENE_SCALE));
 
         const dim = this.add.graphics();
         dim.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0.10, 0.10, 0.42, 0.42);
