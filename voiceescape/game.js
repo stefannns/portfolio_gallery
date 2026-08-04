@@ -76,6 +76,7 @@ class GameScene extends Phaser.Scene {
 
   create() {
     this.makeRedGradient();
+    this.makeSkyGradient();
     this.anims.create({
       key: 'alienwalk',
       frames: this.anims.generateFrameNumbers('alien_walk', { start: 0, end: 14 }),
@@ -92,6 +93,13 @@ class GameScene extends Phaser.Scene {
     // dog); a marble FLOOR strip sits in front of the wall at the bottom. Both
     // tile horizontally (mirrored -> seamless). The dog (depth -10.5) tucks
     // behind the floor and rises to loom in front of the wall. ----
+    // Fallback backdrop (behind everything): a muted orange->red gradient shown
+    // only when the camera feed is inactive, so the transparent sky isn't black.
+    this.skyBg = this.add.image(-1000, -1700, 'skygrad').setOrigin(0, 0).setDepth(-20)
+      .setDisplaySize(WORLD_W + 2000, FLOOR_TOP + 1700);
+    world.push(this.skyBg);
+    this.time.addEvent({ delay: 400, loop: true, callback: () => this.skyBg.setVisible(!this.cameraActive()) });
+
     const wallH = FLOOR_TOP - WALL_TOP_Y;         // wall bottom meets the top of the floor
     const wall = this.add.tileSprite(-1000, WALL_TOP_Y, WORLD_W + 2000, wallH, 'wall').setOrigin(0, 0).setDepth(-11);
     const wts = wallH / 1077; wall.tileScaleX = wts; wall.tileScaleY = wts;   // full image fits the band (zoomed out)
@@ -280,6 +288,29 @@ class GameScene extends Phaser.Scene {
   }
 
   aliveMembers() { return this.members.filter(m => m.alive); }
+
+  // Muted orange->red vertical gradient — fallback backdrop when no camera feed.
+  makeSkyGradient() {
+    const key = 'skygrad';
+    if (this.textures.exists(key)) return;
+    const tex = this.textures.createCanvas(key, 8, 512);
+    const ctx = tex.getContext();
+    const g = ctx.createLinearGradient(0, 0, 0, 512);
+    g.addColorStop(0.00, '#e3a878');   // soft orange (top)
+    g.addColorStop(0.55, '#d17f63');
+    g.addColorStop(1.00, '#b45f52');   // soft red (bottom)
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 8, 512);
+    tex.refresh();
+  }
+
+  // True when the bach camera backdrop is live (video playing with pixels).
+  cameraActive() {
+    const v = this._camVid || (this._camVid = document.querySelector('#__bach_source video'));
+    if (!v) return false;                 // re-queried next call (element may appear later)
+    if (!v.isConnected) { this._camVid = null; return false; }
+    return v.readyState >= 2 && !v.paused && v.videoWidth > 0;
+  }
 
   // Red danger gradient: opaque red at top & bottom, fading to clear in the middle.
   makeRedGradient() {
