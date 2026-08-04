@@ -50,6 +50,22 @@ The tile canvas is built to the strap's world aspect — `(ropeLength / repeat) 
 tan(fov/2))` — because meshline offsets vertices in clip space, so the strap's world width is
 `lineWidth * tan(fov/2)`. Get that wrong and the mark is stretched lengthwise.
 
+### The page does not scroll
+
+It is embedded in a Lark doc, where an inner scroller swallows the wheel from the document
+behind it — you go to scroll the doc, the cursor is over the badge, and the embed creeps
+instead. So `overflow:hidden` on **both** `html` and `body`. Body alone is not enough: the
+body-to-viewport overflow propagation does not hold here, and the viewport still drifted
+(measured 88px at a 600px height).
+
+The content is 688px tall, so a shorter frame loses the bottom of the stage — empty canvas
+below the card. The copy ends at 487px and the prompt at ~490px, both well clear.
+
+The stacked breakpoint (≤720px) puts scrolling back, since there the content genuinely is
+taller than a phone. That needs `height:auto` on `html,body,#root` too — left at `100%` with a
+scroller on body, body became its own scroll container that the viewport could not drive and
+the page still would not move.
+
 ### Layout
 
 `.canvas-layer` is 300% of the stage width and centred on it, so the badge can swing over the

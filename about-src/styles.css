@@ -4,8 +4,19 @@
 }
 *{box-sizing:border-box}
 html,body,#root{margin:0;height:100%}
+/* The page never scrolls. It is embedded in a Lark doc, and an inner scroller there swallows
+   the wheel from the document behind it — you go to scroll the doc, the cursor happens to be
+   over the badge, and the embed creeps instead. The horizontal hidden was always needed since
+   .canvas-layer is 300% wide on purpose; the vertical is what stops that. The content is 688px
+   tall, so anything shorter than that loses the bottom of the stage, which is empty canvas
+   below the card — the copy ends at 487px and the prompt at ~490px, both well clear.
+   The stacked breakpoint puts scrolling back, where the content really is taller than a phone.
+   It has to be set on BOTH html and body: with it on body alone the viewport still scrolled
+   (measured 88px of drift at a 600px height), because the body-to-viewport overflow propagation
+   does not hold here. */
+html{ overflow:hidden }
 body{
-  background:var(--bg); color:var(--text); overflow-x:hidden;
+  background:var(--bg); color:var(--text); overflow:hidden;
   font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"PingFang SC","Microsoft YaHei",sans-serif;
   -webkit-font-smoothing:antialiased;
 }
@@ -61,6 +72,14 @@ body{
 /* Below ~720px the two columns would squeeze the text to one word per line, so stack them
    and let the badge take the full width instead of shrinking toward nothing. */
 @media (max-width:720px){
+  /* Stacked, so the content really is taller than the viewport — without this the skills
+     would be unreachable. The embed is desktop-width, so it keeps the no-scroll rule above.
+     The heights have to go auto as well: left at 100% with a scroller on body, body became its
+     own scroll container that the viewport could not drive, and the page still would not move.
+     overflow-x:hidden with overflow-y:visible resolves the y to auto, which is what it was. */
+  html,body,#root{ height:auto; min-height:100% }
+  html{ overflow:visible }
+  body{ overflow-x:hidden; overflow-y:visible }
   .wrap{ flex-direction:column; align-items:center; justify-content:flex-start;
          padding:20px 18px 40px; gap:6px }
   .stage{ flex:0 0 auto; width:100%; max-width:420px; height:430px; align-self:center }
