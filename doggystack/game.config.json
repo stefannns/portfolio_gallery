@@ -1,0 +1,98 @@
+{
+  "gameDescription": {
+    "gameName": "Puppy Run",
+    "gameIntro": "A one-button runner. A dog rides a stack of blocks; every tap wedges a new block underneath and lifts him one unit. Walls shear off the blocks below their top edge, but anything that touches the dog ends the run — so ride high enough to clear the walls, low enough to duck the slabs, and sweep up the gold coins on the way to the finish.",
+    "orientation": "portrait",
+    "thirdPartyLibraries": [
+      "phaser"
+    ]
+  },
+  "gamePlayConfig": {
+    "startStack": {
+      "type": "int",
+      "range": [
+        1,
+        8
+      ],
+      "displayName": "Starting Squares",
+      "value": 3
+    },
+    "ceilingRows": {
+      "type": "int",
+      "range": [
+        4,
+        12
+      ],
+      "displayName": "Ceiling Height (squares)",
+      "value": 8
+    },
+    "baseSpeed": {
+      "type": "int",
+      "range": [
+        200,
+        900
+      ],
+      "displayName": "Start Scroll Speed",
+      "value": 790
+    },
+    "maxSpeed": {
+      "type": "int",
+      "range": [
+        400,
+        1600
+      ],
+      "displayName": "Max Scroll Speed",
+      "value": 1090
+    },
+    "tapCooldownMs": {
+      "type": "int",
+      "range": [
+        0,
+        400
+      ],
+      "displayName": "Tap Cooldown (ms)",
+      "value": 140
+    },
+    "rampSeconds": {
+      "type": "int",
+      "range": [
+        8,
+        90
+      ],
+      "displayName": "Seconds to Full Difficulty",
+      "value": 10
+    },
+    "coinTotal": {
+      "type": "int",
+      "range": [
+        5,
+        40
+      ],
+      "displayName": "Coins per Run",
+      "value": 15
+    },
+    "runLength": {
+      "type": "int",
+      "range": [
+        6000,
+        40000
+      ],
+      "displayName": "Run Length (design px)",
+      "value": 19500
+    }
+  },
+  "dependencyInput": {
+    "device": {
+      "capabilities": [
+        "touch"
+      ]
+    },
+    "algorithm": {
+      "capabilities": []
+    },
+    "audio": {
+      "capabilities": [],
+      "options": {}
+    }
+  }
+}
