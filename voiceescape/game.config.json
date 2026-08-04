@@ -1,0 +1,14 @@
+{
+  "gameDescription": {
+    "gameName": "Friend Peekaboo",
+    "gameIntro": "Hold to move your line of friends, hide behind cover when the cat looks. Score = how many reach the end.",
+    "orientation": "portrait",
+    "thirdPartyLibraries": ["phaser"]
+  },
+  "gamePlayConfig": {},
+  "dependencyInput": {
+    "device": { "capabilities": ["touch"] },
+    "algorithm": { "capabilities": [] },
+    "audio": { "capabilities": [], "options": {} }
+  }
+}

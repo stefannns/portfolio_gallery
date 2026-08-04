@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Deployed under /voiceescape on Vercel, which serves this file at BOTH /voiceescape and
+         /voiceescape/. Without the trailing slash, every relative path (game.js, libs/, assets/)
+         resolves against the site root and 404s. This pins the base so they work either way. -->
+    <base href="/voiceescape/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Museum Escape (Voice)</title>
+    <style>
+        @font-face {
+            font-family: 'Rubik';
+            src: url('libs/fonts/Rubik-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Rubik';
+            src: url('libs/fonts/Rubik-Bold.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #222;
+            overflow: hidden;
+        }
+        /* Responsive stage: fill the embed/iframe while keeping the game's 9:16 portrait
+           aspect ratio, so it scales to any Lark embed size instead of a fixed 360x640.
+           height = the largest that still fits BOTH the viewport height (100vh) and, via
+           the 9:16 ratio, its width (100vw). Whichever dimension is the constraint wins. */
+        #stage {
+            position: relative;
+            aspect-ratio: 9 / 16;
+            height: min(100vh, 100vw * 16 / 9);
+            max-width: 100vw;
+            overflow: hidden;
+        }
+        #camPreview {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #555;
+            transform: scaleX(-1);   /* mirror, like a selfie camera */
+        }
+        canvas {
+            position: absolute;
+            inset: 0;
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div id="stage">
+        <!-- The game canvas is transparent where the effect pack composites the camera feed;
+             on web we stand that in with the webcam. game.js separately opens the mic (voice
+             control) — the loudness of your voice moves the character. -->
+        <video id="camPreview" autoplay playsinline muted></video>
+        <canvas id="gameCanvas" width="1080" height="1920"></canvas>
+    </div>
+    <script src="./tempsdk.js"></script>
+    <script src="libs/phaser.js"></script>
+    <script>
+        (function () {
+            var v = document.getElementById('camPreview');
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { v.style.display = 'none'; return; }
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
+                .then(function (s) { v.srcObject = s; })
+                .catch(function () { v.style.display = 'none'; });
+        })();
+        var boot = function () {
+            var s = document.createElement('script');
+            s.src = 'game.js';
+            document.body.appendChild(s);
+        };
+        // Boot no matter what: if the font fails to load, document.fonts.load REJECTS, and a
+        // bare .then(boot) would leave the page permanently blank. Race it against a 5s
+        // failsafe and boot on both fulfil and reject.
+        Promise.race([
+            document.fonts.load("bold 16px 'Rubik'"),
+            new Promise(function (r) { setTimeout(r, 5000); })
+        ]).then(boot, boot);
+    </script>
+</body>
+</html>
