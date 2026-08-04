@@ -66,8 +66,8 @@ class LiveScene extends Phaser.Scene {
 
     create() {
         this.preset = 'ARCHERY';
-        this.add.rectangle(W/2, H/2, W, H, 0x0f1622).setDepth(0);
-        this.add.rectangle(GCX, H/2, GW, H, 0x121a2b).setDepth(0.3);
+        this.add.rectangle(W/2, H/2, W, H, 0x0d0e12).setDepth(0);
+        this.add.rectangle(GCX, H/2, GW, H, 0x14161d).setDepth(0.3);
         this.sceneGfx = this.add.graphics().setDepth(2);
 
         this.resultTxt = this.add.text(GCX, FTOP + H*0.02, '', { fontSize: `${GW*0.05}px`, fontStyle: 'bold' }).setOrigin(0.5).setDepth(9);
@@ -227,7 +227,7 @@ class LiveScene extends Phaser.Scene {
 
     draw() {
         const g = this.sceneGfx; g.clear();
-        g.fillStyle(0x1b2740); g.fillRect(GX0, FBOT, GW, H - FBOT);
+        g.fillStyle(0x1a1d27); g.fillRect(GX0, FBOT, GW, H - FBOT);
         g.fillStyle(0x243350); g.fillRect(GX0, FBOT, GW, H*0.006);
 
         if (CFG.spawnLayout === 'grid') this.drawGrid(g);
@@ -269,7 +269,7 @@ class LiveScene extends Phaser.Scene {
         const x = t.x, y = t.y, R = this.R();
         const fade = (t.life !== Infinity && t.maxLife) ? Phaser.Math.Clamp(t.life / (t.maxLife*0.4), 0.35, 1) : 1;   // dim as its lifetime runs out
         g.fillStyle(0x000000, 0.16); g.fillEllipse(x, y + R*1.05, R*1.5, R*0.4);
-        const rings = [[1.0, 0xf4f1ea], [0.74, 0x2d2d3a], [0.52, 0x5ec8ff], [0.3, 0xff8fa3], [0.13, 0xffc24d]];
+        const rings = [[1.0, 0xe8eaf0], [0.72, 0x2a2e38], [0.46, 0xd4f24e], [0.22, 0x2a2e38], [0.10, 0xffffff]];
         for (const [k, col] of rings) { g.fillStyle(col, fade); g.fillCircle(x, y, R*k); }
         g.lineStyle(Math.max(1.5, R*0.03), 0xffffff, 0.5*fade); g.strokeCircle(x, y, R);
     }
@@ -278,11 +278,11 @@ class LiveScene extends Phaser.Scene {
         // fixed crosshair size — independent of Target Size (which the band auto-drives)
         const x = this.eff.x, y = this.eff.y, R = GW*0.05;
         const steady = CFG.aim !== 'steady' || Math.hypot(this.sway.x, this.sway.y) < SWAY_MAX*0.18;
-        g.lineStyle(Math.max(2, R*0.08), steady ? 0x2ecc71 : 0xffffff, 0.92);
+        g.lineStyle(Math.max(2, R*0.08), steady ? 0xd4f24e : 0xffffff, 0.92);
         g.strokeCircle(x, y, R*0.5);
         g.lineBetween(x - R*0.72, y, x - R*0.2, y); g.lineBetween(x + R*0.2, y, x + R*0.72, y);
         g.lineBetween(x, y - R*0.72, x, y - R*0.2); g.lineBetween(x, y + R*0.2, x, y + R*0.72);
-        g.fillStyle(steady ? 0x2ecc71 : 0xffffff, 0.9); g.fillCircle(x, y, Math.max(1.5, R*0.06));
+        g.fillStyle(steady ? 0xd4f24e : 0xffffff, 0.9); g.fillCircle(x, y, Math.max(1.5, R*0.06));
     }
 
     drawProjectile(g) {
@@ -291,14 +291,14 @@ class LiveScene extends Phaser.Scene {
         const arc = CFG.arc ? Math.sin(p * Math.PI) * GW*0.10 : 0;
         const y = f.sy + (f.ly - f.sy) * p - arc;
         g.fillStyle(0x000000, 0.12); g.fillCircle(x, f.sy + (f.ly - f.sy)*p, GW*0.012);
-        g.fillStyle(0xffd27a); g.fillCircle(x, y, GW*0.016);
+        g.fillStyle(0xd4f24e); g.fillCircle(x, y, GW*0.016);
     }
 
     drawLauncher(g) {
         g.fillStyle(0x2a3550); g.fillRoundedRect(LAUNCH_X - GW*0.06, LAUNCH_Y - GW*0.02, GW*0.12, GW*0.05, GW*0.02);
         g.fillStyle(0x3a4a6a); g.fillCircle(LAUNCH_X, LAUNCH_Y, GW*0.028);
         const ang = Math.atan2(this.eff.y - LAUNCH_Y, this.eff.x - LAUNCH_X);
-        g.lineStyle(GW*0.02, 0x5ec8ff, 0.9);
+        g.lineStyle(GW*0.02, 0xd4f24e, 0.9);
         g.lineBetween(LAUNCH_X, LAUNCH_Y, LAUNCH_X + Math.cos(ang)*GW*0.08, LAUNCH_Y + Math.sin(ang)*GW*0.08);
     }
 

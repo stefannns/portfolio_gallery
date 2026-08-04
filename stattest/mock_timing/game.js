@@ -81,17 +81,9 @@ class LiveScene extends Phaser.Scene {
         o = o || {};
         const ink = o.ink != null ? o.ink : 0x3a3340;
         const ex = r * (o.spread || 0.40), ey = cy - r * (o.eyeY || 0.10), er = r * (o.eyeR || 0.15);
-        if (o.cheeks !== false) {
-            g.fillStyle(o.cheek || 0xff7a9c, 0.32);
-            g.fillCircle(cx - r*0.6, cy + r*0.22, r*0.16);
-            g.fillCircle(cx + r*0.6, cy + r*0.22, r*0.16);
-        }
         g.fillStyle(ink, 1);
         g.fillCircle(cx - ex, ey, er);
         g.fillCircle(cx + ex, ey, er);
-        g.fillStyle(0xffffff, 0.95);
-        g.fillCircle(cx - ex + er*0.32, ey - er*0.34, er*0.4);
-        g.fillCircle(cx + ex + er*0.32, ey - er*0.34, er*0.4);
         if ((o.mouthR != null ? o.mouthR : 0.28) > 0.01) {
             g.lineStyle(Math.max(2, r*0.11), ink, 1);
             g.beginPath();

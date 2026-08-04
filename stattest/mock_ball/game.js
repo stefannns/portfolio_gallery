@@ -28,10 +28,12 @@ const LIVE = {
     ballSizeRatio:    0.03,   // ball diameter        (×W)
     paddleWRatio:     0.18,   // paddle width         (×W)
     paddleHRatio:     0.022,  // paddle height        (×H)
+    tilesX:           7,      // brick columns
+    tilesY:           4,      // brick rows
 };
 
 const EASY_SPD  = 1.60, HARD_SPD  = 1.20;
-const EASY_BALL = 0.90, HARD_BALL = 1.50;
+const EASY_BALL = 0.60, HARD_BALL = 0.90;   // ×reach-max: Easy = roomy, Hard = near the paddle's limit (both reachable)
 const PLAY_TOP  = H * 0.03;
 const PLAY_BOT  = H - 161;
 const PADDLE_H  = H * 0.022;
@@ -39,6 +41,8 @@ const PADDLE_Y  = PLAY_BOT - PADDLE_H/2 - H*0.01;
 const PLAY_W    = GW * 0.96;
 const PLAY_H    = PADDLE_Y - PLAY_TOP;
 const WALL_L    = GX0 + GW * 0.02, WALL_R = W - GW * 0.02;
+const BRICK_TOP = PLAY_TOP + H * 0.02;
+const BRICK_H   = (PLAY_BOT - PLAY_TOP) * 0.30;   // brick field = top 30% of the play area
 
 class LiveScene extends Phaser.Scene {
     constructor() { super('LiveScene'); }
@@ -63,6 +67,9 @@ class LiveScene extends Phaser.Scene {
         this.moveDir = 0;
         this.returns = 0;
         this.drops   = 0;
+        this.brickGfx = this.add.graphics().setDepth(4);
+        this.bricks = []; this.gridX = 0; this.gridY = 0; this.broken = 0;
+        this.buildBricks();
         this.resetBall(1);
 
         this.ballGfx   = this.add.graphics().setDepth(5);
@@ -92,17 +99,9 @@ class LiveScene extends Phaser.Scene {
         o = o || {};
         const ink = o.ink != null ? o.ink : 0x3a3340;
         const ex = r * (o.spread || 0.40), ey = cy - r * (o.eyeY || 0.10), er = r * (o.eyeR || 0.15);
-        if (o.cheeks !== false) {
-            g.fillStyle(o.cheek || 0xff7a9c, 0.32);
-            g.fillCircle(cx - r*0.6, cy + r*0.22, r*0.16);
-            g.fillCircle(cx + r*0.6, cy + r*0.22, r*0.16);
-        }
         g.fillStyle(ink, 1);
         g.fillCircle(cx - ex, ey, er);
         g.fillCircle(cx + ex, ey, er);
-        g.fillStyle(0xffffff, 0.95);
-        g.fillCircle(cx - ex + er*0.32, ey - er*0.34, er*0.4);
-        g.fillCircle(cx + ex + er*0.32, ey - er*0.34, er*0.4);
         if ((o.mouthR != null ? o.mouthR : 0.28) > 0.01) {
             g.lineStyle(Math.max(2, r*0.11), ink, 1);
             g.beginPath();
@@ -155,7 +154,31 @@ class LiveScene extends Phaser.Scene {
     resetBall(dir) {
         const sp = H * LIVE.ballSpeedRatio;
         const ang = (-60 + Math.random()*120) * Math.PI/180;   // downward-ish spread
-        this.ball = { x: GCX, y: PLAY_TOP + PLAY_H*0.25, vx: Math.sin(ang)*sp, vy: Math.abs(Math.cos(ang))*sp*dir };
+        this.ball = { x: GCX, y: BRICK_TOP + BRICK_H + PLAY_H*0.14, vx: Math.sin(ang)*sp, vy: Math.abs(Math.cos(ang))*sp*dir };
+    }
+
+    // grid of destructible bricks, X columns × Y rows, filling the top brick field
+    buildBricks() {
+        this.gridX = Math.max(1, Math.round(LIVE.tilesX));
+        this.gridY = Math.max(1, Math.round(LIVE.tilesY));
+        const x0 = WALL_L + GW*0.015, x1 = WALL_R - GW*0.015;
+        const gapX = GW*0.006, gapY = H*0.006;
+        const cw = (x1 - x0 - gapX*(this.gridX - 1)) / this.gridX;
+        const ch = (BRICK_H - gapY*(this.gridY - 1)) / this.gridY;
+        this.bricks = [];
+        for (let r = 0; r < this.gridY; r++) for (let c = 0; c < this.gridX; c++)
+            this.bricks.push({ x: x0 + c*(cw+gapX), y: BRICK_TOP + r*(ch+gapY), w: cw, h: ch, row: r, alive: true });
+        this.broken = 0;
+    }
+
+    drawBricks() {
+        const g = this.brickGfx; g.clear();
+        const pal = [0xd4f24e, 0x9be36b, 0x5ec8ff, 0xb79bff, 0xffc24d, 0xff8fa3];
+        for (const bk of this.bricks) {
+            if (!bk.alive) continue;
+            g.fillStyle(pal[bk.row % pal.length]); g.fillRoundedRect(bk.x, bk.y, bk.w, bk.h, Math.min(bk.w, bk.h)*0.22);
+            g.fillStyle(0xffffff, 0.14); g.fillRoundedRect(bk.x, bk.y, bk.w, Math.max(2, bk.h*0.30), Math.min(bk.w, bk.h)*0.2);
+        }
     }
 
     recompute() {
@@ -181,6 +204,7 @@ class LiveScene extends Phaser.Scene {
     update(time, delta) {
         const dt = Math.min(delta / 1000, 0.05);
         this.recompute();
+        if (Math.round(LIVE.tilesX) !== this.gridX || Math.round(LIVE.tilesY) !== this.gridY) this.buildBricks();
 
         const paddleSpeed = GW * LIVE.paddleSpeedRatio;
         const paddleW = GW * LIVE.paddleWRatio, ballR = GW * LIVE.ballSizeRatio / 2;
@@ -198,6 +222,19 @@ class LiveScene extends Phaser.Scene {
         if (b.x + ballR > WALL_R) { b.x = WALL_R - ballR; b.vx = -Math.abs(b.vx); }
         if (b.y - ballR < PLAY_TOP) { b.y = PLAY_TOP + ballR; b.vy = Math.abs(b.vy); }
 
+        // bricks — break on contact, reflect off the nearer face
+        for (const bk of this.bricks) {
+            if (!bk.alive) continue;
+            if (b.x + ballR > bk.x && b.x - ballR < bk.x + bk.w && b.y + ballR > bk.y && b.y - ballR < bk.y + bk.h) {
+                bk.alive = false; this.broken++;
+                const ox = Math.min(b.x + ballR - bk.x, bk.x + bk.w - (b.x - ballR));
+                const oy = Math.min(b.y + ballR - bk.y, bk.y + bk.h - (b.y - ballR));
+                if (ox < oy) b.vx = -b.vx; else b.vy = -b.vy;
+                break;
+            }
+        }
+        if (!this.bricks.some(bk => bk.alive)) this.buildBricks();   // wall cleared → fresh grid
+
         // paddle return
         if (b.vy > 0 && b.y + ballR >= PADDLE_Y - (H * LIVE.paddleHRatio)/2 && b.y + ballR <= PADDLE_Y + (H * LIVE.paddleHRatio) && Math.abs(b.x - this.paddleX) < paddleW/2 + ballR) {
             b.y = PADDLE_Y - (H * LIVE.paddleHRatio)/2 - ballR;
@@ -209,6 +246,7 @@ class LiveScene extends Phaser.Scene {
         // drop
         if (b.y - ballR > PLAY_BOT) { this.drops++; this.resetBall(1); }
 
+        this.drawBricks();
         this.drawBall(ballR);
         this.drawPaddle(paddleW);
         this.refreshDerived();
@@ -236,7 +274,8 @@ class LiveScene extends Phaser.Scene {
         if (!this.derivedOK) line1 = `⚠ Can't return — ${this.mode==='move' ? 'ball too fast for the paddle' : 'paddle too slow'}`;
         else if (this.mode === 'move') line1 = `PADDLE SPEED  Hard ${this.bandHard.toFixed(2)}W → Easy ${this.bandEasy.toFixed(2)}W`;
         else line1 = `BALL SPEED  Easy ${(this.bandEasy*100).toFixed(0)}%H/s → Hard ${(this.bandHard*100).toFixed(0)}%H/s`;
-        this.readout.setText(`${line1}\nhold ◀ ▶ to return    returns ${this.returns} · drops ${this.drops}`);
+        const left = this.bricks.filter(bk => bk.alive).length;
+        this.readout.setText(`${line1}\nhold ◀ ▶ · break the ${this.gridX}×${this.gridY} bricks    returns ${this.returns} · drops ${this.drops} · bricks ${left}`);
         this.readout.setColor(this.derivedOK ? '#979aa8' : '#e74c3c');
     }
 
@@ -264,6 +303,8 @@ class LiveScene extends Phaser.Scene {
             { key: 'ballS',label: 'Ball Size',    min: 0.02, max: 0.06, get: () => LIVE.ballSizeRatio,    set: v => LIVE.ballSizeRatio    = v, fmt: v => `${(v*100).toFixed(1)}%W` },
             { key: 'padW', label: 'Paddle Width', min: 0.08, max: 0.34, get: () => LIVE.paddleWRatio,     set: v => LIVE.paddleWRatio     = v, fmt: v => `${(v*100).toFixed(0)}%W` },
             { key: 'padH', label: 'Paddle Height', min: 0.012, max: 0.06, get: () => LIVE.paddleHRatio,    set: v => LIVE.paddleHRatio    = v, fmt: v => `${(v*100).toFixed(1)}%H` },
+            { key: 'tilesX', label: 'Tiles X',    min: 3,   max: 12,  get: () => LIVE.tilesX, set: v => LIVE.tilesX = Math.round(v), fmt: v => `${Math.round(v)}`, dir: 'neutral' },
+            { key: 'tilesY', label: 'Tiles Y',    min: 1,   max: 8,   get: () => LIVE.tilesY, set: v => LIVE.tilesY = Math.round(v), fmt: v => `${Math.round(v)}`, dir: 'neutral' },
         ];
         const derivedKey = this.mode;
 

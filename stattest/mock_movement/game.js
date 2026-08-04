@@ -62,7 +62,7 @@ class LiveScene extends Phaser.Scene {
     constructor() { super('LiveScene'); }
 
     create() {
-        this.add.rectangle(W/2, H/2, W, H, 0x161a26).setDepth(0);
+        this.add.rectangle(W/2, H/2, W, H, 0x0d0e12).setDepth(0);
         this.worldGfx  = this.add.graphics().setDepth(3);
         this.playerGfx = this.add.graphics().setDepth(6);
 
@@ -282,7 +282,7 @@ class LiveScene extends Phaser.Scene {
     }
 
     drawSide(g, pg) {
-        g.fillStyle(0x1d2740); g.fillRect(GX0, 0, GW, H);
+        g.fillStyle(0x14161d); g.fillRect(GX0, 0, GW, H);
 
         if (CFG.platforms) {
             const thk = H*0.05;
@@ -301,44 +301,44 @@ class LiveScene extends Phaser.Scene {
         if (CFG.obstacles) for (const o of this.obs) {
             const sx = this.sxOf(o.worldX);
             if (sx < GX0 - o.w - 20 || sx > W + o.w + 20) continue;
-            const col = o.state === 'hit' ? 0xef6b6b : 0xff8fa3;
+            const col = o.state === 'hit' ? 0xf24b3f : 0xe8635a;   // danger red
             g.fillStyle(col); g.fillRoundedRect(sx - o.w/2, o.topY, o.w, o.h, Math.min(o.w, o.h)*0.28);
-            if (o.h > H*0.045 && o.w > W*0.05) {
-                const fr = Math.min(o.w, o.h)*0.5, fy = o.topY + Math.min(o.h*0.42, o.w*0.5);
-                g.fillStyle(0x3a2e33); g.fillCircle(sx - fr*0.3, fy, fr*0.13); g.fillCircle(sx + fr*0.3, fy, fr*0.13);
-                g.lineStyle(Math.max(2, fr*0.1), 0x3a2e33, 1);
-                g.beginPath(); g.arc(sx, fy + fr*0.62, fr*0.26, Math.PI*1.18, Math.PI*1.82); g.strokePath();
-            }
+            g.fillStyle(0xffffff, 0.10); g.fillRoundedRect(sx - o.w/2, o.topY, o.w, Math.max(3, o.h*0.22), Math.min(o.w, o.h)*0.2);
         }
 
         const px = this.playerScreenX(), charW = W*LIVE.playerW, charH = H*LIVE.playerH, top = this.feetY - charH;
         pg.fillStyle(0x000000, 0.16); pg.fillEllipse(px, this.feetY + charH*0.02, charW*1.5, charH*0.08);
-        pg.fillStyle(this.flash > 0 ? 0xef6b6b : 0x8b7dff); pg.fillRoundedRect(px - charW/2, top, charW, charH, charW*0.42);
+        pg.fillStyle(this.flash > 0 ? 0xf24b3f : 0xd4f24e); pg.fillRoundedRect(px - charW/2, top, charW, charH, charW*0.42);
         this.face(pg, px, top + charH*0.42, charW*0.55, { spread: 0.42, eyeY: 0.05, mouthR: 0.3, mouthY: 0.24 });
     }
 
     drawTop(g, pg) {
-        g.fillStyle(0x1d2740); g.fillRect(GX0, 0, GW, H);
+        g.fillStyle(0x14161d); g.fillRect(GX0, 0, GW, H);
         if (CFG.obstacles) for (const e of this.obs) {
-            const col = e.state === 'hit' ? 0xef6b6b : 0xff8fa3, r = e.w/2;
+            const col = e.state === 'hit' ? 0xf24b3f : 0xe8635a, r = e.w/2;   // danger red
             g.fillStyle(col); g.fillCircle(e.x, e.y, r);
             g.fillStyle(col); g.fillCircle(e.x - r*0.5, e.y - r*0.66, r*0.26); g.fillCircle(e.x + r*0.5, e.y - r*0.66, r*0.26);
-            g.fillStyle(0x2d2d3a); g.fillCircle(e.x - r*0.3, e.y - r*0.05, r*0.13); g.fillCircle(e.x + r*0.3, e.y - r*0.05, r*0.13);
+            g.fillStyle(0xffffff, 0.12); g.fillCircle(e.x - r*0.28, e.y - r*0.28, r*0.28);
         }
         const px = this.px, y = this.topPlayerY || TOP_PLAYER_Y, shipW = W*LIVE.playerW, shipH = H*LIVE.playerH;
         pg.fillStyle(0xffb03a, 0.9); pg.fillTriangle(px, y + shipH*0.7, px - shipW*0.15, y + shipH*0.4, px + shipW*0.15, y + shipH*0.4);
-        pg.fillStyle(this.flash > 0 ? 0xef6b6b : 0x5ec8ff); pg.fillRoundedRect(px - shipW*0.42, y - shipH*0.44, shipW*0.84, shipH*0.86, shipW*0.42);
+        pg.fillStyle(this.flash > 0 ? 0xf24b3f : 0xd4f24e); pg.fillRoundedRect(px - shipW*0.42, y - shipH*0.44, shipW*0.84, shipH*0.86, shipW*0.42);
         this.face(pg, px, y - shipH*0.04, shipW*0.4, { spread: 0.4, eyeY: 0.08, mouthR: 0.26, mouthY: 0.3, cheeks: false });
     }
 
     face(g, cx, cy, r, o) {
         o = o || {};
-        const ink = 0x3a3340, ex = r*(o.spread||0.4), ey = cy - r*(o.eyeY||0.1), er = r*(o.eyeR||0.15);
-        if (o.cheeks !== false) { g.fillStyle(0xff7a9c, 0.32); g.fillCircle(cx - r*0.6, cy + r*0.22, r*0.16); g.fillCircle(cx + r*0.6, cy + r*0.22, r*0.16); }
-        g.fillStyle(ink, 1); g.fillCircle(cx - ex, ey, er); g.fillCircle(cx + ex, ey, er);
-        g.fillStyle(0xffffff, 0.95); g.fillCircle(cx - ex + er*0.32, ey - er*0.34, er*0.4); g.fillCircle(cx + ex + er*0.32, ey - er*0.34, er*0.4);
-        g.lineStyle(Math.max(2, r*0.11), ink, 1);
-        g.beginPath(); g.arc(cx, cy + r*(o.mouthY!=null?o.mouthY:0.2), r*(o.mouthR!=null?o.mouthR:0.28), Math.PI*0.15, Math.PI*0.85); g.strokePath();
+        const ink = o.ink != null ? o.ink : 0x3a3340;
+        const ex = r * (o.spread || 0.40), ey = cy - r * (o.eyeY || 0.10), er = r * (o.eyeR || 0.15);
+        g.fillStyle(ink, 1);
+        g.fillCircle(cx - ex, ey, er);
+        g.fillCircle(cx + ex, ey, er);
+        if ((o.mouthR != null ? o.mouthR : 0.28) > 0.01) {
+            g.lineStyle(Math.max(2, r*0.11), ink, 1);
+            g.beginPath();
+            g.arc(cx, cy + r*(o.mouthY != null ? o.mouthY : 0.2), r*(o.mouthR != null ? o.mouthR : 0.28), Math.PI*0.15, Math.PI*0.85);
+            g.strokePath();
+        }
     }
 
     updateReadout() {
