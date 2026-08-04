@@ -130,6 +130,12 @@
       var(--surface-2);
   }
   .card.group:hover { border-color: var(--accent); transform: none; box-shadow: var(--shadow-hover); }
+  .ghead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .ghead .badge { margin-bottom: 0; }
+  .gicon { display: inline-flex; align-items: center; justify-content: center; flex: none;
+           width: 38px; height: 38px; border-radius: 11px;
+           background: var(--accent-soft); color: var(--accent-text); }
+  .gicon svg { width: 21px; height: 21px; }
   .card.group .spec { margin-top: 12px; }
   /* footer holds the dropdown toggle + the (hidden) variant list; sits right
      under the card info. The card keeps a square min-height when collapsed. */
@@ -149,15 +155,21 @@
   .badge { align-self: flex-start; font-size: 9.5px; letter-spacing: .11em; text-transform: uppercase; font-weight: 650;
            color: var(--accent-ink); background: var(--accent); border: 1px solid transparent;
            border-radius: 999px; padding: 3px 10px; margin-bottom: 11px; }
-  .name { font-size: 16px; font-weight: 600; letter-spacing: -.01em; transition: color .13s ease; }
-  .namecn { font-size: 13px; color: var(--ink-mid); margin-top: 1px; }
-  .slug { font-size: 11.5px; color: var(--ink-low); margin-top: 4px; }
+  .name { font-size: 16.5px; font-weight: 600; letter-spacing: -.012em; color: var(--ink); transition: color .13s ease; }
+  .namecn { font-size: 12.5px; color: var(--ink-mid); margin-top: 2px; }
+  .slug { font-size: 10.5px; letter-spacing: .05em; color: var(--ink-low); margin-top: 8px; }
 
-  .spec { display: grid; grid-template-columns: 4.6em 1fr; gap: 5px 10px; margin-top: 14px; }
-  .spec dt { font-size: 10px; letter-spacing: .07em; text-transform: uppercase;
-             color: var(--ink-low); padding-top: 2px; }
-  .spec dd { margin: 0; font-size: 13px; color: var(--ink); }
-  .spec dd.none { color: var(--ink-low); }
+  /* labelled meta rows with tag-style values */
+  .meta { display: flex; flex-direction: column; gap: 9px; margin-top: 15px; }
+  .meta-row { display: flex; align-items: baseline; gap: 12px; }
+  .meta-k { flex: none; width: 72px; font-size: 9.5px; letter-spacing: .09em;
+            text-transform: uppercase; color: var(--ink-low); white-space: nowrap; }
+  .taglist { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+  .tag { display: inline-flex; align-items: center; font-size: 12px; line-height: 1.15; color: var(--ink);
+         background: color-mix(in srgb, var(--ink) 7%, transparent); border: 1px solid var(--line);
+         border-radius: 7px; padding: 4px 9px; }
+  .tag-off { color: var(--ink-low); background: transparent; }
+  .card.group .meta { margin-top: 13px; }
   .note { margin-top: 13px; padding-top: 12px; border-top: 1px solid var(--line);
           font-size: 12px; color: var(--ink-mid); }
   .swap { font-size: 11px; color: var(--ink-low); margin-top: 10px; }
@@ -299,6 +311,7 @@
 // `char` = this genre draws a character you can replace with your own PNG.
 const GENRES = [
   { id:'mock_movement', name:'Movement/Dodge', cn:'移动 / 闪避', group:true,
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>',
     diff:'runner · platformer · scroller', feel:'presets + toggles',
     note:'Super Group — one engine spanning the movement family. Open a variant below, or launch the engine and switch presets live.',
     presets:[
@@ -308,6 +321,7 @@ const GENRES = [
       { key:'MOVING',     name:'Moving Obstacles', cn:'移动障碍', diff:'obstacle speed',    feel:null },
     ] },
   { id:'mock_aim', name:'Aim/Shooting', cn:'瞄准射击', group:true,
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg>',
     diff:'archery · sniper · skeet', feel:'presets + toggles',
     note:'Super Group — aim a crosshair, launch a projectile with a travel time, hit the target. Presets span the aim family; toggle aim mode, target motion, arc & wind live.',
     presets:[
@@ -322,7 +336,6 @@ const GENRES = [
   { id:'mock_catch',      name:'Catch Falling', cn:'接落物',     diff:'fall speed',             feel:null,             char:'catcher' },
   { id:'mock_ball',       name:'Breakout', cn:'打砖块',          diff:'ball speed',             feel:'bounce / angle' },
   { id:'mock_timing',     name:'Precision Timing', cn:'精准时机',  diff:'target zone',            feel:'needle easing',  note:'Window = tolerance × sweep time' },
-  { id:'mock_whack',      name:'Whack-a-Mole', cn:'打地鼠',      diff:'mole-visible time',      feel:'pop juice',      char:'mole',    note:'Floor scales with simultaneous count' },
   { id:'mock_memory',     name:'Memory Match', cn:'记忆翻牌',     diff:'pairs (rows × cols)',    feel:null,                             note:'Cognitive — recall span, not a reflex floor' },
 ];
 
@@ -353,16 +366,16 @@ document.getElementById('count').textContent =
 
 const grid = document.getElementById('grid');
 
+const tag = (t) => `<span class="tag">${t}</span>`;
+const tagList = (s) => `<span class="taglist">${s.split('·').map(t => tag(t.trim())).join('')}</span>`;
 const cardHTML = (g) =>
-  `${g.group ? '<div class="badge mono">Super Group</div>' : ''}
-   <div class="name">${g.name}</div>
+  `<div class="name">${g.name}</div>
    <div class="namecn">${g.cn}</div>
    <div class="slug mono">${g.id}</div>
-   <dl class="spec">
-     <dt class="mono">${g.group ? 'Covers' : 'Difficulty'}</dt><dd>${g.diff}</dd>
-     <dt class="mono">${g.group ? 'Config' : 'Feel'}</dt><dd${g.feel ? '' : ' class="none"'}>${g.feel || 'none'}</dd>
-   </dl>
-   ${g.note ? `<div class="note">${g.note}</div>` : ''}
+   <div class="meta">
+     <div class="meta-row"><span class="meta-k mono">Difficulty</span>${tag(g.diff)}</div>
+     <div class="meta-row"><span class="meta-k mono">Feel</span>${g.feel ? tag(g.feel) : '<span class="tag tag-off">none</span>'}</div>
+   </div>
    ${g.char ? `<div class="swap">${getChar(g.id) ? '<b>Custom ' + g.char + '</b> loaded' : 'Swap the <b>' + g.char + '</b> for your own art'}</div>` : ''}`;
 
 const makeCard = (g) => {
@@ -391,11 +404,11 @@ const makeGroupCard = (g) => {
   card.className = 'card group';
   card.title = 'Open the engine';
   card.innerHTML =
-    `<div class="badge mono">Super Group</div>
+    `<div class="ghead"><div class="badge mono">Super Group</div><span class="gicon">${g.icon || ''}</span></div>
      <div class="name">${g.name}</div>
      <div class="namecn">${g.cn}</div>
      <div class="slug mono">${g.id}</div>
-     <dl class="spec"><dt class="mono">Covers</dt><dd>${g.diff}</dd></dl>`;
+     <div class="meta"><div class="meta-row"><span class="meta-k mono">Covers</span>${tagList(g.diff)}</div></div>`;
   card.addEventListener('click', () => { location.hash = g.id; location.reload(); });
 
   const foot = document.createElement('div'); foot.className = 'group-foot';

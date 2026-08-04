@@ -32,7 +32,7 @@ const GCX = GX0 + GW/2;
 const CFG = {
     aim: 'steady', projectile: 'travel', showProjectile: true,
     targetMove: false, targetPos: 'fixed', spawnLayout: 'free', timed: false,
-    arc: true, wind: true,
+    arc: true, wind: true, compute: true,   // compute: derive Target Size as an Easy↔Hard band
 };
 
 const LIVE = {
@@ -101,6 +101,9 @@ class LiveScene extends Phaser.Scene {
         this.windAng = 0.6; this.windMag = LIVE.windStr;
         this.rseed = 1;
         this.targets = []; this.spawnAcc = 0;
+        // Easy↔Hard difficulty band on Target Size
+        this.bandEasy = 0.6; this.bandHard = 0.4; this.bandT = 0.5;
+        this.derivedOK = true; this.draggingRun = false; this.derived = null;
     }
 
     rnd() { this.rseed = (this.rseed * 1103515245 + 12345) & 0x7fffffff; return this.rseed / 0x7fffffff; }
@@ -177,6 +180,7 @@ class LiveScene extends Phaser.Scene {
         const dt = Math.min(delta/1000, 0.05);
         if (this.cooldown > 0) this.cooldown -= delta;
         if (this.resultT > 0) this.resultT -= delta;
+        this.recompute();   // updates the Target Size band (and sets LIVE.targetSize when compute is on)
 
         // ── aim reticle ──
         this.swayT += dt; this.sweepT += dt * (0.6 + LIVE.aimSpeed*2.2);
@@ -217,6 +221,7 @@ class LiveScene extends Phaser.Scene {
         if (this.flying) { this.flying.t += dt; if (this.flying.t >= this.flying.T) this.resolve(); }
 
         this.draw();
+        this.refreshDerived();
         this.updateReadout();
     }
 
@@ -270,7 +275,8 @@ class LiveScene extends Phaser.Scene {
     }
 
     drawReticle(g) {
-        const x = this.eff.x, y = this.eff.y, R = Math.max(GW*0.03, this.R()*0.6);
+        // fixed crosshair size — independent of Target Size (which the band auto-drives)
+        const x = this.eff.x, y = this.eff.y, R = GW*0.05;
         const steady = CFG.aim !== 'steady' || Math.hypot(this.sway.x, this.sway.y) < SWAY_MAX*0.18;
         g.lineStyle(Math.max(2, R*0.08), steady ? 0x2ecc71 : 0xffffff, 0.92);
         g.strokeCircle(x, y, R*0.5);
@@ -346,6 +352,7 @@ class LiveScene extends Phaser.Scene {
         CFG.showProjectile = p.showProjectile !== undefined ? p.showProjectile : (p.projectile === 'travel');
         CFG.spawnLayout = p.spawnLayout || 'free';
         CFG.timed = !!p.timed;
+        CFG.compute = p.compute !== undefined ? p.compute : true;
         Object.assign(LIVE, p.live);
         this.preset = name;
         this.resetRun();
@@ -405,6 +412,7 @@ class LiveScene extends Phaser.Scene {
         const cAim  = { label:'Aim Mode',   val: aimLbl[CFG.aim], en:true, tap:()=>{ CFG.aim = aimNext[CFG.aim]; } };
         const cProj = { label:'Projectile', val: CFG.projectile==='travel'?'TRAVEL':'INSTANT', en:true, tap:()=>CFG.projectile = CFG.projectile==='travel'?'instant':'travel' };
         const cShow = { label:'Show Shot',  val: CFG.showProjectile?'ON':'OFF', en:true, tap:()=>CFG.showProjectile=!CFG.showProjectile };
+        const cComp = { label:'Compute',    val: CFG.compute?'TARGET SIZE':'OFF', en:true, tap:()=>CFG.compute=!CFG.compute };
         const cMot  = { label:'Target',     val: CFG.targetMove?'MOVING':'STATIC', en:!grid, tap:()=>CFG.targetMove=!CFG.targetMove };
         const cPos  = { label:'Position',   val: CFG.targetPos==='random'?'RANDOM':'FIXED', en:!grid, tap:()=>CFG.targetPos = CFG.targetPos==='random'?'fixed':'random' };
         const cLay  = { label:'Spawn',      val: grid?'GRID':'FREE', en:true, tap:()=>CFG.spawnLayout = grid?'free':'grid' };
@@ -433,14 +441,72 @@ class LiveScene extends Phaser.Scene {
             if (open) body();
         };
 
-        section('SETUP',      () => chipRow([cAim, cProj, cShow]));
-        section('TARGET',     () => { chipRow([cMot, cPos, cLay]); sliderRows([R.size, R.dist, R.tspd, R.simul, R.gridN]); });
+        section('SETUP',      () => chipRow([cAim, cProj, cShow, cComp]));
+        section('TARGET',     () => {
+            chipRow([cMot, cPos, cLay]);
+            for (const rr of [R.size, R.dist, R.tspd, R.simul, R.gridN]) {
+                if (rr === R.size && CFG.compute) this.renderDerived(rr, cy + H*0.005);
+                else this.mkSlider(rr, cy + H*0.005);
+                cy += H*0.034;
+            }
+        });
         section('PROJECTILE', () => { chipRow([cArc, cWind]); sliderRows([R.flight, R.arcs, R.wind]); });
         section('AIM',        () => sliderRows([R.drift, R.dspd, R.aspd]));
         section('TIMING',     () => { chipRow([cTime]); sliderRows([R.life, R.spawn]); });
     }
 
-    rebuildPanel() { this.panelObjs.forEach(o => o.destroy()); this.panelObjs = []; this.buildPanel(); }
+    rebuildPanel() { this.panelObjs.forEach(o => o.destroy()); this.panelObjs = []; this.derived = null; this.buildPanel(); }
+
+    // ── difficulty band on Target Size ─────────────────────────────
+    // The aim error e (px) is the precision the shot demands and does NOT depend on
+    // target size, so the fair radius runs from Hard (just covers e) to Easy (roomy).
+    R2(size) { return GW * (0.045 + 0.11 * Phaser.Math.Clamp((size - 0.3)/0.7 + 0.3, 0.2, 1.0)) * (1 - 0.30 * this.distN()); }
+    sizeFromR(R) {
+        const base = R / (GW * (1 - 0.30 * this.distN()));
+        const c = Phaser.Math.Clamp((base - 0.045) / 0.11, 0.2, 1.0);
+        return Phaser.Math.Clamp(0.3 + 0.7 * (c - 0.3), 0.3, 1.0);
+    }
+    recompute() {
+        const e = Math.max(this.aimError().e, GW * 0.02);
+        this.bandHard = this.sizeFromR(e * 1.25);   // radius just above the error → hardest fair
+        this.bandEasy = this.sizeFromR(e * 2.60);   // generous radius → easiest
+        this.derivedOK = this.R2(1.0) >= e * 1.25;  // even the biggest target must cover the error
+        if (CFG.compute) LIVE.targetSize = this.bandEasy + (this.bandHard - this.bandEasy) * this.bandT;
+    }
+    renderDerived(r, y) {
+        const x0 = PW*0.06, x1 = PW*0.94, ty = y + H*0.017;
+        this.reg(this.add.text(x0, y, r.label + '  ▸AUTO', { fontSize: `${GW*0.02}px`, color: '#e8e9ef' }).setOrigin(0, 0.5).setDepth(60));
+        const text = this.reg(this.add.text(x1, y, '', { fontSize: `${GW*0.02}px`, color: '#e8e9ef', fontStyle: 'bold' }).setOrigin(1, 0.5).setDepth(60));
+        const g = this.reg(this.add.graphics().setDepth(59));
+        const handle = this.reg(this.add.circle(x0, ty, GW*0.022, 0xffffff).setStrokeStyle(3, 0x121319).setInteractive({ draggable: true }).setDepth(62));
+        this.input.setDraggable(handle);
+        const xOf = ratio => x0 + (Phaser.Math.Clamp(ratio, r.min, r.max) - r.min)/(r.max - r.min) * (x1 - x0);
+        handle.on('dragstart', () => { this.draggingRun = true; });
+        handle.on('dragend',   () => { this.draggingRun = false; });
+        handle.on('drag', (ptr, dragX) => {
+            const exPos = xOf(this.bandEasy), hxPos = xOf(this.bandHard);
+            const lo = Math.min(exPos, hxPos), hi = Math.max(exPos, hxPos);
+            const cx = Phaser.Math.Clamp(dragX, lo, hi); handle.x = cx;
+            const sp = hxPos - exPos;
+            this.bandT = Math.abs(sp) < 1 ? 0 : Phaser.Math.Clamp((cx - exPos)/sp, 0, 1);
+        });
+        this.derived = { r, g, text, handle, x0, x1, y: ty };
+        this.refreshDerived();
+    }
+    refreshDerived() {
+        const d = this.derived; if (!d) return;
+        const g = d.g; g.clear();
+        const min = d.r.min, max = d.r.max, span = d.x1 - d.x0, y = d.y;
+        const xOf = ratio => d.x0 + (Phaser.Math.Clamp(ratio, min, max) - min)/(max - min) * span;
+        const ex = xOf(this.bandEasy), hx = xOf(this.bandHard);
+        g.lineStyle(4, 0x2e313c); g.lineBetween(d.x0, y, d.x1, y);
+        g.lineStyle(8, this.derivedOK ? 0x2e7d4f : 0x7d2e2e, 1); g.lineBetween(Math.min(ex,hx), y, Math.max(ex,hx), y);
+        g.lineStyle(3, 0x2ecc71); g.lineBetween(ex, y - H*0.010, ex, y + H*0.010);
+        g.lineStyle(3, 0xe74c3c); g.lineBetween(hx, y - H*0.010, hx, y + H*0.010);
+        if (d.handle && !this.draggingRun) d.handle.x = xOf(d.r.get());
+        d.text.setText(d.r.fmt(d.r.get()));
+        d.text.setColor(this.derivedOK ? '#979aa8' : '#e74c3c');
+    }
 
     mkChip(c, x, y, w) {
         const en = c.en !== false;

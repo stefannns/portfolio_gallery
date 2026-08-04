@@ -87,6 +87,9 @@ class LiveScene extends Phaser.Scene {
 
         this.moveDir = 0;
         this.panelObjs = [];
+        // Easy↔Hard difficulty band on Jump Height (side plane)
+        this.bandT = 0.5; this.draggingRun = false; this.derived = null;
+        this.bandEasy = 0.17; this.bandHard = 0.13; this.derivedOK = true;
         // hub can launch a specific variant via window.__genrePreset (subgroup card == preset)
         const boot = (typeof window !== 'undefined' && window.__genrePreset && PRESETS[window.__genrePreset]) ? window.__genrePreset : 'RUNNER';
         this.applyPreset(boot);
@@ -164,8 +167,10 @@ class LiveScene extends Phaser.Scene {
     update(time, delta) {
         const dt = Math.min(delta/1000, 0.05);
         if (this.flash > 0) this.flash -= delta;
+        this.recompute();
         if (CFG.plane === 'side') this.updateSide(dt, delta); else this.updateTop(dt, delta);
         this.draw();
+        this.refreshDerived();
         this.updateReadout();
     }
 
@@ -422,13 +427,78 @@ class LiveScene extends Phaser.Scene {
         };
 
         section('SETUP',          () => chipRow([cPlane, cDir, cScroll]));
-        section('JUMP',           () => sliderRows([R.jump, R.air, R.jumpN]));
+        section('JUMP',           () => {
+            for (const rr of [R.jump, R.air, R.jumpN]) {
+                if (rr === R.jump && CFG.plane === 'side') this.renderDerived(rr, cy + H*0.006);
+                else this.mkSlider(rr, cy + H*0.006);
+                cy += H*0.037;
+            }
+        });
         section('PLATFORMS',      () => { chipRow([cPlat]); sliderRows([R.pLen, R.pGap, R.pStep]); });
         section('OBSTACLES',      () => { chipRow([cObs, cMove, cAxis]); sliderRows([R.oW, R.oH, R.oGap]); });
         section('PLAYER & SPEED', () => sliderRows([R.plW, R.plH, R.move, R.scr]));
     }
 
-    rebuildPanel() { this.panelObjs.forEach(o => o.destroy()); this.panelObjs = []; this.buildPanel(); }
+    rebuildPanel() { this.panelObjs.forEach(o => o.destroy()); this.panelObjs = []; this.derived = null; this.buildPanel(); }
+
+    // ── difficulty band on Jump Height (SIDE plane) ────────────────
+    // Clearance floor: to clear a hazard while crossing it, jump height must exceed
+    // obsH/(1−R²) with R=(obsW+playerW)/(approachSpeed·airTime). Band = Easy (tall,
+    // roomy) → Hard (near the floor). Platforms mode floors on the step; TOP plane
+    // has no jump, so no band there.
+    recompute() {
+        if (CFG.plane !== 'side') { this.derivedOK = true; return; }
+        const T = Math.max(0.2, LIVE.airTime);
+        const speed = CFG.auto ? LIVE.scrollSpeed : LIVE.moveSpeed;
+        let floor;
+        if (CFG.obstacles) {
+            const Rr = (LIVE.obsW + LIVE.playerW) / (speed * T);
+            if (Rr >= 1) { this.derivedOK = false; this.bandEasy = this.bandHard = 0.28; LIVE.jumpHeight = 0.28; return; }
+            floor = LIVE.obsH / (1 - Rr*Rr);
+        } else if (CFG.platforms) {
+            floor = LIVE.platStep + 0.03;
+        } else {
+            floor = 0.10;
+        }
+        this.bandEasy = Phaser.Math.Clamp(floor * 1.80, 0.06, 0.28);
+        this.bandHard = Phaser.Math.Clamp(floor * 1.30, 0.06, 0.28);
+        this.derivedOK = floor <= 0.28;
+        LIVE.jumpHeight = this.bandEasy + (this.bandHard - this.bandEasy) * this.bandT;
+    }
+    renderDerived(r, y) {
+        const x0 = PW*0.06, x1 = PW*0.94, ty = y + H*0.019;
+        this.reg(this.add.text(x0, y, r.label + '  ▸AUTO', { fontSize: `${W*0.019}px`, color: '#e8e9ef' }).setOrigin(0, 0.5).setDepth(60));
+        const text = this.reg(this.add.text(x1, y, '', { fontSize: `${W*0.019}px`, color: '#e8e9ef', fontStyle: 'bold' }).setOrigin(1, 0.5).setDepth(60));
+        const g = this.reg(this.add.graphics().setDepth(59));
+        const handle = this.reg(this.add.circle(x0, ty, W*0.02, 0xffffff).setStrokeStyle(3, 0x121319).setInteractive({ draggable: true }).setDepth(62));
+        this.input.setDraggable(handle);
+        const xOf = ratio => x0 + (Phaser.Math.Clamp(ratio, r.min, r.max) - r.min)/(r.max - r.min) * (x1 - x0);
+        handle.on('dragstart', () => { this.draggingRun = true; });
+        handle.on('dragend',   () => { this.draggingRun = false; });
+        handle.on('drag', (ptr, dragX) => {
+            const exPos = xOf(this.bandEasy), hxPos = xOf(this.bandHard);
+            const lo = Math.min(exPos, hxPos), hi = Math.max(exPos, hxPos);
+            const cx = Phaser.Math.Clamp(dragX, lo, hi); handle.x = cx;
+            const sp = hxPos - exPos;
+            this.bandT = Math.abs(sp) < 1 ? 0 : Phaser.Math.Clamp((cx - exPos)/sp, 0, 1);
+        });
+        this.derived = { r, g, text, handle, x0, x1, y: ty };
+        this.refreshDerived();
+    }
+    refreshDerived() {
+        const d = this.derived; if (!d) return;
+        const g = d.g; g.clear();
+        const min = d.r.min, max = d.r.max, span = d.x1 - d.x0, y = d.y;
+        const xOf = ratio => d.x0 + (Phaser.Math.Clamp(ratio, min, max) - min)/(max - min) * span;
+        const ex = xOf(this.bandEasy), hx = xOf(this.bandHard);
+        g.lineStyle(4, 0x2e313c); g.lineBetween(d.x0, y, d.x1, y);
+        g.lineStyle(8, this.derivedOK ? 0x2e7d4f : 0x7d2e2e, 1); g.lineBetween(Math.min(ex,hx), y, Math.max(ex,hx), y);
+        g.lineStyle(3, 0x2ecc71); g.lineBetween(ex, y - H*0.010, ex, y + H*0.010);
+        g.lineStyle(3, 0xe74c3c); g.lineBetween(hx, y - H*0.010, hx, y + H*0.010);
+        if (d.handle && !this.draggingRun) d.handle.x = xOf(d.r.get());
+        d.text.setText(d.r.fmt(d.r.get()));
+        d.text.setColor(this.derivedOK ? '#979aa8' : '#e74c3c');
+    }
 
     mkChip(c, x, y, w) {
         const en = c.en !== false;
