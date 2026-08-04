@@ -744,43 +744,50 @@ class GameScene extends Phaser.Scene {
     // below its top edge and the rest rides over — but anything that touches the
     // dog ends the run. The dog is always on top, so a hanging slab can never
     // take "just the top few": walls shave, slabs kill.
+    // ONE rule for every solid part. A part is a list of occupied row spans,
+    // lowest first: a pillar is [0, h), a float is [h-rows, h), a bar is
+    // [clearance, hangTop), and a gate has both. For each span, in order:
+    //
+    //   head below it  -> passes underneath, no interaction
+    //   head inside it -> dead
+    //   head above it  -> lands on top; everything below the span is sheared
+    //
+    // The old code special-cased the hanging span as "if it touches you at all
+    // you die", which was true only while hanging parts still reached the
+    // ceiling. Bars are one row thick and float now, so being ABOVE one is a
+    // legitimate position and used to kill you anyway.
     resolveObstacle(ob) {
-        // Mid-fall the dog sits between rows, so a single rounded row would still
-        // be up to half a cell from where he is drawn. Each death check therefore
-        // reads the fractional position the way that FAVOURS the player: highest
-        // possible head against something below him, lowest possible head against
-        // something above him. Once he has landed, visualBase is a whole number
-        // and all three agree, so settled play is unchanged.
-        const headHi = Math.ceil(this.visualBase) + this.stack - 1;
-        const headLo = Math.floor(this.visualBase) + this.stack - 1;
+        const spans = [];
+        if (ob.h > 0) spans.push({ lo: ob.floatBottom || 0, hi: ob.h, cause: 'wall' });
+        if (ob.clearance < CEIL_ROWS) spans.push({ lo: ob.clearance, hi: ob.hangTop, cause: 'slab' });
 
-        // A float is solid only on the rows it actually occupies — there is open
-        // air under it, and running through that air must be free. Treating it as
-        // solid all the way to the ground (which is right for a pillar, whose
-        // bottom row IS 0) killed you for passing underneath one.
-        const bottom = ob.floatBottom || 0;
-        if (ob.h > 0) {
-            // Kill only if the head is unambiguously inside the solid rows.
-            if (headLo >= bottom && headHi < ob.h) { this.wipeOut('wall'); return; }
-            // Ride it only if the head is unambiguously above it; otherwise the
-            // dog went under and the part gives no support at all.
-            ob.support = headLo >= ob.h ? ob.h : 0;
-            if (!ob.support) { this.refreshHud(); return; }   // passed beneath, untouched
-        }
-        if (ob.clearance < CEIL_ROWS && headLo >= ob.clearance &&
-            Math.ceil(this.visualBase) < ob.hangTop) {
-            this.wipeOut('slab'); return;
-        }
+        ob.support = 0;
+        for (let i = 0; i < spans.length; i++) {
+            const sp = spans[i];
+            // Mid-fall the dog sits between rows, so each test reads the
+            // fractional position the way that FAVOURS him: the highest possible
+            // head against something below, the lowest against something above.
+            const headHi = Math.ceil(this.visualBase) + this.stack - 1;
+            const headLo = Math.floor(this.visualBase) + this.stack - 1;
 
-        const cut = Math.max(0, ob.h - this.baseRow);
-        if (cut > 0) {
-            playSfx('drop');
-            this.spawnDebris(cut, 0);
-            for (let i = 0; i < cut; i++) this.blocks.shift().destroy();
-            this.stack -= cut;
-            this.reseatBlocks();
-            this.lurch();
-            this.cameras.main.shake(120, 0.006);
+            if (headHi < sp.lo) continue;                          // clean pass beneath
+            if (headLo >= sp.lo && headHi < sp.hi) { this.wipeOut(sp.cause); return; }
+
+            // Head is above the span: land on it, losing whatever sat below.
+            const cut = Math.max(0, sp.hi - Math.round(this.visualBase));
+            if (cut >= this.stack) { this.wipeOut(sp.cause); return; }
+            if (cut > 0) {
+                playSfx('drop');
+                this.spawnDebris(cut, 0);
+                for (let k = 0; k < cut; k++) this.blocks.shift().destroy();
+                this.stack -= cut;
+                this.reseatBlocks();
+                this.lurch();
+                this.cameras.main.shake(120, 0.006);
+            }
+            this.visualBase = sp.hi;
+            this.baseRow = sp.hi;
+            ob.support = sp.hi;
         }
         this.refreshHud();
     }
