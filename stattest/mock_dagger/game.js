@@ -233,10 +233,9 @@ class LiveScene extends Phaser.Scene {
         if (d==='harder'||d==='easier') {
             const lerp=(a,b,t)=>{const f=(s)=>[(s>>16)&255,(s>>8)&255,s&255];const A=f(a),B=f(b);return((A[0]+(B[0]-A[0])*t|0)<<16)|((A[1]+(B[1]-A[1])*t|0)<<8)|(A[2]+(B[2]-A[2])*t|0);};
             const CA=d==='harder'?0x2ecc71:0xe74c3c, CB=d==='harder'?0xe74c3c:0x2ecc71, N=18;
-            for(let i=0;i<N;i++){g.lineStyle(6,lerp(CA,CB,(i+0.5)/N),1);g.lineBetween(x0+(x1-x0)*i/N,ty,x0+(x1-x0)*(i+1)/N,ty);}
-        } else if (d==='feel') { g.lineStyle(5,0xf1c40f,0.4); g.lineBetween(x0,ty,x1,ty); }
-        else { g.lineStyle(5,0x565a68); g.lineBetween(x0,ty,x1,ty); }
-        const knob = reg(this.add.circle(x0 + (r.get() - r.min)/(r.max - r.min) * trackW, ty, GW*0.02, 0xf0a324).setStrokeStyle(2, 0x17181f).setInteractive({ draggable: true }).setDepth(61));
+            for(let i=0;i<N;i++){g.lineStyle(6,lerp(CA,CB,(i+0.5)/N),1);g.lineBetween(x0+(x1-x0)*i/N,ty,x0+(x1-x0)*(i+1)/N,ty);} g.fillStyle(CA,1); g.fillCircle(x0,ty,3); g.fillStyle(CB,1); g.fillCircle(x1,ty,3); } else if (d==='feel') { g.lineStyle(5,0xf1c40f,0.4); g.lineBetween(x0,ty,x1,ty); g.fillStyle(0xf1c40f,0.4); g.fillCircle(x0,ty,2.5); g.fillCircle(x1,ty,2.5); }
+        else { g.lineStyle(5,0x565a68); g.lineBetween(x0,ty,x1,ty); g.fillStyle(0x565a68,1); g.fillCircle(x0,ty,2.5); g.fillCircle(x1,ty,2.5); }
+        const knob = reg(this.add.circle(x0 + (r.get() - r.min)/(r.max - r.min) * trackW, ty, GW*0.02, 0xd4f24e).setStrokeStyle(2.5, 0x121319).setInteractive({ draggable: true }).setDepth(61));
         this.input.setDraggable(knob);
         knob.on('drag', (ptr, dragX) => {
             const cx = Phaser.Math.Clamp(dragX, x0, x1); knob.x = cx;

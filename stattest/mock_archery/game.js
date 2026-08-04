@@ -243,16 +243,16 @@ class LiveScene extends Phaser.Scene {
             { label: 'Arrow Speed', min: 0.3, max: 1.3, get: () => LIVE.arrowSpeed, set: v => LIVE.arrowSpeed = v, fmt: v => `${v.toFixed(2)}`,      dir: 'feel' },
         ];
         let cy = H*0.11;
-        for (const r of rows) { this.mkSlider(r, cy); cy += H*0.052; }
+        for (const r of rows) { this.mkSlider(r, cy); cy += H*0.060; }
     }
 
     diffTrack(g, r, x0, x1, y) {
         const d = r.dir || 'neutral';
         const lerp = (a,b,t)=>{const f=(s)=>[(s>>16)&255,(s>>8)&255,s&255];const A=f(a),B=f(b);return((A[0]+(B[0]-A[0])*t|0)<<16)|((A[1]+(B[1]-A[1])*t|0)<<8)|(A[2]+(B[2]-A[2])*t|0);};
         if (d==='harder'||d==='easier') { const A=d==='harder'?0x2ecc71:0xe74c3c, B=d==='harder'?0xe74c3c:0x2ecc71, N=18;
-            for(let i=0;i<N;i++){g.lineStyle(6,lerp(A,B,(i+0.5)/N),1);g.lineBetween(x0+(x1-x0)*i/N,y,x0+(x1-x0)*(i+1)/N,y);} }
-        else if (d==='feel') { g.lineStyle(5,0xf1c40f,0.4); g.lineBetween(x0,y,x1,y); }
-        else { g.lineStyle(5,0x565a68); g.lineBetween(x0,y,x1,y); }
+            for(let i=0;i<N;i++){g.lineStyle(6,lerp(A,B,(i+0.5)/N),1);g.lineBetween(x0+(x1-x0)*i/N,y,x0+(x1-x0)*(i+1)/N,y);} g.fillStyle(A,1); g.fillCircle(x0,y,3); g.fillStyle(B,1); g.fillCircle(x1,y,3); }
+        else if (d==='feel') { g.lineStyle(5,0xf1c40f,0.4); g.lineBetween(x0,y,x1,y); g.fillStyle(0xf1c40f,0.4); g.fillCircle(x0,y,2.5); g.fillCircle(x1,y,2.5); }
+        else { g.lineStyle(5,0x565a68); g.lineBetween(x0,y,x1,y); g.fillStyle(0x565a68,1); g.fillCircle(x0,y,2.5); g.fillCircle(x1,y,2.5); }
     }
 
     mkSlider(r, y) {
@@ -261,7 +261,7 @@ class LiveScene extends Phaser.Scene {
         const valTxt = this.reg(this.add.text(tx1, y, r.fmt(r.get()), { fontSize: `${GW*0.024}px`, color: '#e8e9ef', fontStyle: 'bold' }).setOrigin(1, 0.5).setDepth(60));
         const g = this.reg(this.add.graphics().setDepth(59));
         this.diffTrack(g, r, tx0, tx1, ty);
-        const knob = this.reg(this.add.circle(tx0 + (r.get() - r.min)/(r.max - r.min) * trackW, ty, GW*0.020, 0xf0a324).setStrokeStyle(2, 0x17181f).setInteractive({ draggable: true }).setDepth(61));
+        const knob = this.reg(this.add.circle(tx0 + (r.get() - r.min)/(r.max - r.min) * trackW, ty, GW*0.022, 0xd4f24e).setStrokeStyle(2.5, 0x121319).setInteractive({ draggable: true }).setDepth(61));
         this.input.setDraggable(knob);
         knob.on('drag', (ptr, dragX) => {
             const cx = Phaser.Math.Clamp(dragX, tx0, tx1); knob.x = cx;

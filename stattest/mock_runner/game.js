@@ -189,9 +189,9 @@ class LiveScene extends Phaser.Scene {
         const d = this._dir(r);
         const lerp = (a,b,t)=>{const f=(s)=>[(s>>16)&255,(s>>8)&255,s&255];const A=f(a),B=f(b);return((A[0]+(B[0]-A[0])*t|0)<<16)|((A[1]+(B[1]-A[1])*t|0)<<8)|(A[2]+(B[2]-A[2])*t|0);};
         if (d==='harder'||d==='easier') { const A=d==='harder'?0x2ecc71:0xe74c3c, B=d==='harder'?0xe74c3c:0x2ecc71, N=18;
-            for(let i=0;i<N;i++){g.lineStyle(6,lerp(A,B,(i+0.5)/N),1);g.lineBetween(x0+(x1-x0)*i/N,y,x0+(x1-x0)*(i+1)/N,y);} }
-        else if (d==='feel') { g.lineStyle(4,0xf1c40f,0.4); g.lineBetween(x0,y,x1,y); }
-        else { g.lineStyle(4,0x565a68); g.lineBetween(x0,y,x1,y); }
+            for(let i=0;i<N;i++){g.lineStyle(6,lerp(A,B,(i+0.5)/N),1);g.lineBetween(x0+(x1-x0)*i/N,y,x0+(x1-x0)*(i+1)/N,y);} g.fillStyle(A,1); g.fillCircle(x0,y,3); g.fillStyle(B,1); g.fillCircle(x1,y,3); }
+        else if (d==='feel') { g.lineStyle(4,0xf1c40f,0.4); g.lineBetween(x0,y,x1,y); g.fillStyle(0xf1c40f,0.4); g.fillCircle(x0,y,2.5); g.fillCircle(x1,y,2.5); }
+        else { g.lineStyle(4,0x565a68); g.lineBetween(x0,y,x1,y); g.fillStyle(0x565a68,1); g.fillCircle(x0,y,2.5); g.fillCircle(x1,y,2.5); }
     }
     dirTag(r, y) {
         const d=this._dir(r); if(d==='neutral') return;
@@ -504,8 +504,8 @@ class LiveScene extends Phaser.Scene {
                 this.reg(this.add.text(mx, ty + H*0.009, m.label, { fontSize: `${GW*0.015}px`, color: '#6c9fff' }).setOrigin(0.5, 0).setDepth(60));
             }
         }
-        const knob = this.reg(this.add.circle(tx0 + (r.get() - r.min)/(r.max - r.min) * trackW, ty, GW*0.019, 0xf0a324)
-            .setStrokeStyle(2, 0x17181f).setInteractive({ draggable: true }).setDepth(61));
+        const knob = this.reg(this.add.circle(tx0 + (r.get() - r.min)/(r.max - r.min) * trackW, ty, GW*0.019, 0xd4f24e)
+            .setStrokeStyle(2.5, 0x121319).setInteractive({ draggable: true }).setDepth(61));
         this.input.setDraggable(knob);
         knob.on('drag', (ptr, dragX) => {
             const cx = Phaser.Math.Clamp(dragX, tx0, tx1); knob.x = cx;
@@ -537,7 +537,7 @@ class LiveScene extends Phaser.Scene {
             this.derived = { type: 'range', r, g, text, handle, x0, x1, y: ty };
         } else {
             g.lineStyle(4, 0x2e313c); g.lineBetween(x0, ty, x1, ty);
-            const marker = this.reg(this.add.circle(x0, ty, GW*0.018, 0xf0a324).setStrokeStyle(2, 0xffffff).setDepth(61));
+            const marker = this.reg(this.add.circle(x0, ty, GW*0.018, 0xd4f24e).setStrokeStyle(2, 0xffffff).setDepth(61));
             this.derived = { type: 'point', r, marker, text, x0, x1, y: ty };
         }
         this.refreshDerived();
@@ -561,7 +561,7 @@ class LiveScene extends Phaser.Scene {
             const r = d.r, val = r.get();
             const t = Phaser.Math.Clamp((val - r.min)/(r.max - r.min), 0, 1);
             d.marker.x = d.x0 + t * (d.x1 - d.x0);
-            d.marker.setFillStyle(this.derivedOK ? 0xf0a324 : 0xe74c3c);
+            d.marker.setFillStyle(this.derivedOK ? 0xd4f24e : 0xe74c3c);
             d.text.setText(`${r.fmt(val)} ${this.derivedOK ? '' : '⚠'}`);
             d.text.setColor(this.derivedOK ? '#979aa8' : '#e74c3c');
         }

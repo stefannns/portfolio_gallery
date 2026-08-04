@@ -7,28 +7,52 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Genre Skill Testing</title>
 <style>
-  /* ── tokens ─────────────────────────────────────────────
-     Single dark theme, on purpose. The webui runtime injects
-     `html, body { background:#000 }` into every page it serves, and this
-     page frames dark game canvases — a light ground would fight both.
-     Neutrals carry a faint cool bias to sit with the amber accent, which
-     is lifted from the games' own control color (#f39c12). Green/red are
-     semantic only: they mirror the in-game difficulty gradient exactly,
-     so they read as data rather than decoration. */
+  /* ── design tokens — dark (default) + light, lime accent ───────
+     The hub frames dark game canvases and the webui runtime force-injects a
+     black page background; we override it per-theme with !important below.
+     Lime is the hub's brand accent; the games' in-panel controls are retuned
+     to the same lime. Easy/Hard/Feel/Neutral stay the EXACT in-game gradient
+     colors (so the legend reads as data) — unthemed on purpose. */
   :root {
-    --bg:      #0f1014;
-    --surface: #17181f;
-    --line:    #24262f;
-    --line-hi: #3a3d4a;
-    --ink:     #e8e9ef;
-    --ink-mid: #979aa8;
-    --ink-low: #6d7080;
-    --accent:  #f0a324;
+    color-scheme: dark;
+    --bg:        #0d0e12;
+    --bg-2:      #111319;
+    --surface:   #16181f;
+    --surface-2: #1b1e28;
+    --line:      #262a34;
+    --line-hi:   #3a3f4c;
+    --ink:       #edeef4;
+    --ink-mid:   #9ea4b4;
+    --ink-low:   #6a6f7e;
+    --accent:      #d4f24e;
+    --accent-ink:  #18220a;
+    --accent-text: #d4f24e;
+    --accent-soft: rgba(212,242,78,.12);
     --easy:    #2ecc71;
     --hard:    #e74c3c;
     --feel:    #f1c40f;
     --neutral: #565a68;
-    --shadow:  none;
+    --shadow:       0 1px 2px rgba(0,0,0,.35);
+    --shadow-hover: 0 10px 30px -14px rgba(0,0,0,.7);
+    --radius:  14px;
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg:        #f1f2ee;
+    --bg-2:      #ffffff;
+    --surface:   #ffffff;
+    --surface-2: #ffffff;
+    --line:      #e7e8e2;
+    --line-hi:   #d3d5cc;
+    --ink:       #15171c;
+    --ink-mid:   #565b66;
+    --ink-low:   #8a8f99;
+    --accent:      #cfee45;
+    --accent-ink:  #1c2708;
+    --accent-text: #5f7d0a;
+    --accent-soft: rgba(180,215,40,.20);
+    --shadow:       0 1px 2px rgba(20,22,26,.06), 0 4px 14px -8px rgba(20,22,26,.10);
+    --shadow-hover: 0 12px 30px -12px rgba(20,22,26,.18);
   }
 
   * { box-sizing: border-box; }
@@ -42,6 +66,7 @@
     font: 400 15px/1.55 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
     -webkit-font-smoothing: antialiased;
+    transition: background-color .25s ease, color .25s ease;
   }
   .mono {
     font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
@@ -49,21 +74,30 @@
   }
 
   /* ── masthead ── */
-  .wrap { max-width: 880px; margin: 0 auto; padding: 56px 28px 72px; }
-  header { display: flex; align-items: baseline; justify-content: space-between;
-           gap: 20px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
-  h1 { margin: 0; font-size: 21px; font-weight: 600; letter-spacing: -.015em; }
-  .h1cn { font-weight: 400; font-size: 16px; color: var(--ink-low); margin-left: 6px; }
-  .count { font-size: 11px; letter-spacing: .08em; color: var(--ink-low); text-transform: uppercase; }
-  .lede { margin: 18px 0 0; max-width: 62ch; color: var(--ink-mid); font-size: 14px; }
-  .lede strong { color: var(--ink); font-weight: 550; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 52px 28px 80px; }
+  header { display: flex; align-items: center; justify-content: space-between;
+           gap: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+  h1 { margin: 0; font-size: 23px; font-weight: 650; letter-spacing: -.02em; }
+  .h1cn { font-weight: 400; font-size: 15px; color: var(--ink-low); margin-left: 8px; }
+  .head-right { display: flex; align-items: center; gap: 14px; flex: none; }
+  .count { font-size: 11px; letter-spacing: .09em; color: var(--ink-low); text-transform: uppercase; }
+  .themebtn { display: inline-flex; align-items: center; gap: 7px; font: inherit; font-size: 12px; font-weight: 550;
+              color: var(--ink-mid); background: var(--surface); border: 1px solid var(--line);
+              border-radius: 999px; padding: 6px 13px; cursor: pointer;
+              transition: border-color .13s ease, color .13s ease, background-color .13s ease; }
+  .themebtn:hover { border-color: var(--line-hi); color: var(--ink); }
+  .themebtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  /* intro row: blurb on the left, slider-color legend on the right */
+  .intro { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 26px; margin: 22px 0 36px; }
+  .lede { margin: 0; flex: 1 1 360px; min-width: 300px; max-width: 60ch; color: var(--ink-mid); font-size: 14.5px; }
+  .lede strong { color: var(--ink); font-weight: 600; }
 
   /* ── legend: reference for what the sliders look like inside ── */
-  .legend { margin: 26px 0 34px; padding: 15px 17px; background: var(--surface);
-            border: 1px solid var(--line); border-radius: 7px; box-shadow: var(--shadow); }
+  .legend { flex: none; width: 296px; margin: 0; padding: 15px 17px; background: var(--bg-2);
+            border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
   .legend-h { font-size: 10.5px; letter-spacing: .09em; text-transform: uppercase;
-              color: var(--ink-low); margin-bottom: 11px; }
-  .legend-items { display: flex; flex-wrap: wrap; gap: 8px 26px; }
+              color: var(--ink-low); margin-bottom: 12px; }
+  .legend-items { display: flex; flex-direction: column; gap: 11px; }
   .li { display: flex; align-items: center; gap: 9px; font-size: 12.5px; color: var(--ink-mid); }
   .li b { color: var(--ink); font-weight: 550; }
   .sw { width: 24px; height: 5px; border-radius: 2.5px; flex: none; }
@@ -71,54 +105,82 @@
   .sw-feel { background: var(--feel); opacity: .55; }
   .sw-neut { background: var(--neutral); }
 
-  /* ── genre grid ── */
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(252px, 1fr)); gap: 12px; }
+  /* ── genre grid: columns stretch to fill the width (min 340px each) ── */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+  .grid > .card { min-height: 240px; }
   .card {
     /* flex column, not block: a stretched <button> centers its content vertically,
        which misaligns short cards against tall ones in the same grid row */
     display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start;
     width: 100%; text-align: left; font: inherit; color: inherit;
-    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
-    padding: 17px 18px 16px; cursor: pointer; box-shadow: var(--shadow);
-    transition: border-color .13s ease, background-color .13s ease;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 18px 19px 17px; cursor: pointer; box-shadow: var(--shadow);
+    transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease, transform .15s ease;
   }
-  .card:hover { border-color: var(--line-hi); }
+  .card:hover { border-color: var(--line-hi); transform: translateY(-2px); box-shadow: var(--shadow-hover); }
   .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .card:hover .name { color: var(--accent); }
-  .card.group { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); background: color-mix(in srgb, var(--accent) 7%, var(--surface)); grid-column: 1 / -1; }
-  .card.group:hover { border-color: var(--accent); }
-  .badge { align-self: flex-start; font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase;
-           color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
-           border-radius: 20px; padding: 2px 8px; margin-bottom: 9px; }
-  .name { font-size: 15.5px; font-weight: 550; letter-spacing: -.01em; transition: color .13s ease; }
+  .card:hover .name { color: var(--accent-text); }
+  .card.group {
+    flex: 1 1 0; min-width: 0; align-self: flex-start;
+    display: flex; flex-direction: column;
+    border-radius: calc(var(--radius) + 4px);
+    border-color: color-mix(in srgb, var(--accent) 42%, var(--line));
+    background:
+      radial-gradient(130% 150% at 100% 0%, var(--accent-soft), transparent 58%),
+      var(--surface-2);
+  }
+  .card.group:hover { border-color: var(--accent); transform: none; box-shadow: var(--shadow-hover); }
+  .card.group .spec { margin-top: 12px; }
+  /* footer holds the dropdown toggle + the (hidden) variant list; sits right
+     under the card info. The card keeps a square min-height when collapsed. */
+  .group-foot { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .plist { display: flex; flex-direction: column; gap: 7px; }
+  .plist[hidden] { display: none; }
+  .prow { display: flex; align-items: center; justify-content: space-between; gap: 10px;
+          width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer;
+          background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+          padding: 9px 12px; transition: border-color .13s ease, background-color .13s ease, transform .13s ease; }
+  .prow:hover { border-color: var(--accent); transform: translateX(2px); }
+  .prow:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .prow-main { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .prow-name { font-size: 13.5px; font-weight: 600; letter-spacing: -.005em; }
+  .prow-sub { font-size: 10.5px; color: var(--ink-low); }
+  .prow-arw { color: var(--accent-text); font-size: 15px; flex: none; }
+  .badge { align-self: flex-start; font-size: 9.5px; letter-spacing: .11em; text-transform: uppercase; font-weight: 650;
+           color: var(--accent-ink); background: var(--accent); border: 1px solid transparent;
+           border-radius: 999px; padding: 3px 10px; margin-bottom: 11px; }
+  .name { font-size: 16px; font-weight: 600; letter-spacing: -.01em; transition: color .13s ease; }
   .namecn { font-size: 13px; color: var(--ink-mid); margin-top: 1px; }
-  .slug { font-size: 11.5px; color: var(--ink-low); margin-top: 3px; }
+  .slug { font-size: 11.5px; color: var(--ink-low); margin-top: 4px; }
 
-  .spec { display: grid; grid-template-columns: 4.6em 1fr; gap: 4px 10px; margin-top: 13px; }
+  .spec { display: grid; grid-template-columns: 4.6em 1fr; gap: 5px 10px; margin-top: 14px; }
   .spec dt { font-size: 10px; letter-spacing: .07em; text-transform: uppercase;
              color: var(--ink-low); padding-top: 2px; }
   .spec dd { margin: 0; font-size: 13px; color: var(--ink); }
   .spec dd.none { color: var(--ink-low); }
-  .note { margin-top: 12px; padding-top: 11px; border-top: 1px solid var(--line);
+  .note { margin-top: 13px; padding-top: 12px; border-top: 1px solid var(--line);
           font-size: 12px; color: var(--ink-mid); }
-  .swap { font-size: 11px; color: var(--ink-low); margin-top: 9px; }
+  .swap { font-size: 11px; color: var(--ink-low); margin-top: 10px; }
   .swap b { color: var(--ink-mid); font-weight: 550; }
 
-  /* ── supergroup with foldable child genres ── */
-  .groupwrap { grid-column: 1 / -1; position: relative; display: flex; flex-direction: column; gap: 12px; }
-  .foldbtn { width: 100%; font: inherit; font-size: 12.5px; font-weight: 550; letter-spacing: .02em;
-             color: var(--accent); cursor: pointer; text-align: center;
-             background: color-mix(in srgb, var(--accent) 11%, var(--surface));
-             border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
-             border-radius: 8px; padding: 10px 12px; transition: background-color .13s ease, border-color .13s ease; }
-  .foldbtn:hover { background: color-mix(in srgb, var(--accent) 18%, var(--surface)); border-color: var(--accent); }
-  .foldbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .subgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px;
-             margin-left: 6px; padding-left: 22px;
-             border-left: 2px solid color-mix(in srgb, var(--accent) 32%, transparent); }
+  /* ── supergroups: a row of square, expandable cards ── */
+  .groups-row { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 2px; }
+  .foldbtn { width: 100%;
+             font: inherit; font-size: 12.5px; font-weight: 650; letter-spacing: .03em;
+             color: var(--accent-ink); cursor: pointer; text-align: center;
+             background: var(--accent); border: 1px solid transparent;
+             border-radius: 999px; padding: 11px 14px;
+             transition: filter .13s ease, transform .1s ease; }
+  .foldbtn:hover { filter: brightness(1.05); }
+  .foldbtn:active { transform: translateY(1px); }
+  .foldbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .subgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(232px, 1fr)); gap: 14px;
+             margin-left: 6px; padding-left: 24px;
+             border-left: 2px solid color-mix(in srgb, var(--accent) 40%, transparent); }
   .subgrid[hidden] { display: none; }
-  .subgrid .card { background: color-mix(in srgb, var(--accent) 3%, var(--surface)); }
-  .vbadge { color: var(--ink-mid); border-color: color-mix(in srgb, var(--ink-mid) 38%, transparent); }
+  .subgrid .card { background: color-mix(in srgb, var(--accent) 4%, var(--surface)); }
+  .vbadge { color: var(--ink-mid); background: transparent;
+            border: 1px solid color-mix(in srgb, var(--ink-mid) 34%, transparent); }
 
   /* ── stage (a genre running) ── */
   #stage { display: none; flex-direction: column; align-items: center;
@@ -137,8 +199,6 @@
            max-height: min(calc(100dvh - 64px), 640px) !important;
            max-width: 100vw !important;
            border: 1px solid var(--line); border-radius: 4px; background: #211f26; }
-  /* Too narrow to fit the side panels beside the game -> hide them so the game stays
-     correctly sized instead of squeezed. Panels use inline/JS display, so !important. */
   @media (max-width: 900px) {
     .statspanel, .charpanel { display: none !important; }
   }
@@ -181,26 +241,35 @@
 
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
+<script>
+  // apply the saved theme before first paint (no flash); default = dark
+  (function () { try { if (localStorage.getItem('genrelab:theme') === 'light') document.documentElement.setAttribute('data-theme', 'light'); } catch (e) {} })();
+</script>
 </head>
 <body>
 
 <main class="wrap" id="menu">
   <header>
-    <h1>Genre Skill Testing <span class="h1cn">玩法技能测试</span></h1>
-    <div class="count mono" id="count"></div>
-  </header>
-  <p class="lede">Live-tuning sandboxes for mini-game genres. Each one runs continuously — no start
-     button. The <strong>⚙ TUNE</strong> panel changes the game in real time and shows the fairness
-     math behind it; drag the <strong>Easy ↔ Hard</strong> handle on the derived row to set difficulty.</p>
-
-  <section class="legend">
-    <div class="legend-h mono">Slider colors</div>
-    <div class="legend-items">
-      <div class="li"><span class="sw sw-grad"></span><span><b>Gradient</b> — difficulty lever, red end is harder</span></div>
-      <div class="li"><span class="sw sw-feel"></span><span><b>Feel</b> — no difficulty direction</span></div>
-      <div class="li"><span class="sw sw-neut"></span><span><b>Neutral</b> — shifts the fairness band</span></div>
+    <h1>Genre Skill Testing</h1>
+    <div class="head-right">
+      <span class="count mono" id="count"></span>
+      <button class="themebtn" id="themebtn" type="button" aria-label="Toggle light/dark theme">☾ <span id="themelbl">Dark</span></button>
     </div>
-  </section>
+  </header>
+  <div class="intro">
+    <p class="lede">Live-tuning sandboxes for mini-game genres. Each one runs continuously — no start
+       button. The <strong>⚙ TUNE</strong> panel changes the game in real time and shows the fairness
+       math behind it; drag the <strong>Easy ↔ Hard</strong> handle on the derived row to set difficulty.</p>
+
+    <section class="legend">
+      <div class="legend-h mono">Slider colors</div>
+      <div class="legend-items">
+        <div class="li"><span class="sw sw-grad"></span><span><b>Gradient</b> — difficulty lever, red end is harder</span></div>
+        <div class="li"><span class="sw sw-feel"></span><span><b>Feel</b> — no difficulty direction</span></div>
+        <div class="li"><span class="sw sw-neut"></span><span><b>Neutral</b> — shifts the fairness band</span></div>
+      </div>
+    </section>
+  </div>
 
   <div class="grid" id="grid"></div>
 </main>
@@ -260,6 +329,25 @@ const GENRES = [
 const charKey = id => 'genrelab:char:' + id;
 const getChar = id => { try { return localStorage.getItem(charKey(id)); } catch (e) { return null; } };
 
+// ── light / dark theme toggle (persisted) ──
+(function () {
+  const btn = document.getElementById('themebtn'), lbl = document.getElementById('themelbl');
+  if (!btn) return;
+  const paint = () => {
+    const light = document.documentElement.getAttribute('data-theme') === 'light';
+    if (lbl) lbl.textContent = light ? 'Light' : 'Dark';
+    btn.firstChild.nodeValue = light ? '☀ ' : '☾ ';
+  };
+  paint();
+  btn.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    if (next === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    else document.documentElement.removeAttribute('data-theme');
+    try { localStorage.setItem('genrelab:theme', next); } catch (e) {}
+    paint();
+  });
+})();
+
 document.getElementById('count').textContent =
   GENRES.reduce((n, g) => n + (g.presets ? g.presets.length : 1), 0) + ' genres';
 
@@ -285,58 +373,68 @@ const makeCard = (g) => {
   return b;
 };
 
-// A variant card == one engine preset. Clicking it launches the supergroup
-// engine with that preset preloaded (subgroups and presets are the same list).
-const makePresetCard = (group, p) => {
+// A supergroup renders as a SQUARE, expandable card: a compact header + a
+// dropdown that reveals its presets (== its variants) as a list, growing the
+// card taller. Clicking the card body opens the engine; each row opens a preset.
+const makePresetRow = (group, p) => {
   const b = document.createElement('button');
-  b.className = 'card';
+  b.className = 'prow'; b.type = 'button';
   b.innerHTML =
-    `<div class="badge mono vbadge">Variant</div>
-     <div class="name">${p.name}</div>
-     <div class="namecn">${p.cn}</div>
-     <div class="slug mono">${group.id} · ${p.key}</div>
-     <dl class="spec">
-       <dt class="mono">Difficulty</dt><dd>${p.diff}</dd>
-       <dt class="mono">Feel</dt><dd${p.feel ? '' : ' class="none"'}>${p.feel || 'none'}</dd>
-     </dl>`;
-  b.onclick = () => { location.hash = group.id + '=' + encodeURIComponent(p.key); location.reload(); };
+    `<span class="prow-main"><span class="prow-name">${p.name}</span>` +
+    `<span class="prow-sub mono">${p.key} · ${p.diff}</span></span><span class="prow-arw">→</span>`;
+  b.onclick = (e) => { e.stopPropagation(); location.hash = group.id + '=' + encodeURIComponent(p.key); location.reload(); };
   return b;
 };
 
-for (const g of GENRES) {
-  const presets = g.presets || [];
-  if (!presets.length) { grid.appendChild(makeCard(g)); continue; }
+const makeGroupCard = (g) => {
+  const card = document.createElement('div');
+  card.className = 'card group';
+  card.title = 'Open the engine';
+  card.innerHTML =
+    `<div class="badge mono">Super Group</div>
+     <div class="name">${g.name}</div>
+     <div class="namecn">${g.cn}</div>
+     <div class="slug mono">${g.id}</div>
+     <dl class="spec"><dt class="mono">Covers</dt><dd>${g.diff}</dd></dl>`;
+  card.addEventListener('click', () => { location.hash = g.id; location.reload(); });
 
-  // supergroup: launchable engine card + a fold toggle + an indented sub-grid of its presets
-  const wrap = document.createElement('div');
-  wrap.className = 'groupwrap';
-  wrap.appendChild(makeCard(g));
+  const foot = document.createElement('div'); foot.className = 'group-foot';
+  const list = document.createElement('div'); list.className = 'plist';
+  g.presets.forEach(p => list.appendChild(makePresetRow(g, p)));
 
-  const sub = document.createElement('div');
-  sub.className = 'subgrid';
-  presets.forEach(p => sub.appendChild(makePresetCard(g, p)));
-
-  const foldKey = 'genrelab:fold:' + g.id;
-  let folded = false;
-  try { folded = localStorage.getItem(foldKey) === '1'; } catch (e) {}
+  const key = 'genrelab:grp:' + g.id;
+  let open = false;
+  try { open = localStorage.getItem(key) === '1'; } catch (e) {}
   const fold = document.createElement('button');
-  fold.className = 'foldbtn mono';
+  fold.className = 'foldbtn mono'; fold.type = 'button';
   const paint = () => {
-    sub.hidden = folded;
-    fold.textContent = folded ? `▸  Show ${presets.length} variants` : `▾  Hide ${presets.length} variants`;
+    list.hidden = !open;
+    fold.textContent = (open ? '▾  ' : '▸  ') + g.presets.length + ' variants';
   };
   fold.onclick = (e) => {
     e.stopPropagation();
-    folded = !folded;
-    try { localStorage.setItem(foldKey, folded ? '1' : '0'); } catch (e2) {}
+    open = !open;
+    try { localStorage.setItem(key, open ? '1' : '0'); } catch (e2) {}
     paint();
   };
   paint();
 
-  wrap.appendChild(fold);
-  wrap.appendChild(sub);
-  grid.appendChild(wrap);
+  foot.appendChild(fold);
+  foot.appendChild(list);
+  card.appendChild(foot);
+  return card;
+};
+
+const groups  = GENRES.filter(g => g.presets && g.presets.length);
+const singles = GENRES.filter(g => !(g.presets && g.presets.length));
+
+if (groups.length) {
+  const row = document.createElement('div');
+  row.className = 'groups-row';
+  groups.forEach(g => row.appendChild(makeGroupCard(g)));
+  grid.appendChild(row);
 }
+singles.forEach(g => grid.appendChild(makeCard(g)));
 
 // Boot a genre when the hash names one. Hash is `id` or `id=PRESET` (a supergroup
 // launched at one of its presets). Every pick is a full page load, so the

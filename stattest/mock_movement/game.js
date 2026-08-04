@@ -359,8 +359,8 @@ class LiveScene extends Phaser.Scene {
             const col = i % 2, row = (i / 2) | 0;
             const bw = PW*0.42, cx = PW*0.05 + col*PW*0.48 + bw/2, py = cy + row*H*0.043;
             const on = this.preset === name;
-            const b = this.reg(this.add.rectangle(cx, py, bw, H*0.034, on ? 0x2b3350 : 0x1f2230).setStrokeStyle(1.5, on ? 0xf0a324 : 0x3a3d4a).setInteractive().setDepth(60));
-            this.reg(this.add.text(cx, py, name, { fontSize: `${W*0.018}px`, color: on ? '#f0a324' : '#c8ccda', fontStyle: 'bold' }).setOrigin(0.5).setDepth(61));
+            const b = this.reg(this.add.rectangle(cx, py, bw, H*0.034, on ? 0x2b3350 : 0x1f2230).setStrokeStyle(1.5, on ? 0xd4f24e : 0x3a3d4a).setInteractive().setDepth(60));
+            this.reg(this.add.text(cx, py, name, { fontSize: `${W*0.018}px`, color: on ? '#d4f24e' : '#c8ccda', fontStyle: 'bold' }).setOrigin(0.5).setDepth(61));
             b.on('pointerup', () => this.applyPreset(name));
         });
         cy += 2*H*0.043 + H*0.005;
@@ -434,7 +434,7 @@ class LiveScene extends Phaser.Scene {
         const en = c.en !== false;
         const b = this.reg(this.add.rectangle(x, y, w, H*0.036, en ? 0x1f2230 : 0x191b24).setStrokeStyle(1.5, en ? 0x3a3d4a : 0x2a2c36).setDepth(60).setOrigin(0, 0.5));
         this.reg(this.add.text(x + PW*0.03, y, c.label, { fontSize: `${W*0.018}px`, color: en ? '#9aa0b4' : '#565b6b' }).setOrigin(0, 0.5).setDepth(61));
-        this.reg(this.add.text(x + w - PW*0.03, y, c.val, { fontSize: `${W*0.019}px`, color: en ? '#f0a324' : '#565b6b', fontStyle: 'bold' }).setOrigin(1, 0.5).setDepth(61));
+        this.reg(this.add.text(x + w - PW*0.03, y, c.val, { fontSize: `${W*0.019}px`, color: en ? '#d4f24e' : '#565b6b', fontStyle: 'bold' }).setOrigin(1, 0.5).setDepth(61));
         if (en) { b.setInteractive(); b.on('pointerup', () => { c.tap(); this.resetRun(); this.rebuildPanel(); this.refreshControls(); }); }
     }
 
@@ -446,7 +446,7 @@ class LiveScene extends Phaser.Scene {
         const g = this.reg(this.add.graphics().setDepth(59));
         if (en) this.diffTrack(g, r, tx0, tx1, ty);
         else { g.lineStyle(5, 0x33363f); g.lineBetween(tx0, ty, tx1, ty); }
-        const knob = this.reg(this.add.circle(tx0 + (r.get() - r.min)/(r.max - r.min) * trackW, ty, W*0.018, en ? 0xf0a324 : 0x4a4e5c).setStrokeStyle(2, 0x17181f).setDepth(61));
+        const knob = this.reg(this.add.circle(tx0 + (r.get() - r.min)/(r.max - r.min) * trackW, ty, W*0.018, en ? 0xd4f24e : 0x4a4e5c).setStrokeStyle(2.5, 0x121319).setDepth(61));
         if (en) {
             knob.setInteractive({ draggable: true });
             this.input.setDraggable(knob);
@@ -462,9 +462,9 @@ class LiveScene extends Phaser.Scene {
         const d = r.dir || 'neutral';
         const lerp = (a,b,t)=>{const f=(s)=>[(s>>16)&255,(s>>8)&255,s&255];const A=f(a),B=f(b);return((A[0]+(B[0]-A[0])*t|0)<<16)|((A[1]+(B[1]-A[1])*t|0)<<8)|(A[2]+(B[2]-A[2])*t|0);};
         if (d==='harder'||d==='easier') { const A=d==='harder'?0x2ecc71:0xe74c3c, B=d==='harder'?0xe74c3c:0x2ecc71, N=18;
-            for(let i=0;i<N;i++){g.lineStyle(6,lerp(A,B,(i+0.5)/N),1);g.lineBetween(x0+(x1-x0)*i/N,y,x0+(x1-x0)*(i+1)/N,y);} }
-        else if (d==='feel') { g.lineStyle(5,0xf1c40f,0.4); g.lineBetween(x0,y,x1,y); }
-        else { g.lineStyle(5,0x565a68); g.lineBetween(x0,y,x1,y); }
+            for(let i=0;i<N;i++){g.lineStyle(6,lerp(A,B,(i+0.5)/N),1);g.lineBetween(x0+(x1-x0)*i/N,y,x0+(x1-x0)*(i+1)/N,y);} g.fillStyle(A,1); g.fillCircle(x0,y,3); g.fillStyle(B,1); g.fillCircle(x1,y,3); }
+        else if (d==='feel') { g.lineStyle(5,0xf1c40f,0.4); g.lineBetween(x0,y,x1,y); g.fillStyle(0xf1c40f,0.4); g.fillCircle(x0,y,2.5); g.fillCircle(x1,y,2.5); }
+        else { g.lineStyle(5,0x565a68); g.lineBetween(x0,y,x1,y); g.fillStyle(0x565a68,1); g.fillCircle(x0,y,2.5); g.fillCircle(x1,y,2.5); }
     }
 }
 
