@@ -9,6 +9,8 @@ let FONT = 'Rubik';
 try { if (typeof tt !== 'undefined' && tt.loadFont) FONT = tt.loadFont('libs/fonts/Rubik-Bold.ttf') || FONT; } catch (_) {}
 
 const DW = 1080, DH = 1920;      // design space
+const PROG_W = 560, PROG_H = 30, PROG_Y = 265;   // progress bar: shorter, near the top (below the timer)
+const PROG_LEFT = (DW - PROG_W) / 2;
 const BASE_Y = 1220;             // vertical anchor for covers
 const FLOOR_Y = BASE_Y + 350;    // ground line the exhibits/alien stand on
 const ALIEN_DY = 45;             // extra downward nudge for the alien
@@ -71,6 +73,7 @@ class GameScene extends Phaser.Scene {
     this.load.spritesheet('alien_walk', 'assets/alien_walk.png', { frameWidth: 480, frameHeight: 480 });  // walk cycle
     this.load.image('player_hide', 'assets/player_hide.png');     // crouch / hide pose
     this.load.image('teeth', 'assets/teethfx.png');               // jaws bite-effect on death
+    this.load.image('alienhead', 'assets/alienhead.png');         // progress-bar marker
     for (let i = 1; i <= 5; i++) this.load.image('obstacle' + i, 'assets/obstacle' + i + '.png');
   }
 
@@ -170,10 +173,16 @@ class GameScene extends Phaser.Scene {
     }).setOrigin(0.5).setDepth(95);
     ui.push(this.hudState);
 
-    this.progBg = this.add.rectangle(DW / 2, DH - 60, DW - 120, 26, 0x000000, 0.25).setDepth(95);
+    // progress bar (top, shorter, outlined) with the alien head riding the fill
+    this.progBg = this.add.rectangle(DW / 2, PROG_Y, PROG_W, PROG_H, 0x1a1a2a, 0.55)
+      .setStrokeStyle(6, 0xffffff, 0.9).setDepth(95);
     ui.push(this.progBg);
-    this.progFill = this.add.rectangle(60, DH - 60, 10, 26, 0xffe066).setOrigin(0, 0.5).setDepth(96);
+    this.progFill = this.add.rectangle(PROG_LEFT + 5, PROG_Y, 8, PROG_H - 12, 0x8fe070).setOrigin(0, 0.5).setDepth(96);
     ui.push(this.progFill);
+    this.progHead = this.add.image(PROG_LEFT + 5, PROG_Y, 'alienhead').setOrigin(0.5, 0.5).setScale(0.6).setDepth(97);
+    ui.push(this.progHead);
+    { const w0 = (PROG_W - 10) * Phaser.Math.Clamp((this.leadX - START_X) / (ESCAPE_X - START_X), 0, 1);   // starts at 0 (far left)
+      this.progFill.width = w0; this.progHead.x = PROG_LEFT + 5 + w0; }
 
     // mic-level meter (fills with your voice; turns green once loud enough to move)
     this.micBg = this.add.rectangle(52, DH - 190, 26, 380, 0x000000, 0.22).setOrigin(0.5, 1).setDepth(95);
@@ -216,6 +225,7 @@ class GameScene extends Phaser.Scene {
     this.cameras.main.setBounds(-1200, -1200, WORLD_W + 2400, DH + 2400);
     this.cameras.main.setZoom(ZOOM);
     this.cameras.main.startFollow(this.camTarget, false, 0.15, 0.15);
+    this.cameras.main.centerOn(this.camTarget.x, this.camTarget.y);   // start already settled (no pan-in on start)
 
     this.uiCam = this.cameras.add(0, 0, DW, DH);
     this.uiCam.setScroll(0, 0);
@@ -515,8 +525,10 @@ class GameScene extends Phaser.Scene {
     this.timerText.setColor(t <= 5 ? '#ff5b5b' : '#ffffff');
 
     // progress (camera follows this.camTarget automatically)
-    const p = Phaser.Math.Clamp(this.leadX / ESCAPE_X, 0, 1);
-    this.progFill.width = (DW - 120) * p;
+    const p = Phaser.Math.Clamp((this.leadX - START_X) / (ESCAPE_X - START_X), 0, 1);   // 0 at spawn, 1 at escape
+    const fillW = (PROG_W - 10) * p;
+    this.progFill.width = fillW;
+    this.progHead.x = PROG_LEFT + 5 + fillW;   // alien head at the leading edge
 
     // mic meter: fill height = current voice level; green once past the move threshold
     const lvl = Phaser.Math.Clamp((this.voiceLevel || 0) / MIC_MAX, 0, 1);
