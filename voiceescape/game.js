@@ -9,15 +9,25 @@ let FONT = 'Rubik';
 try { if (typeof tt !== 'undefined' && tt.loadFont) FONT = tt.loadFont('libs/fonts/Rubik-Bold.ttf') || FONT; } catch (_) {}
 
 const DW = 1080, DH = 1920;      // design space
-const PROG_W = 560, PROG_H = 30, PROG_Y = 265;   // progress bar: shorter, near the top (below the timer)
-const PROG_LEFT = (DW - PROG_W) / 2;
+// Top HUD: timer (left) + progress bar (right) on the same horizontal level,
+// inset from their respective screen edges by the SAME padding.
+const BAR_Y = 132;                          // shared top level
+const HUD_PAD = 88;                         // equal gap: timer-from-left == bar-from-right
+const BAR_SCALE = 1.14;                      // progress bar image scale (shorter than before)
+const BAR_TEX_W = 322, BAR_TEX_H = 74;       // progress_full texture size (crop is in texture px)
+const BAR_W = 323 * BAR_SCALE, BAR_H = BAR_TEX_H * BAR_SCALE;   // ~400 x 92 display
+const BAR_LEFT = DW - HUD_PAD - BAR_W;       // left edge (origin-0 anchor); right edge = DW - HUD_PAD
+const BAR_HEAD = 96;                          // alien-head width at the fill's leading edge (overhangs the bar)
+// Voice meter (vertical bar on the left): white track image, level fill, threshold marker + mic icon.
+const MIC_X = 92, MIC_W = 46, MIC_TOP = 600, MIC_H = 470;
+const MIC_FILL_BOT = MIC_TOP + MIC_H - 12, MIC_FILL_H = MIC_H - 26;   // fill span inside the track
 const BASE_Y = 1220;             // vertical anchor for covers
 const FLOOR_Y = BASE_Y + 350;    // ground line the exhibits/alien stand on
 const ALIEN_DY = 45;             // extra downward nudge for the alien
 const SPACING = 160;             // gap between line members
 // Museum Guard: a single alien sneaks past the guard dog, hiding behind exhibits.
 const TEAM = 1;                  // a single alien
-const TIME_LIMIT = 30;           // seconds to escape before the guard nabs you
+const TIME_LIMIT = 20;           // seconds to escape before the guard nabs you
 const MOVE_SPEED = 720;          // px/s while moving
 const VOICE_THRESHOLD = 0.06;    // mic RMS above this = "loud enough" -> alien advances
 const MIC_MAX = 0.17;            // RMS that fills the meter to the top (lower = threshold marker sits higher)
@@ -26,29 +36,40 @@ const ZOOM = 0.78;               // world camera zoom-out
 const CAM_CY = 720;              // world y the camera vertically centres on
 const PLAYER_X_OFFSET = 230;     // camera leads ahead of the alien so it sits left-of-centre
 const SHADOW_LIFT = 34;          // lift shadows up so they tuck under the object base (no gap)
-const WALL_TOP_Y = 810;          // camera/wall boundary: CAMERA shows above (more exposed), shorter wall below
-const FLOOR_TOP = 1410;          // top edge of the marble-floor strip (drawn in front of the wall)
-const ENEMY_FOOT = 0.843;        // dog's chest (content bottom) fraction — anchor here so it tucks behind the floor
-const ENEMY_WY = 1520;           // chest world-y when UP: below FLOOR_TOP so the cut-off bottom hides
-const ENEMY_DOWN_Y = 2320;       // ducked fully behind the floor (hidden during SAFE)
-const ENEMY_SCALE_W = 1.3;       // dog scale on the (zoomed) world camera
+const WALL_TOP_Y = 860;          // camera/wall boundary (wall+floor nudged down a bit)
+const FLOOR_TOP = 1300;          // top of the marble-floor strip (raised -> shorter, squished wall)
+// Guard rises from BEHIND the wall (depth < wall's -11), peeking over WALL_TOP_Y.
+const ENEMY_WY = 1100;           // base world-y when UP: face pokes above the wall, chest behind it
+const ENEMY_DOWN_Y = 1850;       // ducked fully behind the wall (hidden during SAFE)
+// Guard poses per phase (bulldog cop). Each: art key + scale + foot fraction (anchor near the chest).
+const GUARD = {
+  pre:    { key: 'guard_pre',    scale: 1.25, foot: 0.95 },   // WARNING: confused, "?"
+  attack: { key: 'guard_attack', scale: 1.30, foot: 0.96 },   // LOOK: snarl + flashlight
+  after:  { key: 'guard_after',  scale: 1.25, foot: 0.96 },   // HOLD: still angry
+};
+const GUARD_FW = 820, GUARD_FH = 609;    // guard_attack frame size
+const FL_FX = 0.244, FL_FY = 0.353;      // flashlight-lens position (fraction of the attack frame)
 const ENEMY_RISE_SPEED = 620;    // px/s — slow rise so it emerges before the look
 const LINE_SPAN = 0;             // single player
 
 // Level layout: museum exhibits. obstacle3 (the classic car) patrols; the rest
 // are static displays. `key` = exhibit art, `w` = hide-zone / display width.
-const COVERS = [   // x positions scaled 0.8 for a 20%-shorter map
+const COVERS = [   // shorter map (fits the 20s timer)
   { x: 600,   w: 420, key: 'obstacle5' },               // Anubis statue
   { x: 1520,  w: 400, key: 'obstacle4' },               // pharaoh mask
   { x: 2480,  w: 760, key: 'obstacle3', moving: true }, // classic car (patrols)
   { x: 4000,  w: 440, key: 'obstacle2' },               // T-rex skeleton
+  { x: 4880,  w: 420, key: 'coffin' },                  // sarcophagus (roped-off exhibit)
   { x: 5600,  w: 420, key: 'obstacle5' },               // Anubis statue
-  { x: 6720,  w: 760, key: 'obstacle3', moving: true }, // classic car (patrols)
-  { x: 8320,  w: 400, key: 'obstacle4' },               // pharaoh mask
 ];
-const OBSTACLE_CW = { obstacle1: 275, obstacle2: 308, obstacle3: 831, obstacle4: 246, obstacle5: 280 };
-const OBSTACLE_FOOT = { obstacle1: 0.963, obstacle2: 1.0, obstacle3: 0.959, obstacle4: 0.97, obstacle5: 0.968 };
+// CW = the content width used to map art -> hide-zone width. For the coffin the
+// art also includes the rope barrier (shown, not hideable), so CW is just the
+// COFFIN sub-width and ORIGIN_X puts the coffin (not the whole art) over the zone.
+const OBSTACLE_CW = { obstacle1: 275, obstacle2: 308, obstacle3: 831, obstacle4: 246, obstacle5: 280, coffin: 270 };
+const OBSTACLE_FOOT = { obstacle1: 0.963, obstacle2: 1.0, obstacle3: 0.959, obstacle4: 0.97, obstacle5: 0.968, coffin: 0.98 };
+const OBSTACLE_ORIGIN_X = { coffin: 0.728 };   // coffin centre as a fraction of the full art (barrier extends left)
 const OBSTACLE_DY = { obstacle1: 28 };   // per-exhibit vertical nudge (px down) to sit flush on the floor
+const OBSTACLE_VSCALE = { obstacle5: 0.88 };   // per-exhibit visual shrink (keeps hide-zone width unchanged)
 // Alien poses: running (moving) vs crouch (stopped/hiding). Each carries its own
 // scale + foot fraction so the feet stay planted on the floor when swapping.
 const PLAYER_POSE = {
@@ -57,9 +78,9 @@ const PLAYER_POSE = {
 };
 const V_MOVE = 190;        // px/s patrol speed of a moving cover
 const PATROL = 640;        // patrol span: cover swings between c.x and c.x + PATROL
-const CAM_STOP_X = 8600;   // camera stops scrolling here near the end; the alien then walks off-screen
-const ESCAPE_X = 9520;     // alien has walked off the right edge past this -> escaped
-const WORLD_W = 10400;
+const CAM_STOP_X = 6100;   // camera stops scrolling here near the end; the alien then walks off-screen
+const ESCAPE_X = 6800;     // alien has walked off the right edge past this -> escaped
+const WORLD_W = 7800;
 const START_X = COVERS[0].x + COVERS[0].w / 2;   // spawn sheltered at the first exhibit
 
 class GameScene extends Phaser.Scene {
@@ -69,17 +90,33 @@ class GameScene extends Phaser.Scene {
     // Museum-guard theme
     this.load.image('wall', 'assets/wallbg.png');       // museum wall (top-half backdrop, tiled)
     this.load.image('floor', 'assets/floor.png');       // marble floor (bottom half, tiled)
-    this.load.image('enemy', 'assets/enemy.png');       // guard-dog watcher
+    this.load.image('guard_pre', 'assets/guard_pre.png');       // guard: confused (warning)
+    this.load.image('guard_attack', 'assets/guard_attack.png'); // guard: snarl + flashlight (look)
+    this.load.image('guard_after', 'assets/guard_after.png');   // guard: still angry (hold)
     this.load.spritesheet('alien_walk', 'assets/alien_walk.png', { frameWidth: 480, frameHeight: 480 });  // walk cycle
     this.load.image('player_hide', 'assets/player_hide.png');     // crouch / hide pose
     this.load.image('teeth', 'assets/teethfx.png');               // jaws bite-effect on death
-    this.load.image('alienhead', 'assets/alienhead.png');         // progress-bar marker
+    this.load.image('alienhead', 'assets/alienhead.png');         // progress-bar head (rides the fill's leading edge)
+    this.load.image('playbutton', 'assets/playbutton.png');       // start button
+    this.load.image('voicehint', 'assets/voicehint.png');         // mic icon (ready screen)
+    this.load.image('progress_empty', 'assets/progress_empty.png');   // progress bar: empty track
+    this.load.image('progress_full', 'assets/progress_full.png');     // progress bar: full (revealed by crop)
+    this.load.image('voicebar', 'assets/voicebar.png');               // voice meter track
+    this.load.image('voicethresholdmarker', 'assets/voicethresholdmarker.png');   // voice threshold line
+    this.load.image('voiceicon', 'assets/voiceicon.png');             // mic icon under the meter
+    this.load.image('excl_yellow', 'assets/excl_yellow.png');         // warning "!!!" (yellow)
+    this.load.image('excl_red', 'assets/excl_red.png');               // look "!!!" (red)
+    this.load.image('busted', 'assets/busted.png');                   // lose title
+    this.load.image('escaped', 'assets/escaped.png');                 // win title
+    this.load.image('exitsign', 'assets/exitsign.png');           // EXIT sign near the finish
     for (let i = 1; i <= 5; i++) this.load.image('obstacle' + i, 'assets/obstacle' + i + '.png');
+    this.load.image('coffin', 'assets/coffin.png');               // sarcophagus exhibit (roped-off)
   }
 
   create() {
     this.makeRedGradient();
     this.makeSkyGradient();
+    this.makeDarkGradient();
     this.anims.create({
       key: 'alienwalk',
       frames: this.anims.generateFrameNumbers('alien_walk', { start: 0, end: 14 }),
@@ -112,6 +149,11 @@ class GameScene extends Phaser.Scene {
     const fts = floorH / 515; floor.tileScaleX = fts; floor.tileScaleY = fts;
     world.push(floor);
 
+    // EXIT sign on the wall, just before the right-edge finish (the alien runs past it).
+    // Pulled left of the finish so it isn't flush against the right screen edge.
+    world.push(this.add.image(CAM_STOP_X + 480, WALL_TOP_Y + 250, 'exitsign')
+      .setOrigin(0.5, 0.5).setScale(1.6).setDepth(-5));
+
     // ---- cover objects: museum exhibits the alien hides behind. Whoever's x is
     // outside every cover's live span is exposed when the guard looks. ----
     this.covers = COVERS.map((c) => ({
@@ -123,11 +165,12 @@ class GameScene extends Phaser.Scene {
     // content width = the hide-zone width, and grounded by its foot fraction.
     for (const c of this.covers) {
       c.dy = OBSTACLE_DY[c.key] || 0;
-      const sx = c.w / OBSTACLE_CW[c.key];
-      c.shadow = this.makeShadow(c.key, OBSTACLE_FOOT[c.key], sx, c.x + c.w / 2, FLOOR_Y + c.dy);
+      const sx = (c.w / OBSTACLE_CW[c.key]) * (OBSTACLE_VSCALE[c.key] || 1);
+      const ox = OBSTACLE_ORIGIN_X[c.key] ?? 0.5;   // coffin: art extends left of the hide-zone
+      c.shadow = this.makeShadow(c.key, OBSTACLE_FOOT[c.key], sx, c.x + c.w / 2, FLOOR_Y + c.dy, ox);
       world.push(c.shadow);
       c.sprite = this.add.image(c.x + c.w / 2, FLOOR_Y + c.dy, c.key)
-        .setOrigin(0.5, OBSTACLE_FOOT[c.key]).setDepth(10).setScale(sx);
+        .setOrigin(ox, OBSTACLE_FOOT[c.key]).setDepth(10).setScale(sx);
       world.push(c.sprite);
     }
 
@@ -153,53 +196,88 @@ class GameScene extends Phaser.Scene {
     // ---- guard-dog enemy: a WORLD object at depth -10.5 (behind the floor at
     // -10, in front of the wall at -11) so it peeks over the horizon. Kept
     // screen-centred each frame in updateCat; ducks during SAFE, rises to look. ----
-    this.medusa = this.add.image(DW / 2, ENEMY_DOWN_Y, 'enemy')
-      .setOrigin(0.5, ENEMY_FOOT).setDepth(-10.5).setScale(ENEMY_SCALE_W);
+    this.medusa = this.add.image(DW / 2, ENEMY_DOWN_Y, GUARD.pre.key)
+      .setOrigin(0.5, GUARD.pre.foot).setDepth(-11.5).setScale(GUARD.pre.scale);   // behind the wall (-11)
+    this.guardPose = 'pre';
     this.medusaY = ENEMY_DOWN_Y;   // starts hidden below the floor (SAFE)
     world.push(this.medusa);
     this.spotGfx = this.add.graphics().setDepth(1);    ui.push(this.spotGfx);  // gaze over field
-    this.vignette = this.add.graphics().setDepth(88);  ui.push(this.vignette); // edge pulse
+    // smooth danger vignette: a white edge-glow gradient texture, tinted yellow
+    // (warning) or red (look) and pulsed via alpha — no hard-edged border.
+    if (!this.textures.exists('vigTex')) this.buildVignetteTex('vigTex', 360);
+    this.vignette = this.add.image(0, 0, 'vigTex').setOrigin(0, 0).setDepth(88).setAlpha(0);
+    ui.push(this.vignette);
 
-    // ---- HUD (UI camera) ----
-    this.timerText = this.add.text(DW / 2, 70, String(TIME_LIMIT), {
-      fontFamily: FONT, fontSize: 104, color: '#ffffff', fontStyle: 'bold',
-      stroke: '#1a1a2a', strokeThickness: 14
-    }).setOrigin(0.5, 0).setDepth(97);
+    // ---- HUD (UI camera): timer (left) + progress bar (right), same level ----
+    this.timerText = this.add.text(HUD_PAD, BAR_Y, '00:20', {
+      fontFamily: FONT, fontSize: 74, color: '#ffffff', fontStyle: 'bold',
+      stroke: '#1a1a2a', strokeThickness: 12
+    }).setOrigin(0, 0.5).setDepth(97);   // left-anchored so its left padding == the bar's right padding
     ui.push(this.timerText);
 
-    this.hudState = this.add.text(DW / 2, 560, '', {
-      fontFamily: FONT, fontSize: 72, color: '#ffffff', fontStyle: 'bold',
-      stroke: '#2b2b3a', strokeThickness: 9
-    }).setOrigin(0.5).setDepth(95);
+    this.hudState = this.add.image(DW / 2, 560, 'excl_yellow')
+      .setOrigin(0.5).setScale(0.62).setDepth(95).setVisible(false);   // "!!!" warning/look indicator
     ui.push(this.hudState);
 
-    // progress bar (top, shorter, outlined) with the alien head riding the fill
-    this.progBg = this.add.rectangle(DW / 2, PROG_Y, PROG_W, PROG_H, 0x1a1a2a, 0.55)
-      .setStrokeStyle(6, 0xffffff, 0.9).setDepth(95);
-    ui.push(this.progBg);
-    this.progFill = this.add.rectangle(PROG_LEFT + 5, PROG_Y, 8, PROG_H - 12, 0x8fe070).setOrigin(0, 0.5).setDepth(96);
-    ui.push(this.progFill);
-    this.progHead = this.add.image(PROG_LEFT + 5, PROG_Y, 'alienhead').setOrigin(0.5, 0.5).setScale(0.6).setDepth(97);
-    ui.push(this.progHead);
-    { const w0 = (PROG_W - 10) * Phaser.Math.Clamp((this.leadX - START_X) / (ESCAPE_X - START_X), 0, 1);   // starts at 0 (far left)
-      this.progFill.width = w0; this.progHead.x = PROG_LEFT + 5 + w0; }
+    // progress bar (right, same level as the timer): empty track + full overlay
+    // revealed left-to-right by cropping the full image to the current progress.
+    this.progEmpty = this.add.image(BAR_LEFT, BAR_Y, 'progress_empty').setOrigin(0, 0.5).setDisplaySize(BAR_W, BAR_H).setDepth(95);
+    ui.push(this.progEmpty);
+    this.progFull = this.add.image(BAR_LEFT, BAR_Y, 'progress_full').setOrigin(0, 0.5).setDisplaySize(BAR_W, BAR_H).setDepth(96);
+    ui.push(this.progFull);
+    this.progHead = this.add.image(BAR_LEFT, BAR_Y, 'alienhead').setOrigin(0.5, 0.5).setDisplaySize(BAR_HEAD, BAR_HEAD * 134 / 116).setDepth(97);
+    ui.push(this.progHead);   // alien head riding the fill's leading edge
+    { const p0 = Phaser.Math.Clamp((this.leadX - START_X) / (ESCAPE_X - START_X), 0, 1);   // starts empty
+      this.progFull.setCrop(0, 0, BAR_TEX_W * p0, BAR_TEX_H);
+      this.progHead.x = BAR_LEFT + BAR_W * p0; }
 
-    // mic-level meter (fills with your voice; turns green once loud enough to move)
-    this.micBg = this.add.rectangle(52, DH - 190, 26, 380, 0x000000, 0.22).setOrigin(0.5, 1).setDepth(95);
-    ui.push(this.micBg);
-    this.micFill = this.add.rectangle(52, DH - 190, 26, 380, 0x8fb0c8).setOrigin(0.5, 1).setDepth(96).setScale(1, 0);
+    // voice meter (fills with your voice; turns green once loud enough to move):
+    // white track image, colored level fill inside it, threshold marker + mic icon.
+    const micTrack = this.add.image(MIC_X, MIC_TOP + MIC_H / 2, 'voicebar').setDisplaySize(MIC_W, MIC_H).setDepth(95);
+    ui.push(micTrack);
+    this.micFill = this.add.rectangle(MIC_X, MIC_FILL_BOT, MIC_W - 20, MIC_FILL_H, 0xff5a5a).setOrigin(0.5, 1).setDepth(96).setScale(1, 0);
     ui.push(this.micFill);
-    this.micMark = this.add.rectangle(52, DH - 190 - 380 * (VOICE_THRESHOLD / MIC_MAX), 34, 4, 0xffffff, 0.85).setDepth(97);
+    this.micMark = this.add.image(MIC_X, MIC_FILL_BOT - MIC_FILL_H * (VOICE_THRESHOLD / MIC_MAX), 'voicethresholdmarker').setDisplaySize(MIC_W + 24, 26).setDepth(97);
     ui.push(this.micMark);   // threshold line
+    this.micIcon = this.add.image(MIC_X, MIC_TOP + MIC_H + 54, 'voiceicon').setDisplaySize(74, 74).setDepth(98);
+    ui.push(this.micIcon);
 
-    // ---- overlay (ready / results, UI camera) ----
+    // HUD stays visible on the ready + game-over screens too (never removed)
+
+    // ---- game-over screen (UI camera), hidden until you win/lose ----
     this.overlay = this.add.rectangle(0, 0, DW, DH, 0x101024, 0).setOrigin(0, 0).setDepth(100);
     ui.push(this.overlay);
+    this.outcomeImg = this.add.image(DW / 2, DH / 2, 'busted').setOrigin(0.5, 1).setDepth(101).setVisible(false);
+    ui.push(this.outcomeImg);   // BUSTED / ESCAPED title art
     this.overlayText = this.add.text(DW / 2, DH / 2, '', {
-      fontFamily: FONT, fontSize: 60, color: '#ffffff', fontStyle: 'bold',
-      align: 'center', lineSpacing: 20, stroke: '#1a1a2a', strokeThickness: 10
-    }).setOrigin(0.5).setDepth(101);
-    ui.push(this.overlayText);
+      fontFamily: FONT, fontSize: 52, color: '#ffffff', fontStyle: 'bold',
+      align: 'center', lineSpacing: 18, stroke: '#1a1a2a', strokeThickness: 9
+    }).setOrigin(0.5, 1).setDepth(101).setVisible(false);
+    ui.push(this.overlayText);   // subtitle under the title
+
+    // ---- ready screen: 语音提示 header + instruction (pure white, no outline)
+    // + PLAY button, all three vertically centred on screen ----
+    this.readyGrad = this.add.image(0, 0, 'darkgrad').setOrigin(0, 0).setDisplaySize(DW, DH).setDepth(99);
+    ui.push(this.readyGrad);
+    this.readyTitle = this.add.image(DW / 2, 0, 'voicehint').setOrigin(0.5, 0).setScale(0.85).setDepth(101);
+    this.readyText = this.add.text(DW / 2, 0, 'Yell to run!\nHide from the guard and\nreach the end in time.', {
+      fontFamily: FONT, fontSize: 58, color: '#ffffff', fontStyle: 'bold', align: 'center', lineSpacing: 18
+    }).setOrigin(0.5, 0).setDepth(101);
+    this.playBtn = this.add.image(DW / 2, 0, 'playbutton').setOrigin(0.5, 0.5).setScale(0.9).setDepth(101);
+    this.playLabel = this.add.text(DW / 2, 0, 'PLAY', {
+      fontFamily: FONT, fontSize: 72, color: '#111111', fontStyle: 'bold'
+    }).setOrigin(0.5, 0.5).setDepth(102);
+    ui.push(this.readyTitle, this.readyText, this.playBtn, this.playLabel);
+    // centre the (mic icon + instruction + button) group vertically
+    const gapTI = 30, gapTB = 78, btnH = this.playBtn.displayHeight, titleH = this.readyTitle.displayHeight;
+    const totalH = titleH + gapTI + this.readyText.height + gapTB + btnH;
+    const grpTop = DH / 2 - totalH / 2;
+    this.readyTitle.y = grpTop;
+    this.readyText.y = grpTop + titleH + gapTI;
+    const btnCY = this.readyText.y + this.readyText.height + gapTB + btnH / 2;
+    this.playBtn.y = btnCY;
+    this.playLabel.y = btnCY - 6;   // optical centre on the button
+    this.playBtnY = btnCY;          // reused so the end-screen RETRY sits at the same spot
 
     // ---- state ----
     this.state = 'ready';
@@ -208,7 +286,7 @@ class GameScene extends Phaser.Scene {
     this.phase = 'safe';
     this.phaseTime = 0;
     this.attacksLeft = 0;
-    this.showOverlay('Yell to run!\nHide from the guard and\nreach the end in time.');
+    // (ready screen: readyText + PLAY button are visible by default)
 
     // ---- input ----
     this.input.on('pointerdown', () => {
@@ -236,9 +314,18 @@ class GameScene extends Phaser.Scene {
 
     // Lock the dog to the exact camera centre right BEFORE it renders (after the
     // camera's follow has settled this frame) — zero horizontal latency vs the rays.
+    // Near the end the camera stops (like the wall + ground); freeze the guard at a
+    // fixed world x there so it doesn't keep following as the alien walks off-screen.
     this.cameras.main.on('prerender', (cam) => {
-      if (this.medusa) this.medusa.x = cam.midPoint.x;
+      if (this.medusa) this.medusa.x = this.guardWorldX(cam);
     });
+  }
+
+  // Guard's horizontal world position: tracks the camera centre while it scrolls,
+  // but once the camera has stopped near the end it stays pinned at CAM_STOP_X —
+  // a fixed spot like the wall/ground — so the alien walks past it to escape.
+  guardWorldX(cam) {
+    return (this.leadX + PLAYER_X_OFFSET >= CAM_STOP_X) ? CAM_STOP_X : cam.midPoint.x;
   }
 
   startGame() {
@@ -246,6 +333,11 @@ class GameScene extends Phaser.Scene {
     this.timeLeft = TIME_LIMIT;
     this.overlay.setVisible(false);
     this.overlayText.setVisible(false);
+    this.readyGrad.setVisible(false);      // hide the ready-screen group
+    this.readyTitle.setVisible(false);
+    this.readyText.setVisible(false);
+    this.playBtn.setVisible(false);
+    this.playLabel.setVisible(false);
     this.initMic();          // request the microphone (user gesture = the start tap)
     this.setPhase('safe');
   }
@@ -322,6 +414,21 @@ class GameScene extends Phaser.Scene {
     return v.readyState >= 2 && !v.paused && v.videoWidth > 0;
   }
 
+  // Slight dark gradient: transparent at top, black toward the bottom (ready screen).
+  makeDarkGradient() {
+    const key = 'darkgrad';
+    if (this.textures.exists(key)) return;
+    const tex = this.textures.createCanvas(key, 8, DH);
+    const ctx = tex.getContext();
+    const g = ctx.createLinearGradient(0, 0, 0, DH);
+    g.addColorStop(0.00, 'rgba(0,0,0,0)');
+    g.addColorStop(0.45, 'rgba(0,0,0,0.12)');
+    g.addColorStop(1.00, 'rgba(0,0,0,0.6)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 8, DH);
+    tex.refresh();
+  }
+
   // Red danger gradient: opaque red at top & bottom, fading to clear in the middle.
   makeRedGradient() {
     const key = 'redgrad';
@@ -341,9 +448,23 @@ class GameScene extends Phaser.Scene {
   // Shape-based cast shadow: a black, flattened, flipped-down copy of the sprite,
   // anchored at the feet so it lies on the floor with the object's silhouette.
   // Lifted up slightly (SHADOW_LIFT) so it tucks under the base with no gap.
-  makeShadow(key, foot, sx, x, y) {
+  // White edge-glow texture: opaque at the screen border, fading smoothly to
+  // transparent `band` px inward on all four sides (tinted + pulsed at runtime).
+  buildVignetteTex(key, band) {
+    const tex = this.textures.createCanvas(key, DW, DH);
+    const ctx = tex.getContext();
+    ctx.clearRect(0, 0, DW, DH);
+    const edge = (grd) => { grd.addColorStop(0, 'rgba(255,255,255,1)'); grd.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = grd; };
+    edge(ctx.createLinearGradient(0, 0, 0, band));            ctx.fillRect(0, 0, DW, band);
+    edge(ctx.createLinearGradient(0, DH, 0, DH - band));      ctx.fillRect(0, DH - band, DW, band);
+    edge(ctx.createLinearGradient(0, 0, band, 0));            ctx.fillRect(0, 0, band, DH);
+    edge(ctx.createLinearGradient(DW, 0, DW - band, 0));      ctx.fillRect(DW - band, 0, band, DH);
+    tex.refresh();
+  }
+
+  makeShadow(key, foot, sx, x, y, ox = 0.5) {
     return this.add.image(x, y - SHADOW_LIFT, key)
-      .setOrigin(0.5, foot)
+      .setOrigin(ox, foot)
       .setScale(sx, -sx * 0.30)
       .setTintFill(0x000000).setAlpha(0.16).setDepth(6);
   }
@@ -441,7 +562,7 @@ class GameScene extends Phaser.Scene {
     // movement — making noise (voice over the threshold) OR a touch-hold pushes the line forward
     this.voiceLevel = Phaser.Math.Linear(this.voiceLevel || 0, this.readVoice(), 0.5);
     const moving = this.holding || this.voiceLevel > VOICE_THRESHOLD;
-    if (moving) this.leadX = Math.min(this.leadX + MOVE_SPEED * dt, ESCAPE_X + 200);
+    if (moving) this.leadX = Math.min(this.leadX + MOVE_SPEED * dt, ESCAPE_X + 600);   // headroom to walk fully off
 
     // the alien follows leadX; running pose while moving, crouch pose when stopped
     this.setPlayerPose(moving ? 'stand' : 'hide');
@@ -480,7 +601,13 @@ class GameScene extends Phaser.Scene {
     // end conditions
     const alive = this.aliveMembers();
     if (alive.length === 0) return this.endGame(0);
-    if (this.leadX >= ESCAPE_X) return this.endGame(1);   // walked off the right edge -> escaped
+    // escaped only once the ENTIRE alien has cleared the right screen edge
+    const m0 = this.members[0];
+    if (m0 && m0.alive) {
+      const cam = this.cameras.main;
+      const screenRightWorld = cam.midPoint.x + (DW / 2) / cam.zoom;
+      if (m0.img.getBounds().left > screenRightWorld) return this.endGame(1);
+    }
   }
 
   updateCat(dt) {
@@ -489,73 +616,93 @@ class GameScene extends Phaser.Scene {
     const step = ENEMY_RISE_SPEED * dt;
     if (this.medusaY > targetY) this.medusaY = Math.max(targetY, this.medusaY - step);
     else this.medusaY = Math.min(targetY, this.medusaY + step);
-    this.medusa.x = this.cameras.main.midPoint.x;   // screen-centred (finalised in the pre-render hook)
+    // swap the guard pose to match the phase (confused -> snarl -> still-angry)
+    const wantPose = this.phase === 'look' ? 'attack' : this.phase === 'hold' ? 'after' : 'pre';
+    if (this.guardPose !== wantPose) {
+      this.guardPose = wantPose;
+      const g = GUARD[wantPose];
+      this.medusa.setTexture(g.key).setOrigin(0.5, g.foot).setScale(g.scale);
+    }
+    this.medusa.x = this.guardWorldX(this.cameras.main);   // screen-centred, or frozen once the camera stops
     this.medusa.y = this.medusaY;
 
-    // Rays emanate from the dog's ACTUAL eyes — origin tracked live from medusaY,
-    // and the dog is centre-locked each render, so ray + guard never drift apart.
-    const cx = DW / 2;
-    const eyeY = (this.medusaY - 546 - CAM_CY) * ZOOM + DH / 2;
-    const eyeDX = 61;
+    // Flashlight-beam rays from the guard's glowing eyes (attack pose). Origin tracked
+    // live from medusaY, and the guard is centre-locked, so ray + guard never drift.
+    // Flashlight beam from the guard's RAISED FLASHLIGHT (attack-frame lens
+    // position), tracked live from medusaY so it stays on the lens as it rises.
+    const gA = GUARD.attack;
+    const bx = DW / 2 + (FL_FX - 0.5) * GUARD_FW * gA.scale * ZOOM;
+    const by = (this.medusaY - (gA.foot - FL_FY) * GUARD_FH * gA.scale - CAM_CY) * ZOOM + DH / 2;
     const s = this.spotGfx; s.clear();
     if (this.phase === 'look') {
-      s.fillStyle(0xfff2a0, 0.22 + Math.sin(this.time.now / 80) * 0.06);
-      s.fillTriangle(cx - eyeDX, eyeY, cx + eyeDX, eyeY, cx + 520, DH);
-      s.fillTriangle(cx - eyeDX, eyeY, cx + 520, DH, cx - 520, DH);
+      s.fillStyle(0xfff2a0, 0.26 + Math.sin(this.time.now / 80) * 0.06);
+      s.fillTriangle(bx - 24, by, bx + 24, by, bx + 430, DH);
+      s.fillTriangle(bx - 24, by, bx + 430, DH, bx - 300, DH);
     }
 
-    // vignette pulse
-    const v = this.vignette; v.clear();
+    // smooth danger vignette: tint the edge-glow yellow (warning) or red (look)
+    // and pulse its alpha — a soft gradient glow instead of a hard border.
     if (this.phase !== 'safe') {
-      const col = this.phase === 'look' ? 0xff3b3b : 0xffd43b;
-      const a = (this.phase === 'look' ? 0.35 : 0.2) * (0.6 + 0.4 * Math.sin(this.time.now / 100));
-      v.lineStyle(46, col, a);
-      v.strokeRect(23, 23, DW - 46, DH - 46);
+      const look = this.phase === 'look';
+      const pulse = 0.6 + 0.4 * Math.sin(this.time.now / 100);
+      this.vignette.setTint(look ? 0xff3030 : 0xffd23a).setAlpha((look ? 0.62 : 0.4) * pulse);
+    } else {
+      this.vignette.setAlpha(0);
     }
   }
 
   updateHud() {
-    if (this.phase === 'safe') { this.hudState.setText(''); }
-    else if (this.phase === 'look') { this.hudState.setText('!!!'); this.hudState.setColor('#ff5b5b'); }
-    else { this.hudState.setText('!  !  !'); this.hudState.setColor('#ffd43b'); }   // warning / hold
+    if (this.phase === 'safe') { this.hudState.setVisible(false); }
+    else if (this.phase === 'look') { this.hudState.setTexture('excl_red').setVisible(true); }
+    else { this.hudState.setTexture('excl_yellow').setVisible(true); }   // warning / hold
 
-    // countdown display (red in the final seconds)
+    // countdown display (mm:ss, red in the final seconds)
     const t = Math.max(0, Math.ceil(this.timeLeft));
-    this.timerText.setText(String(t));
+    const mm = Math.floor(t / 60), ss = t % 60;
+    this.timerText.setText(String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0'));
     this.timerText.setColor(t <= 5 ? '#ff5b5b' : '#ffffff');
 
-    // progress (camera follows this.camTarget automatically)
+    // progress (camera follows this.camTarget automatically): reveal the full bar by crop
     const p = Phaser.Math.Clamp((this.leadX - START_X) / (ESCAPE_X - START_X), 0, 1);   // 0 at spawn, 1 at escape
-    const fillW = (PROG_W - 10) * p;
-    this.progFill.width = fillW;
-    this.progHead.x = PROG_LEFT + 5 + fillW;   // alien head at the leading edge
+    this.progFull.setCrop(0, 0, BAR_TEX_W * p, BAR_TEX_H);
+    this.progHead.x = BAR_LEFT + BAR_W * p;   // alien head at the fill's leading edge
 
     // mic meter: fill height = current voice level; green once past the move threshold
     const lvl = Phaser.Math.Clamp((this.voiceLevel || 0) / MIC_MAX, 0, 1);
     this.micFill.setScale(1, lvl);
-    this.micFill.setFillStyle((this.voiceLevel || 0) > VOICE_THRESHOLD ? 0x69db7c : 0x8fb0c8);
+    this.micFill.setFillStyle((this.voiceLevel || 0) > VOICE_THRESHOLD ? 0x69db7c : 0xff5a5a);   // green when loud enough, else red
   }
 
   endGame(score, reason) {
     this.state = 'over';
     this.holding = false;
-    this.spotGfx.clear(); this.vignette.clear();
+    this.spotGfx.clear(); this.vignette.setAlpha(0); this.hudState.setVisible(false);
     if (score === 0) {   // lost -> keep the red danger gradient on the game-over screen
       const grad = this.add.image(0, 0, 'redgrad').setOrigin(0, 0).setDisplaySize(DW, DH).setDepth(99).setAlpha(0);
       this.cameras.main.ignore(grad);
-      this.tweens.add({ targets: grad, alpha: 0.95, duration: 250 });
+      this.tweens.add({ targets: grad, alpha: 0.62, duration: 250 });
     }
-    const msg = score > 0
-      ? `YOU ESCAPED!`
-      : reason === 'time'
-        ? `TIME'S UP!\n\nThe guard nabbed you.\n\nTap to try again`
-        : `BUSTED!\n\nThe guard caught you.\n\nTap to try again`;
-    this.showOverlay(msg);
+    this.showOutcome(score > 0);
   }
 
-  showOverlay(text) {
+  showOutcome(win) {
     this.overlay.setVisible(true);
-    this.overlayText.setText(text).setVisible(true);
+    // BUSTED / ESCAPED title art, scaled to a fixed on-screen width
+    this.outcomeImg.setTexture(win ? 'escaped' : 'busted').setVisible(true);
+    const titleScale = 660 / this.outcomeImg.width;
+    const bH = this.playBtn.displayHeight;               // button at its 0.9 scale
+    this.outcomeImg.setY(this.playBtnY - bH / 2 - 210);  // title sits high above the button
+    // reuse the ready-screen PLAY button as RETRY, at the SAME start-screen spot
+    this.playLabel.setText('RETRY');
+    this.playBtn.setY(this.playBtnY).setVisible(true);
+    this.playLabel.setY(this.playBtnY - 6).setVisible(true);
+    // quick pop-in (title first, then button) with a slight overshoot
+    this.outcomeImg.setScale(0);
+    this.playBtn.setScale(0);
+    this.playLabel.setScale(0);
+    this.tweens.add({ targets: this.outcomeImg, scale: titleScale, duration: 300, ease: 'Back.easeOut' });
+    this.tweens.add({ targets: this.playBtn, scale: 0.9, duration: 280, delay: 120, ease: 'Back.easeOut' });
+    this.tweens.add({ targets: this.playLabel, scale: 1, duration: 280, delay: 120, ease: 'Back.easeOut' });
   }
 }
 
