@@ -53,6 +53,8 @@ const FALL_ACCEL = 130;                        // units / sec^2, step-off drop
 // you picked up along the way.
 const RUN_LENGTH = 19500;                      // design px of travel
 const COIN_TOTAL = 15;
+const COIN_GROUP = 3;                          // coins arrive three at a time
+const STAR_PIPS = 3;                           // 1 star per COIN_TOTAL/3 collected
 
 const MAX_PILLAR = 2;                          // cap + 1 brick row, no taller
 const MAX_FLOAT = 4;                           // highest a floating surface sits
@@ -606,6 +608,22 @@ class GameScene extends Phaser.Scene {
         // this piece would arrive alongside a coin at a row it kills at, lift the
         // hanging part above the coin or shorten the pillar below it. Both edits
         // only ever make the piece easier, so fairness is unaffected.
+        // The mirror of the rule above: a coin already on its way in cannot be
+        // moved, so a spike field that would swallow it becomes a plain wall.
+        if (spec.cost) {
+            const t0 = (spawnX - CONTACT_X) / (speed * mul);
+            const cross = (spec.w * UNIT) / (speed * mul);
+            for (let i = 0; i < this.coins.length; i++) {
+                const c = this.coins[i];
+                if (c.resolved) continue;
+                const ct = (c.x - CONTACT_X) / speed;
+                if (ct > t0 - 0.25 && ct < t0 + cross + 0.25) {
+                    spec = { h: 1, w: spec.w, clearance: CEIL_ROWS, hangTop: CEIL_ROWS, style: 'pillar' };
+                    break;
+                }
+            }
+        }
+
         let yielded = false;
         for (let i = 0; i < this.coins.length; i++) {
             const c = this.coins[i];
@@ -870,11 +888,37 @@ class GameScene extends Phaser.Scene {
         // reach given the pillars still queued. Without this, climbing for a high
         // coin permanently strands every lower coin after it.
         if (row + 1 < this.projectedMinHeight((cx - CONTACT_X) / speed, speed)) return false;
-        const mine = (cx - CONTACT_X) / speed;
+
+        // A group is three units wide, so every test runs against the span it
+        // covers rather than its centre point — otherwise the outer two coins
+        // could still overlap something the middle one clears.
+        const half = (COIN_GROUP - 1) * UNIT * 0.5;
+        const inA = (cx - half - CONTACT_X) / speed;
+        const inB = (cx + half - CONTACT_X) / speed;
         for (let i = 0; i < this.obstacles.length; i++) {
             const o = this.obstacles[i];
             if (o === own || o.resolved) continue;
-            if (Math.abs((o.x - CONTACT_X) / (speed * o.mul) - mine) > 0.5) continue;
+            const oArrive = (o.x - CONTACT_X) / (speed * o.mul);
+            if (o.cost) {
+                // Spikes eat a block per unit at ANY height, so a coin anywhere
+                // over the field is one you cannot stop and take. Block the whole
+                // crossing, not just one row.
+                const cross = (o.w * UNIT) / (speed * o.mul);
+                if (inA < oArrive + cross + 0.25 && inB > oArrive - 0.25) return false;
+                continue;
+            }
+            // Landable part in front of this group: stepping off one costs a ride
+            // to its far end plus a fall, and during that fall the head is between
+            // rows. A group landing in that window is a lottery — you would have
+            // to be at an exact height three times while still dropping. Wait
+            // until the player is back on the floor. (The group's OWN part is
+            // excluded above: riding it is stable, so collecting there is fine.)
+            if (o.h > 0) {
+                const v = speed * o.mul;
+                const shed = oArrive + (o.w * UNIT) / v + SHED_TIME;
+                if (inA < shed) return false;
+            }
+            if (inA > oArrive + 0.5 || inB < oArrive - 0.5) continue;
             const hangs = o.clearance < CEIL_ROWS;
             if (hangs ? row >= o.clearance : (o.h > 0 && row < o.h)) return false;
         }
@@ -882,10 +926,12 @@ class GameScene extends Phaser.Scene {
     }
 
     spawnCoin(atX, row) {
-        const n = Math.min(2, COIN_TOTAL - this.coinsMade);
-        const x0 = Math.max(atX, W + 60) - (n - 1) * UNIT * 0.46;
+        // Groups of three, spaced one unit apart so each coin sits over one cell
+        // of the 3-wide part it belongs to.
+        const n = Math.min(COIN_GROUP, COIN_TOTAL - this.coinsMade);
+        const x0 = Math.max(atX, W + 60) - (n - 1) * UNIT * 0.5;
         for (let i = 0; i < n; i++) {
-            const x = x0 + i * UNIT * 0.92;
+            const x = x0 + i * UNIT;
             const c = this.add.image(x, GROUND_Y - (row + 0.5) * UNIT, 'coin').setOrigin(0.5, 0.5);
             c.setDisplaySize(UNIT * 0.82, UNIT * 0.82 * (186 / 153));
             this.coinLayer.add(c);
@@ -1067,7 +1113,7 @@ class GameScene extends Phaser.Scene {
             this.nextCoinAt -= step;
             if (this.nextCoinAt <= 0) {
                 this.coinArmed = true;
-                this.nextCoinAt = (RUN_LENGTH - 2200) / (COIN_TOTAL / 2);
+                this.nextCoinAt = (RUN_LENGTH - 4600) / (COIN_TOTAL / COIN_GROUP);
             }
         }
         // Near the finish no more obstacles spawn, so there is no mid-gap to wait
@@ -1075,7 +1121,7 @@ class GameScene extends Phaser.Scene {
         // nothing queued there is no approach for it to sit in.
         if (this.coinArmed) {
             this.coinWait += step;
-            if (this.coinWait > 700) {
+            if (this.coinWait > 520) {
                 // Fallback for when no piece had room (or none are spawning near
                 // the finish). Still has to clear every obstacle in flight — this
                 // path used to drop a coin on a random row and was the one place
@@ -1157,16 +1203,26 @@ class EndScene extends Phaser.Scene {
 
         // Coin pips straddling the panel's top edge, arced so the middle one
         // sits proud of the pair beside it.
+        // Stars are threshold-based, not proportional: a third of the coins each,
+        // so 5 / 10 / 15 earns 1 / 2 / 3. Derived from COIN_TOTAL so the cut-offs
+        // stay correct if the coin count changes.
         const got = this.payload.coins || 0;
-        const pips = 3, pipSize = 178, panelTop = -PANEL_H / 2;
-        for (let i = 0; i < pips; i++) {
-            const filled = i < Math.min(pips, Math.ceil(got / COIN_TOTAL * pips));
-            const mid = i === (pips - 1) / 2;
-            const pip = this.add.image((i - (pips - 1) / 2) * (pipSize + 10),
+        const stars = Math.min(STAR_PIPS, Math.floor(got / (COIN_TOTAL / STAR_PIPS)));
+        const pipSize = 178, panelTop = -PANEL_H / 2;
+        for (let i = 0; i < STAR_PIPS; i++) {
+            const filled = i < stars;
+            const mid = i === (STAR_PIPS - 1) / 2;
+            const pip = this.add.image((i - (STAR_PIPS - 1) / 2) * (pipSize + 10),
                 panelTop + (mid ? 4 : 60),
                 filled ? 'pipFull' : 'pipEmpty').setOrigin(0.5, 0.5);
             pip.setDisplaySize(pipSize, pipSize);
             box.add(pip);
+            if (filled) {                                  // each earned star pops in
+                const full = pipSize / pip.width;
+                pip.setScale(0);
+                this.tweens.add({ targets: pip, scale: { from: 0, to: full },
+                    duration: 300, delay: 320 + i * 160, ease: 'Back.easeOut' });
+            }
         }
 
         box.add(fitLabel(this, 0, -98, this.payload.won ? 'YOU WIN' : 'GAME OVER', 68, 30, PANEL_W - 150, '#123f9e'));
