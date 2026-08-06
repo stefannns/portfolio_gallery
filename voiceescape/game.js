@@ -62,7 +62,13 @@ const HIDE_W = { newobstacle1: 370, newobstacle2: 560, newobstacle3: 460, newobs
 // Positive pulls that edge inward; negative extends it outward past the artwork.
 const HIDE_INSET = { newobstacle1: [70, 48], newobstacle2: [0, -30] };
 // Per-exhibit shadow origin nudge (px from FLOOR_Y; negative = the shadow starts higher).
-const SHADOW_YBOT = { newobstacle1: -110, newobstacle2: -75, coffin: -45 };
+const SHADOW_YBOT = { newobstacle1: -110, newobstacle2: -75 };
+// Extra lift for an exhibit's ground drop-shadow (px up). Needed when the art's
+// bottom is NOT the object's base — e.g. the coffin, whose rope poles hang lower.
+const DROP_LIFT = { coffin: 80 };
+// Split an exhibit's drop-shadow into two halves so only one side can be lifted
+// (newobstacle2: the duck's tall pedestal needs lifting, the toast's does not).
+const SPLIT_SHADOW = { newobstacle2: { frac: 0.5, leftLift: 20 } };
 // Cast the beam shadow from the full sprite art instead of the hide-box (e.g. the
 // coffin, whose rope barrier is drawn outside its hide-zone but should still shadow).
 const SHADOW_FULL_ART = { coffin: true };
@@ -190,6 +196,16 @@ class GameScene extends Phaser.Scene {
       const ox = OBSTACLE_ORIGIN_X[c.key] ?? 0.5;   // coffin: art extends left of the hide-zone
       c.shadow = this.makeShadow(c.key, OBSTACLE_FOOT[c.key], sx, c.x + c.w / 2, FLOOR_Y + c.dy, ox);
       world.push(c.shadow);
+      const split = SPLIT_SHADOW[c.key];
+      if (split) {   // right half stays put; left half gets its own extra lift
+        const src = this.textures.get(c.key).getSourceImage();
+        const cut = Math.round(src.width * split.frac);
+        c.shadow.setCrop(cut, 0, src.width - cut, src.height);
+        c.shadowL = this.makeShadow(c.key, OBSTACLE_FOOT[c.key], sx, c.x + c.w / 2, FLOOR_Y + c.dy, ox);
+        c.shadowL.y -= split.leftLift;
+        c.shadowL.setCrop(0, 0, cut, src.height);
+        world.push(c.shadowL);
+      }
       c.sprite = this.add.image(c.x + c.w / 2, FLOOR_Y + c.dy, c.key)
         .setOrigin(ox, OBSTACLE_FOOT[c.key]).setDepth(10).setScale(sx);
       world.push(c.sprite);
@@ -522,7 +538,7 @@ class GameScene extends Phaser.Scene {
   }
 
   makeShadow(key, foot, sx, x, y, ox = 0.5) {
-    return this.add.image(x, y - SHADOW_LIFT, key)
+    return this.add.image(x, y - SHADOW_LIFT - (DROP_LIFT[key] || 0), key)
       .setOrigin(ox, foot)
       .setScale(sx, -sx * 0.30)
       .setTintFill(0x000000).setAlpha(0.16).setDepth(6);
@@ -622,7 +638,7 @@ class GameScene extends Phaser.Scene {
       c.sprite.setFlipX(c.dir < 0);   // car faces right; flip when driving left
       c.sprite.x = c.curX + c.w / 2;
       c.sprite.y = FLOOR_Y + (c.dy || 0);
-      c.shadow.x = c.sprite.x; c.shadow.y = c.sprite.y - SHADOW_LIFT; c.shadow.setFlipX(c.dir < 0);
+      c.shadow.x = c.sprite.x; c.shadow.y = c.sprite.y - SHADOW_LIFT - (DROP_LIFT[c.key] || 0); c.shadow.setFlipX(c.dir < 0);
     }
     if (DEBUG_HIDE_BOXES && this.debugGfx) this.drawHideBoxes();
   }
@@ -785,7 +801,7 @@ class GameScene extends Phaser.Scene {
     const baseY = CAM_CY + (DH / 2) / ZOOM;   // world y at the screen bottom
     const aw = 24 / ZOOM, bl = 300 / ZOOM, br = 430 / ZOOM;
     const s = this.spotGfx;
-    s.fillStyle(0xfff2a0, 0.8);
+    s.fillStyle(0xfff2a0, 0.34 + Math.sin(this.time.now / 80) * 0.06);
     s.fillTriangle(ax - aw, ay, ax + aw, ay, ax + br, baseY);
     s.fillTriangle(ax - aw, ay, ax + br, baseY, ax - bl, baseY);
     // exhibits cast shadows: project a wedge from each hide-box's BOTTOM (ground
