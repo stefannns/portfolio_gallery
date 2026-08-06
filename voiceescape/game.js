@@ -17,7 +17,11 @@ const BAR_SCALE = 1.14;                      // progress bar image scale (shorte
 const BAR_TEX_W = 322, BAR_TEX_H = 74;       // progress_full texture size (crop is in texture px)
 const BAR_W = 323 * BAR_SCALE, BAR_H = BAR_TEX_H * BAR_SCALE;   // ~400 x 92 display
 const BAR_LEFT = DW - HUD_PAD - BAR_W;       // left edge (origin-0 anchor); right edge = DW - HUD_PAD
-const BAR_HEAD = 96;                          // alien-head width at the fill's leading edge (overhangs the bar)
+const BAR_HEAD = 88;                          // alien-head width at the fill's leading edge (overhangs the bar)
+const BAR_HEAD_H = BAR_HEAD * 96 / 76;       // alien-head aspect (native 76x96)
+// Time-bar pill (top-left, same level as the progress bar): hourglass icon + time text.
+const TB_H = 96, TB_W = 295 * TB_H / 93;     // pill display size (preserve native 295x93 aspect)
+const TB_TEXT_X = HUD_PAD + TB_W * 0.62;     // time text centred in the pill area right of the hourglass
 // Voice meter (vertical bar on the left): white track image, level fill, threshold marker + mic icon.
 const MIC_X = 92, MIC_W = 46, MIC_TOP = 600, MIC_H = 470;
 const MIC_FILL_BOT = MIC_TOP + MIC_H - 12, MIC_FILL_H = MIC_H - 26;   // fill span inside the track
@@ -52,21 +56,21 @@ const FL_FX = 0.244, FL_FY = 0.353;      // flashlight-lens position (fraction o
 const ENEMY_RISE_SPEED = 620;    // px/s — slow rise so it emerges before the look
 const LINE_SPAN = 0;             // single player
 
-// Level layout: museum exhibits. obstacle3 (the classic car) patrols; the rest
-// are static displays. `key` = exhibit art, `w` = hide-zone / display width.
-const COVERS = [   // shorter map (fits the 20s timer)
-  { x: 600,   w: 420, key: 'obstacle5' },               // Anubis statue
-  { x: 1520,  w: 400, key: 'obstacle4' },               // pharaoh mask
-  { x: 2480,  w: 760, key: 'obstacle3', moving: true }, // classic car (patrols)
-  { x: 4000,  w: 440, key: 'obstacle2' },               // T-rex skeleton
-  { x: 4880,  w: 420, key: 'coffin' },                  // sarcophagus (roped-off exhibit)
-  { x: 5600,  w: 420, key: 'obstacle5' },               // Anubis statue
-];
+// Level layout is randomized each play (see buildLevel). Exhibit hide-zone widths:
+const HIDE_W = { newobstacle1: 370, newobstacle2: 560, newobstacle3: 460, newobstacle4: 620, obstacle3: 760, coffin: 420 };
+// Per-exhibit hide-box edge tweaks in px [left, right] (WITHOUT resizing the art).
+// Positive pulls that edge inward; negative extends it outward past the artwork.
+const HIDE_INSET = { newobstacle1: [70, 48], newobstacle2: [0, -30] };
+const LEVEL_POOL = ['newobstacle1', 'newobstacle2', 'newobstacle3', 'newobstacle4'];   // static exhibits
+const LEVEL_LAST_START = 5650;   // don't begin a cover past here (leave room for the finish dash)
 // CW = the content width used to map art -> hide-zone width. For the coffin the
 // art also includes the rope barrier (shown, not hideable), so CW is just the
 // COFFIN sub-width and ORIGIN_X puts the coffin (not the whole art) over the zone.
-const OBSTACLE_CW = { obstacle1: 275, obstacle2: 308, obstacle3: 831, obstacle4: 246, obstacle5: 280, coffin: 270 };
-const OBSTACLE_FOOT = { obstacle1: 0.963, obstacle2: 1.0, obstacle3: 0.959, obstacle4: 0.97, obstacle5: 0.968, coffin: 0.98 };
+// A `gap` on a cover marks a middle fraction [start,end] that is NOT a hide point.
+const OBSTACLE_CW = { obstacle1: 275, obstacle2: 308, obstacle3: 831, obstacle4: 246, obstacle5: 280, coffin: 270,
+  newobstacle1: 424, newobstacle2: 402, newobstacle3: 489, newobstacle4: 717 };
+const OBSTACLE_FOOT = { obstacle1: 0.963, obstacle2: 1.0, obstacle3: 0.959, obstacle4: 0.97, obstacle5: 0.968, coffin: 0.98,
+  newobstacle1: 0.985, newobstacle2: 0.99, newobstacle3: 0.985, newobstacle4: 0.99 };
 const OBSTACLE_ORIGIN_X = { coffin: 0.728 };   // coffin centre as a fraction of the full art (barrier extends left)
 const OBSTACLE_DY = { obstacle1: 28 };   // per-exhibit vertical nudge (px down) to sit flush on the floor
 const OBSTACLE_VSCALE = { obstacle5: 0.88 };   // per-exhibit visual shrink (keeps hide-zone width unchanged)
@@ -75,13 +79,18 @@ const OBSTACLE_VSCALE = { obstacle5: 0.88 };   // per-exhibit visual shrink (kee
 const PLAYER_POSE = {
   stand: { key: 'alien_walk', anim: 'alienwalk', scale: 0.78, foot: 0.82 },   // walk cycle while moving
   hide:  { key: 'player_hide', scale: 0.72, foot: 0.981 },                     // crouch when stopped
+  fail:  { key: 'playerfail', scale: 0.72, foot: 0.95 },                       // shocked pose when caught
+  win:   { key: 'playerwin', scale: 0.9, foot: 0.98 },                         // triumphant pose on escape
 };
 const V_MOVE = 190;        // px/s patrol speed of a moving cover
 const PATROL = 640;        // patrol span: cover swings between c.x and c.x + PATROL
 const CAM_STOP_X = 6100;   // camera stops scrolling here near the end; the alien then walks off-screen
 const ESCAPE_X = 6800;     // alien has walked off the right edge past this -> escaped
 const WORLD_W = 7800;
-const START_X = COVERS[0].x + COVERS[0].w / 2;   // spawn sheltered at the first exhibit
+const START_X = 810;       // spawn x (the first exhibit is centred here)
+const WIN_ALIEN_X = 6980;  // where the alien stands to celebrate (right of the exit sign)
+const WIN_CAM_X = WIN_ALIEN_X;   // camera centres horizontally on the winning alien
+const DEBUG_HIDE_BOXES = false;   // draw each cover's hide-zone (green box) for tuning
 
 class GameScene extends Phaser.Scene {
   constructor() { super('GameScene'); }
@@ -95,6 +104,8 @@ class GameScene extends Phaser.Scene {
     this.load.image('guard_after', 'assets/guard_after.png');   // guard: still angry (hold)
     this.load.spritesheet('alien_walk', 'assets/alien_walk.png', { frameWidth: 480, frameHeight: 480 });  // walk cycle
     this.load.image('player_hide', 'assets/player_hide.png');     // crouch / hide pose
+    this.load.image('playerfail', 'assets/playerfail.png');       // shocked pose when caught
+    this.load.image('playerwin', 'assets/playerwin.png');         // triumphant pose on escape
     this.load.image('teeth', 'assets/teethfx.png');               // jaws bite-effect on death
     this.load.image('alienhead', 'assets/alienhead.png');         // progress-bar head (rides the fill's leading edge)
     this.load.image('playbutton', 'assets/playbutton.png');       // start button
@@ -106,15 +117,20 @@ class GameScene extends Phaser.Scene {
     this.load.image('voiceicon', 'assets/voiceicon.png');             // mic icon under the meter
     this.load.image('excl_yellow', 'assets/excl_yellow.png');         // warning "!!!" (yellow)
     this.load.image('excl_red', 'assets/excl_red.png');               // look "!!!" (red)
-    this.load.image('busted', 'assets/busted.png');                   // lose title
-    this.load.image('escaped', 'assets/escaped.png');                 // win title
-    this.load.image('exitsign', 'assets/exitsign.png');           // EXIT sign near the finish
+    this.load.image('title_gameover', 'assets/title_gameover.png');   // lose title (GAME OVER)
+    this.load.image('title_youwin', 'assets/title_youwin.png');       // win title (YOU WIN!)
+    this.load.image('guard_caught', 'assets/guard_caught.png');       // guard close-up when it catches you
+    this.load.image('timebar', 'assets/timebar.png');                 // timer pill (hourglass + time)
+    this.load.image('exitsign', 'assets/exitsign.png');           // free-standing EXIT sign on the ground
     for (let i = 1; i <= 5; i++) this.load.image('obstacle' + i, 'assets/obstacle' + i + '.png');
+    for (let i = 1; i <= 4; i++) this.load.image('newobstacle' + i, 'assets/newobstacle' + i + '.png');
     this.load.image('coffin', 'assets/coffin.png');               // sarcophagus exhibit (roped-off)
   }
 
   create() {
     this.makeRedGradient();
+    this.makeBlackGradient();
+    this.makeGlowTex();
     this.makeSkyGradient();
     this.makeDarkGradient();
     this.anims.create({
@@ -149,14 +165,14 @@ class GameScene extends Phaser.Scene {
     const fts = floorH / 515; floor.tileScaleX = fts; floor.tileScaleY = fts;
     world.push(floor);
 
-    // EXIT sign on the wall, just before the right-edge finish (the alien runs past it).
-    // Pulled left of the finish so it isn't flush against the right screen edge.
-    world.push(this.add.image(CAM_STOP_X + 480, WALL_TOP_Y + 250, 'exitsign')
-      .setOrigin(0.5, 0.5).setScale(1.6).setDepth(-5));
+    // free-standing EXIT sign standing on the ground, just before the finish
+    // (posts sink into the floor; the alien runs past it to escape).
+    world.push(this.add.image(CAM_STOP_X + 470, FLOOR_Y + 18, 'exitsign')
+      .setOrigin(0.5, 1).setScale(1.15).setDepth(9));
 
     // ---- cover objects: museum exhibits the alien hides behind. Whoever's x is
-    // outside every cover's live span is exposed when the guard looks. ----
-    this.covers = COVERS.map((c) => ({
+    // outside every cover's live span is exposed when the guard looks. Randomized. ----
+    this.covers = this.buildLevel().map((c) => ({
       ...c, curX: c.x, activated: false, glide: 0, dir: 1,
     }));
 
@@ -173,6 +189,7 @@ class GameScene extends Phaser.Scene {
         .setOrigin(ox, OBSTACLE_FOOT[c.key]).setDepth(10).setScale(sx);
       world.push(c.sprite);
     }
+    if (DEBUG_HIDE_BOXES) { this.debugGfx = this.add.graphics().setDepth(25); world.push(this.debugGfx); }
 
     // (no finish line — the level ends when the alien walks off the right edge)
 
@@ -201,7 +218,13 @@ class GameScene extends Phaser.Scene {
     this.guardPose = 'pre';
     this.medusaY = ENEMY_DOWN_Y;   // starts hidden below the floor (SAFE)
     world.push(this.medusa);
-    this.spotGfx = this.add.graphics().setDepth(1);    ui.push(this.spotGfx);  // gaze over field
+    // Flashlight beam lives in the WORLD, behind the exhibits (depth 5 < covers' 10),
+    // and is blocked per-exhibit by an inverted geometry mask keyed to hide-boxes.
+    this.spotGfx = this.add.graphics().setDepth(5);    world.push(this.spotGfx);
+    this.beamMask = this.make.graphics();
+    const bmask = this.beamMask.createGeometryMask();
+    bmask.invertAlpha = true;
+    this.spotGfx.setMask(bmask);
     // smooth danger vignette: a white edge-glow gradient texture, tinted yellow
     // (warning) or red (look) and pulsed via alpha — no hard-edged border.
     if (!this.textures.exists('vigTex')) this.buildVignetteTex('vigTex', 360);
@@ -209,10 +232,11 @@ class GameScene extends Phaser.Scene {
     ui.push(this.vignette);
 
     // ---- HUD (UI camera): timer (left) + progress bar (right), same level ----
-    this.timerText = this.add.text(HUD_PAD, BAR_Y, '00:20', {
-      fontFamily: FONT, fontSize: 74, color: '#ffffff', fontStyle: 'bold',
-      stroke: '#1a1a2a', strokeThickness: 12
-    }).setOrigin(0, 0.5).setDepth(97);   // left-anchored so its left padding == the bar's right padding
+    this.timeBar = this.add.image(HUD_PAD, BAR_Y, 'timebar').setOrigin(0, 0.5).setDisplaySize(TB_W, TB_H).setDepth(96);
+    ui.push(this.timeBar);   // green hourglass pill, left-anchored (== progress bar's right padding)
+    this.timerText = this.add.text(TB_TEXT_X, BAR_Y, '00:20', {
+      fontFamily: FONT, fontSize: 52, color: '#111111', fontStyle: 'bold'
+    }).setOrigin(0.5, 0.5).setDepth(97);   // black time on the pill, right of the hourglass
     ui.push(this.timerText);
 
     this.hudState = this.add.image(DW / 2, 560, 'excl_yellow')
@@ -225,7 +249,7 @@ class GameScene extends Phaser.Scene {
     ui.push(this.progEmpty);
     this.progFull = this.add.image(BAR_LEFT, BAR_Y, 'progress_full').setOrigin(0, 0.5).setDisplaySize(BAR_W, BAR_H).setDepth(96);
     ui.push(this.progFull);
-    this.progHead = this.add.image(BAR_LEFT, BAR_Y, 'alienhead').setOrigin(0.5, 0.5).setDisplaySize(BAR_HEAD, BAR_HEAD * 134 / 116).setDepth(97);
+    this.progHead = this.add.image(BAR_LEFT, BAR_Y, 'alienhead').setOrigin(0.5, 0.5).setDisplaySize(BAR_HEAD, BAR_HEAD_H).setDepth(97);
     ui.push(this.progHead);   // alien head riding the fill's leading edge
     { const p0 = Phaser.Math.Clamp((this.leadX - START_X) / (ESCAPE_X - START_X), 0, 1);   // starts empty
       this.progFull.setCrop(0, 0, BAR_TEX_W * p0, BAR_TEX_H);
@@ -247,21 +271,22 @@ class GameScene extends Phaser.Scene {
     // ---- game-over screen (UI camera), hidden until you win/lose ----
     this.overlay = this.add.rectangle(0, 0, DW, DH, 0x101024, 0).setOrigin(0, 0).setDepth(100);
     ui.push(this.overlay);
-    this.outcomeImg = this.add.image(DW / 2, DH / 2, 'busted').setOrigin(0.5, 1).setDepth(101).setVisible(false);
-    ui.push(this.outcomeImg);   // BUSTED / ESCAPED title art
+    this.outcomeImg = this.add.image(DW / 2, DH / 2, 'title_gameover').setOrigin(0.5, 0.5).setDepth(101).setVisible(false);
+    ui.push(this.outcomeImg);   // GAME OVER / YOU WIN title art
     this.overlayText = this.add.text(DW / 2, DH / 2, '', {
-      fontFamily: FONT, fontSize: 52, color: '#ffffff', fontStyle: 'bold',
-      align: 'center', lineSpacing: 18, stroke: '#1a1a2a', strokeThickness: 9
-    }).setOrigin(0.5, 1).setDepth(101).setVisible(false);
-    ui.push(this.overlayText);   // subtitle under the title
+      fontFamily: FONT, fontSize: 66, color: '#000000', fontStyle: 'bold',
+      align: 'center', stroke: '#ffffff', strokeThickness: 8
+    }).setOrigin(0.5, 0.5).setDepth(101).setVisible(false);
+    ui.push(this.overlayText);   // "Time Out!" above the title (time-out loss only)
 
-    // ---- ready screen: 语音提示 header + instruction (pure white, no outline)
+    // ---- ready screen: 语音提示 mic header + instruction (white, black outline)
     // + PLAY button, all three vertically centred on screen ----
     this.readyGrad = this.add.image(0, 0, 'darkgrad').setOrigin(0, 0).setDisplaySize(DW, DH).setDepth(99);
     ui.push(this.readyGrad);
     this.readyTitle = this.add.image(DW / 2, 0, 'voicehint').setOrigin(0.5, 0).setScale(0.85).setDepth(101);
     this.readyText = this.add.text(DW / 2, 0, 'Yell to run!\nHide from the guard and\nreach the end in time.', {
-      fontFamily: FONT, fontSize: 58, color: '#ffffff', fontStyle: 'bold', align: 'center', lineSpacing: 18
+      fontFamily: FONT, fontSize: 58, color: '#ffffff', fontStyle: 'bold', align: 'center', lineSpacing: 18,
+      stroke: '#000000', strokeThickness: 9
     }).setOrigin(0.5, 0).setDepth(101);
     this.playBtn = this.add.image(DW / 2, 0, 'playbutton').setOrigin(0.5, 0.5).setScale(0.9).setDepth(101);
     this.playLabel = this.add.text(DW / 2, 0, 'PLAY', {
@@ -445,6 +470,35 @@ class GameScene extends Phaser.Scene {
     tex.refresh();
   }
 
+  // Soft radial glow behind the winning alien.
+  makeGlowTex() {
+    const key = 'winglow';
+    if (this.textures.exists(key)) return;
+    const S = 256, tex = this.textures.createCanvas(key, S, S), ctx = tex.getContext();
+    const g = ctx.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
+    g.addColorStop(0.00, 'rgba(215,255,150,0.85)');
+    g.addColorStop(0.40, 'rgba(170,240,90,0.42)');
+    g.addColorStop(1.00, 'rgba(170,240,90,0.0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, S, S);
+    tex.refresh();
+  }
+
+  // Black game-over gradient: dark at top & bottom, lighter (but still dim) middle.
+  makeBlackGradient() {
+    const key = 'blackgrad';
+    if (this.textures.exists(key)) return;
+    const tex = this.textures.createCanvas(key, 8, DH);
+    const ctx = tex.getContext();
+    const g = ctx.createLinearGradient(0, 0, 0, DH);
+    g.addColorStop(0.00, 'rgba(0,0,0,0.96)');
+    g.addColorStop(0.42, 'rgba(0,0,0,0.30)');
+    g.addColorStop(0.58, 'rgba(0,0,0,0.30)');
+    g.addColorStop(1.00, 'rgba(0,0,0,0.96)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 8, DH);
+    tex.refresh();
+  }
+
   // Shape-based cast shadow: a black, flattened, flipped-down copy of the sprite,
   // anchored at the feet so it lies on the floor with the object's silhouette.
   // Lifted up slightly (SHADOW_LIFT) so it tucks under the base with no gap.
@@ -469,6 +523,20 @@ class GameScene extends Phaser.Scene {
       .setTintFill(0x000000).setAlpha(0.16).setDepth(6);
   }
 
+  // Freeze the alien in the shocked "fail" pose (caught, or time ran out).
+  setFailPose() {
+    const m = this.members[0];
+    if (!m || !m.img || !m.img.active) return;
+    const pf = PLAYER_POSE.fail;
+    m.img.anims.stop();
+    m.img.clearTint();
+    m.img.setTexture(pf.key).setOrigin(0.5, pf.foot).setScale(pf.scale).setDepth(20);
+    if (this.playerShadow) {
+      this.playerShadow.setVisible(true).anims.stop();
+      this.playerShadow.setTexture(pf.key).setOrigin(0.5, pf.foot).setScale(pf.scale, -pf.scale * 0.30);
+    }
+  }
+
   setPlayerPose(pose) {
     if (this.pose === pose) return;
     const m = this.members[0]; if (!m || !m.alive) return;
@@ -485,9 +553,48 @@ class GameScene extends Phaser.Scene {
     }
   }
 
+  // Randomized level: each exhibit is used at most once, always including the
+  // patrolling car. The first exhibit is centred on START_X (stable spawn); the
+  // coffin, when present, is the spawn (its rope barrier trails off-screen left).
+  buildLevel() {
+    const rnd = (n) => Math.floor(Math.random() * n);
+    const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+    const statics = shuffle(LEVEL_POOL.slice());
+    let order;
+    if (Math.random() < 0.45) {
+      order = ['coffin', ...shuffle([...statics, 'obstacle3'])];       // coffin + 4 statics + car (6)
+    } else {
+      const spawn = statics.shift();
+      order = [spawn, ...shuffle([...statics, 'obstacle3'])];          // static + 3 statics + car (5)
+    }
+    const covers = [];
+    let x = 0;
+    order.forEach((key, i) => {
+      const w = HIDE_W[key];
+      const cx = i === 0 ? START_X - w / 2 : x;
+      const c = { x: cx, w, key };
+      if (key === 'newobstacle2') c.gap = [0.40, 0.60];   // duck+toast: middle gap not a hide point
+      if (key === 'obstacle3') c.moving = true;           // the car patrols
+      covers.push(c);
+      x = cx + w + (key === 'obstacle3' ? PATROL : 0) + (200 + rnd(150));   // gap 200-350
+    });
+    return covers;
+  }
+
+  // The hide-box x-range for a cover: [left, right], after per-exhibit inset tweaks.
+  hideEdges(c) {
+    const ins = HIDE_INSET[c.key] || [0, 0];
+    return [c.curX + COVER_PAD + ins[0], c.curX + c.w - COVER_PAD - ins[1]];
+  }
+
   inCover(x) {
     for (const c of this.covers) {
-      if (x > c.curX + COVER_PAD && x < c.curX + c.w - COVER_PAD) return true;
+      const [L, R] = this.hideEdges(c);
+      if (x > L && x < R) {
+        // a `gap` cover (e.g. two pedestals) leaves its middle exposed — not a hide point
+        if (c.gap && x > c.curX + c.gap[0] * c.w && x < c.curX + c.gap[1] * c.w) continue;
+        return true;
+      }
     }
     return false;
   }
@@ -512,6 +619,23 @@ class GameScene extends Phaser.Scene {
       c.sprite.y = FLOOR_Y + (c.dy || 0);
       c.shadow.x = c.sprite.x; c.shadow.y = c.sprite.y - SHADOW_LIFT; c.shadow.setFlipX(c.dir < 0);
     }
+    if (DEBUG_HIDE_BOXES && this.debugGfx) this.drawHideBoxes();
+  }
+
+  // Debug: draw each cover's hide-zone as a green box (gap covers skip the middle).
+  drawHideBoxes() {
+    const g = this.debugGfx; g.clear();
+    const yTop = FLOOR_Y - 360, yBot = FLOOR_Y + 40;
+    for (const c of this.covers) {
+      const [L, R] = this.hideEdges(c);
+      const segs = c.gap
+        ? [[L, c.curX + c.gap[0] * c.w], [c.curX + c.gap[1] * c.w, R]]
+        : [[L, R]];
+      for (const [x0, x1] of segs) {
+        g.fillStyle(0x00ff66, 0.22); g.fillRect(x0, yTop, x1 - x0, yBot - yTop);
+        g.lineStyle(4, 0x00ff66, 0.95); g.strokeRect(x0, yTop, x1 - x0, yBot - yTop);
+      }
+    }
   }
 
   // Death: two rows of fangs snap shut (top + inverted bottom) over a red flash.
@@ -522,7 +646,8 @@ class GameScene extends Phaser.Scene {
     const top = this.add.image(DW / 2, -th / 2, 'teeth').setOrigin(0.5, 0.5).setScale(scale).setDepth(109).setAlpha(0.5);
     const bot = this.add.image(DW / 2, DH + th / 2, 'teeth').setOrigin(0.5, 0.5).setScale(scale, -scale).setDepth(109).setAlpha(0.5);
     this.cameras.main.ignore([flash, top, bot]);   // UI camera only (fixed to screen)
-    this.tweens.add({ targets: flash, alpha: 1, duration: 90, yoyo: true, hold: 200, onComplete: () => flash.destroy() });
+    this.deathFlash = flash;   // lingers through the catch, then crossfades to the game-over gray
+    this.tweens.add({ targets: flash, alpha: 0.92, duration: 100 });
     this.tweens.add({ targets: top, y: DH * 0.5 - th * 0.42, duration: 170, ease: 'Back.out' });
     this.tweens.add({
       targets: bot, y: DH * 0.5 + th * 0.42, duration: 170, ease: 'Back.out',
@@ -534,22 +659,28 @@ class GameScene extends Phaser.Scene {
   }
 
   killMember(m) {
-    // Caught by the guard! jaws snap shut + red flash, alien snatched away.
+    // Caught by the guard! jaws snap shut + red flash; the alien freezes in shock.
     if (!m.alive) return;
     m.alive = false;
-    if (this.playerShadow) this.playerShadow.setVisible(false);
+    this.state = 'dying';   // freeze play; run the catch VFX, then show the game-over screen
     this.biteEffect();
-    m.img.setDepth(30);
-    const gx = m.img.x, gy = m.img.y;
-    m.img.setTintFill(0xffffff);
-    this.time.delayedCall(60, () => { if (m.img.active) m.img.setTintFill(0xff5555); });
-    this.tweens.add({ targets: m.img, x: gx + 8, duration: 40, yoyo: true, repeat: 5 });
-    this.time.delayedCall(300, () => {
-      this.tweens.killTweensOf(m.img);
-      if (m.img.active) this.tweens.add({
-        targets: m.img, y: gy - 160, scaleX: 0, scaleY: 0, angle: 220, alpha: 0,
-        duration: 380, ease: 'Back.in', onComplete: () => m.img.destroy()
-      });
+    // the guard reacts with the "caught!" close-up during the red teeth VFX
+    const gA = GUARD.attack;
+    this.medusa.setTexture('guard_caught').setOrigin(0.5, gA.foot).setScale(gA.scale);
+    this.spotGfx.clear(); this.drawBeam();   // keep the flashlight ray pinned on the caught player
+    // the player switches to the shocked "fail" pose and STAYS there (doesn't vanish)
+    this.setFailPose();
+    const gx = m.img.x;
+    this.tweens.add({ targets: m.img, x: gx + 8, duration: 40, yoyo: true, repeat: 5 });   // shocked shudder
+    // let the red danger flash linger, then crossfade it into the game-over gray
+    this.time.delayedCall(1450, () => {
+      this.medusa.setTexture('guard_attack').setOrigin(0.5, gA.foot).setScale(gA.scale);
+      this.guardPose = 'attack';
+      if (this.deathFlash) {
+        const f = this.deathFlash; this.deathFlash = null;
+        this.tweens.add({ targets: f, alpha: 0, duration: 450, onComplete: () => f.destroy() });
+      }
+      this.endGame(0, 'caught');
     });
   }
 
@@ -590,23 +721,80 @@ class GameScene extends Phaser.Scene {
         if (!this.inCover(m.x)) this.killMember(m);
       }
     }
+    if (this.state !== 'playing') return;   // just caught -> killMember runs the death + delayed game-over
 
     this.updateCat(dt);
     this.updateHud();
 
     // countdown
     this.timeLeft -= dt;
-    if (this.timeLeft <= 0) { this.timeLeft = 0; return this.endGame(0, 'time'); }
+    if (this.timeLeft <= 0) { this.timeLeft = 0; this.setFailPose(); return this.endGame(0, 'time'); }
 
     // end conditions
     const alive = this.aliveMembers();
     if (alive.length === 0) return this.endGame(0);
-    // escaped only once the ENTIRE alien has cleared the right screen edge
+    // escaped once the ENTIRE alien has cleared the right screen edge -> win beat
     const m0 = this.members[0];
     if (m0 && m0.alive) {
       const cam = this.cameras.main;
       const screenRightWorld = cam.midPoint.x + (DW / 2) / cam.zoom;
-      if (m0.img.getBounds().left > screenRightWorld) return this.endGame(1);
+      if (m0.img.getBounds().left > screenRightWorld) return this.winSequence();
+    }
+  }
+
+  // Win: the alien has run off the right edge — pan the scene right to reveal it
+  // striking the triumphant pose by the exit sign, then show the YOU WIN screen.
+  winSequence() {
+    if (this.state !== 'playing') return;
+    this.state = 'winning';
+    this.cameras.main.stopFollow();
+    this.spotGfx.clear(); this.beamMask.clear();
+    this.medusa.setVisible(false);   // guard out of the winning frame
+    const m = this.members[0], pw = PLAYER_POSE.win, y = FLOOR_Y + ALIEN_DY;
+    // soft glow behind the winning alien
+    const glow = this.add.image(WIN_ALIEN_X, y - 150, 'winglow').setScale(2.4).setDepth(19);
+    this.uiCam.ignore(glow);
+    m.img.anims.stop();
+    m.img.clearTint();
+    m.img.setTexture(pw.key).setOrigin(0.5, pw.foot).setScale(pw.scale).setDepth(20);
+    m.img.x = WIN_ALIEN_X; m.img.y = y;
+    this.playerShadow.setVisible(true).anims.stop();
+    this.playerShadow.setTexture(pw.key).setOrigin(0.5, pw.foot).setScale(pw.scale, -pw.scale * 0.30)
+      .setTintFill(0x000000).setAlpha(0.16);
+    this.playerShadow.x = WIN_ALIEN_X; this.playerShadow.y = y - SHADOW_LIFT;
+    // pan the camera right to frame [exit sign | winning alien], then the YOU WIN page
+    const cam = this.cameras.main, proxy = { x: cam.midPoint.x };
+    this.tweens.add({
+      targets: proxy, x: WIN_CAM_X, duration: 650, ease: 'Sine.inOut',
+      onUpdate: () => cam.centerOn(proxy.x, CAM_CY),
+      onComplete: () => this.time.delayedCall(300, () => this.endGame(1)),
+    });
+  }
+
+  // Flashlight beam (WORLD space) from the guard's raised flashlight, tracked live
+  // from medusaY. Exhibits block it: an inverted mask punches each hide-box column.
+  drawBeam() {
+    const gA = GUARD.attack;
+    const ax = this.guardWorldX(this.cameras.main) + (FL_FX - 0.5) * GUARD_FW * gA.scale;   // lens world x
+    const ay = this.medusaY - (gA.foot - FL_FY) * GUARD_FH * gA.scale;                       // lens world y
+    const baseY = CAM_CY + (DH / 2) / ZOOM;   // world y at the screen bottom
+    const aw = 24 / ZOOM, bl = 300 / ZOOM, br = 430 / ZOOM;
+    const s = this.spotGfx;
+    s.fillStyle(0xfff2a0, 0.26 + Math.sin(this.time.now / 80) * 0.06);
+    s.fillTriangle(ax - aw, ay, ax + aw, ay, ax + br, baseY);
+    s.fillTriangle(ax - aw, ay, ax + br, baseY, ax - bl, baseY);
+    // exhibits cast shadows: project a wedge from each hide-box's BOTTOM (ground
+    // contact) away from the flashlight, darkening only the floor beyond the box.
+    // Gap covers pass light through the middle. (The sprite blocks the beam above.)
+    const mg = this.beamMask; mg.clear(); mg.fillStyle(0xffffff, 1);
+    const yBot = FLOOR_Y;
+    const proj = (px) => ax + (px - ax) * (baseY - ay) / (yBot - ay);   // ray apex->(px, yBot) at y=baseY
+    const wedge = (x0, x1) => mg.fillPoints(
+      [{ x: x0, y: yBot }, { x: x1, y: yBot }, { x: proj(x1), y: baseY }, { x: proj(x0), y: baseY }], true);
+    for (const c of this.covers) {
+      const [L, R] = this.hideEdges(c);
+      if (c.gap) { wedge(L, c.curX + c.gap[0] * c.w); wedge(c.curX + c.gap[1] * c.w, R); }
+      else wedge(L, R);
     }
   }
 
@@ -628,17 +816,8 @@ class GameScene extends Phaser.Scene {
 
     // Flashlight-beam rays from the guard's glowing eyes (attack pose). Origin tracked
     // live from medusaY, and the guard is centre-locked, so ray + guard never drift.
-    // Flashlight beam from the guard's RAISED FLASHLIGHT (attack-frame lens
-    // position), tracked live from medusaY so it stays on the lens as it rises.
-    const gA = GUARD.attack;
-    const bx = DW / 2 + (FL_FX - 0.5) * GUARD_FW * gA.scale * ZOOM;
-    const by = (this.medusaY - (gA.foot - FL_FY) * GUARD_FH * gA.scale - CAM_CY) * ZOOM + DH / 2;
-    const s = this.spotGfx; s.clear();
-    if (this.phase === 'look') {
-      s.fillStyle(0xfff2a0, 0.26 + Math.sin(this.time.now / 80) * 0.06);
-      s.fillTriangle(bx - 24, by, bx + 24, by, bx + 430, DH);
-      s.fillTriangle(bx - 24, by, bx + 430, DH, bx - 300, DH);
-    }
+    this.spotGfx.clear(); this.beamMask.clear();
+    if (this.phase === 'look') this.drawBeam();
 
     // smooth danger vignette: tint the edge-glow yellow (warning) or red (look)
     // and pulse its alpha — a soft gradient glow instead of a hard border.
@@ -660,7 +839,7 @@ class GameScene extends Phaser.Scene {
     const t = Math.max(0, Math.ceil(this.timeLeft));
     const mm = Math.floor(t / 60), ss = t % 60;
     this.timerText.setText(String(mm).padStart(2, '0') + ':' + String(ss).padStart(2, '0'));
-    this.timerText.setColor(t <= 5 ? '#ff5b5b' : '#ffffff');
+    this.timerText.setColor(t <= 5 ? '#c0201a' : '#111111');
 
     // progress (camera follows this.camTarget automatically): reveal the full bar by crop
     const p = Phaser.Math.Clamp((this.leadX - START_X) / (ESCAPE_X - START_X), 0, 1);   // 0 at spawn, 1 at escape
@@ -677,25 +856,35 @@ class GameScene extends Phaser.Scene {
     this.state = 'over';
     this.holding = false;
     this.spotGfx.clear(); this.vignette.setAlpha(0); this.hudState.setVisible(false);
-    if (score === 0) {   // lost -> keep the red danger gradient on the game-over screen
-      const grad = this.add.image(0, 0, 'redgrad').setOrigin(0, 0).setDisplaySize(DW, DH).setDepth(99).setAlpha(0);
-      this.cameras.main.ignore(grad);
-      this.tweens.add({ targets: grad, alpha: 0.62, duration: 250 });
-    }
-    this.showOutcome(score > 0);
+    // clear the top HUD (timer pill + progress bar) on the outcome screen
+    [this.timeBar, this.timerText, this.progEmpty, this.progFull, this.progHead].forEach((o) => o && o.setVisible(false));
+    // lost -> subtle black gradient; won -> the same soft gradient as the start screen
+    const grad = this.add.image(0, 0, score === 0 ? 'blackgrad' : 'darkgrad')
+      .setOrigin(0, 0).setDisplaySize(DW, DH).setDepth(score === 0 ? 99 : 8).setAlpha(0);
+    this.cameras.main.ignore(grad);
+    this.tweens.add({ targets: grad, alpha: score === 0 ? 0.5 : 1, duration: 300 });
+    this.showOutcome(score > 0, reason === 'time');
   }
 
-  showOutcome(win) {
+  showOutcome(win, timeout) {
     this.overlay.setVisible(true);
-    // BUSTED / ESCAPED title art, scaled to a fixed on-screen width
-    this.outcomeImg.setTexture(win ? 'escaped' : 'busted').setVisible(true);
+    // GAME OVER / YOU WIN title art, scaled to a fixed on-screen width
+    this.outcomeImg.setTexture(win ? 'title_youwin' : 'title_gameover').setVisible(true);
     const titleScale = 660 / this.outcomeImg.width;
-    const bH = this.playBtn.displayHeight;               // button at its 0.9 scale
-    this.outcomeImg.setY(this.playBtnY - bH / 2 - 210);  // title sits high above the button
-    // reuse the ready-screen PLAY button as RETRY, at the SAME start-screen spot
+    const titleH = this.outcomeImg.height * titleScale;
+    this.overlayText.setText('Time Out!').setVisible(timeout);
+    const toH = timeout ? this.overlayText.height : 0;
     this.playLabel.setText('RETRY');
-    this.playBtn.setY(this.playBtnY).setVisible(true);
-    this.playLabel.setY(this.playBtnY - 6).setVisible(true);
+    const bH = this.playBtn.displayHeight;                 // button at its 0.9 scale
+    // vertically centre the group: [Time Out! (opt)] + [title] + [RETRY]
+    const gTO = 24, gTB = 72;
+    const total = (timeout ? toH + gTO : 0) + titleH + gTB + bH;
+    let y = DH / 2 - total / 2;
+    if (timeout) { this.overlayText.setY(y + toH / 2); y += toH + gTO; }
+    this.outcomeImg.setY(y + titleH / 2); y += titleH + gTB;
+    const btnCY = y + bH / 2;
+    this.playBtn.setY(btnCY).setVisible(true);
+    this.playLabel.setY(btnCY - 6).setVisible(true);
     // quick pop-in (title first, then button) with a slight overshoot
     this.outcomeImg.setScale(0);
     this.playBtn.setScale(0);
@@ -703,6 +892,10 @@ class GameScene extends Phaser.Scene {
     this.tweens.add({ targets: this.outcomeImg, scale: titleScale, duration: 300, ease: 'Back.easeOut' });
     this.tweens.add({ targets: this.playBtn, scale: 0.9, duration: 280, delay: 120, ease: 'Back.easeOut' });
     this.tweens.add({ targets: this.playLabel, scale: 1, duration: 280, delay: 120, ease: 'Back.easeOut' });
+    if (timeout) {
+      this.overlayText.setScale(0);
+      this.tweens.add({ targets: this.overlayText, scale: 1, duration: 300, ease: 'Back.easeOut' });
+    }
   }
 }
 
