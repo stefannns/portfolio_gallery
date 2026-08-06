@@ -333,19 +333,18 @@ class TitleScene extends Phaser.Scene {
         }).setOrigin(0.5).setDepth(5);
         const bs = this.textures.get('playbtn').getSourceImage();
         const btnH = PLAY_BTN_W * bs.height / bs.width;
-        const gap = 50;                                   // text-to-button spacing
+        const gap = 90;                                   // text-to-button spacing
         const groupTop = windowHeight * 0.5 - (intro.height + gap + btnH) / 2;
         intro.setY(groupTop + intro.height / 2);
         this.buildPlayButton(cx, groupTop + intro.height + gap + btnH / 2);
     }
 
-    // Green PLAY pill (baked art). Gentle pulse for affordance; tap starts the game and
-    // hands off the current sweep phase + demo animal so play continues seamlessly.
+    // Green PLAY pill (baked art). Tap starts the game and hands off the current sweep
+    // phase + demo animal so play continues seamlessly.
     buildPlayButton(cx, cy) {
         const bs = this.textures.get('playbtn').getSourceImage();
         const btnH = PLAY_BTN_W * bs.height / bs.width;
-        const btn = this.add.image(cx, cy, 'playbtn').setDisplaySize(PLAY_BTN_W, btnH).setDepth(60);
-        this.tweens.add({ targets: btn, scale: btn.scale * 1.05, duration: 720, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+        this.add.image(cx, cy, 'playbtn').setDisplaySize(PLAY_BTN_W, btnH).setDepth(60);
         this.add.zone(cx, cy, PLAY_BTN_W * 1.1, btnH * 1.6).setDepth(61)
             .setInteractive({ useHandCursor: true })
             .on('pointerdown', () => this.scene.start('GameScene', { t: this.demoT, firstKey: this.demoKey }));
