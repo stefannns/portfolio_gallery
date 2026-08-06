@@ -324,16 +324,19 @@ class TitleScene extends Phaser.Scene {
         // full time — so the top-left HUD is consistent from the title onward.
         addTimerBadge(this, String(GAME_SECONDS));
 
-        // How-to-play line (white with a black outline). Lives on the title only, so it
-        // vanishes the moment PLAY starts the game.
-        this.add.text(cx, windowHeight * 0.46, 'Click to drop,\nfind the right spot, and\nsee who can stack the\nhighest!', {
+        // How-to-play line (white with a black outline) + PLAY button, laid out as ONE
+        // group that's vertically centred on the screen with the button close under the
+        // text. Lives on the title only, so it vanishes the moment PLAY starts the game.
+        const intro = this.add.text(cx, 0, 'Click to drop,\nfind the right spot, and\nsee who can stack the\nhighest!', {
             fontFamily: FONT, fontSize: '58px', color: '#ffffff', fontStyle: 'bold',
             stroke: '#000000', strokeThickness: 9, align: 'center', lineSpacing: 10
         }).setOrigin(0.5).setDepth(5);
-
-        // PLAY button (playbtn.png) that starts the game. Kept at the low TikTok-style
-        // position (renders on top of the platform, depth 60).
-        this.buildPlayButton(cx, windowHeight - REC_BOTTOM_GAP - 90);
+        const bs = this.textures.get('playbtn').getSourceImage();
+        const btnH = PLAY_BTN_W * bs.height / bs.width;
+        const gap = 50;                                   // text-to-button spacing
+        const groupTop = windowHeight * 0.5 - (intro.height + gap + btnH) / 2;
+        intro.setY(groupTop + intro.height / 2);
+        this.buildPlayButton(cx, groupTop + intro.height + gap + btnH / 2);
     }
 
     // Green PLAY pill (baked art). Gentle pulse for affordance; tap starts the game and
