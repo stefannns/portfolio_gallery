@@ -61,6 +61,11 @@ const HIDE_W = { newobstacle1: 370, newobstacle2: 560, newobstacle3: 460, newobs
 // Per-exhibit hide-box edge tweaks in px [left, right] (WITHOUT resizing the art).
 // Positive pulls that edge inward; negative extends it outward past the artwork.
 const HIDE_INSET = { newobstacle1: [70, 48], newobstacle2: [0, -30] };
+// Per-exhibit shadow origin nudge (px from FLOOR_Y; negative = the shadow starts higher).
+const SHADOW_YBOT = { newobstacle1: -110, newobstacle2: -75, coffin: -45 };
+// Cast the beam shadow from the full sprite art instead of the hide-box (e.g. the
+// coffin, whose rope barrier is drawn outside its hide-zone but should still shadow).
+const SHADOW_FULL_ART = { coffin: true };
 const LEVEL_POOL = ['newobstacle1', 'newobstacle2', 'newobstacle3', 'newobstacle4'];   // static exhibits
 const LEVEL_LAST_START = 5650;   // don't begin a cover past here (leave room for the finish dash)
 // CW = the content width used to map art -> hide-zone width. For the coffin the
@@ -257,8 +262,8 @@ class GameScene extends Phaser.Scene {
 
     // voice meter (fills with your voice; turns green once loud enough to move):
     // white track image, colored level fill inside it, threshold marker + mic icon.
-    const micTrack = this.add.image(MIC_X, MIC_TOP + MIC_H / 2, 'voicebar').setDisplaySize(MIC_W, MIC_H).setDepth(95);
-    ui.push(micTrack);
+    this.micTrack = this.add.image(MIC_X, MIC_TOP + MIC_H / 2, 'voicebar').setDisplaySize(MIC_W, MIC_H).setDepth(95);
+    ui.push(this.micTrack);
     this.micFill = this.add.rectangle(MIC_X, MIC_FILL_BOT, MIC_W - 20, MIC_FILL_H, 0xff5a5a).setOrigin(0.5, 1).setDepth(96).setScale(1, 0);
     ui.push(this.micFill);
     this.micMark = this.add.image(MIC_X, MIC_FILL_BOT - MIC_FILL_H * (VOICE_THRESHOLD / MIC_MAX), 'voicethresholdmarker').setDisplaySize(MIC_W + 24, 26).setDepth(97);
@@ -476,9 +481,9 @@ class GameScene extends Phaser.Scene {
     if (this.textures.exists(key)) return;
     const S = 256, tex = this.textures.createCanvas(key, S, S), ctx = tex.getContext();
     const g = ctx.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
-    g.addColorStop(0.00, 'rgba(215,255,150,0.85)');
-    g.addColorStop(0.40, 'rgba(170,240,90,0.42)');
-    g.addColorStop(1.00, 'rgba(170,240,90,0.0)');
+    g.addColorStop(0.00, 'rgba(255,244,150,0.9)');
+    g.addColorStop(0.40, 'rgba(255,214,60,0.45)');
+    g.addColorStop(1.00, 'rgba(255,214,60,0.0)');
     ctx.fillStyle = g; ctx.fillRect(0, 0, S, S);
     tex.refresh();
   }
@@ -780,19 +785,22 @@ class GameScene extends Phaser.Scene {
     const baseY = CAM_CY + (DH / 2) / ZOOM;   // world y at the screen bottom
     const aw = 24 / ZOOM, bl = 300 / ZOOM, br = 430 / ZOOM;
     const s = this.spotGfx;
-    s.fillStyle(0xfff2a0, 0.26 + Math.sin(this.time.now / 80) * 0.06);
+    s.fillStyle(0xfff2a0, 0.8);
     s.fillTriangle(ax - aw, ay, ax + aw, ay, ax + br, baseY);
     s.fillTriangle(ax - aw, ay, ax + br, baseY, ax - bl, baseY);
     // exhibits cast shadows: project a wedge from each hide-box's BOTTOM (ground
     // contact) away from the flashlight, darkening only the floor beyond the box.
     // Gap covers pass light through the middle. (The sprite blocks the beam above.)
     const mg = this.beamMask; mg.clear(); mg.fillStyle(0xffffff, 1);
-    const yBot = FLOOR_Y;
-    const proj = (px) => ax + (px - ax) * (baseY - ay) / (yBot - ay);   // ray apex->(px, yBot) at y=baseY
-    const wedge = (x0, x1) => mg.fillPoints(
-      [{ x: x0, y: yBot }, { x: x1, y: yBot }, { x: proj(x1), y: baseY }, { x: proj(x0), y: baseY }], true);
     for (const c of this.covers) {
-      const [L, R] = this.hideEdges(c);
+      // shadow spans the full art (coffin + barrier) when flagged, else the hide-box
+      let L, R;
+      if (SHADOW_FULL_ART[c.key]) { const b = c.sprite.getBounds(); L = b.x; R = b.x + b.width; }
+      else [L, R] = this.hideEdges(c);
+      const yBot = FLOOR_Y + (SHADOW_YBOT[c.key] || 0);   // shadow origin (per-exhibit)
+      const proj = (px) => ax + (px - ax) * (baseY - ay) / (yBot - ay);   // ray apex->(px, yBot) at y=baseY
+      const wedge = (x0, x1) => mg.fillPoints(
+        [{ x: x0, y: yBot }, { x: x1, y: yBot }, { x: proj(x1), y: baseY }, { x: proj(x0), y: baseY }], true);
       if (c.gap) { wedge(L, c.curX + c.gap[0] * c.w); wedge(c.curX + c.gap[1] * c.w, R); }
       else wedge(L, R);
     }
@@ -856,8 +864,9 @@ class GameScene extends Phaser.Scene {
     this.state = 'over';
     this.holding = false;
     this.spotGfx.clear(); this.vignette.setAlpha(0); this.hudState.setVisible(false);
-    // clear the top HUD (timer pill + progress bar) on the outcome screen
-    [this.timeBar, this.timerText, this.progEmpty, this.progFull, this.progHead].forEach((o) => o && o.setVisible(false));
+    // clear the in-game HUD (timer pill, progress bar, voice meter) on the outcome screen
+    [this.timeBar, this.timerText, this.progEmpty, this.progFull, this.progHead,
+     this.micTrack, this.micFill, this.micMark, this.micIcon].forEach((o) => o && o.setVisible(false));
     // lost -> subtle black gradient; won -> the same soft gradient as the start screen
     const grad = this.add.image(0, 0, score === 0 ? 'blackgrad' : 'darkgrad')
       .setOrigin(0, 0).setDisplaySize(DW, DH).setDepth(score === 0 ? 99 : 8).setAlpha(0);
