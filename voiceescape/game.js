@@ -595,12 +595,19 @@ class GameScene extends Phaser.Scene {
     const rnd = (n) => Math.floor(Math.random() * n);
     const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
     const statics = shuffle(LEVEL_POOL.slice());
+    // Shuffle the post-spawn run, but never let the patrolling car be the very
+    // first obstacle after spawn — swap it deeper into the level if it lands there.
+    const tail = (rest) => {
+      const t = shuffle([...rest, 'obstacle3']);
+      if (t[0] === 'obstacle3') { const j = 1 + rnd(t.length - 1); [t[0], t[j]] = [t[j], t[0]]; }
+      return t;
+    };
     let order;
     if (Math.random() < 0.45) {
-      order = ['coffin', ...shuffle([...statics, 'obstacle3'])];       // coffin + 4 statics + car (6)
+      order = ['coffin', ...tail(statics)];       // coffin + 4 statics + car (6)
     } else {
       const spawn = statics.shift();
-      order = [spawn, ...shuffle([...statics, 'obstacle3'])];          // static + 3 statics + car (5)
+      order = [spawn, ...tail(statics)];          // static + 3 statics + car (5)
     }
     const covers = [];
     let x = 0;
