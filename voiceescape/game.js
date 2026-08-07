@@ -50,6 +50,10 @@ const GUARD = {
   pre:    { key: 'guard_pre',    scale: 1.25, foot: 0.95 },   // WARNING: confused, "?"
   attack: { key: 'guard_attack', scale: 1.30, foot: 0.96 },   // LOOK: snarl + flashlight
   after:  { key: 'guard_after',  scale: 1.25, foot: 0.96 },   // HOLD: still angry
+  // CAUGHT: shocked close-up. Its art (805x621) draws the dog ~1.16x larger and
+  // further left than the attack frame, so scale/foot/ox are calibrated to keep
+  // the head in the same on-screen spot when it swaps in.
+  caught: { key: 'guard_caught', scale: 1.12, foot: 0.946, ox: 0.334 },
 };
 const GUARD_FW = 820, GUARD_FH = 609;    // guard_attack frame size
 const FL_FX = 0.244, FL_FY = 0.353;      // flashlight-lens position (fraction of the attack frame)
@@ -686,8 +690,8 @@ class GameScene extends Phaser.Scene {
     this.state = 'dying';   // freeze play; run the catch VFX, then show the game-over screen
     this.biteEffect();
     // the guard reacts with the "caught!" close-up during the red teeth VFX
-    const gA = GUARD.attack;
-    this.medusa.setTexture('guard_caught').setOrigin(0.5, gA.foot).setScale(gA.scale);
+    const gA = GUARD.attack, gC = GUARD.caught;
+    this.medusa.setTexture(gC.key).setOrigin(gC.ox, gC.foot).setScale(gC.scale);
     this.spotGfx.clear(); this.drawBeam();   // keep the flashlight ray pinned on the caught player
     // the player switches to the shocked "fail" pose and STAYS there (doesn't vanish)
     this.setFailPose();
@@ -833,7 +837,7 @@ class GameScene extends Phaser.Scene {
     if (this.guardPose !== wantPose) {
       this.guardPose = wantPose;
       const g = GUARD[wantPose];
-      this.medusa.setTexture(g.key).setOrigin(0.5, g.foot).setScale(g.scale);
+      this.medusa.setTexture(g.key).setOrigin(g.ox ?? 0.5, g.foot).setScale(g.scale);
     }
     this.medusa.x = this.guardWorldX(this.cameras.main);   // screen-centred, or frozen once the camera stops
     this.medusa.y = this.medusaY;
