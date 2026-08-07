@@ -1,9 +1,15 @@
-:root{
+/* This bundle is mounted in two places: /about (standalone, `html.about-solo`) and the root
+   page's hero section, where the gallery owns html/body. So everything global here is gated
+   behind .about-solo, and the variables live on .wrap rather than :root — the gallery declares
+   --bg/--muted/--line/--accent too, and a :root block here would silently repaint it. */
+.wrap{
   --bg:#0b0b0d; --text:#f4f6fa; --muted:#9297a3; --faint:#5b5f6b;
   --accent:#b98cff; --line:rgba(255,255,255,.09);
+  color:var(--text);
+  font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"PingFang SC","Microsoft YaHei",sans-serif;
 }
 *{box-sizing:border-box}
-html,body,#root{margin:0;height:100%}
+.about-solo,.about-solo body,.about-solo #root{margin:0;height:100%}
 /* The page never scrolls. It is embedded in a Lark doc, and an inner scroller there swallows
    the wheel from the document behind it — you go to scroll the doc, the cursor happens to be
    over the badge, and the embed creeps instead. The horizontal hidden was always needed since
@@ -14,9 +20,9 @@ html,body,#root{margin:0;height:100%}
    It has to be set on BOTH html and body: with it on body alone the viewport still scrolled
    (measured 88px of drift at a 600px height), because the body-to-viewport overflow propagation
    does not hold here. */
-html{ overflow:hidden }
-body{
-  background:var(--bg); color:var(--text); overflow:hidden;
+.about-solo{ overflow:hidden }
+.about-solo body{
+  background:#0b0b0d; color:#f4f6fa; overflow:hidden;
   font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"PingFang SC","Microsoft YaHei",sans-serif;
   -webkit-font-smoothing:antialiased;
 }
@@ -77,9 +83,9 @@ body{
      The heights have to go auto as well: left at 100% with a scroller on body, body became its
      own scroll container that the viewport could not drive, and the page still would not move.
      overflow-x:hidden with overflow-y:visible resolves the y to auto, which is what it was. */
-  html,body,#root{ height:auto; min-height:100% }
-  html{ overflow:visible }
-  body{ overflow-x:hidden; overflow-y:visible }
+  .about-solo,.about-solo body,.about-solo #root{ height:auto; min-height:100% }
+  .about-solo{ overflow:visible }
+  .about-solo body{ overflow-x:hidden; overflow-y:visible }
   .wrap{ flex-direction:column; align-items:center; justify-content:flex-start;
          padding:20px 18px 40px; gap:6px }
   .stage{ flex:0 0 auto; width:100%; max-width:420px; height:430px; align-self:center }

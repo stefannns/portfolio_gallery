@@ -1,6 +1,6 @@
 # /about — 3D lanyard badge
 
-Source for the `/about` page. Built output is committed to `../about/` and served statically;
+Source for the badge. Built output is committed to `../about/` and served statically;
 Vercel does **not** run a build for this repo.
 
 ```bash
@@ -12,8 +12,27 @@ npm run dev
 
 The Vite project lives here rather than at the repo root on purpose: a root `package.json`
 would trip Vercel's zero-config detection and switch the whole portfolio from a static deploy
-to a Vite build. `emptyOutDir` is off so the build won't wipe `about/index-2d.html`, which is
-why the `build` script clears `../about/assets` itself.
+to a Vite build.
+
+## This bundle is mounted in two places
+
+1. **`/about`** — the standalone page, built here as `../about/index.html`.
+2. **`/`** — the combined site. The root `index.html` is hand-written and no build step ever
+   rewrites it, so it references `/about/assets/about.js` and `about.css` literally.
+
+That second consumer is why `rollupOptions.output` pins the filenames instead of taking Vite's
+content hashes: a hashed name would go stale on the next build and the root page would silently
+404 its own hero.
+
+Two consequences worth knowing before editing anything global here:
+
+- **Nothing may style `html`/`body` unconditionally.** On the root page the gallery owns those.
+  Every global rule in `styles.css` is gated behind `html.about-solo`, a class set only by this
+  project's own `index.html`. Drop the class and the standalone page loses its layout; add such
+  a rule ungated and it leaks into the gallery.
+- **The palette lives on `.wrap`, not `:root`.** The gallery declares `--bg`, `--muted`,
+  `--line` and `--accent` too, so a `:root` block here would repaint it. `.wrap` is the element
+  `App` renders, and the variables inherit from there.
 
 ## The lanyard
 
@@ -50,13 +69,19 @@ The tile canvas is built to the strap's world aspect — `(ropeLength / repeat) 
 tan(fov/2))` — because meshline offsets vertices in clip space, so the strap's world width is
 `lineWidth * tan(fov/2)`. Get that wrong and the mark is stretched lengthwise.
 
-### The page does not scroll
+### The standalone page does not scroll
 
 It is embedded in a Lark doc, where an inner scroller swallows the wheel from the document
 behind it — you go to scroll the doc, the cursor is over the badge, and the embed creeps
 instead. So `overflow:hidden` on **both** `html` and `body`. Body alone is not enough: the
 body-to-viewport overflow propagation does not hold here, and the viewport still drifted
 (measured 88px at a 600px height).
+
+All of that is gated behind `.about-solo` and applies to `/about` only — the combined root page
+scrolls vertically by design, and there the badge is just a block in the flow. What the root
+page does need is `overflow-x:clip` on the section wrapping it, because `.canvas-layer` is 300%
+wide (below); `clip` rather than `hidden`, since `hidden` would make the section a scroll
+container and eat the wheel, and cannot leave the other axis visible.
 
 The content is 688px tall, so a shorter frame loses the bottom of the stage — empty canvas
 below the card. The copy ends at 487px and the prompt at ~490px, both well clear.

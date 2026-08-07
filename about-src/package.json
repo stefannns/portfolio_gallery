@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "//": "emptyOutDir is off so the build won't wipe about/index-2d.html, which means old hashed assets would otherwise accumulate — clear them by hand first.",
-    "build": "rm -rf ../about/assets && vite build"
+    "build": "vite build"
   },
   "dependencies": {
     "@react-three/drei": "^9.114.0",

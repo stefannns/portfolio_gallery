@@ -83,6 +83,9 @@ const SPLIT_SHADOW = { newobstacle2: { frac: 0.5, leftLift: 20 } };
 const SHADOW_FULL_ART = { coffin: true };
 const LEVEL_POOL = ['newobstacle1', 'newobstacle2', 'newobstacle3', 'newobstacle4'];   // static exhibits
 const LEVEL_LAST_START = 5650;   // don't begin a cover past here (leave room for the finish dash)
+// Base gap after cover i (a random 0-150 is added on top). Front-loaded so the
+// opening exhibits aren't bunched together; tapers to the original 200 baseline.
+const GAP_RAMP = [450, 380, 300, 250, 200, 200];
 // CW = the content width used to map art -> hide-zone width. For the coffin the
 // art also includes the rope barrier (shown, not hideable), so CW is just the
 // COFFIN sub-width and ORIGIN_X puts the coffin (not the whole art) over the zone.
@@ -104,11 +107,11 @@ const PLAYER_POSE = {
 };
 const V_MOVE = 190;        // px/s patrol speed of a moving cover
 const PATROL = 640;        // patrol span: cover swings between c.x and c.x + PATROL
-const CAM_STOP_X = 6100;   // camera stops scrolling here near the end; the alien then walks off-screen
-const ESCAPE_X = 6800;     // alien has walked off the right edge past this -> escaped
-const WORLD_W = 7800;
+const CAM_STOP_X = 6515;   // camera stops scrolling here near the end; the alien then walks off-screen
+const ESCAPE_X = 7215;     // alien has walked off the right edge past this -> escaped
+const WORLD_W = 8600;
 const START_X = 810;       // spawn x (the first exhibit is centred here)
-const WIN_ALIEN_X = 6980;  // where the alien stands to celebrate (right of the exit sign)
+const WIN_ALIEN_X = 7395;  // where the alien stands to celebrate (right of the exit sign)
 const WIN_CAM_X = WIN_ALIEN_X;   // camera centres horizontally on the winning alien
 const DEBUG_HIDE_BOXES = false;   // draw each cover's hide-zone (green box) for tuning
 
@@ -430,15 +433,17 @@ class GameScene extends Phaser.Scene {
     this.phase = p;
     if (p === 'safe') this.phaseTime = Phaser.Math.FloatBetween(1.6, 3.1);
     else if (p === 'warning') {
-      this.phaseTime = 2.2;                           // slow emerge + a longer eyes-open beat before the strike
+      this.phaseTime = 1.3;                           // emerge + eyes-open beat before the strike
+                                                      // (the rise itself takes ~1.21s, so this is just enough)
       // No chained attacks at a turtle (moving-cover) section — single strike only.
       let nearest = null, best = Infinity;
       for (const c of this.covers) {
         const d = Math.abs((c.curX + c.w / 2) - this.leadX);
         if (d < best) { best = d; nearest = c; }
       }
-      const r = Math.random();                       // extra back-to-back attacks this rise
-      this.attacksLeft = (nearest && nearest.moving) ? 0 : (r < 0.6 ? 0 : r < 0.85 ? 1 : 2);
+      // extra back-to-back attacks this rise — capped at 1 so a rise never
+      // strikes more than twice in a row.
+      this.attacksLeft = (nearest && nearest.moving) ? 0 : (Math.random() < 0.6 ? 0 : 1);
     }
     else if (p === 'hold') this.phaseTime = 1.2;      // up-and-watching gap before the next attack
     else if (p === 'look') this.phaseTime = 1.3;
@@ -606,7 +611,9 @@ class GameScene extends Phaser.Scene {
       if (key === 'newobstacle2') c.gap = [0.40, 0.60];   // duck+toast: middle gap not a hide point
       if (key === 'obstacle3') c.moving = true;           // the car patrols
       covers.push(c);
-      x = cx + w + (key === 'obstacle3' ? PATROL : 0) + (200 + rnd(150));   // gap 200-350
+      // Gap after this cover. The opening stretch was reading as cramped, so the
+      // early gaps are widened and taper back to the original 200 baseline.
+      x = cx + w + (key === 'obstacle3' ? PATROL : 0) + (GAP_RAMP[i] ?? 200) + rnd(150);
     });
     return covers;
   }

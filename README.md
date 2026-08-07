@@ -1,49 +1,78 @@
-# Portfolio Gallery
+# Portfolio
 
-A dark, minimalist horizontal film-strip gallery for game-design projects. Drag / wheel / trackpad-swipe sideways through landscape cards; it loops endlessly. Click a card and the cover **glitches away** to reveal a video reel.
+Stefan's game-design portfolio. Static site — no build step at the root, no dependencies.
 
-Single self-contained file — `index.html`, no dependencies, no build step.
+## The site
 
-## Projects
+`index.html` is the whole page, in two sections:
 
-Edit the `PIECES` array near the top of the `<script>` in `index.html`:
+1. **About** — a draggable 3D lanyard badge beside the intro copy. This is a React/three.js
+   bundle; its source is `about-src/` and it is mounted into `#root`. See
+   [about-src/NOTES.md](about-src/NOTES.md).
+2. **Gallery** — a dark horizontal film-strip of the work. Drag / wheel / trackpad-swipe
+   sideways; it loops endlessly. Click a card and the cover **glitches away** to reveal the
+   video reel, with a description drawer below the frame.
+
+`/about` also stays live as a standalone page serving the same bundle — it's embedded on its
+own in a Lark doc.
+
+## Pages
+
+| Path | What |
+|---|---|
+| `/` | the combined site (about + gallery) |
+| `/about` | the badge on its own |
+| `/doggystack`, `/sheepjump`, `/voiceescape`, `/zoostacker` | playable Phaser builds |
+| `/stattest` | mini-game test harness |
+
+## Editing the gallery
+
+The `PIECES` array near the top of the `<script>` in `index.html`:
 
 ```js
 const PIECES = [
-  { title:"Recurve", cat:"Puzzle Game Demo", role:"…", accent:"#6be3c9", video:"videos/recurve.mp4" },
+  { title:"Assassin's Weakness is Love", cn:"心动刺客", cat:"Rhythm Game", date:"May 2025",
+    accent:"#b98cff", cover:"assassin/awil_cover.png", video:REELS+"/assassin-l1.mp4",
+    desc:"…", levels:[ … ] },
   …
 ];
 ```
 
+Per piece: `cn` adds the Chinese name beside the title, `accent` drives that card's glow and
+highlights, `desc`/`desc2` fill the drawer, `levels` adds tabs (Assassin has two), and `hover`
+is a clip that plays on hover (Niflheim).
+
 ## Videos
 
-Drop clips into a `videos/` folder next to `index.html`, matching the filenames in `PIECES`:
+Reels are **not** in the repo — they're too large. They live in a public Supabase Storage
+bucket, referenced through the `REELS` base constant in `index.html`. Covers are committed.
 
-- `videos/recurve.mp4`
-- `videos/assassins-weakness.mp4`
-- `videos/niflheim-highway.mp4`
+Compression used for the hosted reels (keeps them under Supabase's 50 MB/file cap, with audio):
 
-Landscape (16:9) plays uncropped. With no file present, a styled placeholder "reel" shows instead.
+```bash
+ffmpeg -i in.mov -vf scale=-2:720 -c:v libx264 -crf 23 -maxrate 2.3M -bufsize 4.6M -c:a aac -b:a 128k -movflags +faststart out.mp4
+```
 
 ## Run locally
 
+Serve from the repo root — the about bundle is referenced by absolute path (`/about/assets/…`),
+so opening `index.html` as a `file://` URL will not load it.
+
 ```bash
 python3 -m http.server 8000
-# open http://localhost:8000
 ```
 
 ## Deploy
 
-Static site — deploy anywhere. For Vercel:
+Static, no build command, framework preset **Other**. Vercel auto-deploys on push to `main`.
+After changing anything in `about-src/`, rebuild and commit the output:
 
 ```bash
-npx vercel
+cd about-src && npm run build
 ```
-
-Framework preset **Other**, no build command. Then embed the resulting URL in a Lark doc (paste → Embed).
 
 ## Controls
 
 - **Drag / wheel / two-finger swipe** — move sideways (loops both ways)
-- **Click** a centered card — reveal the video reel; **✕** or click again to close
-- **Arrow keys** — previous / next · **number keys 1–4** — switch reveal effect (testing)
+- **Click** a centered card — reveal the reel; **✕** to close
+- **Arrow keys** — previous / next

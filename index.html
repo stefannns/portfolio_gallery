@@ -3,7 +3,11 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Portfolio — Game Design</title>
+<title>Stefan — Game Design Portfolio</title>
+<!-- The /about hero is the same built bundle the standalone /about page serves; it mounts into
+     #root below. Loaded BEFORE the gallery's own <style> so gallery rules win any tie. -->
+<link rel="stylesheet" href="/about/assets/about.css">
+<script type="module" src="/about/assets/about.js"></script>
 <style>
   :root{
     --bg:#0a0b0e;
@@ -20,21 +24,42 @@
   }
 
   *{box-sizing:border-box}
-  html,body{height:100%}
+  html,body{min-height:100%}
   body{
     margin:0;
     background:radial-gradient(120% 90% at 50% -10%, #14161c 0%, var(--bg) 55%), var(--bg);
     color:var(--ink);
     font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     -webkit-font-smoothing:antialiased;
-    overflow:hidden;overscroll-behavior:none;
+    /* The page scrolls vertically now (about hero, then the gallery). Only x is pinned — the
+       badge's canvas layer and the rail both overhang on purpose. overscroll-behavior stays
+       x-only so a trackpad h-swipe can't trigger browser back-nav, without touching y. */
+    overflow-x:hidden;overscroll-behavior-x:none;
   }
   body::after{ /* vignette */
     content:"";position:fixed;inset:0;pointer-events:none;z-index:5;
     background:radial-gradient(140% 120% at 50% 50%, transparent 58%, rgba(0,0,0,.55) 100%);
   }
 
-  #stage{position:fixed;inset:0;display:flex;flex-direction:column}
+  /* ---------- ABOUT HERO ---------- */
+  /* The badge's .canvas-layer is 300% of its stage width on purpose (it swings out over the
+     copy), so this has to clip horizontally or the whole page gains a sideways scrollbar.
+     `clip` and not `hidden`: hidden would make the section a scroll container and eat the
+     wheel; clip is the one overflow value that doesn't. It also leaves overflow-y visible,
+     which hidden cannot do — hidden on one axis forces the other to auto. */
+  #about-section{position:relative;overflow-x:clip;padding:44px 0 8px;z-index:1}
+  /* hairline handoff into the work */
+  #about-section::after{
+    content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+    width:min(560px,72vw);height:1px;
+    background:linear-gradient(90deg,transparent,var(--line),transparent);
+  }
+  @media (max-width:720px){ #about-section{padding:24px 0 8px} }
+
+  /* ---------- GALLERY ---------- */
+  /* Was position:fixed;inset:0 back when the gallery was the whole page. It's a section now,
+     but still exactly one viewport tall so the rail's centring lands a card in the middle. */
+  #stage{position:relative;height:100vh;height:100svh;display:flex;flex-direction:column}
 
   /* ---------- RAIL ---------- */
   .rail{
@@ -44,7 +69,9 @@
     opacity:0;transform:translateY(16px);
     transition:opacity .9s var(--ease), transform .9s var(--ease);
     cursor:grab;touch-action:pan-x;gap:3.4vw;
-    overscroll-behavior:contain;            /* stop trackpad h-swipe from triggering browser back-nav */
+    /* x only. As `contain` on both axes the rail also refused to hand a vertical wheel back to
+       the page, so the cursor sitting over the gallery stopped the page scrolling at all. */
+    overscroll-behavior-x:contain;          /* stop trackpad h-swipe from triggering browser back-nav */
   }
   .rail.ready{opacity:1;transform:none}
   .rail.dragging{cursor:grabbing}
@@ -235,7 +262,9 @@
   .nav-arrow svg{width:26px;height:26px}
 
   /* "scroll for details" hint — over the reel while reading, until the user scrolls */
-  .scroll-hint{position:fixed;z-index:20;left:50%;bottom:88px;
+  /* absolute, not fixed: it belongs to the gallery section, and as fixed it hung over the
+     about hero too once the page started scrolling */
+  .scroll-hint{position:absolute;z-index:20;left:50%;bottom:88px;
     display:flex;align-items:center;gap:9px;padding:9px 16px;border-radius:999px;
     border:1px solid var(--line);background:rgba(10,11,14,.62);backdrop-filter:blur(10px);
     font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);white-space:nowrap;
@@ -252,13 +281,16 @@
    * ============================================================= */
 
   /* 1 · INK — soft organic bloom that spreads from the click point */
-  @property --ink{ syntax:'<percentage>'; inherits:false; initial-value:0%; }
+  /* --inkr, not --ink: @property registers a name GLOBALLY, so registering --ink as a
+     <percentage> made the :root text colour --ink:#eceef2 type-invalid, and every
+     color:var(--ink) fell back to the initial-value 0% — an invalid colour, i.e. black. */
+  @property --inkr{ syntax:'<percentage>'; inherits:false; initial-value:0%; }
   .card[data-fx="ink"] .front{
-    -webkit-mask:radial-gradient(circle at var(--cx,50%) var(--cy,50%), transparent 0, transparent calc(var(--ink) - 18%), #000 var(--ink));
-            mask:radial-gradient(circle at var(--cx,50%) var(--cy,50%), transparent 0, transparent calc(var(--ink) - 18%), #000 var(--ink));
-    transition:--ink .95s var(--ease);
+    -webkit-mask:radial-gradient(circle at var(--cx,50%) var(--cy,50%), transparent 0, transparent calc(var(--inkr) - 18%), #000 var(--inkr));
+            mask:radial-gradient(circle at var(--cx,50%) var(--cy,50%), transparent 0, transparent calc(var(--inkr) - 18%), #000 var(--inkr));
+    transition:--inkr .95s var(--ease);
   }
-  .card[data-fx="ink"].open .front{ --ink:175%; }
+  .card[data-fx="ink"].open .front{ --inkr:175%; }
   .card[data-fx="ink"].open .art{ animation:inkbleed .95s var(--ease) }
   @keyframes inkbleed{0%{filter:none}45%{filter:blur(2.5px) brightness(1.12) saturate(1.2)}100%{filter:none}}
 
@@ -365,6 +397,12 @@
       <feDisplacementMap id="rippleDisp" in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
   </svg>
+
+  <!-- ABOUT — the React/three.js lanyard badge. Mounted by /about/assets/about.js into #root,
+       the same element name the standalone /about page uses, so one build serves both. -->
+  <section id="about-section" aria-label="About">
+    <div id="root"></div>
+  </section>
 
   <main id="stage">
     <button class="nav-arrow left" id="navPrev" aria-label="Previous">
