@@ -45,15 +45,20 @@ const FLOOR_TOP = 1300;          // top of the marble-floor strip (raised -> sho
 // Guard rises from BEHIND the wall (depth < wall's -11), peeking over WALL_TOP_Y.
 const ENEMY_WY = 1100;           // base world-y when UP: face pokes above the wall, chest behind it
 const ENEMY_DOWN_Y = 1850;       // ducked fully behind the wall (hidden during SAFE)
-// Guard poses per phase (bulldog cop). Each: art key + scale + foot fraction (anchor near the chest).
+// Guard poses per phase (bulldog cop). Each: art key + scale + foot fraction (anchor
+// near the chest). Poses that hold the flashlight also carry their frame size (fw/fh)
+// and the lens position within that frame (flx/fly) so the beam starts on the lens.
 const GUARD = {
   pre:    { key: 'guard_pre',    scale: 1.25, foot: 0.95 },   // WARNING: confused, "?"
-  attack: { key: 'guard_attack', scale: 1.30, foot: 0.96 },   // LOOK: snarl + flashlight
+  attack: { key: 'guard_attack', scale: 1.30, foot: 0.96,     // LOOK: snarl + flashlight
+            fw: 820, fh: 609, flx: 0.244, fly: 0.353 },
   after:  { key: 'guard_after',  scale: 1.25, foot: 0.96 },   // HOLD: still angry
   // CAUGHT: shocked close-up. Its art (805x621) draws the dog ~1.16x larger and
   // further left than the attack frame, so scale/foot/ox are calibrated to keep
-  // the head in the same on-screen spot when it swaps in.
-  caught: { key: 'guard_caught', scale: 1.12, foot: 0.946, ox: 0.334 },
+  // the head in the same on-screen spot when it swaps in. Its flashlight sits far
+  // left in the frame (lens at ~53,189), hence the very different flx/fly.
+  caught: { key: 'guard_caught', scale: 1.12, foot: 0.946, ox: 0.334,
+            fw: 805, fh: 621, flx: 0.066, fly: 0.304 },
 };
 const GUARD_FW = 820, GUARD_FH = 609;    // guard_attack frame size
 const FL_FX = 0.244, FL_FY = 0.353;      // flashlight-lens position (fraction of the attack frame)
@@ -692,6 +697,7 @@ class GameScene extends Phaser.Scene {
     // the guard reacts with the "caught!" close-up during the red teeth VFX
     const gA = GUARD.attack, gC = GUARD.caught;
     this.medusa.setTexture(gC.key).setOrigin(gC.ox, gC.foot).setScale(gC.scale);
+    this.guardPose = 'caught';   // so the beam origin uses this pose's flashlight lens
     this.spotGfx.clear(); this.drawBeam();   // keep the flashlight ray pinned on the caught player
     // the player switches to the shocked "fail" pose and STAYS there (doesn't vanish)
     this.setFailPose();
@@ -799,9 +805,12 @@ class GameScene extends Phaser.Scene {
   // Flashlight beam (WORLD space) from the guard's raised flashlight, tracked live
   // from medusaY. Exhibits block it: an inverted mask punches each hide-box column.
   drawBeam() {
-    const gA = GUARD.attack;
-    const ax = this.guardWorldX(this.cameras.main) + (FL_FX - 0.5) * GUARD_FW * gA.scale;   // lens world x
-    const ay = this.medusaY - (gA.foot - FL_FY) * GUARD_FH * gA.scale;                       // lens world y
+    // origin follows whichever pose is holding the flashlight (attack vs caught):
+    // each carries its own frame size + lens fraction, so the ray starts on the lens.
+    const g = (GUARD[this.guardPose] && GUARD[this.guardPose].flx != null) ? GUARD[this.guardPose] : GUARD.attack;
+    const ox = g.ox ?? 0.5;
+    const ax = this.guardWorldX(this.cameras.main) + (g.flx - ox) * g.fw * g.scale;   // lens world x
+    const ay = this.medusaY - (g.foot - g.fly) * g.fh * g.scale;                      // lens world y
     const baseY = CAM_CY + (DH / 2) / ZOOM;   // world y at the screen bottom
     const aw = 24 / ZOOM, bl = 300 / ZOOM, br = 430 / ZOOM;
     const s = this.spotGfx;
