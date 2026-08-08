@@ -11,3 +11,11 @@ web/
 
 # vite build tooling for the /about lanyard page
 about-src/node_modules/
+
+# Any node_modules, not just about-src's. badge-portfolio/node_modules alone is 255MB, so a
+# single `git add -A` without this would commit it.
+node_modules/
+**/node_modules/
+# local vite build output; only about/ is committed, and that is written by its own build
+dist/
+**/dist/
