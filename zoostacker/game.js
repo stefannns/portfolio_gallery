@@ -1008,10 +1008,19 @@ class GameScene extends Phaser.Scene {
     }
 
     update(time, delta) {
-        // exactly one physics step per rendered frame -> even on-screen motion
-        const stepMs = Phaser.Math.Clamp(delta, MIN_STEP_MS, MAX_STEP_MS);
-        this.stepScale = stepMs / BASE_STEP_MS;
-        this.matter.world.step(stepMs);
+        // Fixed-timestep physics: advance Matter by a constant BASE_STEP_MS regardless of
+        // the render frame rate, so the fall runs at the same speed on 60Hz, 120Hz, or a
+        // throttled webview (e.g. the Lark embed, where variable/clamped deltas used to make
+        // it fall too fast). Accumulate real elapsed time and run whole fixed steps.
+        // On a 60Hz display delta ~= BASE_STEP_MS, so this matches the old behaviour exactly.
+        this._physAcc = (this._physAcc || 0) + Math.min(delta, MAX_STEP_MS);
+        let steps = 0;
+        while (this._physAcc >= BASE_STEP_MS && steps < 5) {   // cap guards against a hitch spiral
+            this.matter.world.step(BASE_STEP_MS);
+            this._physAcc -= BASE_STEP_MS;
+            steps++;
+        }
+        this.stepScale = 1;   // steps are constant now -> fallCap == MAX_FALL_SPEED
 
         // countdown runs in real time (wall-clock delta), but only after the first drop
         if (this.timerStarted && !this.gameOver && !this.finished) {
