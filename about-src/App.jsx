@@ -5,6 +5,7 @@ import { useTextRepel } from './useTextRepel.js'
 import { mountWaves } from './waves.js'
 import { makeCardFrontURL, makeCardBackURL, makeStrapURL, CAM_FOV, CAM_Z, CAM_Y, BAND_LINE_W, ANCHOR_Y, ROPE_SEG } from './cardTexture.js'
 import patternUrl from './pattern.png'
+import grabIconUrl from './grabicon.png'
 
 // The card's physical extent, from the component's own CuboidCollider args [0.8, 1.125, 0.01].
 const CARD_HW = 0.8, CARD_HH = 1.125
@@ -102,7 +103,15 @@ export default function App () {
             />
           )}
         </div>
-        <div className={used ? 'hint is-used' : 'hint'}>drag the badge</div>
+        {/* The icon is a MASK, not an <img>: it is a flat shape, so masking it and filling with
+            currentColor makes it exactly the hint's colour and keeps it that way if the accent
+            ever changes again. The URL has to come through as a custom property because Vite
+            hashes the asset filename at build time. */}
+        <div className={used ? 'hint is-used' : 'hint'}
+             style={{ '--grab': `url(${grabIconUrl})` }}>
+          <i className="hint-icon" aria-hidden="true" />
+          drag the badge
+        </div>
       </div>
       <section className="info">
         <p className="intro">

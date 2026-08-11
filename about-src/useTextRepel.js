@@ -70,7 +70,7 @@ export function useTextRepel () {
       const els = Array.from(document.querySelectorAll(SELECTOR))
       // Clear transforms before measuring, otherwise each pass reads the previous offset back
       // in and the elements creep across the page.
-      els.forEach((el) => { el.style.transform = '' })
+      els.forEach((el) => { el.style.transform = ''; el.classList.remove('is-lit') })
       items.current = els.map((el) => {
         const r = el.getBoundingClientRect()
         return {
@@ -121,7 +121,7 @@ export function useTextRepel () {
       removeEventListener('blur', clearHot)
       clearHot()
       removeEventListener('resize', measure)
-      items.current.forEach((it) => { it.el.style.transform = '' })
+      items.current.forEach((it) => { it.el.style.transform = ''; it.el.classList.remove('is-lit') })
       items.current = []
       if (intro) intro.textContent = text
     }
@@ -154,6 +154,12 @@ export function useTextRepel () {
       it.tx = (penX > 0 && penY > 0)
         ? Math.max(-MAX_PUSH, Math.min(MAX_PUSH, (dx < 0 ? -1 : 1) * penX))
         : 0
+      /* Kept separately because the relax pass below overwrites tx, and this is the only point
+         at which the BADGE'S own contribution is known. The highlight has to key off this rather
+         than off final displacement: the chips sit at a 9px flex gap while relax enforces GAP=12,
+         so it holds them ~3px apart permanently, with the badge nowhere near. Judged on total
+         displacement those chips read as "being pushed" for ever and stay lit. */
+      it.badgePush = Math.abs(it.tx)
     }
 
     // 2. relax the elements against each other. Only pairs that share vertical space can
@@ -182,6 +188,20 @@ export function useTextRepel () {
       it.el.style.transform = Math.abs(it.ox) < 0.05
         ? ''
         : `translate3d(${it.ox.toFixed(2)}px, 0, 0)`
+
+      /* Light while the BADGE is shoving this element aside, off once it is not. Keyed on
+         badgePush, not on ox: ox includes the standing offset the relax pass holds the chips at,
+         which never returns to zero, so judging by it left those chips lit permanently.
+         The fade is the stylesheet's job — a CSS transition on colour gives it for free and keeps
+         the timing next to the colours it applies to.
+         Two thresholds, not one: at a single value an element hovering exactly on it flickers the
+         class on and off every frame.
+         The class is only touched when it actually changes — this runs for every element every
+         frame, and an unconditional classList write invalidates style each time. */
+      const lit = it.lit === true
+      const d = it.badgePush || 0
+      if (!lit && d > 0.6) { it.lit = true; it.el.classList.add('is-lit') }
+      else if (lit && d < 0.25) { it.lit = false; it.el.classList.remove('is-lit') }
     }
   }
 }

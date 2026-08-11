@@ -65,9 +65,18 @@
    26.5% is ~29px below the card's resting bottom edge: the card rests at ANCHOR_Y - ROPE_LEN -
    1.45 = -0.75, so its bottom is at world y -1.875, which the 25deg camera at z 17.1 puts
    about 33% up from the stage floor. */
-.hint{ position:absolute; left:0; right:0; bottom:26.5%; text-align:center; font-size:10.5px;
+/* flex rather than text-align, so the icon and the words share a baseline-ish centre line. The
+   right padding cancels the trailing letter-spacing on the last glyph, which would otherwise
+   push the whole group a couple of px left of true centre. */
+.hint{ position:absolute; left:0; right:0; bottom:26.5%; font-size:10.5px;
+  display:flex; align-items:center; justify-content:center; gap:7px; padding-left:.22em;
   letter-spacing:.22em; text-transform:uppercase; color:#83f2cd; pointer-events:none;
   transition:opacity .45s ease; }
+/* Filled with currentColor through the mask, so it is the same #83f2cd as the words beside it
+   rather than the icon's own slightly greener mint. */
+.hint-icon{ width:15px; height:15px; flex:none; background:currentColor;
+  -webkit-mask:var(--grab) center / contain no-repeat;
+  mask:var(--grab) center / contain no-repeat; }
 /* the prompt is only useful until they've actually done it */
 .hint.is-used{ opacity:0 }
 
@@ -78,7 +87,10 @@
    the paragraph reads as set copy against the UI around it. The fallback is the same stack the
    rest of the page uses, so a failed webfont degrades to what was there before rather than to
    Times. */
-.intro{ margin:0; color:rgba(244,246,250,.8); font-size:15px; line-height:1.72;
+/* .9 rather than .8 — lifted a step now the wave field sits behind it. Raising the alpha of the
+   existing colour rather than picking a brighter one keeps it the same hue as the rest of the
+   page, so only the weight changes. */
+.intro{ margin:0; color:rgba(244,246,250,.9); font-size:15px; line-height:1.72;
   font-family:'Mozilla Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif }
 /* Each visual line of the intro is its own box so it can dodge the badge on its own. The spans
@@ -86,6 +98,19 @@
    fit-content is what makes this work: a plain block would be the full column width, so the
    badge would push the whole paragraph again — exactly what the split is meant to avoid. */
 .intro .line{ display:block; width:fit-content }
+
+/* .is-lit is added by useTextRepel while the badge is actually shoving something aside. The
+   asymmetry is the point: it lights in .12s so it feels struck by the badge, and fades over .6s
+   so the room settles slowly behind it. A single duration reads as a hover state instead.
+   Only the intro lines and the chips take it — .sec-title is already the accent colour, so
+   lighting it green would do nothing. */
+.intro .line{ transition:color .6s ease }
+.intro .line.is-lit{ color:#b6ffe6; transition-duration:.12s }
+/* Only the two properties that change are sped up. Overriding transition-duration wholesale
+   would also make the hover scale snap while a chip happens to be lit. */
+.chip.is-lit{ border-color:rgba(131,242,205,.6); color:#d6fff2;
+  transition:border-color .12s ease, color .12s ease,
+             scale .22s cubic-bezier(.16,.84,.24,1), box-shadow .22s ease, background .22s ease }
 /* Light blue rather than --faint's grey. It is the only .sec-title on the page, so this is
    scoped to Core Skills without needing a modifier class. */
 .sec-title{ font-size:12px; letter-spacing:.26em; text-transform:uppercase; color:#83f2cd;
@@ -93,8 +118,11 @@
 .skills{ display:flex; flex-wrap:wrap; gap:9px }
 .chip{ font-size:12.5px; color:rgba(244,246,250,.95); padding:7px 15px; border-radius:999px;
   border:1px solid rgba(255,255,255,.26); background:rgba(255,255,255,.02);
-  transition:scale .22s cubic-bezier(.16,.84,.24,1), border-color .22s ease,
-             box-shadow .22s ease, background .22s ease, color .22s ease }
+  /* colour and border fade over .6s to match the intro lines settling back after the badge has
+     passed; scale, shadow and background stay at .22s because those belong to hover, which
+     should feel immediate. */
+  transition:scale .22s cubic-bezier(.16,.84,.24,1), border-color .6s ease,
+             box-shadow .22s ease, background .22s ease, color .6s ease }
 /* .is-hot is set by useTextRepel from a pointermove hit-test, and :hover is kept only as a
    fallback. CSS hover cannot work here on its own: .canvas-layer is z-index 3 and 300% wide,
    deliberately over the copy so R3F keeps receiving badge drags, so the pointer never reaches a
