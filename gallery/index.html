@@ -370,9 +370,17 @@
     .card .front{transition:opacity .2s !important}
     *{scroll-behavior:auto !important}
   }
+
+  #waves{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;
+    pointer-events:none}
 </style>
 </head>
 <body>
+<!-- Wave field. Fixed behind everything: body's own gradient is opaque and paints under this,
+     #stage has no background and comes later in the DOM so it draws over it. The vignette at
+     z-index 5 stays on top of both. pointer-events:none — the rail owns the pointer. -->
+<canvas id="waves"></canvas>
+
   <!-- water-displacement filter for the Ripple reveal (scale animated in JS) -->
   <svg width="0" height="0" aria-hidden="true" style="position:absolute">
     <filter id="rippleflt" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
@@ -913,6 +921,12 @@ function boot(){
 addEventListener('resize',()=>{ measure(); centerSlideInstant(centerIndex<0?MID:centerIndex); render(); });
 window.addEventListener('load',boot);
 boot();
+</script>
+<script type="module">
+  /* Mounted after the gallery's own script, so .slide elements already carry their --accent by
+     the time the field first reads one. */
+  import { mountWaves } from './waves.js'
+  mountWaves(document.getElementById('waves'))
 </script>
 </body>
 </html>
