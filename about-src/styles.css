@@ -35,6 +35,16 @@
   width:100%; max-width:1140px;
   margin:0 auto; padding:16px 32px 32px;
 }
+/* The wave field. Behind everything: the badge canvas is z 3 and the copy z 1, so z 0 puts it
+   under both. pointer-events:none is essential — it spans the whole section, and without it the
+   badge could not be grabbed anywhere the field covers.
+   Standalone (/about) it goes full-viewport, since .wrap is capped at 1140px and a background
+   that stopped at that edge would read as a panel rather than as the page. Mounted in the root
+   page's hero it stays inside .wrap, where the section around it belongs to the gallery. */
+.waves{ position:absolute; inset:0; z-index:0; display:block; width:100%; height:100%;
+  pointer-events:none; }
+.about-solo .waves{ position:fixed; }
+
 .stage{ position:relative; flex:0 0 545px; height:640px; align-self:center;
   user-select:none; -webkit-user-select:none; touch-action:none; }
 

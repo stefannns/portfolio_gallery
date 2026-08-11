@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import Lanyard from './Lanyard.jsx'
 import { useTextRepel } from './useTextRepel.js'
+import { mountWaves } from './waves.js'
 import { makeCardFrontURL, makeCardBackURL, makeStrapURL, CAM_FOV, CAM_Z, CAM_Y, BAND_LINE_W, ANCHOR_Y, ROPE_SEG } from './cardTexture.js'
 import patternUrl from './pattern.png'
 
@@ -19,6 +20,13 @@ export default function App () {
   const [strap, setStrap] = useState(null)
   const [used, setUsed] = useState(false)
   const repel = useTextRepel()
+  const wavesRef = useRef(null)
+
+  // The background field. Its own WebGL context, independent of the R3F canvas the badge owns.
+  useEffect(() => {
+    if (!wavesRef.current) return
+    return mountWaves(wavesRef.current)
+  }, [])
 
   const scratch = useMemo(() => ({
     quat: new THREE.Quaternion(),
@@ -73,6 +81,8 @@ export default function App () {
 
   return (
     <div className="wrap">
+      {/* behind everything: the badge canvas is z 3, the copy z 1 */}
+      <canvas className="waves" ref={wavesRef} aria-hidden="true" />
       <div className="stage">
         <div className="canvas-layer">
           {/* held until the strap art is ready, so the component's own band texture never flashes */}
@@ -107,7 +117,7 @@ export default function App () {
         <div className="skills">
           <span className="chip">Vibe Coding</span>
           <span className="chip">AI Image &amp; Video</span>
-          <span className="chip">Game Design &amp; Development</span>
+          <span className="chip">Game Design</span>
           <span className="chip">Full-Stack Development</span>
           <span className="chip">ComfyUI</span>
           <span className="chip">Unity</span>
