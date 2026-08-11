@@ -70,7 +70,10 @@ export function useTextRepel () {
       const els = Array.from(document.querySelectorAll(SELECTOR))
       // Clear transforms before measuring, otherwise each pass reads the previous offset back
       // in and the elements creep across the page.
-      els.forEach((el) => { el.style.transform = ''; el.classList.remove('is-lit') })
+      els.forEach((el) => {
+        el.style.transform = ''
+        el.style.removeProperty('--lit'); el.style.removeProperty('--cx')
+      })
       items.current = els.map((el) => {
         const r = el.getBoundingClientRect()
         return {
@@ -121,7 +124,10 @@ export function useTextRepel () {
       removeEventListener('blur', clearHot)
       clearHot()
       removeEventListener('resize', measure)
-      items.current.forEach((it) => { it.el.style.transform = ''; it.el.classList.remove('is-lit') })
+      items.current.forEach((it) => {
+        it.el.style.transform = ''
+        it.el.style.removeProperty('--lit'); it.el.style.removeProperty('--cx')
+      })
       items.current = []
       if (intro) intro.textContent = text
     }
@@ -189,19 +195,37 @@ export function useTextRepel () {
         ? ''
         : `translate3d(${it.ox.toFixed(2)}px, 0, 0)`
 
-      /* Light while the BADGE is shoving this element aside, off once it is not. Keyed on
-         badgePush, not on ox: ox includes the standing offset the relax pass holds the chips at,
-         which never returns to zero, so judging by it left those chips lit permanently.
-         The fade is the stylesheet's job — a CSS transition on colour gives it for free and keeps
-         the timing next to the colours it applies to.
-         Two thresholds, not one: at a single value an element hovering exactly on it flickers the
-         class on and off every frame.
-         The class is only touched when it actually changes — this runs for every element every
-         frame, and an unconditional classList write invalidates style each time. */
-      const lit = it.lit === true
-      const d = it.badgePush || 0
-      if (!lit && d > 0.6) { it.lit = true; it.el.classList.add('is-lit') }
-      else if (lit && d < 0.25) { it.lit = false; it.el.classList.remove('is-lit') }
+      /* The highlight is published as two numbers rather than a class, so the stylesheet can put
+         the colour only WHERE the badge is touching and let it fall off across the rest of the
+         element — a whole line turning green reads as a state change, not as contact.
+           --lit  0..1, how strongly this element is being pushed
+           --cx   where along its width the badge is, as a percentage
+         Driven from here rather than by a CSS transition because the value has to be continuous
+         for the gradient to move with the badge, and because the rise and fall want different
+         rates: quick to light on contact, slow to let go afterwards. A transition can only give
+         one duration per property.
+         Keyed on badgePush, not on ox — ox includes the standing offset the relax pass holds the
+         chips at, which never returns to zero and left them lit permanently. */
+      const target = (it.badgePush || 0) > 0.6 ? 1 : 0
+      const prevLit = it.litV || 0
+      it.litV = prevLit + (target - prevLit) * (target > prevLit ? 0.3 : 0.045)
+      if (it.litV < 0.002) it.litV = 0
+
+      if (Math.abs(it.litV - (it.litShown ?? -1)) > 0.01) {
+        it.litShown = it.litV
+        it.el.style.setProperty('--lit', it.litV.toFixed(3))
+      }
+      /* Contact point, measured against the element where it actually IS — it carries a live
+         transform, so its laid-out centre is not where the badge met it. Only worth updating
+         while there is something to see. */
+      if (it.litV > 0.01) {
+        const left = it.cx + it.ox - it.hw
+        const pct = Math.max(0, Math.min(100, ((bcx - left) / (it.hw * 2)) * 100))
+        if (Math.abs(pct - (it.cxShown ?? -999)) > 1) {
+          it.cxShown = pct
+          it.el.style.setProperty('--cx', pct.toFixed(0) + '%')
+        }
+      }
     }
   }
 }

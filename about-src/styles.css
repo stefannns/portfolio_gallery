@@ -99,18 +99,24 @@
    badge would push the whole paragraph again — exactly what the split is meant to avoid. */
 .intro .line{ display:block; width:fit-content }
 
-/* .is-lit is added by useTextRepel while the badge is actually shoving something aside. The
-   asymmetry is the point: it lights in .12s so it feels struck by the badge, and fades over .6s
-   so the room settles slowly behind it. A single duration reads as a hover state instead.
-   Only the intro lines and the chips take it — .sec-title is already the accent colour, so
-   lighting it green would do nothing. */
-.intro .line{ transition:color .6s ease }
-.intro .line.is-lit{ color:#b6ffe6; transition-duration:.12s }
-/* Only the two properties that change are sped up. Overriding transition-duration wholesale
-   would also make the hover scale snap while a chip happens to be lit. */
-.chip.is-lit{ border-color:rgba(131,242,205,.6); color:#d6fff2;
-  transition:border-color .12s ease, color .12s ease,
-             scale .22s cubic-bezier(.16,.84,.24,1), box-shadow .22s ease, background .22s ease }
+/* CONTACT GLOW. --lit (0..1) and --cx (position along the line) are written per frame by
+   useTextRepel; there is no transition here because the values are already eased in JS, which is
+   what lets the bright spot travel with the badge instead of cross-fading in place.
+   The colour is painted as a background clipped to the glyphs, so it can be a GRADIENT: accent at
+   the point of contact, falling back to the ordinary text colour within about a third of the
+   line. A flat colour on the whole line reads as a state change; this reads as something passing.
+   The mix is capped at 70%, so even at the centre of the touch it is tinted rather than green. */
+.intro .line{
+  color:transparent;
+  background-image:radial-gradient(circle at var(--cx, 50%) 50%,
+    color-mix(in srgb, #9dffe0 calc(var(--lit, 0) * 70%), rgba(244,246,250,.9)) 0%,
+    rgba(244,246,250,.9) 34%);
+  -webkit-background-clip:text; background-clip:text;
+}
+/* Selection and the no-JS case both need the plain colour back: with a transparent foreground and
+   no background painted, the text would be invisible. */
+.intro .line::selection{ color:rgba(244,246,250,.95); background:rgba(131,242,205,.25) }
+@supports not (background-clip: text){ .intro .line{ color:rgba(244,246,250,.9) } }
 /* Light blue rather than --faint's grey. It is the only .sec-title on the page, so this is
    scoped to Core Skills without needing a modifier class. */
 .sec-title{ font-size:12px; letter-spacing:.26em; text-transform:uppercase; color:#83f2cd;
@@ -123,6 +129,15 @@
      should feel immediate. */
   transition:scale .22s cubic-bezier(.16,.84,.24,1), border-color .6s ease,
              box-shadow .22s ease, background .22s ease, color .6s ease }
+/* Chips glow rather than take the gradient: they are only a few words wide, so a bright spot
+   travelling across one would have nowhere to travel.
+   drop-shadow, NOT box-shadow, and that is the whole story of why two earlier attempts looked
+   broken. .chip transitions box-shadow over .22s, so every change to it starts an interpolation —
+   and --lit changes every frame, so the shadow would chase a moving target and never arrive,
+   smeared to nothing. filter is not in that transition list, so it follows --lit exactly, frame
+   for frame, which is what the JS easing already does properly.
+   It hugs the pill's actual rounded shape too, where box-shadow would need the radius to agree. */
+.chip{ filter:drop-shadow(0 0 5px rgba(131,242,205, var(--lit, 0))) }
 /* .is-hot is set by useTextRepel from a pointermove hit-test, and :hover is kept only as a
    fallback. CSS hover cannot work here on its own: .canvas-layer is z-index 3 and 300% wide,
    deliberately over the copy so R3F keeps receiving badge drags, so the pointer never reaches a
