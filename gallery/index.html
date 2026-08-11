@@ -925,7 +925,11 @@ boot();
 <script type="module">
   /* Mounted after the gallery's own script, so .slide elements already carry their --accent by
      the time the field first reads one. */
-  import { mountWaves } from './waves.js'
+  /* Absolute, NOT './waves.js'. This page is reachable as both /gallery and /gallery/ — the host
+     serves the first without redirecting to the second — and a relative specifier resolves
+     against the directory of the current URL. From /gallery that is the site root, so './waves.js'
+     asks for /waves.js and 404s, the module never runs and the canvas stays blank. */
+  import { mountWaves } from '/gallery/waves.js'
   mountWaves(document.getElementById('waves'))
 </script>
 </body>
