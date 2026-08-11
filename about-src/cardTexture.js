@@ -3,6 +3,15 @@
 
 const FONT = '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif'
 
+/* Card stock. Raised from #1f2229 / #262a32 / #23272e: against the page's #0b0b0d that left only
+ * about 20 levels of separation, and the card's material multiplies it down further (metalness
+ * 0.8 plus clearcoat), so the laminate disappeared into the background. Lifting the texture is
+ * the right lever — the material is tuned and the background is the page's.
+ * Keep BODY darker than PANEL; the inset reads as a window in the stock, not a sticker on it. */
+const CARD_BODY  = '#2a2e37'    // outer stock
+const PANEL_FRONT = '#31363f'   // inset panel, front
+const PANEL_BACK  = '#2e323b'   // inset panel, back
+
 // The card model's front face maps to a 0.5 x 0.755 rect of a 1024 atlas, so this is the
 // aspect the artwork has to be or the component will crop it to fit.
 const CARD_W = 512, CARD_H = 773
@@ -67,9 +76,9 @@ export function makeCardFrontURL () {
   const g = c.getContext('2d')
   const s = CARD_W / 640                       // the layout was designed at 640 wide
 
-  g.fillStyle = '#1f2229'; g.fillRect(0, 0, CARD_W, CARD_H)
+  g.fillStyle = CARD_BODY; g.fillRect(0, 0, CARD_W, CARD_H)
   rr(g, 20 * s, 120 * s, CARD_W - 40 * s, CARD_H - 190 * s, 16 * s)
-  g.fillStyle = '#262a32'; g.fill()
+  g.fillStyle = PANEL_FRONT; g.fill()
   g.lineWidth = 2 * s; g.strokeStyle = 'rgba(255,255,255,.10)'; g.stroke()
 
   const sheen = g.createLinearGradient(0, 0, CARD_W * 0.9, CARD_H * 0.55)
@@ -93,9 +102,9 @@ export function makeCardBackURL () {
   const g = c.getContext('2d')
   const s = CARD_W / 640
 
-  g.fillStyle = '#1f2229'; g.fillRect(0, 0, CARD_W, CARD_H)
+  g.fillStyle = CARD_BODY; g.fillRect(0, 0, CARD_W, CARD_H)
   rr(g, 20 * s, 120 * s, CARD_W - 40 * s, CARD_H - 190 * s, 16 * s)
-  g.fillStyle = '#23272e'; g.fill()
+  g.fillStyle = PANEL_BACK; g.fill()
   g.lineWidth = 2 * s; g.strokeStyle = 'rgba(255,255,255,.07)'; g.stroke()
 
   g.textAlign = 'center'; g.textBaseline = 'middle'
@@ -173,6 +182,10 @@ export function makeStrapURL (patternUrl, canvasAspect) {
     shade.addColorStop(.90, 'rgba(255,255,255,.10)')
     shade.addColorStop(1, 'rgba(0,0,0,.42)')
     g.fillStyle = shade; g.fillRect(0, 0, W, H)
+
+    // No mark asked for — hand back the bare webbing. The combined root page uses this;
+    // only the standalone /about carries the brand mark.
+    if (!patternUrl) { resolve(c.toDataURL('image/png')); return }
 
     const img = new Image()
     img.onload = () => {

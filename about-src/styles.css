@@ -51,8 +51,11 @@
 .canvas-layer .lanyard-wrapper{ width:100%; height:100%; }
 
 /* Sits just under the card rather than on the stage floor, so it moves with the badge. A
-   percentage keeps that relationship across the breakpoints, where the stage is shorter. */
-.hint{ position:absolute; left:0; right:0; bottom:26%; text-align:center; font-size:10.5px;
+   percentage keeps that relationship across the breakpoints, where the stage is shorter.
+   26.5% is ~29px below the card's resting bottom edge: the card rests at ANCHOR_Y - ROPE_LEN -
+   1.45 = -0.75, so its bottom is at world y -1.875, which the 25deg camera at z 17.1 puts
+   about 33% up from the stage floor. */
+.hint{ position:absolute; left:0; right:0; bottom:26.5%; text-align:center; font-size:10.5px;
   letter-spacing:.22em; text-transform:uppercase; color:var(--faint); pointer-events:none;
   transition:opacity .45s ease; }
 /* the prompt is only useful until they've actually done it */

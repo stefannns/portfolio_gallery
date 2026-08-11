@@ -34,7 +34,10 @@ export default function App () {
     const r = document.querySelector('.canvas-layer')?.getBoundingClientRect()
     const aspect = r && r.width > 0 && r.height > 0 ? r.width / r.height : null
     window.__strapAspect = aspect
-    makeStrapURL(patternUrl, aspect).then(url => { if (alive) setStrap(url) })
+    // The strap mark belongs to the standalone /about page only — on the combined root page
+    // the strap is left as plain webbing. .about-solo is the same flag styles.css gates on.
+    const solo = document.documentElement.classList.contains('about-solo')
+    makeStrapURL(solo ? patternUrl : null, aspect).then(url => { if (alive) setStrap(url) })
     return () => { alive = false }
   }, [])
 
@@ -103,11 +106,11 @@ export default function App () {
         <p className="sec-title">Core Skills</p>
         <div className="skills">
           <span className="chip">Vibe Coding</span>
-          <span className="chip">AI生图和视频</span>
-          <span className="chip">游戏策划与开发</span>
+          <span className="chip">AI Image &amp; Video</span>
+          <span className="chip">Game Design &amp; Development</span>
           <span className="chip">Full-Stack Development</span>
           <span className="chip">ComfyUI</span>
-          <span className="chip">Unity引擎</span>
+          <span className="chip">Unity</span>
         </div>
       </section>
     </div>
