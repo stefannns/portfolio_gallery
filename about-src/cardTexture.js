@@ -88,10 +88,20 @@ export function makeCardFrontURL () {
   const padL = 52 * s
   const ls = v => { if ('letterSpacing' in g) g.letterSpacing = v }
   g.textBaseline = 'top'
-  ls('0px');   g.fillStyle = '#f4f6fa'; g.font = `700 ${62 * s}px ${FONT}`; g.fillText('Stefan', padL, CARD_H * 0.478)
-  ls('1.8px'); g.fillStyle = '#5fa8ff'; g.font = `600 ${29 * s}px ${FONT}`; g.fillText('AIGC/Game Designer', padL, CARD_H * 0.569)
-  ls('1.1px'); g.fillStyle = '#cbd0d9'; g.font = `400 ${27 * s}px ${FONT}`; g.fillText('USC School of Cinematic Arts', padL, CARD_H * 0.644)
-  ls('0px');   g.fillStyle = '#9aa1b0'; g.font = `400 ${25 * s}px ${FONT}`; g.fillText('Class of 2027', padL, CARD_H * 0.693)
+  /* Name 62 -> 84 and job title 29 -> 38. The two lines below them are UNCHANGED in size but had
+     to move: a block's height in real px is about its design size * s, so the name alone grew by
+     ~18px and would have landed on the title, which sat only 20px under it.
+     Re-derived top-down from the name, with gaps of 14 / 12 / 8 px:
+       name    363.3 -> 430.5   (67.2 tall)
+       title   444.5 -> 474.9   (30.4)
+       school  486.9 -> 508.5   (21.6)
+       class   516.5 -> 536.5   (20.0)
+     which still ends 180px clear of the inset panel's bottom edge at 717. Both enlarged lines were
+     checked against the panel width: the title is the longest at ~371px, inside the 496px edge. */
+  ls('0px');   g.fillStyle = '#f4f6fa'; g.font = `700 ${84 * s}px ${FONT}`; g.fillText('Stefan', padL, CARD_H * 0.470)
+  ls('1.8px'); g.fillStyle = '#83f2cd'; g.font = `600 ${38 * s}px ${FONT}`; g.fillText('AIGC/Game Designer', padL, CARD_H * 0.575)
+  ls('1.1px'); g.fillStyle = '#cbd0d9'; g.font = `400 ${27 * s}px ${FONT}`; g.fillText('USC School of Cinematic Arts', padL, CARD_H * 0.630)
+  ls('0px');   g.fillStyle = '#9aa1b0'; g.font = `400 ${25 * s}px ${FONT}`; g.fillText('Class of 2027', padL, CARD_H * 0.668)
 
   return c.toDataURL('image/png')
 }

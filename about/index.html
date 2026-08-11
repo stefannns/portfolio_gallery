@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Stefan — Lanyard Badge</title>
+<!-- Mozilla Text, for the intro paragraph. preconnect first: the stylesheet is render-blocking
+     and the font files come from a second host, so without it the browser only starts the DNS and
+     TLS handshake for gstatic after the CSS has already arrived. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mozilla+Text:wght@400;500&display=swap">
   <script type="module" crossorigin src="/about/assets/about.js"></script>
   <link rel="stylesheet" crossorigin href="/about/assets/about.css">
 </head>

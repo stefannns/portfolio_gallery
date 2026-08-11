@@ -83,7 +83,43 @@ export function useTextRepel () {
     }
     measure()
     addEventListener('resize', measure)
+
+    /* Re-split once the webfonts have settled. The line boxes are frozen at the browser's OWN
+       break points, which means they are only correct for the metrics that were active when they
+       were measured — and .intro is set in Mozilla Text with font-display:swap, so the first
+       measure necessarily runs against the fallback. The moment the real font arrives the text
+       reflows inside spans cut for a different width, and the breaks land mid-phrase.
+       document.fonts.ready covers every pending face at once, and resolves immediately when they
+       are already cached, so the reflow only happens on a cold load. */
+    let alive = true
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => { if (alive) measure() })
+    }
+
+    /* Chip hover, done by hit-test rather than by :hover. The badge canvas covers the copy so it
+       can receive drags, which means the pointer never actually lands on a chip — see the note on
+       .chip.is-hot in styles.css for why raising them out from under it is not an option.
+       The rects are read at event time, so this follows the chips as they dodge; they carry a
+       live transform and their laid-out position is not where they are. */
+    const chips = () => items.current.filter((it) => it.el.classList.contains('chip'))
+    const onMove = (e) => {
+      for (const it of chips()) {
+        const r = it.el.getBoundingClientRect()
+        it.el.classList.toggle('is-hot',
+          e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom)
+      }
+    }
+    const clearHot = () => { for (const it of chips()) it.el.classList.remove('is-hot') }
+    addEventListener('pointermove', onMove, { passive: true })
+    addEventListener('pointerleave', clearHot)
+    addEventListener('blur', clearHot)
+
     return () => {
+      alive = false
+      removeEventListener('pointermove', onMove)
+      removeEventListener('pointerleave', clearHot)
+      removeEventListener('blur', clearHot)
+      clearHot()
       removeEventListener('resize', measure)
       items.current.forEach((it) => { it.el.style.transform = '' })
       items.current = []

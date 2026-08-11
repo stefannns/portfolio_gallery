@@ -56,7 +56,7 @@
    1.45 = -0.75, so its bottom is at world y -1.875, which the 25deg camera at z 17.1 puts
    about 33% up from the stage floor. */
 .hint{ position:absolute; left:0; right:0; bottom:26.5%; text-align:center; font-size:10.5px;
-  letter-spacing:.22em; text-transform:uppercase; color:var(--faint); pointer-events:none;
+  letter-spacing:.22em; text-transform:uppercase; color:#83f2cd; pointer-events:none;
   transition:opacity .45s ease; }
 /* the prompt is only useful until they've actually done it */
 .hint.is-used{ opacity:0 }
@@ -64,17 +64,45 @@
 .info{ position:relative; z-index:1; flex:1; min-width:0; align-self:center; max-width:520px }
 /* driven per-frame by the badge; declared here so they animate smoothly if JS is idle */
 .intro .line,.sec-title,.chip{ will-change:transform }
-.intro{ margin:0; color:rgba(244,246,250,.8); font-size:15px; line-height:1.72 }
+/* Mozilla Text for the intro only — the headings, chips and card stay on the system stack, so
+   the paragraph reads as set copy against the UI around it. The fallback is the same stack the
+   rest of the page uses, so a failed webfont degrades to what was there before rather than to
+   Times. */
+.intro{ margin:0; color:rgba(244,246,250,.8); font-size:15px; line-height:1.72;
+  font-family:'Mozilla Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif }
 /* Each visual line of the intro is its own box so it can dodge the badge on its own. The spans
    are created at runtime by useTextRepel, at the breaks the browser had already chosen.
    fit-content is what makes this work: a plain block would be the full column width, so the
    badge would push the whole paragraph again — exactly what the split is meant to avoid. */
 .intro .line{ display:block; width:fit-content }
-.sec-title{ font-size:12px; letter-spacing:.26em; text-transform:uppercase; color:var(--faint);
+/* Light blue rather than --faint's grey. It is the only .sec-title on the page, so this is
+   scoped to Core Skills without needing a modifier class. */
+.sec-title{ font-size:12px; letter-spacing:.26em; text-transform:uppercase; color:#83f2cd;
   font-weight:600; margin:34px 0 14px }
 .skills{ display:flex; flex-wrap:wrap; gap:9px }
 .chip{ font-size:12.5px; color:rgba(244,246,250,.95); padding:7px 15px; border-radius:999px;
-  border:1px solid rgba(255,255,255,.26); background:rgba(255,255,255,.02) }
+  border:1px solid rgba(255,255,255,.26); background:rgba(255,255,255,.02);
+  transition:scale .22s cubic-bezier(.16,.84,.24,1), border-color .22s ease,
+             box-shadow .22s ease, background .22s ease, color .22s ease }
+/* .is-hot is set by useTextRepel from a pointermove hit-test, and :hover is kept only as a
+   fallback. CSS hover cannot work here on its own: .canvas-layer is z-index 3 and 300% wide,
+   deliberately over the copy so R3F keeps receiving badge drags, so the pointer never reaches a
+   chip. Raising the chips out from under it does not work either — .info is position:relative
+   with z-index:1, which opens a stacking context, so any z-index on a child is trapped inside a
+   column that is itself below the canvas. Lifting .info instead would fix the hover and cost the
+   badge the ability to be dragged across any of the copy, which is the thing this whole layout
+   is built around. Hit-testing keeps both.
+   The pop uses `scale`, NOT `transform`: useTextRepel writes el.style.transform on every chip
+   every frame, so a transform here would be overwritten on the next tick — scale is a separate
+   property and composes with it.
+   The edge lights rather than thickens; a border-width change would reflow the row and shove the
+   neighbouring chips sideways on every hover. */
+.chip:hover,.chip.is-hot{ scale:1.06; color:#e8fff7;
+  border-color:rgba(131,242,205,.8); background:rgba(131,242,205,.07);
+  box-shadow:0 0 0 1px rgba(131,242,205,.22), 0 0 16px rgba(131,242,205,.38) }
+@media (prefers-reduced-motion:reduce){
+  .chip{ transition:none } .chip:hover,.chip.is-hot{ scale:1 } }
 
 @media (max-width:900px){ .wrap{gap:24px} .stage{flex-basis:330px;height:560px} .info{font-size:14px} }
 
