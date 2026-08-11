@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Deployed under /juicetest on Vercel (served at /juicetest and /juicetest/);
+     pin the base so relative vendor/ path resolves either way. -->
+<base href="/juicetest/">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portable Juice — Phaser A/B Demo</title>
+<style>
+  /* ── design tokens ──────────────────────────────────────────────────────
+     Lifted from the Genre Skill Testing hub (genre_skills/previews) so the two
+     read as one product: same lime accent, same neutral ramp, same radii and
+     transitions. The canvas stays dark in both themes — the page frames a dark
+     game surface rather than trying to re-tint it. */
+  :root{
+    color-scheme: dark;
+    --bg:#0d0e12; --bg-2:#111319; --surface:#16181f; --surface-2:#1b1e28;
+    --line:#262a34; --line-hi:#3a3f4c;
+    --ink:#edeef4; --ink-mid:#9ea4b4; --ink-low:#6a6f7e;
+    --accent:#d4f24e; --accent-ink:#18220a; --accent-text:#d4f24e;
+    --accent-soft:rgba(212,242,78,.12);
+    --hard:#e74c3c;
+    --shadow:0 1px 2px rgba(0,0,0,.35);
+    --shadow-hover:0 10px 30px -14px rgba(0,0,0,.7);
+    --radius:14px;
+  }
+  :root[data-theme="light"]{
+    color-scheme: light;
+    --bg:#f1f2ee; --bg-2:#ffffff; --surface:#ffffff; --surface-2:#ffffff;
+    --line:#e7e8e2; --line-hi:#d3d5cc;
+    --ink:#15171c; --ink-mid:#565b66; --ink-low:#8a8f99;
+    --accent:#cfee45; --accent-ink:#1c2708; --accent-text:#5f7d0a;
+    --accent-soft:rgba(180,215,40,.20);
+    --shadow:0 1px 2px rgba(20,22,26,.06), 0 4px 14px -8px rgba(20,22,26,.10);
+    --shadow-hover:0 12px 30px -12px rgba(20,22,26,.18);
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);
+    font:400 13px/1.5 ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+         "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    overflow:hidden;-webkit-font-smoothing:antialiased;
+    transition:background-color .25s ease,color .25s ease}
+  .mono{font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    font-variant-ligatures:none}
+  #wrap{display:flex;height:100%;gap:14px;padding:14px}
+  .ui{background:var(--surface);border:1px solid var(--line);
+      border-radius:var(--radius);box-shadow:var(--shadow)}
+  h1,h2{margin:0;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--ink-low);font-weight:400;
+    font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace}
+  h2{margin-bottom:10px}
+
+  /* ── left rail ── */
+  #left{width:196px;flex:none;padding:13px;display:flex;flex-direction:column;gap:9px;overflow-y:auto}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  button{font:inherit;color:var(--ink-mid);background:var(--surface);
+    border:1px solid var(--line);border-radius:8px;padding:7px 10px;cursor:pointer;
+    transition:border-color .13s ease,color .13s ease,background-color .13s ease}
+  button:hover{border-color:var(--line-hi);color:var(--ink)}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  button.on{border-color:var(--accent);color:var(--accent-text)}
+  .themebtn{flex:none;font-size:11px;font-weight:550;border-radius:999px;padding:4px 10px}
+  .scene{width:100%;text-align:left;font-size:12.5px;border-radius:10px}
+  .scene.on{background:color-mix(in srgb,var(--accent) 8%,var(--surface))}
+  /* the one filled control on the page — their primary-action pill */
+  #master{width:100%;padding:10px;font-size:12.5px;font-weight:650;letter-spacing:.03em;
+    color:var(--accent-ink);background:var(--accent);border-color:transparent;border-radius:999px;
+    transition:filter .13s ease,transform .1s ease}
+  #master:hover{filter:brightness(1.05);color:var(--accent-ink)}
+  #master:active{transform:translateY(1px)}
+  #master.off{color:var(--ink-low);background:var(--surface);border-color:var(--line)}
+  #master.off:hover{color:var(--ink-mid);border-color:var(--line-hi)}
+  .row{display:flex;gap:6px}
+  .row button{flex:1;font-size:12px;border-radius:8px}
+  .ctl{margin-bottom:9px}
+  .ctl label{display:flex;justify-content:space-between;gap:8px;font-size:11px;
+    color:var(--ink-low);margin-bottom:4px}
+  .ctl label b{color:var(--ink);font-variant-numeric:tabular-nums;font-weight:550;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  input[type=range]{width:100%;height:4px;appearance:none;background:var(--line-hi);
+    border-radius:2px;outline:0}
+  input[type=range]::-webkit-slider-thumb{appearance:none;width:14px;height:14px;border-radius:50%;
+    background:var(--accent);border:2.5px solid var(--bg);cursor:pointer}
+  input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .sep{margin:3px 0 1px;padding-top:9px;border-top:1px solid var(--line)}
+
+  /* ── centre ── */
+  #mid{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px}
+  /* Phaser letterboxes inside this box; the canvas is transparent outside the
+     two viewports, so the spare room reads as page background in either theme. */
+  #stage{flex:1;min-height:0;overflow:hidden}
+  #stage canvas{display:block}
+  #note{flex:none;padding:12px 14px;color:var(--ink-mid);font-size:12.5px;line-height:1.55}
+  #note b{color:var(--ink);font-weight:600}
+  code{font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent-text);
+    background:var(--accent-soft);padding:1.5px 6px;border-radius:5px}
+  kbd{font:11.5px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink);
+    background:var(--bg-2);border:1px solid var(--line);border-radius:5px;padding:2px 6px}
+
+  /* ── layer list — their `.prow` pattern ── */
+  #right{width:276px;flex:none;padding:13px 14px;overflow-y:auto}
+  .fx{display:flex;align-items:flex-start;gap:10px;width:100%;margin-bottom:7px;
+    padding:9px 11px;cursor:pointer;background:var(--surface);border:1px solid var(--line);
+    border-radius:10px;text-align:left;color:var(--ink);font:inherit;
+    transition:border-color .13s ease,background-color .13s ease,transform .13s ease}
+  .fx:hover{border-color:var(--accent);transform:translateX(2px)}
+  .fx:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .dot{width:15px;height:15px;flex:none;margin-top:1px;border:1.5px solid var(--line-hi);
+    border-radius:5px;transition:background-color .13s ease,border-color .13s ease}
+  .fx[aria-pressed="true"]{background:color-mix(in srgb,var(--accent) 6%,var(--surface))}
+  .fx[aria-pressed="true"] .dot{background:var(--accent);border-color:var(--accent);
+    box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--accent-ink) 40%,transparent)}
+  .fx strong{font-size:13px;font-weight:600;letter-spacing:-.005em}
+  .fx[aria-pressed="false"] strong{color:var(--ink-mid);font-weight:550}
+  .fx em{display:block;color:var(--ink-low);font-style:normal;font-size:11.5px;
+    line-height:1.4;margin-top:2px}
+
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+</style>
+<script>
+  // apply the saved theme before first paint (no flash); default = dark
+  (function(){ try { if (localStorage.getItem('juice:theme') === 'light')
+    document.documentElement.setAttribute('data-theme','light'); } catch(e) {} })();
+</script>
+</head>
+<body>
+
+<div id="wrap">
+
+  <div class="ui" id="left">
+    <div class="head">
+      <h1>Scenario</h1>
+      <button class="themebtn" id="themebtn" type="button" aria-label="Toggle light/dark theme">☾ <span id="themelbl">Dark</span></button>
+    </div>
+    <div id="sceneList"></div>
+    <div class="sep"></div>
+    <button id="master">JUICE: ON</button>
+    <div class="row"><button id="fire">Trigger</button><button id="auto" class="on">Auto</button></div>
+    <div class="sep"></div>
+    <h1>Global</h1>
+    <div id="globals"></div>
+  </div>
+
+  <div id="mid">
+    <div id="stage"></div>
+    <div class="ui" id="note"></div>
+  </div>
+
+  <div class="ui" id="right">
+    <h2>Layers</h2>
+    <div id="fxList"></div>
+  </div>
+
+</div>
+
+<script src="vendor/phaser.min.js"></script>
+<script>
+/* ============================================================================
+   PORTABLE JUICE — three scenarios, each running twice, side by side
+   ---------------------------------------------------------------------------
+   Left = raw. Right = juiced. Same input, same numbers, and deliberately the
+   SAME ART on both sides, because nothing in this file is a drawn effect.
+
+   That is the selection rule here. A layer earns its place only if it is a
+   transform of something already on screen — a position, a scale, a delay, a
+   camera, a number, a pitch. Those port to any art style, any genre, any
+   engine. A shockwave ring or a dust puff does not: it is new art, and it only
+   reads correctly in the style it was drawn for.
+   ========================================================================= */
+
+const W = 980, H = 470;      // game units — Phaser.Scale.FIT handles the real size
+const HALF = 486;            // width of each side's camera viewport
+const GAP  = 4000;           // world-space distance between the two stages
+
+const lerp  = Phaser.Math.Linear;
+const clamp = Phaser.Math.Clamp;
+const rnd   = (a, b) => a + Math.random() * (b - a);
+// Frame-rate independent smoothing. Never write `x += (target - x) * 0.1`:
+// that is a different speed on a 144 Hz monitor than it is on a 60 Hz one.
+const damp  = (cur, target, lambda, dt) => target + (cur - target) * Math.exp(-lambda * dt);
+
+const FONT = 'ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif';
+const F = (size, color, bold) =>
+  ({ fontFamily:FONT, fontSize:size + 'px', color, fontStyle: bold ? 'bold' : '' });
+
+/* The canvas palette, mirroring the CSS tokens above so the game surface and
+   the page chrome stay one design. Phaser wants ints for shapes and strings
+   for text, hence the two tables. */
+const C = {
+  // The game surface sits LIGHTER than the page, the way the hub's canvas does,
+  // so each viewport reads as an inset panel instead of a hole in the layout.
+  bg:      0x181b23,   // stage backdrop
+  ground:  0x1f232b,   // floor
+  surface: 0x23272f,   // in-canvas panel
+  accent:  0xd4f24e,   // lime                (--accent)
+  inkMid:  0x9ea4b4,   // the target dummy    (--ink-mid)
+  hard:    0xe74c3c,   // damage / chip layer (--hard)
+  flash:   0xf2ffd0,   // screen flash — lime-tinted white, not pure white
+  white:   0xffffff,
+  black:   0x000000,
+};
+const CT = {
+  accent:   '#d4f24e',
+  accentHi: '#eaffa8',   // heavy hits — a lighter lime, not a second hue
+  accentInk:'#18220a',
+  ink:      '#edeef4',
+  inkMid:   '#9ea4b4',
+};
+
+/* ---------------------------------------------------------------------------
+   LAYERS
+   ------------------------------------------------------------------------ */
+const L = {
+  accel:true, coyote:true, buffer:true, variableJump:true, squash:true, idle:true, camLead:true,
+  anticipation:true, followThrough:true, hitFlash:true, screenFlash:true, hitstop:true, shake:true,
+  knockback:true, recoil:true, damageNumbers:true, camPunch:true, chipBar:true, audio:false,
+  easing:true, stagger:true, countUp:true, barFill:true, buttonFx:true, idleFloat:true,
+  freezeFrame:true, slowMo:true, pushIn:true, drain:true, vignette:true,
+  letterbox:true, slam:true, beat:true, tally:true, endAudio:false,
+};
+
+const INFO = {
+  accel:         ['Acceleration curves',  'Ramp up fast, stop faster, and double the acceleration when reversing. Snappy without being twitchy.'],
+  coyote:        ['Coyote time',          'Still allow a jump ~110 ms after walking off a ledge. The player never notices it firing.'],
+  buffer:        ['Input buffering',      'Remember a jump pressed ~140 ms early and fire it on landing. Kills "the game ate my input".'],
+  variableJump:  ['Variable jump',        'Cut the rise when the button releases, fall ~1.9× faster than you rose, hang briefly at the apex.'],
+  squash:        ['Squash & stretch',     'Stretch on takeoff, flatten on landing, spring back. Anchor the scale to the feet, not the centre.'],
+  idle:          ['Idle motion',          'A 2% breathing scale while standing. Nothing in a live frame is ever perfectly still.'],
+  camLead:       ['Camera lead & lag',    'Smooth the camera, and offset it ~80 px toward where you are going instead of where you are.'],
+
+  anticipation:  ['Anticipation',         'Wind back 14 px before the lunge. Telegraphs the action — never do this to a player-triggered input.'],
+  followThrough: ['Follow-through',       'Overshoot the rest pose and settle back with a Back ease instead of stopping dead on it.'],
+  hitFlash:      ['Hit flash',            'Two frames of flat white on whatever got hit. The cheapest confirmation that exists.'],
+  screenFlash:   ['Screen flash',         'A whole-frame wash, ~0.15 s, peak 30% alpha. Loudest layer here — tone-dependent, so use it sparingly.'],
+  hitstop:       ['Hit stop',             'Freeze both actors ~70 ms on contact. The pause is what the brain reads as weight.'],
+  shake:         ['Screen shake',         'Trauma model: decay trauma linearly, shake by trauma², so it tails off instead of stopping dead.'],
+  knockback:     ['Knockback',            'Displace the target and spring it back. Motion is the proof that force transferred.'],
+  recoil:        ['Recoil',               'Push the attacker back too. Equal and opposite — this is the half that everyone forgets.'],
+  damageNumbers: ['Floating numbers',     'Arc up, scale-pop in, fade out, jittered position and angle so stacked hits stay readable.'],
+  camPunch:      ['Camera punch',         'Zoom in ~4.5% and ease back over 0.26 s. Nobody notices it consciously; everybody feels it.'],
+  chipBar:       ['Delayed bar drain',    'Two bars: the front one snaps, the back one chases ~300 ms behind, showing what was just lost.'],
+  audio:         ['Audio pitch variance', 'Randomise pitch ± semitones per hit and scale volume by force. Fixed pitch reads as a machine gun.'],
+
+  easing:        ['Easing & overshoot',   'Nothing appears, and nothing moves linearly. Back.easeOut on entrances is most of UI juice.'],
+  stagger:       ['Stagger',              'Delay each row ~55 ms. A group that lands together reads as a blob; cascaded, it reads as a list.'],
+  countUp:       ['Number count-up',      'Tween the value, not only the position. A number worth earning is worth spending a second on.'],
+  barFill:       ['Bar fill',             'Fill over ~800 ms with an ease, trailing a lighter chip layer behind the head of the bar.'],
+  buttonFx:      ['Button feedback',      'Scale up on hover, down on press, overshoot on release. Every clickable thing, in every project.'],
+  idleFloat:     ['Idle float',           'A slow 3 px bob once the panel lands, so the screen never becomes a completely static image.'],
+
+  freezeFrame:   ['Freeze frame',         'Stop the world dead for ~220 ms on the killing blow. Hit stop, held long enough to become punctuation.'],
+  slowMo:        ['Slow motion',          'Ramp world time to 0.18× and back. Ramp it — a hard cut to slow-mo reads as a dropped frame.'],
+  pushIn:        ['Camera push-in',       'Scale the world 24% about the kill point over 0.9 s. Says "look here" without moving anything.'],
+  drain:         ['Colour drain',         'Desaturate the world to grey. One ColorMatrix on the world only — never on the UI over it.'],
+  vignette:      ['Vignette',             'Darken the edges. Pushes the eye to the centre, and it costs one post-process, no art.'],
+  letterbox:     ['Letterbox',            'Ease cinematic bars in over 0.5 s. Universally understood as "you are not playing right now".'],
+  slam:          ['Title slam',           'Scale the title in with an ease-IN so it lands like a hammer, then kick the camera on contact.'],
+  beat:          ['The beat',             'A 0.45 s hold where nothing happens before the tally. Silence is a layer; most endings skip it.'],
+  tally:         ['Tally cascade',        'Summary lines arrive one at a time, ~130 ms apart, each with a tick a tone higher than the last.'],
+  endAudio:      ['Stinger & muffle',     'A chord behind a low-pass that closes to 420 Hz — the "everything goes underwater" move.'],
+};
+
+const SCENES = [
+  { key:'movement', name:'1 · Movement',
+    layers:['accel','coyote','buffer','variableJump','squash','idle','camLead'],
+    note:'<b>Movement &amp; input.</b> Both runners receive the same keystrokes. Hold <kbd>D</kbd> to run at the gap and press <kbd>Space</kbd> a beat <i>late</i> — the raw runner drops in, the juiced one still jumps. Most of this scenario is invisible: it is felt, never seen. <kbd>A</kbd> <kbd>D</kbd> run · <kbd>Space</kbd> jump' },
+  { key:'impact', name:'2 · Impact',
+    layers:['anticipation','followThrough','hitFlash','screenFlash','hitstop','shake','knockback','recoil','damageNumbers','camPunch','chipBar','audio'],
+    note:'<b>Impact.</b> One collision, many reactions — every one of them scaled by a single <code>force</code> value in 0..1. Skip that scaling and a light tap shakes the screen like a meteor. <kbd>Space</kbd> or click to swing.' },
+  { key:'interface', name:'3 · Interface',
+    layers:['easing','stagger','countUp','barFill','buttonFx','idleFloat'],
+    note:'<b>Interface.</b> The most portable juice of all: no art, no physics, no engine required. A results screen, a shop, a settings page — the same six layers every time. <kbd>Space</kbd> or the button to replay.' },
+  { key:'gameend', name:'4 · Game end',
+    layers:['freezeFrame','slowMo','pushIn','drain','vignette','letterbox','slam','beat','tally','endAudio'],
+    note:'<b>Game end.</b> The kill is identical on both sides — same launch velocity, same spin. Only what the game does <i>about</i> it differs. Note the structure: the sequence runs on <code>real time</code> while the world runs on scaled time, so the slow motion never slows the results. <kbd>Space</kbd> to kill / reset.' },
+];
+
+const S = { timeScale:1, shake:1, hitstopMs:70, pitchVar:2.5 };
+
+/* --- shared: the RAW / JUICED corner label ------------------------------- */
+function sideLabel(scene, juiced) {
+  return scene.add.text(14, 12, juiced ? 'JUICED' : 'RAW',
+    F(11, juiced ? CT.accent : CT.inkMid, true)).setScrollFactor(0).setDepth(50);
+}
+
+/* ============================================================================
+   TWO CAMERAS, ONE WORLD
+   ---------------------------------------------------------------------------
+   Each stage lives in its own slice of world space, GAP apart, and gets its own
+   camera with its own viewport. Shake, zoom and rotation are camera properties,
+   so the juiced side can be thrown around without the raw side moving a pixel —
+   and neither side needs a second canvas or a second Game.
+
+   HUD objects are the one exception: scrollFactor 0 pins them to camera space,
+   which means both cameras would draw both sides' HUD. `ignore()` fixes that.
+   ========================================================================= */
+function setupCameras(scene) {
+  const a = scene.a, b = scene.b;
+  a.cam = scene.cameras.main;
+  a.cam.setViewport(0, 0, HALF, H).setScroll(0, 0);
+  b.cam = scene.cameras.add(HALF + 8, 0, HALF, H);
+  b.cam.setScroll(GAP, 0);
+  a.cam.ignore(b.hud);
+  b.cam.ignore(a.hud);
+}
+
+/* ============================================================================
+   SCENARIO 1 — MOVEMENT & INPUT
+   ============================================================================ */
+const LEVEL = { w:1240, top:330, gapA:430, gapB:545 };
+const onPlatform = x => x < LEVEL.gapA || x > LEVEL.gapB;
+
+class Runner {
+  constructor(scene, ox, juiced) {
+    Object.assign(this, { s:scene, ox, juiced });
+
+    scene.add.rectangle(ox - 100, -100, LEVEL.w + 200, H + 200, C.bg).setOrigin(0, 0);
+    for (const [x1, x2] of [[0, LEVEL.gapA], [LEVEL.gapB, LEVEL.w]]) {
+      scene.add.rectangle(ox + x1, LEVEL.top, x2 - x1, H, C.ground).setOrigin(0, 0);
+      scene.add.rectangle(ox + x1, LEVEL.top, x2 - x1, 2, C.accent, .28).setOrigin(0, 0);
+    }
+    this.body  = scene.add.rectangle(ox, LEVEL.top, 26, 34, C.accent).setOrigin(.5, 1);
+    this.tag   = scene.add.text(0, 0, '', F(11, CT.accent, true)).setOrigin(.5, 1);
+    this.hud   = [sideLabel(scene, juiced)];
+    this.reset();
+  }
+
+  reset() {
+    this.p = { x:110, y:LEVEL.top, vx:0, vy:0, ground:true, face:1, sx:1, sy:1, lastGround:0 };
+    this.pressAt = -1; this.tagT = 0; this.lead = 0;
+    this.camX = this.ox + 110 - HALF / 2;
+    this.tag.setAlpha(0);
+  }
+
+  doJump(label) {
+    this.p.vy = -560; this.p.ground = false; this.p.lastGround = -9999;
+    if (this.juiced && L.squash) { this.p.sx = 0.78; this.p.sy = 1.26; }   // stretch on takeoff
+    if (label) { this.tag.setText(label); this.tagT = 0.9; }
+  }
+
+  update(dt, now, input) {
+    const p = this.p, J = this.juiced;
+
+    /* --- input forgiveness: two timers, and an enormous felt difference --- */
+    const coyoteMs = (J && L.coyote) ? 110 : 0;
+    const bufferMs = (J && L.buffer) ? 140 : 0;
+    if (this.pressAt >= 0) {
+      const age = now - this.pressAt;
+      if (age <= bufferMs + 20) {
+        const coyote = !p.ground && now - p.lastGround <= coyoteMs;
+        if (p.ground || coyote) {
+          this.doJump(coyote ? 'COYOTE' : (age > 45 ? 'BUFFERED' : ''));
+          this.pressAt = -1;
+        }
+      } else this.pressAt = -1;
+    }
+
+    /* --- horizontal --- */
+    const dir = input.dir;
+    if (J && L.accel) {
+      const turning = dir !== 0 && p.vx !== 0 && dir !== Math.sign(p.vx);
+      const a = (p.ground ? 2800 : 1900) * (turning ? 2.2 : 1);   // reversing gets extra bite
+      if (dir) p.vx = clamp(p.vx + dir * a * dt, -270, 270);
+      else     p.vx = damp(p.vx, 0, p.ground ? 16 : 3, dt);       // and stop fast on the floor
+    } else {
+      if (dir) p.vx = clamp(p.vx + dir * 900 * dt, -270, 270);
+      else     p.vx = damp(p.vx, 0, 3.5, dt);                     // slidey
+    }
+    if (dir) p.face = dir;
+
+    /* --- vertical: three gravities, all of them a lie, all of them better --- */
+    let g = 1800;
+    if (J && L.variableJump) {
+      if (p.vy > 0)             g = 1800 * 1.9;                   // fall faster than you rose
+      else if (!input.held)     g = 1800 * 2.4;                   // released early -> cut the rise
+      if (Math.abs(p.vy) < 140) g *= 0.62;                        // hang at the apex
+    }
+    p.vy += g * dt;
+    p.x  += p.vx * dt;
+    p.y  += p.vy * dt;
+
+    /* --- floor --- */
+    const wasAir = !p.ground;
+    p.ground = false;
+    if (p.vy >= 0 && p.y >= LEVEL.top && onPlatform(p.x)) {
+      p.y = LEVEL.top; p.vy = 0; p.ground = true; p.lastGround = now;
+      if (wasAir && J && L.squash) { p.sx = 1.32; p.sy = 0.72; }  // flatten on landing
+    }
+    p.x = clamp(p.x, 12, LEVEL.w - 12);
+    if (p.x >= LEVEL.w - 13 || p.y > H + 140) this.s.resetBoth();
+
+    /* --- squash springs back; breathing is independent of it --- */
+    p.sx = damp(p.sx, 1, 14, dt);
+    p.sy = damp(p.sy, 1, 14, dt);
+    let bx = 1, by = 1;
+    if (J && L.squash) { bx = p.sx; by = p.sy; }
+    if (J && L.idle && p.ground && Math.abs(p.vx) < 12) {
+      const b = Math.sin(now / 420) * 0.02;
+      bx -= b; by += b;
+    }
+    this.body.setPosition(this.ox + p.x, p.y).setScale(bx, by);
+
+    this.tagT = Math.max(0, this.tagT - dt);
+    this.tag.setPosition(this.ox + p.x, p.y - 46).setAlpha(Math.min(1, this.tagT * 3));
+
+    /* --- camera: hard snap vs. smoothed with look-ahead --- */
+    const maxScroll = this.ox + LEVEL.w - HALF;
+    if (J && L.camLead) {
+      this.lead = damp(this.lead, p.face * 80, 4, dt);            // aim where they are going
+      const want = clamp(this.ox + p.x + this.lead - HALF / 2, this.ox, maxScroll);
+      this.camX = damp(this.camX, want, 6, dt);
+    } else {
+      this.camX = clamp(this.ox + p.x - HALF / 2, this.ox, maxScroll);
+    }
+    this.cam.setScroll(this.camX, 0);
+  }
+}
+
+class MovementScene extends Phaser.Scene {
+  constructor() { super('movement'); }
+  create() {
+    this.a = new Runner(this, 0, false);
+    this.b = new Runner(this, GAP, true);
+    setupCameras(this);
+    this.keys = this.input.keyboard.addKeys('A,D,LEFT,RIGHT,SPACE,W,UP');
+    for (const k of ['SPACE', 'W', 'UP']) {
+      this.input.keyboard.on('keydown-' + k, () => {
+        this.a.pressAt = this.time.now;
+        this.b.pressAt = this.time.now;
+      });
+    }
+    this.resetPending = 0;
+  }
+  // Reset the pair together — a comparison where the two sides have drifted
+  // out of sync stops being a comparison.
+  resetBoth() { if (this.resetPending <= 0) this.resetPending = 0.5; }
+  fire() { this.a.reset(); this.b.reset(); }
+  update(time, delta) {
+    const dt = Math.min(delta / 1000, 1 / 20) * S.timeScale;
+    const k = this.keys;
+    const input = {
+      dir:  (k.D.isDown || k.RIGHT.isDown ? 1 : 0) - (k.A.isDown || k.LEFT.isDown ? 1 : 0),
+      held: k.SPACE.isDown || k.W.isDown || k.UP.isDown,
+    };
+    if (this.resetPending > 0 && (this.resetPending -= dt) <= 0) this.fire();
+    this.a.update(dt, time, input);
+    this.b.update(dt, time, input);
+  }
+}
+
+/* ============================================================================
+   SCENARIO 2 — IMPACT
+   ============================================================================ */
+const FLOOR2 = 330;
+
+class Duel {
+  constructor(scene, ox, juiced) {
+    Object.assign(this, { s:scene, ox, juiced });
+    scene.add.rectangle(ox - 120, -120, HALF + 240, H + 240, C.bg).setOrigin(0, 0);
+    scene.add.rectangle(ox - 120, FLOOR2, HALF + 240, H, C.ground).setOrigin(0, 0);
+    scene.add.rectangle(ox - 120, FLOOR2, HALF + 240, 2, C.accent, .28).setOrigin(0, 0);
+
+    /* Screen flash: one full-viewport overlay, pinned to camera space so the
+       shake never drags it, and oversized because the camera also ROTATES
+       during the shake — a viewport-sized rect would expose the corners. */
+    this.sflashRect = scene.add.rectangle(-60, -60, HALF + 120, H + 120, C.flash)
+      .setOrigin(0, 0).setScrollFactor(0).setDepth(100).setAlpha(0);
+    this.hud = [sideLabel(scene, juiced), this.sflashRect];
+
+    this.homeX = 140; this.dummyX = 330;
+    this.atk = scene.add.rectangle(ox + this.homeX, FLOOR2, 26, 34, C.accent).setOrigin(.5, 1);
+    this.dum = scene.add.rectangle(ox + this.dummyX, FLOOR2, 40, 62, C.inkMid).setOrigin(.5, 1);
+
+    // Health bar in three layers: plate, chip, live. Scaled with scaleX, not
+    // width — a Phaser Rectangle's fill geometry does not follow `.width`.
+    const bx = ox + this.dummyX - 46, by = FLOOR2 - 88;
+    scene.add.rectangle(bx, by, 92, 9, C.black, .45).setOrigin(0, .5);
+    this.chip = scene.add.rectangle(bx, by, 92, 9, C.hard, .6).setOrigin(0, .5);
+    this.bar  = scene.add.rectangle(bx, by, 92, 9, C.accent).setOrigin(0, .5);
+
+    this.reset();
+  }
+
+  reset() {
+    this.hp = 1; this.chipHp = 1; this.deadT = 0;
+    this.state = 'idle'; this.t = 0; this.hitstop = 0;
+    this.dx = 0; this.dvx = 0;      // target knockback spring
+    this.rx = 0; this.rvx = 0;      // attacker recoil spring (kept separate from
+    this.ax = this.homeX;           //   the lunge, or the lunge overwrites it)
+    this.flash = 0; this.sflash = 0; this.sx = 1; this.sy = 1; this.trauma = 0;
+    this.sflashRect.setAlpha(0);
+  }
+
+  // The force is rolled once by the scene and handed to both sides, so the two
+  // stages are always reacting to the identical hit.
+  attack(force) {
+    if (this.state !== 'idle') return;
+    this.force = force;
+    this.state = (this.juiced && L.anticipation) ? 'wind' : 'lunge';
+    this.t = 0;
+  }
+
+  /* --- THE IMPACT: one event, every layer reading the same `force` -------- */
+  onImpact(force) {
+    const J = this.juiced;
+    this.hp = Math.max(0, this.hp - (0.14 + force * 0.10));
+    if (!J) { this.chipHp = this.hp; this.s.rawNumber(this.ox, this.dummyX, force); return; }
+
+    if (L.hitFlash)      this.flash = 1;
+    if (L.screenFlash)   this.sflash = Math.min(1, 0.22 + force * 0.55);
+    if (L.hitstop)       this.hitstop = (S.hitstopMs / 1000) * (0.5 + force);
+    if (L.shake)         this.trauma = Math.min(1, this.trauma + 0.34 + force * 0.5);
+    if (L.knockback)     this.dvx  =  460 * (0.5 + force);
+    if (L.recoil)        this.rvx  = -300 * (0.5 + force);
+    if (L.camPunch)      this.s.punch(this.cam, force);
+    if (L.damageNumbers) this.s.popNumber(this.ox, this.dummyX, force);
+    if (L.audio)         thud(force);
+    if (!L.chipBar)      this.chipHp = this.hp;
+    this.sx = 1 + 0.40 * force;
+    this.sy = 1 - 0.30 * force;
+  }
+
+  update(dt, now) {
+    const J = this.juiced;
+
+    /* Hit stop burns real time without advancing this stage. Note that the
+       camera at the bottom is deliberately NOT frozen: the world stops, the
+       shake does not, which is what keeps the freeze from reading as a stall. */
+    if (this.hitstop > 0) this.hitstop = Math.max(0, this.hitstop - dt);
+    else {
+      this.t += dt;
+      const seq = J ? { wind:0.10, lunge:0.085, recover:0.42 }
+                    : { wind:0,    lunge:0.20,  recover:0.30 };
+
+      if (this.state === 'wind') {
+        const k = Math.min(1, this.t / seq.wind);
+        this.ax = this.homeX - 14 * k * k;                       // pull back...
+        this.sx = 1 + 0.18 * k; this.sy = 1 - 0.14 * k;
+        if (k >= 1) { this.windX = this.ax; this.state = 'lunge'; this.t = 0; }
+      } else if (this.state === 'lunge') {
+        const k = Math.min(1, this.t / seq.lunge);
+        const from = this.windX ?? this.homeX;
+        this.ax = lerp(from, this.dummyX - 44, J ? k * k : k);   // ...then accelerate in
+        if (J) { this.sx = 0.78; this.sy = 1.20; }
+        if (k >= 1) {
+          this.hitX = this.ax; this.windX = null;
+          this.state = 'recover'; this.t = 0;
+          this.onImpact(this.force);
+        }
+      } else if (this.state === 'recover') {
+        const k = Math.min(1, this.t / seq.recover);
+        // Follow-through: a Back ease overshoots the rest pose and settles onto it.
+        const e = (J && L.followThrough) ? Phaser.Math.Easing.Back.Out(k, 1.7)
+                : J ? Phaser.Math.Easing.Cubic.Out(k) : k;
+        this.ax = lerp(this.hitX, this.homeX, e);
+        if (k >= 1) { this.state = 'idle'; this.t = 0; }
+      }
+
+      /* World springs live INSIDE the freeze branch. Leave them outside and the
+         target keeps sliding away and un-squashing while the game is supposedly
+         frozen, which quietly cancels most of what hit stop is for. */
+      this.dvx += (-70 * this.dx - 11 * this.dvx) * dt;   // knockback springs home
+      this.dx  += this.dvx * dt;
+      this.rvx += (-90 * this.rx - 12 * this.rvx) * dt;   // recoil springs home
+      this.rx  += this.rvx * dt;
+      this.sx   = damp(this.sx, 1, 13, dt);
+      this.sy   = damp(this.sy, 1, 13, dt);
+    }
+
+    /* --- presentation: runs through the freeze, same as the camera below ---
+       A screen flash held for the whole freeze stops reading as a flash and
+       starts reading as a white screen. Peak alpha 0.30 — enough to feel, not
+       enough to blind, and it decays in about 0.15 s. */
+    this.flash  = Math.max(0, this.flash - dt * 9);
+    this.sflash = Math.max(0, this.sflash - dt * 7);
+    this.sflashRect.setAlpha(this.sflash * 0.30);
+    this.chipHp = damp(this.chipHp, this.hp, 4.5, dt);  // the chip layer trails ~300 ms behind
+
+    this.atk.setPosition(this.ox + this.ax + this.rx, FLOOR2);
+    this.dum.setPosition(this.ox + this.dummyX + this.dx, FLOOR2)
+            .setScale(J ? this.sx : 1, J ? this.sy : 1)
+            .setFillStyle(this.flash > 0.45 ? C.white : C.inkMid);
+    this.bar.scaleX  = Math.max(0.0001, this.hp);
+    this.chip.scaleX = Math.max(0.0001, Math.max(this.chipHp, this.hp));
+
+    if (this.hp <= 0 && (this.deadT += dt) > 1) { this.hp = 1; this.chipHp = 1; this.deadT = 0; }
+
+    /* --- camera: trauma², so the shake tails off instead of stopping dead --- */
+    this.trauma = Math.max(0, this.trauma - 1.7 * dt);
+    const s = this.trauma * this.trauma, amp = 26 * S.shake;
+    this.cam.setScroll(this.ox + rnd(-1, 1) * amp * s, rnd(-1, 1) * amp * s);
+    this.cam.setRotation(rnd(-1, 1) * 0.035 * s);
+  }
+}
+
+class ImpactScene extends Phaser.Scene {
+  constructor() { super('impact'); }
+  create() {
+    this.a = new Duel(this, 0, false);
+    this.b = new Duel(this, GAP, true);
+    setupCameras(this);
+    this.input.keyboard.on('keydown-SPACE', () => this.fire());
+    this.input.on('pointerdown', () => this.fire());
+    this.autoT = 0.7;
+  }
+  fire() {
+    const force = rnd(0.40, 1);          // one roll, both sides
+    this.a.attack(force); this.b.attack(force);
+  }
+
+  punch(cam, force) {
+    this.tweens.killTweensOf(cam);
+    cam.setZoom(1 + 0.045 * force);
+    this.tweens.add({ targets:cam, zoom:1, duration:260, ease:'Cubic.easeOut' });
+  }
+  popNumber(ox, x, force) {
+    const t = this.add.text(ox + x + rnd(-16, 16), FLOOR2 - 78, Math.round(14 + force * 26),
+      F(22, force > 0.8 ? CT.accentHi : CT.accent, true)).setOrigin(.5).setDepth(20);
+    this.tweens.add({ targets:t, y:t.y - 62, alpha:0, duration:760, ease:'Quad.easeOut',
+                      onComplete:() => t.destroy() });
+    this.tweens.add({ targets:t, scale:{ from:0.35, to:1 }, angle:rnd(-7, 7),
+                      duration:260, ease:'Back.easeOut' });
+  }
+  rawNumber(ox, x, force) {   // the same information, with none of the motion
+    const t = this.add.text(ox + x, FLOOR2 - 78, Math.round(14 + force * 26),
+      F(22, CT.accent)).setOrigin(.5).setDepth(20);
+    this.time.delayedCall(500, () => t.destroy());
+  }
+  update(time, delta) {
+    const dt = Math.min(delta / 1000, 1 / 20) * S.timeScale;
+    if (autoRun && (this.autoT -= dt) <= 0) { this.autoT = 1.5; this.fire(); }
+    this.a.update(dt, time);
+    this.b.update(dt, time);
+  }
+}
+
+/* ============================================================================
+   SCENARIO 3 — INTERFACE
+   ============================================================================ */
+const RESULTS = [['TIME', '01:42'], ['COINS', '138'], ['ENEMIES', '27']];
+const BAR_W = 240, XP = 0.72, SCORE = 12480;
+
+class Panel {
+  constructor(scene, ox, juiced) {
+    Object.assign(this, { s:scene, ox, juiced });
+    scene.add.rectangle(ox, 0, HALF, H, C.bg).setOrigin(0, 0);
+    this.hud = [sideLabel(scene, juiced)];
+    this.root = null;
+    this.build();
+  }
+
+  build() {
+    const J = this.juiced, sc = this.s;
+    if (this.root) this.root.destroy(true);
+
+    const box = sc.add.container(this.ox + HALF / 2, H / 2 - 6);
+    this.root = box;
+
+    const g = sc.add.graphics();
+    g.fillStyle(C.surface, 1).fillRoundedRect(-152, -128, 304, 256, 14);
+    g.lineStyle(1, C.white, 0.10).strokeRoundedRect(-152, -128, 304, 256, 14);
+    box.add(g);
+
+    const title = sc.add.text(0, -100, 'STAGE CLEAR', F(15, CT.accent, true)).setOrigin(.5);
+    box.add(title);
+
+    const rows = [];
+    RESULTS.forEach(([k, v], i) => {
+      const y = -58 + i * 26;
+      const a = sc.add.text(-120, y, k, F(12, CT.inkMid)).setOrigin(0, .5);
+      const b = sc.add.text( 120, y, v, F(13, CT.ink)).setOrigin(1, .5);
+      box.add([a, b]); rows.push(a, b);
+    });
+
+    box.add(sc.add.rectangle(-120, 34, BAR_W, 10, C.black, .45).setOrigin(0, .5));
+    this.chip = sc.add.rectangle(-120, 34, BAR_W, 10, C.accent, .35).setOrigin(0, .5);
+    this.fill = sc.add.rectangle(-120, 34, BAR_W, 10, C.accent).setOrigin(0, .5);
+    box.add([this.chip, this.fill]);
+    const barLabel = sc.add.text(120, 15, 'XP', F(11, CT.inkMid)).setOrigin(1, .5);
+    box.add(barLabel);
+
+    this.score = sc.add.text(0, 70, '0', F(30, CT.accent, true)).setOrigin(.5);
+    box.add(this.score);
+
+    const btn   = sc.add.container(0, 106);
+    const brect = sc.add.rectangle(0, 0, 132, 30, C.accent);
+    const btext = sc.add.text(0, 0, 'CONTINUE', F(12, CT.accentInk, true)).setOrigin(.5);
+    btn.add([brect, btext]);
+    box.add(btn);
+
+    brect.setInteractive({ useHandCursor:true });
+    const to = (v, ms, ease) => {
+      sc.tweens.killTweensOf(btn);
+      if (!J || !L.buttonFx) { btn.setScale(1); return; }
+      sc.tweens.add({ targets:btn, scale:v, duration:ms, ease });
+    };
+    brect.on('pointerover', () => to(1.06, 140, 'Quad.easeOut'));
+    brect.on('pointerout',  () => to(1.00, 160, 'Quad.easeOut'));
+    brect.on('pointerdown', () => to(0.93,  70, 'Quad.easeOut'));
+    brect.on('pointerup',   () => { to(1.00, 320, 'Back.easeOut'); sc.fire(); });
+
+    /* --- raw: the panel simply exists, already at its final values --- */
+    if (!J) {
+      this.score.setText(SCORE.toLocaleString());
+      this.fill.scaleX = XP; this.chip.scaleX = XP;
+      return;
+    }
+
+    /* --- juiced: the same panel, arriving --- */
+    this.fill.scaleX = 0.0001; this.chip.scaleX = 0.0001;
+    this.score.setText('0');
+
+    if (L.easing) {
+      box.setAlpha(0).setScale(0.86);
+      sc.tweens.add({ targets:box, alpha:1, scale:1, duration:400, ease:'Back.easeOut' });
+    }
+    const items = [title, ...rows, barLabel, btn];
+    if (L.easing || L.stagger) items.forEach((o, i) => {
+      const homeX = o.x;
+      o.setAlpha(0);
+      sc.tweens.add({
+        targets:o, alpha:1, x:{ from: homeX - (L.easing ? 22 : 0), to: homeX },
+        delay: 120 + (L.stagger ? i * 55 : 0),
+        duration:340, ease: L.easing ? 'Cubic.easeOut' : 'Linear',
+      });
+    });
+
+    if (L.barFill) {
+      sc.tweens.add({ targets:this.fill, scaleX:XP, delay:560, duration:820,  ease:'Cubic.easeOut' });
+      sc.tweens.add({ targets:this.chip, scaleX:XP, delay:560, duration:1220, ease:'Cubic.easeOut' });
+    } else { this.fill.scaleX = XP; this.chip.scaleX = XP; }
+
+    if (L.countUp) {
+      sc.tweens.addCounter({ from:0, to:SCORE, delay:660, duration:1000, ease:'Cubic.easeOut',
+        onUpdate: t => this.score.setText(Math.round(t.getValue()).toLocaleString()) });
+      sc.tweens.add({ targets:this.score, scale:{ from:1.18, to:1 },
+                      delay:660, duration:1100, ease:'Cubic.easeOut' });
+    } else this.score.setText(SCORE.toLocaleString());
+  }
+
+  update(dt, now) {
+    if (!this.root) return;
+    const bob = (this.juiced && L.idleFloat) ? Math.sin(now / 700) * 3 : 0;
+    this.root.y = H / 2 - 6 + bob;
+  }
+}
+
+class InterfaceScene extends Phaser.Scene {
+  constructor() { super('interface'); }
+  create() {
+    this.a = new Panel(this, 0, false);
+    this.b = new Panel(this, GAP, true);
+    setupCameras(this);
+    this.input.keyboard.on('keydown-SPACE', () => this.fire());
+    this.autoT = 3.6;
+  }
+  fire() {
+    this.tweens.killAll();            // both panels rebuild, so nothing survives it
+    this.a.build(); this.b.build();
+    this.autoT = 3.6;
+  }
+  update(time, delta) {
+    const dt = Math.min(delta / 1000, 1 / 20) * S.timeScale;
+    if (autoRun && (this.autoT -= dt) <= 0) this.fire();
+    this.a.update(dt, time);
+    this.b.update(dt, time);
+  }
+}
+
+/* ============================================================================
+   SCENARIO 4 — GAME END
+   ---------------------------------------------------------------------------
+   The kill itself is identical on both sides — same launch velocity, same spin,
+   same gravity. Only what the game does *about* it differs.
+
+   The one structural idea worth stealing: the sequence timeline runs on REAL
+   time while the world runs on scaled time. Drive both from the same clock and
+   your slow-motion also slows the results screen, which is never what you want.
+   ========================================================================= */
+const FLOOR3 = 330, PIVX = 243, PIVY = 250;
+const TALLY = [['ENEMIES', '27'], ['ACCURACY', '84%'], ['RANK', 'A']];
+
+const easeOutC = k => 1 - Math.pow(1 - k, 3);
+const easeInC  = k => k * k * k;
+
+class Ending {
+  constructor(scene, ox, juiced) {
+    Object.assign(this, { s:scene, ox, juiced });
+
+    /* The world lives in a container so the push-in can scale it about the
+       kill point, and so the colour drain applies to the world ONLY — the
+       title and the tally are HUD, and a desaturated VICTORY looks broken. */
+    this.world = scene.add.container(ox + PIVX, PIVY);
+    const bg     = scene.add.rectangle(-543, -550, HALF + 600, H + 600, C.bg).setOrigin(0, 0);
+    const ground = scene.add.rectangle(-543,   80, HALF + 600, H,       C.ground).setOrigin(0, 0);
+    const line   = scene.add.rectangle(-543,   80, HALF + 600, 2, C.accent, .28).setOrigin(0, 0);
+    this.hero = scene.add.rectangle(-53, 80, 26, 34, C.accent).setOrigin(.5, 1);
+    this.foe  = scene.add.rectangle( 57, 80, 40, 62, C.inkMid).setOrigin(.5, 1);
+    this.world.add([bg, ground, line, this.hero, this.foe]);
+
+    // The drain goes on the container, so it never touches the HUD drawn over it.
+    this.cm = this.world.postFX.addColorMatrix();
+    // The vignette goes on the CAMERA instead: postFX coordinates are relative
+    // to the target's render bounds, and the push-in is rescaling the container
+    // every frame, which would drag a container-mounted vignette around with it.
+    this.vig = null;
+
+    /* --- HUD: fixed in camera space, so the shake never moves it --- */
+    this.barTop = scene.add.rectangle(0, 0, HALF, 1, C.black).setOrigin(0, 0).setScrollFactor(0);
+    this.barBot = scene.add.rectangle(0, H, HALF, 1, C.black).setOrigin(0, 1).setScrollFactor(0);
+    this.title  = scene.add.text(HALF / 2, 176, 'VICTORY', F(38, CT.accent, true))
+                    .setOrigin(.5).setScrollFactor(0);
+    this.lines = TALLY.map(([k, v], i) => {
+      const y = 254 + i * 27;
+      return [
+        scene.add.text(HALF / 2 - 86, y, k, F(12, CT.inkMid)).setOrigin(0, .5).setScrollFactor(0),
+        scene.add.text(HALF / 2 + 86, y, v, F(13, CT.ink)).setOrigin(1, .5).setScrollFactor(0),
+      ];
+    });
+    this.hud = [sideLabel(scene, juiced), this.barTop, this.barBot,
+                this.title, ...this.lines.flat()];
+    this.reset();
+  }
+
+  reset() {
+    this.dead = false; this.seqT = 0; this.slammed = false; this.ticked = -1;
+    this.fx = 0; this.fy = 0; this.fvx = 0; this.fvy = 0; this.fa = 0; this.fva = 0;
+    this.hx = 0; this.trauma = 0;
+    this.world.setScale(1);
+    this.cm.saturate(0);
+    this.setVignette(0);
+    this.barTop.setSize(HALF, 0.001);
+    this.barBot.setSize(HALF, 0.001);
+    this.title.setAlpha(0).setScale(1);
+    this.lines.flat().forEach(t => t.setAlpha(0));
+    this.foe.setPosition(57, 80).setAngle(0).setAlpha(1);
+    this.hero.x = -53;
+  }
+
+  kill() {
+    if (this.dead) return;
+    this.dead = true; this.seqT = 0;
+    this.fvx = 250; this.fvy = -520; this.fva = 400;   // identical on both sides
+    this.hx = 55;
+    if (this.juiced && L.endAudio) stinger();
+    if (!this.juiced) {                                 // raw: the end state, immediately
+      this.title.setAlpha(1);
+      this.lines.flat().forEach(t => t.setAlpha(1));
+    }
+  }
+
+  /* A vignette at strength 0 is not a no-op in Phaser — the radius still masks
+     the frame — so the effect is added and removed rather than turned down. */
+  setVignette(v) {
+    if (!this.cam) return;
+    if (v > 0.01) {
+      if (!this.vig) this.vig = this.cam.postFX.addVignette(0.5, 0.5, 0.9, v);
+      else this.vig.strength = v;
+    } else if (this.vig) { this.cam.postFX.clear(); this.vig = null; }
+  }
+
+  /* --- how fast the WORLD runs; the timeline above is unaffected by this --- */
+  worldScale() {
+    if (!this.juiced || !this.dead) return 1;
+    const t = this.seqT;
+    if (L.freezeFrame && t < 0.22) return 0;
+    if (!L.slowMo) return 1;
+    const u = t - (L.freezeFrame ? 0.22 : 0);
+    if (u < 0.12) return lerp(1, 0.18, u / 0.12);
+    if (u < 1.50) return 0.18;
+    if (u < 2.20) return lerp(0.18, 1, (u - 1.50) / 0.70);
+    return 1;
+  }
+
+  stepWorld(dt) {
+    if (!this.dead) return;
+    this.fvy += 2200 * dt;
+    this.fx  += this.fvx * dt;
+    this.fy  += this.fvy * dt;
+    this.fa  += this.fva * dt;
+    if (this.fy > 0) {                                  // one scrape along the ground
+      this.fy = 0; this.fvy *= -0.42; this.fvx *= 0.72; this.fva *= 0.55;
+    }
+    this.foe.setPosition(57 + this.fx, 80 + this.fy).setAngle(this.fa);
+    this.hx = damp(this.hx, 0, 6, dt);
+    this.hero.x = -53 + this.hx;
+  }
+
+  update(dt, now) {
+    this.stepWorld(dt * this.worldScale());
+    if (!this.dead) return;
+    this.seqT += dt;                                    // real time, deliberately
+    const t = this.seqT, J = this.juiced;
+
+    if (J) {
+      // Each layer also has to undo itself, so toggling one off mid-sequence
+      // does not leave the screen stuck in a half-finished ending.
+      this.world.setScale(L.pushIn ? 1 + 0.24 * easeOutC(clamp(t / 0.9, 0, 1)) : 1);
+      this.cm.saturate(L.drain ? -easeOutC(clamp((t - 0.15) / 0.8, 0, 1)) : 0);
+      this.setVignette(L.vignette ? 0.40 * easeOutC(clamp((t - 0.15) / 0.8, 0, 1)) : 0);
+      const h = L.letterbox ? 54 * easeOutC(clamp((t - 0.20) / 0.5, 0, 1)) : 0;
+      this.barTop.setSize(HALF, Math.max(0.001, h));
+      this.barBot.setSize(HALF, Math.max(0.001, h));
+
+      /* Slam: scale in hard with an ease-IN (fast at the end, so it lands like
+         a hammer rather than drifting to a stop) and kick the camera on contact. */
+      if (L.slam) {
+        const k = clamp((t - 0.85) / 0.22, 0, 1);
+        if (t >= 0.85) {
+          this.title.setAlpha(1).setScale(lerp(3.2, 1, easeInC(k)));
+          if (k >= 1 && !this.slammed) { this.slammed = true; this.trauma = 0.55; }
+          if (this.slammed) this.title.setScale(1 + 0.06 * Math.exp(-9 * (t - 1.07)));
+        }
+      } else if (t >= 0.85) this.title.setAlpha(1).setScale(1);
+
+      // The beat: a deliberate hold where nothing at all happens.
+      const tallyAt = 1.25 + (L.beat ? 0.45 : 0);
+      this.lines.forEach((pair, i) => {
+        const k = clamp((t - tallyAt - i * 0.13) / 0.3, 0, 1);
+        const show = L.tally ? k : (t >= tallyAt ? 1 : 0);
+        pair[0].setAlpha(show); pair[1].setAlpha(show);
+        if (L.tally && k > 0 && this.ticked < i) { this.ticked = i; if (L.endAudio) tick(i); }
+      });
+    }
+
+    this.trauma = Math.max(0, this.trauma - 2.2 * dt);
+    const s = this.trauma * this.trauma, amp = 22 * S.shake;
+    this.cam.setScroll(this.ox + rnd(-1, 1) * amp * s, rnd(-1, 1) * amp * s);
+  }
+}
+
+class EndScene extends Phaser.Scene {
+  constructor() { super('gameend'); }
+  create() {
+    this.a = new Ending(this, 0, false);
+    this.b = new Ending(this, GAP, true);
+    setupCameras(this);
+    this.input.keyboard.on('keydown-SPACE', () => this.fire());
+    this.input.on('pointerdown', () => this.fire());
+    this.holdT = 0.8;
+  }
+  fire() {
+    if (this.a.dead || this.b.dead) { this.a.reset(); this.b.reset(); this.holdT = 0.5; return; }
+    this.a.kill(); this.b.kill();
+  }
+  update(time, delta) {
+    const dt = Math.min(delta / 1000, 1 / 20) * S.timeScale;
+    if (autoRun) {
+      this.holdT -= dt;
+      if (this.holdT <= 0) { this.holdT = this.a.dead ? 1.2 : 4.6; this.fire(); }
+    }
+    this.a.update(dt, time);
+    this.b.update(dt, time);
+  }
+}
+
+/* --- sound: a synthesised thud. Pitch variance is the whole lesson here. --- */
+let ac;
+function thud(force) {
+  ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+  const t = ac.currentTime;
+  const detune = Math.pow(2, rnd(-S.pitchVar, S.pitchVar) / 12);          // ± semitones
+  const o = ac.createOscillator(), g = ac.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime((150 + force * 190) * detune, t);
+  o.frequency.exponentialRampToValueAtTime(46 * detune, t + 0.16);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.04 + force * 0.20, t + 0.008);    // volume tracks force
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.28);
+  o.connect(g).connect(ac.destination);
+  o.start(t); o.stop(t + 0.3);
+}
+
+/* --- game-end audio: a chord behind a closing low-pass, then rising ticks --
+   The filter sweep is the "everything goes underwater" move every game makes
+   on a death or a victory. It costs one BiquadFilter and no assets. */
+function audio() { return ac = ac || new (window.AudioContext || window.webkitAudioContext)(); }
+
+function stinger() {
+  const a = audio(), t = a.currentTime;
+  const lp = a.createBiquadFilter(), g = a.createGain();
+  lp.type = 'lowpass';
+  lp.frequency.setValueAtTime(7000, t);
+  lp.frequency.exponentialRampToValueAtTime(420, t + 1.3);       // muffle it shut
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.12, t + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 1.8);
+  lp.connect(g).connect(a.destination);
+  for (const f of [131, 165, 196, 262]) {                         // a plain minor-ish chord
+    const o = a.createOscillator();
+    o.type = 'triangle';
+    o.frequency.setValueAtTime(f, t);
+    o.connect(lp); o.start(t); o.stop(t + 1.9);
+  }
+}
+
+function tick(i) {
+  const a = audio(), t = a.currentTime;
+  const o = a.createOscillator(), g = a.createGain();
+  o.type = 'square';
+  o.frequency.setValueAtTime(520 * Math.pow(2, i / 12 * 2), t);   // each line a tone higher
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.05, t + 0.005);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+  o.connect(g).connect(a.destination);
+  o.start(t); o.stop(t + 0.14);
+}
+
+/* ============================================================================
+   BOOT + UI WIRING
+   ========================================================================= */
+let autoRun = true, current = SCENES[0];
+
+const game = new Phaser.Game({
+  type: Phaser.AUTO,
+  // Transparent, not a background colour: every stage paints its own dark
+  // backdrop inside its viewport, so the FIT letterboxing and the 8 px divider
+  // fall through to the page and follow the light/dark theme.
+  transparent: true,
+  scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH,
+           parent: 'stage', width: W, height: H },
+  scene: [MovementScene, ImpactScene, InterfaceScene, EndScene],
+});
+
+/* Key off `current`, never off the live scene list: Phaser queues start/stop and
+   processes them on the next game step, so getScenes(true) can briefly report
+   the old scene, the new one, or both. Reading [0] from it silently aimed every
+   button at whichever scene booted first. */
+const activeScene = () => game.scene.getScene(current.key);
+
+document.getElementById('sceneList').innerHTML =
+  SCENES.map(s => `<button class="scene" data-scene="${s.key}">${s.name}</button>`).join('');
+document.getElementById('sceneList').addEventListener('click', e => {
+  const k = e.target.dataset.scene;
+  if (!k || k === current.key) return;
+  game.scene.stop(current.key);          // stop the outgoing scene by name,
+  game.scene.start(k);                   // not "everything that looks active"
+  current = SCENES.find(s => s.key === k);
+  buildPanel();
+});
+
+const fxList = document.getElementById('fxList');
+function buildPanel() {
+  document.querySelectorAll('[data-scene]').forEach(b =>
+    b.classList.toggle('on', b.dataset.scene === current.key));
+  document.getElementById('note').innerHTML = current.note;
+  fxList.innerHTML = current.layers.map(k => `
+    <button class="fx" data-fx="${k}" aria-pressed="false"><i class="dot"></i>
+      <span><strong>${INFO[k][0]}</strong><em>${INFO[k][1]}</em></span></button>`).join('');
+  syncFx();
+}
+fxList.addEventListener('click', e => {
+  const b = e.target.closest('[data-fx]');
+  if (!b) return;
+  L[b.dataset.fx] = !L[b.dataset.fx];
+  syncFx();
+  if (current.key === 'interface') activeScene()?.fire();
+});
+function syncFx() {
+  for (const k of current.layers)
+    fxList.querySelector(`[data-fx="${k}"]`)?.setAttribute('aria-pressed', L[k]);
+  const any = current.layers.some(k => L[k]);
+  masterBtn.textContent = any ? 'JUICE: ON' : 'JUICE: OFF';
+  masterBtn.classList.toggle('off', !any);
+}
+
+const masterBtn = document.getElementById('master');
+masterBtn.onclick = () => {
+  const any = current.layers.some(k => L[k]);
+  const SILENT = ['audio', 'endAudio'];                                  // never auto-enable audio
+  for (const k of current.layers) L[k] = any ? false : !SILENT.includes(k);
+  syncFx();
+  if (current.key === 'interface') activeScene()?.fire();
+};
+
+const GLOBALS = [
+  ['timeScale', 'Time scale',     0.1, 1.5, 0.05, v => v.toFixed(2) + '×'],
+  ['shake',     'Shake amount',   0,   2.5, 0.05, v => v.toFixed(2) + '×'],
+  ['hitstopMs', 'Hit stop',       0,   250, 5,    v => v + ' ms'],
+  ['pitchVar',  'Pitch variance', 0,   7,   0.25, v => '±' + v.toFixed(2) + ' st'],
+];
+document.getElementById('globals').innerHTML = GLOBALS.map(([k, label, min, max, step]) => `
+  <div class="ctl"><label>${label} <b id="v_${k}"></b></label>
+  <input type="range" id="s_${k}" min="${min}" max="${max}" step="${step}" autocomplete="off"></div>`).join('');
+function bindGlobals() {
+  for (const [k, , , , , fmt] of GLOBALS) {
+    const el = document.getElementById('s_' + k), out = document.getElementById('v_' + k);
+    el.value = S[k]; out.textContent = fmt(S[k]);
+    el.oninput = () => { S[k] = +el.value; out.textContent = fmt(+el.value); };
+  }
+}
+bindGlobals();
+
+const autoBtn = document.getElementById('auto');
+autoBtn.onclick = () => { autoRun = !autoRun; autoBtn.classList.toggle('on', autoRun); };
+document.getElementById('fire').onclick = () => activeScene()?.fire();
+
+const themeBtn = document.getElementById('themebtn'), themeLbl = document.getElementById('themelbl');
+function paintTheme() {
+  const light = document.documentElement.getAttribute('data-theme') === 'light';
+  themeBtn.firstChild.nodeValue = light ? '☀ ' : '☾ ';
+  themeLbl.textContent = light ? 'Light' : 'Dark';
+}
+themeBtn.onclick = () => {
+  const light = document.documentElement.getAttribute('data-theme') === 'light';
+  document.documentElement.setAttribute('data-theme', light ? 'dark' : 'light');
+  try { localStorage.setItem('juice:theme', light ? 'dark' : 'light'); } catch (e) {}
+  paintTheme();
+};
+paintTheme();
+
+buildPanel();
+// Re-assert code state over anything the browser restores on reload.
+addEventListener('pageshow', () => { syncFx(); bindGlobals(); paintTheme(); });
+</script>
+</body>
+</html>
