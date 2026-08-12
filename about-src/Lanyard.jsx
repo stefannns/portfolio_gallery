@@ -45,6 +45,16 @@ const BLANK_PIXEL =
 const FRONT_UV_RECT = { x: 0, y: 0, w: 0.5, h: 0.755 };
 const BACK_UV_RECT = { x: 0.5, y: 0, w: 0.5, h: 0.757 };
 
+// The card's physical half-extents, used BOTH for its collider and for bounding the drag. Named
+// rather than repeated so the two cannot drift apart — a limit that disagreed with the collider
+// would let a corner past the edge it is meant to hold back.
+const CARD_HALF_W = 0.8, CARD_HALF_H = 1.125, CARD_HALF_D = 0.01;
+
+// Extra clearance held between the card and the edge of the canvas while dragging, in world
+// units (~17px on this page). Stopping exactly at the edge still reads as the badge meeting an
+// invisible wall; stopping short of it reads as the end of its reach.
+const DRAG_MARGIN = 0.15;
+
 /* ---- local patch: the band ribbon ---------------------------------------------------- */
 
 // How far up the strap the card's twist reaches, and how sharply it lets go. The whole twist
@@ -358,7 +368,23 @@ function Band({
       dir.copy(vec).sub(state.camera.position).normalize();
       vec.add(dir.multiplyScalar(state.camera.position.length()));
       [card, j1, j2, j3, fixed].forEach(ref => ref.current?.wakeUp());
-      card.current?.setNextKinematicTranslation({ x: vec.x - dragged.x, y: vec.y - dragged.y, z: vec.z - dragged.z });
+
+      /* local patch: stop the drag short of the canvas edge.
+         While dragging, the card is kinematic and tracks the pointer exactly — the rope no longer
+         constrains it, so it can be pulled past the edge of the canvas, where it is simply
+         clipped. That reads as the badge being cut in half by an invisible mask.
+         The bound is the visible world half-width at the card's depth, less the card's own half
+         width so the whole thing stays inside rather than its centre, less a margin so it comes to
+         rest before the edge rather than against it. Both sides: the canvas extends off-screen to
+         the left, so without this the card can be dragged out of view that way instead.
+         Derived from the live camera and canvas every frame, so it follows a resize with no
+         constant to keep in sync. X only — the layer already reaches 200px above the stage and the
+         card hangs, so nothing clips vertically, and bounding Y would fight the rope. */
+      const halfH = Math.tan((state.camera.fov / 2) * Math.PI / 180) * state.camera.position.z;
+      const halfW = halfH * (state.size.width / state.size.height);
+      const limX = Math.max(0, halfW - CARD_HALF_W - DRAG_MARGIN);
+      const x = Math.max(-limX, Math.min(limX, vec.x - dragged.x));
+      card.current?.setNextKinematicTranslation({ x, y: vec.y - dragged.y, z: vec.z - dragged.z });
     }
     if (fixed.current) {
       [j1, j2].forEach(ref => {
@@ -403,7 +429,7 @@ function Band({
           <BallCollider args={[0.1]} />
         </RigidBody>
         <RigidBody position={[ropeSeg * 2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
-          <CuboidCollider args={[0.8, 1.125, 0.01]} />
+          <CuboidCollider args={[CARD_HALF_W, CARD_HALF_H, CARD_HALF_D]} />
           <group
             scale={2.25}
             position={[0, -1.2, -0.05]}
