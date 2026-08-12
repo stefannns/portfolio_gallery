@@ -90,7 +90,12 @@ void main(){
   float w = fwidth(bands);
   float line = 1.0 - smoothstep(0.0, w * 1.6, tri);
 
-  float shade = 0.35 + 0.65 * smoothstep(0.2, 0.9, field);
+  /* Depth cue: how much a contour's brightness depends on the field's own value. The floor at
+     0.35 meant even the dimmest line still carried a third of full strength, so the whole field
+     sat at a similar weight. Dropping the floor to 0.12 and widening the ramp lets the far lines
+     fall much further back while the near ones keep their strength — more variation across the
+     field, without making the bright lines any brighter. */
+  float shade = 0.12 + 0.88 * smoothstep(0.12, 0.95, field);
   vec3 col = uBg + uAccent * line * shade * uFade;
   col += uAccent * pull * 0.10 * uPace * uFade;        // faint wake, only while moving
   gl_FragColor = vec4(col, 1.0);
@@ -188,7 +193,7 @@ export function mountWaves (canvas, opts = {}) {
     cursor: 0.12, reach: 0.22,
     rough: 0.13,                  // lower = smoother; weights the broad shapes over the
                                  // fine wobble, so the contours run longer and cleaner
-    fade: 0.55,                    // held well down: this sits UNDER body copy
+    fade: 0.44,                    // held well down: this sits UNDER body copy
     accent: [0x83 / 255, 0xf2 / 255, 0xcd / 255],
     bg: [0.043, 0.043, 0.051],     // #0b0b0d, the page's own background
     ...opts,
