@@ -120,7 +120,7 @@ const PANEL_FIELDS = [
   ['scale',  'Scale',       0.5,  6,    0.05],
   ['speed',  'Speed',       0,    0.6,  0.005],
   ['warp',   'Warp',        0,    2,    0.02],
-  ['rough',  'Roughness',   0.15, 0.6,  0.01],
+  ['rough',  'Roughness',   0.06, 0.6,  0.01],
   ['lines',  'Lines',       2,    40,   1],
   ['cursor', 'Cursor drag', 0,    1.2,  0.02],
   ['reach',  'Reach',       0.05, 1,    0.01],
@@ -186,7 +186,8 @@ export function mountWaves (canvas, opts = {}) {
   const cfg = {
     scale: 4.0, speed: 0.24, warp: 0.7, lines: 9,
     cursor: 0.12, reach: 0.22,
-    rough: 0.20,
+    rough: 0.13,                  // lower = smoother; weights the broad shapes over the
+                                 // fine wobble, so the contours run longer and cleaner
     fade: 0.42,                    // lower than /about: the cards are the subject here
     accent: [0x6b / 255, 0xe3 / 255, 0xc9 / 255],   // the gallery's own default --accent
     bg: [0.02, 0.023, 0.031],      // matches the page's #05060a end stop, so the edges blend
