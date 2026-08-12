@@ -621,8 +621,15 @@ function render(){
     s.style.transform = t;
     s.style.zIndex = String(200 - Math.round(ad*20));
     /* de-emphasis on the slide; 'none' at centre keeps its 3D unflattened */
-    s.style.filter = ad < 0.06 ? 'none' : `blur(${blur.toFixed(2)}px) brightness(${(1-ad*0.28).toFixed(3)})`;
-    s.style.opacity = op.toFixed(3);
+    /* De-emphasis is DARKENING, not transparency. As element opacity it made every off-centre
+       slide translucent, so the wave field behind the page showed straight through the cards —
+       reading as the background sitting on top of them. Folding op into brightness keeps each
+       card fully opaque, so it occludes the field like a card should, and looks near enough
+       identical against a dark page. Safe because op floors at .18 and never reaches 0: nothing
+       here was ever fading out completely, only dimming. */
+    const dim = (1 - ad*0.28) * op;
+    s.style.filter = ad < 0.06 ? 'none' : `blur(${blur.toFixed(2)}px) brightness(${dim.toFixed(3)})`;
+    s.style.opacity = '1';
     s.classList.toggle('is-center', isC);
     if(ad<best){best=ad;bi=i;}
   });
