@@ -11,6 +11,23 @@ import grabIconUrl from './grabicon.png'
 const CARD_HW = 0.8, CARD_HH = 1.125
 const CORNER_SIGNS = [[-1, -1], [1, -1], [1, 1], [-1, 1]]
 
+/* The canvas is 220vw wide so the card can be dragged anywhere on screen without being clipped by
+   its own edge — at 300% of the stage it stopped 88px short of the viewport at 1280 and 408px
+   short at 1920, because it is centred on the stage rather than on the window.
+   That has a price: meshline's world width is lineWidth * tan(fov/2) * canvasAspect, so a wider
+   canvas makes the strap proportionally fatter. Scaling the width by the inverse of the change
+   holds it exactly where it was — the same correction dooropen2 makes via __BADGE_W.
+   Measured rather than hardcoded, so it stays right through the breakpoints where the stage is a
+   different size. */
+const REFERENCE_LAYER_MULTIPLE = 3   // the layer's old width, as a multiple of the stage's
+
+function effectiveBandWidth () {
+  const layer = document.querySelector('.canvas-layer')?.getBoundingClientRect()
+  const stage = document.querySelector('.stage')?.getBoundingClientRect()
+  if (!layer?.width || !stage?.width) return BAND_LINE_W
+  return BAND_LINE_W * ((stage.width * REFERENCE_LAYER_MULTIPLE) / layer.width)
+}
+
 const HOVER_YAW = 0.4    // how far the card turns toward the cursor
 const HOVER_SNAP = 14    // rad/s per unit of yaw error — higher follows the cursor quicker
 const HOVER_MAX_W = 6    // rad/s ceiling, so a big jump can't fling it
@@ -19,6 +36,7 @@ export default function App () {
   const front = useMemo(makeCardFrontURL, [])
   const back = useMemo(makeCardBackURL, [])
   const [strap, setStrap] = useState(null)
+  const [bandW, setBandW] = useState(BAND_LINE_W)
   const [used, setUsed] = useState(false)
   const repel = useTextRepel()
   const wavesRef = useRef(null)
@@ -43,11 +61,20 @@ export default function App () {
     const r = document.querySelector('.canvas-layer')?.getBoundingClientRect()
     const aspect = r && r.width > 0 && r.height > 0 ? r.width / r.height : null
     window.__strapAspect = aspect
+    const w = effectiveBandWidth()
+    setBandW(w)
     // The strap mark belongs to the standalone /about page only — on the combined root page
     // the strap is left as plain webbing. .about-solo is the same flag styles.css gates on.
     const solo = document.documentElement.classList.contains('about-solo')
-    makeStrapURL(solo ? patternUrl : null, aspect).then(url => { if (alive) setStrap(url) })
-    return () => { alive = false }
+    makeStrapURL(solo ? patternUrl : null, aspect, w).then(url => { if (alive) setStrap(url) })
+
+    // The canvas is sized in vw, so its aspect — and with it the strap's world width — changes
+    // whenever the window does. Only the width needs recomputing: the tile aspect is invariant
+    // under this compensation (see strapTileAspect), so the texture stays valid and is never
+    // regenerated.
+    const onResize = () => { if (alive) setBandW(effectiveBandWidth()) }
+    addEventListener('resize', onResize)
+    return () => { alive = false; removeEventListener('resize', onResize) }
   }, [])
 
   // Runs once per frame, after the component has finished with the card.
@@ -95,7 +122,7 @@ export default function App () {
               frontImage={front}
               backImage={back}
               lanyardImage={strap}
-              lanyardWidth={BAND_LINE_W}
+              lanyardWidth={bandW}
               anchorY={ANCHOR_Y}
               ropeSeg={ROPE_SEG}
               onCardFrame={onCardFrame}

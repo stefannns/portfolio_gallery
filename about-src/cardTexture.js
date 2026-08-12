@@ -48,12 +48,20 @@ export const BAND_LINE_W = 0.58 // passed as lanyardWidth
 // Miss that factor and the texture tile comes out the wrong shape, which stretches the mark
 // along the strap. It was invisible while the canvas was roughly stage-shaped and became
 // obvious once .canvas-layer went to 300% width.
-export function strapTileAspect (canvasAspect) {
+// lineW is the width ACTUALLY passed to the component, which is no longer always BAND_LINE_W:
+// the canvas is sized in vw now, so its aspect moves with the window and App compensates the
+// width to keep the strap a constant size on screen. The tile has to be shaped from the same
+// number or the webbing stretches along the strap by exactly the compensation factor.
+// Note this makes the tile aspect INVARIANT: strapW = lineW * tan * aspect, and lineW is scaled
+// by 1/aspect, so the two cancel and the texture stays valid across every window size — no
+// regeneration on resize.
+export function strapTileAspect (canvasAspect, lineW = BAND_LINE_W) {
   // Guarded: a zero/NaN aspect would make the tile infinitely long, and a canvas with an
   // invalid width serialises to "data:," which the texture loader then rejects and takes the
   // whole tree down with it.
   const a = Number.isFinite(canvasAspect) && canvasAspect > 0 ? canvasAspect : 2
-  const strapW = BAND_LINE_W * Math.tan((CAM_FOV / 2) * Math.PI / 180) * a
+  const w = Number.isFinite(lineW) && lineW > 0 ? lineW : BAND_LINE_W
+  const strapW = w * Math.tan((CAM_FOV / 2) * Math.PI / 180) * a
   return Math.max(1, Math.min(16, (ROPE_LEN / BAND_REPEAT) / strapW))
 }
 
@@ -134,9 +142,9 @@ export function makeCardBackURL () {
 // Flat webbing plus the mark, and nothing else. Fine detail cannot survive here: the strap
 // renders roughly 30px wide, so this 256px axis is minified about 9:1 and anything approaching
 // a single texel lands inside a fraction of a screen pixel and crawls as the strap moves.
-export function makeStrapURL (patternUrl, canvasAspect) {
+export function makeStrapURL (patternUrl, canvasAspect, lineW = BAND_LINE_W) {
   return new Promise((resolve) => {
-    const H = 256, W = Math.round(H * strapTileAspect(canvasAspect))
+    const H = 256, W = Math.round(H * strapTileAspect(canvasAspect, lineW))
     const c = document.createElement('canvas'); c.width = W; c.height = H
     const g = c.getContext('2d')
     g.fillStyle = STRAP_COLOR; g.fillRect(0, 0, W, H)
