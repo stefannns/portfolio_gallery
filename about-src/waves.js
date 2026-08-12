@@ -193,7 +193,7 @@ export function mountWaves (canvas, opts = {}) {
     cursor: 0.12, reach: 0.22,
     rough: 0.13,                  // lower = smoother; weights the broad shapes over the
                                  // fine wobble, so the contours run longer and cleaner
-    fade: 0.44,                    // held well down: this sits UNDER body copy
+    fade: 0.35,                    // held well down: this sits UNDER body copy
     accent: [0x83 / 255, 0xf2 / 255, 0xcd / 255],
     bg: [0.043, 0.043, 0.051],     // #0b0b0d, the page's own background
     ...opts,
