@@ -152,7 +152,7 @@ export default function App () {
         </p>
         <p className="sec-title">Core Skills</p>
         <div className="skills">
-          <span className="chip">Vibe Coding</span>
+          <span className="chip">Harness Engineering</span>
           <span className="chip">AI Image &amp; Video</span>
           <span className="chip">Game Design</span>
           <span className="chip">Full-Stack Development</span>

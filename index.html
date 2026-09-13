@@ -22,7 +22,13 @@
     --card:#101217;
     --accent:#6be3c9;               /* overridden per-card */
     --accent-ui:#7df2e6;            /* fixed UI accent (switcher) */
-    --cw:min(66vw, 1060px, calc(82vh * 16 / 9));  /* landscape 16:9, width-driven, height-capped */
+    /* Landscape 16:9, width-driven, height-capped. The absolute 1060px that used to sit in the
+       middle is gone: past ~1606px of viewport it beat 66vw and pinned the card at a literal
+       pixel width while the page kept growing around it, so the card fell from 47% of the window
+       at 1440 to 22% at 3440 and under 20% at 4K — a small island in a field of black, with the
+       rail gaps (3.4vw) still spreading out around it. That mismatch was the "weird on large
+       screens". The height term is the real cap and keeps the card inside the viewport. */
+    --cw:min(66vw, calc(82vh * 16 / 9));
     --ch:calc(var(--cw) * 9 / 16);
     --ease:cubic-bezier(.16,.84,.24,1);
     --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -54,6 +60,77 @@
      which hidden cannot do — hidden on one axis forces the other to auto. */
   #about-section{position:relative;overflow-x:clip;padding:44px 0 8px;z-index:1}
   @media (max-width:720px){ #about-section{padding:24px 0 8px} }
+
+  /* ---- LARGE SCREENS ----
+     The about hero is assembled from fixed parts — .stage is flex:0 0 545px and .info caps at
+     520px — inside a .wrap capped at 1140px. Past roughly 1600px of window none of that grows, so
+     the whole block sat at the same absolute size in the middle of the page: measured 80% of the
+     section at 1440 wide but only 33% at 3440, which is what made it read as a panel floating in
+     black instead of as the page itself.
+     Widening .wrap on its own would have been wrong — .stage and .info would have stayed put and
+     simply drifted apart with a hole between them — so the three scale together.
+     .stage's HEIGHT is what sizes the badge: the R3F camera's vertical fov is fixed, so a taller
+     canvas means more pixels per world unit and a proportionally larger card. Its width only ever
+     bought the card more room to swing.
+     Root page only. /about loads about.css by itself and never sees this. */
+  /* Each growing term is min(Nvw, Mvh), with M = N x 16/9 — so on a 16:9 screen the two are
+     equal and nothing changes, on a taller 16:10 one the vw term is smaller and wins (the original
+     behaviour), and on a WIDE one — 21:9, 32:9 — the vh term wins and the hero stops growing with
+     the width it has but the height it does not. Sized on width alone, a 2560x1080 ultrawide
+     would have pushed .stage to its 980px ceiling inside a 1080px window, the whole hero would
+     have been the fold, and PORTFOLIO would have started off-screen. The lower bounds are the
+     original fixed sizes, so no screen ever gets less than it did before any of this. */
+  @media (min-width:1600px){
+    .wrap{max-width:clamp(1140px, min(72vw, 128vh), 1900px);
+          font-size:clamp(15px, min(.92vw, 1.64vh), 19px)}
+    .wrap .stage{flex:0 0 clamp(545px, min(33vw, 58.7vh), 880px);
+                 height:clamp(640px, min(40vw, 71.1vh), 980px)}
+    .wrap .info{max-width:clamp(520px, min(31vw, 55.1vh), 820px)}
+  }
+
+  /* ---- THE WAVE FIELD: full-bleed, feathered on all four sides ----
+     It used to be exactly .wrap's box, and since the canvas paints its own opaque dark ground
+     rather than a transparent one, that box read as a card with four hard edges — left and right
+     visibly stopping short of the window, a line along the top, and another a few px above
+     PORTFOLIO. On a wide screen the card just got relatively narrower: 55% of a 3440 window.
+     Now the canvas spans the whole window and each edge dissolves. Widening it is safe because the
+     shader is height-normalised — st = (uv - 0.5) * vec2(uRes.x / uRes.y, 1) in waves.js — so a
+     wider canvas reveals more of the field at the same cell size instead of stretching it, and
+     waves.js re-measures its backing store every frame, so it follows the new box on its own.
+     left:calc(50% - 50vw) centres a viewport-wide box on .wrap, which is itself centred. 100vw
+     includes the scrollbar, so the box overhangs the client area by half a scrollbar on each side;
+     #about-section's overflow-x:clip trims that, and it lands inside the transparent end of the
+     side feathers where it cannot show.
+     The mask is two gradients INTERSECTED, one per axis. A single radial gradient would have
+     been simpler but cannot hold the bottom stops where the content needs them. Where
+     mask-composite is unsupported the layers add instead, which only means less feathering at the
+     corners — it degrades, it does not break.
+     Stops, all placed off measurements rather than by eye:
+       sides   clamp(80px, 12%, 520px) — proportional, but never a sliver on a laptop nor a
+               half-metre smear on a 32:9 panel
+       top     clamp(40px, 10%, 140px) — the strap enters from above and is R3F, not this canvas,
+               so it is never faded with it
+       bottom  opaque to 62%, half by 84%, gone at 100% — the badge and its "drag the badge" label
+               end at about 71% of the height, so the field only yields through the empty band
+     A mask reads ALPHA: #000 keeps, transparent drops, and the colour itself is never painted.
+     Root page only. On /about the panel is the entire screen, so there is nothing to fade into. */
+  .waves{
+    left:calc(50% - 50vw); right:auto; width:100vw;
+    --feather-x:clamp(80px, 12%, 520px);
+    --feather-top:clamp(40px, 10%, 140px);
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0, #000 var(--feather-x),
+                      #000 calc(100% - var(--feather-x)), transparent 100%),
+      linear-gradient(to bottom, transparent 0, #000 var(--feather-top),
+                      #000 62%, rgba(0,0,0,.5) 84%, transparent 100%);
+    -webkit-mask-composite:source-in;
+    mask-image:
+      linear-gradient(to right, transparent 0, #000 var(--feather-x),
+                      #000 calc(100% - var(--feather-x)), transparent 100%),
+      linear-gradient(to bottom, transparent 0, #000 var(--feather-top),
+                      #000 62%, rgba(0,0,0,.5) 84%, transparent 100%);
+    mask-composite:intersect;
+  }
 
   /* ---------- HANDOFF INTO THE WORK ---------- */
   .gallery-head{display:flex;flex-direction:column;align-items:center;gap:20px;padding:30px 20px 42px}
