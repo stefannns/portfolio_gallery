@@ -4,8 +4,8 @@
       "id": "BOSS_MAX_HP",
       "kind": "number",
       "label": "Boss Max HP",
-      "value": 500,
-      "default": 500,
+      "value": 100,
+      "default": 100,
       "min": 100,
       "max": 2000,
       "step": 50
