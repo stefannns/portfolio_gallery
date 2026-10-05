@@ -71,7 +71,7 @@
     {
       "id": "ICON_MONSTER",
       "label": "Monster Icon",
-      "path": "./assets/icon_monster.webp",
+      "path": "./assets/icon_monster.svg",
       "replaceable": true
     }
   ],

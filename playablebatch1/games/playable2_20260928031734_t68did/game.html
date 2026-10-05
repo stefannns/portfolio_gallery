@@ -1,17 +1,115 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Playable</title>
-  <link rel="stylesheet" href="./bundle.css" />
   <style>
     html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
-    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    body { background: #050510; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    #root { isolation: isolate; }
+    canvas { touch-action: none; }
+    button, input, select, textarea { touch-action: manipulation; }
   </style>
 </head>
 <body>
   <div id="root"></div>
+  <script id="playable-inline-config" type="application/json">
+  {
+    "tweaks": [
+      {
+        "id": "MAX_OXYGEN",
+        "kind": "number",
+        "label": "Max Oxygen (ms)",
+        "value": 45000,
+        "default": 45000,
+        "min": 10000,
+        "max": 120000,
+        "step": 1000
+      }
+    ],
+    "texts": [
+      {
+        "id": "INSTRUCTION_MAIN",
+        "label": "Instruction Title",
+        "value": "Hold to dive",
+        "default": "Hold to dive",
+        "max_length": 30
+      },
+      {
+        "id": "INSTRUCTION_SUB",
+        "label": "Instruction Subtitle",
+        "value": "Take a deep breath first",
+        "default": "Take a deep breath first",
+        "max_length": 50
+      },
+      {
+        "id": "RESULT_TITLE",
+        "label": "Result Title",
+        "value": "Breath Hold Time",
+        "default": "Breath Hold Time",
+        "max_length": 30
+      },
+      {
+        "id": "RESULT_DESC_NORMAL",
+        "label": "Result Desc (Normal)",
+        "value": "You surfaced for air!",
+        "default": "You surfaced for air!",
+        "max_length": 40
+      },
+      {
+        "id": "RESULT_DESC_O2",
+        "label": "Result Desc (Out of O2)",
+        "value": "Out of oxygen!",
+        "default": "Out of oxygen!",
+        "max_length": 40
+      },
+      {
+        "id": "BTN_REPLAY",
+        "label": "Replay Button",
+        "value": "Try Again",
+        "default": "Try Again",
+        "max_length": 20
+      }
+    ],
+    "images": [
+      {
+        "id": "ICON_MASK",
+        "label": "Snorkel Mask Icon",
+        "path": "./assets/icon_mask.webp",
+        "replaceable": true
+      }
+    ],
+    "config_version": "2.0",
+    "playable": {
+      "runtime_target": "h5",
+      "h5_playstyle_type": "general_game",
+      "content_locale": "en",
+      "min_capability_level": 1,
+      "full_capability_level": 1
+    }
+  }
+  </script>
+  <script>
+    (() => {
+      if (window.location.protocol !== "file:" || !window.fetch) return;
+      const configNode = document.getElementById("playable-inline-config");
+      if (!configNode) return;
+      let inlineConfig;
+      try { inlineConfig = JSON.parse(configNode.textContent); } catch (_) { return; }
+      const nativeFetch = window.fetch.bind(window);
+      window.fetch = (input, init) => {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url === "./game.config.json" || url === "game.config.json") {
+          return Promise.resolve(new Response(JSON.stringify(inlineConfig), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return nativeFetch(input, init);
+      };
+    })();
+  </script>
   <script src="./bundle.js"></script>
 </body>
 </html>

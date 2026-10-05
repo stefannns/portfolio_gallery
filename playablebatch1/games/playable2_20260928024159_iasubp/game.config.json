@@ -65,9 +65,9 @@
     },
     {
       "id": "BTN_REPLAY",
-      "label": "Replay Button",
-      "value": "Play Again",
-      "default": "Play Again",
+      "label": "New Level Button",
+      "value": "New Level",
+      "default": "New Level",
       "max_length": 20
     },
     {

@@ -35,8 +35,8 @@
     {
       "id": "APP_TITLE",
       "label": "App Title",
-      "value": "Liquify Editor",
-      "default": "Liquify Editor",
+      "value": "Live Liquify Camera",
+      "default": "Live Liquify Camera",
       "max_length": 20
     },
     {

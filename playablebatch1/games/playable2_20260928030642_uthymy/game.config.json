@@ -34,8 +34,8 @@
       "id": "PEEL_WIDTH",
       "kind": "number",
       "label": "Peel Width",
-      "value": 36,
-      "default": 36,
+      "value": 46.8,
+      "default": 46.8,
       "min": 20,
       "max": 80,
       "step": 4
@@ -52,15 +52,15 @@
     {
       "id": "TXT_FAIL_TITLE",
       "label": "Fail Title",
-      "value": "Out of Tries!",
-      "default": "Out of Tries!",
+      "value": "Out of Peels!",
+      "default": "Out of Peels!",
       "max_length": 20
     },
     {
       "id": "TXT_FAIL_DESC",
       "label": "Fail Desc",
-      "value": "You didn't peel the entire fruit! Back to Level 1.",
-      "default": "You didn't peel the entire fruit! Back to Level 1.",
+      "value": "Peel 100% within 5 peels to win.",
+      "default": "Peel 100% within 5 peels to win.",
       "max_length": 60
     },
     {
@@ -73,8 +73,8 @@
     {
       "id": "TXT_CLEAR_DESC",
       "label": "Clear Desc",
-      "value": "You really know how to handle your fruits!",
-      "default": "You really know how to handle your fruits!",
+      "value": "You really know how to peel potatoes!",
+      "default": "You really know how to peel potatoes!",
       "max_length": 60
     },
     {
@@ -87,106 +87,22 @@
   ],
   "images": [
     {
-      "id": "PEELER_IMG",
-      "label": "Peeler Sprite",
-      "path": "./assets/peeler.webp",
-      "replaceable": true
-    },
+        "id": "PEELER_IMG",
+        "label": "Peeler Sprite",
+        "path": "./assets/peeler.webp",
+        "replaceable": true
+      },
     {
-      "id": "FRUIT_1",
-      "label": "Fruit Level 1",
-      "path": "./assets/fruit_blueberry.webp",
-      "replaceable": true
-    },
+        "id": "POTATO_UNPEELED",
+        "label": "Unpeeled Potato",
+        "path": "./assets/potato_unpeeled_v2.webp",
+        "replaceable": true
+      },
     {
-      "id": "FRUIT_2",
-      "label": "Fruit Level 2",
-      "path": "./assets/fruit_strawberry.webp",
-      "replaceable": true
-    },
-    {
-      "id": "FRUIT_3",
-      "label": "Fruit Level 3",
-      "path": "./assets/fruit_apple.webp",
-      "replaceable": true
-    },
-    {
-      "id": "FRUIT_4",
-      "label": "Fruit Level 4",
-      "path": "./assets/fruit_orange.webp",
-      "replaceable": true
-    },
-    {
-      "id": "FRUIT_5",
-      "label": "Fruit Level 5",
-      "path": "./assets/fruit_lemon.webp",
-      "replaceable": true
-    },
-    {
-      "id": "FRUIT_6",
-      "label": "Fruit Level 6",
-      "path": "./assets/fruit_peach.webp",
-      "replaceable": true
-    },
-    {
-      "id": "FRUIT_7",
-      "label": "Fruit Level 7",
-      "path": "./assets/fruit_plum.webp",
-      "replaceable": true
-    },
-    {
-      "id": "FRUIT_8",
-      "label": "Fruit Level 8",
-      "path": "./assets/fruit_kiwi.webp",
-      "replaceable": true
-    },
-    {
-      "id": "FRUIT_9",
-      "label": "Fruit Level 9",
-      "path": "./assets/fruit_mango.webp",
-      "replaceable": true
-    },
-    {
-      "id": "FRUIT_10",
-      "label": "Fruit Level 10",
-      "path": "./assets/fruit_pear.webp",
-      "replaceable": true
-    },
-    {
-      "id": "FRUIT_11",
-      "label": "Fruit Level 11",
-      "path": "./assets/fruit_tomato.webp",
-      "replaceable": true
-    },
-    {
-      "id": "FRUIT_12",
-      "label": "Fruit Level 12",
-      "path": "./assets/fruit_potato.webp",
-      "replaceable": true
-    },
-    {
-      "id": "FRUIT_13",
-      "label": "Fruit Level 13",
-      "path": "./assets/fruit_avocado.webp",
-      "replaceable": true
-    },
-    {
-      "id": "FRUIT_14",
-      "label": "Fruit Level 14",
-      "path": "./assets/fruit_melon.webp",
-      "replaceable": true
-    },
-    {
-      "id": "FRUIT_15",
-      "label": "Fruit Level 15",
-      "path": "./assets/fruit_pineapple.webp",
-      "replaceable": true
-    },
-    {
-      "id": "FRUIT_16",
-      "label": "Fruit Level 16",
-      "path": "./assets/fruit_watermelon.webp",
-      "replaceable": true
+        "id": "POTATO_PEELED",
+        "label": "Peeled Potato",
+        "path": "./assets/potato_peeled_v2.webp",
+        "replaceable": true
     }
   ],
   "config_version": "2.0",

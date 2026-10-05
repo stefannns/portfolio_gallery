@@ -1,17 +1,108 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Playable</title>
-  <link rel="stylesheet" href="./bundle.css" />
   <style>
     html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
-    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    body { background: #050510; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    #root { isolation: isolate; }
+    canvas { touch-action: none; }
+    button, input, select, textarea { touch-action: manipulation; }
   </style>
 </head>
 <body>
   <div id="root"></div>
+  <script id="playable-inline-config" type="application/json">
+  {
+    "tweaks": [
+      {
+        "id": "MAX_LEVEL",
+        "kind": "number",
+        "label": "Max Level",
+        "value": 25,
+        "default": 25,
+        "min": 10,
+        "max": 200,
+        "step": 1
+      }
+    ],
+    "texts": [
+      {
+        "id": "TITLE_MAIN",
+        "label": "Main Title",
+        "value": "Find the mistake!",
+        "default": "Find the mistake!",
+        "max_length": 25
+      },
+      {
+        "id": "SUB_TITLE",
+        "label": "Footer Prompt",
+        "value": "TAP THE ODD ONE OUT",
+        "default": "TAP THE ODD ONE OUT",
+        "max_length": 30
+      },
+      {
+        "id": "LEVEL_LABEL",
+        "label": "Level Label",
+        "value": "Level",
+        "default": "Level",
+        "max_length": 15
+      },
+      {
+        "id": "VICTORY_TITLE",
+        "label": "Victory Title",
+        "value": "All Levels Complete!",
+        "default": "All Levels Complete!",
+        "max_length": 30
+      },
+      {
+        "id": "BTN_RESTART",
+        "label": "Restart Button",
+        "value": "Play Again",
+        "default": "Play Again",
+        "max_length": 20
+      },
+      {
+        "id": "BTN_POST",
+        "label": "Post Button",
+        "value": "Post My Play",
+        "default": "Post My Play",
+        "max_length": 20
+      }
+    ],
+    "images": [],
+    "config_version": "2.0",
+    "playable": {
+      "runtime_target": "h5",
+      "h5_playstyle_type": "general_game",
+      "content_locale": "en",
+      "min_capability_level": 1,
+      "full_capability_level": 1
+    }
+  }
+  </script>
+  <script>
+    (() => {
+      if (window.location.protocol !== "file:" || !window.fetch) return;
+      const configNode = document.getElementById("playable-inline-config");
+      if (!configNode) return;
+      let inlineConfig;
+      try { inlineConfig = JSON.parse(configNode.textContent); } catch (_) { return; }
+      const nativeFetch = window.fetch.bind(window);
+      window.fetch = (input, init) => {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url === "./game.config.json" || url === "game.config.json") {
+          return Promise.resolve(new Response(JSON.stringify(inlineConfig), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return nativeFetch(input, init);
+      };
+    })();
+  </script>
   <script src="./bundle.js"></script>
 </body>
 </html>

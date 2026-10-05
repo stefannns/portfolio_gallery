@@ -35,8 +35,8 @@
     {
       "id": "GAME_TITLE",
       "label": "Game Title",
-      "value": "FISHING NET SLICE",
-      "default": "FISHING NET SLICE",
+      "value": "FISHING NET TEAR",
+      "default": "FISHING NET TEAR",
       "max_length": 30
     },
     {

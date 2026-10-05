@@ -1,17 +1,132 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Playable</title>
-  <link rel="stylesheet" href="./bundle.css" />
   <style>
     html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
-    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    body { background: #050510; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    #root { isolation: isolate; }
+    canvas { touch-action: none; }
+    button, input, select, textarea { touch-action: manipulation; }
   </style>
 </head>
 <body>
   <div id="root"></div>
+  <script id="playable-inline-config" type="application/json">
+  {
+    "tweaks": [
+      {
+        "id": "INTENSITY_PUSH",
+        "kind": "number",
+        "label": "Push Intensity",
+        "value": 0.8,
+        "default": 0.8,
+        "min": 0.1,
+        "max": 2.0,
+        "step": 0.1
+      },
+      {
+        "id": "INTENSITY_BLOAT",
+        "kind": "number",
+        "label": "Bloat/Pucker Intensity",
+        "value": 0.5,
+        "default": 0.5,
+        "min": 0.1,
+        "max": 1.0,
+        "step": 0.1
+      },
+      {
+        "id": "BRUSH_DEFAULT_SIZE",
+        "kind": "number",
+        "label": "Default Brush Size",
+        "value": 80,
+        "default": 80,
+        "min": 20,
+        "max": 200,
+        "step": 1
+      }
+    ],
+    "texts": [
+      {
+        "id": "APP_TITLE",
+        "label": "App Title",
+        "value": "Live Liquify Camera",
+        "default": "Live Liquify Camera",
+        "max_length": 20
+      },
+      {
+        "id": "BTN_UNDO",
+        "label": "Undo Button",
+        "value": "Undo",
+        "default": "Undo",
+        "max_length": 15
+      },
+      {
+        "id": "BTN_RESET",
+        "label": "Reset Button",
+        "value": "Reset",
+        "default": "Reset",
+        "max_length": 15
+      }
+    ],
+    "images": [
+      {
+        "id": "STICKER_GLASSES",
+        "label": "Glasses Sticker",
+        "path": "./assets/sticker_glasses.webp",
+        "replaceable": true
+      },
+      {
+        "id": "STICKER_MOUSTACHE",
+        "label": "Moustache Sticker",
+        "path": "./assets/sticker_moustache.webp",
+        "replaceable": true
+      },
+      {
+        "id": "STICKER_HAT",
+        "label": "Hat Sticker",
+        "path": "./assets/sticker_hat.webp",
+        "replaceable": true
+      },
+      {
+        "id": "STICKER_SPARKLE",
+        "label": "Sparkle Sticker",
+        "path": "./assets/sticker_sparkle.webp",
+        "replaceable": true
+      }
+    ],
+    "config_version": "2.0",
+    "playable": {
+      "runtime_target": "h5",
+      "h5_playstyle_type": "image_expression",
+      "content_locale": "en",
+      "min_capability_level": 1,
+      "full_capability_level": 1
+    }
+  }
+  </script>
+  <script>
+    (() => {
+      if (window.location.protocol !== "file:" || !window.fetch) return;
+      const configNode = document.getElementById("playable-inline-config");
+      if (!configNode) return;
+      let inlineConfig;
+      try { inlineConfig = JSON.parse(configNode.textContent); } catch (_) { return; }
+      const nativeFetch = window.fetch.bind(window);
+      window.fetch = (input, init) => {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url === "./game.config.json" || url === "game.config.json") {
+          return Promise.resolve(new Response(JSON.stringify(inlineConfig), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return nativeFetch(input, init);
+      };
+    })();
+  </script>
   <script src="./bundle.js"></script>
 </body>
 </html>

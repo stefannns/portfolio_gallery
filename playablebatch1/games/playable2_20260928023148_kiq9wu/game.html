@@ -1,17 +1,143 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Playable</title>
-  <link rel="stylesheet" href="./bundle.css" />
   <style>
     html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
-    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    body { background: #050510; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    #root { isolation: isolate; }
+    canvas { touch-action: none; }
+    button, input, select, textarea { touch-action: manipulation; }
   </style>
 </head>
 <body>
   <div id="root"></div>
+  <script id="playable-inline-config" type="application/json">
+  {
+    "tweaks": [
+      {
+        "id": "PLAYER_SPEED",
+        "kind": "number",
+        "label": "Player Speed",
+        "value": 0.6,
+        "default": 0.6,
+        "min": 0.2,
+        "max": 1.5,
+        "step": 0.1
+      },
+      {
+        "id": "COP_SPEED",
+        "kind": "number",
+        "label": "Police Speed",
+        "value": 0.55,
+        "default": 0.55,
+        "min": 0.2,
+        "max": 1.5,
+        "step": 0.1
+      }
+    ],
+    "texts": [
+      {
+        "id": "TEXT_GUIDE",
+        "label": "Guide Text",
+        "value": "DRAW A LINE TO THE GOAL",
+        "default": "DRAW A LINE TO THE GOAL",
+        "max_length": 30
+      },
+      {
+        "id": "TEXT_WIN",
+        "label": "Win Text",
+        "value": "Escaped!",
+        "default": "Escaped!",
+        "max_length": 20
+      },
+      {
+        "id": "TEXT_LOSE",
+        "label": "Lose Text",
+        "value": "Busted!",
+        "default": "Busted!",
+        "max_length": 20
+      },
+      {
+        "id": "BTN_RETRY_WIN",
+        "label": "Win Retry Button",
+        "value": "PLAY AGAIN",
+        "default": "PLAY AGAIN",
+        "max_length": 15
+      },
+      {
+        "id": "BTN_RETRY_LOSE",
+        "label": "Lose Retry Button",
+        "value": "TRY AGAIN",
+        "default": "TRY AGAIN",
+        "max_length": 15
+      },
+      {
+        "id": "BTN_POST",
+        "label": "Post Button",
+        "value": "Post my play",
+        "default": "Post my play",
+        "max_length": 20
+      }
+    ],
+    "images": [
+      {
+        "id": "PLAYER_CAR",
+        "label": "Player Car",
+        "path": "./assets/char_player.webp",
+        "replaceable": true
+      },
+      {
+        "id": "COP_LEFT",
+        "label": "Police Car (Left)",
+        "path": "./assets/char_cop_r.webp",
+        "replaceable": true
+      },
+      {
+        "id": "COP_RIGHT",
+        "label": "Police Car (Right)",
+        "path": "./assets/char_cop_r.webp",
+        "replaceable": true
+      },
+      {
+        "id": "GOAL_AREA",
+        "label": "Goal Area",
+        "path": "./assets/bg_goal.svg",
+        "replaceable": true
+      }
+    ],
+    "config_version": "2.0",
+    "playable": {
+      "runtime_target": "h5",
+      "h5_playstyle_type": "general_game",
+      "content_locale": "en",
+      "min_capability_level": 1,
+      "full_capability_level": 1
+    }
+  }
+  </script>
+  <script>
+    (() => {
+      if (window.location.protocol !== "file:" || !window.fetch) return;
+      const configNode = document.getElementById("playable-inline-config");
+      if (!configNode) return;
+      let inlineConfig;
+      try { inlineConfig = JSON.parse(configNode.textContent); } catch (_) { return; }
+      const nativeFetch = window.fetch.bind(window);
+      window.fetch = (input, init) => {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url === "./game.config.json" || url === "game.config.json") {
+          return Promise.resolve(new Response(JSON.stringify(inlineConfig), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return nativeFetch(input, init);
+      };
+    })();
+  </script>
   <script src="./bundle.js"></script>
 </body>
 </html>

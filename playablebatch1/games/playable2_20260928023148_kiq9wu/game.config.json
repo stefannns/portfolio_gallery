@@ -75,7 +75,7 @@
     {
       "id": "COP_LEFT",
       "label": "Police Car (Left)",
-      "path": "./assets/char_cop_l.webp",
+      "path": "./assets/char_cop_r.webp",
       "replaceable": true
     },
     {
@@ -87,7 +87,7 @@
     {
       "id": "GOAL_AREA",
       "label": "Goal Area",
-      "path": "./assets/bg_goal.webp",
+      "path": "./assets/bg_goal.svg",
       "replaceable": true
     }
   ],

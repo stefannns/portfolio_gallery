@@ -133,7 +133,7 @@
     {
       "id": "CABLE_HEAD",
       "label": "Cable Head Img",
-      "path": "./assets/cable_head.webp",
+      "path": "./assets/cable_connector.svg",
       "replaceable": true
     }
   ],

@@ -1,17 +1,136 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Playable</title>
-  <link rel="stylesheet" href="./bundle.css" />
   <style>
     html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
-    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    body { background: #050510; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    #root { isolation: isolate; }
+    canvas { touch-action: none; }
+    button, input, select, textarea { touch-action: manipulation; }
   </style>
 </head>
 <body>
   <div id="root"></div>
+  <script id="playable-inline-config" type="application/json">
+  {
+    "tweaks": [
+      {
+        "id": "TARGET_TIME",
+        "kind": "number",
+        "label": "Target Time (s)",
+        "value": 0.01,
+        "default": 0.01,
+        "min": 0.005,
+        "max": 1.0,
+        "step": 0.005
+      }
+    ],
+    "texts": [
+      {
+        "id": "GAME_TITLE",
+        "label": "Game Title",
+        "value": "Double Tap Test",
+        "default": "Double Tap Test",
+        "max_length": 25
+      },
+      {
+        "id": "GUIDE_TEXT",
+        "label": "Guide Text",
+        "value": "Can you get 0.01?",
+        "default": "Can you get 0.01?",
+        "max_length": 40
+      },
+      {
+        "id": "TXT_TAP_START",
+        "label": "Start Prompt",
+        "value": "TAP TO START",
+        "default": "TAP TO START",
+        "max_length": 20
+      },
+      {
+        "id": "TXT_TAP_STOP",
+        "label": "Stop Prompt",
+        "value": "TAP TO STOP!",
+        "default": "TAP TO STOP!",
+        "max_length": 20
+      },
+      {
+        "id": "TXT_RESULT",
+        "label": "Result Prompt",
+        "value": "FINAL TIME",
+        "default": "FINAL TIME",
+        "max_length": 20
+      },
+      {
+        "id": "TXT_BEST",
+        "label": "Best Time Label",
+        "value": "BEST TIME",
+        "default": "BEST TIME",
+        "max_length": 15
+      },
+      {
+        "id": "TXT_DIFF",
+        "label": "Difference Label",
+        "value": "DIFFERENCE",
+        "default": "DIFFERENCE",
+        "max_length": 15
+      },
+      {
+        "id": "TXT_RESTART",
+        "label": "Restart Button",
+        "value": "PLAY AGAIN",
+        "default": "PLAY AGAIN",
+        "max_length": 20
+      },
+      {
+        "id": "TXT_POST",
+        "label": "Post Button (Not in Edit)",
+        "value": "POST MY PLAY",
+        "default": "POST MY PLAY",
+        "max_length": 25
+      }
+    ],
+    "images": [
+      {
+        "id": "BG_MAIN",
+        "label": "Main Background",
+        "path": "./assets/bg_main.webp",
+        "replaceable": true
+      }
+    ],
+    "config_version": "2.0",
+    "playable": {
+      "runtime_target": "h5",
+      "h5_playstyle_type": "general_game",
+      "content_locale": "en",
+      "min_capability_level": 1,
+      "full_capability_level": 1
+    }
+  }
+  </script>
+  <script>
+    (() => {
+      if (window.location.protocol !== "file:" || !window.fetch) return;
+      const configNode = document.getElementById("playable-inline-config");
+      if (!configNode) return;
+      let inlineConfig;
+      try { inlineConfig = JSON.parse(configNode.textContent); } catch (_) { return; }
+      const nativeFetch = window.fetch.bind(window);
+      window.fetch = (input, init) => {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url === "./game.config.json" || url === "game.config.json") {
+          return Promise.resolve(new Response(JSON.stringify(inlineConfig), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return nativeFetch(input, init);
+      };
+    })();
+  </script>
   <script src="./bundle.js"></script>
 </body>
 </html>

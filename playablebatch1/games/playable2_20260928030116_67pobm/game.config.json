@@ -159,31 +159,31 @@
     {
       "id": "CHAR_HOBO_IDLE",
       "label": "Hobo Idle",
-      "path": "./assets/char_hobo_idle.webp",
+      "path": "./assets/char_hobo_idle_v2.webp",
       "replaceable": true
     },
     {
       "id": "CHAR_HOBO_BEG",
       "label": "Hobo Begging",
-      "path": "./assets/char_hobo_beg.webp",
+      "path": "./assets/char_hobo_beg_v2.webp",
       "replaceable": true
     },
     {
       "id": "CHAR_HOBO_JUMP",
       "label": "Hobo Jumping",
-      "path": "./assets/char_hobo_jump.webp",
+      "path": "./assets/char_hobo_jump_v2.webp",
       "replaceable": true
     },
     {
       "id": "CHAR_HOBO_PUNCH",
       "label": "Hobo Punching",
-      "path": "./assets/char_hobo_punch.webp",
+      "path": "./assets/char_hobo_punch_v2.webp",
       "replaceable": true
     },
     {
       "id": "CHAR_PED",
       "label": "Pedestrian",
-      "path": "./assets/char_pedestrian.webp",
+      "path": "./assets/char_pedestrian_v2.webp",
       "replaceable": true
     },
     {

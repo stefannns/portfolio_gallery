@@ -1,17 +1,139 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Playable</title>
-  <link rel="stylesheet" href="./bundle.css" />
   <style>
     html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
-    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    body { background: #050510; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    #root { isolation: isolate; }
+    canvas { touch-action: none; }
+    button, input, select, textarea { touch-action: manipulation; }
   </style>
 </head>
 <body>
   <div id="root"></div>
+  <script id="playable-inline-config" type="application/json">
+  {
+    "tweaks": [
+      {
+        "id": "DROP_COUNT",
+        "kind": "number",
+        "label": "Drops Limit",
+        "value": 40,
+        "default": 40,
+        "min": 10,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "id": "WIN_THRESHOLD",
+        "kind": "number",
+        "label": "Win Threshold",
+        "value": 20,
+        "default": 20,
+        "min": 1,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "id": "DROP_INTERVAL",
+        "kind": "number",
+        "label": "Drop Interval",
+        "value": 150,
+        "default": 150,
+        "min": 50,
+        "max": 1000,
+        "step": 10
+      },
+      {
+        "id": "GRAVITY",
+        "kind": "number",
+        "label": "Gravity",
+        "value": 1.0,
+        "default": 1.0,
+        "min": 0.5,
+        "max": 3.0,
+        "step": 0.1
+      }
+    ],
+    "texts": [
+      {
+        "id": "INSTRUCTION",
+        "label": "Instruction",
+        "value": "Draw a line to guide the soda!",
+        "default": "Draw a line to guide the soda!",
+        "max_length": 50
+      },
+      {
+        "id": "BTN_RESET",
+        "label": "Reset Button",
+        "value": "Reset",
+        "default": "Reset",
+        "max_length": 20
+      },
+      {
+        "id": "BTN_POST",
+        "label": "Post Button",
+        "value": "Post My Play",
+        "default": "Post My Play",
+        "max_length": 20
+      },
+      {
+        "id": "BTN_REPLAY",
+        "label": "New Level Button",
+        "value": "New Level",
+        "default": "New Level",
+        "max_length": 20
+      },
+      {
+        "id": "MSG_WIN",
+        "label": "Win Message",
+        "value": "Level Cleared!",
+        "default": "Level Cleared!",
+        "max_length": 30
+      }
+    ],
+    "images": [
+      {
+        "id": "GLASS_IMG",
+        "label": "Glass Image",
+        "path": "./assets/glass.webp",
+        "replaceable": true
+      }
+    ],
+    "config_version": "2.0",
+    "playable": {
+      "runtime_target": "h5",
+      "h5_playstyle_type": "general_game",
+      "content_locale": "en",
+      "min_capability_level": 1,
+      "full_capability_level": 1
+    }
+  }
+  </script>
+  <script>
+    (() => {
+      if (window.location.protocol !== "file:" || !window.fetch) return;
+      const configNode = document.getElementById("playable-inline-config");
+      if (!configNode) return;
+      let inlineConfig;
+      try { inlineConfig = JSON.parse(configNode.textContent); } catch (_) { return; }
+      const nativeFetch = window.fetch.bind(window);
+      window.fetch = (input, init) => {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url === "./game.config.json" || url === "game.config.json") {
+          return Promise.resolve(new Response(JSON.stringify(inlineConfig), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return nativeFetch(input, init);
+      };
+    })();
+  </script>
+  <script src="./canvas-color-repair.js"></script>
   <script src="./bundle.js"></script>
 </body>
 </html>

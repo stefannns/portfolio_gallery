@@ -4,8 +4,8 @@
       "id": "MAX_LEVEL",
       "kind": "number",
       "label": "Max Level",
-      "value": 100,
-      "default": 100,
+      "value": 25,
+      "default": 25,
       "min": 10,
       "max": 200,
       "step": 1
@@ -36,8 +36,8 @@
     {
       "id": "VICTORY_TITLE",
       "label": "Victory Title",
-      "value": "Pet Wolf Unlocked!",
-      "default": "Pet Wolf Unlocked!",
+      "value": "All Levels Complete!",
+      "default": "All Levels Complete!",
       "max_length": 30
     },
     {
@@ -55,14 +55,7 @@
       "max_length": 20
     }
   ],
-  "images": [
-    {
-      "id": "IMG_WOLF",
-      "label": "Reward Wolf Image",
-      "path": "./assets/bg_reward_wolf.webp",
-      "replaceable": true
-    }
-  ],
+  "images": [],
   "config_version": "2.0",
   "playable": {
     "runtime_target": "h5",
