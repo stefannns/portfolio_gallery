@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-config-inline" type="application/json">{
+  "tweaks": [
+    {
+      "id": "GRAVITY_Y",
+      "kind": "number",
+      "label": "Gravity",
+      "value": 1.2,
+      "default": 1.2,
+      "min": 0.1,
+      "max": 2.5,
+      "step": 0.1
+    },
+    {
+      "id": "BRUSH_SIZE",
+      "kind": "number",
+      "label": "Brush Size (Particles)",
+      "value": 2,
+      "default": 2,
+      "min": 1,
+      "max": 5,
+      "step": 1
+    },
+    {
+      "id": "MAX_PARTICLES",
+      "kind": "number",
+      "label": "Max Particles Limit",
+      "value": 2000,
+      "default": 2000,
+      "min": 200,
+      "max": 3000,
+      "step": 100
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "Pixel Sandbox",
+      "default": "Pixel Sandbox",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_CLEAR",
+      "label": "Clear Button Text",
+      "value": "Clear",
+      "default": "Clear",
+      "max_length": 15
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99278216761911513",
+    "version_id": "99278216761859467",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}</script>
+  <script>
+    // file:// pages cannot fetch their adjacent JSON in Chrome. Keep the normal
+    // package fetch path on HTTP, and serve only the local config from this copy.
+    if (location.protocol === "file:") {
+      const config = document.getElementById("playable-config-inline").textContent;
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = function(input, options) {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url && /(?:^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve(new Response(config, {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return originalFetch(input, options);
+      };
+    }
+  </script>
+  <script src="./bundle.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+{
+  "tweaks": [
+    {
+      "id": "TOLERANCE_FACTOR",
+      "kind": "number",
+      "label": "Tolerance Factor",
+      "value": 0.15,
+      "default": 0.15,
+      "min": 0.05,
+      "max": 0.5,
+      "step": 0.01
+    }
+  ],
+  "texts": [
+    {
+      "id": "START_TITLE",
+      "label": "Start Title",
+      "value": "Hold to guide the knife around the star. Release to cool before the stress bar fills.",
+      "default": "Hold to guide the knife around the star. Release to cool before the stress bar fills.",
+      "max_length": 150
+    },
+    {
+      "id": "BTN_START",
+      "label": "Start Button",
+      "value": "Start Carving",
+      "default": "Start Carving",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_RETRY",
+      "label": "Retry Button",
+      "value": "Try Again",
+      "default": "Try Again",
+      "max_length": 20
+    },
+    {
+      "id": "MSG_HOLD_CARVE",
+      "label": "Hint Text",
+      "value": "Hold to carve · release to cool",
+      "default": "Hold to carve · release to cool",
+      "max_length": 30
+    },
+    {
+      "id": "MSG_SCORE",
+      "label": "Score Label",
+      "value": "Star Carved",
+      "default": "Star Carved",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Main Background",
+      "path": "./assets/coconut_backdrop.svg",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_COCONUT",
+      "label": "Coconut Object",
+      "path": "./assets/img_coconut_uncarved.png",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99278764042931231",
+    "version_id": "99278764043067602",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

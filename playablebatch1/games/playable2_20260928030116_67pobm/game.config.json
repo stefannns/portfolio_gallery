@@ -1,0 +1,210 @@
+{
+  "tweaks": [
+    {
+      "id": "GRAVITY",
+      "kind": "number",
+      "label": "Gravity",
+      "value": 1.2,
+      "default": 1.2,
+      "min": 0.5,
+      "max": 2.0,
+      "step": 0.1
+    },
+    {
+      "id": "BASE_SPEED",
+      "kind": "number",
+      "label": "Base Speed",
+      "value": 300,
+      "default": 300,
+      "min": 100,
+      "max": 500,
+      "step": 10
+    },
+    {
+      "id": "JUMP_FORCE",
+      "kind": "number",
+      "label": "Jump Force",
+      "value": 600,
+      "default": 600,
+      "min": 300,
+      "max": 1000,
+      "step": 50
+    },
+    {
+      "id": "PED_SPEED",
+      "kind": "number",
+      "label": "Pedestrian Speed",
+      "value": 100,
+      "default": 100,
+      "min": 50,
+      "max": 200,
+      "step": 10
+    },
+    {
+      "id": "CAR_SPEED",
+      "kind": "number",
+      "label": "Car Speed",
+      "value": 400,
+      "default": 400,
+      "min": 200,
+      "max": 800,
+      "step": 50
+    },
+    {
+      "id": "COST_BEG",
+      "kind": "number",
+      "label": "Base Cost - Tin Cup",
+      "value": 10,
+      "default": 10,
+      "min": 5,
+      "max": 50,
+      "step": 5
+    },
+    {
+      "id": "COST_SPEED",
+      "kind": "number",
+      "label": "Base Cost - Sneakers",
+      "value": 20,
+      "default": 20,
+      "min": 5,
+      "max": 50,
+      "step": 5
+    },
+    {
+      "id": "COST_PUNCH",
+      "kind": "number",
+      "label": "Base Cost - Fists",
+      "value": 30,
+      "default": 30,
+      "min": 5,
+      "max": 100,
+      "step": 5
+    },
+    {
+      "id": "COST_ARMOR",
+      "kind": "number",
+      "label": "Base Cost - Armor",
+      "value": 40,
+      "default": 40,
+      "min": 10,
+      "max": 150,
+      "step": 10
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "STREET HOBO",
+      "default": "STREET HOBO",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_DESC",
+      "label": "Description",
+      "value": "Survive the streets. Beg or brawl for cash. Upgrade to rule the block!",
+      "default": "Survive the streets. Beg or brawl for cash.",
+      "max_length": 100
+    },
+    {
+      "id": "TXT_START",
+      "label": "Start Button",
+      "value": "PLAY",
+      "default": "PLAY",
+      "max_length": 10
+    },
+    {
+      "id": "TXT_NO_MONEY",
+      "label": "No Money Toast",
+      "value": "Resume begging or brawling to collect more cash!",
+      "default": "Resume begging or brawling to collect more cash!",
+      "max_length": 60
+    },
+    {
+      "id": "UPG_BEG_NAME",
+      "label": "Upgrade 1 Name",
+      "value": "Stinky Tin Cup",
+      "default": "Stinky Tin Cup",
+      "max_length": 20
+    },
+    {
+      "id": "UPG_SPEED_NAME",
+      "label": "Upgrade 2 Name",
+      "value": "Stinky Sneakers",
+      "default": "Stinky Sneakers",
+      "max_length": 20
+    },
+    {
+      "id": "UPG_PUNCH_NAME",
+      "label": "Upgrade 3 Name",
+      "value": "Super Fists",
+      "default": "Super Fists",
+      "max_length": 20
+    },
+    {
+      "id": "UPG_ARMOR_NAME",
+      "label": "Upgrade 4 Name",
+      "value": "Cardboard Plate",
+      "default": "Cardboard Plate",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_STREET",
+      "label": "Street Background",
+      "path": "./assets/bg_street.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CHAR_HOBO_IDLE",
+      "label": "Hobo Idle",
+      "path": "./assets/char_hobo_idle.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CHAR_HOBO_BEG",
+      "label": "Hobo Begging",
+      "path": "./assets/char_hobo_beg.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CHAR_HOBO_JUMP",
+      "label": "Hobo Jumping",
+      "path": "./assets/char_hobo_jump.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CHAR_HOBO_PUNCH",
+      "label": "Hobo Punching",
+      "path": "./assets/char_hobo_punch.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CHAR_PED",
+      "label": "Pedestrian",
+      "path": "./assets/char_pedestrian.webp",
+      "replaceable": true
+    },
+    {
+      "id": "OBJ_CAR",
+      "label": "Car",
+      "path": "./assets/obj_car.webp",
+      "replaceable": true
+    },
+    {
+      "id": "ICON_COIN",
+      "label": "Coin Icon",
+      "path": "./assets/icon_coin.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

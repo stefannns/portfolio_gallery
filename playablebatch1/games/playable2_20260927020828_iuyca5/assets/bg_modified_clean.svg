@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="dough" cx="38%" cy="28%" r="68%">
+      <stop stop-color="#fff"/>
+      <stop offset=".72" stop-color="#fff7ec"/>
+      <stop offset="1" stop-color="#ded1c3"/>
+    </radialGradient>
+  </defs>
+  <path d="M18 67c0-20 13-34 25-42 1-6 4-12 7-16 4 4 7 10 7 16 14 8 25 23 25 42 0 16-15 25-32 25S18 83 18 67Z" fill="url(#dough)" stroke="#c8b8aa" stroke-width="2"/>
+  <path d="M37 26c7 3 19 3 26 0M41 20c6 3 12 3 18 0M47 14c2 2 4 2 7 0" fill="none" stroke="#ddd0c5" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="39" cy="59" r="3" fill="#3d2928"/><circle cx="61" cy="59" r="3" fill="#3d2928"/>
+  <circle cx="32" cy="66" r="5" fill="#f6a9a9" opacity=".75"/><circle cx="68" cy="66" r="5" fill="#f6a9a9" opacity=".75"/>
+  <path d="M46 67c3 3 5 3 8 0" fill="none" stroke="#6f4441" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

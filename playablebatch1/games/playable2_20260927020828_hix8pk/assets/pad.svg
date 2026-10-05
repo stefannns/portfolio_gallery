@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 112" role="img" aria-label="Bounce pad">
+  <defs>
+    <radialGradient id="pad-fill" cx="38%" cy="32%" r="68%">
+      <stop offset="0" stop-color="#eaffff"/>
+      <stop offset="0.22" stop-color="#75fff0"/>
+      <stop offset="0.72" stop-color="#20dfcf"/>
+      <stop offset="1" stop-color="#079b98"/>
+    </radialGradient>
+  </defs>
+  <circle cx="56" cy="56" r="51" fill="url(#pad-fill)" stroke="#b9fff8" stroke-width="4"/>
+</svg>

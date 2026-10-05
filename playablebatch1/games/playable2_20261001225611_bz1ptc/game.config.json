@@ -1,0 +1,114 @@
+{
+  "tweaks": [
+    {
+      "id": "GAME_DURATION",
+      "kind": "number",
+      "label": "Survival Time (s)",
+      "value": 15,
+      "default": 15,
+      "min": 10,
+      "max": 60,
+      "step": 5
+    },
+    {
+      "id": "PASS_ACCURACY",
+      "kind": "number",
+      "label": "Pass Accuracy (%)",
+      "value": 60,
+      "default": 60,
+      "min": 10,
+      "max": 100,
+      "step": 5
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "Stayin' Alive CPR",
+      "default": "Stayin' Alive CPR",
+      "max_length": 30
+    },
+    {
+      "id": "GAME_SUBTITLE",
+      "label": "Subtitle",
+      "value": "Tap to the beat to save a life!",
+      "default": "Tap to the beat to save a life!",
+      "max_length": 40
+    },
+    {
+      "id": "INSTRUCTION",
+      "label": "Instruction",
+      "value": "Ideally, perform compressions at 100-120 beats per minute",
+      "default": "Ideally, perform compressions at 100-120 beats per minute",
+      "max_length": 80
+    },
+    {
+      "id": "TXT_PERFECT",
+      "label": "Perfect Feedback",
+      "value": "Perfect!",
+      "default": "Perfect!",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_TOO_FAST",
+      "label": "Fast Feedback",
+      "value": "Too Fast!",
+      "default": "Too Fast!",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_TOO_SLOW",
+      "label": "Slow Feedback",
+      "value": "Too Slow!",
+      "default": "Too Slow!",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_START",
+      "label": "Start Button",
+      "value": "START",
+      "default": "START",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "PLAY AGAIN",
+      "default": "PLAY AGAIN",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_SUCCESS",
+      "label": "Success Result",
+      "value": "Life Saved!",
+      "default": "Life Saved!",
+      "max_length": 25
+    },
+    {
+      "id": "TXT_FAIL",
+      "label": "Fail Result",
+      "value": "Keep Practicing",
+      "default": "Keep Practicing",
+      "max_length": 25
+    }
+  ],
+  "images": [
+    {
+      "id": "BTN_PLAY",
+      "label": "Play Button Icon",
+      "path": "./assets/btn_play.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99278216778511579",
+    "version_id": "99278216778645925",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

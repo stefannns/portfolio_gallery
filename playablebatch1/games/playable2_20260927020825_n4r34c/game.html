@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <link rel="stylesheet" href="./bundle.css" />
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    #root > div { padding: 40px 25px !important; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <!-- playable-inline-config:start -->
+  <script id="playable-inline-config" type="application/json">{"tweaks":[],"texts":[{"id":"TITLE","label":"Game Title","value":"Orbital Circle","default":"Orbital Circle","max_length":25},{"id":"GUIDE_TEXT","label":"Guide Text","value":"Tap the canvas and try to draw a perfect circle","default":"Tap the canvas and try to draw a perfect circle","max_length":60},{"id":"BTN_RETRY","label":"Retry Button","value":"Try Again","default":"Try Again","max_length":20},{"id":"SCORE_PERFECT","label":"Perfect Comment","value":"Perfect","default":"Perfect","max_length":20},{"id":"SCORE_GOOD","label":"Good Comment","value":"Good","default":"Good","max_length":20},{"id":"SCORE_AGAIN","label":"Try Again Comment","value":"Try Again","default":"Try Again","max_length":20},{"id":"SCORE_SHORT","label":"Too Short Comment","value":"Too Short","default":"Too Short","max_length":20}],"images":[],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    (function () {
+      if (window.location.protocol !== 'file:') return;
+      var configText = document.getElementById('playable-inline-config').textContent;
+      var nativeFetch = window.fetch;
+      window.fetch = function (input) {
+        var url = typeof input === 'string' ? input : (input && input.url) || '';
+        if (/(^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: function () { return Promise.resolve(JSON.parse(configText)); },
+            text: function () { return Promise.resolve(configText); }
+          });
+        }
+        return nativeFetch.apply(window, arguments);
+      };
+    }());
+  </script>
+  <!-- playable-inline-config:end -->
+  <script src="./bundle.js"></script>
+</body>
+</html>

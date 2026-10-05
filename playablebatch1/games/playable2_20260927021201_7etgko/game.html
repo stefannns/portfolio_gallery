@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <link rel="stylesheet" href="./bundle.css" />
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    /* Keep social metadata and like controls outside device edge zones. */
+    .feed-container { padding: 40px 16px !important; box-sizing: border-box; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <!-- playable-inline-config:start -->
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"BOSS_MAX_HP","kind":"number","label":"Boss Max HP","value":500,"default":500,"min":100,"max":2000,"step":50},{"id":"BOSS_SPEED","kind":"number","label":"Boss Speed","value":0.25,"default":0.25,"min":0.1,"max":0.6,"step":0.05}],"texts":[{"id":"UI_POST_TITLE","label":"Post Title","value":"LIKE IF YOU HATE BUGS","default":"LIKE IF YOU HATE BUGS","max_length":30},{"id":"UI_AUTHOR_NAME","label":"Author Name","value":"Bug_Hater","default":"Bug_Hater","max_length":20},{"id":"UI_HATE_TEXT","label":"Hate Text","value":"people hate bugs","default":"people hate bugs","max_length":30},{"id":"BTN_LIKE","label":"Like Button","value":"8.8K","default":"8.8K","max_length":10},{"id":"BTN_REPLAY","label":"Replay Button","value":"Play Again","default":"Play Again","max_length":20},{"id":"BTN_POST","label":"Post Button","value":"Post My Play","default":"Post My Play","max_length":20},{"id":"MSG_VICTORY","label":"Victory Message","value":"BUG SQUASHED!","default":"BUG SQUASHED!","max_length":40}],"images":[{"id":"IMG_AVATAR","label":"Author Avatar","path":"./assets/img_avatar.webp","replaceable":true},{"id":"IMG_FEED_MAIN","label":"Feed Main Image","path":"./assets/img_bug_boss.svg","replaceable":true},{"id":"IMG_BOSS","label":"Bug Boss Character","path":"./assets/img_bug_boss.svg","replaceable":true},{"id":"IMG_MEME_SPAWN","label":"Spawn Meme Effect","path":"./assets/img_meme_spawn.webp","replaceable":true},{"id":"IMG_MEME_WIN","label":"Victory Meme Effect","path":"./assets/img_meme_win.webp","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    (function () {
+      if (window.location.protocol !== 'file:') return;
+      var configText = document.getElementById('playable-inline-config').textContent;
+      var nativeFetch = window.fetch;
+      window.fetch = function (input) {
+        var url = typeof input === 'string' ? input : (input && input.url) || '';
+        if (/(^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: function () { return Promise.resolve(JSON.parse(configText)); },
+            text: function () { return Promise.resolve(configText); }
+          });
+        }
+        return nativeFetch.apply(window, arguments);
+      };
+    }());
+  </script>
+  <!-- playable-inline-config:end -->
+  <script src="./bundle.js?v=bug-boss-1"></script>
+</body>
+</html>

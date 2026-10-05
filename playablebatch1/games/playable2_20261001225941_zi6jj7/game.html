@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    #root > div > main > div > div {
+      padding-left: calc(25px + env(safe-area-inset-left, 0px)) !important;
+      padding-right: calc(25px + env(safe-area-inset-right, 0px)) !important;
+    }
+    #root > div > main + div {
+      padding-left: calc(25px + env(safe-area-inset-left, 0px)) !important;
+      padding-right: calc(25px + env(safe-area-inset-right, 0px)) !important;
+    }
+    #code-color-legend {
+      width: calc(100% - 50px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+      max-width: 500px;
+      margin: 10px auto 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      color: #f4f4f5;
+      font: 700 clamp(9px, 2.4vw, 11px)/1.25 system-ui, sans-serif;
+      letter-spacing: 0;
+      text-align: left;
+    }
+    .code-color-key {
+      min-width: 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+      padding: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 8px;
+      background: rgba(28, 28, 30, 0.72);
+    }
+    .code-color-swatch {
+      flex: 0 0 10px;
+      width: 10px;
+      height: 10px;
+      margin-top: 1px;
+      border-radius: 3px;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+    }
+    .code-color-key strong { display: block; color: #fff; font-size: 1.05em; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-config-inline" type="application/json">{
+  "tweaks": [
+    {
+      "id": "CODE_LENGTH",
+      "kind": "number",
+      "label": "Code Length",
+      "value": 6,
+      "default": 6,
+      "min": 3,
+      "max": 8,
+      "step": 1
+    },
+    {
+      "id": "MAX_ATTEMPTS",
+      "kind": "number",
+      "label": "Max Attempts",
+      "value": 10,
+      "default": 10,
+      "min": 3,
+      "max": 10,
+      "step": 1
+    },
+    {
+      "id": "ALLOW_DUPLICATES",
+      "kind": "boolean",
+      "label": "Allow Duplicate Digits",
+      "value": true,
+      "default": true
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "CRACK THE CODE",
+      "default": "CRACK THE CODE",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_GUESS",
+      "label": "Guess Button Text",
+      "value": "GUESS",
+      "default": "GUESS",
+      "max_length": 10
+    },
+    {
+      "id": "MSG_WIN",
+      "label": "Win Message",
+      "value": "CODE CRACKED!",
+      "default": "CODE CRACKED!",
+      "max_length": 30
+    },
+    {
+      "id": "MSG_LOSE",
+      "label": "Lose Message",
+      "value": "ACCESS DENIED",
+      "default": "ACCESS DENIED",
+      "max_length": 30
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button Text",
+      "value": "PLAY AGAIN",
+      "default": "PLAY AGAIN",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_POST",
+      "label": "Post Button Text",
+      "value": "Post My Play",
+      "default": "Post My Play",
+      "max_length": 15
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Optional Background Overlay",
+      "path": "./assets/bg_overlay.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99279099402845675",
+    "version_id": "99279099402698785",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}</script>
+  <script>
+    // Support direct local preview without changing the normal HTTP/platform path.
+    if (location.protocol === "file:") {
+      const config = document.getElementById("playable-config-inline").textContent;
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = function(input, options) {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url && /(?:^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve(new Response(config, {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return originalFetch(input, options);
+      };
+    }
+  </script>
+  <script src="./bundle.js"></script>
+  <script>
+    (() => {
+      function addColorLegend() {
+        const header = document.querySelector("#root > div > header");
+        if (!header) {
+          requestAnimationFrame(addColorLegend);
+          return;
+        }
+        if (document.getElementById("code-color-legend")) return;
+
+        const legend = document.createElement("div");
+        legend.id = "code-color-legend";
+        legend.setAttribute("role", "note");
+        legend.setAttribute("aria-label", "Guess color meanings");
+
+        const keys = [
+          ["#34c759", "Green", "Correct digit and position"],
+          ["#ff9f0a", "Orange", "Correct digit, wrong position"],
+          ["#636366", "Gray", "Digit is not in the code"]
+        ];
+
+        keys.forEach(([color, label, explanation]) => {
+          const item = document.createElement("div");
+          item.className = "code-color-key";
+
+          const swatch = document.createElement("span");
+          swatch.className = "code-color-swatch";
+          swatch.style.background = color;
+
+          const text = document.createElement("span");
+          const name = document.createElement("strong");
+          name.textContent = label;
+          text.append(name, document.createTextNode(explanation));
+          item.append(swatch, text);
+          legend.appendChild(item);
+        });
+
+        header.appendChild(legend);
+      }
+
+      addColorLegend();
+    })();
+  </script>
+</body>
+</html>

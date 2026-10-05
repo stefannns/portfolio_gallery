@@ -1,0 +1,166 @@
+{
+  "tweaks": [
+    {
+      "id": "INITIAL_TIME",
+      "kind": "number",
+      "label": "Initial Time Limit (ms)",
+      "value": 3000,
+      "default": 3000,
+      "min": 1000,
+      "max": 5000,
+      "step": 100
+    },
+    {
+      "id": "MIN_TIME",
+      "kind": "number",
+      "label": "Minimum Time Limit (ms)",
+      "value": 800,
+      "default": 800,
+      "min": 300,
+      "max": 1500,
+      "step": 50
+    },
+    {
+      "id": "TIME_DECREMENT",
+      "kind": "number",
+      "label": "Time Decrease per Correct (ms)",
+      "value": 100,
+      "default": 100,
+      "min": 10,
+      "max": 200,
+      "step": 10
+    },
+    {
+      "id": "SCORE_PER_CORRECT",
+      "kind": "number",
+      "label": "Score per Correct Decision",
+      "value": 10,
+      "default": 10,
+      "min": 1,
+      "max": 100,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "Fridge Inspector",
+      "default": "Fridge Inspector",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_START",
+      "label": "Start Button",
+      "value": "START",
+      "default": "START",
+      "max_length": 10
+    },
+    {
+      "id": "BTN_EAT",
+      "label": "Eat Button",
+      "value": "EAT",
+      "default": "EAT",
+      "max_length": 10
+    },
+    {
+      "id": "BTN_PASS",
+      "label": "Pass Button",
+      "value": "PASS",
+      "default": "PASS",
+      "max_length": 10
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "PLAY AGAIN",
+      "default": "PLAY AGAIN",
+      "max_length": 15
+    },
+    {
+      "id": "LBL_SCORE",
+      "label": "Score Label",
+      "value": "FINAL SCORE",
+      "default": "FINAL SCORE",
+      "max_length": 15
+    },
+    {
+      "id": "LBL_GAME_OVER",
+      "label": "Game Over Label",
+      "value": "GAME OVER",
+      "default": "GAME OVER",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_POST_PLAY",
+      "label": "Post Play Button (Not displayed, uses TT locale)",
+      "value": "Post My Play",
+      "default": "Post My Play",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Main Background / Title Image",
+      "path": "./assets/bg_main.png",
+      "replaceable": true
+    },
+    {
+      "id": "UI_HEART_FULL",
+      "label": "Full Heart Icon",
+      "path": "./assets/ui_heart_full.webp",
+      "replaceable": true
+    },
+    {
+      "id": "UI_HEART_EMPTY",
+      "label": "Empty Heart Icon",
+      "path": "./assets/ui_heart_empty.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FOOD_FRESH_1",
+      "label": "Fresh Food 1",
+      "path": "./assets/food_apple_fresh.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FOOD_SPOIL_1",
+      "label": "Spoiled Food 1",
+      "path": "./assets/food_apple_spoil.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FOOD_FRESH_2",
+      "label": "Fresh Food 2",
+      "path": "./assets/food_bread_fresh.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FOOD_SPOIL_2",
+      "label": "Spoiled Food 2",
+      "path": "./assets/food_bread_spoil.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FOOD_FRESH_3",
+      "label": "Fresh Food 3",
+      "path": "./assets/food_cheese_fresh.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FOOD_SPOIL_3",
+      "label": "Spoiled Food 3",
+      "path": "./assets/food_cheese_spoil.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

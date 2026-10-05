@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-config-inline" type="application/json">{
+  "tweaks": [
+    {
+      "id": "GRAVITY",
+      "kind": "number",
+      "label": "Gravity",
+      "value": 0.12,
+      "default": 0.12,
+      "min": 0.02,
+      "max": 2.5,
+      "step": 0.1
+    },
+    {
+      "id": "BALL_RESTITUTION",
+      "kind": "number",
+      "label": "Ball Bounciness",
+      "value": 0.85,
+      "default": 0.85,
+      "min": 0.1,
+      "max": 1.2,
+      "step": 0.05
+    },
+    {
+      "id": "LINE_RESTITUTION",
+      "kind": "number",
+      "label": "Line Bounciness",
+      "value": 0.8,
+      "default": 0.8,
+      "min": 0.1,
+      "max": 1.2,
+      "step": 0.05
+    },
+    {
+      "id": "BALL_RADIUS",
+      "kind": "number",
+      "label": "Ball Radius",
+      "value": 24,
+      "default": 24,
+      "min": 10,
+      "max": 50,
+      "step": 1
+    },
+    {
+      "id": "LINE_THICKNESS",
+      "kind": "number",
+      "label": "Line Thickness",
+      "value": 8,
+      "default": 8,
+      "min": 4,
+      "max": 20,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "Ball Line Bouncer",
+      "default": "Ball Line Bouncer",
+      "max_length": 30
+    },
+    {
+      "id": "GAME_OVER_TITLE",
+      "label": "Game Over Title",
+      "value": "Game Over",
+      "default": "Game Over",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Add Ball Button",
+      "value": "Add Ball",
+      "default": "Add Ball",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_POST",
+      "label": "Post Button",
+      "value": "Post My Play",
+      "default": "Post My Play",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "BALL_IMG",
+      "label": "Ball Image",
+      "path": "./assets/ball_img.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99278216745139447",
+    "version_id": "99278216744990522",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}</script>
+  <script>
+    // file:// pages cannot fetch their adjacent JSON in Chrome. Keep the normal
+    // package fetch path on HTTP, and serve only the local config from this copy.
+    if (location.protocol === "file:") {
+      const config = document.getElementById("playable-config-inline").textContent;
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = function(input, options) {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url && /(?:^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve(new Response(config, {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return originalFetch(input, options);
+      };
+    }
+  </script>
+  <script src="./bundle.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+{
+  "tweaks": [
+    {
+      "id": "FALL_ANGLE",
+      "kind": "number",
+      "label": "Fall Angle (rad)",
+      "value": 1.25,
+      "default": 1.25,
+      "min": 0.5,
+      "max": 2.0,
+      "step": 0.05
+    },
+    {
+      "id": "BASE_WOBBLE",
+      "kind": "number",
+      "label": "Base Wobble Force",
+      "value": 0.005,
+      "default": 0.005,
+      "min": 0.001,
+      "max": 0.02,
+      "step": 0.001
+    },
+    {
+      "id": "WOBBLE_INC",
+      "kind": "number",
+      "label": "Wobble Variance",
+      "value": 0.0005,
+      "default": 0.0005,
+      "min": 0.0001,
+      "max": 0.005,
+      "step": 0.0001
+    }
+  ],
+  "texts": [
+    {
+      "id": "TITLE",
+      "label": "Game Title",
+      "value": "Keep Him Steady",
+      "default": "Keep Him Steady",
+      "max_length": 30
+    },
+    {
+      "id": "BTN_START",
+      "label": "Start Button",
+      "value": "Start Feeding",
+      "default": "Start",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "Reset",
+      "default": "Reset",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "CHAR_MAIN",
+      "label": "Stickman Character",
+      "path": "./assets/char_main.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99278827033041520",
+    "version_id": "99278827033158626",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "image_expression",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

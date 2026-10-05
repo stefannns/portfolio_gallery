@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-config-inline" type="application/json">{
+  "tweaks": [
+    {
+      "id": "TYPING_SPEED",
+      "kind": "number",
+      "label": "Typing Speed (ms)",
+      "value": 1200,
+      "default": 1200,
+      "min": 500,
+      "max": 3000,
+      "step": 100
+    }
+  ],
+  "texts": [
+    {
+      "id": "TITLE",
+      "label": "Game Title",
+      "value": "Text Your Ex",
+      "default": "Text Your Ex",
+      "max_length": 30
+    },
+    {
+      "id": "BTN_START",
+      "label": "Start Button",
+      "value": "Start Game",
+      "default": "Start Game",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "Play Again",
+      "default": "Play Again",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "START_BG",
+      "label": "Start Background",
+      "path": "./assets/text_ex_backdrop.svg",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99278216778713364",
+    "version_id": "99278216778593044",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}</script>
+  <script>
+    // file:// pages cannot fetch their adjacent JSON in Chrome. Keep the normal
+    // package fetch path on HTTP, and serve only the local config from this copy.
+    if (location.protocol === "file:") {
+      const config = document.getElementById("playable-config-inline").textContent;
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = function(input, options) {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url && /(?:^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve(new Response(config, {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return originalFetch(input, options);
+      };
+    }
+  </script>
+  <script src="./bundle.js"></script>
+</body>
+</html>

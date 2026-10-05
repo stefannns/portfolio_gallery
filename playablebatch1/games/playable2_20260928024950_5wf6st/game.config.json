@@ -1,0 +1,95 @@
+{
+  "tweaks": [
+    {
+      "id": "TARGET_TIME",
+      "kind": "number",
+      "label": "Target Time (s)",
+      "value": 0.01,
+      "default": 0.01,
+      "min": 0.005,
+      "max": 1.0,
+      "step": 0.005
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "Double Tap Test",
+      "default": "Double Tap Test",
+      "max_length": 25
+    },
+    {
+      "id": "GUIDE_TEXT",
+      "label": "Guide Text",
+      "value": "Can you get 0.01?",
+      "default": "Can you get 0.01?",
+      "max_length": 40
+    },
+    {
+      "id": "TXT_TAP_START",
+      "label": "Start Prompt",
+      "value": "TAP TO START",
+      "default": "TAP TO START",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_TAP_STOP",
+      "label": "Stop Prompt",
+      "value": "TAP TO STOP!",
+      "default": "TAP TO STOP!",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_RESULT",
+      "label": "Result Prompt",
+      "value": "FINAL TIME",
+      "default": "FINAL TIME",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_BEST",
+      "label": "Best Time Label",
+      "value": "BEST TIME",
+      "default": "BEST TIME",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_DIFF",
+      "label": "Difference Label",
+      "value": "DIFFERENCE",
+      "default": "DIFFERENCE",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_RESTART",
+      "label": "Restart Button",
+      "value": "PLAY AGAIN",
+      "default": "PLAY AGAIN",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_POST",
+      "label": "Post Button (Not in Edit)",
+      "value": "POST MY PLAY",
+      "default": "POST MY PLAY",
+      "max_length": 25
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Main Background",
+      "path": "./assets/bg_main.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

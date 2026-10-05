@@ -1,0 +1,93 @@
+{
+  "tweaks": [
+    {
+      "id": "CODE_LENGTH",
+      "kind": "number",
+      "label": "Code Length",
+      "value": 6,
+      "default": 6,
+      "min": 3,
+      "max": 8,
+      "step": 1
+    },
+    {
+      "id": "MAX_ATTEMPTS",
+      "kind": "number",
+      "label": "Max Attempts",
+      "value": 10,
+      "default": 10,
+      "min": 3,
+      "max": 10,
+      "step": 1
+    },
+    {
+      "id": "ALLOW_DUPLICATES",
+      "kind": "boolean",
+      "label": "Allow Duplicate Digits",
+      "value": true,
+      "default": true
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "CRACK THE CODE",
+      "default": "CRACK THE CODE",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_GUESS",
+      "label": "Guess Button Text",
+      "value": "GUESS",
+      "default": "GUESS",
+      "max_length": 10
+    },
+    {
+      "id": "MSG_WIN",
+      "label": "Win Message",
+      "value": "CODE CRACKED!",
+      "default": "CODE CRACKED!",
+      "max_length": 30
+    },
+    {
+      "id": "MSG_LOSE",
+      "label": "Lose Message",
+      "value": "ACCESS DENIED",
+      "default": "ACCESS DENIED",
+      "max_length": 30
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button Text",
+      "value": "PLAY AGAIN",
+      "default": "PLAY AGAIN",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_POST",
+      "label": "Post Button Text",
+      "value": "Post My Play",
+      "default": "Post My Play",
+      "max_length": 15
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Optional Background Overlay",
+      "path": "./assets/bg_overlay.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99279099402845675",
+    "version_id": "99279099402698785",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "tweaks": [
+    {
+      "id": "TRIES_BASE",
+      "kind": "number",
+      "label": "Base Tries",
+      "value": 6,
+      "default": 6,
+      "min": 3,
+      "max": 10,
+      "step": 1
+    },
+    {
+      "id": "PEELER_SPEED",
+      "kind": "number",
+      "label": "Peeler Speed",
+      "value": 0.08,
+      "default": 0.08,
+      "min": 0.02,
+      "max": 0.2,
+      "step": 0.01
+    },
+    {
+      "id": "DROP_SPEED",
+      "kind": "number",
+      "label": "Drop Speed",
+      "value": 0.3,
+      "default": 0.3,
+      "min": 0.1,
+      "max": 1.0,
+      "step": 0.05
+    },
+    {
+      "id": "PEEL_WIDTH",
+      "kind": "number",
+      "label": "Peel Width",
+      "value": 36,
+      "default": 36,
+      "min": 20,
+      "max": 80,
+      "step": 4
+    }
+  ],
+  "texts": [
+    {
+      "id": "TXT_PERFECT",
+      "label": "Perfect Peel Text",
+      "value": "Perfect Peel!",
+      "default": "Perfect Peel!",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_FAIL_TITLE",
+      "label": "Fail Title",
+      "value": "Out of Tries!",
+      "default": "Out of Tries!",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_FAIL_DESC",
+      "label": "Fail Desc",
+      "value": "You didn't peel the entire fruit! Back to Level 1.",
+      "default": "You didn't peel the entire fruit! Back to Level 1.",
+      "max_length": 60
+    },
+    {
+      "id": "TXT_CLEAR_TITLE",
+      "label": "Clear Title",
+      "value": "Challenge Complete!",
+      "default": "Challenge Complete!",
+      "max_length": 30
+    },
+    {
+      "id": "TXT_CLEAR_DESC",
+      "label": "Clear Desc",
+      "value": "You really know how to handle your fruits!",
+      "default": "You really know how to handle your fruits!",
+      "max_length": 60
+    },
+    {
+      "id": "TXT_POST",
+      "label": "Post Button Text",
+      "value": "Post My Play",
+      "default": "Post My Play",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "PEELER_IMG",
+      "label": "Peeler Sprite",
+      "path": "./assets/peeler.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_1",
+      "label": "Fruit Level 1",
+      "path": "./assets/fruit_blueberry.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_2",
+      "label": "Fruit Level 2",
+      "path": "./assets/fruit_strawberry.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_3",
+      "label": "Fruit Level 3",
+      "path": "./assets/fruit_apple.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_4",
+      "label": "Fruit Level 4",
+      "path": "./assets/fruit_orange.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_5",
+      "label": "Fruit Level 5",
+      "path": "./assets/fruit_lemon.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_6",
+      "label": "Fruit Level 6",
+      "path": "./assets/fruit_peach.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_7",
+      "label": "Fruit Level 7",
+      "path": "./assets/fruit_plum.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_8",
+      "label": "Fruit Level 8",
+      "path": "./assets/fruit_kiwi.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_9",
+      "label": "Fruit Level 9",
+      "path": "./assets/fruit_mango.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_10",
+      "label": "Fruit Level 10",
+      "path": "./assets/fruit_pear.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_11",
+      "label": "Fruit Level 11",
+      "path": "./assets/fruit_tomato.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_12",
+      "label": "Fruit Level 12",
+      "path": "./assets/fruit_potato.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_13",
+      "label": "Fruit Level 13",
+      "path": "./assets/fruit_avocado.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_14",
+      "label": "Fruit Level 14",
+      "path": "./assets/fruit_melon.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_15",
+      "label": "Fruit Level 15",
+      "path": "./assets/fruit_pineapple.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRUIT_16",
+      "label": "Fruit Level 16",
+      "path": "./assets/fruit_watermelon.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

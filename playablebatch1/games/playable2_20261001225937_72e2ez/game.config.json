@@ -1,0 +1,71 @@
+{
+  "tweaks": [
+    {
+      "id": "DRAG_SENSITIVITY",
+      "kind": "number",
+      "label": "Drag Sensitivity",
+      "value": 0.5,
+      "default": 0.5,
+      "min": 0.1,
+      "max": 1,
+      "step": 0.1
+    },
+    {
+      "id": "START_TIME_RATIO",
+      "kind": "number",
+      "label": "Start Time",
+      "value": 0.5,
+      "default": 0.5,
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    },
+    {
+      "id": "VOLUME_DB",
+      "kind": "number",
+      "label": "Ambient Volume (dB)",
+      "value": -20,
+      "default": -20,
+      "min": -40,
+      "max": 0,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "PROMPT_TEXT",
+      "label": "Prompt Text",
+      "value": "Try Sky Cycle Toy and drag to watch the sun travel from sunrise to sunset in your own responsive sky scene. ☀️",
+      "default": "Try Sky Cycle Toy and drag to watch the sun travel from sunrise to sunset in your own responsive sky scene. ☀️",
+      "max_length": 200
+    },
+    {
+      "id": "APP_TITLE",
+      "label": "App Title",
+      "value": "Sky Cycle",
+      "default": "Sky Cycle",
+      "max_length": 30
+    }
+  ],
+  "images": [],
+  "motions": [
+    {
+      "id": "MOTION_SKY",
+      "label": "Sky Day Cycle",
+      "base_path": "./assets/motion/sky.svg",
+      "frame_count": 36,
+      "duration": 10,
+      "aspect_ratio": "9:16"
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99279079425315069",
+    "version_id": "99279079425234741",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

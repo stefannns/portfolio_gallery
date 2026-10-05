@@ -1,0 +1,76 @@
+{
+  "tweaks": [
+    {
+      "id": "TILT_THRESHOLD",
+      "kind": "number",
+      "label": "Tilt Threshold",
+      "value": 0.25,
+      "default": 0.25,
+      "min": 0.1,
+      "max": 0.8,
+      "step": 0.05
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "2048",
+      "default": "2048",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_SCORE",
+      "label": "Score Label",
+      "value": "SCORE",
+      "default": "SCORE",
+      "max_length": 10
+    },
+    {
+      "id": "TXT_GAME_OVER",
+      "label": "Game Over Text",
+      "value": "Game Over!",
+      "default": "Game Over!",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_RESTART",
+      "label": "Restart Button",
+      "value": "Try Again",
+      "default": "Try Again",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_INSTRUCTION",
+      "label": "Instruction",
+      "value": "Tap to drop balls. Match equal numbers to merge.",
+      "default": "Tap to drop balls. Match equal numbers to merge.",
+      "max_length": 40
+    },
+    {
+      "id": "TXT_POST_PLAY",
+      "label": "Post Play Button",
+      "value": "Post My Play",
+      "default": "Post My Play",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Main Background",
+      "path": "./assets/bg_main.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99278910617068396",
+    "version_id": "99278910617179240",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "tweaks": [
+    {
+      "id": "TYPING_SPEED",
+      "kind": "number",
+      "label": "Typing Speed (ms)",
+      "value": 1200,
+      "default": 1200,
+      "min": 500,
+      "max": 3000,
+      "step": 100
+    }
+  ],
+  "texts": [
+    {
+      "id": "TITLE",
+      "label": "Game Title",
+      "value": "Text Your Ex",
+      "default": "Text Your Ex",
+      "max_length": 30
+    },
+    {
+      "id": "BTN_START",
+      "label": "Start Button",
+      "value": "Start Game",
+      "default": "Start Game",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "Play Again",
+      "default": "Play Again",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "START_BG",
+      "label": "Start Background",
+      "path": "./assets/text_ex_backdrop.svg",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99278216778713364",
+    "version_id": "99278216778593044",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

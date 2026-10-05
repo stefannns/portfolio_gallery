@@ -1,0 +1,86 @@
+{
+  "tweaks": [
+    {
+      "id": "CASH_PER_BOUNCE",
+      "kind": "number",
+      "label": "Cash Per Bounce",
+      "value": 1,
+      "default": 1,
+      "min": 1,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "id": "INITIAL_BALL_COST",
+      "kind": "number",
+      "label": "Initial Ball Cost",
+      "value": 1,
+      "default": 1,
+      "min": 1,
+      "max": 10,
+      "step": 1
+    },
+    {
+      "id": "COST_INCREMENT",
+      "kind": "number",
+      "label": "Cost Increment per Ball",
+      "value": 1,
+      "default": 1,
+      "min": 1,
+      "max": 50,
+      "step": 1
+    },
+    {
+      "id": "SPEED_MULTIPLIER",
+      "kind": "number",
+      "label": "Bounce Speed Multiplier",
+      "value": 1.05,
+      "default": 1.05,
+      "min": 1.0,
+      "max": 1.5,
+      "step": 0.01
+    },
+    {
+      "id": "MAX_SPEED",
+      "kind": "number",
+      "label": "Max Ball Speed",
+      "value": 15,
+      "default": 15,
+      "min": 10,
+      "max": 30,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "TEXT_CASH_EARNED",
+      "label": "Cash Earned Label",
+      "value": "CASH EARNED",
+      "default": "CASH EARNED",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_ADD_BALL",
+      "label": "Add Ball Button Text",
+      "value": "ADD BALL",
+      "default": "ADD BALL",
+      "max_length": 15
+    },
+    {
+      "id": "TEXT_DRAW_HINT",
+      "label": "Draw Hint Text",
+      "value": "DRAW CIRCLES TO TRAP BALLS",
+      "default": "DRAW CIRCLES TO TRAP BALLS",
+      "max_length": 40
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

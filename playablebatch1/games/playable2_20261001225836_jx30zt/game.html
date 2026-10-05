@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-config-inline" type="application/json">{
+  "tweaks": [
+    {
+      "id": "FALL_ANGLE",
+      "kind": "number",
+      "label": "Fall Angle (rad)",
+      "value": 1.25,
+      "default": 1.25,
+      "min": 0.5,
+      "max": 2.0,
+      "step": 0.05
+    },
+    {
+      "id": "BASE_WOBBLE",
+      "kind": "number",
+      "label": "Base Wobble Force",
+      "value": 0.005,
+      "default": 0.005,
+      "min": 0.001,
+      "max": 0.02,
+      "step": 0.001
+    },
+    {
+      "id": "WOBBLE_INC",
+      "kind": "number",
+      "label": "Wobble Variance",
+      "value": 0.0005,
+      "default": 0.0005,
+      "min": 0.0001,
+      "max": 0.005,
+      "step": 0.0001
+    }
+  ],
+  "texts": [
+    {
+      "id": "TITLE",
+      "label": "Game Title",
+      "value": "Keep Him Steady",
+      "default": "Keep Him Steady",
+      "max_length": 30
+    },
+    {
+      "id": "BTN_START",
+      "label": "Start Button",
+      "value": "Start Feeding",
+      "default": "Start",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "Reset",
+      "default": "Reset",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "CHAR_MAIN",
+      "label": "Stickman Character",
+      "path": "./assets/char_main.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99278827033041520",
+    "version_id": "99278827033158626",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "image_expression",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}</script>
+  <script>
+    // file:// pages cannot fetch their adjacent JSON in Chrome. Keep the normal
+    // package fetch path on HTTP, and serve only the local config from this copy.
+    if (location.protocol === "file:") {
+      const config = document.getElementById("playable-config-inline").textContent;
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = function(input, options) {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url && /(?:^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve(new Response(config, {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return originalFetch(input, options);
+      };
+    }
+  </script>
+  <script src="./temperature-stickman.js"></script>
+</body>
+</html>

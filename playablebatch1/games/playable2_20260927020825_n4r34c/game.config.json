@@ -1,0 +1,63 @@
+{
+  "tweaks": [],
+  "texts": [
+    {
+      "id": "TITLE",
+      "label": "Game Title",
+      "value": "Orbital Circle",
+      "default": "Orbital Circle",
+      "max_length": 25
+    },
+    {
+      "id": "GUIDE_TEXT",
+      "label": "Guide Text",
+      "value": "Tap the canvas and try to draw a perfect circle",
+      "default": "Tap the canvas and try to draw a perfect circle",
+      "max_length": 60
+    },
+    {
+      "id": "BTN_RETRY",
+      "label": "Retry Button",
+      "value": "Try Again",
+      "default": "Try Again",
+      "max_length": 20
+    },
+    {
+      "id": "SCORE_PERFECT",
+      "label": "Perfect Comment",
+      "value": "Perfect",
+      "default": "Perfect",
+      "max_length": 20
+    },
+    {
+      "id": "SCORE_GOOD",
+      "label": "Good Comment",
+      "value": "Good",
+      "default": "Good",
+      "max_length": 20
+    },
+    {
+      "id": "SCORE_AGAIN",
+      "label": "Try Again Comment",
+      "value": "Try Again",
+      "default": "Try Again",
+      "max_length": 20
+    },
+    {
+      "id": "SCORE_SHORT",
+      "label": "Too Short Comment",
+      "value": "Too Short",
+      "default": "Too Short",
+      "max_length": 20
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

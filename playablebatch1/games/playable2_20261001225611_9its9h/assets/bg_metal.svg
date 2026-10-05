@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 693" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x2="0.8" y2="1"><stop stop-color="#2b343d"/><stop offset=".55" stop-color="#15212d"/><stop offset="1" stop-color="#0a111a"/></linearGradient>
+    <filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".32" numOctaves="3" seed="7" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".19"/></feComponentTransfer></filter>
+  </defs>
+  <rect width="390" height="693" fill="url(#g)"/>
+  <rect width="390" height="693" filter="url(#n)"/>
+  <path d="M10 8H380V685H10Z" fill="none" stroke="#647681" stroke-opacity=".24" stroke-width="2"/>
+  <path d="m0 130 390-90M0 500l390-130M-20 630l450-85" stroke="#61707b" stroke-opacity=".08" stroke-width="3"/>
+</svg>

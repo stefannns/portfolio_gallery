@@ -1,0 +1,97 @@
+{
+  "tweaks": [
+    {
+      "id": "DROP_COUNT",
+      "kind": "number",
+      "label": "Drops Limit",
+      "value": 40,
+      "default": 40,
+      "min": 10,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "id": "WIN_THRESHOLD",
+      "kind": "number",
+      "label": "Win Threshold",
+      "value": 20,
+      "default": 20,
+      "min": 1,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "id": "DROP_INTERVAL",
+      "kind": "number",
+      "label": "Drop Interval",
+      "value": 150,
+      "default": 150,
+      "min": 50,
+      "max": 1000,
+      "step": 10
+    },
+    {
+      "id": "GRAVITY",
+      "kind": "number",
+      "label": "Gravity",
+      "value": 1.0,
+      "default": 1.0,
+      "min": 0.5,
+      "max": 3.0,
+      "step": 0.1
+    }
+  ],
+  "texts": [
+    {
+      "id": "INSTRUCTION",
+      "label": "Instruction",
+      "value": "Draw a line to guide the soda!",
+      "default": "Draw a line to guide the soda!",
+      "max_length": 50
+    },
+    {
+      "id": "BTN_RESET",
+      "label": "Reset Button",
+      "value": "Reset",
+      "default": "Reset",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_POST",
+      "label": "Post Button",
+      "value": "Post My Play",
+      "default": "Post My Play",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_REPLAY",
+      "label": "Replay Button",
+      "value": "Play Again",
+      "default": "Play Again",
+      "max_length": 20
+    },
+    {
+      "id": "MSG_WIN",
+      "label": "Win Message",
+      "value": "Level Cleared!",
+      "default": "Level Cleared!",
+      "max_length": 30
+    }
+  ],
+  "images": [
+    {
+      "id": "GLASS_IMG",
+      "label": "Glass Image",
+      "path": "./assets/glass.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

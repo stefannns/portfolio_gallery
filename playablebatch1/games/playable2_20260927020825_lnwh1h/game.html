@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <link rel="stylesheet" href="./bundle.css" />
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    button { min-height: 44px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <!-- playable-inline-config:start -->
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"BALL_COUNT","kind":"number","label":"Ball Count","value":112,"default":112,"min":50,"max":200,"step":1},{"id":"GRAVITY_Y","kind":"number","label":"Gravity","value":1.2,"default":1.2,"min":0.5,"max":2.5,"step":0.1},{"id":"DIG_RADIUS","kind":"number","label":"Dig Brush Size","value":35,"default":35,"min":20,"max":60,"step":1}],"texts":[{"id":"GAME_TITLE","label":"Game Title","value":"Dig Sand","default":"Dig Sand","max_length":20},{"id":"LEVEL_TEXT","label":"Level Prefix","value":"LEVEL","default":"LEVEL","max_length":10},{"id":"WIN_TEXT","label":"Win Message","value":"LEVEL CLEARED!","default":"LEVEL CLEARED!","max_length":25},{"id":"BTN_RESET","label":"Reset Button","value":"RESET","default":"RESET","max_length":15},{"id":"BTN_PLAY_AGAIN","label":"Play Again Button","value":"PLAY AGAIN","default":"PLAY AGAIN","max_length":20},{"id":"BTN_POST","label":"Post My Play Button","value":"POST MY PLAY","default":"POST MY PLAY","max_length":20}],"images":[{"id":"SAND_DECO","label":"Sand Decoration","path":"./assets/media2_20260927020936_pzpo8p00.webp","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    (function () {
+      if (window.location.protocol !== 'file:') return;
+      var configText = document.getElementById('playable-inline-config').textContent;
+      var nativeFetch = window.fetch;
+      window.fetch = function (input) {
+        var url = typeof input === 'string' ? input : (input && input.url) || '';
+        if (/(^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: function () { return Promise.resolve(JSON.parse(configText)); },
+            text: function () { return Promise.resolve(configText); }
+          });
+        }
+        return nativeFetch.apply(window, arguments);
+      };
+    }());
+  </script>
+  <!-- playable-inline-config:end -->
+  <script src="./bundle.js?v=sand-obstacle-up-4"></script>
+</body>
+</html>

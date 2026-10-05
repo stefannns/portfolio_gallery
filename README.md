@@ -24,6 +24,7 @@ own in a Lark doc.
 | `/about` | the badge on its own |
 | `/doggystack`, `/sheepjump`, `/voiceescape`, `/zoostacker` | playable Phaser builds |
 | `/stattest` | mini-game test harness |
+| `/playablebatch1` | 61-game playable review library with a fixed portrait preview |
 
 ## Editing the gallery
 

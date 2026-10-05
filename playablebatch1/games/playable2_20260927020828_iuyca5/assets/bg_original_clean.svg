@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844">
+  <defs>
+    <linearGradient id="bamboo" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#6d3518"/>
+      <stop offset=".45" stop-color="#a9642e"/>
+      <stop offset="1" stop-color="#54260f"/>
+    </linearGradient>
+    <radialGradient id="paper" cx="48%" cy="42%" r="68%">
+      <stop stop-color="#ead8bf"/>
+      <stop offset=".72" stop-color="#d2b99d"/>
+      <stop offset="1" stop-color="#b59270"/>
+    </radialGradient>
+    <pattern id="weave" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+      <rect width="24" height="24" fill="none"/>
+      <path d="M0 3h24M0 15h24" stroke="#e2a75c" stroke-width="6" opacity=".2"/>
+      <path d="M0 9h24M0 21h24" stroke="#3f1b0d" stroke-width="4" opacity=".16"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#251006" flood-opacity=".75"/>
+    </filter>
+  </defs>
+  <rect width="390" height="844" fill="url(#bamboo)"/>
+  <rect width="390" height="844" fill="url(#weave)"/>
+  <ellipse cx="195" cy="455" rx="181" ry="368" fill="#4a210e" opacity=".45" filter="url(#shadow)"/>
+  <ellipse cx="195" cy="448" rx="173" ry="358" fill="url(#paper)" stroke="#c68a48" stroke-width="8"/>
+  <ellipse cx="195" cy="448" rx="158" ry="342" fill="none" stroke="#f2ddbc" stroke-width="2" opacity=".45"/>
+  <g opacity=".12" fill="#7c5a3d">
+    <circle cx="99" cy="188" r="42"/><circle cx="281" cy="302" r="54"/>
+    <circle cx="118" cy="514" r="64"/><circle cx="267" cy="650" r="51"/>
+  </g>
+</svg>

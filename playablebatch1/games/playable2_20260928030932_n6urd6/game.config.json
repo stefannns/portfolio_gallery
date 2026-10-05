@@ -1,0 +1,87 @@
+{
+  "tweaks": [
+    {
+      "id": "TIME_LIMIT",
+      "kind": "number",
+      "label": "Time Limit",
+      "value": 30,
+      "default": 30,
+      "min": 10,
+      "max": 60,
+      "step": 1
+    },
+    {
+      "id": "FISH_COUNT",
+      "kind": "number",
+      "label": "Fish Count",
+      "value": 24,
+      "default": 24,
+      "min": 5,
+      "max": 50,
+      "step": 1
+    },
+    {
+      "id": "FISH_SPEED",
+      "kind": "number",
+      "label": "Fish Speed",
+      "value": 0.16,
+      "default": 0.16,
+      "min": 0.05,
+      "max": 0.4,
+      "step": 0.01
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "FISHING NET SLICE",
+      "default": "FISHING NET SLICE",
+      "max_length": 30
+    },
+    {
+      "id": "BTN_START",
+      "label": "Start Button",
+      "value": "START",
+      "default": "START",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "PLAY AGAIN",
+      "default": "PLAY AGAIN",
+      "max_length": 20
+    },
+    {
+      "id": "LBL_SCORE",
+      "label": "Score Label",
+      "value": "SCORE",
+      "default": "SCORE",
+      "max_length": 15
+    },
+    {
+      "id": "LBL_TIME",
+      "label": "Time Label",
+      "value": "TIME",
+      "default": "TIME",
+      "max_length": 15
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Background Image",
+      "path": "./assets/bg_main.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

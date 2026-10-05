@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>New Instrument</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #020306; -webkit-tap-highlight-color: transparent; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-config-inline" type="application/json">{
+  "tweaks": [
+    {
+      "id": "VOLUME",
+      "kind": "number",
+      "label": "Master Volume (dB)",
+      "value": -20,
+      "default": -20,
+      "min": -36,
+      "max": -8,
+      "step": 1
+    },
+    {
+      "id": "MIN_FREQUENCY",
+      "kind": "number",
+      "label": "Shortest String Frequency",
+      "value": 110,
+      "default": 110,
+      "min": 60,
+      "max": 240,
+      "step": 5
+    },
+    {
+      "id": "MAX_FREQUENCY",
+      "kind": "number",
+      "label": "Longest String Frequency",
+      "value": 760,
+      "default": 760,
+      "min": 420,
+      "max": 1200,
+      "step": 10
+    },
+    {
+      "id": "WAVE_HEIGHT",
+      "kind": "number",
+      "label": "Wave Height",
+      "value": 22,
+      "default": 22,
+      "min": 8,
+      "max": 42,
+      "step": 2
+    },
+    {
+      "id": "MAX_STRINGS",
+      "kind": "number",
+      "label": "Maximum Strings",
+      "value": 8,
+      "default": 8,
+      "min": 3,
+      "max": 12,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "TEXT_PROMPT",
+      "label": "Interaction Prompt",
+      "value": "DRAG BETWEEN TWO POINTS",
+      "default": "DRAG BETWEEN TWO POINTS",
+      "max_length": 36
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99279771737181559",
+    "version_id": "99279771737000613",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}</script>
+  <script>
+    if (location.protocol === "file:") {
+      const config = document.getElementById("playable-config-inline").textContent;
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = function(input, options) {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url && /(?:^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve(new Response(config, {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return originalFetch(input, options);
+      };
+    }
+  </script>
+  <script src="./bundle.js"></script>
+</body>
+</html>
+

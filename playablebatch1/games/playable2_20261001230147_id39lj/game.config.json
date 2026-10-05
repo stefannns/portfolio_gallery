@@ -1,0 +1,61 @@
+{
+  "tweaks": [
+    {
+      "id": "AURORA_GLOW",
+      "kind": "number",
+      "label": "Aurora Glow Intensity",
+      "value": 46,
+      "default": 46,
+      "min": 10,
+      "max": 60,
+      "step": 1
+    },
+    {
+      "id": "WIND_SPEED",
+      "kind": "number",
+      "label": "Wind Speed",
+      "value": 0.05,
+      "default": 0.05,
+      "min": 0.01,
+      "max": 0.15,
+      "step": 0.01
+    },
+    {
+      "id": "BUOYANCY",
+      "kind": "number",
+      "label": "Aurora Buoyancy",
+      "value": 0.05,
+      "default": 0.05,
+      "min": 0.01,
+      "max": 0.2,
+      "step": 0.01
+    }
+  ],
+  "texts": [
+    {
+      "id": "HINT_TEXT",
+      "label": "Interaction Hint",
+      "value": "Touch to shape the aurora",
+      "default": "Touch to shape the aurora",
+      "max_length": 30
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Arctic Background",
+      "path": "./assets/bg_arctic.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99279624970128997",
+    "version_id": "99279624970050078",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "image_expression",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

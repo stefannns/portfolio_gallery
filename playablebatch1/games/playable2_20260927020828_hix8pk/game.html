@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <link rel="stylesheet" href="./bundle.css" />
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    .pad {
+      width: 112px !important;
+      height: 112px !important;
+      translate: 0 44px;
+      filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.7));
+    }
+    .hud-panel, .top-btn { top: max(40px, calc(env(safe-area-inset-top, 0px) + 16px)) !important; }
+    .tip-text { bottom: max(40px, calc(env(safe-area-inset-bottom, 0px) + 16px)) !important; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <!-- playable-inline-config:start -->
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"GRAVITY","kind":"number","label":"Gravity","value":0.002,"default":0.002,"min":0.001,"max":0.005,"step":0.0001},{"id":"BOUNCE_SPEED","kind":"number","label":"Bounce Speed","value":0.8,"default":0.8,"min":0.5,"max":1.5,"step":0.1},{"id":"SCORE_PAD","kind":"number","label":"Pad Score Bonus","value":10,"default":10,"min":0,"max":100,"step":5},{"id":"SCORE_BONUS","kind":"number","label":"Ring Score Bonus","value":100,"default":100,"min":10,"max":500,"step":10}],"texts":[{"id":"SCORE_LABEL","label":"Score Label","value":"CASH","default":"CASH","max_length":10},{"id":"TOP_BTN","label":"Top Button text","value":"Top","default":"Top","max_length":8},{"id":"TIP_TEXT","label":"Bottom Tip Text","value":"TAP TO PLACE BOUNCE PAD","default":"TAP TO PLACE BOUNCE PAD","max_length":30},{"id":"LB_TITLE","label":"Leaderboard Title","value":"LEADERBOARD","default":"LEADERBOARD","max_length":15}],"images":[{"id":"IMG_PAD","label":"Bounce Pad","path":"./assets/pad.svg","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    (function () {
+      if (window.location.protocol !== 'file:') return;
+      var configText = document.getElementById('playable-inline-config').textContent;
+      var nativeFetch = window.fetch;
+      window.fetch = function (input) {
+        var url = typeof input === 'string' ? input : (input && input.url) || '';
+        if (/(^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: function () { return Promise.resolve(JSON.parse(configText)); },
+            text: function () { return Promise.resolve(configText); }
+          });
+        }
+        return nativeFetch.apply(window, arguments);
+      };
+    }());
+  </script>
+  <!-- playable-inline-config:end -->
+  <script src="./bundle.js?v=20260927-3"></script>
+</body>
+</html>

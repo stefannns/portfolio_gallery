@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <link rel="stylesheet" href="./bundle.css" />
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    .screen-container { padding: 40px 25px !important; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <!-- playable-inline-config:start -->
+  <script id="playable-inline-config" type="application/json">{"tweaks":[],"texts":[{"id":"GAME_TITLE","label":"Game Title","value":"are you dumb","default":"are you dumb","max_length":30},{"id":"START_BTN","label":"Start Button","value":"Start Test","default":"Start Test","max_length":15},{"id":"HUD_QUESTION","label":"HUD Question Label","value":"Question","default":"Question","max_length":15},{"id":"HUD_SCORE","label":"HUD Score Label","value":"Score","default":"Score","max_length":10},{"id":"Q1_TEXT","label":"Q1 Text","value":"Some months have 31 days, others have 30 days. How many have 28 days?","default":"Some months have 31 days, others have 30 days. How many have 28 days?","max_length":150},{"id":"Q1_O0","label":"Q1 Option 1","value":"1","default":"1","max_length":30},{"id":"Q1_O1","label":"Q1 Option 2","value":"6","default":"6","max_length":30},{"id":"Q1_O2","label":"Q1 Option 3","value":"12","default":"12","max_length":30},{"id":"Q1_O3","label":"Q1 Option 4","value":"Depends on leap year","default":"Depends on leap year","max_length":30},{"id":"Q1_A","label":"Q1 Correct Index (0-3)","value":"2","default":"2","max_length":1},{"id":"Q1_EXP","label":"Q1 Explanation","value":"All 12 months have at least 28 days!","default":"All 12 months have at least 28 days!","max_length":100},{"id":"Q2_TEXT","label":"Q2 Text","value":"What has a head and a tail, but no body?","default":"What has a head and a tail, but no body?","max_length":150},{"id":"Q2_O0","label":"Q2 Option 1","value":"A snake","default":"A snake","max_length":30},{"id":"Q2_O1","label":"Q2 Option 2","value":"A coin","default":"A coin","max_length":30},{"id":"Q2_O2","label":"Q2 Option 3","value":"A comet","default":"A comet","max_length":30},{"id":"Q2_O3","label":"Q2 Option 4","value":"A river","default":"A river","max_length":30},{"id":"Q2_A","label":"Q2 Correct Index (0-3)","value":"1","default":"1","max_length":1},{"id":"Q2_EXP","label":"Q2 Explanation","value":"A coin has a 'heads' side and a 'tails' side.","default":"A coin has a 'heads' side and a 'tails' side.","max_length":100},{"id":"Q3_TEXT","label":"Q3 Text","value":"If you are running in a race and you pass the person in second place, what place are you in?","default":"If you are running in a race and you pass the person in second place, what place are you in?","max_length":150},{"id":"Q3_O0","label":"Q3 Option 1","value":"First place","default":"First place","max_length":30},{"id":"Q3_O1","label":"Q3 Option 2","value":"Second place","default":"Second place","max_length":30},{"id":"Q3_O2","label":"Q3 Option 3","value":"Third place","default":"Third place","max_length":30},{"id":"Q3_O3","label":"Q3 Option 4","value":"Last place","default":"Last place","max_length":30},{"id":"Q3_A","label":"Q3 Correct Index (0-3)","value":"1","default":"1","max_length":1},{"id":"Q3_EXP","label":"Q3 Explanation","value":"You took their spot, so now you are in second place.","default":"You took their spot, so now you are in second place.","max_length":100},{"id":"Q4_TEXT","label":"Q4 Text","value":"What has keys but can't open locks?","default":"What has keys but can't open locks?","max_length":150},{"id":"Q4_O0","label":"Q4 Option 1","value":"A piano","default":"A piano","max_length":30},{"id":"Q4_O1","label":"Q4 Option 2","value":"A treasure chest","default":"A treasure chest","max_length":30},{"id":"Q4_O2","label":"Q4 Option 3","value":"A map","default":"A map","max_length":30},{"id":"Q4_O3","label":"Q4 Option 4","value":"A door","default":"A door","max_length":30},{"id":"Q4_A","label":"Q4 Correct Index (0-3)","value":"0","default":"0","max_length":1},{"id":"Q4_EXP","label":"Q4 Explanation","value":"A piano has musical keys, but no physical locks.","default":"A piano has musical keys, but no physical locks.","max_length":100},{"id":"FB_CORRECT","label":"Feedback Correct Text","value":"Correct!","default":"Correct!","max_length":15},{"id":"FB_WRONG","label":"Feedback Wrong Text","value":"Wrong!","default":"Wrong!","max_length":15},{"id":"BTN_NEXT","label":"Next Button","value":"Next","default":"Next","max_length":10},{"id":"RES_TITLE","label":"Result Title","value":"Test Complete!","default":"Test Complete!","max_length":25},{"id":"RES_PERFECT","label":"Result Perfect Comment","value":"Wow, you're actually smart!","default":"Wow, you're actually smart!","max_length":50},{"id":"RES_NORMAL","label":"Result Normal Comment","value":"Well... at least you tried.","default":"Well... at least you tried.","max_length":50},{"id":"RESTART_BTN","label":"Restart Button","value":"Restart Test","default":"Restart Test","max_length":20},{"id":"POST_BTN","label":"Post My Play Button","value":"Post My Play","default":"Post My Play","max_length":20}],"images":[],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    (function () {
+      if (window.location.protocol !== 'file:') return;
+      var configText = document.getElementById('playable-inline-config').textContent;
+      var nativeFetch = window.fetch;
+      window.fetch = function (input) {
+        var url = typeof input === 'string' ? input : (input && input.url) || '';
+        if (/(^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: function () { return Promise.resolve(JSON.parse(configText)); },
+            text: function () { return Promise.resolve(configText); }
+          });
+        }
+        return nativeFetch.apply(window, arguments);
+      };
+    }());
+  </script>
+  <!-- playable-inline-config:end -->
+  <script src="./bundle.js"></script>
+</body>
+</html>
