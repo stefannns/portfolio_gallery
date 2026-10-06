@@ -32,7 +32,7 @@
     {
       "id": "SUBTITLE",
       "label": "Subtitle",
-      "value": "Tap the falling cube!",
+      "value": "Tap empty space to add cubes.",
       "default": "Tap the falling cube!",
       "max_length": 40
     }

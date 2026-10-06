@@ -4,8 +4,11 @@
   var root = document.getElementById("root");
   var heat = 50;
   var fed = 0;
-  var drag = null;
+  var extreme = null;
+  var lastFood = "chili";
   var reactionTimer = 0;
+  var audio = null;
+  var voices = [];
 
   function foodSvg(kind, size) {
     var width = Math.round(size * 0.78);
@@ -27,134 +30,194 @@
   function stickmanSvg() {
     return '<svg viewBox="0 0 180 270" class="stickman" aria-label="Smiling stickman">' +
       '<g fill="none" stroke="#222" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round">' +
-      '<circle cx="90" cy="36" r="29" fill="#fbfaf4"/>' +
-      '<path d="M90 65 90 155M75 88 68 165 109 165 104 88M74 94 50 151M104 94 130 151M80 165 73 252M102 165 108 252M73 252q-14 6-25 4M108 252q14 6 25 4"/>' +
-      '<ellipse cx="48" cy="156" rx="5" ry="9"/><ellipse cx="132" cy="156" rx="5" ry="9"/>' +
+      '<path d="M90 7c39-1 40 58 1 58-38 1-40-57-1-58Z" fill="#fbfaf4"/>' +
+      '<path class="neck" d="M90 65 90 78"/>' +
+      '<path class="torso" d="M90 78C82 78 77 86 75 96L70 152Q70 172 82 172L98 172Q110 172 110 152L105 96C103 86 98 78 90 78Z" fill="#fbfaf4"/>' +
+      '<path class="arms" d="M75 96Q60 117 48 151M105 96Q120 117 132 151"/>' +
+      '<ellipse cx="48" cy="160" rx="5" ry="9"/><ellipse cx="132" cy="160" rx="5" ry="9"/>' +
+      '<path class="legs" d="M82 172C81 202 79 230 74 249M98 172C99 202 103 230 108 249"/>' +
+      '<path class="feet" d="M74 249Q60 249 48 257Q64 262 74 253ZM108 249Q124 249 134 257Q118 262 108 253Z" fill="#fbfaf4"/>' +
       '<path class="mouth" d="M80 48q10 12 20 0"/>' +
-      '</g><circle cx="80" cy="31" r="3.4"/><circle cx="100" cy="31" r="3.4"/></svg>';
+      '</g><circle cx="80" cy="31" r="3.4"/><circle cx="100" cy="31" r="3.4"/>' +
+      '<g class="cheeks" fill="#e7897c" opacity="0"><ellipse cx="72" cy="43" rx="7" ry="4"/><ellipse cx="108" cy="43" rx="7" ry="4"/></g></svg>';
+  }
+
+  function weatherSvg() {
+    var flakes = [[46,58],[235,84],[53,145],[251,161],[37,230],[245,267],[75,314],[224,346],[110,42],[192,51],[31,302],[262,322],[104,370],[187,375]];
+    var flames = [[40,235,-12],[225,223,13],[69,139,-8],[208,128,11],[62,317,-10],[216,312,10]];
+    return '<svg class="weather" viewBox="0 0 300 400" aria-hidden="true">' +
+      '<g class="cold-weather" fill="none" stroke="#367fa6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+      flakes.map(function (flake, index) {
+        return '<g transform="translate(' + flake[0] + ' ' + flake[1] + ')"><g class="snowflake" style="--delay:' + (-index * .37) + 's">' +
+          '<path d="M-1-13 1 13M-12-7 12 7M-11 8 11-8M-5-10 0-6 5-10M-5 10 0 6 5 10M-11-1-6-3-7-9M11 1 6 3 7 9M-10 3-5 4-5 10M10-3 5-4 5-10"/>' +
+          '</g></g>';
+      }).join("") + '</g><g class="hot-weather" stroke-linecap="round" stroke-linejoin="round">' +
+      flames.map(function (flame, index) {
+        return '<g transform="translate(' + flame[0] + ' ' + flame[1] + ') rotate(' + flame[2] + ')"><g class="flame" style="--delay:' + (-index * .31) + 's">' +
+          '<path d="M2 35C-20 26-19 9-7-7-4 1 2 0 1-8 0-21 11-32 15-37 12-13 35-2 26 20 22 32 13 38 2 35Z" fill="#f6a153" stroke="#9c4935" stroke-width="2.4"/>' +
+          '<path d="M7 29C-5 20 1 8 7 2 8 13 17 11 17 21 16 27 13 31 7 29Z" fill="#ffe5a1" stroke="#cf7643" stroke-width="1.7"/>' +
+          '<path d="M-17 32-23 27M28-13 33-20" fill="none" stroke="#bb6740" stroke-width="2"/>' +
+          '</g></g>';
+      }).join("") +
+      '<path class="fire-breath" d="M178 82c12-8 20-3 29-12l-4 12 23-2-14 10 21 10-27-2 5 10c-15-7-26-5-34-14" fill="#ffd17c" stroke="#ad5934" stroke-width="2.4"/>' +
+      '<g class="embers" fill="#e58b45" stroke="#ac5035" stroke-width="1.5">' +
+      [[57,260],[229,244],[86,157],[210,151],[99,310],[204,308]].map(function (point,index) {
+        return '<g transform="translate(' + point[0] + ' ' + point[1] + ')"><path class="ember" style="--delay:' + (-index*.28) + 's" d="M0-5 4 0 0 6-3 0Z"/></g>';
+      }).join("") + '</g></g>' +
+      '<g class="cold-weather frost-streaks" fill="none" stroke="#508bad" stroke-width="2.2" stroke-linecap="round"><path d="M86 73 78 63M95 66 93 51M207 68 213 54M218 79 234 74M49 195 35 183M246 202 262 190M106 292 91 305M199 295 211 306"/></g></svg>';
+  }
+
+  function impactSvg() {
+    return '<svg class="tap-impact" viewBox="0 0 300 400" aria-hidden="true">' +
+      '<g class="impact-lines" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">' +
+      '<path d="M73 72 91 85M62 98 82 102M221 71 204 84M237 98 216 103M71 137 88 126M228 136 211 126M123 54 128 72M177 53 172 71"/></g>' +
+      '<g class="impact-dots" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">' +
+      '<path d="M64 161 73 166M230 163 238 157M88 45 92 53M211 43 207 51M108 157 113 149M191 160 186 151"/>' +
+      '</g></svg>';
   }
 
   function render() {
     root.innerHTML = [
       '<main class="temperature-game">',
+      '<header>',
       '<div class="temperature-track" role="meter" aria-label="Stickman temperature" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">',
       '<span class="cold-label">COLD</span><span class="hot-label">HOT</span><div class="temperature-marker"></div>',
       '</div>',
       '<h1>Spicy Stickman</h1>',
-      '<div class="reaction" aria-live="polite">Feed him! ↓</div>',
-      stickmanSvg(),
+      '</header>',
+      '<div class="speech-region">',
+      '<div class="reaction" role="status" aria-live="polite">Tap a treat to feed him!</div>',
+      '<section class="recovery-bubble" hidden aria-label="Help the stickman">',
+      '<p class="bubble-message" aria-live="polite"></p>',
+      '<div class="bubble-options"><button type="button" class="help-button"></button></div>',
+      '</section></div>',
+      '<div class="character-stage"><div class="scene-motion"><div class="stage-wash" aria-hidden="true"></div><div class="person">' + weatherSvg() + stickmanSvg() + impactSvg() + '</div></div></div>',
       '<div class="food-controls">',
-      '<button class="food-button ice-button" type="button" data-food="ice" aria-label="Drag ice cream to feed">' + foodSvg("ice", 92) + '<span>COOL</span></button>',
-      '<button class="food-button chili-button" type="button" data-food="chili" aria-label="Drag chili pepper to feed">' + foodSvg("chili", 92) + '<span>HEAT</span></button>',
+      '<button class="food-button ice-button" type="button" data-food="ice" aria-label="Tap to feed ice cream">' + foodSvg("ice", 82) + '<span>ICE CREAM</span></button>',
+      '<div class="reset-slot"><button class="reset-button" type="button" hidden>Reset</button></div>',
+      '<button class="food-button chili-button" type="button" data-food="chili" aria-label="Tap to feed chili">' + foodSvg("chili", 82) + '<span>CHILI</span></button>',
       '</div>',
-      '<button class="reset-button" type="button" hidden>Reset</button>',
-      '<div class="drag-food" aria-hidden="true"></div>',
       '</main>'
     ].join("");
 
     root.querySelectorAll(".food-button").forEach(function (button) {
-      button.addEventListener("pointerdown", startDrag);
+      button.addEventListener("click", function () { feed(button.dataset.food); });
     });
     root.querySelector(".reset-button").addEventListener("click", reset);
-    root.addEventListener("pointermove", moveDrag);
-    root.addEventListener("pointerup", endDrag);
-    root.addEventListener("pointercancel", cancelDrag);
+    root.querySelector(".help-button").addEventListener("click", reset);
+    root.querySelector(".scene-motion").addEventListener("animationend", function (event) {
+      if (event.target !== event.currentTarget) return;
+      event.currentTarget.classList.remove("tap-chili", "tap-ice");
+      event.currentTarget.style.animation = "";
+    });
     updateTemperature();
   }
 
-  function positionFromEvent(event) {
-    var bounds = root.getBoundingClientRect();
-    return {
-      x: event.clientX - bounds.left,
-      y: event.clientY - bounds.top,
-      width: bounds.width,
-      height: bounds.height
-    };
+  function shakeScene(kind) {
+    var scene = root.querySelector(".scene-motion");
+    scene.classList.remove("tap-chili", "tap-ice");
+    scene.style.animation = "none";
+    scene.style.setProperty("--shake", (heat === 100 || heat === 0 ? 10 : 5 + Math.abs(heat - 50) * .06) + "px");
+    void scene.offsetWidth;
+    scene.classList.add("tap-" + kind);
+    scene.style.animation = "";
   }
 
-  function startDrag(event) {
-    event.preventDefault();
-    var button = event.currentTarget;
-    var point = positionFromEvent(event);
-    drag = { kind: button.dataset.food, pointerId: event.pointerId, source: button };
-    button.setPointerCapture(event.pointerId);
-    button.classList.add("food-dragging");
-    var ghost = root.querySelector(".drag-food");
-    ghost.innerHTML = foodSvg(drag.kind, 92);
-    ghost.classList.add("drag-visible");
-    moveGhost(point.x, point.y);
-  }
-
-  function moveDrag(event) {
-    if (!drag || drag.pointerId !== event.pointerId) return;
-    event.preventDefault();
-    var point = positionFromEvent(event);
-    moveGhost(point.x, point.y);
-  }
-
-  function moveGhost(x, y) {
-    var ghost = root.querySelector(".drag-food");
-    ghost.style.left = x + "px";
-    ghost.style.top = y + "px";
-  }
-
-  function finishDrag() {
-    if (!drag) return;
-    drag.source.classList.remove("food-dragging");
-    root.querySelector(".drag-food").classList.remove("drag-visible");
-    drag = null;
-  }
-
-  function endDrag(event) {
-    if (!drag || drag.pointerId !== event.pointerId) return;
-    var point = positionFromEvent(event);
-    var hitsMouth = Math.abs(point.x - point.width / 2) < Math.max(50, point.width * 0.17) &&
-      Math.abs(point.y - point.height * 0.39) < Math.max(65, point.height * 0.11);
-    var kind = drag.kind;
-    if (drag.source.hasPointerCapture(event.pointerId)) drag.source.releasePointerCapture(event.pointerId);
-    finishDrag();
-    if (hitsMouth) feed(kind);
-  }
-
-  function cancelDrag(event) {
-    if (!drag || drag.pointerId !== event.pointerId) return;
-    finishDrag();
+  function sound(kind) {
+    try {
+      var Constructor = window.AudioContext || window.webkitAudioContext;
+      if (!Constructor) return;
+      if (!audio) audio = new Constructor();
+      if (audio.state === "suspended") audio.resume().catch(function () {});
+      while (voices.length >= 4) voices.shift().stop();
+      var oscillator = audio.createOscillator(), gain = audio.createGain(), now = audio.currentTime;
+      var frequency = kind === "hot" ? 210 : kind === "cold" ? 540 : kind === "reset" ? 440 : kind === "chili" ? 330 : 620;
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(frequency, now);
+      oscillator.frequency.exponentialRampToValueAtTime(kind === "hot" ? 110 : kind === "cold" ? 260 : frequency * 1.3, now + .2);
+      gain.gain.setValueAtTime(.001, now);
+      gain.gain.linearRampToValueAtTime(.055, now + .012);
+      gain.gain.exponentialRampToValueAtTime(.001, now + .25);
+      oscillator.connect(gain); gain.connect(audio.destination);
+      voices.push(oscillator);
+      oscillator.onended = function () { oscillator.disconnect(); gain.disconnect(); voices = voices.filter(function (voice) { return voice !== oscillator; }); };
+      oscillator.start(now); oscillator.stop(now + .27);
+    } catch (_) { /* Feeding remains immediate when browser audio is unavailable. */ }
   }
 
   function feed(kind) {
+    if (extreme || (kind !== "chili" && kind !== "ice")) return;
+    lastFood = kind;
     heat = Math.max(0, Math.min(100, heat + (kind === "chili" ? 17 : -17)));
     fed += 1;
     updateTemperature();
-    showReaction(kind === "chili" ? "Spicy! 🔥" : "So cool! ❄️", kind);
+    shakeScene(kind);
+    if (heat === 100 || heat === 0) {
+      showRecovery(heat === 100 ? "hot" : "cold");
+    } else {
+      showReaction(kind === "chili" ? "Spicy!" : "Brrr... so cold!", kind);
+      sound(kind);
+    }
     root.querySelector(".reset-button").hidden = false;
-    if (navigator.vibrate) navigator.vibrate(20);
+  }
+
+  function showRecovery(kind) {
+    extreme = kind;
+    clearTimeout(reactionTimer);
+    reactionTimer = 0;
+    var game = root.querySelector(".temperature-game"), bubble = root.querySelector(".recovery-bubble");
+    game.classList.add("is-" + kind);
+    root.querySelector(".reaction").hidden = true;
+    root.querySelector(".bubble-message").textContent = kind === "hot" ? "Too spicy! Can I have some milk?" : "I'm freezing! Can you warm me up?";
+    root.querySelector(".help-button").textContent = kind === "hot" ? "Milk, please!" : "Warm me up!";
+    bubble.hidden = false;
+    root.querySelectorAll(".food-button").forEach(function (button) { button.disabled = true; });
+    sound(kind);
+    try { if (navigator.vibrate) navigator.vibrate([30, 40, 30]); } catch (_) {}
+    root.querySelector(".help-button").focus({ preventScroll: true });
   }
 
   function updateTemperature() {
     var meter = root.querySelector(".temperature-track");
     meter.setAttribute("aria-valuenow", String(heat));
-    root.querySelector(".temperature-marker").style.left = "calc(" + heat + "% - 4px)";
+    root.querySelector(".temperature-marker").style.left = "calc(" + heat + "% - " + (heat * .08) + "px)";
     root.querySelector(".stickman").style.filter = heat < 34 ? "drop-shadow(0 0 10px #83cdf0)" : heat > 66 ? "drop-shadow(0 0 10px #e76e75)" : "none";
+    root.querySelector(".mouth").setAttribute("d", heat === 100 ? "M79 48q11-10 22 0" : heat === 0 ? "M80 49l5-3 5 3 5-3 5 3" : "M80 48q10 12 20 0");
   }
 
   function showReaction(message, kind) {
     var reaction = root.querySelector(".reaction");
     reaction.textContent = message;
     reaction.className = "reaction reaction-pop " + kind;
+    // Restart the same feedback animation on consecutive taps.
+    reaction.style.animation = "none";
+    void reaction.offsetWidth;
+    reaction.style.animation = "";
     clearTimeout(reactionTimer);
     reactionTimer = window.setTimeout(function () {
-      reaction.textContent = "Feed him! ↓";
+      reaction.textContent = "Tap a treat to feed him!";
       reaction.className = "reaction";
     }, 1100);
   }
 
   function reset() {
+    clearTimeout(reactionTimer);
+    reactionTimer = 0;
     heat = 50;
     fed = 0;
+    extreme = null;
+    root.querySelector(".temperature-game").classList.remove("is-hot", "is-cold");
+    root.querySelector(".scene-motion").classList.remove("tap-chili", "tap-ice");
+    root.querySelector(".scene-motion").style.animation = "none";
+    root.querySelector(".recovery-bubble").hidden = true;
+    root.querySelectorAll(".food-button").forEach(function (button) { button.disabled = false; });
     updateTemperature();
-    root.querySelector(".reaction").textContent = "Feed him! ↓";
+    root.querySelector(".reaction").hidden = false;
+    root.querySelector(".reaction").textContent = "Tap a treat to feed him!";
     root.querySelector(".reaction").className = "reaction";
     root.querySelector(".reset-button").hidden = true;
+    sound("reset");
+    root.querySelector('[data-food="' + lastFood + '"]').focus({ preventScroll: true });
   }
 
   function installStyles() {
@@ -162,30 +225,35 @@
     style.textContent = [
       "*{box-sizing:border-box}",
       "html,body,#root{width:100%;height:100%;margin:0;overflow:hidden}",
-      "body{background:#f9f6ec;color:#1d2731;font-family:Arial,system-ui,sans-serif;overscroll-behavior:none}",
-      "button{font:inherit}",
-      ".temperature-game{position:relative;width:100%;max-width:520px;height:100%;margin:0 auto;overflow:hidden;background:#f9f6ec;touch-action:none;user-select:none}",
-      ".temperature-track{position:absolute;top:max(40px,calc(env(safe-area-inset-top) + 20px));left:25px;right:25px;height:18px;border:2px solid #1d2731;border-radius:10px;background:linear-gradient(90deg,#9bd4fa,#f3eee8,#e8899c);box-shadow:0 3px 8px #0002}",
-      ".temperature-marker{position:absolute;top:-2px;bottom:-2px;width:8px;border-radius:3px;background:#202020;box-shadow:0 0 0 2px #fff8}",
-      ".cold-label,.hot-label{position:absolute;top:22px;font-size:9px;font-weight:900;letter-spacing:1.2px}.cold-label{left:2px;color:#3888b5}.hot-label{right:2px;color:#b63d52}",
-      ".temperature-game h1{position:absolute;top:max(68px,calc(env(safe-area-inset-top) + 48px));left:25px;right:25px;margin:0;text-align:center;font-size:clamp(27px,7vw,36px);line-height:1.05}",
-      ".reaction{position:absolute;top:max(113px,calc(env(safe-area-inset-top) + 93px));left:25px;right:25px;min-height:27px;text-align:center;font-size:19px;font-weight:800}",
-      ".reaction.ice{color:#3e91bd}.reaction.chili{color:#c43e55}.reaction-pop{animation:reaction-pop .3s ease}",
+      "body{background:#f9f6ec;color:#1d2731;font-family:'Chalkboard SE','Comic Sans MS',system-ui,sans-serif;overscroll-behavior:none}",
+      "button{font:inherit}button:focus-visible{outline:3px solid #1d2731;outline-offset:3px}[hidden]{display:none!important}",
+      ".temperature-game{position:relative;width:100%;max-width:520px;height:100%;margin:0 auto;padding:calc(40px + env(safe-area-inset-top)) calc(25px + env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) calc(25px + env(safe-area-inset-left));display:flex;flex-direction:column;gap:10px;overflow:hidden;background:#f9f6ec;touch-action:manipulation;user-select:none}",
+      "header{flex:none}.temperature-track{position:relative;height:18px;margin-bottom:24px;border:2px solid #1d2731;border-radius:10px;background:linear-gradient(90deg,#9bd4fa,#f3eee8,#e8899c);box-shadow:0 3px 8px #0002}",
+      ".temperature-marker{position:absolute;top:0;bottom:0;width:8px;border-radius:3px;background:#202020}",
+      ".cold-label,.hot-label{position:absolute;top:21px;font-size:12px;font-weight:700;line-height:1.2;letter-spacing:1px}.cold-label{left:2px;color:#22688b}.hot-label{right:2px;color:#a42e43}",
+      ".temperature-game h1{margin:0;text-align:center;font-size:clamp(23px,6vw,29px);line-height:1.15}",
+      ".speech-region{flex:none;min-height:112px;display:grid;place-items:center;padding-bottom:9px}.reaction{min-height:27px;text-align:center;font-size:18px;font-weight:700;line-height:1.35}",
+      ".reaction.ice{color:#22688b}.reaction.chili{color:#a42e43}.reaction-pop{animation:reaction-pop .25s ease}",
+      ".recovery-bubble{position:relative;width:100%;padding:10px 12px;background:#fffdf6;border:2px solid #34342e;border-radius:22px 18px 23px 16px;box-shadow:3px 3px 0 #34342e16}.recovery-bubble:after{content:'';position:absolute;width:14px;height:14px;bottom:-9px;left:50%;background:#fffdf6;border-right:2px solid #34342e;border-bottom:2px solid #34342e;transform:rotate(45deg)}",
+      ".bubble-message{margin:0 0 8px;text-align:center;font-size:16px;font-weight:700;line-height:1.3;overflow-wrap:anywhere}.bubble-options{display:flex;gap:10px}.bubble-options button{flex:1;min-width:0;min-height:48px;padding:7px 8px;border:2px solid #34342e;border-radius:12px 15px 11px 14px;background:#fff4de;color:#34342e;font-weight:700;font-size:15px;line-height:1.2;cursor:pointer}.bubble-options button:active{background:#e9dfc8}.is-hot .help-button{background:#fce2c6}.is-cold .help-button{background:#d8edf6}",
       "@keyframes reaction-pop{0%{transform:scale(.75);opacity:.2}100%{transform:scale(1);opacity:1}}",
-      ".stickman{position:absolute;width:min(48vw,190px);height:39%;left:50%;top:25%;transform:translateX(-50%);overflow:visible;transition:filter .25s ease}",
-      ".food-controls{position:absolute;left:25px;right:25px;bottom:max(46px,calc(env(safe-area-inset-bottom) + 26px));display:flex;align-items:flex-end;justify-content:space-between}",
-      ".food-button{width:104px;min-height:120px;padding:4px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;border:0;border-radius:18px;background:transparent;color:#34424b;font-weight:900;font-size:10px;letter-spacing:1px;cursor:grab;touch-action:none;transition:opacity .12s ease,background .12s ease}",
-      ".food-button:active{background:#fff8}.food-button:focus-visible{outline:3px solid #222;outline-offset:2px}.food-dragging{opacity:.35}",
-      ".reset-button{position:absolute;left:50%;bottom:max(40px,calc(env(safe-area-inset-bottom) + 20px));transform:translateX(-50%);min-width:88px;min-height:48px;padding:8px 15px;border:1px solid #c8cbd0;border-radius:12px;background:#fff;color:#333;font-weight:800;box-shadow:0 3px 10px #0001;cursor:pointer;touch-action:manipulation}",
-      ".reset-button:focus-visible{outline:3px solid #222;outline-offset:2px}",
-      ".drag-food{position:absolute;z-index:5;display:none;transform:translate(-50%,-55%);pointer-events:none;filter:drop-shadow(0 6px 6px #0004)}.drag-visible{display:block}",
-      "@media(max-width:360px){.food-button{width:88px}.reset-button{min-width:76px}}",
-      "@media(max-height:620px){.temperature-track{top:max(28px,calc(env(safe-area-inset-top) + 12px))}.temperature-game h1{top:max(54px,calc(env(safe-area-inset-top) + 38px))}.reaction{top:max(92px,calc(env(safe-area-inset-top) + 76px))}.stickman{top:23%;height:38%}.food-controls{bottom:max(26px,calc(env(safe-area-inset-bottom) + 12px))}.food-button{min-height:102px}.food-button svg{height:78px}.reset-button{bottom:max(28px,calc(env(safe-area-inset-bottom) + 12px))}}",
-      "@media(prefers-reduced-motion:reduce){.reaction-pop{animation:none}.stickman{transition:none}}"
+      ".character-stage{flex:1;min-height:0;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}.scene-motion{position:relative;width:100%;height:100%;padding:12px;display:flex;align-items:center;justify-content:center;--shake:6px}.scene-motion.tap-chili,.scene-motion.tap-ice{animation:stage-shake .55s ease-out}.person{position:relative;width:min(100%,260px);height:min(100%,340px);display:flex;justify-content:center;align-items:center}.stickman{position:relative;width:auto;max-width:100%;height:100%;overflow:visible;transition:filter .25s ease}.weather,.tap-impact{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.hot-weather,.cold-weather{opacity:0}.is-hot .hot-weather,.is-cold .cold-weather{opacity:1}.is-hot .stickman{color:#a84433;animation:hot-wobble .65s ease-in-out infinite alternate}.is-hot .stickman>g:first-child{stroke:currentColor}.is-hot .cheeks{opacity:.65}.is-cold .stickman>g:first-child{stroke:#386f92}.is-cold .stickman{animation:shiver .19s ease-in-out infinite alternate}.snowflake{animation:snow-drift 2.3s ease-in-out infinite alternate;animation-delay:var(--delay)}.flame{animation:flame-dance .8s ease-in-out infinite alternate;animation-delay:var(--delay);transform-origin:center bottom}.ember{animation:ember-rise 1.65s ease-out infinite;animation-delay:var(--delay)}.fire-breath{transform-origin:177px 90px;animation:fire-puff 1.1s ease-in-out infinite alternate}",
+      ".stage-wash{position:absolute;inset:12px;border-radius:44% 48% 40% 45%;pointer-events:none;opacity:0;transition:opacity .35s ease;background:radial-gradient(ellipse,#efb37d55,transparent 72%)}.is-hot .stage-wash{opacity:1}.is-cold .stage-wash{opacity:1;background:radial-gradient(ellipse,#91c9e25c,transparent 72%)}.tap-impact{opacity:0;color:#b55b35}.tap-ice .tap-impact{color:#387d9f}.tap-chili .tap-impact,.tap-ice .tap-impact{animation:impact-burst .55s ease-out}.impact-dots{transform-origin:150px 105px;animation:impact-scatter .55s ease-out}",
+      "@keyframes stage-shake{0%,100%{transform:translate(0,0) rotate(0)}12%{transform:translate(calc(var(--shake)*-1),-3px) rotate(-.6deg)}26%{transform:translate(var(--shake),2px) rotate(.6deg)}40%{transform:translate(calc(var(--shake)*-.75),-2px) rotate(-.4deg)}55%{transform:translate(calc(var(--shake)*.65),1px) rotate(.3deg)}70%{transform:translate(calc(var(--shake)*-.4),0)}85%{transform:translate(calc(var(--shake)*.2),0)}}",
+      "@keyframes impact-burst{0%{opacity:0;transform:scale(.86)}15%{opacity:.9}100%{opacity:0;transform:scale(1.18)}}@keyframes impact-scatter{from{transform:scale(.8)}to{transform:scale(1.25)}}@keyframes snow-drift{from{transform:translateY(-9px) rotate(-14deg)}to{transform:translateY(15px) rotate(18deg)}}@keyframes flame-dance{from{transform:scale(.95,1.17) rotate(-5deg)}to{transform:scale(1.18,.94) rotate(5deg)}}@keyframes shiver{from{transform:translateX(-3px) rotate(-.7deg)}to{transform:translateX(3px) rotate(.7deg)}}@keyframes hot-wobble{from{transform:rotate(-2deg) translateY(0)}to{transform:rotate(2deg) translateY(-2px)}}@keyframes ember-rise{0%{opacity:0;transform:translateY(4px)}20%{opacity:.8}100%{opacity:0;transform:translate(8px,-44px)}}@keyframes fire-puff{from{transform:scale(.9,1)}to{transform:scale(1.2,1.08)}}",
+      ".food-controls{flex:none;display:flex;align-items:center;justify-content:space-between;gap:8px}.food-button{flex:1;max-width:114px;min-width:0;min-height:106px;padding:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:0;border-radius:18px;background:transparent;color:#34424b;font-weight:700;font-size:12px;line-height:1.25;cursor:pointer;touch-action:manipulation;transition:background .12s ease}.food-button svg{max-width:100%;flex:none;pointer-events:none}.food-button:active{background:#fff8}.food-button:disabled{opacity:.4;cursor:default}",
+      ".reset-slot{flex:0 0 66px}.reset-button{width:100%;min-height:48px;padding:8px 4px;border:1.5px solid #737977;border-radius:12px 10px 13px 11px;background:#fffdf6;color:#34342e;font-weight:700;font-size:14px;box-shadow:0 3px 0 #0001;cursor:pointer;touch-action:manipulation}.reset-button:active{background:#ece5d7}",
+      "@media(max-height:620px){.temperature-game{gap:6px}.temperature-game h1{font-size:23px}.temperature-track{margin-bottom:21px}.speech-region{min-height:102px}.recovery-bubble{padding:8px 10px}.bubble-message{font-size:15px}.food-button{min-height:88px}.food-button svg{height:68px;width:auto}}",
+      "@media(prefers-reduced-motion:reduce){.reaction-pop,.scene-motion.tap-chili,.scene-motion.tap-ice,.is-cold .stickman,.is-hot .stickman,.snowflake,.flame,.ember,.fire-breath,.tap-impact,.impact-dots{animation:none}.stickman,.stage-wash{transition:none}.tap-chili .tap-impact,.tap-ice .tap-impact{opacity:.6}}"
     ].join("");
     document.head.appendChild(style);
   }
 
   installStyles();
   render();
+  window.addEventListener("pagehide", function () {
+    clearTimeout(reactionTimer);
+    voices.forEach(function (voice) { try { voice.stop(); } catch (_) {} });
+    if (audio) audio.close().catch(function () {});
+  });
 })();
