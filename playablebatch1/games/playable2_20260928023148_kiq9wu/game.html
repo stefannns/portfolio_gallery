@@ -5,9 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Playable</title>
   <style>
+    @font-face {
+      font-family: "Poppins Chase";
+      src: url("./assets/fonts/poppins/Poppins-Regular.woff2") format("woff2");
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Poppins Chase";
+      src: url("./assets/fonts/poppins/Poppins-Bold.woff2") format("woff2");
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+    }
     html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
     body { background: #050510; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
     #root { isolation: isolate; }
+    #root div, #root h1, #root h2, #root button {
+      font-family: "Poppins Chase", "Arial Narrow", Arial, sans-serif !important;
+    }
     canvas { touch-action: none; }
     button, input, select, textarea { touch-action: manipulation; }
   </style>

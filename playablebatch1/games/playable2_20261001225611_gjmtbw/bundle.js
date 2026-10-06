@@ -291,9 +291,10 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     .btn:disabled { opacity: 0.55; pointer-events: none; }
   `}),ny=["\u{1F436}","\u{1F431}","\u{1F42D}","\u{1F439}","\u{1F430}","\u{1F98A}","\u{1F43B}","\u{1F43C}","\u{1F428}","\u{1F42F}","\u{1F981}","\u{1F42E}","\u{1F437}","\u{1F438}","\u{1F435}","\u{1F414}","\u{1F427}","\u{1F426}","\u{1F424}","\u{1F986}","\u{1F985}","\u{1F989}","\u{1F987}","\u{1F43A}","\u{1F417}","\u{1F434}","\u{1F984}","\u{1F41D}","\u{1F41B}","\u{1F98B}","\u{1F40C}","\u{1F41E}","\u{1F41C}","\u{1F99F}","\u{1F997}","\u{1F577}","\u{1F982}","\u{1F422}","\u{1F40D}","\u{1F98E}","\u{1F996}","\u{1F995}","\u{1F419}","\u{1F991}","\u{1F990}","\u{1F99E}","\u{1F980}","\u{1F421}","\u{1F420}","\u{1F41F}","\u{1F42C}","\u{1F433}","\u{1F40B}","\u{1F988}","\u{1F40A}","\u{1F405}","\u{1F406}","\u{1F993}","\u{1F98D}","\u{1F9A7}","\u{1F418}","\u{1F99B}","\u{1F98F}","\u{1F42A}","\u{1F42B}","\u{1F992}","\u{1F998}","\u{1F403}","\u{1F402}","\u{1F404}","\u{1F40E}","\u{1F416}","\u{1F40F}","\u{1F411}","\u{1F999}","\u{1F410}","\u{1F98C}","\u{1F415}","\u{1F429}","\u{1F9AE}","\u{1F415}\u200D\u{1F9BA}","\u{1F408}","\u{1F408}\u200D\u2B1B","\u{1F413}","\u{1F983}","\u{1F99A}","\u{1F99C}","\u{1F9A2}","\u{1F9A9}","\u{1F54A}","\u{1F407}","\u{1F99D}","\u{1F9A8}","\u{1F9A1}","\u{1F9A6}","\u{1F9A5}","\u{1F401}","\u{1F400}","\u{1F43F}","\u{1F994}"],RE=t=>{let e=[...t];for(let r=e.length-1;r>0;r--){let n=Math.floor(Math.random()*(r+1));[e[r],e[n]]=[e[n],e[r]]}return e};function TV(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}function AV(){let t=typeof tt<"u"&&typeof tt.playableRecordingSubmission=="function",[e,r]=(0,Ke.useState)(!1);(0,Ke.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]);let n=(0,Ke.useCallback)(()=>{e||!t||(r(!0),tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] playableRecordingSubmission failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))},[e,t]);return{canSubmit:t,submitting:e,submitRecording:n}}function oy(t){try{typeof tt<"u"&&tt.vibrate&&tt.vibrate({style:t||"light"})}catch{}}var CV=()=>{
   const h=Ke.createElement;
+  const side=8,cells=side*side;
   const [cfg,setCfg]=(0,Ke.useState)({});
   const [round,setRound]=(0,Ke.useState)(0);
-  const [target,setTarget]=(0,Ke.useState)(()=>Math.floor(Math.random()*25));
+  const [target,setTarget]=(0,Ke.useState)(()=>Math.floor(Math.random()*cells));
   const [animal,setAnimal]=(0,Ke.useState)("🐘");
   const [taps,setTaps]=(0,Ke.useState)(0);
   const [opened,setOpened]=(0,Ke.useState)({});
@@ -307,25 +308,25 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     return()=>{live=false};
   },[]);
   const restart=()=>{
-    setRound(x=>x+1);setTarget(Math.floor(Math.random()*25));
+    setRound(x=>x+1);setTarget(Math.floor(Math.random()*cells));
     setAnimal(["🐘","🐵","🦁","🐼","🦊","🐸"][Math.floor(Math.random()*6)]);
     setTaps(0);setOpened({});setWon(false);
   };
   const choose=i=>{
     if(won||opened[i])return;
-    const dist=Math.abs(Math.floor(i/5)-Math.floor(target/5))+Math.abs(i%5-target%5);
+    const dist=Math.abs(Math.floor(i/side)-Math.floor(target/side))+Math.abs(i%side-target%side);
     const feedback=dist===0?animal:dist<=1?"🔥":dist<=2?"🌶️":dist<=4?"💜":"🥶";
     setOpened(old=>({...old,[i]:feedback}));setTaps(x=>x+1);
     if(dist===0){setWon(true);if(navigator.vibrate)navigator.vibrate(25)}
   };
-  const cellStyle={width:"100%",aspectRatio:"1",minHeight:44,border:"1px solid #eee5f2",background:"#c7b3d0",color:"#222",fontSize:"clamp(21px, 7vw, 29px)",display:"grid",placeItems:"center",cursor:"pointer",touchAction:"manipulation"};
-  return h("div",{style:{width:"100%",height:"100%",minHeight:0,background:"#bba3c5",color:"#111",fontFamily:"Arial, sans-serif",display:"flex",flexDirection:"column",alignItems:"center",padding:"max(42px, env(safe-area-inset-top)) 25px max(40px, env(safe-area-inset-bottom))",boxSizing:"border-box",overflow:"hidden"}},
+  const cellStyle={width:"100%",height:"100%",minWidth:0,minHeight:0,padding:0,boxSizing:"border-box",border:"1px solid #eee5f2",background:"#c7b3d0",color:"#222",fontSize:"clamp(16px, 4.5vw, 26px)",display:"grid",placeItems:"center",cursor:"pointer",touchAction:"manipulation"};
+  return h("div",{style:{width:"100%",height:"100%",minHeight:0,background:"#bba3c5",color:"#111",fontFamily:"Arial, sans-serif",display:"flex",flexDirection:"column",alignItems:"center",padding:"calc(42px + env(safe-area-inset-top)) calc(25px + env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) calc(25px + env(safe-area-inset-left))",boxSizing:"border-box",overflow:"hidden"}},
     h("h1",{style:{margin:"0 0 16px",fontSize:"clamp(22px, 6vw, 29px)",fontWeight:800,textAlign:"center"}},"Find the Animal"),
     h("div",{style:{width:"100%",maxWidth:390,background:"#d4c0d9",borderRadius:8,padding:"10px 6px",display:"flex",flexWrap:"wrap",justifyContent:"space-around",gap:4,fontSize:"clamp(10px, 2.75vw, 13px)",whiteSpace:"nowrap"}},
       h("span",null,"🔥 On fire!"),h("span",null,"🌶️ Hot"),h("span",null,"💜 Warm"),h("span",null,"🥶 Cold")),
-    h("div",{style:{flex:1,minHeight:0,display:"flex",alignItems:"center",justifyContent:"center",width:"100%"}},
-      h("div",{style:{width:"100%",maxWidth:"min(390px, 53vh)",display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:1,border:"1px solid #e3d7e9",boxShadow:"0 4px 12px #6c547052"}},
-        Array.from({length:25},(_,i)=>h("button",{key:round+"-"+i,type:"button",onClick:()=>choose(i),"aria-label":opened[i]?"Cell "+(i+1)+": "+(opened[i]===animal?"animal found":"clue "+opened[i]):"Check cell "+(i+1),style:{...cellStyle,background:opened[i]?"#dcc7e5":"#c7b3d0"}},opened[i]||"")))),
+    h("div",{style:{flex:1,minHeight:0,display:"flex",alignItems:"center",justifyContent:"center",width:"100%",containerType:"size"}},
+      h("div",{"aria-label":"8 by 8 animal search map",style:{width:"min(100%, 100cqh)",maxWidth:440,aspectRatio:"1",flexShrink:0,boxSizing:"border-box",display:"grid",gridTemplateColumns:`repeat(${side},minmax(0,1fr))`,gridTemplateRows:`repeat(${side},minmax(0,1fr))`,gap:1,border:"1px solid #e3d7e9",boxShadow:"0 4px 12px #6c547052"}},
+        Array.from({length:cells},(_,i)=>h("button",{key:round+"-"+i,type:"button",onClick:()=>choose(i),"aria-label":opened[i]?"Cell "+(i+1)+": "+(opened[i]===animal?"animal found":"clue "+opened[i]):"Check cell "+(i+1),style:{...cellStyle,background:opened[i]?"#dcc7e5":"#c7b3d0"}},opened[i]||"")))),
     h("div",{style:{fontSize:15,minHeight:24,textAlign:"center",marginTop:14}},won?"Found it in "+taps+" taps!":"Taps: "+taps),
     won&&h("button",{type:"button",onClick:restart,style:{minHeight:46,minWidth:140,marginTop:12,border:0,borderRadius:12,background:"#744e92",color:"white",fontSize:16,fontWeight:700,cursor:"pointer"}},"Play Again")
   );

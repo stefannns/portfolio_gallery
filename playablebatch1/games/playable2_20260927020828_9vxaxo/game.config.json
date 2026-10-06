@@ -91,7 +91,7 @@
     {
       "id": "BG_MAIN",
       "label": "Background Image",
-      "path": "./assets/bg_main.webp",
+      "path": "./assets/sky-background-v2.webp",
       "replaceable": true
     },
     {

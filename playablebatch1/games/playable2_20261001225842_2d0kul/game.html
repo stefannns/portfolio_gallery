@@ -106,7 +106,8 @@
       const backdropCtx = backdrop.getContext("2d");
       const TAU = Math.PI * 2;
       const CELL = 6;
-      const BRUSH_RADIUS = 88;
+      const BRUSH_RADIUS = 78;
+      const HEAT_DOTS = 5; // One controlled ball plus four mirrored balls.
       const COOL_PER_SECOND = 0.615;
       const heatColors = ["#4676bc", "#21abd2", "#f6e554", "#ffac2b", "#f66b50", "#eb308e"];
       let width = 0;
@@ -184,7 +185,7 @@
       }
 
       function rotatePoint(source, cx, cy, step) {
-        const angle = step * TAU / 6;
+        const angle = step * TAU / HEAT_DOTS;
         const dx = source.x - cx;
         const dy = source.y - cy;
         return {
@@ -222,7 +223,7 @@
           const source = from
             ? { x: from.x + (to.x - from.x) * amount, y: from.y + (to.y - from.y) * amount }
             : to;
-          for (let step = 0; step < 6; step++) {
+          for (let step = 0; step < HEAT_DOTS; step++) {
             const reflected = rotatePoint(source, cx, cy, step);
             depositAt(reflected.x, reflected.y);
           }
@@ -236,7 +237,7 @@
         const elapsed = lastFrame ? Math.min(8, (now - lastFrame) / 1000) : 0;
         lastFrame = now;
         if (activePointer !== null && point) {
-          for (let step = 0; step < 6; step++) {
+          for (let step = 0; step < HEAT_DOTS; step++) {
             const reflected = rotatePoint(point, width / 2, height / 2, step);
             depositAt(reflected.x, reflected.y);
           }
