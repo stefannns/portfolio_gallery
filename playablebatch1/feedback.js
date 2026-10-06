@@ -7,6 +7,8 @@
   const statuses = {needs_review: 'Needs review', fixed: 'Fixed', approved: 'Approved'};
   const PAGE_SIZE = 20, MAX_COMMENT = 2000;
   const drafts = new Map(), pending = new Set(), outcomes = new Map();
+  const counts = new Map(), countRequests = new Map();
+  let countListener = () => {}, countGames = [];
   let current = null, generation = 0, loaded = [], hasMore = false, available = true, reading = false, reviewerName = '';
 
   function el(tag, options = {}, ...children) {
@@ -87,8 +89,34 @@
       let data;
       try { data = text ? JSON.parse(text) : null; } catch { data = null; }
       if (!response.ok) throw Object.assign(new Error('Feedback request failed'), {status: response.status, code: data?.code});
+      if (options.method === 'HEAD') {
+        const total = response.headers.get('content-range')?.split('/')[1];
+        if (!/^\d+$/.test(total || '')) throw new Error('Missing feedback total');
+        return Number(total);
+      }
       return data;
     } finally { clearTimeout(timer); }
+  }
+  async function refreshCount(taskId, afterPending = false) {
+    if (countRequests.has(taskId)) {
+      await countRequests.get(taskId);
+      if (!afterPending) return;
+    }
+    const readingCount = (async () => {
+      try {
+        const total = await request({task_id: 'eq.' + taskId, select: 'id'}, {method: 'HEAD', headers: {Prefer: 'count=exact', Range: '0-0'}});
+        counts.set(taskId, total);
+      } catch { counts.set(taskId, 'error'); }
+      countListener(taskId);
+    })();
+    countRequests.set(taskId, readingCount);
+    try { await readingCount; } finally { if (countRequests.get(taskId) === readingCount) countRequests.delete(taskId); }
+  }
+  async function refreshCounts() {
+    const queue = [...countGames];
+    await Promise.all(Array.from({length: Math.min(4, queue.length)}, async () => {
+      while (queue.length) await refreshCount(queue.shift().taskId);
+    }));
   }
   function renderList() {
     list.replaceChildren();
@@ -118,6 +146,7 @@
       const incoming = rows.slice(0, PAGE_SIZE);
       loaded = append ? [...loaded, ...incoming.filter(row => !loaded.some(old => old.id === row.id))] : incoming;
       renderList(); message(loadMessage, loaded.length ? '' : 'No feedback yet. Be the first to leave a note.');
+      if (!append) refreshCount(game.taskId);
     } catch (error) {
       if (token !== generation) return;
       if ([401,403].includes(error.status) || ['PGRST205','42P01','PGRST204','42703'].includes(error.code)) available = false;
@@ -146,6 +175,7 @@
       await request({on_conflict: 'id'}, {method: 'POST', headers: {'Content-Type': 'application/json', Prefer: 'resolution=ignore-duplicates,return=minimal'}, body: JSON.stringify(draft.request)});
       draft.comment = ''; draft.request = null;
       outcomes.set(game.taskId, {text: 'Feedback posted. Everyone reviewing this link can see it.', tone: 'success'});
+      refreshCount(game.taskId, true);
       if (current?.taskId === game.taskId) { comment.value = ''; counter.textContent = '0 / 2,000'; generation++; reading = false; await load(); }
     } catch (error) {
       outcomes.set(game.taskId, {text: errorText(error), tone: 'error'});
@@ -154,7 +184,12 @@
   for (const input of [name, category, comment]) input.addEventListener('input', captureDraft);
   refresh.addEventListener('click', () => { available = true; updateForm(); load(); });
   more.addEventListener('click', () => load(true));
-  window.PlayableFeedback = Object.freeze({selectGame(game) {
+  window.PlayableFeedback = Object.freeze({
+    getCommentCount(taskId) { return counts.get(taskId) ?? null; },
+    initializeCounts(games, listener) {
+      countGames = [...games]; countListener = listener; refreshCounts();
+    },
+    selectGame(game) {
     captureDraft(); current = {taskId: game.taskId, number: game.number, name: game.name}; generation++;
     loaded = []; hasMore = false; available = true; reading = false; renderList();
     const draft = draftFor(game.taskId); name.value = draft.name; category.value = draft.category; comment.value = draft.comment;
@@ -162,4 +197,6 @@
     heading.textContent = 'Feedback · ' + game.number + '. ' + game.name;
     updateForm(); load();
   }});
+  setInterval(() => { if (document.visibilityState === 'visible') refreshCounts(); }, 60000);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshCounts(); });
 })();
