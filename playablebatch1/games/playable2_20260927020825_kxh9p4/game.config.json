@@ -71,7 +71,7 @@
     {
       "id": "CHAR_ANT",
       "label": "Ant sprite",
-      "path": "./assets/char_ant.webp",
+      "path": "./assets/ant-ink-v2.svg",
       "replaceable": true
     }
   ],

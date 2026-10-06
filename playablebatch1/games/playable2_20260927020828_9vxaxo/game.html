@@ -5,18 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Playable</title>
   <link rel="stylesheet" href="./bundle.css" />
-  <link rel="stylesheet" href="./art-v2.css?v=sky-stone-1" />
+  <link rel="stylesheet" href="./art-v2.css?v=pixel-grass-sky-1" />
   <style>
     html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
     body { background: #050510; -webkit-tap-highlight-color: transparent; }
-    /* Neutral platforms keep the ladder route legible against the sky. */
-    #root { --color-plat: #747983; }
+    /* Generated pixel grass and dirt; original collision geometry is retained. */
+    #root { --color-plat: #7b4b29; }
   </style>
 </head>
 <body>
   <div id="root"></div>
   <!-- playable-inline-config:start -->
-  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"STRETCH_SPEED","kind":"number","label":"Stretch Speed","value":0.04,"default":0.04,"min":0.01,"max":0.1,"step":0.01},{"id":"DROP_SPEED","kind":"number","label":"Drop Speed","value":0.3,"default":0.3,"min":0.1,"max":0.8,"step":0.1},{"id":"MIN_GAP","kind":"number","label":"Min Gap Width","value":12,"default":12,"min":8,"max":30,"step":1},{"id":"MAX_GAP","kind":"number","label":"Max Gap Width","value":28,"default":28,"min":20,"max":35,"step":1},{"id":"PLAT_MIN","kind":"number","label":"Platform Min Width","value":22,"default":22,"min":10,"max":25,"step":1},{"id":"PLAT_MAX","kind":"number","label":"Platform Max Width","value":34,"default":34,"min":25,"max":40,"step":1},{"id":"BRIDGE_THIN","kind":"number","label":"Ladder Initial Length","value":5,"default":5,"min":3,"max":10,"step":1}],"texts":[{"id":"GAME_TITLE","label":"Game Title","value":"Sky Ladder Stretch","default":"Sky Ladder Stretch","max_length":30},{"id":"HINT_TEXT","label":"Hint Text","value":"Hold to extend ladder\nRelease to drop!","default":"Hold to extend ladder\nRelease to drop!","max_length":40}],"images":[{"id":"BG_MAIN","label":"Background Image","path":"./assets/sky-background-v2.webp","replaceable":true},{"id":"ITEM_RING","label":"Ladder Texture","path":"./assets/item_ladder_continuous.svg","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script>
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"STRETCH_SPEED","kind":"number","label":"Stretch Speed","value":0.09,"default":0.04,"min":0.01,"max":0.1,"step":0.01},{"id":"DROP_SPEED","kind":"number","label":"Drop Speed","value":0.3,"default":0.3,"min":0.1,"max":0.8,"step":0.1},{"id":"MIN_GAP","kind":"number","label":"Min Gap Width","value":30,"default":12,"min":8,"max":30,"step":1},{"id":"MAX_GAP","kind":"number","label":"Max Gap Width","value":40,"default":28,"min":20,"max":40,"step":1},{"id":"PLAT_MIN","kind":"number","label":"Platform Min Width","value":10,"default":22,"min":10,"max":25,"step":1},{"id":"PLAT_MAX","kind":"number","label":"Platform Max Width","value":18,"default":34,"min":18,"max":40,"step":1},{"id":"BRIDGE_THIN","kind":"number","label":"Ladder Initial Length","value":5,"default":5,"min":3,"max":10,"step":1}],"texts":[{"id":"GAME_TITLE","label":"Game Title","value":"Sky Ladder Stretch","default":"Sky Ladder Stretch","max_length":30},{"id":"HINT_TEXT","label":"Hint Text","value":"Hold to extend ladder\nRelease to drop!","default":"Hold to extend ladder\nRelease to drop!","max_length":40}],"images":[{"id":"BG_MAIN","label":"Background Image","path":"./assets/pixel-sky-v1.webp","replaceable":true},{"id":"ITEM_RING","label":"Ladder Texture","path":"./assets/pixel-ladder-segment-v1.webp","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script>
   <script>
     (function () {
       if (window.location.protocol !== 'file:') return;
@@ -37,6 +37,6 @@
     }());
   </script>
   <!-- playable-inline-config:end -->
-  <script src="./bundle.js?v=ladder-shrink-left-right-5"></script>
+  <script src="./bundle.js?v=pixel-ladder-hard-mode-11"></script>
 </body>
 </html>

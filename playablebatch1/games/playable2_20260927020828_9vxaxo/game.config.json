@@ -4,7 +4,7 @@
       "id": "STRETCH_SPEED",
       "kind": "number",
       "label": "Stretch Speed",
-      "value": 0.04,
+      "value": 0.09,
       "default": 0.04,
       "min": 0.01,
       "max": 0.1,
@@ -24,7 +24,7 @@
       "id": "MIN_GAP",
       "kind": "number",
       "label": "Min Gap Width",
-      "value": 12,
+      "value": 30,
       "default": 12,
       "min": 8,
       "max": 30,
@@ -34,17 +34,17 @@
       "id": "MAX_GAP",
       "kind": "number",
       "label": "Max Gap Width",
-      "value": 28,
+      "value": 40,
       "default": 28,
       "min": 20,
-      "max": 35,
+      "max": 40,
       "step": 1
     },
     {
       "id": "PLAT_MIN",
       "kind": "number",
       "label": "Platform Min Width",
-      "value": 22,
+      "value": 10,
       "default": 22,
       "min": 10,
       "max": 25,
@@ -54,9 +54,9 @@
       "id": "PLAT_MAX",
       "kind": "number",
       "label": "Platform Max Width",
-      "value": 34,
+      "value": 18,
       "default": 34,
-      "min": 25,
+      "min": 18,
       "max": 40,
       "step": 1
     },
@@ -91,13 +91,13 @@
     {
       "id": "BG_MAIN",
       "label": "Background Image",
-      "path": "./assets/sky-background-v2.webp",
+      "path": "./assets/pixel-sky-v1.webp",
       "replaceable": true
     },
     {
       "id": "ITEM_RING",
       "label": "Ladder Texture",
-      "path": "./assets/item_ladder_continuous.svg",
+      "path": "./assets/pixel-ladder-segment-v1.webp",
       "replaceable": true
     }
   ],

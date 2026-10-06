@@ -6,6 +6,18 @@
   <title>Playable</title>
   <link rel="stylesheet" href="./bundle.css" />
   <style>
+    @font-face {
+      font-family: DynaPuff;
+      src: url("./assets/fonts/dynapuff/DynaPuff-SemiBold.woff2") format("woff2");
+      font-weight: 600; font-style: normal; font-display: swap;
+    }
+    :root {
+      --font-display: DynaPuff, system-ui, sans-serif;
+      --font-mono: ui-monospace, Menlo, monospace;
+      --color-panel: #fff;
+      --color-text: #1f2937;
+    }
+    * { box-sizing: border-box; }
     html, body {
       width: 100%;
       height: 100%;
@@ -28,7 +40,8 @@
       contain: layout paint size;
     }
     body {
-      background: #050510;
+      background: #f6f7f9;
+      color: #1f2937;
       -webkit-tap-highlight-color: transparent;
       -webkit-user-select: none;
       user-select: none;
@@ -57,6 +70,7 @@
     div:has(> img[src*="tube_"]) { position: relative !important; }
     img[src*="tube_"] { opacity: 0 !important; position: relative; z-index: 2; }
     div:has(> img[src*="tube_"])::after {
+      content: "";
       position: absolute;
       left: 4px;
       right: 4px;
@@ -76,18 +90,18 @@
       box-shadow: 0 5px 10px rgba(0,0,0,.2);
       pointer-events: none;
     }
-    div:has(> img[src*="tube_red"])::after { content: "RED"; background: linear-gradient(#ff8794,#d62839); }
-    div:has(> img[src*="tube_yellow"])::after { content: "YELLOW"; background: linear-gradient(#ffe66d,#e0a800); color:#3d2d00; text-shadow:none; }
-    div:has(> img[src*="tube_blue"])::after { content: "BLUE"; background: linear-gradient(#71c7ff,#2166d1); }
-    div:has(> img[src*="tube_white"])::after { content: "WHITE"; background: linear-gradient(#fff,#dfe7ef); color:#1f2937; text-shadow:none; }
-    div:has(> img[src*="tube_black"])::after { content: "BLACK"; background: linear-gradient(#4b5563,#070b12); }
+    div:has(> img[src*="tube_red"])::after { background: linear-gradient(#ff8794,#d62839); }
+    div:has(> img[src*="tube_yellow"])::after { background: linear-gradient(#ffe66d,#e0a800); }
+    div:has(> img[src*="tube_blue"])::after { background: linear-gradient(#71c7ff,#2166d1); }
+    div:has(> img[src*="tube_white"])::after { background: linear-gradient(#fff,#dfe7ef); }
+    div:has(> img[src*="tube_black"])::after { background: linear-gradient(#4b5563,#070b12); }
     /* Keep the target bowl clear of the tube dock on compact portrait screens. */
     @media (max-height: 600px) {
-      #root > div > div:nth-of-type(1) { padding: 40px 16px 10px !important; }
+      #root > div > div:nth-of-type(1) { padding: calc(40px + env(safe-area-inset-top, 0px)) 25px 10px !important; }
       #root > div > div:nth-of-type(1) > div { padding: 10px !important; gap: 6px !important; }
       #root > div > div:nth-of-type(2) { padding: 6px !important; }
-      #root > div > div:nth-of-type(2) > div { width: min(62vw, 235px) !important; }
-      #root > div > div:nth-of-type(3) { padding: 10px 10px 40px !important; }
+      #root > div > div:nth-of-type(2) > div { width: min(60vw, 220px) !important; }
+      #root > div > div:nth-of-type(3) { padding: 10px 25px calc(40px + env(safe-area-inset-bottom, 0px)) !important; }
       #root > div > div:nth-of-type(3) > div { height: 82px !important; }
       div:has(> img[src*="tube_"])::after { height: 78px; }
     }
@@ -166,6 +180,6 @@
     }());
   </script>
   <!-- playable-inline-config:end -->
-  <script src="./bundle.js?v=no-black-target-6"></script>
+  <script src="./bundle.js?v=neutral-readability-1"></script>
 </body>
 </html>

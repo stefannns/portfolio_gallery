@@ -4,7 +4,7 @@
       "id": "MAX_LEVEL",
       "kind": "number",
       "label": "Max Level",
-      "value": 25,
+      "value": 12,
       "default": 25,
       "min": 10,
       "max": 200,

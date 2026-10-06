@@ -103,55 +103,55 @@
     {
       "id": "BG_MAIN",
       "label": "Main Background / Title Image",
-      "path": "./assets/bg_main.png",
+      "path": "./assets/fridge-hero-v3.webp",
       "replaceable": true
     },
     {
       "id": "UI_HEART_FULL",
       "label": "Full Heart Icon",
-      "path": "./assets/ui_heart_full.webp",
+      "path": "./assets/heart-full-v2.svg",
       "replaceable": true
     },
     {
       "id": "UI_HEART_EMPTY",
       "label": "Empty Heart Icon",
-      "path": "./assets/ui_heart_empty.webp",
+      "path": "./assets/heart-empty-v2.svg",
       "replaceable": true
     },
     {
       "id": "FOOD_FRESH_1",
       "label": "Fresh Food 1",
-      "path": "./assets/food_apple_fresh.webp",
+      "path": "./assets/food-apple-fresh-v3.webp",
       "replaceable": true
     },
     {
       "id": "FOOD_SPOIL_1",
       "label": "Spoiled Food 1",
-      "path": "./assets/food_apple_spoil.webp",
+      "path": "./assets/food-apple-spoil-v3.webp",
       "replaceable": true
     },
     {
       "id": "FOOD_FRESH_2",
       "label": "Fresh Food 2",
-      "path": "./assets/food_bread_fresh.webp",
+      "path": "./assets/food-bread-fresh-v3.webp",
       "replaceable": true
     },
     {
       "id": "FOOD_SPOIL_2",
       "label": "Spoiled Food 2",
-      "path": "./assets/food_bread_spoil.webp",
+      "path": "./assets/food-bread-spoil-v3.webp",
       "replaceable": true
     },
     {
       "id": "FOOD_FRESH_3",
       "label": "Fresh Food 3",
-      "path": "./assets/food_cheese_fresh.webp",
+      "path": "./assets/food-cheese-fresh-v3.webp",
       "replaceable": true
     },
     {
       "id": "FOOD_SPOIL_3",
       "label": "Spoiled Food 3",
-      "path": "./assets/food_cheese_spoil.webp",
+      "path": "./assets/food-cheese-spoil-v3.webp",
       "replaceable": true
     }
   ],
