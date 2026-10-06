@@ -63,8 +63,8 @@
     {
       "id": "TXT_MISS",
       "label": "Miss Text",
-      "value": "Missed! 💥",
-      "default": "Missed! 💥",
+      "value": "Missed!",
+      "default": "Missed!",
       "max_length": 15
     }
   ],

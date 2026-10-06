@@ -91,8 +91,8 @@
     {
       "id": "TEXT_ALL_CLEAR_SUB",
       "label": "All Clear Subtitle",
-      "value": "All 9 puzzles solved.",
-      "default": "All 9 puzzles solved.",
+      "value": "All 4 puzzles solved.",
+      "default": "All 4 puzzles solved.",
       "max_length": 40
     },
     {
