@@ -9,6 +9,56 @@
   var reactionTimer = 0;
   var audio = null;
   var voices = [];
+  var driftFrame = 0;
+  var previousFrame = null;
+  var driftVelocity = 0;
+  var driftTarget = 0;
+  var driftRemaining = 0;
+  var pageActive = true;
+
+  // Random external heat/cold, not an automatic return to the midpoint.
+  // Velocity blends smoothly when a new gust changes direction or strength.
+  function chooseDrift() {
+    driftTarget = (Math.random() < .5 ? -1 : 1) * (6.25 + Math.random() * 6.25);
+    driftRemaining = 2.2 + Math.random() * 2;
+  }
+
+  function stopDrift() {
+    if (driftFrame) window.cancelAnimationFrame(driftFrame);
+    driftFrame = 0;
+    previousFrame = null;
+  }
+
+  function startDrift() {
+    if (driftFrame || extreme || document.hidden || !pageActive) return;
+    previousFrame = null;
+    driftFrame = window.requestAnimationFrame(driftStep);
+  }
+
+  function driftStep(timestamp) {
+    driftFrame = 0;
+    if (extreme || document.hidden || !pageActive) { previousFrame = null; return; }
+    if (previousFrame !== null) {
+      // Do not apply a backlog after a stalled frame or hidden/background tab.
+      var dt = Math.min(.05, Math.max(0, (timestamp - previousFrame) / 1000));
+      driftRemaining -= dt;
+      if (driftRemaining <= 0) chooseDrift();
+      driftVelocity += (driftTarget - driftVelocity) * (1 - Math.exp(-dt * 2.6));
+      heat = Math.max(0, Math.min(100, heat + driftVelocity * dt));
+      updateTemperature();
+      if (heat === 100 || heat === 0) {
+        shakeScene(heat === 100 ? 'chili' : 'ice');
+        showRecovery(heat === 100 ? 'hot' : 'cold');
+        return;
+      }
+    }
+    previousFrame = timestamp;
+    startNextFrame();
+  }
+
+  function startNextFrame() {
+    driftFrame = window.requestAnimationFrame(driftStep);
+  }
 
   function foodSvg(kind, size) {
     var width = Math.round(size * 0.78);
@@ -86,7 +136,7 @@
       '<h1>Spicy Stickman</h1>',
       '</header>',
       '<div class="speech-region">',
-      '<div class="reaction" role="status" aria-live="polite">Tap a treat to feed him!</div>',
+      '<div class="reaction" role="status" aria-live="polite">Tap treats to balance his temperature!</div>',
       '<section class="recovery-bubble" hidden aria-label="Help the stickman">',
       '<p class="bubble-message" aria-live="polite"></p>',
       '<div class="bubble-options"><button type="button" class="help-button"></button></div>',
@@ -163,6 +213,7 @@
 
   function showRecovery(kind) {
     extreme = kind;
+    stopDrift();
     clearTimeout(reactionTimer);
     reactionTimer = 0;
     var game = root.querySelector(".temperature-game"), bubble = root.querySelector(".recovery-bubble");
@@ -179,7 +230,7 @@
 
   function updateTemperature() {
     var meter = root.querySelector(".temperature-track");
-    meter.setAttribute("aria-valuenow", String(heat));
+    meter.setAttribute("aria-valuenow", String(Math.round(heat * 10) / 10));
     root.querySelector(".temperature-marker").style.left = "calc(" + heat + "% - " + (heat * .08) + "px)";
     root.querySelector(".stickman").style.filter = heat < 34 ? "drop-shadow(0 0 10px #83cdf0)" : heat > 66 ? "drop-shadow(0 0 10px #e76e75)" : "none";
     root.querySelector(".mouth").setAttribute("d", heat === 100 ? "M79 48q11-10 22 0" : heat === 0 ? "M80 49l5-3 5 3 5-3 5 3" : "M80 48q10 12 20 0");
@@ -195,17 +246,20 @@
     reaction.style.animation = "";
     clearTimeout(reactionTimer);
     reactionTimer = window.setTimeout(function () {
-      reaction.textContent = "Tap a treat to feed him!";
+      reaction.textContent = "Tap treats to balance his temperature!";
       reaction.className = "reaction";
     }, 1100);
   }
 
   function reset() {
+    stopDrift();
     clearTimeout(reactionTimer);
     reactionTimer = 0;
     heat = 50;
     fed = 0;
     extreme = null;
+    chooseDrift();
+    driftVelocity = 0;
     root.querySelector(".temperature-game").classList.remove("is-hot", "is-cold");
     root.querySelector(".scene-motion").classList.remove("tap-chili", "tap-ice");
     root.querySelector(".scene-motion").style.animation = "none";
@@ -213,11 +267,12 @@
     root.querySelectorAll(".food-button").forEach(function (button) { button.disabled = false; });
     updateTemperature();
     root.querySelector(".reaction").hidden = false;
-    root.querySelector(".reaction").textContent = "Tap a treat to feed him!";
+    root.querySelector(".reaction").textContent = "Tap treats to balance his temperature!";
     root.querySelector(".reaction").className = "reaction";
     root.querySelector(".reset-button").hidden = true;
     sound("reset");
     root.querySelector('[data-food="' + lastFood + '"]').focus({ preventScroll: true });
+    startDrift();
   }
 
   function installStyles() {
@@ -251,9 +306,23 @@
 
   installStyles();
   render();
+  chooseDrift();
+  startDrift();
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) stopDrift();
+    else startDrift();
+  });
+  window.addEventListener('pageshow', function () {
+    pageActive = true;
+    startDrift();
+  });
   window.addEventListener("pagehide", function () {
+    pageActive = false;
+    stopDrift();
     clearTimeout(reactionTimer);
     voices.forEach(function (voice) { try { voice.stop(); } catch (_) {} });
     if (audio) audio.close().catch(function () {});
+    audio = null;
+    voices = [];
   });
 })();

@@ -103,55 +103,91 @@
     {
       "id": "BG_MAIN",
       "label": "Main Background / Title Image",
-      "path": "./assets/fridge-hero-v3.webp",
+      "path": "./assets/fridge-hero-photo-v5.webp",
       "replaceable": true
     },
     {
       "id": "UI_HEART_FULL",
       "label": "Full Heart Icon",
-      "path": "./assets/heart-full-v2.svg",
+      "path": "./assets/heart-full-clean-v4.svg",
       "replaceable": true
     },
     {
       "id": "UI_HEART_EMPTY",
       "label": "Empty Heart Icon",
-      "path": "./assets/heart-empty-v2.svg",
+      "path": "./assets/heart-empty-clean-v4.svg",
       "replaceable": true
     },
     {
       "id": "FOOD_FRESH_1",
       "label": "Fresh Food 1",
-      "path": "./assets/food-apple-fresh-v3.webp",
+      "path": "./assets/food-apple-fresh-photo-v4.webp",
       "replaceable": true
     },
     {
       "id": "FOOD_SPOIL_1",
       "label": "Spoiled Food 1",
-      "path": "./assets/food-apple-spoil-v3.webp",
+      "path": "./assets/food-apple-spoil-photo-v4.webp",
       "replaceable": true
     },
     {
       "id": "FOOD_FRESH_2",
       "label": "Fresh Food 2",
-      "path": "./assets/food-bread-fresh-v3.webp",
+      "path": "./assets/food-bread-fresh-photo-v4.webp",
       "replaceable": true
     },
     {
       "id": "FOOD_SPOIL_2",
       "label": "Spoiled Food 2",
-      "path": "./assets/food-bread-spoil-v3.webp",
+      "path": "./assets/food-bread-spoil-photo-v4.webp",
       "replaceable": true
     },
     {
       "id": "FOOD_FRESH_3",
       "label": "Fresh Food 3",
-      "path": "./assets/food-cheese-fresh-v3.webp",
+      "path": "./assets/food-cheese-fresh-photo-v4.webp",
       "replaceable": true
     },
     {
       "id": "FOOD_SPOIL_3",
       "label": "Spoiled Food 3",
-      "path": "./assets/food-cheese-spoil-v3.webp",
+      "path": "./assets/food-cheese-spoil-photo-v4.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FOOD_FRESH_4",
+      "label": "Fresh strawberries",
+      "path": "./assets/food-strawberries-fresh-photo-v4.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FOOD_FRESH_5",
+      "label": "Fresh broccoli",
+      "path": "./assets/food-broccoli-fresh-photo-v4.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FOOD_FRESH_6",
+      "label": "Fresh tomato",
+      "path": "./assets/food-tomato-fresh-photo-v4.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FOOD_SPOIL_4",
+      "label": "Spoiled strawberries",
+      "path": "./assets/food-strawberries-spoil-photo-v4.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FOOD_SPOIL_5",
+      "label": "Spoiled broccoli",
+      "path": "./assets/food-broccoli-spoil-photo-v4.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FOOD_SPOIL_6",
+      "label": "Spoiled tomato",
+      "path": "./assets/food-tomato-spoil-photo-v4.webp",
       "replaceable": true
     }
   ],

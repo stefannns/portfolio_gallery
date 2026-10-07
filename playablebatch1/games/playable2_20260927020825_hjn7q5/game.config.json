@@ -51,7 +51,7 @@
     {
       "id": "BG_OVERLAY",
       "label": "Background Texture",
-      "path": "./assets/bg_overlay.webp",
+      "path": "./assets/soundboard-realistic-v1.webp",
       "replaceable": true
     }
   ],
