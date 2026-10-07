@@ -54,6 +54,15 @@
         line-height: 1.35;
         transition: opacity .35s ease, transform .35s ease;
       }
+      .counter { display: flex; align-items: center; justify-content: center; gap: 8px; color: #eef3ff; font-size: calc(28 * var(--ui-unit)); line-height: 1.2; font-weight: 700; font-variant-numeric: tabular-nums; margin-bottom: 14px; }
+      .counter svg { width: 19px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+      .storm-controls { position: absolute; z-index: 3; bottom: calc(50 * var(--ui-unit) + env(safe-area-inset-bottom)); left: calc(30 * var(--ui-unit) + env(safe-area-inset-left)); right: calc(30 * var(--ui-unit) + env(safe-area-inset-right)); display: flex; justify-content: center; gap: 12px; }
+      .storm-control { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; min-width: 112px; padding: 10px 14px; border: 1px solid rgba(221,231,255,.38); border-radius: 24px; background: rgba(15,21,34,.88); color: #edf3ff; font: inherit; font-size: calc(18 * var(--ui-unit)); font-weight: 600; line-height: 1.25; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; transition: background .15s ease, border-color .15s ease; }
+      .storm-control svg { flex: 0 0 auto; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+      .storm-control[aria-pressed="true"] { background: #334264; border-color: #bed0f7; }
+      .storm-control:active { background: #455779; }
+      .storm-control:focus-visible { outline: 3px solid #d6e6ff; outline-offset: 4px; }
+      .storm-control[aria-busy="true"] svg { opacity: .5; }
       .guide.hidden { opacity: 0; transform: translateY(-5px); }
       .tap-ripple {
         position: absolute;
@@ -70,6 +79,7 @@
       @media (prefers-reduced-motion: reduce) {
         .tap-ripple { animation-duration: .2s; }
         .guide { transition-duration: .01ms; }
+        .storm-control { transition-duration: .01ms; }
       }
     `;
     document.head.appendChild(style);
@@ -78,20 +88,31 @@
       <main class="storm">
         <canvas id="sky" aria-label="Moving storm clouds. Tap anywhere to create lightning."></canvas>
         <header class="hud">
+          <div class="counter" aria-label="0 strikes" id="strike-counter"><svg viewBox="0 0 24 28" aria-hidden="true"><path d="M14 2 4 16h8l-2 10 10-15h-8z"/></svg><span id="strike-count">0</span></div>
           <p class="guide" id="guide"></p>
         </header>
+        <nav class="storm-controls" aria-label="Storm options">
+          <button type="button" class="storm-control" id="color-toggle" aria-pressed="false" aria-label="Colored lightning"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 2-9 12h7l-1 8 10-13h-7z"/></svg><span>Color</span></button>
+          <button type="button" class="storm-control" id="music-toggle" aria-pressed="false" aria-busy="false" aria-label="Rock music"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l11-2v13M9 9l11-2"/><ellipse cx="6" cy="18" rx="3" ry="2"/><ellipse cx="17" cy="16" rx="3" ry="2"/></svg><span id="music-label">Rock off</span></button>
+        </nav>
       </main>
     `;
 
     const canvas = document.getElementById('sky');
     const ctx = canvas.getContext('2d', { alpha: false });
     const guide = document.getElementById('guide');
+    const strikeCount = document.getElementById('strike-count');
+    const strikeCounter = document.getElementById('strike-counter');
+    const colorToggle = document.getElementById('color-toggle');
+    const musicToggle = document.getElementById('music-toggle');
+    const musicLabel = document.getElementById('music-label');
     guide.textContent = cfg.GUIDE_TEXT || 'Tap the clouds to call lightning';
 
     const cloudSpeed = Math.max(.05, Number(cfg.CLOUD_SPEED) || .34);
     const cloudDensity = Math.max(8, Math.min(30, Math.round(Number(cfg.CLOUD_DENSITY) || 18)));
     const lightningGlow = Math.max(8, Number(cfg.LIGHTNING_GLOW) || 30);
-    const thunderVolume = Math.max(0, Math.min(.6, Number(cfg.THUNDER_VOLUME) || .28));
+    const configuredThunder = Number(cfg.THUNDER_VOLUME);
+    const thunderVolume = Math.max(0, Math.min(.6, Number.isFinite(configuredThunder) ? configuredThunder : .28));
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
     let width = 1;
     let height = 1;
@@ -101,12 +122,23 @@
     let puffSprites = [];
     let lastFrame = performance.now();
     let flash = 0;
+    let flashColor = [221, 234, 255];
+    let strikes = 0;
+    let colored = false;
+    const lightningColors = [[161, 196, 255], [202, 149, 255], [255, 145, 217], [138, 232, 238], [255, 202, 125]];
+    let lastColor = -1;
     const muted = false;
     let audio = null;
+    let thunderSound = null;
+    let thunderIndex = 0;
     let rainBuffer = null;
     let rainSource = null;
     let rainGain = null;
     let hasInteracted = false;
+    let rockMusic = null;
+    let musicWanted = false;
+    let musicRevision = 0;
+    let musicFrame = null;
 
     const seeded = seed => {
       let value = seed >>> 0;
@@ -265,8 +297,10 @@
     };
 
     const createBolt = (x, y) => {
-      const endY = Math.max(height * .42, Math.min(height * .98, y + height * .08));
-      const startY = height * (.025 + Math.random() * .06);
+      // Crop the bolt at the viewport, not at its visible rounded endpoints.
+      const overflow = Math.max(100, height * .16, lightningGlow * 3);
+      const endY = height + overflow;
+      const startY = -overflow;
       const startX = Math.max(18, Math.min(width - 18, x + (Math.random() - .5) * 92));
       const main = makePath(startX, startY, x, endY, 15, Math.min(132, width * .32));
       const branches = [];
@@ -277,7 +311,14 @@
           branches.push(makePath(point.x, point.y, point.x + direction * (45 + Math.random() * 100), point.y + 75 + Math.random() * 115, 6, 44));
         }
       }
-      bolts.push({ main, branches, born: performance.now(), duration: 620 });
+      let color = [177, 211, 255];
+      if (colored) {
+        // Vary new strikes without recoloring bolts that are already fading.
+        lastColor = (lastColor + 1 + Math.floor(Math.random() * (lightningColors.length - 1))) % lightningColors.length;
+        color = lightningColors[lastColor];
+      }
+      bolts.push({ main, branches, color, colored, born: performance.now(), duration: 620 });
+      flashColor = color.map(channel => Math.round(channel * .45 + 255 * .55));
       flash = 1;
     };
 
@@ -298,16 +339,18 @@
         ctx.save();
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
-        ctx.shadowColor = 'rgba(177,211,255,' + alpha + ')';
+        const tint = bolt.color.join(',');
+        const core = bolt.color.map(channel => Math.round(channel * .3 + 255 * .7)).join(',');
+        ctx.shadowColor = 'rgba(' + tint + ',' + alpha + ')';
         ctx.shadowBlur = lightningGlow * 1.45;
-        ctx.strokeStyle = 'rgba(126,174,255,' + (alpha * .42) + ')';
+        ctx.strokeStyle = 'rgba(' + tint + ',' + (alpha * .42) + ')';
         ctx.lineWidth = 15;
         strokePath(bolt.main);
-        ctx.strokeStyle = 'rgba(236,246,255,' + alpha + ')';
+        ctx.strokeStyle = 'rgba(' + (bolt.colored ? core : '236,246,255') + ',' + alpha + ')';
         ctx.lineWidth = 4.2;
         strokePath(bolt.main);
         for (const branch of bolt.branches) {
-          ctx.strokeStyle = 'rgba(209,229,255,' + (alpha * .72) + ')';
+          ctx.strokeStyle = 'rgba(' + core + ',' + (alpha * .72) + ')';
           ctx.lineWidth = 2.1;
           strokePath(branch);
         }
@@ -317,7 +360,7 @@
 
     const drawFlash = dt => {
       if (flash <= .002) return;
-      ctx.fillStyle = 'rgba(221,234,255,' + (flash * .34) + ')';
+      ctx.fillStyle = 'rgba(' + flashColor.join(',') + ',' + (flash * (reducedMotion ? .09 : .34)) + ')';
       ctx.fillRect(0, 0, width, height);
       flash *= Math.pow(.075, dt);
     };
@@ -403,30 +446,88 @@
     };
 
     const thunder = () => {
-      if (muted || thunderVolume <= 0) return;
+      if (muted || thunderVolume <= 0 || document.hidden) return;
       ensureAudio();
-      if (!audio) return;
-      const duration = .72;
-      const buffer = audio.createBuffer(1, Math.ceil(audio.sampleRate * duration), audio.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < data.length; i++) {
-        const t = i / data.length;
-        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 2.2);
-      }
-      const noise = audio.createBufferSource();
-      const filter = audio.createBiquadFilter();
-      const gain = audio.createGain();
-      noise.buffer = buffer;
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(520, audio.currentTime);
-      filter.frequency.exponentialRampToValueAtTime(110, audio.currentTime + duration);
-      gain.gain.setValueAtTime(.0001, audio.currentTime);
-      gain.gain.exponentialRampToValueAtTime(thunderVolume, audio.currentTime + .025);
-      gain.gain.exponentialRampToValueAtTime(.0001, audio.currentTime + duration);
-      noise.connect(filter).connect(gain).connect(audio.destination);
-      noise.start();
-      noise.stop(audio.currentTime + duration);
+      if (!audio || !window.PlayableSceneAudio) return;
+      if (!thunderSound) thunderSound = new window.PlayableSceneAudio({ profile: 'thunder', context: audio });
+      thunderSound.play('thunder', { volume: thunderVolume, variant: thunderIndex++ % 2 });
     };
+
+    const updateMusicControl = (busy = false) => {
+      musicToggle.setAttribute('aria-pressed', String(musicWanted));
+      musicToggle.setAttribute('aria-busy', String(busy));
+      musicLabel.textContent = busy ? 'Loading…' : musicWanted ? 'Rock on' : 'Rock off';
+    };
+
+    const cancelMusicFade = () => {
+      if (musicFrame !== null) cancelAnimationFrame(musicFrame);
+      musicFrame = null;
+    };
+
+    const fadeMusic = (target, finished) => {
+      cancelMusicFade();
+      if (!rockMusic) return;
+      const from = rockMusic.volume, started = performance.now();
+      const tick = now => {
+        if (!rockMusic) return;
+        const fraction = Math.max(0, Math.min(1, (now - started) / 350));
+        rockMusic.volume = Math.max(0, Math.min(1, from + (target - from) * fraction));
+        if (fraction < 1) musicFrame = requestAnimationFrame(tick);
+        else { musicFrame = null; finished?.(); }
+      };
+      musicFrame = requestAnimationFrame(tick);
+    };
+
+    const pauseMusic = () => {
+      cancelMusicFade();
+      if (rockMusic) { rockMusic.volume = 0; rockMusic.pause(); }
+    };
+
+    const musicFailed = revision => {
+      if (revision !== musicRevision || !musicWanted || document.hidden) return;
+      musicWanted = false;
+      musicRevision++;
+      pauseMusic();
+      updateMusicControl();
+      musicToggle.setAttribute('aria-label', 'Rock music unavailable. Tap to retry');
+    };
+
+    const startMusic = () => {
+      if (!musicWanted || document.hidden) return;
+      const revision = musicRevision;
+      try {
+        if (!rockMusic) {
+          if (!window.Audio) { musicFailed(revision); return; }
+          rockMusic = new window.Audio('./assets/audio/rock-theme-song-loop.mp3');
+          rockMusic.loop = true;
+          rockMusic.preload = 'none';
+          rockMusic.volume = 0;
+          rockMusic.addEventListener('error', () => musicFailed(musicRevision));
+        }
+        if (rockMusic.error) rockMusic.load();
+        updateMusicControl(true);
+        const playing = rockMusic.play();
+        Promise.resolve(playing).then(() => {
+          if (!musicWanted || document.hidden) { pauseMusic(); return; }
+          if (revision !== musicRevision) return;
+          musicToggle.setAttribute('aria-label', 'Rock music');
+          updateMusicControl();
+          fadeMusic(.3);
+        }).catch(() => musicFailed(revision));
+      } catch (_) { musicFailed(revision); }
+    };
+
+    colorToggle.addEventListener('click', () => {
+      colored = !colored;
+      colorToggle.setAttribute('aria-pressed', String(colored));
+    });
+    musicToggle.addEventListener('click', () => {
+      musicWanted = !musicWanted;
+      musicRevision++;
+      updateMusicControl();
+      if (musicWanted) startMusic();
+      else fadeMusic(0, () => { if (!musicWanted) { rockMusic.pause(); rockMusic.currentTime = 0; } });
+    });
 
     const ripple = (x, y) => {
       const el = document.createElement('div');
@@ -438,12 +539,16 @@
     };
 
     canvas.addEventListener('pointerdown', event => {
+      if (event.isPrimary === false || event.button > 0) return;
       hasInteracted = true;
       startRain();
       const rect = canvas.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
       createBolt(x, y);
+      strikes++;
+      strikeCount.textContent = String(strikes);
+      strikeCounter.setAttribute('aria-label', strikes + (strikes === 1 ? ' strike' : ' strikes'));
       ripple(x, y);
       guide.classList.add('hidden');
       guide.setAttribute('aria-hidden', 'true');
@@ -452,9 +557,14 @@
     });
 
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) stopRain(); else startRain();
+      if (document.hidden) { stopRain(); pauseMusic(); }
+      else { startRain(); startMusic(); }
     });
 
+    window.addEventListener('pagehide', stopRain);
+    window.addEventListener('pagehide', pauseMusic);
+    window.addEventListener('pageshow', startRain);
+    window.addEventListener('pageshow', startMusic);
     window.addEventListener('resize', resize);
     resize();
     requestAnimationFrame(frame);

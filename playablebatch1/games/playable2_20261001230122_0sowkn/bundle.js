@@ -413,6 +413,23 @@ Error generating stack: `+i.message+`
   const canvas=(0,ge.useRef)(null);
   const state=(0,ge.useRef)({snake:[{x:7,y:4},{x:6,y:4},{x:5,y:4}],food:{x:11,y:6},dir:{x:1,y:0},next:{x:1,y:0},score:0,over:false,paused:false});
   const [score,setScore]=(0,ge.useState)(0),[over,setOver]=(0,ge.useState)(false),[paused,setPaused]=(0,ge.useState)(false);
+  const [consoleArt,setConsoleArt]=(0,ge.useState)("./assets/console-cutout-v2.webp");
+  const audio=(0,ge.useRef)(null),pressTimer=(0,ge.useRef)(null);
+  const [pressed,setPressed]=(0,ge.useState)("");
+  const press=(id,kind)=>{
+    setPressed(id);clearTimeout(pressTimer.current);
+    pressTimer.current=setTimeout(()=>setPressed(""),150);
+    try{audio.current ||= window.createSnakeConsoleFeedback?.();audio.current?.play(kind,true)}catch(_){}
+  };
+  (0,ge.useEffect)(()=>()=>{clearTimeout(pressTimer.current);audio.current?.destroy()},[]);
+  (0,ge.useEffect)(()=>{
+    let active=true;
+    fetch("./game.config.json",{cache:"no-store"}).then(r=>r.ok?r.json():Promise.reject()).then(config=>{
+      const image=(config.images||[]).find(image=>image.id==="IMG_CONSOLE");
+      if(active&&image?.path)setConsoleArt(image.path);
+    }).catch(()=>{});
+    return()=>{active=false};
+  },[]);
   const randomFood=snake=>{let spot;do{spot={x:Math.floor(Math.random()*16),y:Math.floor(Math.random()*10)}}while(snake.some(s=>s.x===spot.x&&s.y===spot.y));return spot};
   const draw=()=>{
     const c=canvas.current;if(!c)return;const ctx=c.getContext("2d"),s=state.current;
@@ -428,31 +445,33 @@ Error generating stack: `+i.message+`
       const s=state.current;if(s.over||s.paused)return;
       s.dir=s.next;const head={x:s.snake[0].x+s.dir.x,y:s.snake[0].y+s.dir.y};
       if(head.x<0||head.x>=16||head.y<0||head.y>=10||s.snake.some((p,i)=>i<s.snake.length-1&&p.x===head.x&&p.y===head.y)){
-        s.over=true;setOver(true);draw();return;
+        s.over=true;setOver(true);audio.current?.play("over");draw();return;
       }
       s.snake.unshift(head);
-      if(head.x===s.food.x&&head.y===s.food.y){s.score++;setScore(s.score);s.food=randomFood(s.snake);if(navigator.vibrate)navigator.vibrate(10)}else s.snake.pop();
+      if(head.x===s.food.x&&head.y===s.food.y){s.score++;setScore(s.score);s.food=randomFood(s.snake);audio.current?.play("eat");if(navigator.vibrate)navigator.vibrate(10)}else s.snake.pop();
       draw();
     },215);
     const key=e=>{const dirs={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0],w:[0,-1],s:[0,1],a:[-1,0],d:[1,0]};if(dirs[e.key]){e.preventDefault();turn(...dirs[e.key])}};
     window.addEventListener("keydown",key);return()=>{clearInterval(id);window.removeEventListener("keydown",key)};
   },[]);
-  const turn=(x,y)=>{const s=state.current;if(s.dir.x+x===0&&s.dir.y+y===0)return;s.next={x,y}};
-  const restart=()=>{state.current={snake:[{x:7,y:4},{x:6,y:4},{x:5,y:4}],food:{x:11,y:6},dir:{x:1,y:0},next:{x:1,y:0},score:0,over:false,paused:false};setScore(0);setOver(false);setPaused(false);draw()};
-  const togglePause=()=>{state.current.paused=!state.current.paused;setPaused(state.current.paused)};
-  const control=(label,x,y,style)=>h("button",{type:"button","aria-label":label,onClick:()=>turn(x,y),style:{position:"absolute",width:50,height:50,border:"2px solid #202735",borderRadius:"50%",background:"linear-gradient(#b9bec7,#747d8c)",color:"#17202c",fontSize:24,fontWeight:900,boxShadow:"inset 0 2px #fff8,0 3px 4px #0008",cursor:"pointer",touchAction:"manipulation",...style}},label);
-  return h("div",{style:{width:"100%",height:"100%",overflow:"hidden",background:"#111720",display:"grid",placeItems:"center",padding:"max(40px, env(safe-area-inset-top)) 25px max(40px, env(safe-area-inset-bottom))",boxSizing:"border-box",fontFamily:"Arial,sans-serif"}},
-    h("div",{style:{position:"relative",width:"min(100%,355px)",height:"min(100%,610px)",background:"linear-gradient(90deg,#88929e 0%,#1e2939 9%,#263447 88%,#b4bac0 100%)",border:"6px solid #757e88",borderRadius:"50px 50px 60px 60px",boxShadow:"inset 0 0 20px #0009,0 10px 28px #000a",overflow:"hidden"}},
-      h("div",{style:{position:"absolute",top:"4%",left:"43%",width:"14%",height:6,borderRadius:8,background:"#050909",boxShadow:"0 12px #050909,0 24px #050909"}}),
-      h("div",{style:{position:"absolute",top:"17%",left:"7%",right:"7%",height:"39%",border:"6px solid #121b26",borderRadius:15,background:"#aab194",boxShadow:"inset 0 4px 12px #445440"}},
+  const turn=(x,y)=>{press("dir-"+x+","+y,"click");const s=state.current;if(s.dir.x+x===0&&s.dir.y+y===0)return;s.next={x,y}};
+  const restart=()=>{press("restart","restart");state.current={snake:[{x:7,y:4},{x:6,y:4},{x:5,y:4}],food:{x:11,y:6},dir:{x:1,y:0},next:{x:1,y:0},score:0,over:false,paused:false};setScore(0);setOver(false);setPaused(false);draw()};
+  const togglePause=()=>{press("pause",state.current.paused?"resume":"pause");state.current.paused=!state.current.paused;setPaused(state.current.paused)};
+  const buttonStyle={position:"absolute",width:44,height:44,padding:0,border:0,borderRadius:"50%",background:"transparent",color:"#f1f3ee",display:"grid",placeItems:"center",transform:"translate(-50%,-50%)",cursor:"pointer",touchAction:"manipulation"};
+  const icon=path=>h("svg",{width:20,height:20,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:2,strokeLinecap:"round",strokeLinejoin:"round","aria-hidden":true},h("path",{d:path}));
+  const control=(label,path,x,y,left,top)=>h("button",{type:"button",className:"snake-console-control","aria-label":label,"data-feedback":pressed==="dir-"+x+","+y,onClick:()=>turn(x,y),style:{...buttonStyle,left,top}},icon(path));
+  return h("div",{style:{width:"100%",height:"100%",overflow:"hidden",background:"transparent",display:"grid",placeItems:"center",padding:"env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)",boxSizing:"border-box",fontFamily:"Arial,sans-serif"}},
+    h("style",null,".snake-console-control{transition:box-shadow 100ms ease,color 100ms ease}.snake-console-control svg{transition:transform 100ms ease}.snake-console-control:active,.snake-console-control[data-feedback=true]{background:rgba(160,215,220,.2)!important;box-shadow:inset 0 3px 8px #000a,0 0 0 2px #b6dfdfa6,0 0 14px #96dada70;color:#fff!important}.snake-console-control:active svg,.snake-console-control[data-feedback=true] svg{transform:translateY(1px) scale(.88)}.snake-console-control:focus-visible{outline:2px solid #9bd8ed;outline-offset:3px}@media(prefers-reduced-motion:reduce){.snake-console-control,.snake-console-control svg{transition:none}.snake-console-control:active svg,.snake-console-control[data-feedback=true] svg{transform:none}}"),
+    h("div",{style:{position:"relative",width:"min(100%,calc((100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)) / 1.5))",aspectRatio:"2 / 3",overflow:"hidden"}},
+      h("img",{src:consoleArt,alt:"",width:780,height:1170,draggable:false,"aria-hidden":true,style:{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"contain",pointerEvents:"none",userSelect:"none"}}),
+      h("div",{style:{position:"absolute",top:"17.8%",left:"12.7%",width:"74.8%",height:"34.1%",borderRadius:4,overflow:"hidden"}},
         h("canvas",{ref:canvas,width:320,height:225,"aria-label":"Snake game, score "+score,style:{width:"100%",height:"100%",display:"block",imageRendering:"pixelated"}})),
-      h("div",{style:{position:"absolute",top:"58%",left:"31%",width:"38%",height:11,borderRadius:10,background:"#6e7d8e",boxShadow:"inset 0 1px 4px #0009"}}),
-      h("button",{type:"button",onClick:togglePause,style:{position:"absolute",left:"6%",bottom:"11%",minWidth:78,minHeight:50,borderRadius:"50%",border:"2px solid #263042",background:"#a6adb8",fontWeight:800,fontSize:16}},paused?"▶":"▶❚❚"),
-      h("button",{type:"button",onClick:restart,style:{position:"absolute",left:"6%",bottom:"2%",minWidth:78,minHeight:50,borderRadius:"50%",border:"2px solid #263042",background:"#a6adb8",fontWeight:800,fontSize:13}},"RESTART"),
-      control("▲",0,-1,{right:"17%",bottom:"16%"}),
-      control("◀",-1,0,{right:"31%",bottom:"7%"}),
-      control("▶",1,0,{right:"3%",bottom:"7%"}),
-      control("▼",0,1,{right:"17%",bottom:"0%"})
+      h("button",{type:"button",className:"snake-console-control","aria-label":paused?"Resume game":"Pause game","aria-pressed":paused,"data-feedback":pressed==="pause",onClick:togglePause,style:{...buttonStyle,left:"22%",top:"70.7%",width:"max(54px,19%)",borderRadius:22}},icon(paused?"M8 5l11 7-11 7Z":"M9 5v14M15 5v14")),
+      h("button",{type:"button",className:"snake-console-control","aria-label":"Restart game","data-feedback":pressed==="restart",onClick:restart,style:{...buttonStyle,left:"22%",top:"83%",width:"max(54px,19%)",borderRadius:22}},icon("M3 10a9 9 0 1 1 2 9M3 4v6h6")),
+      control("Move up","M6 15l6-6 6 6",0,-1,"71.2%","66.7%"),
+      control("Move left","M15 6l-6 6 6 6",-1,0,"56.4%","75.7%"),
+      control("Move right","M9 6l6 6-6 6",1,0,"86.4%","75.7%"),
+      control("Move down","M6 9l6 6 6-6",0,1,"71.2%","85%")
     )
   );
 };;(0,Ff.createRoot)(document.getElementById("root")).render((0,Te.jsx)(Jv,{}));})();

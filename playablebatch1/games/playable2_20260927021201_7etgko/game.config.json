@@ -82,13 +82,13 @@
     {
       "id": "IMG_FEED_MAIN",
       "label": "Feed Main Image",
-      "path": "./assets/img_bug_boss.svg",
+      "path": "./assets/img_bug_cartoon_v2.webp",
       "replaceable": true
     },
     {
       "id": "IMG_BOSS",
       "label": "Bug Boss Character",
-      "path": "./assets/img_bug_boss.svg",
+      "path": "./assets/img_bug_cartoon_v2.webp",
       "replaceable": true
     },
     {

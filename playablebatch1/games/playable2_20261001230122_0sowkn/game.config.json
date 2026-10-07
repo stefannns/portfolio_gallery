@@ -46,6 +46,12 @@
   ],
   "images": [
     {
+      "id": "IMG_CONSOLE",
+      "label": "Realistic Console Frame",
+      "path": "./assets/console-cutout-v2.webp",
+      "replaceable": true
+    },
+    {
       "id": "BG_STONE",
       "label": "Stone Tablet",
       "path": "./assets/motion/reveal.svg",

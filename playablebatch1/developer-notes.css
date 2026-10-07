@@ -1,13 +1,31 @@
-.developer-notes {
+.game-notes {
+  --notes-border: #d9dfe8;
+  --notes-ink: #28374b;
+  --notes-muted: #526174;
+  --notes-surface: #f6f8fb;
+  --notes-accent: #536781;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  align-items: start;
+  gap: 12px;
   margin-top: 20px;
+}
+.game-notes[hidden] { display: none; }
+.developer-notes, .implemented-fixes {
+  min-width: 0;
+  margin: 0;
   padding: 16px;
-  border: 1px solid #d9dfe8;
-  border-left: 3px solid #536781;
+  border: 1px solid var(--notes-border);
+  border-left: 3px solid var(--notes-accent);
   border-radius: 12px;
-  background: #f6f8fb;
-  color: #28374b;
+  background: var(--notes-surface);
+  color: var(--notes-ink);
   overflow-wrap: anywhere;
 }
 .developer-notes[hidden] { display: none; }
-.developer-notes-heading { margin: 0 0 8px; font-size: 16px; line-height: 1.4; }
+.implemented-fixes[hidden], .implemented-fixes [hidden] { display: none; }
+.developer-notes-heading, .implemented-fixes-heading { margin: 0 0 8px; font-size: 16px; line-height: 1.4; }
 .developer-notes-body { margin: 0; font-size: 14px; line-height: 1.6; }
+.implemented-fixes-status, .implemented-fixes-empty { margin: 0; color: var(--notes-muted); font-size: 13px; line-height: 1.5; }
+.implemented-fixes-list { margin: 10px 0 0; padding-left: 18px; font-size: 14px; line-height: 1.6; }
+.implemented-fixes-list li + li { margin-top: 8px; }

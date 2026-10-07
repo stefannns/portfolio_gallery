@@ -22,8 +22,8 @@
     {
       "id": "DESC",
       "label": "Description",
-      "value": "Tap the wrappers to reveal as many dumplings as you can before time runs out! 🥟",
-      "default": "Tap the wrappers to reveal as many dumplings as you can before time runs out! 🥟",
+      "value": "Tap the steamers to reveal as many dumplings as you can before time runs out! 🥟",
+      "default": "Tap the steamers to reveal as many dumplings as you can before time runs out! 🥟",
       "max_length": 150
     },
     {
@@ -65,14 +65,14 @@
   "images": [
     {
       "id": "IMG_ORIGINAL",
-      "label": "Original Steamer",
-      "path": "./assets/bg_original_clean.svg",
+      "label": "Covered Steamer",
+      "path": "./assets/steamer-covered-v3.webp",
       "replaceable": true
     },
     {
       "id": "IMG_MODIFIED",
-      "label": "Modified Steamer",
-      "path": "./assets/bg_modified_clean.svg",
+      "label": "Steamer with Cartoon Bun",
+      "path": "./assets/steamer-cartoon-bun-v4.webp",
       "replaceable": true
     }
   ],

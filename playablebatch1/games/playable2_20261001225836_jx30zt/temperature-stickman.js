@@ -19,8 +19,10 @@
   // Random external heat/cold, not an automatic return to the midpoint.
   // Velocity blends smoothly when a new gust changes direction or strength.
   function chooseDrift() {
-    driftTarget = (Math.random() < .5 ? -1 : 1) * (6.25 + Math.random() * 6.25);
-    driftRemaining = 2.2 + Math.random() * 2;
+    var direction = driftTarget === 0 ? (Math.random() < .5 ? -1 : 1) :
+      Math.sign(driftTarget) * (Math.random() < .7 ? -1 : 1);
+    driftTarget = direction * (7.5 + Math.random() * 7.5);
+    driftRemaining = 1.2 + Math.random() * 1.2;
   }
 
   function stopDrift() {
@@ -258,6 +260,7 @@
     heat = 50;
     fed = 0;
     extreme = null;
+    driftTarget = 0;
     chooseDrift();
     driftVelocity = 0;
     root.querySelector(".temperature-game").classList.remove("is-hot", "is-cold");

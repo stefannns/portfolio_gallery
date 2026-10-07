@@ -86,9 +86,9 @@
       evidence: 'User requested fewer layered lines, smoother interval-triggered hums, then translucent layers between some strands.'
     },
     playable2_20261001230352_h4uxll: {
-      scope: 'Rain ambience only',
-      note: 'Added rain ambience to the moving-cloud and lightning scene.',
-      evidence: 'User: for 66 add some rain sounds.'
+      scope: 'Added rain, counter and replacement music',
+      note: 'Added rain and a strikes counter; optional rock music uses a licensed replacement track.',
+      evidence: 'User requested rain sounds, then explicitly requested colored lightning, a strikes counter and optional rock music after checking the original.'
     }
   };
   window.PLAYABLE_DEVELOPER_NOTES = decisions;
@@ -101,17 +101,21 @@
     return element;
   };
   const panel = make('section', 'developer-notes');
+  const notesHost = make('div', 'game-notes');
+  notesHost.hidden = true;
   panel.hidden = true;
   panel.setAttribute('aria-labelledby', 'developer-notes-heading');
   const heading = make('h3', 'developer-notes-heading', 'Developer notes');
   heading.id = 'developer-notes-heading';
   const body = make('p', 'developer-notes-body');
   panel.append(heading, body);
-  host.append(panel);
+  notesHost.append(panel);
+  host.append(notesHost);
   window.PlayableDeveloperNotes = {
     selectGame(game) {
       const decision = Object.prototype.hasOwnProperty.call(decisions, game?.taskId) ? decisions[game.taskId] : null;
       panel.hidden = !decision;
+      if (decision) notesHost.hidden = false;
       body.textContent = decision?.note || '';
       panel.dataset.taskId = decision ? game.taskId : '';
     }

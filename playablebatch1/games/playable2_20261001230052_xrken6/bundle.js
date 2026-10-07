@@ -10,11 +10,12 @@ Error generating stack: `+o.message+`
   const canvas=(0,z.useRef)(null),plants=(0,z.useRef)([]),grass=(0,z.useRef)([]),grassCache=(0,z.useRef)({canvas:null,seen:new Set()}),bugs=(0,z.useRef)([]),drag=(0,z.useRef)(null),images=(0,z.useRef)({}),audio=(0,z.useRef)(null),raf=(0,z.useRef)(0),lastFrame=(0,z.useRef)(0),lastSpawn=(0,z.useRef)(0);
   const [stats,setStats]=(0,z.useState)({plants:0,grass:false,bugs:0}),[hasGrowth,setHasGrowth]=(0,z.useState)(false),[selected,setSelected]=(0,z.useState)("grass");
   const serial=(0,z.useRef)(0),reduced=(0,z.useRef)(false),keyboard=(0,z.useRef)({x:.5,y:.65,visible:false}),voices=(0,z.useRef)(0);
+  const grassAudio=(0,z.useRef)(null);
   const growth=Fe(Number(e.GRAVITY)||1.2,.1,2),wander=Fe(Number(e.CREATURE_FORCE)||.05,.01,.2);
   const choices=[{id:"grass",label:"Grass"},{id:"daisy",label:"Daisy"},{id:"tulip",label:"Tulip"},{id:"sunflower",label:"Sunflower"},{id:"fern",label:"Fern"}];
   (0,z.useEffect)(()=>{const sources={ladybug:e.IMG_CREATURE,bee:e.IMG_FOOD,flower:e.IMG_BLOCK};let live=true;for(const [key,src] of Object.entries(sources)){const image=new Image;image.onload=()=>{if(live)images.current[key]=image};image.onerror=()=>{if(live)images.current[key]=null};image.src=src||""}return()=>{live=false}},[e.IMG_CREATURE,e.IMG_FOOD,e.IMG_BLOCK]);
   (0,z.useEffect)(()=>{const media=window.matchMedia?.("(prefers-reduced-motion: reduce)");const update=()=>{if(reduced.current&&!media?.matches)for(const plant of [...grass.current,...plants.current])plant.born=Math.min(plant.born,performance.now()-plant.duration/growth);reduced.current=!!media?.matches};update();media?.addEventListener?.("change",update);return()=>media?.removeEventListener?.("change",update)},[growth]);
-  const tone=(0,z.useCallback)(kind=>{try{const AudioCtor=window.AudioContext||window.webkitAudioContext;if(!AudioCtor)return;const ctx=audio.current||(audio.current=new AudioCtor);
+  const tone=(0,z.useCallback)(kind=>{try{if(kind==="grow"){const sound=grassAudio.current||(grassAudio.current=window.createGrassAudio?.());sound?.play();return}if(kind==="clear")grassAudio.current?.stop();const AudioCtor=window.AudioContext||window.webkitAudioContext;if(!AudioCtor)return;const ctx=audio.current||(audio.current=new AudioCtor);
     const play=()=>{try{if(audio.current!==ctx||ctx.state!=="running"||voices.current>=4)return;const oscillator=ctx.createOscillator(),gain=ctx.createGain(),at=ctx.currentTime;oscillator.type="sine";const notes=kind==="bug"?[660,880]:kind==="clear"?[420,280]:kind==="select"?[520,650]:[440,550];oscillator.frequency.setValueAtTime(notes[0],at);oscillator.frequency.exponentialRampToValueAtTime(notes[1],at+.13);gain.gain.setValueAtTime(.0001,at);gain.gain.exponentialRampToValueAtTime(.035,at+.015);gain.gain.exponentialRampToValueAtTime(.0001,at+.21);oscillator.connect(gain).connect(ctx.destination);voices.current++;oscillator.onended=()=>{voices.current=Math.max(0,voices.current-1);try{oscillator.disconnect();gain.disconnect()}catch{}};oscillator.start(at);oscillator.stop(at+.22)}catch{}};
     if(ctx.state==="suspended")Promise.resolve(ctx.resume()).then(play).catch(()=>{});else play();
   }catch{}},[]);
@@ -107,7 +108,7 @@ Error generating stack: `+o.message+`
       if(keyboard.current.visible){ctx.save();ctx.strokeStyle="#244734";ctx.lineWidth=1.5;ctx.setLineDash([3,4]);ctx.beginPath();ctx.arc(keyboard.current.x*w,keyboard.current.y*hgt,9*scale,0,Math.PI*2);ctx.stroke();ctx.restore()}
       raf.current=requestAnimationFrame(frame);
     };
-    raf.current=requestAnimationFrame(frame);return()=>{live=false;cancelAnimationFrame(raf.current);releasePointer();if(audio.current){Promise.resolve(audio.current.close()).catch(()=>{});audio.current=null}voices.current=0};
+    raf.current=requestAnimationFrame(frame);return()=>{live=false;cancelAnimationFrame(raf.current);releasePointer();grassAudio.current?.dispose();grassAudio.current=null;if(audio.current){Promise.resolve(audio.current.close()).catch(()=>{});audio.current=null}voices.current=0};
   },[growth,wander,spawnBug,syncStats]);
   const icon=type=>{const common={width:25,height:25,viewBox:"0 0 28 28",fill:"none","aria-hidden":"true"};
     if(type==="grass")return h("svg",common,h("path",{d:"M14 25C13 17 11 9 7 4M14 25c1-9 4-16 9-21M14 25c0-7 0-14 1-21M14 25c-3-5-6-9-11-12M14 25c4-4 7-7 11-9",stroke:"#4f9e57",strokeWidth:2.4,strokeLinecap:"round"}));
