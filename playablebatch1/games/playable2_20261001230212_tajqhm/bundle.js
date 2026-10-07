@@ -24,267 +24,89 @@
     const style = document.createElement('style');
     style.textContent = `
       :root {
+        --ui-unit: min(0.2564102564vw, 0.1672240803vh);
         color-scheme: dark;
-        font-family: Inter, ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         --green: #28d66f;
-        --green-deep: #0fb957;
         --yellow: #ffd10a;
-        --panel: #1b1b22;
-        --muted: #9b9ba9;
       }
       * { box-sizing: border-box; }
       html, body, #root { width: 100%; height: 100%; margin: 0; overflow: hidden; }
-      body {
-        background: #08080d;
-        touch-action: manipulation;
-        user-select: none;
-        -webkit-user-select: none;
-      }
+      body { background: #08080d; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
       button { font: inherit; -webkit-tap-highlight-color: transparent; }
       .game {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        min-height: 100%;
-        overflow: hidden;
-        display: grid;
-        grid-template-rows: auto auto auto auto minmax(140px, 1fr) auto;
-        align-items: center;
-        gap: clamp(10px, 1.8vh, 18px);
-        padding: calc(42px + env(safe-area-inset-top)) max(28px, env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) max(28px, env(safe-area-inset-left));
-        background:
-          radial-gradient(circle at 50% 38%, rgba(97, 35, 174, .58) 0, rgba(43, 13, 78, .5) 26%, transparent 56%),
-          linear-gradient(145deg, #0a0a10 0%, #120a22 46%, #08080d 100%);
+        position: relative; width: 100%; height: 100%; overflow: hidden;
+        display: flex; flex-direction: column; align-items: center;
+        gap: calc(12 * var(--ui-unit));
+        padding: calc(30 * var(--ui-unit) + env(safe-area-inset-top))
+          calc(30 * var(--ui-unit) + env(safe-area-inset-right))
+          calc(50 * var(--ui-unit) + env(safe-area-inset-bottom) + 7px)
+          calc(30 * var(--ui-unit) + env(safe-area-inset-left));
+        background: radial-gradient(ellipse at 50% 40%, #33105a, transparent 70%), #08080d;
       }
-      .game::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background: radial-gradient(circle at 50% 62%, rgba(131, 58, 210, .13), transparent 40%);
-      }
-      .sound {
-        position: absolute;
-        z-index: 4;
-        top: calc(24px + env(safe-area-inset-top));
-        right: max(25px, env(safe-area-inset-right));
-        width: 48px;
-        height: 48px;
-        display: grid;
-        place-items: center;
-        border: 1px solid rgba(255,255,255,.18);
-        border-radius: 50%;
-        background: rgba(36,36,43,.84);
-        color: #fff;
-        box-shadow: 0 8px 28px rgba(0,0,0,.3);
-        cursor: pointer;
-      }
-      .sound svg { width: 23px; height: 23px; }
-      .sound:focus-visible, .action:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
-      .title {
-        position: relative;
-        z-index: 1;
-        margin: 0;
-        padding: 24px 58px 0;
-        color: #fff;
-        font-family: Impact, "Arial Black", ui-rounded, sans-serif;
-        font-size: clamp(42px, 12vw, 70px);
-        line-height: .96;
-        letter-spacing: -.035em;
-        text-align: center;
-        text-wrap: balance;
-        filter: drop-shadow(0 8px 20px rgba(59, 10, 104, .5));
+      .hud {
+        flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between;
+        width: 100%; gap: 16px; min-height: calc(34 * var(--ui-unit));
+        color: #fff; font-size: calc(28 * var(--ui-unit)); font-weight: 750;
+        line-height: 1.2; font-variant-numeric: tabular-nums;
       }
       .target-card {
-        position: relative;
-        z-index: 1;
-        width: min(100%, 480px);
-        min-height: clamp(126px, 18vh, 174px);
-        margin: 0 auto;
-        display: grid;
-        place-content: center;
-        gap: 6px;
-        padding: 20px;
-        border: 2px solid rgba(255,255,255,.08);
-        border-radius: 28px;
-        background: rgba(28,28,34,.94);
-        box-shadow: 0 22px 50px rgba(0,0,0,.32), 0 0 34px rgba(118,45,209,.14);
-        text-align: center;
+        flex: 0 0 auto; width: 100%; min-height: calc(100 * var(--ui-unit));
+        display: grid; place-content: center; gap: calc(4 * var(--ui-unit));
+        padding: calc(12 * var(--ui-unit)); text-align: center;
+        background: #1b1b22; border: 1px solid #ffffff20; border-radius: calc(22 * var(--ui-unit));
       }
-      .label {
-        color: #aaaab8;
-        font-size: clamp(14px, 3.5vw, 19px);
-        font-weight: 800;
-        letter-spacing: .23em;
-      }
-      .target {
-        color: var(--yellow);
-        font-size: clamp(46px, 13vw, 72px);
-        font-weight: 750;
-        line-height: 1;
-        font-variant-numeric: tabular-nums;
-        text-shadow: 0 0 26px rgba(255,209,10,.14);
-      }
-      .round { color: #777781; font-size: 13px; font-weight: 800; letter-spacing: .12em; }
-      .timer-wrap { position: relative; z-index: 1; text-align: center; min-height: 102px; }
-      .timer {
-        color: #fff;
-        font-size: clamp(74px, 22vw, 120px);
-        font-weight: 700;
-        line-height: .92;
-        letter-spacing: -.065em;
-        font-variant-numeric: tabular-nums;
-        text-shadow: 0 10px 32px rgba(0,0,0,.28);
-      }
-      .feedback {
-        min-height: 26px;
-        margin-top: 6px;
-        color: #fff;
-        font-size: clamp(14px, 3.6vw, 18px);
-        font-weight: 800;
-        letter-spacing: .06em;
-        text-align: center;
-      }
+      .label { color: #c8c8d5; font-size: calc(18 * var(--ui-unit)); font-weight: 650; line-height: 1.3; overflow-wrap: anywhere; }
+      .target { color: var(--yellow); font-size: calc(48 * var(--ui-unit)); font-weight: 750; line-height: 1.1; font-variant-numeric: tabular-nums; }
+      .timer-wrap { flex: 1; min-height: calc(132 * var(--ui-unit)); width: 100%; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+      .timer { color: #fff; font-size: calc(80 * var(--ui-unit)); font-weight: 700; line-height: 1.1; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+      .feedback { min-height: calc(50 * var(--ui-unit)); margin-top: calc(8 * var(--ui-unit)); color: #fff; font-size: calc(18 * var(--ui-unit)); line-height: 1.4; font-weight: 600; overflow-wrap: anywhere; }
       .feedback.perfect { color: #46ee8b; }
       .feedback.close { color: #ffd75a; }
       .feedback.miss { color: #ff7e83; }
-      .precision { position: relative; z-index: 1; width: min(100%, 540px); margin: auto; }
-      .precision-title { margin-bottom: 10px; color: #9696a7; font-size: 14px; font-weight: 800; letter-spacing: .08em; }
-      .track {
-        position: relative;
-        height: 18px;
-        border: 5px solid rgba(255,255,255,.08);
-        border-radius: 999px;
-        background: linear-gradient(90deg, #25d76f 0 5%, #efd63f 18%, #d64d68 48%, #382535 100%);
-        box-shadow: inset 0 2px 8px rgba(0,0,0,.45);
-      }
-      .marker {
-        position: absolute;
-        top: 50%;
-        width: 5px;
-        height: 30px;
-        border-radius: 99px;
-        background: #fff;
-        box-shadow: 0 0 12px #fff;
-        transform: translate(-50%, -50%);
-        opacity: 0;
-        transition: left .28s ease, opacity .2s ease;
-      }
-      .marker.show { opacity: 1; }
-      .scale { display: flex; justify-content: space-between; margin-top: 8px; color: #6e6e7a; font-size: 12px; font-weight: 700; }
-      .control {
-        position: relative;
-        z-index: 1;
-        align-self: center;
-        display: grid;
-        place-items: center;
-        min-height: 150px;
-      }
+      .control { flex: 0 0 auto; width: 100%; display: grid; place-items: center; min-height: calc(132 * var(--ui-unit)); }
       .action {
-        width: clamp(142px, 42vw, 188px);
-        aspect-ratio: 1;
-        border: 12px solid rgba(43, 235, 125, .2);
-        border-radius: 50%;
-        background: linear-gradient(145deg, #55d67d, #16c963);
-        color: #fff;
-        box-shadow: 0 18px 34px rgba(11,190,83,.24), inset 0 0 0 3px rgba(0,0,0,.1);
-        font-size: clamp(25px, 7vw, 38px);
-        font-weight: 850;
-        letter-spacing: .025em;
-        cursor: pointer;
-        transition: transform .12s ease, background .18s ease, box-shadow .18s ease;
+        width: calc(132 * var(--ui-unit)); min-width: 48px; aspect-ratio: 1;
+        border: calc(8 * var(--ui-unit)) solid #2beb7d33; border-radius: 50%;
+        background: linear-gradient(145deg, #55d67d, #16c963); color: #07301b;
+        box-shadow: 0 8px 22px #0bbe5333;
+        font-size: calc(24 * var(--ui-unit)); line-height: 1.2; font-weight: 800;
+        padding: 8px; cursor: pointer; transition: transform .12s ease;
       }
+      .action:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
       .action:active { transform: scale(.95); }
-      .action.stop {
-        border-color: rgba(255,111,112,.2);
-        background: linear-gradient(145deg, #ff7b7b, #e94858);
-        box-shadow: 0 18px 34px rgba(232,55,79,.24), inset 0 0 0 3px rgba(0,0,0,.1);
-      }
-      .action.next {
-        aspect-ratio: auto;
-        width: min(72vw, 280px);
-        min-height: 82px;
-        border-width: 8px;
-        border-radius: 999px;
-        font-size: clamp(22px, 6vw, 30px);
-      }
-      .stats {
-        position: relative;
-        z-index: 1;
-        width: min(100%, 500px);
-        margin: auto;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-      .stat {
-        min-height: 58px;
-        display: grid;
-        place-content: center;
-        border: 1px solid rgba(255,255,255,.08);
-        border-radius: 16px;
-        background: rgba(28,28,34,.78);
-        text-align: center;
-      }
-      .stat span { color: #747481; font-size: 11px; font-weight: 800; letter-spacing: .12em; }
-      .stat strong { margin-top: 2px; color: #fff; font-size: 20px; font-variant-numeric: tabular-nums; }
-      @media (max-height: 730px) {
-        .game { gap: 8px; padding-top: calc(30px + env(safe-area-inset-top)); padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
-        .title { padding-top: 8px; font-size: clamp(38px, 10vw, 54px); }
-        .target-card { min-height: 116px; padding: 12px; }
-        .timer-wrap { min-height: 82px; }
-        .timer { font-size: clamp(66px, 18vw, 94px); }
-        .control { min-height: 126px; }
-        .action { width: clamp(120px, 34vw, 152px); }
-        .stats { display: none; }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-      }
+      .action.stop { border-color: #ff6f7033; background: linear-gradient(145deg, #ff7b7b, #e94858); color: #340509; }
+      .action.next { aspect-ratio: auto; width: min(100%, calc(260 * var(--ui-unit))); min-height: max(48px, calc(64 * var(--ui-unit))); border-radius: 999px; font-size: calc(20 * var(--ui-unit)); overflow-wrap: anywhere; }
+      @media (prefers-reduced-motion: reduce) { .action { transition: none; } }
     `;
     document.head.appendChild(style);
 
     root.innerHTML = `
       <main class="game">
-        <button class="sound" id="sound" type="button" aria-label="Mute sound" aria-pressed="false">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z" fill="currentColor"/><path id="soundWaves" d="M16 8.2a5 5 0 0 1 0 7.6M18.7 5.5a9 9 0 0 1 0 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        </button>
-        <h1 class="title" id="title"></h1>
+        <header class="hud">
+          <span id="round" aria-label="Round"></span>
+          <span id="score" aria-label="Score">0</span>
+        </header>
         <section class="target-card" aria-label="Target time">
           <div class="label" id="targetLabel"></div>
           <div class="target" id="target"></div>
-          <div class="round" id="round"></div>
         </section>
-        <section class="timer-wrap" aria-live="polite">
+        <section class="timer-wrap">
           <div class="timer" id="timer">00.00</div>
-          <div class="feedback" id="feedback">Tap PLAY, then tap STOP on the target</div>
-        </section>
-        <section class="precision" aria-label="Timing precision">
-          <div class="precision-title">PRECISION</div>
-          <div class="track"><div class="marker" id="marker"></div></div>
-          <div class="scale"><span>0.0s</span><span>0.1s</span><span>0.3s</span><span>1.0s+</span></div>
+          <div class="feedback" id="feedback" role="status" aria-live="polite">Tap PLAY, then tap STOP on the target</div>
         </section>
         <section class="control"><button class="action" id="action" type="button"></button></section>
-        <section class="stats">
-          <div class="stat"><span>SCORE</span><strong id="score">0</strong></div>
-          <div class="stat"><span>BEST</span><strong id="best">—</strong></div>
-        </section>
       </main>
     `;
 
     const els = {
-      title: document.getElementById('title'),
       targetLabel: document.getElementById('targetLabel'),
       target: document.getElementById('target'),
       round: document.getElementById('round'),
       timer: document.getElementById('timer'),
       feedback: document.getElementById('feedback'),
-      marker: document.getElementById('marker'),
       action: document.getElementById('action'),
-      sound: document.getElementById('sound'),
-      soundWaves: document.getElementById('soundWaves'),
-      score: document.getElementById('score'),
-      best: document.getElementById('best')
+      score: document.getElementById('score')
     };
 
     const totalRounds = Math.max(1, Math.round(Number(cfg.ROUNDS) || 5));
@@ -299,7 +121,8 @@
     let best = Infinity;
     let startAt = 0;
     let raf = 0;
-    let muted = false;
+    const muted = false;
+    let hasPlayed = false;
     let audio = null;
 
     const newTarget = () => {
@@ -309,11 +132,13 @@
     const formatTime = value => Math.min(99.99, value).toFixed(2).padStart(5, '0');
 
     const ensureAudio = () => {
-      if (!audio) {
-        const AudioCtor = window.AudioContext || window.webkitAudioContext;
-        if (AudioCtor) audio = new AudioCtor();
-      }
-      if (audio && audio.state === 'suspended') audio.resume().catch(() => {});
+      try {
+        if (!audio) {
+          const AudioCtor = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtor) audio = new AudioCtor();
+        }
+        if (audio && audio.state === 'suspended') audio.resume().catch(() => {});
+      } catch (_) { audio = null; }
     };
 
     const tone = (frequency, duration, type = 'sine', volume = .08, delay = 0) => {
@@ -334,13 +159,13 @@
     };
 
     const render = () => {
-      els.title.textContent = cfg.TITLE || 'Hit the Time';
       els.targetLabel.textContent = cfg.TARGET_LABEL || 'TARGET';
       els.target.textContent = target.toFixed(2) + 's';
-      els.round.textContent = 'ROUND ' + round + ' / ' + totalRounds;
+      els.round.textContent = round + '/' + totalRounds;
+      els.round.setAttribute('aria-label', 'Round ' + round + ' of ' + totalRounds);
       els.timer.textContent = formatTime(elapsed);
       els.score.textContent = String(score);
-      els.best.textContent = Number.isFinite(best) ? best.toFixed(2) + 's' : '—';
+      els.score.setAttribute('aria-label', 'Score ' + score);
 
       els.action.className = 'action';
       if (phase === 'ready') {
@@ -370,9 +195,9 @@
       phase = 'running';
       elapsed = 0;
       startAt = performance.now();
-      els.feedback.textContent = 'Tap STOP at ' + target.toFixed(2) + ' seconds';
+      hasPlayed = true;
+      els.feedback.textContent = '';
       els.feedback.className = 'feedback';
-      els.marker.classList.remove('show');
       tone(360, .08, 'sine', .055);
       render();
       raf = requestAnimationFrame(tick);
@@ -397,8 +222,6 @@
       const direction = signed === 0 ? '' : signed < 0 ? ' early' : ' late';
       els.feedback.textContent = rating + ' · ' + difference.toFixed(2) + 's' + direction;
       els.feedback.className = 'feedback ' + css;
-      els.marker.style.left = Math.min(100, difference * 100) + '%';
-      els.marker.classList.add('show');
       if (perfect) {
         tone(620, .13, 'sine', .08);
         tone(820, .16, 'sine', .07, .08);
@@ -416,15 +239,15 @@
         round = 1;
         score = 0;
         best = Infinity;
+        hasPlayed = false;
       } else {
         round += 1;
       }
       phase = 'ready';
       elapsed = 0;
       newTarget();
-      els.feedback.textContent = 'Tap PLAY, then tap STOP on the target';
+      els.feedback.textContent = hasPlayed ? '' : 'Tap PLAY, then tap STOP on the target';
       els.feedback.className = 'feedback';
-      els.marker.classList.remove('show');
       tone(300, .07, 'sine', .045);
       render();
     };
@@ -434,15 +257,6 @@
       if (phase === 'ready') beginRound();
       else if (phase === 'running') finishRound(false);
       else advance();
-    });
-
-    els.sound.addEventListener('click', event => {
-      event.stopPropagation();
-      muted = !muted;
-      els.sound.setAttribute('aria-pressed', String(muted));
-      els.sound.setAttribute('aria-label', muted ? 'Turn sound on' : 'Mute sound');
-      els.soundWaves.style.display = muted ? 'none' : '';
-      if (!muted) tone(520, .08, 'sine', .045);
     });
 
     window.addEventListener('keydown', event => {
@@ -458,4 +272,3 @@
 
   start();
 })();
-

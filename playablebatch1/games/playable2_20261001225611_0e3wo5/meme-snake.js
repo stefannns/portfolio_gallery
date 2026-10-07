@@ -31,7 +31,10 @@
   var animationFrame = 0;
   var audioContext = null;
   var joystickActive = false;
+  var joystickPointer = null;
+  var movementStarted = false;
   var resizeObserver;
+  var catScale = 0.9;
 
   try {
     best = Number(localStorage.getItem("meme-snake-best") || 0);
@@ -86,15 +89,14 @@
     root.innerHTML = [
       '<main class="meme-game">',
       '<header class="meme-hud">',
-      '<div class="meme-title"></div>',
       '<div class="meme-scores">',
-      '<div><span class="score-label"></span><strong id="score-value">0</strong></div>',
+      '<div><strong id="score-value" aria-label="Score 0">0</strong></div>',
       '<div><span class="best-label"></span><strong id="best-value">0</strong></div>',
       '</div>',
       '</header>',
       '<section class="meme-arena" aria-label="Cats Snake play area">',
       '<canvas></canvas>',
-      '<div class="meme-hint">Drag the joystick in any direction</div>',
+      '<div class="meme-hint">Drag to steer</div>',
       '<div class="meme-pickup" aria-live="polite"></div>',
       '</section>',
       '<section class="meme-controls">',
@@ -102,14 +104,13 @@
       '<div class="joystick-cross" aria-hidden="true"></div>',
       '<div class="joystick-knob" aria-hidden="true"><span></span></div>',
       '</div>',
-      '<p>360° FREE STEERING</p>',
       '</section>',
       '<div class="meme-overlay" id="game-overlay">',
       '<div class="meme-card">',
       '<img class="head-preview" alt="Random cat head preview">',
-      '<p class="overlay-kicker">YOUR HEAD IS RANDOM</p>',
-      '<h1></h1>',
-      '<p class="overlay-copy">Steer freely. Eat mystery squares to add more cats to your snake.</p>',
+      '<p class="overlay-kicker" hidden></p>',
+      '<h1 hidden></h1>',
+      '<p class="overlay-copy">Steer with the joystick. Eat squares to grow.</p>',
       '<button class="primary-button" type="button"></button>',
       '<button class="post-button" type="button" hidden></button>',
       '</div>',
@@ -120,10 +121,7 @@
     canvas = root.querySelector("canvas");
     context = canvas.getContext("2d");
     arena = root.querySelector(".meme-arena");
-    root.querySelector(".meme-title").textContent = config.GAME_TITLE || "CATS SNAKE";
-    root.querySelector(".score-label").textContent = (config.TEXT_SCORE || "SCORE") + " ";
     root.querySelector(".best-label").textContent = (config.TEXT_BEST || "BEST") + " ";
-    root.querySelector(".meme-card h1").textContent = config.GAME_TITLE || "CATS SNAKE";
     root.querySelector(".primary-button").textContent = config.BTN_START || "START GAME";
     root.querySelector(".post-button").textContent = config.TEXT_POST_PLAY || "POST MY PLAY";
     updateScore();
@@ -168,7 +166,7 @@
   function updateScore() {
     var scoreNode = document.getElementById("score-value");
     var bestNode = document.getElementById("best-value");
-    if (scoreNode) scoreNode.textContent = score;
+    if (scoreNode) { scoreNode.textContent = score; scoreNode.setAttribute("aria-label", "Score " + score); }
     if (bestNode) bestNode.textContent = best;
   }
 
@@ -184,6 +182,9 @@
 
   function prepareRound() {
     score = 0;
+    movementStarted = false;
+    joystickActive = false;
+    joystickPointer = null;
     direction = { x: 1, y: 0 };
     var headIndex = randomInt(MEMES.length);
     segments = [{ x: width * 0.42, y: height * 0.5, meme: headIndex }];
@@ -192,6 +193,7 @@
     var preview = root.querySelector(".head-preview");
     preview.src = MEMES[headIndex].src;
     preview.alt = MEMES[headIndex].name + " cat head";
+    root.querySelector(".meme-hint").hidden = false;
     resetJoystick();
     draw();
   }
@@ -212,7 +214,10 @@
       var AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) return;
       audioContext = audioContext || new AudioContext();
-      if (audioContext.state === "suspended") audioContext.resume();
+      if (audioContext.state === "suspended") {
+        var resume = audioContext.resume();
+        if (resume && resume.catch) resume.catch(function () {});
+      }
     } catch (_) {}
   }
 
@@ -235,6 +240,7 @@
   }
 
   function startGame() {
+    if (state !== "idle" && state !== "over") return;
     unlockAudio();
     if (state === "over") prepareRound();
     state = "playing";
@@ -244,8 +250,14 @@
 
   function endGame() {
     state = "over";
+    var joystick = root.querySelector(".joystick");
+    var releasedPointer = joystickPointer;
+    joystickActive = false;
+    joystickPointer = null;
+    if (releasedPointer !== null && joystick.hasPointerCapture(releasedPointer)) joystick.releasePointerCapture(releasedPointer);
+    resetJoystick();
     tone("over");
-    if (navigator.vibrate) navigator.vibrate([35, 35, 55]);
+    try { if (navigator.vibrate) navigator.vibrate([35, 35, 55]); } catch (_) {}
     best = Math.max(best, score);
     try {
       localStorage.setItem("meme-snake-best", String(best));
@@ -254,7 +266,9 @@
 
     var overlay = root.querySelector("#game-overlay");
     var card = root.querySelector(".meme-card");
-    card.querySelector(".overlay-kicker").textContent = "SNAKE COMPLETE";
+    card.querySelector(".overlay-kicker").textContent = "GAME OVER";
+    card.querySelector(".overlay-kicker").hidden = false;
+    card.querySelector("h1").hidden = false;
     card.querySelector("h1").textContent = "SCORE " + score;
     card.querySelector(".overlay-copy").textContent = "You collected " + score + " cat" + (score === 1 ? "" : "s") + ". Try another random head and beat your best.";
     card.querySelector(".head-preview").src = MEMES[segments[0].meme].src;
@@ -274,20 +288,20 @@
   }
 
   function update(deltaSeconds) {
-    if (state !== "playing" || !segments.length) return;
+    if (state !== "playing" || !movementStarted || !segments.length) return;
 
     var head = segments[0];
     var speed = Math.min(maxSpeed(), baseSpeed() + score * 6);
     head.x += direction.x * speed * deltaSeconds;
     head.y += direction.y * speed * deltaSeconds;
 
-    var headRadius = 24;
+    var headRadius = 24 * catScale;
     if (head.x < headRadius || head.x > width - headRadius || head.y < headRadius || head.y > height - headRadius) {
       endGame();
       return;
     }
 
-    var gap = 42;
+    var gap = 42 * catScale;
     for (var index = 1; index < segments.length; index += 1) {
       var leader = segments[index - 1];
       var follower = segments[index];
@@ -300,7 +314,7 @@
       }
     }
 
-    if (food && distance(head, food) < 46) {
+    if (food && distance(head, food) < headRadius + 22) {
       var tail = segments[segments.length - 1];
       segments.push({ x: tail.x, y: tail.y, meme: food.meme });
       score += 1;
@@ -308,13 +322,13 @@
       updateScore();
       showPickup(food.meme);
       tone("eat");
-      if (navigator.vibrate) navigator.vibrate(12);
+      try { if (navigator.vibrate) navigator.vibrate(12); } catch (_) {}
       spawnFood();
     }
 
     if (segments.length > 6) {
       for (var collisionIndex = 5; collisionIndex < segments.length; collisionIndex += 1) {
-        if (distance(head, segments[collisionIndex]) < 25) {
+        if (distance(head, segments[collisionIndex]) < 25 * catScale) {
           endGame();
           return;
         }
@@ -390,7 +404,7 @@
       context.stroke();
       context.shadowBlur = 0;
       context.fillStyle = "#18343b";
-      context.font = "900 23px Arial, sans-serif";
+      context.font = "600 23px DynaPuff, sans-serif";
       context.textAlign = "center";
       context.textBaseline = "middle";
       context.fillText("?", food.x, food.y + 1);
@@ -398,9 +412,9 @@
     }
 
     for (var index = segments.length - 1; index >= 1; index -= 1) {
-      drawMeme(segments[index], 52, false);
+      drawMeme(segments[index], 52 * catScale, false);
     }
-    if (segments.length) drawMeme(segments[0], 62, true);
+    if (segments.length) drawMeme(segments[0], 62 * catScale, true);
   }
 
   function frame(time) {
@@ -425,34 +439,46 @@
       var radius = rectangle.width * 0.31;
       var visualLength = Math.min(radius, length);
       knob.style.transform = "translate(calc(-50% + " + (dx / length * visualLength) + "px),calc(-50% + " + (dy / length * visualLength) + "px))";
-      if (length > 6) direction = { x: dx / length, y: dy / length };
+      if (length > Math.max(3, rectangle.width * 0.025)) {
+        direction = { x: dx / length, y: dy / length };
+        movementStarted = true;
+        root.querySelector(".meme-hint").hidden = true;
+      }
     }
 
     joystick.addEventListener("pointerdown", function (event) {
+      if (state !== "playing" || joystickPointer !== null || event.isPrimary === false || (event.button != null && event.button !== 0)) return;
       event.preventDefault();
       unlockAudio();
+      joystickPointer = event.pointerId;
       joystickActive = true;
       joystick.setPointerCapture(event.pointerId);
       joystick.classList.add("joystick-active");
       updateJoystick(event.clientX, event.clientY);
     });
     joystick.addEventListener("pointermove", function (event) {
-      if (!joystickActive) return;
+      if (!joystickActive || event.pointerId !== joystickPointer || state !== "playing") return;
       event.preventDefault();
       updateJoystick(event.clientX, event.clientY);
     });
 
-    function releaseJoystick() {
+    function releaseJoystick(event) {
+      if (event && event.pointerId != null && event.pointerId !== joystickPointer) return;
+      var releasedPointer = joystickPointer;
+      joystickPointer = null;
       joystickActive = false;
       joystick.classList.remove("joystick-active");
+      if (releasedPointer !== null && joystick.hasPointerCapture(releasedPointer)) joystick.releasePointerCapture(releasedPointer);
       resetJoystick();
     }
     joystick.addEventListener("pointerup", releaseJoystick);
     joystick.addEventListener("pointercancel", releaseJoystick);
     joystick.addEventListener("lostpointercapture", releaseJoystick);
     joystick.addEventListener("keydown", function (event) {
-      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      if (state !== "playing" || (event.key !== "ArrowLeft" && event.key !== "ArrowRight")) return;
       event.preventDefault();
+      movementStarted = true;
+      root.querySelector(".meme-hint").hidden = true;
       var turn = event.key === "ArrowLeft" ? -Math.PI / 12 : Math.PI / 12;
       var cosine = Math.cos(turn);
       var sine = Math.sin(turn);
@@ -460,6 +486,18 @@
         x: direction.x * cosine - direction.y * sine,
         y: direction.x * sine + direction.y * cosine
       };
+    });
+    function pauseSteering() {
+      releaseJoystick();
+      if (state === "playing") {
+        movementStarted = false;
+        root.querySelector(".meme-hint").hidden = false;
+      }
+      lastFrame = performance.now();
+    }
+    window.addEventListener("blur", pauseSteering);
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) pauseSteering();
     });
 
     root.querySelector(".primary-button").addEventListener("click", startGame);
@@ -471,6 +509,8 @@
   }
 
   function resetJoystick() {
+    var joystick = root.querySelector(".joystick");
+    if (joystick) joystick.classList.remove("joystick-active");
     var knob = root.querySelector(".joystick-knob");
     if (knob) knob.style.transform = "translate(-50%,-50%)";
   }
@@ -478,25 +518,27 @@
   function installStyles() {
     var style = document.createElement("style");
     style.textContent = [
+      "@font-face{font-family:DynaPuff;src:url('./assets/fonts/dynapuff/DynaPuff-SemiBold.woff2') format('woff2');font-style:normal;font-weight:600;font-display:swap}",
+      "@font-face{font-family:Poppins;src:url('./assets/fonts/poppins/Poppins-Regular.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}",
+      ":root{--ui-unit:min(0.2564102564vw,0.1672240803vh);--font-playful:DynaPuff,system-ui,sans-serif;--font-readable:Poppins,system-ui,sans-serif}",
       "*{box-sizing:border-box}",
       "html,body,#root{width:100%;height:100%;margin:0;overflow:hidden}",
-      "body{background:#06161b;color:#f6fff9;font-family:Arial,system-ui,sans-serif;overscroll-behavior:none}",
-      "button{font:inherit}",
-      ".meme-game{position:relative;width:100%;max-width:520px;height:100%;margin:0 auto;display:flex;flex-direction:column;overflow:hidden;background:#0a2228;box-shadow:0 0 50px #0008}",
-      ".meme-hud{position:relative;z-index:2;flex:0 0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:max(40px,calc(env(safe-area-inset-top) + 22px)) 25px 12px;background:#102c33;border-bottom:1px solid #79c9b344}",
-      ".meme-title{font-family:Impact,Arial Black,sans-serif;font-size:clamp(24px,7vw,35px);line-height:.9;letter-spacing:.8px;color:#f2d16f;text-shadow:0 3px 0 #663f33}",
-      ".meme-scores{display:flex;gap:14px;text-align:right}",
-      ".meme-scores div{display:flex;flex-direction:column;align-items:flex-end}",
-      ".meme-scores span{font-size:10px;font-weight:800;letter-spacing:1.2px;color:#9ad4c5}",
-      ".meme-scores strong{font-size:22px;line-height:1;color:#fff}",
-      ".meme-arena{position:relative;flex:1;min-height:0;margin:0 25px;border:2px solid #72c6b0;border-radius:18px;overflow:hidden;background:#102d34;box-shadow:inset 0 0 28px #0007,0 10px 24px #0005}",
+      "body{background:#06161b;color:#f6fff9;font-family:var(--font-readable);font-weight:400;font-synthesis:none;overscroll-behavior:none}",
+      "button{font:inherit}[hidden]{display:none!important}",
+      ".meme-game{position:relative;width:100%;height:100%;margin:0 auto;display:flex;flex-direction:column;overflow:hidden;background:#0a2228;box-shadow:0 0 50px #0008}",
+      ".meme-hud{position:relative;z-index:2;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:calc(30 * var(--ui-unit) + env(safe-area-inset-top)) calc(30 * var(--ui-unit) + env(safe-area-inset-right)) 12px calc(30 * var(--ui-unit) + env(safe-area-inset-left));background:#102c33;border-bottom:1px solid #79c9b344}",
+      ".meme-scores{display:flex;width:100%;justify-content:space-between;align-items:center;gap:14px;text-align:right}",
+      ".meme-scores div{display:flex;align-items:baseline;gap:8px}",
+      ".meme-scores span{font-family:var(--font-playful);font-size:calc(14 * var(--ui-unit));font-weight:600;letter-spacing:.5px;color:#c6e8df}",
+      ".meme-scores strong{font-family:var(--font-playful);font-weight:600;font-size:calc(28 * var(--ui-unit));line-height:1.2;color:#fff;font-variant-numeric:tabular-nums}",
+      ".meme-arena{position:relative;flex:1;min-height:0;margin:0;border:2px solid #72c6b0;border-left:0;border-right:0;border-radius:0;overflow:hidden;background:#102d34;box-shadow:inset 0 0 28px #0007,0 10px 24px #0005}",
       ".meme-arena canvas{display:block;width:100%;height:100%;touch-action:none}",
-      ".meme-hint{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:max-content;max-width:calc(100% - 24px);padding:7px 12px;border-radius:999px;background:#06171dcc;color:#b9e6da;font-size:11px;font-weight:800;letter-spacing:.3px;text-align:center;pointer-events:none}",
+      ".meme-hint{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);width:calc(100% - 32px);padding:7px 12px;border-radius:16px;background:#06171de6;color:#e9fff8;font-size:calc(18 * var(--ui-unit));line-height:1.35;font-weight:800;letter-spacing:.3px;text-align:center;pointer-events:none}",
       ".meme-pickup{position:absolute;left:50%;top:20px;display:flex;align-items:center;gap:8px;min-height:42px;padding:5px 12px 5px 6px;border:1px solid #f4d77f;border-radius:999px;background:#142d32ed;color:#fff0b8;font-size:12px;font-weight:900;opacity:0;transform:translate(-50%,-12px);pointer-events:none}",
       ".meme-pickup img{width:34px;height:34px;object-fit:contain}",
       ".pickup-pop{animation:pickup-pop 1.15s ease both}",
       "@keyframes pickup-pop{0%{opacity:0;transform:translate(-50%,-12px) scale(.85)}15%,75%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-8px) scale(.95)}}",
-      ".meme-controls{position:relative;z-index:2;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;padding:12px 25px max(40px,calc(env(safe-area-inset-bottom) + 24px));background:#102c33}",
+      ".meme-controls{position:relative;z-index:2;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;padding:12px calc(30 * var(--ui-unit)) calc(50 * var(--ui-unit) + env(safe-area-inset-bottom) + 22px);background:#102c33}",
       ".meme-controls p{margin:7px 0 0;color:#9bd6c6;font-size:10px;font-weight:900;letter-spacing:1.6px}",
       ".joystick{position:relative;width:142px;height:142px;border:2px solid #83d2bd;border-radius:50%;background:radial-gradient(circle,#183e46 0 29%,#102b32 30% 58%,#0a2026 59%);box-shadow:inset 0 0 18px #0008,0 8px 18px #0006;touch-action:none;cursor:grab;outline:none}",
       ".joystick:focus-visible{outline:3px solid #fff3bc;outline-offset:4px}",
@@ -504,18 +546,20 @@
       ".joystick-cross{position:absolute;inset:14px;border-radius:50%;background:linear-gradient(90deg,transparent 49.5%,#a9d9cc33 50%,transparent 50.5%),linear-gradient(0deg,transparent 49.5%,#a9d9cc33 50%,transparent 50.5%);pointer-events:none}",
       ".joystick-knob{position:absolute;left:50%;top:50%;width:58px;height:58px;transform:translate(-50%,-50%);border:3px solid #ffebb0;border-radius:50%;background:linear-gradient(145deg,#f2d16f,#bb8148);box-shadow:0 7px 14px #0009,inset 0 2px #fff8;pointer-events:none;transition:box-shadow .12s ease}",
       ".joystick-knob span{position:absolute;left:50%;top:9px;width:8px;height:15px;transform:translateX(-50%);border-radius:5px;background:#18343b}",
-      ".meme-overlay{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:max(40px,calc(env(safe-area-inset-top) + 24px)) 25px max(40px,calc(env(safe-area-inset-bottom) + 24px));background:#06161bf2;backdrop-filter:blur(6px);opacity:1;visibility:visible;transition:opacity .25s ease,visibility .25s ease}",
+      ".meme-overlay{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:calc(30 * var(--ui-unit) + env(safe-area-inset-top)) calc(30 * var(--ui-unit) + env(safe-area-inset-right)) calc(50 * var(--ui-unit) + env(safe-area-inset-bottom)) calc(30 * var(--ui-unit) + env(safe-area-inset-left));background:#06161bf2;backdrop-filter:blur(6px);opacity:1;visibility:visible;transition:opacity .25s ease,visibility .25s ease}",
       ".overlay-hidden{opacity:0;visibility:hidden;pointer-events:none}",
       ".meme-card{width:100%;max-width:370px;padding:24px 20px;border:1.5px solid #6fc1ad;border-radius:24px;background:#102d34;text-align:center;box-shadow:0 20px 50px #000b}",
       ".head-preview{width:132px;height:132px;object-fit:contain;filter:drop-shadow(0 9px 10px #0008)}",
       ".overlay-kicker{margin:8px 0 6px;color:#f2d16f;font-size:11px;font-weight:900;letter-spacing:1.8px}",
-      ".meme-card h1{margin:0;font-family:Impact,Arial Black,sans-serif;font-size:clamp(38px,11vw,56px);font-weight:400;line-height:.95;letter-spacing:1px;color:#fff;text-shadow:0 4px 0 #663f33}",
-      ".overlay-copy{max-width:29ch;margin:14px auto 20px;color:#c6e8df;font-size:14px;line-height:1.45}",
+      ".meme-card h1{margin:0;font-family:var(--font-playful);font-size:calc(28 * var(--ui-unit));font-weight:600;line-height:1.2;letter-spacing:.2px;color:#fff;text-shadow:0 2px 0 #663f33}",
+      ".overlay-copy{max-width:29ch;margin:14px auto 20px;color:#c6e8df;font-size:calc(18 * var(--ui-unit));line-height:1.4}",
       ".primary-button,.post-button{width:100%;min-height:54px;padding:10px 16px;border:0;border-radius:13px;background:#f0d17d;color:#17343a;font-size:17px;font-weight:900;box-shadow:0 5px 0 #92763b;cursor:pointer;touch-action:manipulation}",
       ".primary-button:active,.post-button:active{filter:brightness(.92);box-shadow:0 2px 0 #92763b}",
       ".primary-button:focus-visible,.post-button:focus-visible{outline:3px solid #fff;outline-offset:3px}",
       ".post-button{margin-top:11px;border:1px solid #7bcab6;background:#173b43;color:#e9fff8;box-shadow:none}",
-      "@media(max-height:700px){.meme-hud{padding-top:max(28px,calc(env(safe-area-inset-top) + 14px));padding-bottom:8px}.meme-controls{padding-top:8px;padding-bottom:max(24px,calc(env(safe-area-inset-bottom) + 14px))}.joystick{width:116px;height:116px}.joystick-knob{width:48px;height:48px}.meme-controls p{margin-top:4px}.head-preview{width:105px;height:105px}.meme-card{padding-top:18px;padding-bottom:18px}}",
+      ".primary-button,.post-button,.overlay-kicker,.meme-pickup{font-family:var(--font-playful);font-weight:600}",
+      ".meme-hint{font-weight:400;letter-spacing:0}",
+      "@media(max-height:700px){.meme-hud{padding-bottom:8px}.meme-controls{padding-top:8px}.joystick{width:116px;height:116px}.joystick-knob{width:48px;height:48px}.meme-controls p{margin-top:4px}.head-preview{width:105px;height:105px}.meme-card{padding-top:18px;padding-bottom:18px}}",
       "@media(prefers-reduced-motion:reduce){.meme-overlay{transition:none}.pickup-pop{animation-duration:.2s}}"
     ].join("");
     document.head.appendChild(style);

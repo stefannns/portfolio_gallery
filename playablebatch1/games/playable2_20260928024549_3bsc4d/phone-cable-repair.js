@@ -39,15 +39,15 @@
     if (originalLine) originalLine.style.display = 'none';
     head.style.display = 'block';
     head.style.top = 'auto';
-    head.style.bottom = 'calc(40px + env(safe-area-inset-bottom, 0px))';
+    head.style.bottom = 'calc(72px + env(safe-area-inset-bottom, 0px))';
     head.style.left = '50%';
-    head.style.width = '28px';
-    head.style.height = '40px';
+    head.style.width = '32px';
+    head.style.height = '46px';
     head.style.objectFit = 'contain';
     head.style.zIndex = '2';
     moving.style.zIndex = '2';
     const wire = document.createElement('div');
-    wire.style.cssText = 'position:absolute;bottom:0;left:2px;width:12px;height:calc(var(--cable-rise, 0px) + 40px + env(safe-area-inset-bottom, 0px));background:linear-gradient(90deg,#4b5563 0%,#f8fafc 45%,#9ca3af 100%);border:1px solid #4b5563;border-radius:6px;box-shadow:0 0 4px rgba(255,255,255,.35);z-index:1;pointer-events:none';
+    wire.style.cssText = 'position:absolute;bottom:0;left:0;width:16px;height:calc(var(--cable-rise, 0px) + 72px + env(safe-area-inset-bottom, 0px));background:linear-gradient(90deg,#475569 0%,#f8fafc 42%,#cbd5e1 62%,#64748b 100%);border:1px solid #334155;border-radius:8px;box-shadow:0 0 8px rgba(255,255,255,.28);z-index:1;pointer-events:none';
     anchor.insertBefore(wire, moving);
     const syncWire = () => {
       if (!anchor.isConnected) return;

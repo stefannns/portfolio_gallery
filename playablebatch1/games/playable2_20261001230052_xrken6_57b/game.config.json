@@ -1,0 +1,90 @@
+{
+  "tweaks": [
+    {
+      "id": "GRAVITY",
+      "kind": "number",
+      "label": "Growth Speed",
+      "value": 1.2,
+      "default": 1.2,
+      "min": 0.1,
+      "max": 2.0,
+      "step": 0.1
+    },
+    {
+      "id": "CREATURE_FORCE",
+      "kind": "number",
+      "label": "Bug Wander Speed",
+      "value": 0.05,
+      "default": 0.05,
+      "min": 0.01,
+      "max": 0.2,
+      "step": 0.01
+    }
+  ],
+  "texts": [
+    {
+      "id": "TITLE",
+      "label": "Title",
+      "value": "Creature Sandbox",
+      "default": "Creature Sandbox",
+      "max_length": 25
+    },
+    {
+      "id": "BTN_ADD_CREATURE",
+      "label": "Invite Bugs Button",
+      "value": "Invite Bugs",
+      "default": "Invite Bugs",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_ADD_BLOCK",
+      "label": "Grow Patch Button",
+      "value": "Grow Patch",
+      "default": "Grow Patch",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_CLEAR",
+      "label": "Clear Button",
+      "value": "Reset",
+      "default": "Reset",
+      "max_length": 15
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Background",
+      "path": "./assets/meadow_topdown.svg",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_CREATURE",
+      "label": "Ladybug Image",
+      "path": "./assets/ladybug.svg",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_FOOD",
+      "label": "Bee Image",
+      "path": "./assets/bee_topdown.svg",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_BLOCK",
+      "label": "Flower Image",
+      "path": "./assets/flower_topdown.svg",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99279393805132897",
+    "version_id": "99279393805126700",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

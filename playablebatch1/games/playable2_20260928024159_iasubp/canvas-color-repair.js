@@ -1,8 +1,8 @@
 (() => {
   const colors = {
     'var(--bg-color)': '#fdfbf7',
-    'var(--color-obstacle)': '#64748b',
-    'var(--color-soda)': '#ef4444',
+    'var(--color-obstacle)': '#f2a84b',
+    'var(--color-soda)': '#25b8d2',
     'var(--color-primary)': '#243447'
   };
   for (const property of ['fillStyle', 'strokeStyle', 'shadowColor']) {

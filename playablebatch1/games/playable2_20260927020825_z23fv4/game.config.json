@@ -69,7 +69,7 @@
     {
       "id": "BG_COVER",
       "label": "Cover Background",
-      "path": "./assets/bg_cover.webp",
+      "path": "./assets/book-cover-transparent-v2.png",
       "replaceable": true
     },
     {

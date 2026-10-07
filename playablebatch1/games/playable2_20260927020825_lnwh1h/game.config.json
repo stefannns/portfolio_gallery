@@ -24,8 +24,8 @@
       "id": "DIG_RADIUS",
       "kind": "number",
       "label": "Dig Brush Size",
-      "value": 35,
-      "default": 35,
+      "value": 26,
+      "default": 26,
       "min": 20,
       "max": 60,
       "step": 1

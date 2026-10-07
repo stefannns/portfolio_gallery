@@ -1,0 +1,15 @@
+Honey Bee — Kevin MacLeod (incompetech.com)
+ISRC: USUAN1100755. Published tempo: 100 BPM.
+Source: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100755
+Original audio: https://incompetech.com/music/royalty-free/mp3-royaltyfree/Honey%20Bee.mp3
+Licensed under Creative Commons Attribution 4.0 International:
+https://creativecommons.org/licenses/by/4.0/
+
+Adaptation: excerpt starts at 0.02 seconds, with pitch-preserving tempo
+correction at ratio 0.990104166667, then trimmed to a 38.4-second
+16-bar loop (64 quarter-note beats at 100 BPM), normalized to -18 LUFS,
+with 3-millisecond edge fades and encoded as 128-kbps stereo MP3.
+The catalog lists 100 BPM; onset-envelope analysis of the original recording
+found a 16-beat repeat at 9.505 seconds rather than the target 9.600 seconds.
+The small timing correction removes that drift without shifting pitch.
+Visible credit/source/license links appear in game results.

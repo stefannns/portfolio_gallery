@@ -255,6 +255,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   const [running,setRunning]=(0,he.useState)(false);
   const [panel,setPanel]=(0,he.useState)("");
   const [config,setConfig]=(0,he.useState)({});
+  const [showGuide,setShowGuide]=(0,he.useState)(true);
   const swatches=["#47ff25","#21d6fa","#ee62ff","#ff4e70","#ffcc30","#ffffff","#ff8c36","#a879ff","#57f2bb"];
   const icon={
     speed:h("svg",{width:22,height:22,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:2,strokeLinecap:"round",strokeLinejoin:"round","aria-hidden":"true"},h("path",{d:"m13 2-9 11h7l-1 9 10-12h-7l1-8Z"})),
@@ -268,7 +269,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       {angle:Math.PI/2-.18,velocity:0}
     ];
     m.trail=[];m.pivot={x:.5,y:.4};m.drag=null;m.running=false;
-    setRunning(false);
+    setRunning(false);setShowGuide(true);
   };
   model.current.speed=speed;model.current.color=color;model.current.glow=glow;
 
@@ -356,6 +357,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     return Math.hypot(p.x-a.x-t*dx,p.y-a.y-t*dy);
   };
   const onDown=e=>{
+    if(e.isPrimary===false||e.button>0)return;
     const m=model.current,now=performance.now(),p=pointerPosition(e),points=getPoints(m,p.w,p.h);
     let nearest=-1,distance=Infinity;
     points.forEach((q,i)=>{const d=Math.hypot(p.x-q.x,p.y-q.y);if(d<distance){distance=d;nearest=i}});
@@ -367,7 +369,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       if(now-m.lastTap<330){resetMotion();m.lastTap=-1e9}else m.lastTap=now;
       return;
     }
-    m.lastTap=-1e9;
+    m.lastTap=-1e9;setShowGuide(false);e.preventDefault();
     if(m.running){m.running=false;setRunning(false)}
     m.drag={joint:nearest,pointer:e.pointerId,start:{x:p.x,y:p.y},pivot:{...m.pivot}};
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -377,7 +379,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     if(!d||d.pointer!==e.pointerId)return;
     const p=pointerPosition(e);
     if(d.joint===0){
-      m.pivot={x:Math.max(40/p.w,Math.min(1-40/p.w,d.pivot.x+(p.x-d.start.x)/p.w)),y:Math.max(150/p.h,Math.min(.6,d.pivot.y+(p.y-d.start.y)/p.h))};
+      m.pivot={x:Math.max(40/p.w,Math.min(1-40/p.w,d.pivot.x+(p.x-d.start.x)/p.w)),y:Math.max(32/p.h,Math.min(1-32/p.h,d.pivot.y+(p.y-d.start.y)/p.h))};
       m.trail=[];return;
     }
     const points=getPoints(m,p.w,p.h),index=d.joint-1,anchor=points[index],rod=m.rods[index];
@@ -402,34 +404,52 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     osc.connect(gain).connect(ctx.destination);osc.start(at);osc.stop(at+.2);
   }catch{}};
   const toggleMotion=()=>{
-    const m=model.current;
+    const m=model.current;setShowGuide(false);
     if(m.running){m.running=false;setRunning(false);playClick(false);return}
     m.drag=null;m.trail=[];
     m.rods.forEach((rod,i)=>{rod.velocity+=(i%2===0?1:-1)*(.027+i*.006)});
     m.running=true;setRunning(true);setPanel("");playClick(true);
   };
-  const panelButton=(kind,label)=>h("button",{type:"button","aria-label":label,"aria-expanded":panel===kind,onClick:()=>setPanel(panel===kind?"":kind),style:{width:48,height:48,border:"1px solid #444",borderRadius:14,background:panel===kind?"#263b28":"#111",color:panel===kind?"#50ff3a":"#eee",display:"grid",placeItems:"center",cursor:"pointer",touchAction:"manipulation"}},icon[kind]);
-  const heading=h("div",{style:{position:"absolute",top:"calc(40px + env(safe-area-inset-top))",left:25,right:25,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,zIndex:2}},
-    h("div",{style:{color:"#fff",fontSize:"clamp(16px, 4.9vw, 19px)",fontWeight:700,letterSpacing:".02em",whiteSpace:"nowrap"}},config.GAME_TITLE||"Physics 2.0"),
-    h("div",{style:{display:"flex",gap:8}},panelButton("speed","Speed"),panelButton("brush","Color and glow"))
-  );
-  const cardStyle={position:"absolute",zIndex:3,top:"calc(104px + env(safe-area-inset-top))",right:25,left:25,maxWidth:360,marginLeft:"auto",padding:16,border:"1px solid #444",borderRadius:16,background:"#151515",boxShadow:"0 12px 30px #000a",color:"#fff",fontSize:15};
-  const actionStyle={minHeight:44,minWidth:78,padding:"8px 15px",border:"1px solid #555",borderRadius:10,background:"#292929",color:"#fff",fontSize:14,cursor:"pointer",touchAction:"manipulation"};
+  const panelButton=(kind,label)=>h("button",{type:"button",className:"pendulum-tool","aria-label":label,"aria-expanded":panel===kind,"aria-controls":"pendulum-options",onClick:()=>setPanel(panel===kind?"":kind),style:{background:panel===kind?"#263b28":"#151b2a",color:panel===kind?"#50ff3a":"#eee"}},icon[kind]);
+  const actionStyle={minHeight:44,minWidth:0,padding:"8px 12px",border:"1px solid #555",borderRadius:10,background:"#292929",color:"#fff",fontSize:16,cursor:"pointer",touchAction:"manipulation"};
+  const cardHeading=label=>h("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginBottom:12}},
+    h("strong",null,label),h("button",{type:"button",onClick:()=>setPanel(""),style:actionStyle,"aria-label":"Close "+label+" options"},"Done"));
   let card=null;
-  if(panel==="speed")card=h("div",{style:cardStyle},
-    h("label",{htmlFor:"pendulum-speed",style:{display:"block",marginBottom:12,fontWeight:700}},"Speed: "+speed.toFixed(1)+"x"),
-    h("input",{id:"pendulum-speed",type:"range",min:.2,max:3,step:.1,value:speed,onChange:e=>setSpeed(Number(e.target.value)),style:{width:"100%",height:36,accentColor:color,touchAction:"auto"}}),
-    h("div",{style:{display:"flex",gap:8,marginTop:8}},h("button",{type:"button",onClick:()=>setSpeed(1),style:actionStyle},"1X"),h("button",{type:"button",onClick:()=>{setSpeed(1);resetMotion()},style:actionStyle},"Reset"))
+  if(panel==="speed")card=h("section",{id:"pendulum-options",className:"pendulum-options","aria-label":"Motion speed"},
+    cardHeading("Speed"),
+    h("label",{htmlFor:"pendulum-speed",style:{display:"block",marginBottom:8}},"Speed: "+speed.toFixed(1)+"×"),
+    h("input",{id:"pendulum-speed",type:"range",min:.2,max:3,step:.1,value:speed,onChange:e=>setSpeed(Number(e.target.value)),style:{width:"100%",height:44,accentColor:color,touchAction:"auto"}}),
+    h("div",{style:{display:"flex",gap:8,marginTop:8}},h("button",{type:"button",onClick:()=>setSpeed(1),style:{...actionStyle,flex:1}},"1×"),h("button",{type:"button",onClick:()=>{setSpeed(1);resetMotion()},style:{...actionStyle,flex:1}},"Reset"))
   );
-  if(panel==="brush")card=h("div",{style:cardStyle},
-    h("div",{style:{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}},swatches.map(c=>h("button",{key:c,type:"button","aria-label":"Select "+c+" color","aria-pressed":color===c,onClick:()=>setColor(c),style:{height:44,borderRadius:10,border:color===c?"3px solid #fff":"2px solid #555",background:c,cursor:"pointer",touchAction:"manipulation"}}))),
-    h("button",{type:"button","aria-pressed":glow,onClick:()=>setGlow(!glow),style:{...actionStyle,width:"100%",marginTop:14,background:glow?"#244a27":"#292929"}},"Glow "+(glow?"On":"Off"))
+  if(panel==="brush")card=h("section",{id:"pendulum-options",className:"pendulum-options","aria-label":"Color and glow"},
+    cardHeading("Color"),
+    h("div",{style:{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}},swatches.map(c=>h("button",{key:c,type:"button","aria-label":"Select "+c+" color","aria-pressed":color===c,onClick:()=>setColor(c),style:{height:44,borderRadius:10,border:color===c?"3px solid #fff":"2px solid #777",background:c,cursor:"pointer",touchAction:"manipulation"}}))),
+    h("button",{type:"button","aria-pressed":glow,onClick:()=>setGlow(!glow),style:{...actionStyle,width:"100%",marginTop:12,background:glow?"#244a27":"#292929"}},"Glow "+(glow?"On":"Off"))
   );
-  return h("div",{ref:root,style:{position:"relative",isolation:"isolate",width:"100%",height:"100%",background:"#000",overflow:"hidden",fontFamily:"Arial, sans-serif",touchAction:"none"}},
-    h("canvas",{ref:canvas,onPointerDown:onDown,onPointerMove:onMove,onPointerUp:onUp,onPointerCancel:onUp,"aria-label":"Single articulated pendulum arm. Drag pivot or numbered joints to tune each segment before starting motion.",style:{position:"absolute",zIndex:0,inset:0,display:"block",touchAction:"none"}}),
-    heading,card,
-    h("div",{style:{position:"absolute",zIndex:2,top:"calc(102px + env(safe-area-inset-top))",left:25,right:25,color:"#c9c9c9",textAlign:"center",fontSize:14,pointerEvents:"none",display:panel?"none":"block"}},running?"Tap a joint to pause and adjust":"Drag the numbered joints to shape the arm"),
-    h("button",{type:"button",onClick:toggleMotion,"aria-pressed":running,style:{position:"absolute",zIndex:2,bottom:"calc(40px + env(safe-area-inset-bottom))",left:25,right:25,minHeight:56,border:"1px solid #74ff60",borderRadius:16,background:running?"#152319":"#43e530",color:running?"#d8ffcf":"#062406",fontSize:18,fontWeight:700,fontFamily:"Arial, sans-serif",cursor:"pointer",touchAction:"manipulation",boxShadow:"0 7px 22px #19ac2844"}},running?"Pause Motion":config.TXT_TAP_START||"Start Motion"),
-    h("div",{style:{position:"absolute",zIndex:2,bottom:"calc(108px + env(safe-area-inset-bottom))",left:25,right:25,color:"#a8a8a8",textAlign:"center",fontSize:13,pointerEvents:"none"}},running?"Trail draws from the last joint":(config.TXT_DOUBLE_TAP||"Double tap outside to reset").toLowerCase())
+  return h("main",{className:"pendulum-game",onKeyDown:e=>{if(e.key==="Escape")setPanel("")}},
+    h("style",null,`
+      :root{--ui-unit:min(0.2564102564vw,0.1672240803vh)}
+      html,body,#root{margin:0;width:100%;height:100%;overflow:hidden;background:#000}
+      .pendulum-game,.pendulum-game *{box-sizing:border-box}
+      .pendulum-game{position:relative;isolation:isolate;width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden;background:#000;color:#fff;font-family:Arial,system-ui,sans-serif}
+      .pendulum-guide{flex:0 0 auto;min-height:calc(56 * var(--ui-unit));margin:0;padding:calc(30 * var(--ui-unit) + env(safe-area-inset-top)) calc(30 * var(--ui-unit)) 10px;text-align:center;font-size:calc(18 * var(--ui-unit));line-height:1.4;color:#d1d5df;pointer-events:none}
+      .pendulum-stage{position:relative;flex:1;min-height:0;margin:0 calc(30 * var(--ui-unit) + env(safe-area-inset-right)) 0 calc(30 * var(--ui-unit) + env(safe-area-inset-left));overflow:hidden}
+      .pendulum-stage canvas{position:absolute;inset:0;display:block;touch-action:none}
+      .pendulum-actions{position:relative;z-index:2;flex:0 0 auto;display:flex;align-items:stretch;gap:8px;padding:12px calc(30 * var(--ui-unit) + env(safe-area-inset-right)) calc(50 * var(--ui-unit) + env(safe-area-inset-bottom)) calc(30 * var(--ui-unit) + env(safe-area-inset-left))}
+      .pendulum-game button{font-family:inherit;cursor:pointer;touch-action:manipulation}
+      .pendulum-game button:focus-visible,.pendulum-game input:focus-visible{outline:3px solid #fff;outline-offset:3px}
+      .pendulum-tool{width:48px;min-height:48px;flex:0 0 48px;border:1px solid #555;border-radius:12px;display:grid;place-items:center}
+      .pendulum-start{flex:1;min-width:0;min-height:48px;padding:10px 8px;border:1px solid #74ff60;border-radius:12px;background:#43e530;color:#062406;font-size:calc(18 * var(--ui-unit));font-weight:700;line-height:1.3;overflow-wrap:anywhere}
+      .pendulum-start[aria-pressed="true"]{background:#152319;color:#d8ffcf}
+      .pendulum-game button:active{filter:brightness(.86)}
+      .pendulum-options{position:absolute;z-index:3;bottom:calc(50 * var(--ui-unit) + env(safe-area-inset-bottom) + 72px);left:calc(30 * var(--ui-unit) + env(safe-area-inset-left));right:calc(30 * var(--ui-unit) + env(safe-area-inset-right));padding:14px;border:1px solid #555;border-radius:16px;background:#151b2a;box-shadow:0 12px 30px #000a;font-size:16px;line-height:1.4;max-height:calc(100% - 30 * var(--ui-unit) - env(safe-area-inset-top) - 50 * var(--ui-unit) - env(safe-area-inset-bottom) - 84px);overflow-y:auto}
+    `),
+    h("p",{className:"pendulum-guide",style:{visibility:showGuide&&!panel?"visible":"hidden"},"aria-hidden":!showGuide||!!panel},"Adjust the joints, then start"),
+    h("div",{ref:root,className:"pendulum-stage"},
+      h("canvas",{ref:canvas,onPointerDown:onDown,onPointerMove:onMove,onPointerUp:onUp,onPointerCancel:onUp,"aria-label":"Single articulated pendulum arm. Drag pivot or numbered joints to tune each segment before starting motion."})),
+    card,
+    h("footer",{className:"pendulum-actions"},
+      panelButton("speed","Speed"),panelButton("brush","Color and glow"),
+      h("button",{type:"button",className:"pendulum-start",onClick:toggleMotion,"aria-pressed":running},running?"Pause Motion":config.TXT_TAP_START||"Start Motion"))
   );
 };;;(0,GE.createRoot)(document.getElementById("root")).render((0,gt.jsx)(DI,{}));})();

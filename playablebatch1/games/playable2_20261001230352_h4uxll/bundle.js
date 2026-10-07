@@ -28,7 +28,7 @@
     const root = document.getElementById('root');
     const style = document.createElement('style');
     style.textContent = `
-      :root { color-scheme: dark; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      :root { --ui-unit: min(0.2564102564vw, 0.1672240803vh); color-scheme: dark; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
       * { box-sizing: border-box; }
       html, body, #root { width: 100%; height: 100%; margin: 0; overflow: hidden; }
       body { background: #11151d; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
@@ -37,9 +37,9 @@
       .hud {
         position: absolute;
         z-index: 2;
-        top: calc(40px + env(safe-area-inset-top));
-        left: max(25px, env(safe-area-inset-left));
-        right: max(25px, env(safe-area-inset-right));
+        top: calc(30 * var(--ui-unit) + env(safe-area-inset-top));
+        left: calc(30 * var(--ui-unit) + env(safe-area-inset-left));
+        right: calc(30 * var(--ui-unit) + env(safe-area-inset-right));
         pointer-events: none;
         text-align: center;
         filter: drop-shadow(0 3px 12px rgba(0,0,0,.72));
@@ -48,51 +48,13 @@
         max-width: 420px;
         margin: 0 auto;
         color: rgba(226,232,242,.72);
-        font-size: clamp(14px, 3.8vw, 19px);
+        font-size: calc(18 * var(--ui-unit));
+        overflow-wrap: anywhere;
         font-weight: 600;
         line-height: 1.35;
         transition: opacity .35s ease, transform .35s ease;
       }
       .guide.hidden { opacity: 0; transform: translateY(-5px); }
-      .counter {
-        position: absolute;
-        z-index: 2;
-        left: max(25px, env(safe-area-inset-left));
-        bottom: calc(40px + env(safe-area-inset-bottom));
-        min-width: 104px;
-        min-height: 46px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 16px;
-        border: 1px solid rgba(255,255,255,.13);
-        border-radius: 999px;
-        background: rgba(13,17,25,.62);
-        backdrop-filter: blur(10px);
-        color: rgba(241,245,252,.86);
-        font-size: 13px;
-        font-weight: 750;
-        letter-spacing: .12em;
-        pointer-events: none;
-      }
-      .sound {
-        position: absolute;
-        z-index: 3;
-        right: max(25px, env(safe-area-inset-right));
-        bottom: calc(40px + env(safe-area-inset-bottom));
-        width: 48px;
-        height: 48px;
-        display: grid;
-        place-items: center;
-        border: 1px solid rgba(255,255,255,.15);
-        border-radius: 50%;
-        background: rgba(13,17,25,.68);
-        color: #f3f6fc;
-        backdrop-filter: blur(10px);
-        cursor: pointer;
-      }
-      .sound svg { width: 23px; height: 23px; }
-      .sound:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
       .tap-ripple {
         position: absolute;
         z-index: 2;
@@ -118,19 +80,12 @@
         <header class="hud">
           <p class="guide" id="guide"></p>
         </header>
-        <div class="counter" id="counter">STRIKES 0</div>
-        <button class="sound" id="sound" type="button" aria-label="Mute rain and thunder" aria-pressed="false">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4Z" fill="currentColor"/><path id="soundWaves" d="M16 8.2a5 5 0 0 1 0 7.6M18.7 5.5a9 9 0 0 1 0 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        </button>
       </main>
     `;
 
     const canvas = document.getElementById('sky');
     const ctx = canvas.getContext('2d', { alpha: false });
     const guide = document.getElementById('guide');
-    const counter = document.getElementById('counter');
-    const soundButton = document.getElementById('sound');
-    const soundWaves = document.getElementById('soundWaves');
     guide.textContent = cfg.GUIDE_TEXT || 'Tap the clouds to call lightning';
 
     const cloudSpeed = Math.max(.05, Number(cfg.CLOUD_SPEED) || .34);
@@ -146,8 +101,7 @@
     let puffSprites = [];
     let lastFrame = performance.now();
     let flash = 0;
-    let strikeCount = 0;
-    let muted = false;
+    const muted = false;
     let audio = null;
     let rainBuffer = null;
     let rainSource = null;
@@ -491,22 +445,10 @@
       const y = event.clientY - rect.top;
       createBolt(x, y);
       ripple(x, y);
-      strikeCount += 1;
-      counter.textContent = 'STRIKES ' + strikeCount;
       guide.classList.add('hidden');
+      guide.setAttribute('aria-hidden', 'true');
       thunder();
       if (navigator.vibrate) navigator.vibrate(22);
-    });
-
-    soundButton.addEventListener('pointerdown', event => event.stopPropagation());
-    soundButton.addEventListener('click', event => {
-      event.stopPropagation();
-      muted = !muted;
-      hasInteracted = true;
-      if (muted) stopRain(); else startRain();
-      soundButton.setAttribute('aria-pressed', String(muted));
-      soundButton.setAttribute('aria-label', muted ? 'Turn rain and thunder on' : 'Mute rain and thunder');
-      soundWaves.style.display = muted ? 'none' : '';
     });
 
     document.addEventListener('visibilitychange', () => {

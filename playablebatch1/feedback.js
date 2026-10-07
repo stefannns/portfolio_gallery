@@ -168,7 +168,8 @@
       message(submitMessage, 'Write feedback between 1 and 2,000 characters.', 'error'); comment.focus(); return;
     }
     // Reuse the same ID after a network timeout: a retry cannot create duplicate notes.
-    draft.request ||= {id: uuid(), task_id: game.taskId, game_number: game.number, game_name: game.name,
+    // Variants keep their own task ID and label (e.g. 57b); the database row number stays numeric.
+    draft.request ||= {id: uuid(), task_id: game.taskId, game_number: Number.parseInt(game.number, 10), game_name: game.name,
       author: draft.name.trim(), category: draft.category, comment: body};
     pending.add(game.taskId); outcomes.delete(game.taskId); updateForm();
     try {

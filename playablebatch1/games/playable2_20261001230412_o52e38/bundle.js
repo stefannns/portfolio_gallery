@@ -232,9 +232,9 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       --font-display: "Poppins", "PingFang SC", system-ui, sans-serif;
       --font-body:    "Poppins", "PingFang SC", system-ui, sans-serif;
       --font-mono:    ui-monospace, Menlo, monospace;
-      --color-bg: #1a1525;
+      --color-bg: #121a2d;
       --color-hud: #ffffff;
-      --color-btn: #8a2be2;
+      --color-btn: #6557d8;
     }
     html, body, #root {
       width: 100%; height: 100%; margin: 0; padding: 0;
@@ -245,7 +245,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     
     .bg-gradient {
       position: absolute; inset: 0; pointer-events: none;
-      background: radial-gradient(circle at 50% 30%, #31264b 0%, var(--color-bg) 80%);
+      background: radial-gradient(circle at 50% 22%, #30476b 0%, #1b2945 42%, var(--color-bg) 84%);
       z-index: 0;
     }
     .hud-layer {
@@ -301,13 +301,13 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   (0,Ve.useEffect)(()=>{let live=true;(async()=>{let data={tweaks:[],texts:[],images:[]};try{let response=await fetch("./game.config.json",{cache:"no-store"});if(response.ok)data=await response.json()}catch{}if(live)setConfig(QT(data))})();return()=>{live=false}},[]);
   (0,Ve.useEffect)(()=>{if(!config?.BLOCK_IMG)return;let image=new Image;image.onload=()=>surface.current=image;image.src=config.BLOCK_IMG;return()=>{surface.current=null}},[config]);
   let colors=[
-    {top:"#d3af9c",front:"#ad7768",side:"#a16d5f"},
-    {top:"#d8b99a",front:"#ac8967",side:"#9f7e5e"},
-    {top:"#d7c59d",front:"#a6976e",side:"#96865f"},
-    {top:"#e0c795",front:"#b69b6c",side:"#a58b5e"},
-    {top:"#c9c6a7",front:"#9d9f7b",side:"#8c8f6d"},
-    {top:"#d7b9a1",front:"#ab8b75",side:"#9c7c68"},
-    {top:"#c8b6a7",front:"#9c8a80",side:"#8c7a72"}
+    {top:"#f7a9ba",front:"#d96f8a",side:"#bd526f"},
+    {top:"#ffc983",front:"#e79a4c",side:"#c97a38"},
+    {top:"#ffe59a",front:"#dfbc59",side:"#bf993f"},
+    {top:"#afe0c5",front:"#74ba98",side:"#55997d"},
+    {top:"#9fdcec",front:"#5bafd0",side:"#4389ad"},
+    {top:"#bfc8ff",front:"#8390dc",side:"#6671bd"},
+    {top:"#d6b0f0",front:"#9e72c3",side:"#7e55a1"}
   ];
   let makeWorld=()=>({blocks:[{x0:-2,x1:2,y0:-2,y1:2,level:0,color:colors[0]}],current:{axis:"x",offset:4.9,dir:-1,level:1},debris:[],effects:[],camera:0,score:0,phase:"playing",lastTime:performance.now(),overAt:0});
   let reset=event=>{event?.stopPropagation();world.current=makeWorld();setScore(0);setPhase("playing")};
@@ -369,14 +369,14 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         let point=(x,y,z)=>({x:W/2+(x-y)*unit,y:originY+(x+y)*unitY-z*layer+g.camera});
         ctx.setTransform(dpr,0,0,dpr,0,0);
         let backdrop=ctx.createRadialGradient(W*.55,H*.43,W*.08,W*.5,H*.48,H*.9);
-        backdrop.addColorStop(0,"#94785f");backdrop.addColorStop(.55,"#705a47");backdrop.addColorStop(1,"#3d3029");
+        backdrop.addColorStop(0,"#30476b");backdrop.addColorStop(.55,"#1b2945");backdrop.addColorStop(1,"#121a2d");
         ctx.fillStyle=backdrop;ctx.fillRect(0,0,W,H);
-        ctx.save();ctx.beginPath();ctx.rect(0,H*.44,W,H*.56);ctx.clip();ctx.strokeStyle="#332b2a55";ctx.lineWidth=1;
+        ctx.save();let gridFade=ctx.createLinearGradient(0,H*.34,0,H*.7);gridFade.addColorStop(0,"rgba(143,182,221,0)"),gridFade.addColorStop(.38,"rgba(143,182,221,.055)"),gridFade.addColorStop(1,"rgba(143,182,221,.22)"),ctx.strokeStyle=gridFade;ctx.lineWidth=1;
         for(let n=-14;n<=14;n+=2){
           let a=point(n,-14,-2),b=point(n,14,-2),c=point(-14,n,-2),d=point(14,n,-2);
           ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.moveTo(c.x,c.y);ctx.lineTo(d.x,d.y);ctx.stroke();
         }ctx.restore();
-        let shadow=point(0,0,-1);ctx.fillStyle="#2d242055";ctx.beginPath();ctx.ellipse(shadow.x,shadow.y+26,unit*5.4,unit*1.75,0,0,Math.PI*2);ctx.fill();
+        let shadow=point(0,0,-1);ctx.fillStyle="#07101c70";ctx.beginPath();ctx.ellipse(shadow.x,shadow.y+26,unit*5.4,unit*1.75,0,0,Math.PI*2);ctx.fill();
         let drawBlock=(piece,drop=0,alpha=1)=>{
           let z=piece.level,c=piece.color||colors[z%colors.length];
           let a=point(piece.x0,piece.y0,z),b=point(piece.x1,piece.y0,z),c1=point(piece.x1,piece.y1,z),d=point(piece.x0,piece.y1,z);
@@ -396,7 +396,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         for(let piece of g.debris)drawBlock(piece,piece.drop,piece.alpha);
         if(g.current&&g.phase==="playing")drawBlock(activeBounds(g));
         ctx.textAlign="center";ctx.font='700 20px "Poppins",system-ui,sans-serif';
-        for(let effect of g.effects){let p=point(effect.x,effect.y,effect.level);ctx.globalAlpha=Math.min(1,effect.life/250);ctx.fillStyle="#fff";ctx.shadowColor="#3f2b1e";ctx.shadowBlur=9;ctx.fillText(effect.text,p.x,p.y-45-(650-effect.life)*.04);ctx.shadowBlur=0}
+        for(let effect of g.effects){let p=point(effect.x,effect.y,effect.level);ctx.globalAlpha=Math.min(1,effect.life/250);ctx.fillStyle="#fff";ctx.shadowColor="#739ee0";ctx.shadowBlur=9;ctx.fillText(effect.text,p.x,p.y-45-(650-effect.life)*.04);ctx.shadowBlur=0}
         ctx.globalAlpha=1;
       }
       raf.current=requestAnimationFrame(frame);
@@ -406,7 +406,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   },[config]);
   (0,Ve.useEffect)(()=>{let key=event=>{if((event.code==="Space"||event.code==="Enter")&&!event.repeat){event.preventDefault();place(event)}};window.addEventListener("keydown",key);return()=>window.removeEventListener("keydown",key)},[config]);
   return config?(0,Xe.jsxs)("div",{className:"stack-game",tabIndex:0,role:"button","aria-label":(config.TITLE||"Stack")+" — tap or press space to place the moving block",onPointerDown:place,children:[
-    (0,Xe.jsx)("style",{children:"\n.stack-game{position:relative;width:100%;height:100%;overflow:hidden;touch-action:manipulation;background:#5a4839;cursor:pointer}\n.stack-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}\n.stack-score{position:absolute;top:calc(40px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);max-width:calc(100% - 50px);min-height:56px;padding:10px 24px;border-radius:999px;background:#3a2f29d9;color:#fff;font:700 clamp(20px,5vw,30px) \"Poppins\",system-ui,sans-serif;letter-spacing:.025em;white-space:nowrap;box-shadow:0 8px 24px #241b1755;pointer-events:none}\n.stack-hint{position:absolute;bottom:calc(40px + env(safe-area-inset-bottom));left:25px;right:25px;color:#fff;text-align:center;font:700 15px \"Poppins\",system-ui,sans-serif;letter-spacing:.08em;text-shadow:0 2px 6px #39291dcc;pointer-events:none}\n.stack-modal{position:absolute;inset:0;z-index:5;background:#231914b8;display:flex;align-items:center;justify-content:center;padding:40px 25px;cursor:default}\n.stack-card{width:min(100%,360px);padding:28px 24px;border-radius:24px;background:#f4e9d7;color:#3e3028;text-align:center;box-shadow:0 22px 50px #20171399}\n.stack-card h2{margin:0 0 8px;font:700 clamp(28px,8vw,42px) \"Poppins\",system-ui,sans-serif}\n.stack-final{font:700 18px \"Poppins\",system-ui,sans-serif;margin:0 0 24px;color:#66503e}\n.stack-buttons{display:flex;gap:12px;flex-wrap:wrap}\n.stack-button{display:flex;align-items:center;justify-content:center;text-align:center;flex:1 1 125px;min-height:52px;border:0;border-radius:14px;background:#6b513e;color:white;font:700 16px \"Poppins\",system-ui,sans-serif;line-height:1.25;white-space:normal;overflow-wrap:anywhere;padding:10px 14px;cursor:pointer}\n.stack-button.secondary{background:#d9c6a7;color:#3e3028}\n.stack-button:active{filter:brightness(.88)}\n.stack-button:focus-visible,.stack-game:focus-visible{outline:3px solid #fff;outline-offset:3px}\n.stack-button:disabled{opacity:.5;cursor:not-allowed}\n"}),
+    (0,Xe.jsx)("style",{children:"\n.stack-game{position:relative;width:100%;height:100%;overflow:hidden;touch-action:manipulation;background:#121a2d;cursor:pointer}\n.stack-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}\n.stack-score{position:absolute;top:calc(30px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);max-width:calc(100% - 60px);color:#fff;font:700 clamp(24px,7vw,32px) \"Poppins\",system-ui,sans-serif;letter-spacing:.02em;white-space:nowrap;text-shadow:0 3px 12px #07101c99;pointer-events:none}\n.stack-hint{position:absolute;bottom:calc(50px + env(safe-area-inset-bottom));left:30px;right:30px;color:#fff;text-align:center;font:700 15px \"Poppins\",system-ui,sans-serif;letter-spacing:.08em;text-shadow:0 2px 8px #07101ccc;pointer-events:none}\n.stack-modal{position:absolute;inset:0;z-index:5;background:#07101ccc;display:flex;align-items:center;justify-content:center;padding:30px 30px 50px;cursor:default}\n.stack-card{width:min(100%,360px);padding:28px 24px;border-radius:24px;background:#f5f7ff;color:#1b2945;text-align:center;box-shadow:0 22px 50px #20171399}\n.stack-card h2{margin:0 0 8px;font:700 clamp(28px,8vw,42px) \"Poppins\",system-ui,sans-serif}\n.stack-final{font:700 18px \"Poppins\",system-ui,sans-serif;margin:0 0 24px;color:#586887}\n.stack-buttons{display:flex;gap:12px;flex-wrap:wrap}\n.stack-button{display:flex;align-items:center;justify-content:center;text-align:center;flex:1 1 125px;min-height:52px;border:0;border-radius:14px;background:#6557d8;color:white;font:700 16px \"Poppins\",system-ui,sans-serif;line-height:1.25;white-space:normal;overflow-wrap:anywhere;padding:10px 14px;cursor:pointer}\n.stack-button.secondary{background:#dce5ff;color:#1b2945}\n.stack-button:active{filter:brightness(.88)}\n.stack-button:focus-visible,.stack-game:focus-visible{outline:3px solid #fff;outline-offset:3px}\n.stack-button:disabled{opacity:.5;cursor:not-allowed}\n"}),
     (0,Xe.jsx)("canvas",{className:"stack-canvas",ref:canvas,"aria-hidden":true}),
     (0,Xe.jsxs)("div",{className:"stack-score","aria-live":"polite",children:[config.SCORE_TXT||"SCORE"," ",score]}),
     phase==="playing"&&(0,Xe.jsx)("div",{className:"stack-hint",children:score===0?"TAP TO STACK":"TIME YOUR TAP"}),
@@ -418,5 +418,5 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         canSubmit&&(0,Xe.jsx)("button",{type:"button",className:"stack-button secondary",disabled:submitting,onClick:submitRecording,children:config.BTN_POST||"POST MY PLAY"})
       ]})
     ]})})
-  ]}):(0,Xe.jsx)("div",{style:{width:"100%",height:"100%",background:"#705a47"}});
+  ]}):(0,Xe.jsx)("div",{style:{width:"100%",height:"100%",background:"#121a2d"}});
 };(0,Vv.createRoot)(document.getElementById("root")).render((0,Xe.jsx)(HT,{}));})();

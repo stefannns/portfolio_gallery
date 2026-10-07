@@ -10,6 +10,12 @@
     #root { isolation: isolate; }
     canvas { touch-action: none; }
     button, input, select, textarea { touch-action: manipulation; }
+    .btn-control { border: 0; cursor: pointer; min-height: 44px; }
+    button:focus-visible { outline: 3px solid #ffd700; outline-offset: 3px; }
+    @media (prefers-reduced-motion: reduce) {
+      .hobo-hit-flash { box-shadow: none !important; }
+      .btn-control { transition: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -246,7 +252,7 @@
       };
     })();
   </script>
-  <script src="./bundle.js"></script>
+  <script src="./bundle.js?v=car-hit-feedback-20261006-1"></script>
   <script src="./hobo-layout-repair.js"></script>
 </body>
 </html>
