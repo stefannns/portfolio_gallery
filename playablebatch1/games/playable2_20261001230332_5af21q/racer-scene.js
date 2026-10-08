@@ -227,26 +227,22 @@
   }
   function crashSamples(sampleRate) {
     const duration = .78, samples = new Float32Array(Math.ceil(sampleRate * duration));
-    let seed = 6519, low = 0, phase = 0, peak = 0;
+    let seed = 6519, low = 0, phase = 0, bodyPhase = 0, peak = 0;
     for (let i = 0; i < samples.length; i++) {
       const t = i / sampleRate;
       seed = (1664525 * seed + 1013904223) >>> 0;
       const noise = seed / 2147483648 - 1;
-      low += (noise - low) * (1 - Math.exp(-2 * Math.PI * 1100 / sampleRate));
-      phase += 2 * Math.PI * (48 + 125 * Math.exp(-t * 24)) / sampleRate;
-      const thud = Math.sin(phase) * Math.exp(-t * 14) * .8;
-      const crunch = low * Math.exp(-t * 11) * 1.25;
-      const metal = (Math.sin(2 * Math.PI * 820 * t) + .45 * Math.sin(2 * Math.PI * 1373 * t)) * Math.exp(-t * 12) * .12;
-      let debris = 0;
-      for (const delay of [.075, .135, .225, .34]) {
-        const age = t - delay;
-        if (age >= 0) debris += (noise - low + .2 * Math.sin(2 * Math.PI * 1760 * age)) * Math.exp(-age * 38) * .16;
-      }
+      low += (noise - low) * (1 - Math.exp(-2 * Math.PI * 650 / sampleRate));
+      phase += 2 * Math.PI * (52 + 105 * Math.exp(-t * 28)) / sampleRate;
+      bodyPhase += 2 * Math.PI * (92 + 65 * Math.exp(-t * 32)) / sampleRate;
+      const thud = Math.sin(phase) * Math.exp(-t * 7) * 1.6;
+      const body = Math.sin(bodyPhase) * Math.exp(-t * 10) * .65;
+      const crunch = (low * 1.6 + noise * .3) * Math.exp(-t * 20);
       const envelope = Math.min(1, t / .003, (duration - t) / .04);
-      samples[i] = Math.tanh(thud + crunch + metal + debris) * envelope;
+      samples[i] = Math.tanh(thud + body + crunch) * envelope;
       peak = Math.max(peak, Math.abs(samples[i]));
     }
-    for (let i = 0; i < samples.length; i++) samples[i] *= .85 / Math.max(.001, peak);
+    for (let i = 0; i < samples.length; i++) samples[i] *= .92 / Math.max(.001, peak);
     return samples;
   }
   function audio() {
@@ -337,8 +333,8 @@
       }
       const t = context.currentTime, source = context.createBufferSource(), gain = context.createGain();
       source.buffer = crashBuffer;
-      gain.gain.setValueAtTime(0, t); gain.gain.linearRampToValueAtTime(.55, t + .003);
-      gain.gain.setValueAtTime(.55, t + .74); gain.gain.linearRampToValueAtTime(0, t + .78);
+      gain.gain.setValueAtTime(0, t); gain.gain.linearRampToValueAtTime(.85, t + .003);
+      gain.gain.setValueAtTime(.85, t + .74); gain.gain.linearRampToValueAtTime(0, t + .78);
       source.connect(gain); gain.connect(context.destination);
       const voice = { source, gain }; voices.add(voice);
       source.onended = () => { voices.delete(voice); source.disconnect(); gain.disconnect(); };

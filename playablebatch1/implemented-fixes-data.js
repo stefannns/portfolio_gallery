@@ -461,7 +461,7 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "items": [
       "Generated four rear-view cars and alpine scenery; cars are 25% smaller with matching hitboxes, grassy ground and no poles.",
       "Points top-left, time top-right, fixed-center speed dial; steering 20% gentler, unified Arial font. Faster driving earns more points.",
-      "Removed speed streaks, enlarged pines; added engine/road/brake audio and a stronger crash impact, with pause/replay cleanup."
+      "Removed speed streaks, enlarged pines; added engine/road/brake audio and a louder, bass-heavy crash without rattle, with pause/replay cleanup."
     ],
     "status": "Implemented; visual/play/listening acceptance pending.",
     "evidence": [
