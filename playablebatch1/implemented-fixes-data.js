@@ -1,4 +1,4 @@
-/* Concise projection of feedback-tracking/feedback-tracker.md, October 7, 2026.
+/* Concise projection of feedback-tracking/feedback-tracker.md, October 8, 2026.
  * Lists current implementations, not pending suggestions or superseded versions.
  * Task IDs isolate games and variants. Local status is not database status.
  * Update this snapshot alongside the tracker when work changes.
@@ -229,6 +229,12 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
       "FB-030-c1051cac"
     ]
   },
+  "playable2_20260928025635_idnu2k": {
+    "number": 31,
+    "items": ["Title hides after camera or photo start and returns on Back; editing controls stay available."],
+    "status": "Title cleanup implemented; Sticker/Text feature decision remains open.",
+    "evidence": ["Liquify title follow-up"]
+  },
   "playable2_20260928030116_67pobm": {
     "number": 33,
     "items": [
@@ -448,6 +454,19 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "status": "Implemented locally; review acceptance pending.",
     "evidence": [
       "FB-064-9bace1ed"
+    ]
+  },
+  "playable2_20261001230332_5af21q": {
+    "number": 65,
+    "items": [
+      "Generated four rear-view cars and alpine scenery; cars are 25% smaller with matching hitboxes, grassy ground and no poles.",
+      "Points top-left, time top-right, fixed-center speed dial; steering 20% gentler, unified Arial font. Faster driving earns more points.",
+      "Removed speed streaks, enlarged pines and added speed-responsive engine/road/brake audio with pause, crash and replay cleanup."
+    ],
+    "status": "Implemented; visual/play acceptance pending.",
+    "evidence": [
+      "FB-065-f2a901e6",
+      "Pocket Racer art/debug follow-up"
     ]
   },
   "playable2_20261001230352_h4uxll": {

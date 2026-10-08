@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Playable</title>
   <style>
     html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
@@ -78,25 +78,37 @@
     {
       "id": "CHAR_PLAYER",
       "label": "Player Car",
-      "path": "./assets/car_player.svg",
+      "path": "./assets/car-player-v2.webp",
       "replaceable": true
     },
     {
       "id": "IMG_TRAFFIC_RED",
       "label": "Red Traffic Car",
-      "path": "./assets/car_traffic_red.svg",
+      "path": "./assets/car-traffic-red-v2.webp",
       "replaceable": true
     },
     {
       "id": "IMG_TRAFFIC_BLUE",
       "label": "Blue Traffic Car",
-      "path": "./assets/car_traffic_blue.svg",
+      "path": "./assets/car-traffic-blue-v2.webp",
       "replaceable": true
     },
     {
       "id": "IMG_TRAFFIC_PURPLE",
       "label": "Purple Traffic Car",
-      "path": "./assets/car_traffic_purple.svg",
+      "path": "./assets/car-traffic-purple-v2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_BACKGROUND",
+      "label": "Alpine Horizon",
+      "path": "./assets/alpine-horizon-v2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_ROADSIDE",
+      "label": "Roadside Pine",
+      "path": "./assets/roadside-pine-v2.webp",
       "replaceable": true
     }
   ],
@@ -128,6 +140,9 @@
       };
     }
   </script>
-  <script src="./bundle.js"></script>
+    <link rel="stylesheet" href="./racer.css?v=alpine-20261008-8" />
+    <script src="./racer-scene.js?v=alpine-20261008-8"></script>
+    <script src="./racer-component.js?v=alpine-20261008-8"></script>
+    <script src="./bundle.js?v=alpine-20261008-8"></script>
 </body>
 </html>
