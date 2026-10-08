@@ -225,8 +225,32 @@
       key(id, action, down) { if (down) keys.set(id, action); else keys.delete(id); return sync(); },
       clear() { pointers.clear(); keys.clear(); return sync(); } };
   }
+  function crashSamples(sampleRate) {
+    const duration = .78, samples = new Float32Array(Math.ceil(sampleRate * duration));
+    let seed = 6519, low = 0, phase = 0, peak = 0;
+    for (let i = 0; i < samples.length; i++) {
+      const t = i / sampleRate;
+      seed = (1664525 * seed + 1013904223) >>> 0;
+      const noise = seed / 2147483648 - 1;
+      low += (noise - low) * (1 - Math.exp(-2 * Math.PI * 1100 / sampleRate));
+      phase += 2 * Math.PI * (48 + 125 * Math.exp(-t * 24)) / sampleRate;
+      const thud = Math.sin(phase) * Math.exp(-t * 14) * .8;
+      const crunch = low * Math.exp(-t * 11) * 1.25;
+      const metal = (Math.sin(2 * Math.PI * 820 * t) + .45 * Math.sin(2 * Math.PI * 1373 * t)) * Math.exp(-t * 12) * .12;
+      let debris = 0;
+      for (const delay of [.075, .135, .225, .34]) {
+        const age = t - delay;
+        if (age >= 0) debris += (noise - low + .2 * Math.sin(2 * Math.PI * 1760 * age)) * Math.exp(-age * 38) * .16;
+      }
+      const envelope = Math.min(1, t / .003, (duration - t) / .04);
+      samples[i] = Math.tanh(thud + crunch + metal + debris) * envelope;
+      peak = Math.max(peak, Math.abs(samples[i]));
+    }
+    for (let i = 0; i < samples.length; i++) samples[i] *= .85 / Math.max(.001, peak);
+    return samples;
+  }
   function audio() {
-    let context = null, disposed = false, engine = null, lastDrive = -Infinity, engineBuffer = null, roadBuffer = null;
+    let context = null, disposed = false, engine = null, lastDrive = -Infinity, engineBuffer = null, roadBuffer = null, crashBuffer = null;
     const voices = new Set(), engineGroups = new Set();
     function disconnectEngine(group) {
       group.nodes.forEach(node => { try { node.disconnect(); } catch (_) {} }); engineGroups.delete(group);
@@ -304,14 +328,30 @@
       source.onended = () => { voices.delete(voice); source.disconnect(); gain.disconnect(); };
       source.start(t); source.stop(t + duration + .02);
     }
+    function crash() {
+      if (!context || context.state !== 'running' || disposed || voices.size >= 6) return;
+      if (!crashBuffer) {
+        const samples = crashSamples(context.sampleRate);
+        crashBuffer = context.createBuffer(1, samples.length, context.sampleRate);
+        crashBuffer.getChannelData(0).set(samples);
+      }
+      const t = context.currentTime, source = context.createBufferSource(), gain = context.createGain();
+      source.buffer = crashBuffer;
+      gain.gain.setValueAtTime(0, t); gain.gain.linearRampToValueAtTime(.55, t + .003);
+      gain.gain.setValueAtTime(.55, t + .74); gain.gain.linearRampToValueAtTime(0, t + .78);
+      source.connect(gain); gain.connect(context.destination);
+      const voice = { source, gain }; voices.add(voice);
+      source.onended = () => { voices.delete(voice); source.disconnect(); gain.disconnect(); };
+      source.start(t); source.stop(t + .8);
+    }
     return {
       async unlock() { if (disposed) return; try { const Audio = root.AudioContext || root.webkitAudioContext; if (!Audio) return; if (!context) context = new Audio(); if (context.state === 'suspended') await context.resume(); } catch (_) {} },
-      play(kind) { try { if (kind === 'crash') { tone(100, .25, .16); tone(0, .22, .07, true); } else tone(kind === 'score' ? 720 : 520, .09, .06); } catch (_) {} },
+      play(kind) { try { if (kind === 'crash') crash(); else tone(kind === 'score' ? 720 : 520, .09, .06); } catch (_) {} },
       drive(speed, input) { try { drive(speed, input); } catch (_) { stopEngine(true); } },
       stopEngine,
       stop,
-      dispose() { disposed = true; stop(); if (context) { try { Promise.resolve(context.close()).catch(() => {}); } catch (_) {} } context = null; engineBuffer = roadBuffer = null; }
+      dispose() { disposed = true; stop(); if (context) { try { Promise.resolve(context.close()).catch(() => {}); } catch (_) {} } context = null; engineBuffer = roadBuffer = crashBuffer = null; }
     };
   }
-  root.PocketRacer = { create, view, carRect, overlap, collides, step, render, controls, audio, settings, kmh, formatTime, stats, speedPosition, meterAngle, renderMeter };
+  root.PocketRacer = { create, view, carRect, overlap, collides, step, render, controls, audio, settings, kmh, formatTime, stats, speedPosition, meterAngle, renderMeter, crashSamples };
 })(typeof window !== 'undefined' ? window : globalThis);

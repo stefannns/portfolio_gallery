@@ -461,9 +461,9 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "items": [
       "Generated four rear-view cars and alpine scenery; cars are 25% smaller with matching hitboxes, grassy ground and no poles.",
       "Points top-left, time top-right, fixed-center speed dial; steering 20% gentler, unified Arial font. Faster driving earns more points.",
-      "Removed speed streaks, enlarged pines and added speed-responsive engine/road/brake audio with pause, crash and replay cleanup."
+      "Removed speed streaks, enlarged pines; added engine/road/brake audio and a stronger crash impact, with pause/replay cleanup."
     ],
-    "status": "Implemented; visual/play acceptance pending.",
+    "status": "Implemented; visual/play/listening acceptance pending.",
     "evidence": [
       "FB-065-f2a901e6",
       "Pocket Racer art/debug follow-up"
