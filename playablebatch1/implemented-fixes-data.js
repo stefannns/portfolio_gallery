@@ -149,13 +149,15 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
   "playable2_20260927021136_x3i163": {
     "number": 21,
     "items": [
-      "Starts empty; only taps on blank space spawn cubes.",
-      "Added varied cube sizes and half-size splitting.",
-      "Improved click pop/movement and fixed scaled input and edge spawning."
+      "Starts and resets with one cube; blank-space taps add fixed, larger 120px cubes.",
+      "Half-size splitting: 120 → 60 → 30 → 15px, with the same color for every cube of the same size.",
+      "Stronger click pop/movement; removed periodic background chords, keeping tap-only sounds."
     ],
     "status": "Implemented locally; review acceptance pending.",
     "evidence": [
-      "Cube Physics manual-spawn follow-up"
+      "Cube Physics manual-spawn follow-up",
+      "Cube Physics single-cube/colors/audio follow-up 20261008",
+      "Cube Physics fixed-size/color-by-size follow-up 20261008"
     ]
   },
   "playable2_20260927021201_7etgko": {

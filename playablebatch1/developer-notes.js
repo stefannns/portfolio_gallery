@@ -37,7 +37,7 @@
     },
     playable2_20260927021136_x3i163: {
       scope: 'Spawn behavior and cube sizes',
-      note: 'No automatic spawning; tap blank space to create varied-size cubes.',
+      note: 'One starting cube; tap blank space for more 120px cubes. Smaller pieces share a color by size; no automatic spawning.',
       evidence: 'User: no automatics cubes until tapped blank places on the screen.'
     },
     playable2_20260928024805_31g1lw: {
