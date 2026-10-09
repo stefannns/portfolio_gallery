@@ -269,80 +269,530 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
-  `});function _V(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}function Bu(t="light"){try{typeof window<"u"&&window.tt&&window.tt.vibrate&&window.tt.vibrate({style:t})}catch{}}function vV(){let t=typeof window<"u"&&window.tt&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,St.useState)(!1);return(0,St.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]),{canSubmit:t,submitting:e,submitRecording:()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))}}}var wV=()=>{
-  const h=St.createElement;
-  const [cfg,setCfg]=(0,St.useState)({});
-  const [phase,setPhase]=(0,St.useState)("idle"),[time,setTime]=(0,St.useState)(20);
-  const [streak,setStreak]=(0,St.useState)(0),[best,setBest]=(0,St.useState)(0);
-  const [feedback,setFeedback]=(0,St.useState)("");
-  const [cueStarted,setCueStarted]=(0,St.useState)(false);
-  const [currentBpm,setCurrentBpm]=(0,St.useState)(null),[beatProgress,setBeatProgress]=(0,St.useState)(0);
-  const last=(0,St.useRef)(null),streakRef=(0,St.useRef)(0),feedbackTimer=(0,St.useRef)(0);
-  const music=(0,St.useRef)(null),tapIntervals=(0,St.useRef)([]),beatOrigin=(0,St.useRef)(0),active=(0,St.useRef)(false),audioFailed=(0,St.useRef)(false);
-  const TARGET_BPM=100,BEAT_MS=600;
-  const stopMusic=()=>{if(music.current){music.current.pause();try{music.current.currentTime=0}catch{}}};
-  (0,St.useEffect)(()=>{let live=true;fetch("./game.config.json",{cache:"no-store"}).then(r=>r.json()).then(data=>{
-    const values={};for(const k of ["texts","images","tweaks"])for(const item of data[k]||[])values[item.id]=item.value??item.path;
-    if(live)setCfg(values);
-  }).catch(()=>{});return()=>{live=false;active.current=false;clearTimeout(feedbackTimer.current);stopMusic()}},[]);
-  (0,St.useEffect)(()=>{if(phase!=="playing")return;const id=setInterval(()=>setTime(v=>{
-    if(v<=1){active.current=false;stopMusic();clearTimeout(feedbackTimer.current);setFeedback("");setPhase("over");return 0}return v-1;
-  }),1000);return()=>clearInterval(id)},[phase]);
-  (0,St.useEffect)(()=>{
-    if(phase!=="playing"||!cueStarted)return;
-    let frame;
-    const update=()=>{
-      const audio=music.current,now=performance.now();
-      const elapsed=audio&&!audioFailed.current&&!audio.paused&&!audio.ended?audio.currentTime*1000:now-beatOrigin.current;
-      setBeatProgress(((elapsed%BEAT_MS)+BEAT_MS)%BEAT_MS/BEAT_MS);
-      if(last.current!==null&&now-last.current>1500)setCurrentBpm(0);
-      frame=requestAnimationFrame(update);
-    };
-    update();return()=>cancelAnimationFrame(frame);
-  },[phase,cueStarted]);
-  const start=()=>{stopMusic();clearTimeout(feedbackTimer.current);active.current=true;audioFailed.current=false;setPhase("playing");setTime(Number(cfg.GAME_DURATION)||15);setStreak(0);streakRef.current=0;last.current=null;tapIntervals.current=[];setCurrentBpm(null);setBeatProgress(0);setCueStarted(false);setFeedback("Tap once to start the beat")};
-  const tap=()=>{
-    if(phase!=="playing"||!active.current)return;
-    const now=performance.now(),firstTap=last.current===null,gap=firstTap?0:now-last.current;
-    if(!firstTap&&gap<80)return;
-    last.current=now;
-    if(firstTap){
-      beatOrigin.current=now;setCueStarted(true);
-      if(music.current){
-        music.current.volume=.7;
-        try{const promise=music.current.play();promise&&promise.catch(()=>{audioFailed.current=true})}catch{audioFailed.current=true}
-      }
-    }else{
-      if(gap>1500)tapIntervals.current=[];
-      tapIntervals.current.push(gap);tapIntervals.current=tapIntervals.current.slice(-4);
-      const average=tapIntervals.current.reduce((a,b)=>a+b,0)/tapIntervals.current.length;
-      setCurrentBpm(Math.round(60000/average));
+  `});function _V(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}function Bu(t="light"){try{typeof window<"u"&&window.tt&&window.tt.vibrate&&window.tt.vibrate({style:t})}catch{}}function vV(){let t=typeof window<"u"&&window.tt&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,St.useState)(!1);return(0,St.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]),{canSubmit:t,submitting:e,submitRecording:()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))}}}var wV=
+() => {
+  const h = St.createElement;
+  const [cfg, setCfg] = (0, St.useState)({});
+  const [phase, setPhase] = (0, St.useState)("idle"),
+    [time, setTime] = (0, St.useState)(20);
+  const [streak, setStreak] = (0, St.useState)(0),
+    [best, setBest] = (0, St.useState)(0);
+  const [feedback, setFeedback] = (0, St.useState)("");
+  const [cueStarted, setCueStarted] = (0, St.useState)(false);
+  const [currentBpm, setCurrentBpm] = (0, St.useState)(null),
+    [beatProgress, setBeatProgress] = (0, St.useState)(0);
+  const last = (0, St.useRef)(null),
+    streakRef = (0, St.useRef)(0),
+    feedbackTimer = (0, St.useRef)(0);
+  const music = (0, St.useRef)(null),
+    tapIntervals = (0, St.useRef)([]),
+    beatOrigin = (0, St.useRef)(0),
+    active = (0, St.useRef)(false),
+    audioFailed = (0, St.useRef)(false);
+  const TARGET_BPM = 100,
+    BEAT_MS = 600;
+  const stopMusic = () => {
+    if (music.current) {
+      music.current.pause();
+      try {
+        music.current.currentTime = 0;
+      } catch {}
     }
-    const message=!gap?"Find the beat":gap<420?(cfg.TXT_TOO_FAST||"Too Fast!"):gap>680?(cfg.TXT_TOO_SLOW||"Too Slow!"):(cfg.TXT_PERFECT||"Perfect!");
-    if(gap>=420&&gap<=680){streakRef.current++;setStreak(streakRef.current);setBest(v=>Math.max(v,streakRef.current));try{navigator.vibrate&&navigator.vibrate(9)}catch{}}
-    else if(gap){streakRef.current=0;setStreak(0)}
-    setFeedback(message);clearTimeout(feedbackTimer.current);feedbackTimer.current=setTimeout(()=>{if(active.current)setFeedback("")},720);
   };
-  const dancer=x=>h("svg",{viewBox:"0 0 65 115",width:72,height:130,style:{position:"absolute",bottom:"16%",[x]:"4%",opacity:.65},"aria-hidden":"true"},h("g",{fill:"none",stroke:"#253335",strokeWidth:8,strokeLinecap:"round"},h("circle",{cx:33,cy:13,r:8,fill:"#253335"}),h("path",{d:"M32 25 30 65M30 38 8 55M31 40 58 24M30 65 12 104M30 65 57 102"})));
-  const onBeat=beatProgress<.055||beatProgress>.965;
-  const ringScale=beatProgress<.06?1:1+.4*(1-beatProgress)/.94;
-  return h("div",{style:{position:"relative",width:"100%",height:"100%",overflow:"hidden",background:"#e8f8f1",color:"#21313c",fontFamily:"var(--font-body, Poppins),system-ui,sans-serif",textAlign:"center",padding:"calc(30px + env(safe-area-inset-top,0px)) 30px calc(50px + env(safe-area-inset-bottom,0px))",boxSizing:"border-box"}},
+  (0, St.useEffect)(() => {
+    let live = true;
+    fetch("./game.config.json", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => {
+        const values = {};
+        for (const k of ["texts", "images", "tweaks"])
+          for (const item of data[k] || [])
+            values[item.id] = item.value ?? item.path;
+        if (live) {setCfg(values);setTime(Number(values.GAME_DURATION)||15);}
+      })
+      .catch(() => {});
+    return () => {
+      live = false;
+      active.current = false;
+      clearTimeout(feedbackTimer.current);
+      stopMusic();
+    };
+  }, []);
+  (0, St.useEffect)(() => {
+    if (phase !== "playing" || !cueStarted) return;
+    const id = setInterval(
+      () =>
+        setTime((v) => {
+          if (v <= 1) {
+            active.current = false;
+            stopMusic();
+            clearTimeout(feedbackTimer.current);
+            setFeedback("");
+            setPhase("over");
+            return 0;
+          }
+          return v - 1;
+        }),
+      1000,
+    );
+    return () => clearInterval(id);
+  }, [phase, cueStarted]);
+  (0, St.useEffect)(() => {
+    if (phase !== "playing" || !cueStarted) return;
+    let frame;
+    const update = () => {
+      const audio = music.current,
+        now = performance.now();
+      const elapsed =
+        audio && !audioFailed.current && !audio.paused && !audio.ended
+          ? audio.currentTime * 1000
+          : now - beatOrigin.current;
+      setBeatProgress((((elapsed % BEAT_MS) + BEAT_MS) % BEAT_MS) / BEAT_MS);
+      if (last.current !== null && now - last.current > 1500) setCurrentBpm(0);
+      frame = requestAnimationFrame(update);
+    };
+    update();
+    return () => cancelAnimationFrame(frame);
+  }, [phase, cueStarted]);
+  const start = () => {
+    stopMusic();
+    clearTimeout(feedbackTimer.current);
+    active.current = true;
+    audioFailed.current = false;
+    setPhase("playing");
+    setTime(Number(cfg.GAME_DURATION) || 15);
+    setStreak(0);
+    streakRef.current = 0;
+    last.current = null;
+    tapIntervals.current = [];
+    setCurrentBpm(null);
+    setBeatProgress(0);
+    setCueStarted(false);
+    setFeedback("Tap once to start the beat");
+  };
+  const tap = () => {
+    if(phase === "idle")start();
+    else if (phase !== "playing" || !active.current) return;
+    const now = performance.now(),
+      firstTap = last.current === null,
+      gap = firstTap ? 0 : now - last.current;
+    if (!firstTap && gap < 80) return;
+    last.current = now;
+    if (firstTap) {
+      beatOrigin.current = now;
+      setCueStarted(true);
+      if (music.current) {
+        music.current.volume = 0.7;
+        try {
+          const promise = music.current.play();
+          promise &&
+            promise.catch(() => {
+              audioFailed.current = true;
+            });
+        } catch {
+          audioFailed.current = true;
+        }
+      }
+    } else {
+      if (gap > 1500) tapIntervals.current = [];
+      tapIntervals.current.push(gap);
+      tapIntervals.current = tapIntervals.current.slice(-4);
+      const average =
+        tapIntervals.current.reduce((a, b) => a + b, 0) /
+        tapIntervals.current.length;
+      setCurrentBpm(Math.round(60000 / average));
+    }
+    const message = !gap
+      ? "Find the beat"
+      : gap < 420
+        ? cfg.TXT_TOO_FAST || "Too Fast!"
+        : gap > 680
+          ? cfg.TXT_TOO_SLOW || "Too Slow!"
+          : cfg.TXT_PERFECT || "Perfect!";
+    if (gap >= 420 && gap <= 680) {
+      streakRef.current++;
+      setStreak(streakRef.current);
+      setBest((v) => Math.max(v, streakRef.current));
+      try {
+        navigator.vibrate && navigator.vibrate(9);
+      } catch {}
+    } else if (gap) {
+      streakRef.current = 0;
+      setStreak(0);
+    }
+    setFeedback(message);
+    clearTimeout(feedbackTimer.current);
+    feedbackTimer.current = setTimeout(() => {
+      if (active.current) setFeedback("");
+    }, 720);
+  };
+  const dancer = (x) =>
+    h(
+      "svg",
+      {
+        viewBox: "0 0 65 115",
+        width: 72,
+        height: 130,
+        style: {
+          position: "absolute",
+          bottom: "16%",
+          [x]: "4%",
+          opacity: 0.65,
+        },
+        "aria-hidden": "true",
+      },
+      h(
+        "g",
+        {
+          fill: "none",
+          stroke: "#253335",
+          strokeWidth: 8,
+          strokeLinecap: "round",
+        },
+        h("circle", { cx: 33, cy: 13, r: 8, fill: "#253335" }),
+        h("path", {
+          d: "M32 25 30 65M30 38 8 55M31 40 58 24M30 65 12 104M30 65 57 102",
+        }),
+      ),
+    );
+  const onBeat = beatProgress < 0.055 || beatProgress > 0.965;
+  const ringScale =
+    beatProgress < 0.06 ? 1 : 1 + (0.4 * (1 - beatProgress)) / 0.94;
+  return h(
+    "div",
+    {
+      style: {
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        overflow: "hidden",
+        background: "#e8f8f1",
+        color: "#21313c",
+        fontFamily: "var(--font-body, Poppins),system-ui,sans-serif",
+        textAlign: "center",
+        padding:
+          "calc(30px + env(safe-area-inset-top,0px)) 30px calc(50px + env(safe-area-inset-bottom,0px))",
+        boxSizing: "border-box",
+      },
+    },
     h(yV),
-    h("audio",{ref:music,src:"./assets/audio/honey-bee-100bpm.mp3",preload:"auto",loop:true,"aria-hidden":"true",style:{display:"none"},onError:()=>{audioFailed.current=true}}),
-    h("style",null,".cpr-control:focus-visible{outline:3px solid #21313c;outline-offset:6px}.cpr-control:active{filter:brightness(.94)}.cpr-beat-ring{will-change:transform,opacity}@media(prefers-reduced-motion:reduce){.cpr-beat-ring{transform:none!important}}"),
-    phase==="playing"&&h("div",{style:{position:"absolute",top:"calc(30px + env(safe-area-inset-top,0px))",left:30,right:30,display:"flex",justifyContent:"space-between",alignItems:"start",gap:12,pointerEvents:"none"}},
-      h("div",{style:{textAlign:"left"}},h("div",{style:{fontSize:18,lineHeight:1.3}},"Your BPM"),h("div",{role:"status","aria-live":"off","aria-label":currentBpm===null?"Tap twice to measure your BPM":`Your pace: ${currentBpm} BPM`,style:{fontSize:28,fontWeight:700,lineHeight:1.2,fontVariantNumeric:"tabular-nums"}},currentBpm===null?"—":currentBpm),h("div",{style:{fontSize:18,lineHeight:1.3,color:"#50616b"}},`Target ${TARGET_BPM}`)),
-      h("div",{style:{fontSize:28,fontWeight:700,fontVariantNumeric:"tabular-nums",lineHeight:1.2}},time+"s")),
-    phase==="playing"&&dancer("left"),phase==="playing"&&dancer("right"),
-    h("div",{style:{position:"absolute",top:phase==="over"?"42%":"49%",left:"50%",transform:"translate(-50%,-50%)",width:"min(50vw,195px)",aspectRatio:"1"}},
-      phase==="playing"&&cueStarted&&h("div",{className:"cpr-beat-ring",style:{position:"absolute",inset:0,border:"7px solid #d94792",borderRadius:"50%",pointerEvents:"none",transform:`scale(${ringScale})`,opacity:onBeat?1:.25+beatProgress*.6,zIndex:1,boxShadow:"0 0 0 3px #fff8"},"aria-hidden":"true"}),
-      phase==="playing"&&cueStarted&&h("div",{className:"cpr-beat-word",style:{position:"absolute",left:"50%",top:"-14%",transform:"translate(-50%,-50%)",color:"#b72270",fontSize:18,lineHeight:1.2,fontWeight:700,letterSpacing:1.2,pointerEvents:"none",opacity:onBeat?1:0,zIndex:3},"aria-hidden":"true"},"TAP"),
-      phase==="idle"?h("button",{className:"cpr-control",type:"button",onClick:start,"aria-label":"Start CPR rhythm game",style:{width:"100%",height:"100%",border:0,padding:0,borderRadius:"50%",background:"transparent",cursor:"pointer",touchAction:"manipulation"}},h("img",{src:cfg.BTN_PLAY||"./assets/btn_play.webp",alt:"",style:{width:"100%",height:"100%",objectFit:"contain"}})):
-      phase==="playing"?h("button",{className:"cpr-control",type:"button",onPointerDown:event=>{if(event.isPrimary===false||event.button>0)return;event.preventDefault();tap()},onClick:event=>{if(event.detail===0)tap()},"aria-label":"Tap for chest compression",style:{position:"relative",zIndex:2,width:"100%",height:"100%",border:"6px solid #e950a0",borderRadius:"50%",background:"#fff",color:"#ed4b99",boxShadow:"0 3px 8px #0002",fontSize:"clamp(55px,15vw,84px)",cursor:"pointer",touchAction:"manipulation"}},"♥"):
-      h("div",{style:{background:"#fff",border:"6px solid #e950a0",borderRadius:"50%",width:"100%",height:"100%",display:"grid",placeItems:"center",fontSize:24,fontWeight:800}},"Great work!")),
-    phase==="playing"&&h("div",{style:{position:"absolute",top:"69%",left:30,right:30,minHeight:52,color:"#b72270",fontSize:18,lineHeight:1.4,fontWeight:700}},h("div",null,feedback),cueStarted&&h("div",{style:{fontSize:18,color:"#21313c",fontWeight:400}},"Streak "+streak)),
-    phase==="over"&&h("div",{style:{position:"absolute",top:"64%",left:30,right:30,display:"grid",justifyItems:"center",gap:10}},h("div",{style:{fontSize:18,fontWeight:700}},"Best streak: "+best),h("button",{className:"cpr-control",type:"button",onClick:start,style:{minWidth:170,minHeight:48,border:0,borderRadius:25,background:"#b72270",color:"white",fontWeight:700,fontSize:18}},cfg.BTN_RESTART||"PLAY AGAIN")),
-    phase==="idle"&&h("p",{style:{position:"absolute",bottom:"calc(50px + env(safe-area-inset-bottom,0px))",left:30,right:30,fontSize:18,lineHeight:1.4,color:"#50616b",margin:0}},"Tap the heart to the music at 100 BPM."),
-    phase==="over"&&h("div",{style:{position:"absolute",bottom:"calc(50px + env(safe-area-inset-bottom,0px))",left:30,right:30,fontSize:16,lineHeight:1.4,color:"#50616b"}},h("a",{href:"https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100755",target:"_blank",rel:"noopener noreferrer",style:{color:"inherit"}},"Honey Bee · Kevin MacLeod"),h("br"),h("a",{href:"https://creativecommons.org/licenses/by/4.0/",target:"_blank",rel:"noopener noreferrer",style:{color:"inherit"}},"CC BY 4.0")," · Edited music loop")
+    h("audio", {
+      ref: music,
+      src: "./assets/audio/honey-bee-100bpm.mp3",
+      preload: "auto",
+      loop: true,
+      "aria-hidden": "true",
+      style: { display: "none" },
+      onError: () => {
+        audioFailed.current = true;
+      },
+    }),
+    h(
+      "style",
+      null,
+      ".cpr-control:focus-visible{outline:3px solid #21313c;outline-offset:6px}.cpr-control:active{filter:brightness(.94)}.cpr-beat-ring{will-change:transform,opacity}@media(prefers-reduced-motion:reduce){.cpr-beat-ring{transform:none!important}}",
+    ),
+    (phase === "playing" || phase === "idle") &&
+      h(
+        "div",
+        {
+          style: {
+            position: "absolute",
+            top: "calc(30px + env(safe-area-inset-top,0px))",
+            left: 30,
+            right: 30,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "start",
+            gap: 12,
+            pointerEvents: "none",
+          },
+        },
+        h(
+          "div",
+          { style: { textAlign: "left" } },
+          h("div", { style: { fontSize: 18, lineHeight: 1.3 } }, "Your BPM"),
+          h(
+            "div",
+            {
+              role: "status",
+              "aria-live": "off",
+              "aria-label":
+                currentBpm === null
+                  ? "Tap twice to measure your BPM"
+                  : `Your pace: ${currentBpm} BPM`,
+              style: {
+                fontSize: 28,
+                fontWeight: 700,
+                lineHeight: 1.2,
+                fontVariantNumeric: "tabular-nums",
+              },
+            },
+            currentBpm === null ? "—" : currentBpm,
+          ),
+          h(
+            "div",
+            { style: { fontSize: 18, lineHeight: 1.3, color: "#50616b" } },
+            `Target ${TARGET_BPM}`,
+          ),
+        ),
+        h(
+          "div",
+          {
+            style: {
+              fontSize: 28,
+              fontWeight: 700,
+              fontVariantNumeric: "tabular-nums",
+              lineHeight: 1.2,
+            },
+          },
+          time + "s",
+        ),
+      ),
+    phase === "playing" && dancer("left"),
+    phase === "playing" && dancer("right"),
+    h(
+      "div",
+      {
+        style: {
+          position: "absolute",
+          top: phase === "over" ? "42%" : "49%",
+          left: "50%",
+          transform: "translate(-50%,-50%)",
+          width: "min(50vw,195px)",
+          aspectRatio: "1",
+        },
+      },
+      phase === "playing" &&
+        cueStarted &&
+        h("div", {
+          className: "cpr-beat-ring",
+          style: {
+            position: "absolute",
+            inset: 0,
+            border: "7px solid #d94792",
+            borderRadius: "50%",
+            pointerEvents: "none",
+            transform: `scale(${ringScale})`,
+            opacity: onBeat ? 1 : 0.25 + beatProgress * 0.6,
+            zIndex: 1,
+            boxShadow: "0 0 0 3px #fff8",
+          },
+          "aria-hidden": "true",
+        }),
+      phase === "playing" &&
+        cueStarted &&
+        h(
+          "div",
+          {
+            className: "cpr-beat-word",
+            style: {
+              position: "absolute",
+              left: "50%",
+              top: "-14%",
+              transform: "translate(-50%,-50%)",
+              color: "#b72270",
+              fontSize: 18,
+              lineHeight: 1.2,
+              fontWeight: 700,
+              letterSpacing: 1.2,
+              pointerEvents: "none",
+              opacity: onBeat ? 1 : 0,
+              zIndex: 3,
+            },
+            "aria-hidden": "true",
+          },
+          "TAP",
+        ),
+      phase === "idle"
+        ? h(
+            "button",
+            {
+              className: "cpr-control",
+              type: "button",
+              onPointerDown:event=>{if(event.isPrimary===false||event.button>0)return;event.preventDefault();tap();},
+              onClick:event=>{if(event.detail===0)tap();},
+              "aria-label": "Tap the heart to start",
+              style: {
+                width: "100%",
+                height: "100%",
+                border: 0,
+                padding: 0,
+                borderRadius: "50%",
+                background: "transparent",
+                cursor: "pointer",
+                touchAction: "manipulation",
+              },
+            },
+            h("span", {className:"feed-first-action",style:{display:"grid",placeItems:"center",width:"100%",height:"100%",border:"6px solid #e950a0",borderRadius:"50%",background:"#fff",color:"#ed4b99",fontSize:"clamp(55px,15vw,84px)"}}, "♥"),
+          )
+        : phase === "playing"
+          ? h(
+              "button",
+              {
+                className: "cpr-control",
+                type: "button",
+                onPointerDown: (event) => {
+                  if (event.isPrimary === false || event.button > 0) return;
+                  event.preventDefault();
+                  tap();
+                },
+                onClick: (event) => {
+                  if (event.detail === 0) tap();
+                },
+                "aria-label": "Tap for chest compression",
+                style: {
+                  position: "relative",
+                  zIndex: 2,
+                  width: "100%",
+                  height: "100%",
+                  border: "6px solid #e950a0",
+                  borderRadius: "50%",
+                  background: "#fff",
+                  color: "#ed4b99",
+                  boxShadow: "0 3px 8px #0002",
+                  fontSize: "clamp(55px,15vw,84px)",
+                  cursor: "pointer",
+                  touchAction: "manipulation",
+                },
+              },
+              "♥",
+            )
+          : h(
+              "div",
+              {
+                style: {
+                  background: "#fff",
+                  border: "6px solid #e950a0",
+                  borderRadius: "50%",
+                  width: "100%",
+                  height: "100%",
+                  display: "grid",
+                  placeItems: "center",
+                  fontSize: 24,
+                  fontWeight: 800,
+                },
+              },
+              "Great work!",
+            ),
+    ),
+    phase === "playing" &&
+      h(
+        "div",
+        {
+          style: {
+            position: "absolute",
+            top: "69%",
+            left: 30,
+            right: 30,
+            minHeight: 52,
+            color: "#b72270",
+            fontSize: 18,
+            lineHeight: 1.4,
+            fontWeight: 700,
+          },
+        },
+        h("div", null, feedback),
+        cueStarted &&
+          h(
+            "div",
+            { style: { fontSize: 18, color: "#21313c", fontWeight: 400 } },
+            "Streak " + streak,
+          ),
+      ),
+    phase === "over" &&
+      h(
+        "div",
+        {
+          style: {
+            position: "absolute",
+            top: "64%",
+            left: 30,
+            right: 30,
+            display: "grid",
+            justifyItems: "center",
+            gap: 10,
+          },
+        },
+        h(
+          "div",
+          { style: { fontSize: 18, fontWeight: 700 } },
+          "Best streak: " + best,
+        ),
+        h(
+          "button",
+          {
+            className: "cpr-control",
+            type: "button",
+            onClick: start,
+            style: {
+              minWidth: 170,
+              minHeight: 48,
+              border: 0,
+              borderRadius: 25,
+              background: "#b72270",
+              color: "white",
+              fontWeight: 700,
+              fontSize: 18,
+            },
+          },
+          cfg.BTN_RESTART || "PLAY AGAIN",
+        ),
+      ),
+    phase === "idle" &&
+      h(
+        "p",
+        {
+          style: {
+            position: "absolute",
+            bottom: "calc(50px + env(safe-area-inset-bottom,0px))",
+            left: 30,
+            right: 30,
+            fontSize: 18,
+            lineHeight: 1.4,
+            color: "#50616b",
+            margin: 0,
+          },
+        },
+        "Tap the heart to start · follow the 100 BPM beat.",
+      ),
+    phase === "over" &&
+      h(
+        "div",
+        {
+          style: {
+            position: "absolute",
+            bottom: "calc(50px + env(safe-area-inset-bottom,0px))",
+            left: 30,
+            right: 30,
+            fontSize: 16,
+            lineHeight: 1.4,
+            color: "#50616b",
+          },
+        },
+        h(
+          "a",
+          {
+            href: "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100755",
+            target: "_blank",
+            rel: "noopener noreferrer",
+            style: { color: "inherit" },
+          },
+          "Honey Bee · Kevin MacLeod",
+        ),
+        h("br"),
+        h(
+          "a",
+          {
+            href: "https://creativecommons.org/licenses/by/4.0/",
+            target: "_blank",
+            rel: "noopener noreferrer",
+            style: { color: "inherit" },
+          },
+          "CC BY 4.0",
+        ),
+        " · Edited music loop",
+      ),
   );
-};;(0,DE.createRoot)(document.getElementById("root")).render((0,me.jsx)(wV,{}));})();
+}
+;;(0,DE.createRoot)(document.getElementById("root")).render((0,me.jsx)(wV,{}));})();

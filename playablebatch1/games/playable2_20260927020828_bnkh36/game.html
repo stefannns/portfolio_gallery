@@ -9,6 +9,13 @@
     body { background: #f2f0eb; -webkit-tap-highlight-color: transparent; }
     button:focus-visible { outline: 3px solid #285d46; outline-offset: 4px; }
   </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
 </head>
 <body>
   <div id="root"></div>
@@ -34,6 +41,7 @@
     }());
   </script>
   <!-- playable-inline-config:end -->
-  <script src="./bundle.js?v=realistic-foods-20261007-1-cover-5"></script>
+  <script src="./bundle.js?v=feed-first-20261008-1"></script>
+<script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject="#root img[alt=&quot;food&quot;]"></script>
 </body>
 </html>

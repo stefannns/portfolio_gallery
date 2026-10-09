@@ -214,13 +214,419 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 		}
 	}
 `;Hl(Cv,wT);var Nee=[1557/44100,1617/44100,1491/44100,1422/44100,1277/44100,1356/44100,1188/44100,1116/44100];var Iee=[1687/25e3,1601/25e3,2053/25e3,2251/25e3];var Ss=class t extends V{constructor(){let e=N(t.getDefaults(),arguments,["solo"]);super(e),this.name="Solo",this.input=this.output=new H({context:this.context}),t._allSolos.has(this.context)||t._allSolos.set(this.context,new Set),t._allSolos.get(this.context).add(this),this.solo=e.solo}static getDefaults(){return Object.assign(V.getDefaults(),{solo:!1})}get solo(){return this._isSoloed()}set solo(e){e?this._addSolo():this._removeSolo(),t._allSolos.get(this.context).forEach(r=>r._updateSolo())}get muted(){return this.input.gain.value===0}_addSolo(){t._soloed.has(this.context)||t._soloed.set(this.context,new Set),t._soloed.get(this.context).add(this)}_removeSolo(){t._soloed.has(this.context)&&t._soloed.get(this.context).delete(this)}_isSoloed(){return t._soloed.has(this.context)&&t._soloed.get(this.context).has(this)}_noSolos(){return!t._soloed.has(this.context)||t._soloed.has(this.context)&&t._soloed.get(this.context).size===0}_updateSolo(){this._isSoloed()?this.input.gain.value=1:this._noSolos()?this.input.gain.value=1:this.input.gain.value=0}dispose(){return super.dispose(),t._allSolos.get(this.context).delete(this),this._removeSolo(),this}};Ss._allSolos=new Map;Ss._soloed=new Map;var Kl=class t extends V{constructor(){let e=N(t.getDefaults(),arguments,["pan","volume"]);super(e),this.name="PanVol",this._panner=this.input=new ji({context:this.context,pan:e.pan,channelCount:e.channelCount}),this.pan=this._panner.pan,this._volume=this.output=new or({context:this.context,volume:e.volume}),this.volume=this._volume.volume,this._panner.connect(this._volume),this.mute=e.mute,q(this,["pan","volume"])}static getDefaults(){return Object.assign(V.getDefaults(),{mute:!1,pan:0,volume:0,channelCount:1})}get mute(){return this._volume.mute}set mute(e){this._volume.mute=e}dispose(){return super.dispose(),this._panner.dispose(),this.pan.dispose(),this._volume.dispose(),this.volume.dispose(),this}};var fh=class t extends V{constructor(){let e=N(t.getDefaults(),arguments,["volume","pan"]);super(e),this.name="Channel",this._solo=this.input=new Ss({solo:e.solo,context:this.context}),this._panVol=this.output=new Kl({context:this.context,pan:e.pan,volume:e.volume,mute:e.mute,channelCount:e.channelCount}),this.pan=this._panVol.pan,this.volume=this._panVol.volume,this._solo.connect(this._panVol),q(this,["pan","volume"])}static getDefaults(){return Object.assign(V.getDefaults(),{pan:0,volume:0,mute:!1,solo:!1,channelCount:1})}get solo(){return this._solo.solo}set solo(e){this._solo.solo=e}get muted(){return this._solo.muted||this.mute}get mute(){return this._panVol.mute}set mute(e){this._panVol.mute=e}_getBus(e){return t.buses.has(e)||t.buses.set(e,new H({context:this.context})),t.buses.get(e)}send(e,r=0){let n=this._getBus(e),o=new H({context:this.context,units:"decibels",gain:r});return this.connect(o),o.connect(n),o}receive(e){return this._getBus(e).connect(this),this}dispose(){return super.dispose(),this._panVol.dispose(),this.pan.dispose(),this.volume.dispose(),this._solo.dispose(),this}};fh.buses=new Map;var yse=Ve().transport;var vse=Ve().destination,wse=Ve().destination;var Sse=Ve().listener;var Tse=Ve().draw;var Ase=Ve();var dh=Math.PI*2,ET=(t,e,r)=>Math.max(e,Math.min(r,t)),bT=t=>{let e={};for(let r of t.tweaks||[])e[r.id]=r.value;for(let r of t.texts||[])e[r.id]=r.value;for(let r of t.images||[])e[r.id]=r.path;for(let r of t.mentions||[])e[r.id]=r.path||r.value;for(let r of t.motions||[])r.base_path&&(e[r.id]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count);return e};
-function DT(){let t=(0,J.useRef)(null),e=(0,J.useRef)({mode:"loading",width:0,height:0,dpr:1,lastFrame:0,elapsed:0,progress:0,stress:0,holding:!1,pointerId:null,stars:[],sparks:[],lastScrape:0,bg:null,coconut:null}),r=(0,J.useRef)({ready:!1,starting:!1,synth:null,sound:null,disposed:!1}),[n,o]=(0,J.useState)(null),[s,i]=(0,J.useState)("loading"),[a,l]=(0,J.useState)(0),[u,c]=(0,J.useState)(0),[p,h]=(0,J.useState)(!1),[guideUsed,setGuideUsed]=(0,J.useState)(!1),[elapsedSeconds,setElapsedSeconds]=(0,J.useState)(0),d=typeof window<"u"&&typeof window.tt?.playableRecordingSubmission=="function",m=w=>{e.current.mode=w,i(w)},x=w=>{try{window.tt?.vibrate?.({style:w})}catch{}},S=(w,_="16n")=>{try{r.current.ready&&r.current.synth.triggerAttackRelease(w,_)}catch{}},f=()=>{if(!r.current.sound&&window.PlayableSceneAudio)r.current.sound=new window.PlayableSceneAudio({profile:"carve"});r.current.sound?.unlock();r.current.ready||r.current.starting||(r.current.starting=!0,nh().then(()=>{if(r.current.disposed)return;let w=new tn({oscillator:{type:"triangle"},envelope:{attack:.005,decay:.08,sustain:.08,release:.14}}).toDestination();w.volume.value=-24,r.current.synth=w,r.current.ready=!0}).catch(()=>{}).finally(()=>{r.current.starting=!1}))};(0,J.useEffect)(()=>{r.current.disposed=!1;let stopHolding=()=>{e.current.lastFrame=0,e.current.holding=!1,e.current.pointerId=null,r.current.sound?.setLoop(!1)},onVisibility=()=>{e.current.lastFrame=0;document.hidden&&stopHolding()};document.addEventListener("visibilitychange",onVisibility),window.addEventListener("pagehide",stopHolding);let w=!0,_=b=>new Promise(O=>{if(!b)return O(null);let M=new Image;M.onload=()=>O(M),M.onerror=()=>O(null),M.src=b});return(async()=>{let b={tweaks:[],texts:[],images:[]};try{let z=await fetch("./game.config.json",{cache:"no-store"});z.ok&&(b=await z.json())}catch{}let O=bT(b),[M,F]=await Promise.all([_(O.BG_MAIN),_(O.IMG_COCONUT)]);w&&(Object.assign(e.current,{bg:M,coconut:F}),o(O),m("idle"))})(),()=>{w=!1,r.current.disposed=!0,document.removeEventListener("visibilitychange",onVisibility),window.removeEventListener("pagehide",stopHolding),r.current.sound?.dispose(),r.current.sound=null,r.current.synth?.dispose()}},[]);let g=()=>{let w=e.current;setGuideUsed(!1),r.current.sound?.setLoop(!1),w.elapsed=0,w.lastFrame=0,setElapsedSeconds(0),w.progress=0,w.stress=0,w.holding=!1,w.pointerId=null,w.sparks=[],w.lastScrape=0,l(0),c(0),m("playing"),f(),S("C5"),x("light")},y=()=>{if(!(!d||p)){h(!0);try{window.tt.playableRecordingSubmission({success(){},fail(w){console.error("[post_my_play] failed",w?.errMsg||w?.message)},complete(){h(!1)}})}catch{h(!1)}}},A=w=>{let _=e.current;_.mode!=="playing"||w.isPrimary===!1||(w.preventDefault(),setGuideUsed(!0),f(),_.pointerId=w.pointerId,_.holding=!0,t.current.setPointerCapture?.(w.pointerId),r.current.sound?.setLoop(!0))},v=w=>{let _=e.current;w.pointerId===_.pointerId&&(_.holding=!1,r.current.sound?.setLoop(!1),_.pointerId=null,t.current?.hasPointerCapture?.(w.pointerId)&&t.current.releasePointerCapture(w.pointerId))},T=w=>{let _=e.current;w.pointerId===_.pointerId&&(_.holding=!1,r.current.sound?.setLoop(!1),_.pointerId=null)};return(0,J.useEffect)(()=>{if(!n||!t.current)return;let w=t.current,_=w.getContext("2d"),b,O=()=>{let C=e.current,k=w.getBoundingClientRect();C.width=k.width,C.height=k.height,C.dpr=Math.min(devicePixelRatio||1,3),w.width=Math.round(C.width*C.dpr),w.height=Math.round(C.height*C.dpr);let E=C.width/2,R=C.height*.53,I=Math.min(C.width*.8,C.height*.46,360);C.coconutSize=I;let D=I*.32;C.stars=Array.from({length:5},(Q,K)=>{let Te=-Math.PI/2+K*Math.PI*4/5;return{x:E+D*Math.cos(Te),y:R+D*Math.sin(Te)}}),C.stars.push({...C.stars[0]})};O();let M=new ResizeObserver(O);M.observe(w);let F=(C,k)=>{let E=Math.min(4,Math.floor(k)),R=ET(k-E,0,1),I=C.stars[E],D=C.stars[E+1];return{x:I.x+(D.x-I.x)*R,y:I.y+(D.y-I.y)*R,angle:Math.atan2(D.y-I.y,D.x-I.x)}},z=C=>{let k=Math.floor(C.progress),E=F(C,C.progress);_.save(),_.beginPath(),_.moveTo(C.stars[0].x,C.stars[0].y);for(let R=1;R<=Math.min(k,5);R++)_.lineTo(C.stars[R].x,C.stars[R].y);return C.progress<5&&_.lineTo(E.x,E.y),_.lineCap="round",_.lineJoin="round",_.strokeStyle="rgba(59,26,11,.85)",_.lineWidth=13,_.stroke(),_.shadowColor="#ffe681",_.shadowBlur=14,_.strokeStyle="#fff2b3",_.lineWidth=5,_.stroke(),_.shadowBlur=0,_.strokeStyle="#f8af42",_.lineWidth=2,_.stroke(),_.restore(),E},j=C=>{_.save(),_.translate(C.x,C.y),_.rotate(C.angle),_.shadowColor="#211306",_.shadowBlur=10,_.shadowOffsetY=6,_.fillStyle="#bcd5da",_.strokeStyle="#39464b",_.lineWidth=2,_.beginPath(),_.moveTo(0,0),_.lineTo(-30,-9),_.lineTo(-45,-7),_.lineTo(-45,7),_.lineTo(-30,9),_.closePath(),_.fill(),_.stroke(),_.shadowBlur=0,_.shadowOffsetY=0,_.fillStyle="#fff",_.beginPath(),_.moveTo(-7,-1),_.lineTo(-32,-6),_.lineTo(-32,-2),_.closePath(),_.fill(),_.fillStyle="#6c381f",_.strokeStyle="#2a180f",_.lineWidth=2,_.beginPath(),_.roundRect(-81,-7,40,14,5),_.fill(),_.stroke(),_.fillStyle="#f3c15d",_.fillRect(-49,-11,6,22),_.fillStyle="#fff8d0",_.beginPath(),_.arc(0,0,3.5,0,dh),_.fill(),_.restore()},L=C=>{b=requestAnimationFrame(L);let k=e.current,E=k.lastFrame?Math.min((C-k.lastFrame)/1e3,.04):0,timerDelta=k.lastFrame?Math.max(0,(C-k.lastFrame)/1e3):0;if(k.lastFrame=C,k.mode==="playing"){if(!document.hidden){k.elapsed+=timerDelta;setElapsedSeconds(seconds=>Math.floor(k.elapsed)!==seconds?Math.floor(k.elapsed):seconds)}let Q=k.progress;if(k.holding){if(k.progress=Math.min(5,k.progress+
-E*.86
-),k.stress=Math.min(1,k.stress+
-E*.6
-),Math.floor(Q)!==Math.floor(k.progress)&&(x("light")),k.progress>Q){let K=F(k,k.progress);Math.random()<.55&&k.sparks.push({x:K.x,y:K.y,vx:(Math.random()-.5)*75,vy:(Math.random()-.5)*75,life:.45})}}else k.stress=Math.max(0,k.stress-
-E*.4
-);l(K=>Math.abs(K-Math.round(k.progress/5*100))>=1?Math.round(k.progress/5*100):K),c(K=>Math.abs(K-Math.round(k.stress*100))>=1?Math.round(k.stress*100):K),k.progress>=5?(k.holding=!1,m("won"),S("C6","4n"),x("notification_success")):k.stress>=1&&(k.holding=!1,m("over"),S("C3","8n"),x("notification_error"))}r.current.sound?.setLoop(k.mode==="playing"&&k.holding&&!document.hidden),_.setTransform(k.dpr,0,0,k.dpr,0,0),_.clearRect(0,0,k.width,k.height),k.bg?_.drawImage(k.bg,0,0,k.width,k.height):(_.fillStyle="#c48a42",_.fillRect(0,0,k.width,k.height));let R=k.coconutSize||240,I=k.width/2,D=k.height*.53;if(k.coconut){let Q=k.coconut.naturalHeight/k.coconut.naturalWidth;_.drawImage(k.coconut,I-R/2,D-R*Q/2,R,R*Q)}else _.fillStyle="#774021",_.beginPath(),_.arc(I,D,R/2,0,dh),_.fill();if(k.stars.length===6){_.save(),_.beginPath(),_.moveTo(k.stars[0].x,k.stars[0].y);for(let Q=1;Q<k.stars.length;Q++)_.lineTo(k.stars[Q].x,k.stars[Q].y);if(_.setLineDash([6,7]),_.strokeStyle="rgba(255,246,191,.86)",_.lineWidth=3,_.shadowColor="#402312",_.shadowBlur=5,_.stroke(),_.restore(),k.mode==="playing"||k.mode==="won"||k.mode==="over"){let Q=z(k);j(Q)}}for(let Q=k.sparks.length-1;Q>=0;Q--){let K=k.sparks[Q];if(K.x+=K.vx*E,K.y+=K.vy*E,K.life-=E,K.life<=0){k.sparks.splice(Q,1);continue}_.globalAlpha=K.life*2,_.fillStyle="#fff4ac",_.beginPath(),_.arc(K.x,K.y,2+3*K.life,0,dh),_.fill(),_.globalAlpha=1}};return b=requestAnimationFrame(L),()=>{cancelAnimationFrame(b),M.disconnect()}},[n]),J.default.createElement("div",{className:"shell"},J.default.createElement("style",null,`
+
+function DT() {
+  let t = (0, J.useRef)(null),
+    e = (0, J.useRef)({
+      mode: "loading",
+      width: 0,
+      height: 0,
+      dpr: 1,
+      lastFrame: 0,
+      elapsed: 0,
+      progress: 0,
+      stress: 0,
+      holding: !1,
+      pointerId: null,
+      stars: [],
+      sparks: [],
+      lastScrape: 0,
+      bg: null,
+      coconut: null,
+    }),
+    r = (0, J.useRef)({
+      ready: !1,
+      starting: !1,
+      synth: null,
+      sound: null,
+      disposed: !1,
+    }),
+    [n, o] = (0, J.useState)(null),
+    [s, i] = (0, J.useState)("loading"),
+    [a, l] = (0, J.useState)(0),
+    [u, c] = (0, J.useState)(0),
+    [p, h] = (0, J.useState)(!1),
+    [guideUsed, setGuideUsed] = (0, J.useState)(!1),
+    [elapsedSeconds, setElapsedSeconds] = (0, J.useState)(0),
+    d =
+      typeof window < "u" &&
+      typeof window.tt?.playableRecordingSubmission == "function",
+    m = (w) => {
+      ((e.current.mode = w), i(w));
+    },
+    x = (w) => {
+      try {
+        window.tt?.vibrate?.({ style: w });
+      } catch {}
+    },
+    S = (w, _ = "16n") => {
+      try {
+        r.current.ready && r.current.synth.triggerAttackRelease(w, _);
+      } catch {}
+    },
+    f = () => {
+      if (!r.current.sound && window.PlayableSceneAudio)
+        r.current.sound = new window.PlayableSceneAudio({ profile: "carve" });
+      r.current.sound?.unlock();
+      r.current.ready ||
+        r.current.starting ||
+        ((r.current.starting = !0),
+        nh()
+          .then(() => {
+            if (r.current.disposed) return;
+            let w = new tn({
+              oscillator: { type: "triangle" },
+              envelope: {
+                attack: 0.005,
+                decay: 0.08,
+                sustain: 0.08,
+                release: 0.14,
+              },
+            }).toDestination();
+            ((w.volume.value = -24),
+              (r.current.synth = w),
+              (r.current.ready = !0));
+          })
+          .catch(() => {})
+          .finally(() => {
+            r.current.starting = !1;
+          }));
+    };
+  (0, J.useEffect)(() => {
+    r.current.disposed = !1;
+    let stopHolding = () => {
+        ((e.current.lastFrame = 0),
+          (e.current.holding = !1),
+          (e.current.pointerId = null),
+          r.current.sound?.setLoop(!1));
+      },
+      onVisibility = () => {
+        e.current.lastFrame = 0;
+        document.hidden && stopHolding();
+      };
+    (document.addEventListener("visibilitychange", onVisibility),
+      window.addEventListener("pagehide", stopHolding));
+    let w = !0,
+      _ = (b) =>
+        new Promise((O) => {
+          if (!b) return O(null);
+          let M = new Image();
+          ((M.onload = () => O(M)), (M.onerror = () => O(null)), (M.src = b));
+        });
+    return (
+      (async () => {
+        let b = { tweaks: [], texts: [], images: [] };
+        try {
+          let z = await fetch("./game.config.json", { cache: "no-store" });
+          z.ok && (b = await z.json());
+        } catch {}
+        let O = bT(b),
+          [M, F] = await Promise.all([_(O.BG_MAIN), _(O.IMG_COCONUT)]);
+        w && (Object.assign(e.current, { bg: M, coconut: F }), o(O), g());
+      })(),
+      () => {
+        ((w = !1),
+          (r.current.disposed = !0),
+          document.removeEventListener("visibilitychange", onVisibility),
+          window.removeEventListener("pagehide", stopHolding),
+          r.current.sound?.dispose(),
+          (r.current.sound = null),
+          r.current.synth?.dispose());
+      }
+    );
+  }, []);
+  let g = () => {
+      let w = e.current;
+      (setGuideUsed(!1),
+        r.current.sound?.setLoop(!1),
+        (w.elapsed = 0),
+        (w.lastFrame = 0),
+        setElapsedSeconds(0),
+        (w.progress = 0),
+        (w.stress = 0),
+        (w.holding = !1),
+        (w.pointerId = null),
+        (w.sparks = []),
+        (w.lastScrape = 0),
+        l(0),
+        c(0),
+        m("ready"));
+    },
+    y = () => {
+      if (!(!d || p)) {
+        h(!0);
+        try {
+          window.tt.playableRecordingSubmission({
+            success() {},
+            fail(w) {
+              console.error("[post_my_play] failed", w?.errMsg || w?.message);
+            },
+            complete() {
+              h(!1);
+            },
+          });
+        } catch {
+          h(!1);
+        }
+      }
+    },
+    A = (w) => {
+      let _ = e.current;
+      (_.mode !== "playing" && _.mode !== "ready") ||
+        w.isPrimary === !1 || w.button > 0 ||
+        (w.preventDefault(),
+        (_.mode === "ready" && (m("playing"), _.lastFrame=performance.now())),
+        setGuideUsed(!0),
+        f(),
+        (_.pointerId = w.pointerId),
+        (_.holding = !0),
+        t.current.setPointerCapture?.(w.pointerId),
+        r.current.sound?.setLoop(!0));
+    },
+    v = (w) => {
+      let _ = e.current;
+      w.pointerId === _.pointerId &&
+        ((_.holding = !1),
+        r.current.sound?.setLoop(!1),
+        (_.pointerId = null),
+        t.current?.hasPointerCapture?.(w.pointerId) &&
+          t.current.releasePointerCapture(w.pointerId));
+    },
+    T = (w) => {
+      let _ = e.current;
+      w.pointerId === _.pointerId &&
+        ((_.holding = !1), r.current.sound?.setLoop(!1), (_.pointerId = null));
+    };
+  return (
+    (0, J.useEffect)(() => {
+      if (!n || !t.current) return;
+      let w = t.current,
+        _ = w.getContext("2d"),
+        b,
+        O = () => {
+          let C = e.current,
+            k = w.getBoundingClientRect();
+          ((C.width = k.width),
+            (C.height = k.height),
+            (C.dpr = Math.min(devicePixelRatio || 1, 3)),
+            (w.width = Math.round(C.width * C.dpr)),
+            (w.height = Math.round(C.height * C.dpr)));
+          let E = C.width / 2,
+            R = C.height * 0.53,
+            I = Math.min(C.width * 0.8, C.height * 0.46, 360);
+          C.coconutSize = I;
+          let D = I * 0.32;
+          ((C.stars = Array.from({ length: 5 }, (Q, K) => {
+            let Te = -Math.PI / 2 + (K * Math.PI * 4) / 5;
+            return { x: E + D * Math.cos(Te), y: R + D * Math.sin(Te) };
+          })),
+            C.stars.push({ ...C.stars[0] }));
+        };
+      O();
+      let M = new ResizeObserver(O);
+      M.observe(w);
+      let F = (C, k) => {
+          let E = Math.min(4, Math.floor(k)),
+            R = ET(k - E, 0, 1),
+            I = C.stars[E],
+            D = C.stars[E + 1];
+          return {
+            x: I.x + (D.x - I.x) * R,
+            y: I.y + (D.y - I.y) * R,
+            angle: Math.atan2(D.y - I.y, D.x - I.x),
+          };
+        },
+        z = (C) => {
+          let k = Math.floor(C.progress),
+            E = F(C, C.progress);
+          (_.save(), _.beginPath(), _.moveTo(C.stars[0].x, C.stars[0].y));
+          for (let R = 1; R <= Math.min(k, 5); R++)
+            _.lineTo(C.stars[R].x, C.stars[R].y);
+          return (
+            C.progress < 5 && _.lineTo(E.x, E.y),
+            (_.lineCap = "round"),
+            (_.lineJoin = "round"),
+            (_.strokeStyle = "rgba(59,26,11,.85)"),
+            (_.lineWidth = 13),
+            _.stroke(),
+            (_.shadowColor = "#ffe681"),
+            (_.shadowBlur = 14),
+            (_.strokeStyle = "#fff2b3"),
+            (_.lineWidth = 5),
+            _.stroke(),
+            (_.shadowBlur = 0),
+            (_.strokeStyle = "#f8af42"),
+            (_.lineWidth = 2),
+            _.stroke(),
+            _.restore(),
+            E
+          );
+        },
+        j = (C) => {
+          (_.save(),
+            _.translate(C.x, C.y),
+            _.rotate(C.angle),
+            (_.shadowColor = "#211306"),
+            (_.shadowBlur = 10),
+            (_.shadowOffsetY = 6),
+            (_.fillStyle = "#bcd5da"),
+            (_.strokeStyle = "#39464b"),
+            (_.lineWidth = 2),
+            _.beginPath(),
+            _.moveTo(0, 0),
+            _.lineTo(-30, -9),
+            _.lineTo(-45, -7),
+            _.lineTo(-45, 7),
+            _.lineTo(-30, 9),
+            _.closePath(),
+            _.fill(),
+            _.stroke(),
+            (_.shadowBlur = 0),
+            (_.shadowOffsetY = 0),
+            (_.fillStyle = "#fff"),
+            _.beginPath(),
+            _.moveTo(-7, -1),
+            _.lineTo(-32, -6),
+            _.lineTo(-32, -2),
+            _.closePath(),
+            _.fill(),
+            (_.fillStyle = "#6c381f"),
+            (_.strokeStyle = "#2a180f"),
+            (_.lineWidth = 2),
+            _.beginPath(),
+            _.roundRect(-81, -7, 40, 14, 5),
+            _.fill(),
+            _.stroke(),
+            (_.fillStyle = "#f3c15d"),
+            _.fillRect(-49, -11, 6, 22),
+            (_.fillStyle = "#fff8d0"),
+            _.beginPath(),
+            _.arc(0, 0, 3.5, 0, dh),
+            _.fill(),
+            _.restore());
+        },
+        L = (C) => {
+          b = requestAnimationFrame(L);
+          let k = e.current,
+            E = k.lastFrame ? Math.min((C - k.lastFrame) / 1e3, 0.04) : 0,
+            timerDelta = k.lastFrame ? Math.max(0, (C - k.lastFrame) / 1e3) : 0;
+          if (((k.lastFrame = C), k.mode === "playing")) {
+            if (!document.hidden) {
+              k.elapsed += timerDelta;
+              setElapsedSeconds((seconds) =>
+                Math.floor(k.elapsed) !== seconds
+                  ? Math.floor(k.elapsed)
+                  : seconds,
+              );
+            }
+            let Q = k.progress;
+            if (k.holding) {
+              if (
+                ((k.progress = Math.min(5, k.progress + E * 0.86)),
+                (k.stress = Math.min(1, k.stress + E * 0.6)),
+                Math.floor(Q) !== Math.floor(k.progress) && x("light"),
+                k.progress > Q)
+              ) {
+                let K = F(k, k.progress);
+                Math.random() < 0.55 &&
+                  k.sparks.push({
+                    x: K.x,
+                    y: K.y,
+                    vx: (Math.random() - 0.5) * 75,
+                    vy: (Math.random() - 0.5) * 75,
+                    life: 0.45,
+                  });
+              }
+            } else k.stress = Math.max(0, k.stress - E * 0.4);
+            (l((K) =>
+              Math.abs(K - Math.round((k.progress / 5) * 100)) >= 1
+                ? Math.round((k.progress / 5) * 100)
+                : K,
+            ),
+              c((K) =>
+                Math.abs(K - Math.round(k.stress * 100)) >= 1
+                  ? Math.round(k.stress * 100)
+                  : K,
+              ),
+              k.progress >= 5
+                ? ((k.holding = !1),
+                  m("won"),
+                  S("C6", "4n"),
+                  x("notification_success"))
+                : k.stress >= 1 &&
+                  ((k.holding = !1),
+                  m("over"),
+                  S("C3", "8n"),
+                  x("notification_error")));
+          }
+          (r.current.sound?.setLoop(
+            k.mode === "playing" && k.holding && !document.hidden,
+          ),
+            _.setTransform(k.dpr, 0, 0, k.dpr, 0, 0),
+            _.clearRect(0, 0, k.width, k.height),
+            k.bg
+              ? _.drawImage(k.bg, 0, 0, k.width, k.height)
+              : ((_.fillStyle = "#c48a42"),
+                _.fillRect(0, 0, k.width, k.height)));
+          let R = k.coconutSize || 240,
+            I = k.width / 2,
+            D = k.height * 0.53;
+          if (k.coconut) {
+            let Q = k.coconut.naturalHeight / k.coconut.naturalWidth;
+            _.drawImage(k.coconut, I - R / 2, D - (R * Q) / 2, R, R * Q);
+          } else
+            ((_.fillStyle = "#774021"),
+              _.beginPath(),
+              _.arc(I, D, R / 2, 0, dh),
+              _.fill());
+          if (k.stars.length === 6) {
+            (_.save(), _.beginPath(), _.moveTo(k.stars[0].x, k.stars[0].y));
+            for (let Q = 1; Q < k.stars.length; Q++)
+              _.lineTo(k.stars[Q].x, k.stars[Q].y);
+            if (
+              (_.setLineDash([6, 7]),
+              (_.strokeStyle = "rgba(255,246,191,.86)"),
+              (_.lineWidth = 3),
+              (_.shadowColor = "#402312"),
+              (_.shadowBlur = 5),
+              _.stroke(),
+              _.restore(),
+              k.mode === "ready" || k.mode === "playing" || k.mode === "won" || k.mode === "over")
+            ) {
+              let Q = z(k);
+              j(Q);
+            }
+          }
+          for (let Q = k.sparks.length - 1; Q >= 0; Q--) {
+            let K = k.sparks[Q];
+            if (
+              ((K.x += K.vx * E), (K.y += K.vy * E), (K.life -= E), K.life <= 0)
+            ) {
+              k.sparks.splice(Q, 1);
+              continue;
+            }
+            ((_.globalAlpha = K.life * 2),
+              (_.fillStyle = "#fff4ac"),
+              _.beginPath(),
+              _.arc(K.x, K.y, 2 + 3 * K.life, 0, dh),
+              _.fill(),
+              (_.globalAlpha = 1));
+          }
+        };
+      return (
+        (b = requestAnimationFrame(L)),
+        () => {
+          (cancelAnimationFrame(b), M.disconnect());
+        }
+      );
+    }, [n]),
+    J.default.createElement(
+      "div",
+      { className: "shell" },
+      J.default.createElement(
+        "style",
+        null,
+        `
       @font-face{font-family:Poppins;src:url('./assets/fonts/poppins/Poppins-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
       @font-face{font-family:Poppins;src:url('./assets/fonts/poppins/Poppins-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
       html,body,#root{width:100%;height:100%;margin:0;overflow:hidden;touch-action:none;overscroll-behavior:none;background:#9d6832}
@@ -237,7 +643,139 @@ E*.4
       .result-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}.result-stats>div{min-width:0}.final-time{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
       .card .result-label{font-size:17px;font-weight:700;color:#6f4429;margin:4px 0 0}.card .result{font-size:calc(28 * var(--ui-unit));font-weight:700;color:#ac4d1f;margin:0 0 18px;line-height:1.15}.card button{display:block;width:100%;min-height:52px;border:0;border-radius:999px;background:#efad3c;color:#3f240e;font:700 18px Poppins,system-ui,sans-serif;cursor:pointer;padding:9px 15px}
       .card button:focus-visible{outline:3px solid #432713;outline-offset:3px}.card button:active{filter:brightness(.85)}.card button.secondary{margin-top:11px;border:2px solid #aa6a2d;background:transparent}.card button:disabled{opacity:.55}
-    `),J.default.createElement("canvas",{ref:t,onPointerDown:A,onPointerUp:v,onPointerCancel:T,"aria-label":"Hold to move the knife around the star and carve the coconut"}),J.default.createElement("div",{className:"top"},s==="playing"&&J.default.createElement("div",{className:"meters"},J.default.createElement("div",{className:"meter"},J.default.createElement("label",null,"Stress",J.default.createElement("span",{className:"stress-value"},u,"%")),J.default.createElement("div",{className:"track"},J.default.createElement("div",{className:"fill stress",style:{width:u+"%"}}))),J.default.createElement("span",{className:"elapsed",role:"timer","aria-live":"off","aria-label":"Elapsed time "+elapsedSeconds+" seconds"},elapsedSeconds,"s"))),s==="playing"&&J.default.createElement("div",{className:"hint",style:{visibility:guideUsed?"hidden":"visible"},"aria-hidden":guideUsed},n?.MSG_HOLD_CARVE||"Hold to carve \xB7 release to cool"),s==="idle"&&J.default.createElement("div",{className:"overlay"},J.default.createElement("div",{className:"card"},J.default.createElement("p",null,n?.START_TITLE||"Hold to guide the knife around the star. Release to cool before the stress bar fills."),J.default.createElement("button",{onClick:g},n?.BTN_START||"Start Carving"))),(s==="won"||s==="over")&&J.default.createElement("div",{className:"overlay"},J.default.createElement("div",{className:"card"},J.default.createElement("h1",null,s==="won"?"STAR COMPLETE!":"KNIFE SLIPPED!"),J.default.createElement("p",null,s==="won"?"The knife carved a full five-point star.":"Release sooner to cool the knife, then keep carving."),J.default.createElement("div",{className:"result-stats"},J.default.createElement("div",null,J.default.createElement("div",{className:"result-label"},n?.MSG_SCORE||"Star Carved"),J.default.createElement("div",{className:"result"},a,"%")),J.default.createElement("div",null,J.default.createElement("div",{className:"result-label"},"Time"),J.default.createElement("div",{className:"result final-time","aria-label":"Final time "+e.current.elapsed.toFixed(1)+" seconds"},e.current.elapsed.toFixed(1),"s"))),J.default.createElement("button",{onClick:g},n?.BTN_RETRY||"Try Again"),d&&J.default.createElement("button",{className:"secondary",disabled:p,onClick:y},"Post My Play"))))}
+    `,
+      ),
+      J.default.createElement("canvas", {
+        ref: t,
+        onPointerDown: A,
+        onPointerUp: v,
+        onPointerCancel: T,
+        "aria-label":
+          "Hold to move the knife around the star and carve the coconut",
+      }),
+      J.default.createElement(
+        "div",
+        { className: "top" },
+        (s === "playing" || s === "ready") &&
+          J.default.createElement(
+            "div",
+            { className: "meters" },
+            J.default.createElement(
+              "div",
+              { className: "meter" },
+              J.default.createElement(
+                "label",
+                null,
+                "Stress",
+                J.default.createElement(
+                  "span",
+                  { className: "stress-value" },
+                  u,
+                  "%",
+                ),
+              ),
+              J.default.createElement(
+                "div",
+                { className: "track" },
+                J.default.createElement("div", {
+                  className: "fill stress",
+                  style: { width: u + "%" },
+                }),
+              ),
+            ),
+            J.default.createElement(
+              "span",
+              {
+                className: "elapsed",
+                role: "timer",
+                "aria-live": "off",
+                "aria-label": "Elapsed time " + elapsedSeconds + " seconds",
+              },
+              elapsedSeconds,
+              "s",
+            ),
+          ),
+      ),
+      (s === "playing" || s === "ready") &&
+        J.default.createElement(
+          "div",
+          {
+            className: "hint feed-first-action",
+            style: { visibility: guideUsed ? "hidden" : "visible" },
+            "aria-hidden": guideUsed,
+          },
+          s === "ready" ? "Hold to carve and start · release to cool" : (n?.MSG_HOLD_CARVE || "Hold to carve \xB7 release to cool"),
+        ),
+      null,
+      (s === "won" || s === "over") &&
+        J.default.createElement(
+          "div",
+          { className: "overlay" },
+          J.default.createElement(
+            "div",
+            { className: "card" },
+            J.default.createElement(
+              "h1",
+              null,
+              s === "won" ? "STAR COMPLETE!" : "KNIFE SLIPPED!",
+            ),
+            J.default.createElement(
+              "p",
+              null,
+              s === "won"
+                ? "The knife carved a full five-point star."
+                : "Release sooner to cool the knife, then keep carving.",
+            ),
+            J.default.createElement(
+              "div",
+              { className: "result-stats" },
+              J.default.createElement(
+                "div",
+                null,
+                J.default.createElement(
+                  "div",
+                  { className: "result-label" },
+                  n?.MSG_SCORE || "Star Carved",
+                ),
+                J.default.createElement("div", { className: "result" }, a, "%"),
+              ),
+              J.default.createElement(
+                "div",
+                null,
+                J.default.createElement(
+                  "div",
+                  { className: "result-label" },
+                  "Time",
+                ),
+                J.default.createElement(
+                  "div",
+                  {
+                    className: "result final-time",
+                    "aria-label":
+                      "Final time " + e.current.elapsed.toFixed(1) + " seconds",
+                  },
+                  e.current.elapsed.toFixed(1),
+                  "s",
+                ),
+              ),
+            ),
+            J.default.createElement(
+              "button",
+              { onClick: g },
+              n?.BTN_RETRY || "Try Again",
+            ),
+            d &&
+              J.default.createElement(
+                "button",
+                { className: "secondary", disabled: p, onClick: y },
+                "Post My Play",
+              ),
+          ),
+        ),
+    )
+  );
+}
+
 (0,Ov.createRoot)(document.getElementById("root")).render(J.default.createElement(DT,null));})();
 /*! Bundled license information:
 

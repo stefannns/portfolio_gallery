@@ -2,16 +2,23 @@
   const style = document.createElement('style');
   style.textContent = `
     @font-face {
-      font-family: 'Bangers';
-      src: url('./assets/fonts/bangers/Bangers-Regular.woff2') format('woff2');
+      font-family: 'Poppins';
+      src: url('./assets/fonts/poppins/Poppins-Regular.woff2') format('woff2');
       font-weight: 400;
       font-style: normal;
       font-display: swap;
     }
+    @font-face {
+      font-family: 'Poppins';
+      src: url('./assets/fonts/poppins/Poppins-Bold.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
     :root {
-      --font-display: "Bangers", "PingFang SC", system-ui, sans-serif;
-      --font-body: -apple-system, "Helvetica Neue", "PingFang SC", system-ui, sans-serif;
-      --font-mono: ui-monospace, Menlo, monospace;
+      --font-display: "Poppins", "Helvetica Neue", "PingFang SC", sans-serif;
+      --font-body: var(--font-display);
+      --font-mono: var(--font-display);
       --bg-color: #121212;
       --phone-border: #333;
       --color-green: #4ade80;
@@ -22,7 +29,11 @@
     html, body, #root {
       width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
       background: var(--bg-color); user-select: none; -webkit-user-select: none; touch-action: none;
+      font-family: var(--font-body);
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
     }
+    button { font-family: var(--font-body); font-weight: 700; }
     * { box-sizing: border-box; }
   `;
   document.head.appendChild(style);

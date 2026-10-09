@@ -221,9 +221,304 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 			return val;
 		}
 	}
-`;kh(qE,wF);var Cke=[1557/44100,1617/44100,1491/44100,1422/44100,1277/44100,1356/44100,1188/44100,1116/44100];var Oke=[1687/25e3,1601/25e3,2053/25e3,2251/25e3];var Fa=class t extends j{constructor(){let e=D(t.getDefaults(),arguments,["solo"]);super(e),this.name="Solo",this.input=this.output=new $({context:this.context}),t._allSolos.has(this.context)||t._allSolos.set(this.context,new Set),t._allSolos.get(this.context).add(this),this.solo=e.solo}static getDefaults(){return Object.assign(j.getDefaults(),{solo:!1})}get solo(){return this._isSoloed()}set solo(e){e?this._addSolo():this._removeSolo(),t._allSolos.get(this.context).forEach(n=>n._updateSolo())}get muted(){return this.input.gain.value===0}_addSolo(){t._soloed.has(this.context)||t._soloed.set(this.context,new Set),t._soloed.get(this.context).add(this)}_removeSolo(){t._soloed.has(this.context)&&t._soloed.get(this.context).delete(this)}_isSoloed(){return t._soloed.has(this.context)&&t._soloed.get(this.context).has(this)}_noSolos(){return!t._soloed.has(this.context)||t._soloed.has(this.context)&&t._soloed.get(this.context).size===0}_updateSolo(){this._isSoloed()?this.input.gain.value=1:this._noSolos()?this.input.gain.value=1:this.input.gain.value=0}dispose(){return super.dispose(),t._allSolos.get(this.context).delete(this),this._removeSolo(),this}};Fa._allSolos=new Map;Fa._soloed=new Map;var bh=class t extends j{constructor(){let e=D(t.getDefaults(),arguments,["pan","volume"]);super(e),this.name="PanVol",this._panner=this.input=new Gu({context:this.context,pan:e.pan,channelCount:e.channelCount}),this.pan=this._panner.pan,this._volume=this.output=new Wn({context:this.context,volume:e.volume}),this.volume=this._volume.volume,this._panner.connect(this._volume),this.mute=e.mute,W(this,["pan","volume"])}static getDefaults(){return Object.assign(j.getDefaults(),{mute:!1,pan:0,volume:0,channelCount:1})}get mute(){return this._volume.mute}set mute(e){this._volume.mute=e}dispose(){return super.dispose(),this._panner.dispose(),this.pan.dispose(),this._volume.dispose(),this.volume.dispose(),this}};var hy=class t extends j{constructor(){let e=D(t.getDefaults(),arguments,["volume","pan"]);super(e),this.name="Channel",this._solo=this.input=new Fa({solo:e.solo,context:this.context}),this._panVol=this.output=new bh({context:this.context,pan:e.pan,volume:e.volume,mute:e.mute,channelCount:e.channelCount}),this.pan=this._panVol.pan,this.volume=this._panVol.volume,this._solo.connect(this._panVol),W(this,["pan","volume"])}static getDefaults(){return Object.assign(j.getDefaults(),{pan:0,volume:0,mute:!1,solo:!1,channelCount:1})}get solo(){return this._solo.solo}set solo(e){this._solo.solo=e}get muted(){return this._solo.muted||this.mute}get mute(){return this._panVol.mute}set mute(e){this._panVol.mute=e}_getBus(e){return t.buses.has(e)||t.buses.set(e,new $({context:this.context})),t.buses.get(e)}send(e,n=0){let r=this._getBus(e),o=new $({context:this.context,units:"decibels",gain:n});return this.connect(o),o.connect(r),o}receive(e){return this._getBus(e).connect(this),this}dispose(){return super.dispose(),this._panVol.dispose(),this.pan.dispose(),this.volume.dispose(),this._solo.dispose(),this}};hy.buses=new Map;function UE(){return Xe().now()}var gbe=Xe().transport;var xbe=Xe().destination,ybe=Xe().destination;var vbe=Xe().listener;var _be=Xe().draw;var wbe=Xe();var kt=oe(GE()),ye=oe(bo()),de={ready:!1,synths:{},audio:{},bubbleIndex:0,playBubble:null},NF=async()=>{if(de.ready)return;await ny(),de.synths.sand=new Uu({noise:{type:"pink"},envelope:{attack:.28,decay:.25,sustain:.35,release:.6}}).toDestination(),de.synths.sand.volume.value=-22,de.synths.squishy=new Da({pitchDecay:.05,octaves:2,oscillator:{type:"sine"},envelope:{attack:.01,decay:.4,sustain:0,release:.4}}).toDestination(),de.synths.squishy.volume.value=-6,typeof Audio<"u"&&(de.audio.bubbles=Array.from({length:6},()=>{let t=new Audio("./assets/audio/bubble-wrap-pop-399334.mp3");return t.preload="auto",t.volume=.62,t}),de.audio.spinner=new Audio("./assets/audio/fidget-spinner-400683.mp3"),de.audio.spinner.preload="auto",de.audio.spinner.loop=!0,de.audio.spinner.volume=0,de.playBubble=t=>{let e=de.audio.bubbles[de.bubbleIndex++%de.audio.bubbles.length];e.pause(),e.currentTime=0,e.playbackRate=.92+t%5*.035,e.volume=.62,e.play().catch(()=>{})}),de.ready=!0},dy=(t="light")=>{if(typeof window<"u"&&window.tt&&window.tt.vibrate)try{window.tt.vibrate({style:t})}catch{}};function PF(t){let e={};return(t.tweaks||[]).forEach(n=>{e[n.id]=n.value}),(t.texts||[]).forEach(n=>{e[n.id]=n.value}),(t.images||[]).forEach(n=>{e[n.id]=n.path}),(t.mentions||[]).forEach(n=>{e[n.id]=n.path!=null&&n.path!==""?n.path:n.value}),(t.motions||[]).forEach(n=>{!n||!n.id||(n.base_path!=null&&n.base_path!==""&&(e[n.id]=n.base_path,e[n.id+"_BASE"]=n.base_path),n.frame_count!=null&&(e[n.id+"_COUNT"]=n.frame_count))}),e}var bF=()=>{let[t,e]=(0,De.useState)(new Set),n=7,r=5,o=n*r,i=s=>{if(!t.has(s)&&(e(a=>new Set(a).add(s)),de.ready)){de.playBubble?.(s),dy("light")}};return(0,ye.jsx)("div",{style:{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px",minHeight:0},children:(0,ye.jsx)("div",{style:{width:"100%",maxWidth:"400px",aspectRatio:"5/7",display:"grid",gridTemplateColumns:`repeat(${r}, 1fr)`,gridTemplateRows:`repeat(${n}, 1fr)`,gap:"min(3cqi, 12px)",containerType:"inline-size"},children:Array.from({length:o}).map((s,a)=>{let l=t.has(a);return(0,ye.jsx)(Li.div,{whileTap:{scale:l?1:.85},onClick:()=>i(a),animate:{scale:l?.95:1,opacity:l?.4:1,backgroundColor:l?"var(--c-pink-light)":"var(--c-pink-mid)"},style:{borderRadius:"50%",boxShadow:l?"inset 2px 2px 4px rgba(0,0,0,0.1)":"3px 3px 6px rgba(0,0,0,0.15), inset -2px -2px 6px rgba(255,255,255,0.6)",cursor:"pointer",touchAction:"none"}},a)})})})},OF=({config:t})=>{let e=(0,De.useRef)(null),n=(0,De.useRef)(null),r=(0,De.useRef)(!1),o=(0,De.useRef)({x:0,y:0});(0,De.useEffect)(()=>{if(!e.current||!n.current)return;let c=e.current.clientWidth,p=e.current.clientHeight,u=window.devicePixelRatio||1;n.current.width=c*u,n.current.height=p*u;let f=n.current.getContext("2d");f.scale(u,u),f.fillStyle="#FFE4E8",f.fillRect(0,0,c,p)},[]);let i=c=>{let p=n.current.getBoundingClientRect();return{x:c.clientX-p.left,y:c.clientY-p.top}},s=c=>{r.current=!0,o.current=i(c),de.ready&&(de.synths.sand.volume.value=-22,de.synths.sand.state!=="started"&&de.synths.sand.triggerAttack())},a=c=>{if(!r.current||!n.current)return;let p=i(c),u=n.current.getContext("2d");u.beginPath(),u.moveTo(o.current.x,o.current.y),u.lineTo(p.x,p.y),u.strokeStyle="#FF8BA7",u.lineWidth=t.SAND_BRUSH_SIZE||15,u.lineCap="round",u.lineJoin="round",u.stroke(),o.current=p},l=()=>{r.current=!1,de.ready&&de.synths.sand.triggerRelease()};return(0,De.useEffect)(()=>()=>{de.ready&&de.synths.sand.state==="started"&&de.synths.sand.triggerRelease()},[]),(0,ye.jsx)("div",{ref:e,style:{flex:1,minHeight:0,position:"relative",margin:"20px",borderRadius:"16px",overflow:"hidden",boxShadow:"inset 0 4px 10px rgba(0,0,0,0.05)"},children:(0,ye.jsx)("canvas",{ref:n,style:{width:"100%",height:"100%",display:"block",touchAction:"none"},onPointerDown:s,onPointerMove:a,onPointerUp:l,onPointerCancel:l,onPointerLeave:l})})},DF=({config:t})=>{let e=(0,De.useRef)(null),n=(0,De.useRef)(null),r=(0,De.useRef)(0),o=(0,De.useRef)(0),i=(0,De.useRef)(null),s=(0,De.useRef)(performance.now()),a=(0,De.useRef)(null),l=u=>{a.current={x:u.clientX,y:u.clientY}},c=u=>{if(!a.current||!e.current)return;let f=e.current.getBoundingClientRect(),h=f.left+f.width/2,m=f.top+f.height/2,g=a.current.x-h,v=a.current.y-m,x=u.clientX-h,y=u.clientY-m,d=g*y-v*x,w=g*g+v*v;if(w>0){let _=d/w;o.current+=_*180/Math.PI*.8}a.current={x:u.clientX,y:u.clientY}},p=()=>{a.current=null};return(0,De.useEffect)(()=>{let u=f=>{let h=Math.min(32,f-s.current);if(s.current=f,o.current*=t.SPINNER_FRICTION||.98,r.current+=o.current*(h/16),n.current&&(n.current.style.transform=`rotate(${r.current}deg)`),de.ready){let m=Math.abs(o.current);if(de.audio.spinner){let g=de.audio.spinner,v=m>.65?Math.min(.58,.08+m*.026):0,x=g.volume+(v-g.volume)*.22;g.volume=Math.max(0,Math.min(.62,x)),g.playbackRate=Math.max(.78,Math.min(1.3,.78+m*.018)),v>0&&g.paused?g.play().catch(()=>{}):v===0&&g.volume<.012&&!g.paused&&(g.pause(),g.currentTime=0)}}i.current=requestAnimationFrame(u)};return i.current=requestAnimationFrame(u),()=>{cancelAnimationFrame(i.current),de.audio.spinner&&(de.audio.spinner.pause(),de.audio.spinner.currentTime=0,de.audio.spinner.volume=0)}},[t]),(0,ye.jsx)("div",{ref:e,style:{flex:1,minHeight:0,display:"flex",alignItems:"center",justifyContent:"center",touchAction:"none"},onPointerDown:l,onPointerMove:c,onPointerUp:p,onPointerCancel:p,onPointerLeave:p,children:(0,ye.jsx)("img",{ref:n,src:t.IMG_SPINNER,alt:"Spinner",draggable:!1,style:{width:"80%",maxWidth:"300px",aspectRatio:"1/1",objectFit:"contain",pointerEvents:"none"}})})},RF=({config:t})=>{let e=(0,De.useRef)(null);return(0,De.useEffect)(()=>{if(!e.current)return;let n=e.current.clientWidth,r=e.current.clientHeight,o=kt.default.Engine.create();o.gravity.y=.5;let i=kt.default.Render.create({element:e.current,engine:o,options:{width:n,height:r,wireframes:!1,background:"transparent",pixelRatio:window.devicePixelRatio||1}}),s=60,a=[kt.default.Bodies.rectangle(n/2,r+s/2,n,s,{isStatic:!0,render:{visible:!1}}),kt.default.Bodies.rectangle(n/2,-s/2,n,s,{isStatic:!0,render:{visible:!1}}),kt.default.Bodies.rectangle(-s/2,r/2,s,r,{isStatic:!0,render:{visible:!1}}),kt.default.Bodies.rectangle(n+s/2,r/2,s,r,{isStatic:!0,render:{visible:!1}})],l=Math.max(12,Math.min(n,r)*.04),c=8,p=8,u=kt.default.Composites.softBody(n/2-c*l,r/2-p*l,c,p,0,0,!0,l,{friction:.1,restitution:.3,render:{fillStyle:"var(--c-pink-dark)"}},{stiffness:t.SQUISHY_STIFFNESS||.2,damping:.05});kt.default.World.add(o.world,[...a,u]);let f=kt.default.Mouse.create(i.canvas),h=kt.default.MouseConstraint.create(o,{mouse:f,constraint:{stiffness:.2,render:{visible:!1}}});kt.default.World.add(o.world,h),kt.default.Events.on(h,"startdrag",()=>{de.ready&&(de.synths.squishy.triggerAttackRelease("C2","8n"),dy("medium"))});let m,g=()=>{kt.default.Engine.update(o,1e3/60),m=requestAnimationFrame(g)};return m=requestAnimationFrame(g),kt.default.Render.run(i),()=>{cancelAnimationFrame(m),kt.default.Render.stop(i),kt.default.Engine.clear(o),i.canvas.remove(),i.textures={}}},[t]),(0,ye.jsx)("div",{ref:e,style:{flex:1,minHeight:0,overflow:"hidden",touchAction:"none"}})},FF=({cfg:t,onOpen:e})=>{let n=typeof window<"u"&&window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;return(0,ye.jsxs)(Li.div,{initial:{opacity:0},animate:{opacity:1},exit:{opacity:0,scale:n?1:1.06},transition:{duration:n?0:.24},style:{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"16px",padding:"calc(30px + env(safe-area-inset-top, 0px)) 24px calc(50px + env(safe-area-inset-bottom, 0px))"},children:[(0,ye.jsx)(Li.img,{src:t.BG_COVER,alt:"Book cover",draggable:!1,initial:{opacity:0,scale:n?1:.76},animate:{opacity:1,scale:1},transition:{duration:n?0:.52,ease:[.22,1,.36,1]},style:{display:"block",width:"min(88vw,350px)",maxHeight:"calc(100dvh - 144px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))",aspectRatio:"3/4",objectFit:"contain"}}),(0,ye.jsx)(Li.button,{whileTap:{scale:.96},onClick:e,style:{flex:"0 0 auto",minWidth:"168px",minHeight:"48px",padding:"12px 28px",borderRadius:"24px",border:"none",background:"var(--c-pink-accent)",color:"#fff",fontSize:"18px",fontFamily:"var(--font-display)",cursor:"pointer",boxShadow:"0 7px 18px rgba(180,72,108,.28)",touchAction:"manipulation"},children:t.COVER_INSTRUCTION})]})},
-IF=({cfg:t})=>{let[e,n]=(0,De.useState)(0),[r,o]=(0,De.useState)(0),i=[{id:"bubble",label:t.TAB_BUBBLE,Component:bF},{id:"sand",label:t.TAB_SAND,Component:OF},{id:"spinner",label:t.TAB_SPINNER,Component:DF}],
-s=i[e].Component;return(0,ye.jsxs)(Li.div,{initial:{opacity:0,y:20},animate:{opacity:1,y:0},style:{flex:1,display:"flex",flexDirection:"column",minHeight:0},children:[(0,ye.jsx)("div",{style:{flex:"0 0 auto",padding:"15px 10px",display:"flex",overflowX:"auto",gap:"10px",scrollbarWidth:"none"},children:i.map((a,l)=>{let c=e===l;return(0,ye.jsx)("button",{onClick:()=>n(l),style:{flex:"0 0 auto",padding:"10px 20px",borderRadius:"20px",border:"none",background:c?"var(--c-pink-accent)":"var(--c-pink-light)",color:c?"#fff":"#666",fontFamily:"var(--font-body)",fontWeight:c?"bold":"normal",cursor:"pointer",transition:"all 0.2s",whiteSpace:"nowrap"},children:a.label},a.id)})}),(0,ye.jsx)("div",{style:{flex:1,minHeight:0,display:"flex",flexDirection:"column",position:"relative",backgroundColor:"#fff",margin:"0 10px",borderRadius:"24px",boxShadow:"0 4px 20px rgba(0,0,0,0.05)"},children:(0,ye.jsx)(s,{config:t},`${e}-${r}`)}),(0,ye.jsx)("div",{style:{flex:"0 0 auto",padding:"max(16px, env(safe-area-inset-bottom, 0px)) 20px 16px",display:"flex",justifyContent:"center"},children:(0,ye.jsx)(Li.button,{whileTap:{scale:.9},onClick:()=>{o(a=>a+1),dy("light")},style:{padding:"12px 36px",borderRadius:"24px",border:"2px solid var(--c-pink-mid)",background:"transparent",color:"var(--c-pink-accent)",fontFamily:"var(--font-body)",fontWeight:"bold",cursor:"pointer"},children:t.BTN_RESET})})]})},VF=()=>{let[t,e]=(0,De.useState)(null),[n,r]=(0,De.useState)("cover");(0,De.useEffect)(()=>{let i=!0;return(async()=>{let s={tweaks:[],texts:[],images:[]};try{let a=await fetch("./game.config.json",{cache:"no-store"});a.ok&&(s=await a.json())}catch{}i&&e(PF(s))})(),()=>{i=!1}},[]);let o=async()=>{await NF(),r("book")};return t?(0,ye.jsxs)(ye.Fragment,{children:[(0,ye.jsx)("style",{children:`
+`;kh(qE,wF);var Cke=[1557/44100,1617/44100,1491/44100,1422/44100,1277/44100,1356/44100,1188/44100,1116/44100];var Oke=[1687/25e3,1601/25e3,2053/25e3,2251/25e3];var Fa=class t extends j{constructor(){let e=D(t.getDefaults(),arguments,["solo"]);super(e),this.name="Solo",this.input=this.output=new $({context:this.context}),t._allSolos.has(this.context)||t._allSolos.set(this.context,new Set),t._allSolos.get(this.context).add(this),this.solo=e.solo}static getDefaults(){return Object.assign(j.getDefaults(),{solo:!1})}get solo(){return this._isSoloed()}set solo(e){e?this._addSolo():this._removeSolo(),t._allSolos.get(this.context).forEach(n=>n._updateSolo())}get muted(){return this.input.gain.value===0}_addSolo(){t._soloed.has(this.context)||t._soloed.set(this.context,new Set),t._soloed.get(this.context).add(this)}_removeSolo(){t._soloed.has(this.context)&&t._soloed.get(this.context).delete(this)}_isSoloed(){return t._soloed.has(this.context)&&t._soloed.get(this.context).has(this)}_noSolos(){return!t._soloed.has(this.context)||t._soloed.has(this.context)&&t._soloed.get(this.context).size===0}_updateSolo(){this._isSoloed()?this.input.gain.value=1:this._noSolos()?this.input.gain.value=1:this.input.gain.value=0}dispose(){return super.dispose(),t._allSolos.get(this.context).delete(this),this._removeSolo(),this}};Fa._allSolos=new Map;Fa._soloed=new Map;var bh=class t extends j{constructor(){let e=D(t.getDefaults(),arguments,["pan","volume"]);super(e),this.name="PanVol",this._panner=this.input=new Gu({context:this.context,pan:e.pan,channelCount:e.channelCount}),this.pan=this._panner.pan,this._volume=this.output=new Wn({context:this.context,volume:e.volume}),this.volume=this._volume.volume,this._panner.connect(this._volume),this.mute=e.mute,W(this,["pan","volume"])}static getDefaults(){return Object.assign(j.getDefaults(),{mute:!1,pan:0,volume:0,channelCount:1})}get mute(){return this._volume.mute}set mute(e){this._volume.mute=e}dispose(){return super.dispose(),this._panner.dispose(),this.pan.dispose(),this._volume.dispose(),this.volume.dispose(),this}};var hy=class t extends j{constructor(){let e=D(t.getDefaults(),arguments,["volume","pan"]);super(e),this.name="Channel",this._solo=this.input=new Fa({solo:e.solo,context:this.context}),this._panVol=this.output=new bh({context:this.context,pan:e.pan,volume:e.volume,mute:e.mute,channelCount:e.channelCount}),this.pan=this._panVol.pan,this.volume=this._panVol.volume,this._solo.connect(this._panVol),W(this,["pan","volume"])}static getDefaults(){return Object.assign(j.getDefaults(),{pan:0,volume:0,mute:!1,solo:!1,channelCount:1})}get solo(){return this._solo.solo}set solo(e){this._solo.solo=e}get muted(){return this._solo.muted||this.mute}get mute(){return this._panVol.mute}set mute(e){this._panVol.mute=e}_getBus(e){return t.buses.has(e)||t.buses.set(e,new $({context:this.context})),t.buses.get(e)}send(e,n=0){let r=this._getBus(e),o=new $({context:this.context,units:"decibels",gain:n});return this.connect(o),o.connect(r),o}receive(e){return this._getBus(e).connect(this),this}dispose(){return super.dispose(),this._panVol.dispose(),this.pan.dispose(),this.volume.dispose(),this._solo.dispose(),this}};hy.buses=new Map;function UE(){return Xe().now()}var gbe=Xe().transport;var xbe=Xe().destination,ybe=Xe().destination;var vbe=Xe().listener;var _be=Xe().draw;var wbe=Xe();var kt=oe(GE()),ye=oe(bo()),de={ready:!1,synths:{},audio:{},bubbleIndex:0,playBubble:null},NF=
+async () => {
+  if (de.ready) return;
+  if (de.starting) return de.starting;
+  de.starting = (async () => {
+  (await ny(),
+    (de.synths.sand = new Uu({
+      noise: { type: "pink" },
+      envelope: { attack: 0.28, decay: 0.25, sustain: 0.35, release: 0.6 },
+    }).toDestination()),
+    (de.synths.sand.volume.value = -22),
+    (de.synths.squishy = new Da({
+      pitchDecay: 0.05,
+      octaves: 2,
+      oscillator: { type: "sine" },
+      envelope: { attack: 0.01, decay: 0.4, sustain: 0, release: 0.4 },
+    }).toDestination()),
+    (de.synths.squishy.volume.value = -6),
+    typeof Audio < "u" &&
+      ((de.audio.bubbles = Array.from({ length: 6 }, () => {
+        let t = new Audio("./assets/audio/bubble-wrap-pop-399334.mp3");
+        return ((t.preload = "auto"), (t.volume = 0.62), t);
+      })),
+      (de.audio.spinner = new Audio(
+        "./assets/audio/fidget-spinner-400683.mp3",
+      )),
+      (de.audio.spinner.preload = "auto"),
+      (de.audio.spinner.loop = !0),
+      (de.audio.spinner.volume = 0),
+      (de.playBubble = (t) => {
+        let e = de.audio.bubbles[de.bubbleIndex++ % de.audio.bubbles.length];
+        (e.pause(),
+          (e.currentTime = 0),
+          (e.playbackRate = 0.92 + (t % 5) * 0.035),
+          (e.volume = 0.62),
+          e.play().catch(() => {}));
+      })),
+    (de.ready = !0));
+  })();
+  try { await de.starting; } finally { de.starting = null; }
+}
+,dy=(t="light")=>{if(typeof window<"u"&&window.tt&&window.tt.vibrate)try{window.tt.vibrate({style:t})}catch{}};function PF(t){let e={};return(t.tweaks||[]).forEach(n=>{e[n.id]=n.value}),(t.texts||[]).forEach(n=>{e[n.id]=n.value}),(t.images||[]).forEach(n=>{e[n.id]=n.path}),(t.mentions||[]).forEach(n=>{e[n.id]=n.path!=null&&n.path!==""?n.path:n.value}),(t.motions||[]).forEach(n=>{!n||!n.id||(n.base_path!=null&&n.base_path!==""&&(e[n.id]=n.base_path,e[n.id+"_BASE"]=n.base_path),n.frame_count!=null&&(e[n.id+"_COUNT"]=n.frame_count))}),e}var bF=
+() => {
+  let [t, e] = (0, De.useState)(new Set()),
+    n = 7,
+    r = 5,
+    o = n * r,
+    i = async (s) => {
+      if(t.has(s))return;
+      e((a) => new Set(a).add(s));
+      try { await NF(); de.playBubble?.(s); dy("light"); } catch (_) {}
+    };
+  return (0, ye.jsx)("div", {
+    style: {
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "20px",
+      minHeight: 0,
+    },
+    children: (0, ye.jsx)("div", {
+      style: {
+        width: "100%",
+        maxWidth: "400px",
+        aspectRatio: "5/7",
+        display: "grid",
+        gridTemplateColumns: `repeat(${r}, 1fr)`,
+        gridTemplateRows: `repeat(${n}, 1fr)`,
+        gap: "min(3cqi, 12px)",
+        containerType: "inline-size",
+      },
+      children: Array.from({ length: o }).map((s, a) => {
+        let l = t.has(a);
+        return (0, ye.jsx)(
+          Li.div,
+          {
+            whileTap: { scale: l ? 1 : 0.85 },
+            onClick: () => i(a),
+            animate: {
+              scale: l ? 0.95 : 1,
+              opacity: l ? 0.4 : 1,
+              backgroundColor: l ? "var(--c-pink-light)" : "var(--c-pink-mid)",
+            },
+            style: {
+              borderRadius: "50%",
+              boxShadow: l
+                ? "inset 2px 2px 4px rgba(0,0,0,0.1)"
+                : "3px 3px 6px rgba(0,0,0,0.15), inset -2px -2px 6px rgba(255,255,255,0.6)",
+              cursor: "pointer",
+              touchAction: "none",
+            },
+          },
+          a,
+        );
+      }),
+    }),
+  });
+}
+,OF=
+({ config: t }) => {
+  let e = (0, De.useRef)(null),
+    n = (0, De.useRef)(null),
+    r = (0, De.useRef)(!1),
+    o = (0, De.useRef)({ x: 0, y: 0 });
+  (0, De.useEffect)(() => {
+    if (!e.current || !n.current) return;
+    let c = e.current.clientWidth,
+      p = e.current.clientHeight,
+      u = window.devicePixelRatio || 1;
+    ((n.current.width = c * u), (n.current.height = p * u));
+    let f = n.current.getContext("2d");
+    (f.scale(u, u), (f.fillStyle = "#FFE4E8"), f.fillRect(0, 0, c, p));
+  }, []);
+  let i = (c) => {
+      let p = n.current.getBoundingClientRect();
+      return { x: c.clientX - p.left, y: c.clientY - p.top };
+    },
+    s = async (c) => {
+      if(c.isPrimary===false || c.button>0)return;
+      r.current = true; o.current = i(c);
+      try { await NF(); if(r.current && de.ready){de.synths.sand.volume.value=-22;if(de.synths.sand.state!=="started")de.synths.sand.triggerAttack();} } catch (_) {}
+    },
+    a = (c) => {
+      if (!r.current || !n.current) return;
+      let p = i(c),
+        u = n.current.getContext("2d");
+      (u.beginPath(),
+        u.moveTo(o.current.x, o.current.y),
+        u.lineTo(p.x, p.y),
+        (u.strokeStyle = "#FF8BA7"),
+        (u.lineWidth = t.SAND_BRUSH_SIZE || 15),
+        (u.lineCap = "round"),
+        (u.lineJoin = "round"),
+        u.stroke(),
+        (o.current = p));
+    },
+    l = () => {
+      ((r.current = !1), de.ready && de.synths.sand.triggerRelease());
+    };
+  return (
+    (0, De.useEffect)(
+      () => () => {
+        de.ready &&
+          de.synths.sand.state === "started" &&
+          de.synths.sand.triggerRelease();
+      },
+      [],
+    ),
+    (0, ye.jsx)("div", {
+      ref: e,
+      style: {
+        flex: 1,
+        minHeight: 0,
+        position: "relative",
+        margin: "20px",
+        borderRadius: "16px",
+        overflow: "hidden",
+        boxShadow: "inset 0 4px 10px rgba(0,0,0,0.05)",
+      },
+      children: (0, ye.jsx)("canvas", {
+        ref: n,
+        style: {
+          width: "100%",
+          height: "100%",
+          display: "block",
+          touchAction: "none",
+        },
+        onPointerDown: s,
+        onPointerMove: a,
+        onPointerUp: l,
+        onPointerCancel: l,
+        onPointerLeave: l,
+      }),
+    })
+  );
+}
+,DF=({config:t})=>{let e=(0,De.useRef)(null),n=(0,De.useRef)(null),r=(0,De.useRef)(0),o=(0,De.useRef)(0),i=(0,De.useRef)(null),s=(0,De.useRef)(performance.now()),a=(0,De.useRef)(null),l=u=>{a.current={x:u.clientX,y:u.clientY}},c=u=>{if(!a.current||!e.current)return;let f=e.current.getBoundingClientRect(),h=f.left+f.width/2,m=f.top+f.height/2,g=a.current.x-h,v=a.current.y-m,x=u.clientX-h,y=u.clientY-m,d=g*y-v*x,w=g*g+v*v;if(w>0){let _=d/w;o.current+=_*180/Math.PI*.8}a.current={x:u.clientX,y:u.clientY}},p=()=>{a.current=null};return(0,De.useEffect)(()=>{let u=f=>{let h=Math.min(32,f-s.current);if(s.current=f,o.current*=t.SPINNER_FRICTION||.98,r.current+=o.current*(h/16),n.current&&(n.current.style.transform=`rotate(${r.current}deg)`),de.ready){let m=Math.abs(o.current);if(de.audio.spinner){let g=de.audio.spinner,v=m>.65?Math.min(.58,.08+m*.026):0,x=g.volume+(v-g.volume)*.22;g.volume=Math.max(0,Math.min(.62,x)),g.playbackRate=Math.max(.78,Math.min(1.3,.78+m*.018)),v>0&&g.paused?g.play().catch(()=>{}):v===0&&g.volume<.012&&!g.paused&&(g.pause(),g.currentTime=0)}}i.current=requestAnimationFrame(u)};return i.current=requestAnimationFrame(u),()=>{cancelAnimationFrame(i.current),de.audio.spinner&&(de.audio.spinner.pause(),de.audio.spinner.currentTime=0,de.audio.spinner.volume=0)}},[t]),(0,ye.jsx)("div",{ref:e,style:{flex:1,minHeight:0,display:"flex",alignItems:"center",justifyContent:"center",touchAction:"none"},onPointerDown:l,onPointerMove:c,onPointerUp:p,onPointerCancel:p,onPointerLeave:p,children:(0,ye.jsx)("img",{ref:n,src:t.IMG_SPINNER,alt:"Spinner",draggable:!1,style:{width:"80%",maxWidth:"300px",aspectRatio:"1/1",objectFit:"contain",pointerEvents:"none"}})})},RF=({config:t})=>{let e=(0,De.useRef)(null);return(0,De.useEffect)(()=>{if(!e.current)return;let n=e.current.clientWidth,r=e.current.clientHeight,o=kt.default.Engine.create();o.gravity.y=.5;let i=kt.default.Render.create({element:e.current,engine:o,options:{width:n,height:r,wireframes:!1,background:"transparent",pixelRatio:window.devicePixelRatio||1}}),s=60,a=[kt.default.Bodies.rectangle(n/2,r+s/2,n,s,{isStatic:!0,render:{visible:!1}}),kt.default.Bodies.rectangle(n/2,-s/2,n,s,{isStatic:!0,render:{visible:!1}}),kt.default.Bodies.rectangle(-s/2,r/2,s,r,{isStatic:!0,render:{visible:!1}}),kt.default.Bodies.rectangle(n+s/2,r/2,s,r,{isStatic:!0,render:{visible:!1}})],l=Math.max(12,Math.min(n,r)*.04),c=8,p=8,u=kt.default.Composites.softBody(n/2-c*l,r/2-p*l,c,p,0,0,!0,l,{friction:.1,restitution:.3,render:{fillStyle:"var(--c-pink-dark)"}},{stiffness:t.SQUISHY_STIFFNESS||.2,damping:.05});kt.default.World.add(o.world,[...a,u]);let f=kt.default.Mouse.create(i.canvas),h=kt.default.MouseConstraint.create(o,{mouse:f,constraint:{stiffness:.2,render:{visible:!1}}});kt.default.World.add(o.world,h),kt.default.Events.on(h,"startdrag",()=>{de.ready&&(de.synths.squishy.triggerAttackRelease("C2","8n"),dy("medium"))});let m,g=()=>{kt.default.Engine.update(o,1e3/60),m=requestAnimationFrame(g)};return m=requestAnimationFrame(g),kt.default.Render.run(i),()=>{cancelAnimationFrame(m),kt.default.Render.stop(i),kt.default.Engine.clear(o),i.canvas.remove(),i.textures={}}},[t]),(0,ye.jsx)("div",{ref:e,style:{flex:1,minHeight:0,overflow:"hidden",touchAction:"none"}})},FF=({cfg:t,onOpen:e})=>{let n=typeof window<"u"&&window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;return(0,ye.jsxs)(Li.div,{initial:{opacity:0},animate:{opacity:1},exit:{opacity:0,scale:n?1:1.06},transition:{duration:n?0:.24},style:{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"16px",padding:"calc(30px + env(safe-area-inset-top, 0px)) 24px calc(50px + env(safe-area-inset-bottom, 0px))"},children:[(0,ye.jsx)(Li.img,{src:t.BG_COVER,alt:"Book cover",draggable:!1,initial:{opacity:0,scale:n?1:.76},animate:{opacity:1,scale:1},transition:{duration:n?0:.52,ease:[.22,1,.36,1]},style:{display:"block",width:"min(88vw,350px)",maxHeight:"calc(100dvh - 144px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))",aspectRatio:"3/4",objectFit:"contain"}}),(0,ye.jsx)(Li.button,{whileTap:{scale:.96},onClick:e,style:{flex:"0 0 auto",minWidth:"168px",minHeight:"48px",padding:"12px 28px",borderRadius:"24px",border:"none",background:"var(--c-pink-accent)",color:"#fff",fontSize:"18px",fontFamily:"var(--font-display)",cursor:"pointer",boxShadow:"0 7px 18px rgba(180,72,108,.28)",touchAction:"manipulation"},children:t.COVER_INSTRUCTION})]})},
+IF=
+({ cfg: t }) => {
+  let [e, n] = (0, De.useState)(0),
+    [r, o] = (0, De.useState)(0),
+    i = [
+      { id: "bubble", label: t.TAB_BUBBLE, Component: bF },
+      { id: "sand", label: t.TAB_SAND, Component: OF },
+      { id: "spinner", label: t.TAB_SPINNER, Component: DF },
+    ],
+    s = i[e].Component;
+  return (0, ye.jsxs)(Li.div, {
+    onPointerDownCapture:event=>{if(event.isPrimary!==false && !(event.button>0))void NF().catch(()=>{});},
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    style: { flex: 1, display: "flex", flexDirection: "column", minHeight: 0 },
+    children: [
+      (0, ye.jsx)("div", {
+        style: {
+          flex: "0 0 auto",
+          padding: "15px 10px",
+          display: "flex",
+          overflowX: "auto",
+          gap: "10px",
+          scrollbarWidth: "none",
+        },
+        children: i.map((a, l) => {
+          let c = e === l;
+          return (0, ye.jsx)(
+            "button",
+            {
+              onClick: () => n(l),
+              style: {
+                flex: "0 0 auto",
+                padding: "10px 20px",
+                borderRadius: "20px",
+                border: "none",
+                background: c ? "var(--c-pink-accent)" : "var(--c-pink-light)",
+                color: c ? "#fff" : "#666",
+                fontFamily: "var(--font-body)",
+                fontWeight: c ? "bold" : "normal",
+                cursor: "pointer",
+                transition: "all 0.2s",
+                whiteSpace: "nowrap",
+              },
+              children: a.label,
+            },
+            a.id,
+          );
+        }),
+      }),
+      (0, ye.jsx)("div", {
+        style: {
+          flex: 1,
+          minHeight: 0,
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          backgroundColor: "#fff",
+          margin: "0 10px",
+          borderRadius: "24px",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+        },
+        children: (0, ye.jsx)(s, { config: t }, `${e}-${r}`),
+      }),
+      (0, ye.jsx)("div", {
+        style: {
+          flex: "0 0 auto",
+          padding: "max(16px, env(safe-area-inset-bottom, 0px)) 20px 16px",
+          display: "flex",
+          justifyContent: "center",
+        },
+        children: (0, ye.jsx)(Li.button, {
+          whileTap: { scale: 0.9 },
+          onClick: () => {
+            (o((a) => a + 1), dy("light"));
+          },
+          style: {
+            padding: "12px 36px",
+            borderRadius: "24px",
+            border: "2px solid var(--c-pink-mid)",
+            background: "transparent",
+            color: "var(--c-pink-accent)",
+            fontFamily: "var(--font-body)",
+            fontWeight: "bold",
+            cursor: "pointer",
+          },
+          children: t.BTN_RESET,
+        }),
+      }),
+    ],
+  });
+}
+,VF=
+() => {
+  let [t, e] = (0, De.useState)(null),
+    [n, r] = (0, De.useState)("book");
+  (0, De.useEffect)(() => {
+    let i = !0;
+    return (
+      (async () => {
+        let s = { tweaks: [], texts: [], images: [] };
+        try {
+          let a = await fetch("./game.config.json", { cache: "no-store" });
+          a.ok && (s = await a.json());
+        } catch {}
+        i && e(PF(s));
+      })(),
+      () => {
+        i = !1;
+      }
+    );
+  }, []);
+  let o = async () => {
+    (await NF(), r("book"));
+  };
+  return t
+    ? (0, ye.jsxs)(ye.Fragment, {
+        children: [
+          (0, ye.jsx)("style", {
+            children: `
         @font-face {
           font-family: 'DynaPuff';
           src: url('./assets/fonts/dynapuff/DynaPuff-SemiBold.woff2') format('woff2');
@@ -252,4 +547,26 @@ s=i[e].Component;return(0,ye.jsxs)(Li.div,{initial:{opacity:0,y:20},animate:{opa
           -webkit-touch-callout: none;
         }
         * { box-sizing: border-box; }
-      `}),(0,ye.jsx)("div",{style:{width:"100%",height:"100%",display:"flex",flexDirection:"column",containerType:"inline-size"},children:(0,ye.jsx)(cx,{mode:"wait",children:n==="cover"?(0,ye.jsx)(FF,{cfg:t,onOpen:o},"cover"):(0,ye.jsx)(IF,{cfg:t},"book")})})]}):(0,ye.jsx)("div",{style:{width:"100%",height:"100%",backgroundColor:"#FFF0F5"}})};(0,HE.createRoot)(document.getElementById("root")).render((0,ye.jsx)(VF,{}));})();
+      `,
+          }),
+          (0, ye.jsx)("div", {
+            style: {
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              containerType: "inline-size",
+            },
+            children: (0, ye.jsx)(cx, {
+              mode: "wait",
+              children:
+                (0, ye.jsx)(IF, { cfg: t }, "book"),
+            }),
+          }),
+        ],
+      })
+    : (0, ye.jsx)("div", {
+        style: { width: "100%", height: "100%", backgroundColor: "#FFF0F5" },
+      });
+}
+;(0,HE.createRoot)(document.getElementById("root")).render((0,ye.jsx)(VF,{}));})();

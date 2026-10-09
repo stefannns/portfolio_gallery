@@ -12,6 +12,13 @@
     /* Generated pixel grass and dirt; original collision geometry is retained. */
     #root { --color-plat: #7b4b29; }
   </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
 </head>
 <body>
   <div id="root"></div>
@@ -38,5 +45,6 @@
   </script>
   <!-- playable-inline-config:end -->
   <script src="./bundle.js?v=pixel-ladder-hard-mode-11"></script>
+<script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject="#root canvas"></script>
 </body>
 </html>

@@ -269,4 +269,389 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       outline: none;
       cursor: pointer;
     }
-  `});function _V(){let t=typeof window<"u"&&typeof window.tt<"u"&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,xt.useState)(!1);return(0,xt.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]),{canSubmit:t,submitting:e,submitRecording:()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] playableRecordingSubmission failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))}}}function vV(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var wV=()=>{let[t,e]=(0,xt.useState)(null),r=(0,xt.useRef)(!1),n=(0,xt.useRef)(null),o=(0,xt.useRef)(null),i=(0,xt.useRef)(null),[s,a]=(0,xt.useState)("idle"),[l,u]=(0,xt.useState)(null),c=(0,xt.useRef)([]),p=(0,xt.useRef)(null),h=(0,xt.useRef)(null),f=window.devicePixelRatio||1,m=(0,xt.useRef)({cx:0,cy:0,r:100});(0,xt.useEffect)(()=>{let k=!0;return(async()=>{let C={tweaks:[],texts:[],images:[]};try{let E=await fetch("./game.config.json",{cache:"no-store"});E.ok&&(C=await E.json())}catch{}if(k){let E=vV(C);E.TITLE||(E.TITLE="Orbital Circle"),E.GUIDE_TEXT||(E.GUIDE_TEXT="Tap the canvas and try to draw a perfect circle"),E.BTN_RETRY||(E.BTN_RETRY="Try Again"),E.SCORE_PERFECT||(E.SCORE_PERFECT="Perfect"),E.SCORE_GOOD||(E.SCORE_GOOD="Good"),E.SCORE_AGAIN||(E.SCORE_AGAIN="Try Again"),E.SCORE_SHORT||(E.SCORE_SHORT="Too Short"),e(E)}})(),()=>{k=!1}},[]),(0,xt.useEffect)(()=>{if(!t||!h.current||!p.current)return;let k,C=h.current,E=C.getContext("2d",{alpha:!0}),O=()=>{let{clientWidth:F,clientHeight:b}=p.current;F===0||b===0||(C.width=F*f,C.height=b*f,m.current.cx=F/2,m.current.cy=b/2,m.current.r=Math.min(F,b)*.28)},I=new ResizeObserver(O);I.observe(p.current),O();let B=()=>{let{cx:F,cy:b,r:D}=m.current,M=C.width,R=C.height;E.setTransform(1,0,0,1,0,0),E.clearRect(0,0,M,R),E.scale(f,f),E.beginPath(),E.arc(F,b,D,0,Math.PI*2),E.strokeStyle="#2d3b5c",E.lineWidth=4,E.setLineDash([12,12]),E.stroke(),E.setLineDash([]),s==="idle"&&(E.beginPath(),E.arc(F,b-D,12,0,Math.PI*2),E.fillStyle="#ffffff",E.fill(),E.shadowBlur=10,E.shadowColor="rgba(255, 255, 255, 0.5)",E.fill(),E.shadowBlur=0);let V=c.current;if(V&&V.length>0){E.beginPath(),E.moveTo(V[0].x,V[0].y);for(let P=1;P<V.length;P++)E.lineTo(V[P].x,V[P].y);E.strokeStyle="#3b82f6",E.lineWidth=6,E.lineCap="round",E.lineJoin="round",E.stroke()}k=requestAnimationFrame(B)};return k=requestAnimationFrame(B),()=>{I.disconnect(),cancelAnimationFrame(k)}},[t,s,f]);let x=async()=>{if(!r.current)try{await Eg(),n.current=new nn({volume:-8}).toDestination(),o.current=new ea({volume:-4}).toDestination(),i.current=new Wp(nn,{volume:-8}).toDestination(),r.current=!0}catch(k){console.warn("Audio start failed",k)}},_=k=>{var E,O,I;if(!r.current)return;let C=dA();try{k==="start"?(E=n.current)==null||E.triggerAttackRelease("C5","16n",C):k==="short"?(O=o.current)==null||O.triggerAttackRelease("C2","8n",C):k==="success"&&((I=i.current)==null||I.triggerAttackRelease(["C4","E4","G4"],"8n",C))}catch{}},d=()=>{let k=c.current,{cx:C,cy:E,r:O}=m.current;if(k.length<15)return _("short"),{score:0,msg:t.SCORE_SHORT};let I=0;for(let D=1;D<k.length;D++){let M=k[D-1].x-C,R=k[D-1].y-E,V=k[D].x-C,P=k[D].y-E,Z=Math.atan2(R,M),_e=Math.atan2(P,V)-Z;for(;_e>Math.PI;)_e-=Math.PI*2;for(;_e<-Math.PI;)_e+=Math.PI*2;I+=Math.abs(_e)}if(I<Math.PI*1.5)return _("short"),{score:0,msg:t.SCORE_SHORT};let B=0;for(let D=0;D<k.length;D++){let M=k[D].x-C,R=k[D].y-E,V=Math.sqrt(M*M+R*R),P=Math.abs(V-O)/O;B+=P}let b=100-B/k.length*200;return b=Math.max(0,Math.min(100,Math.floor(b))),_("success"),b>=90?{score:b,msg:t.SCORE_PERFECT}:b>=70?{score:b,msg:t.SCORE_GOOD}:{score:b,msg:t.SCORE_AGAIN}},g=async k=>{if(k.isPrimary===!1||(await x(),s!=="idle"))return;let{left:C,top:E}=h.current.getBoundingClientRect(),O=k.clientX-C,I=k.clientY-E,{cx:B,cy:F,r:b}=m.current,D=B,M=F-b;Math.sqrt((O-D)**2+(I-M)**2)<50&&(c.current=[{x:O,y:I}],a("drawing"),_("start"))},y=k=>{if(k.isPrimary===!1||s!=="drawing")return;let{left:C,top:E}=h.current.getBoundingClientRect(),O=k.clientX-C,I=k.clientY-E;c.current.push({x:O,y:I})},S=k=>{if(k.isPrimary===!1||s!=="drawing")return;let{left:C,top:E}=h.current.getBoundingClientRect(),O=k.clientX-C,I=k.clientY-E;c.current.push({x:O,y:I});let B=d();u(B),a("over")},v=async k=>{await x(),c.current=[],u(null),a("idle")},{canSubmit:T,submitting:A,submitRecording:w}=_V();return t?(0,Ge.jsxs)("div",{style:{width:"100%",height:"100%",display:"flex",flexDirection:"column",padding:"clamp(16px, 4vh, 32px)",containerType:"size"},children:[(0,Ge.jsx)(yV,{}),(0,Ge.jsx)("div",{style:{flex:"0 0 auto",textAlign:"center",marginBottom:"clamp(16px, 3vh, 24px)"},children:(0,Ge.jsx)("h1",{style:{margin:0,fontSize:"clamp(24px, 7cqi, 32px)",fontWeight:700},children:t.TITLE})}),(0,Ge.jsxs)("div",{style:{flex:"1",minHeight:0,position:"relative",backgroundColor:"var(--surface)",borderRadius:"32px",boxShadow:"0 8px 32px rgba(0,0,0,0.3)",overflow:"hidden"},ref:p,children:[(0,Ge.jsx)("canvas",{ref:h,style:{width:"100%",height:"100%",display:"block",touchAction:"none"},onPointerDown:g,onPointerMove:y,onPointerUp:S,onPointerCancel:S,onPointerOut:S}),(0,Ge.jsx)(Jh,{children:(s==="idle"||s==="drawing")&&(0,Ge.jsx)(Tf.div,{initial:{opacity:0,y:-10},animate:{opacity:1,y:0},exit:{opacity:0},style:{position:"absolute",top:"clamp(20px, 4cqi, 32px)",left:"20px",right:"20px",textAlign:"center",pointerEvents:"none"},children:(0,Ge.jsx)("p",{style:{margin:0,fontSize:"clamp(14px, 4cqi, 18px)",color:"var(--text-dim)",lineHeight:1.4},children:t.GUIDE_TEXT})})}),(0,Ge.jsx)(Jh,{children:s==="over"&&l&&(0,Ge.jsxs)(Tf.div,{initial:{opacity:0,scale:.95},animate:{opacity:1,scale:1},exit:{opacity:0},style:{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",backgroundColor:"rgba(20, 27, 45, 0.85)",backdropFilter:"blur(4px)",WebkitBackdropFilter:"blur(4px)"},children:[(0,Ge.jsxs)("div",{style:{textAlign:"center",marginBottom:"32px"},children:[(0,Ge.jsxs)("div",{style:{fontSize:"clamp(48px, 15cqi, 72px)",fontWeight:700,fontFamily:"var(--font-mono)",color:"var(--text-main)",textShadow:"0 4px 16px rgba(0,0,0,0.5)"},children:[l.score,"%"]}),(0,Ge.jsx)("div",{style:{fontSize:"clamp(20px, 5cqi, 28px)",color:"var(--primary)",marginTop:"8px",fontWeight:700,textTransform:"uppercase",letterSpacing:"2px"},children:l.msg})]}),(0,Ge.jsxs)("div",{style:{display:"flex",flexDirection:"column",gap:"16px",width:"100%",maxWidth:"240px"},children:[(0,Ge.jsx)("button",{type:"button",onClick:v,style:{padding:"16px 24px",borderRadius:"100px",backgroundColor:"var(--primary)",color:"#fff",fontSize:"16px",fontWeight:700,boxShadow:"0 4px 16px rgba(59, 130, 246, 0.4)",transition:"transform 0.1s"},onPointerDown:k=>k.currentTarget.style.transform="scale(0.95)",onPointerUp:k=>k.currentTarget.style.transform="scale(1)",onPointerCancel:k=>k.currentTarget.style.transform="scale(1)",children:t.BTN_RETRY}),T&&(0,Ge.jsx)("button",{type:"button",disabled:A,onClick:w,style:{padding:"16px 24px",borderRadius:"100px",backgroundColor:"rgba(255, 255, 255, 0.1)",color:"#fff",fontSize:"16px",fontWeight:700,opacity:A?.55:1,border:"1px solid rgba(255, 255, 255, 0.2)"},children:"Post My Play"})]})]})})]})]}):(0,Ge.jsx)("div",{style:{width:"100%",height:"100%",backgroundColor:"var(--bg-dark)"}})};(0,DE.createRoot)(document.getElementById("root")).render((0,Ge.jsx)(wV,{}));})();
+  `});function _V(){let t=typeof window<"u"&&typeof window.tt<"u"&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,xt.useState)(!1);return(0,xt.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]),{canSubmit:t,submitting:e,submitRecording:()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] playableRecordingSubmission failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))}}}function vV(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var wV=
+() => {
+  let [t, e] = (0, xt.useState)(null),
+    r = (0, xt.useRef)(!1),
+    n = (0, xt.useRef)(null),
+    o = (0, xt.useRef)(null),
+    i = (0, xt.useRef)(null),
+    [s, a] = (0, xt.useState)("idle"),
+    [l, u] = (0, xt.useState)(null),
+    c = (0, xt.useRef)([]),
+    p = (0, xt.useRef)(null),
+    h = (0, xt.useRef)(null),
+    f = window.devicePixelRatio || 1,
+    m = (0, xt.useRef)({ cx: 0, cy: 0, r: 100 });
+  ((0, xt.useEffect)(() => {
+    let k = !0;
+    return (
+      (async () => {
+        let C = { tweaks: [], texts: [], images: [] };
+        try {
+          let E = await fetch("./game.config.json", { cache: "no-store" });
+          E.ok && (C = await E.json());
+        } catch {}
+        if (k) {
+          let E = vV(C);
+          (E.TITLE || (E.TITLE = "Orbital Circle"),
+            E.GUIDE_TEXT ||
+              (E.GUIDE_TEXT =
+                "Tap the canvas and try to draw a perfect circle"),
+            E.BTN_RETRY || (E.BTN_RETRY = "Try Again"),
+            E.SCORE_PERFECT || (E.SCORE_PERFECT = "Perfect"),
+            E.SCORE_GOOD || (E.SCORE_GOOD = "Good"),
+            E.SCORE_AGAIN || (E.SCORE_AGAIN = "Try Again"),
+            E.SCORE_SHORT || (E.SCORE_SHORT = "Too Short"),
+            e(E));
+        }
+      })(),
+      () => {
+        k = !1;
+      }
+    );
+  }, []),
+    (0, xt.useEffect)(() => {
+      if (!t || !h.current || !p.current) return;
+      let k,
+        C = h.current,
+        E = C.getContext("2d", { alpha: !0 }),
+        O = () => {
+          let { clientWidth: F, clientHeight: b } = p.current;
+          F === 0 ||
+            b === 0 ||
+            ((C.width = F * f),
+            (C.height = b * f),
+            (m.current.cx = F / 2),
+            (m.current.cy = b / 2),
+            (m.current.r = Math.min(F, b) * 0.28));
+        },
+        I = new ResizeObserver(O);
+      (I.observe(p.current), O());
+      let B = () => {
+        let { cx: F, cy: b, r: D } = m.current,
+          M = C.width,
+          R = C.height;
+        (E.setTransform(1, 0, 0, 1, 0, 0),
+          E.clearRect(0, 0, M, R),
+          E.scale(f, f),
+          E.beginPath(),
+          E.arc(F, b, D, 0, Math.PI * 2),
+          (E.strokeStyle = "#2d3b5c"),
+          (E.lineWidth = 4),
+          E.setLineDash([12, 12]),
+          E.stroke(),
+          E.setLineDash([]),
+          s === "idle" &&
+            (E.beginPath(),
+            E.arc(F, b - D, 12, 0, Math.PI * 2),
+            (E.fillStyle = "#ffffff"),
+            E.fill(),
+            (E.shadowBlur = 10),
+            (E.shadowColor = "rgba(255, 255, 255, 0.5)"),
+            E.fill(),
+            (E.shadowBlur = 0)));
+        let V = c.current;
+        if (V && V.length > 0) {
+          (E.beginPath(), E.moveTo(V[0].x, V[0].y));
+          for (let P = 1; P < V.length; P++) E.lineTo(V[P].x, V[P].y);
+          ((E.strokeStyle = "#3b82f6"),
+            (E.lineWidth = 6),
+            (E.lineCap = "round"),
+            (E.lineJoin = "round"),
+            E.stroke());
+        }
+        k = requestAnimationFrame(B);
+      };
+      return (
+        (k = requestAnimationFrame(B)),
+        () => {
+          (I.disconnect(), cancelAnimationFrame(k));
+        }
+      );
+    }, [t, s, f]));
+  let x = async () => {
+      if (!r.current)
+        try {
+          (await Eg(),
+            (n.current = new nn({ volume: -8 }).toDestination()),
+            (o.current = new ea({ volume: -4 }).toDestination()),
+            (i.current = new Wp(nn, { volume: -8 }).toDestination()),
+            (r.current = !0));
+        } catch (k) {
+          console.warn("Audio start failed", k);
+        }
+    },
+    _ = (k) => {
+      var E, O, I;
+      if (!r.current) return;
+      let C = dA();
+      try {
+        k === "start"
+          ? (E = n.current) == null || E.triggerAttackRelease("C5", "16n", C)
+          : k === "short"
+            ? (O = o.current) == null || O.triggerAttackRelease("C2", "8n", C)
+            : k === "success" &&
+              ((I = i.current) == null ||
+                I.triggerAttackRelease(["C4", "E4", "G4"], "8n", C));
+      } catch {}
+    },
+    d = () => {
+      let k = c.current,
+        { cx: C, cy: E, r: O } = m.current;
+      if (k.length < 15) return (_("short"), { score: 0, msg: t.SCORE_SHORT });
+      let I = 0;
+      for (let D = 1; D < k.length; D++) {
+        let M = k[D - 1].x - C,
+          R = k[D - 1].y - E,
+          V = k[D].x - C,
+          P = k[D].y - E,
+          Z = Math.atan2(R, M),
+          _e = Math.atan2(P, V) - Z;
+        for (; _e > Math.PI; ) _e -= Math.PI * 2;
+        for (; _e < -Math.PI; ) _e += Math.PI * 2;
+        I += Math.abs(_e);
+      }
+      if (I < Math.PI * 1.5)
+        return (_("short"), { score: 0, msg: t.SCORE_SHORT });
+      let B = 0;
+      for (let D = 0; D < k.length; D++) {
+        let M = k[D].x - C,
+          R = k[D].y - E,
+          V = Math.sqrt(M * M + R * R),
+          P = Math.abs(V - O) / O;
+        B += P;
+      }
+      let b = 100 - (B / k.length) * 200;
+      return (
+        (b = Math.max(0, Math.min(100, Math.floor(b)))),
+        _("success"),
+        b >= 90
+          ? { score: b, msg: t.SCORE_PERFECT }
+          : b >= 70
+            ? { score: b, msg: t.SCORE_GOOD }
+            : { score: b, msg: t.SCORE_AGAIN }
+      );
+    },
+    g = (k) => {
+      if (k.isPrimary === !1 || k.button > 0 || s !== "idle") return;
+      void x();
+      let { left: C, top: E } = h.current.getBoundingClientRect(),
+        O = k.clientX - C,
+        I = k.clientY - E,
+        { cx: B, cy: F, r: b } = m.current,
+        D = B,
+        M = F - b;
+      Math.sqrt((O - D) ** 2 + (I - M) ** 2) < 50 &&
+        ((c.current = [{ x: O, y: I }]), a("drawing"), _("start"));
+    },
+    y = (k) => {
+      if (k.isPrimary === !1 || s !== "drawing") return;
+      let { left: C, top: E } = h.current.getBoundingClientRect(),
+        O = k.clientX - C,
+        I = k.clientY - E;
+      c.current.push({ x: O, y: I });
+    },
+    S = (k) => {
+      if (k.isPrimary === !1 || s !== "drawing") return;
+      let { left: C, top: E } = h.current.getBoundingClientRect(),
+        O = k.clientX - C,
+        I = k.clientY - E;
+      c.current.push({ x: O, y: I });
+      let B = d();
+      (u(B), a("over"));
+    },
+    v = () => {
+      ((c.current = []), u(null), a("idle"));
+    },
+    { canSubmit: T, submitting: A, submitRecording: w } = _V();
+  return t
+    ? (0, Ge.jsxs)("div", {
+        style: {
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          padding: "clamp(16px, 4vh, 32px)",
+          containerType: "size",
+        },
+        children: [
+          (0, Ge.jsx)(yV, {}),
+          (0, Ge.jsx)("div", {
+            style: {
+              flex: "0 0 auto",
+              textAlign: "center",
+              marginBottom: "clamp(16px, 3vh, 24px)",
+            },
+            children: (0, Ge.jsx)("h1", {
+              style: {
+                margin: 0,
+                fontSize: "clamp(24px, 7cqi, 32px)",
+                fontWeight: 700,
+              },
+              children: t.TITLE,
+            }),
+          }),
+          (0, Ge.jsxs)("div", {
+            style: {
+              flex: "1",
+              minHeight: 0,
+              position: "relative",
+              backgroundColor: "var(--surface)",
+              borderRadius: "32px",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+              overflow: "hidden",
+            },
+            ref: p,
+            children: [
+              (0, Ge.jsx)("canvas", {
+                ref: h,
+                style: {
+                  width: "100%",
+                  height: "100%",
+                  display: "block",
+                  touchAction: "none",
+                },
+                onPointerDown: g,
+                onPointerMove: y,
+                onPointerUp: S,
+                onPointerCancel: S,
+                onPointerOut: S,
+              }),
+              (0, Ge.jsx)(Jh, {
+                children:
+                  (s === "idle" || s === "drawing") &&
+                  (0, Ge.jsx)(Tf.div, {
+                    initial: { opacity: 0, y: -10 },
+                    animate: { opacity: 1, y: 0 },
+                    exit: { opacity: 0 },
+                    style: {
+                      position: "absolute",
+                      top: "clamp(20px, 4cqi, 32px)",
+                      left: "20px",
+                      right: "20px",
+                      textAlign: "center",
+                      pointerEvents: "none",
+                    },
+                    children: (0, Ge.jsx)("p", {
+                      style: {
+                        margin: 0,
+                        fontSize: "clamp(14px, 4cqi, 18px)",
+                        color: "var(--text-dim)",
+                        lineHeight: 1.4,
+                      },
+                      children: t.GUIDE_TEXT,
+                    }),
+                  }),
+              }),
+              (0, Ge.jsx)(Jh, {
+                children:
+                  s === "over" &&
+                  l &&
+                  (0, Ge.jsxs)(Tf.div, {
+                    initial: { opacity: 0, scale: 0.95 },
+                    animate: { opacity: 1, scale: 1 },
+                    exit: { opacity: 0 },
+                    style: {
+                      position: "absolute",
+                      inset: 0,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "rgba(20, 27, 45, 0.85)",
+                      backdropFilter: "blur(4px)",
+                      WebkitBackdropFilter: "blur(4px)",
+                    },
+                    children: [
+                      (0, Ge.jsxs)("div", {
+                        style: { textAlign: "center", marginBottom: "32px" },
+                        children: [
+                          (0, Ge.jsxs)("div", {
+                            style: {
+                              fontSize: "clamp(48px, 15cqi, 72px)",
+                              fontWeight: 700,
+                              fontFamily: "var(--font-mono)",
+                              color: "var(--text-main)",
+                              textShadow: "0 4px 16px rgba(0,0,0,0.5)",
+                            },
+                            children: [l.score, "%"],
+                          }),
+                          (0, Ge.jsx)("div", {
+                            style: {
+                              fontSize: "clamp(20px, 5cqi, 28px)",
+                              color: "var(--primary)",
+                              marginTop: "8px",
+                              fontWeight: 700,
+                              textTransform: "uppercase",
+                              letterSpacing: "2px",
+                            },
+                            children: l.msg,
+                          }),
+                        ],
+                      }),
+                      (0, Ge.jsxs)("div", {
+                        style: {
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "16px",
+                          width: "100%",
+                          maxWidth: "240px",
+                        },
+                        children: [
+                          (0, Ge.jsx)("button", {
+                            type: "button",
+                            onClick: v,
+                            style: {
+                              padding: "16px 24px",
+                              borderRadius: "100px",
+                              backgroundColor: "var(--primary)",
+                              color: "#fff",
+                              fontSize: "16px",
+                              fontWeight: 700,
+                              boxShadow: "0 4px 16px rgba(59, 130, 246, 0.4)",
+                              transition: "transform 0.1s",
+                            },
+                            onPointerDown: (k) =>
+                              (k.currentTarget.style.transform = "scale(0.95)"),
+                            onPointerUp: (k) =>
+                              (k.currentTarget.style.transform = "scale(1)"),
+                            onPointerCancel: (k) =>
+                              (k.currentTarget.style.transform = "scale(1)"),
+                            children: t.BTN_RETRY,
+                          }),
+                          T &&
+                            (0, Ge.jsx)("button", {
+                              type: "button",
+                              disabled: A,
+                              onClick: w,
+                              style: {
+                                padding: "16px 24px",
+                                borderRadius: "100px",
+                                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                                color: "#fff",
+                                fontSize: "16px",
+                                fontWeight: 700,
+                                opacity: A ? 0.55 : 1,
+                                border: "1px solid rgba(255, 255, 255, 0.2)",
+                              },
+                              children: "Post My Play",
+                            }),
+                        ],
+                      }),
+                    ],
+                  }),
+              }),
+            ],
+          }),
+        ],
+      })
+    : (0, Ge.jsx)("div", {
+        style: {
+          width: "100%",
+          height: "100%",
+          backgroundColor: "var(--bg-dark)",
+        },
+      });
+}
+;(0,DE.createRoot)(document.getElementById("root")).render((0,Ge.jsx)(wV,{}));})();

@@ -11,6 +11,13 @@
     canvas { touch-action: none; }
     button, input, select, textarea { touch-action: manipulation; }
   </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
 </head>
 <body>
   <div id="root"></div>
@@ -111,5 +118,6 @@
     })();
   </script>
   <script src="./bundle.js?v=ui-visual-next-20261006-1"></script>
+<script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject=".dive-mask"></script>
 </body>
 </html>

@@ -230,4 +230,463 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
  button:disabled { cursor:default; }
  button:focus-visible { outline:3px solid var(--col-primary);outline-offset:4px; }
  @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;}}
- `});function ry(t="light"){try{typeof window<"u"&&window.tt&&window.tt.vibrate&&window.tt.vibrate({style:t})}catch{}}function SF(){let t=typeof window<"u"&&window.tt&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,ve.useState)(!1);return(0,ve.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]),{canSubmit:t,submitting:e,submitRecording:()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))}}}var TF=({cfg:t,onStart:e})=>(0,Z.jsxs)(zo.div,{initial:{opacity:0},animate:{opacity:1},exit:{opacity:0},transition:{duration:.16},style:{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"calc(18 * var(--ui-unit))",padding:"calc(30 * var(--ui-unit) + env(safe-area-inset-top, 0px)) calc(30 * var(--ui-unit)) calc(50 * var(--ui-unit) + env(safe-area-inset-bottom, 0px))",backgroundColor:"var(--col-bg)",zIndex:20},children:[(0,Z.jsx)("img",{src:t.BG_MAIN,alt:"Open refrigerator",draggable:!1,style:{width:"min(72cqi, 280px, 43vh)",aspectRatio:"1/1",objectFit:"contain",flexShrink:1,minHeight:0}}),(0,Z.jsx)("p",{style:{margin:0,textAlign:"center",fontSize:"calc(18 * var(--ui-unit))",lineHeight:1.45,maxWidth:"280px",overflowWrap:"anywhere"},children:"Eat fresh food. Pass spoiled food."}),(0,Z.jsx)("button",{onClick:e,style:{width:"min(100%, 220px)",minHeight:"48px",padding:"14px 24px",fontSize:"calc(18 * var(--ui-unit))",backgroundColor:"var(--col-primary)",color:"#FFF",border:"1px solid var(--col-primary)",borderRadius:"12px"},children:t.BTN_START})]}),AF=({cfg:t,score:e,onRestart:r})=>{let{canSubmit:n,submitting:o,submitRecording:i}=SF();return(0,Z.jsx)(zo.div,{initial:{opacity:0,scale:.9},animate:{opacity:1,scale:1},exit:{opacity:0},style:{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"calc(30 * var(--ui-unit) + env(safe-area-inset-top, 0px)) calc(30 * var(--ui-unit)) calc(50 * var(--ui-unit) + env(safe-area-inset-bottom, 0px))",backgroundColor:"rgba(0,0,0,0.7)",backdropFilter:"blur(5px)",zIndex:30},children:(0,Z.jsxs)("div",{style:{backgroundColor:"var(--col-panel)",padding:"24px 20px",borderRadius:"18px",border:"1px solid #dedfd7",display:"flex",flexDirection:"column",alignItems:"center",gap:"16px",width:"100%",maxWidth:"360px",maxHeight:"100%",overflowY:"auto",boxShadow:"0 16px 36px rgba(0,0,0,0.18)"},children:[(0,Z.jsx)("h2",{style:{margin:0,fontSize:"calc(24 * var(--ui-unit))",fontWeight:600,lineHeight:1.3,textAlign:"center",overflowWrap:"anywhere",color:"var(--col-pass)"},children:t.LBL_GAME_OVER}),(0,Z.jsxs)("div",{style:{textAlign:"center"},children:[(0,Z.jsx)("p",{style:{margin:0,fontSize:"16px",color:"#475569"},children:t.LBL_SCORE}),(0,Z.jsx)("p",{style:{margin:"8px 0 0 0",fontSize:"calc(28 * var(--ui-unit))",color:"var(--col-primary)",fontFamily:"var(--font-mono)",lineHeight:1},children:e})]}),(0,Z.jsxs)("div",{style:{display:"flex",flexDirection:"column",gap:"16px",width:"100%",marginTop:0},children:[(0,Z.jsx)("button",{onClick:r,style:{width:"100%",minHeight:"48px",padding:"14px 16px",fontSize:"calc(18 * var(--ui-unit))",backgroundColor:"var(--col-primary)",color:"#FFF",borderRadius:"12px",border:"1px solid var(--col-primary)"},children:t.BTN_RESTART}),n&&(0,Z.jsx)("button",{onClick:i,disabled:o,style:{width:"100%",padding:"16px",fontSize:"18px",backgroundColor:"#EEE",color:"#333",minHeight:"48px",borderRadius:"12px",border:"1px solid #dedfd7",opacity:o?.6:1},children:t.BTN_POST_PLAY})]})]})})},CF=()=>{let[t,e]=(0,ve.useState)(null),[r,n]=(0,ve.useState)("idle"),[o,i]=(0,ve.useState)(0),[s,a]=(0,ve.useState)(3),[l,u]=(0,ve.useState)([]),[c,p]=(0,ve.useState)(null),[h,f]=(0,ve.useState)(null),m=(0,ve.useRef)(3e3),x=(0,ve.useRef)(3e3),[_,d]=(0,ve.useState)(1),g=(0,ve.useRef)(0),y=(0,ve.useRef)(null),S=(0,ve.useRef)(!1),v=(0,ve.useRef)(null),T=(0,ve.useRef)(null),q=(0,ve.useRef)([]),J=(0,ve.useRef)(null),roundLock=(0,ve.useRef)(!1),roundTimer=(0,ve.useRef)(null),overTimer=(0,ve.useRef)(null);(0,ve.useEffect)(()=>()=>{clearTimeout(roundTimer.current);clearTimeout(overTimer.current)},[]);(0,ve.useEffect)(()=>{let F=!0;return(async()=>{let V={tweaks:[],texts:[],images:[]};try{let k=await fetch("./game.config.json",{cache:"no-store"});k.ok&&(V=await k.json())}catch{}if(F){let k=vF(V);e(k);let D=Array.from({length:6},(_,index)=>{let family=index+1;return[{id:"f"+family,img:k["FOOD_FRESH_"+family],fresh:!0},{id:"s"+family,img:k["FOOD_SPOIL_"+family],fresh:!1}]}).flat().filter(O=>O.img);u(D)}})(),()=>{F=!1}},[]);let A=async()=>{if(!S.current)try{await Gx(),v.current=new an().toDestination(),T.current=new yf(an).toDestination(),ME.volume.value=-8,S.current=!0}catch{console.warn("Audio init failed")}},w=(0,ve.useCallback)(F=>{var k,D,O;if(!S.current)return;let V=DE();try{F==="tap"&&((k=v.current)==null||k.triggerAttackRelease("C5","32n",V)),F==="correct"&&((D=T.current)==null||D.triggerAttackRelease(["C5","E5","G5"],"8n",V)),F==="wrong"&&((O=T.current)==null||O.triggerAttackRelease(["C3","Eb3"],"4n",V))}catch{}},[]),b=(0,ve.useCallback)(()=>{if(l.length===0)return;roundLock.current=!1;if(q.current.length===0){let F={};l.forEach(O=>{let I=O.id.slice(1);(F[I]||(F[I]=[])).push(O)});let V=Object.keys(F);for(let O=V.length-1;O>0;O--){let I=Math.floor(Math.random()*(O+1));[V[O],V[I]]=[V[I],V[O]]}J.current&&V.length>1&&V[0]===J.current&&V.push(V.shift());V.forEach(O=>{for(let I=F[O].length-1;I>0;I--){let Y=Math.floor(Math.random()*(I+1));[F[O][I],F[O][Y]]=[F[O][Y],F[O][I]]}});let k=[];for(let O=0;O<2;O++)V.forEach(I=>{F[I][O]&&k.push(F[I][O])});q.current=k.reverse()}let F=q.current.pop();J.current=F.id.slice(1),p({...F,renderId:Math.random()}),x.current=m.current,d(1),f(null)},[l]),C=(0,ve.useCallback)(()=>{roundLock.current=!0,clearTimeout(roundTimer.current),n("over"),cancelAnimationFrame(y.current)},[]),N=(0,ve.useCallback)(F=>{if(r!=="playing"||!c||roundLock.current)return;roundLock.current=!0;let correct=F!=="timeout"&&F===c.fresh,remaining=s;if(correct){i(k=>k+t.SCORE_PER_CORRECT),w("correct"),ry("notification_success"),f("correct"),m.current=Math.max(t.MIN_TIME,m.current-t.TIME_DECREMENT)}else{remaining=Math.max(0,s-1),a(remaining),w("wrong"),ry("notification_error"),f("wrong")}if(remaining===0){overTimer.current=setTimeout(C,350)}else{roundTimer.current=setTimeout(b,200)}},[r,c,s,t,w,b,C]),M=(0,ve.useCallback)(F=>{g.current===0&&(g.current=F);let V=F-g.current;if(g.current=F,r==="playing"&&c&&h===null){x.current-=V;let k=Math.max(0,x.current/m.current);d(k),x.current<=0&&N("timeout")}y.current=requestAnimationFrame(M)},[r,c,h,N]);(0,ve.useEffect)(()=>(r==="playing"&&(g.current=performance.now(),y.current=requestAnimationFrame(M)),()=>cancelAnimationFrame(y.current)),[r,M]);let j=async()=>{clearTimeout(roundTimer.current),clearTimeout(overTimer.current),roundLock.current=!1,await A(),w("tap"),ry("light"),i(0),a(3),m.current=t.INITIAL_TIME,q.current=[],J.current=null,n("playing"),b()};return t?(0,Z.jsxs)("div",{style:{width:"100%",height:"100%",position:"relative",display:"flex",flexDirection:"column",containerType:"inline-size"},children:[(0,Z.jsx)(wF,{}),(0,Z.jsx)(Ws,{children:r==="idle"&&(0,Z.jsx)(TF,{cfg:t,onStart:j},"start")}),(0,Z.jsxs)("div",{style:{flex:1,display:"flex",flexDirection:"column",minHeight:0,opacity:r==="idle"?0:1,transition:"opacity 0.3s"},children:[(0,Z.jsxs)("div",{style:{flex:"0 0 auto",padding:"calc(30 * var(--ui-unit) + env(safe-area-inset-top, 0px)) calc(30 * var(--ui-unit)) 16px",display:"flex",justifyContent:"space-between",alignItems:"center"},children:[(0,Z.jsxs)("div",{style:{fontSize:"calc(28 * var(--ui-unit))",fontFamily:"var(--font-mono)",fontWeight:"bold",color:"var(--col-primary)",display:"flex",alignItems:"center",gap:"8px"},children:[(0,Z.jsx)("span",{style:{position:"absolute",width:1,height:1,overflow:"hidden",clipPath:"inset(50%)"},children:"Score "}),o]}),(0,Z.jsx)("div",{style:{display:"flex",gap:"8px"},children:[1,2,3].map(F=>(0,Z.jsx)("img",{src:F<=s?t.UI_HEART_FULL:t.UI_HEART_EMPTY,alt:"heart",style:{width:"28px",height:"28px",objectFit:"contain"}},F))})]}),(0,Z.jsx)("div",{style:{flex:"0 0 auto",padding:"0 calc(30 * var(--ui-unit))",height:"8px"},children:(0,Z.jsx)("div",{style:{width:"100%",height:"100%",backgroundColor:"rgba(0,0,0,0.1)",borderRadius:"6px",overflow:"hidden"},children:(0,Z.jsx)("div",{style:{width:`${_*100}%`,height:"100%",backgroundColor:_>.3?"var(--col-eat)":"var(--col-pass)",transition:"width 0.1s linear, background-color 0.3s"}})})}),(0,Z.jsx)("div",{style:{flex:1,minHeight:0,position:"relative",display:"flex",alignItems:"center",justifyContent:"center",padding:"20px calc(30 * var(--ui-unit))"},children:(0,Z.jsx)(Ws,{mode:"popLayout",children:c&&(0,Z.jsxs)(zo.div,{initial:{scale:.96,opacity:0},animate:{scale:1,opacity:1},exit:{opacity:0},transition:{duration:.16},style:{width:"100%",maxWidth:"min(300px, 70cqi, 38vh)",aspectRatio:"1/1",position:"relative",display:"flex",justifyContent:"center",alignItems:"center"},children:[(0,Z.jsx)("div",{style:{position:"absolute",inset:0,background:"radial-gradient(ellipse at 40% 30%, #ffffff 40%, #f4f2ee 67%, #e3e1dc 69%, #fffefa 73%, #ece9e3 100%)",border:"6px solid #e8efe2",borderRadius:"50%",boxShadow:"0 12px 20px -12px rgba(37,53,45,0.25)",zIndex:0}}),(0,Z.jsx)("img",{src:c.img,alt:"food",style:{width:"64%",height:"64%",objectFit:"contain",zIndex:1,filter:"none"},draggable:!1}),(0,Z.jsxs)(Ws,{children:[h==="correct"&&(0,Z.jsx)(zo.div,{initial:{scale:.8,opacity:1},animate:{scale:1.1,opacity:0},exit:{opacity:0},transition:{duration:.5},style:{position:"absolute",zIndex:2,fontSize:"56px",pointerEvents:"none",color:h==="correct"?"var(--col-eat)":"var(--col-pass)"},children:"\u2713"}),h==="wrong"&&(0,Z.jsx)(zo.div,{initial:{scale:.8,opacity:1},animate:{scale:1.1,opacity:0},exit:{opacity:0},transition:{duration:.5},style:{position:"absolute",zIndex:2,fontSize:"56px",pointerEvents:"none",color:h==="correct"?"var(--col-eat)":"var(--col-pass)"},children:"\u00D7"})]})]},c.renderId)})}),(0,Z.jsxs)("div",{style:{flex:"0 0 auto",display:"flex",gap:"12px",padding:"16px calc(30 * var(--ui-unit))",paddingBottom:"calc(50 * var(--ui-unit) + env(safe-area-inset-bottom, 0px) )"},children:[(0,Z.jsx)("button",{onClick:()=>N(!1),disabled:r!=="playing"||h!==null,style:{flex:1,minHeight:"48px",padding:"16px 12px",fontSize:"calc(18 * var(--ui-unit))",backgroundColor:"#fffefa",color:"var(--col-pass)",border:"1px solid #cbaaa2",borderRadius:"12px",opacity:r!=="playing"||h!==null?.7:1},children:t.BTN_PASS}),(0,Z.jsx)("button",{onClick:()=>N(!0),disabled:r!=="playing"||h!==null,style:{flex:1,minHeight:"48px",padding:"16px 12px",fontSize:"calc(18 * var(--ui-unit))",backgroundColor:"var(--col-eat)",color:"#FFF",border:"1px solid var(--col-eat)",borderRadius:"12px",opacity:r!=="playing"||h!==null?.7:1},children:t.BTN_EAT})]})]}),(0,Z.jsx)(Ws,{children:r==="over"&&(0,Z.jsx)(AF,{cfg:t,score:o,onRestart:j},"end")})]}):(0,Z.jsx)("div",{style:{width:"100%",height:"100%",background:"#f2f0eb"}})};(0,PE.createRoot)(document.getElementById("root")).render((0,Z.jsx)(CF,{}));})();
+ `});function ry(t="light"){try{typeof window<"u"&&window.tt&&window.tt.vibrate&&window.tt.vibrate({style:t})}catch{}}function SF(){let t=typeof window<"u"&&window.tt&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,ve.useState)(!1);return(0,ve.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]),{canSubmit:t,submitting:e,submitRecording:()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))}}}var TF=({cfg:t,onStart:e})=>(0,Z.jsxs)(zo.div,{initial:{opacity:0},animate:{opacity:1},exit:{opacity:0},transition:{duration:.16},style:{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"calc(18 * var(--ui-unit))",padding:"calc(30 * var(--ui-unit) + env(safe-area-inset-top, 0px)) calc(30 * var(--ui-unit)) calc(50 * var(--ui-unit) + env(safe-area-inset-bottom, 0px))",backgroundColor:"var(--col-bg)",zIndex:20},children:[(0,Z.jsx)("img",{src:t.BG_MAIN,alt:"Open refrigerator",draggable:!1,style:{width:"min(72cqi, 280px, 43vh)",aspectRatio:"1/1",objectFit:"contain",flexShrink:1,minHeight:0}}),(0,Z.jsx)("p",{style:{margin:0,textAlign:"center",fontSize:"calc(18 * var(--ui-unit))",lineHeight:1.45,maxWidth:"280px",overflowWrap:"anywhere"},children:"Eat fresh food. Pass spoiled food."}),(0,Z.jsx)("button",{onClick:e,style:{width:"min(100%, 220px)",minHeight:"48px",padding:"14px 24px",fontSize:"calc(18 * var(--ui-unit))",backgroundColor:"var(--col-primary)",color:"#FFF",border:"1px solid var(--col-primary)",borderRadius:"12px"},children:t.BTN_START})]}),AF=({cfg:t,score:e,onRestart:r})=>{let{canSubmit:n,submitting:o,submitRecording:i}=SF();return(0,Z.jsx)(zo.div,{initial:{opacity:0,scale:.9},animate:{opacity:1,scale:1},exit:{opacity:0},style:{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"calc(30 * var(--ui-unit) + env(safe-area-inset-top, 0px)) calc(30 * var(--ui-unit)) calc(50 * var(--ui-unit) + env(safe-area-inset-bottom, 0px))",backgroundColor:"rgba(0,0,0,0.7)",backdropFilter:"blur(5px)",zIndex:30},children:(0,Z.jsxs)("div",{style:{backgroundColor:"var(--col-panel)",padding:"24px 20px",borderRadius:"18px",border:"1px solid #dedfd7",display:"flex",flexDirection:"column",alignItems:"center",gap:"16px",width:"100%",maxWidth:"360px",maxHeight:"100%",overflowY:"auto",boxShadow:"0 16px 36px rgba(0,0,0,0.18)"},children:[(0,Z.jsx)("h2",{style:{margin:0,fontSize:"calc(24 * var(--ui-unit))",fontWeight:600,lineHeight:1.3,textAlign:"center",overflowWrap:"anywhere",color:"var(--col-pass)"},children:t.LBL_GAME_OVER}),(0,Z.jsxs)("div",{style:{textAlign:"center"},children:[(0,Z.jsx)("p",{style:{margin:0,fontSize:"16px",color:"#475569"},children:t.LBL_SCORE}),(0,Z.jsx)("p",{style:{margin:"8px 0 0 0",fontSize:"calc(28 * var(--ui-unit))",color:"var(--col-primary)",fontFamily:"var(--font-mono)",lineHeight:1},children:e})]}),(0,Z.jsxs)("div",{style:{display:"flex",flexDirection:"column",gap:"16px",width:"100%",marginTop:0},children:[(0,Z.jsx)("button",{onClick:r,style:{width:"100%",minHeight:"48px",padding:"14px 16px",fontSize:"calc(18 * var(--ui-unit))",backgroundColor:"var(--col-primary)",color:"#FFF",borderRadius:"12px",border:"1px solid var(--col-primary)"},children:t.BTN_RESTART}),n&&(0,Z.jsx)("button",{onClick:i,disabled:o,style:{width:"100%",padding:"16px",fontSize:"18px",backgroundColor:"#EEE",color:"#333",minHeight:"48px",borderRadius:"12px",border:"1px solid #dedfd7",opacity:o?.6:1},children:t.BTN_POST_PLAY})]})]})})},CF=
+() => {
+  let [t, e] = (0, ve.useState)(null),
+    [r, n] = (0, ve.useState)("playing"),
+    [o, i] = (0, ve.useState)(0),
+    [s, a] = (0, ve.useState)(3),
+    [l, u] = (0, ve.useState)([]),
+    [c, p] = (0, ve.useState)(null),
+    [h, f] = (0, ve.useState)(null),
+    m = (0, ve.useRef)(3e3),
+    x = (0, ve.useRef)(3e3),
+    [_, d] = (0, ve.useState)(1),
+    g = (0, ve.useRef)(0),
+    y = (0, ve.useRef)(null),
+    S = (0, ve.useRef)(!1),
+    v = (0, ve.useRef)(null),
+    T = (0, ve.useRef)(null),
+    q = (0, ve.useRef)([]),
+    J = (0, ve.useRef)(null),
+    roundLock = (0, ve.useRef)(!1),
+    roundTimer = (0, ve.useRef)(null),
+    overTimer = (0, ve.useRef)(null);
+  const [feedStarted,setFeedStarted]=(0,ve.useState)(false); const feedGate=(0,ve.useRef)(false);
+
+  (0, ve.useEffect)(
+    () => () => {
+      clearTimeout(roundTimer.current);
+      clearTimeout(overTimer.current);
+    },
+    [],
+  );
+  (0, ve.useEffect)(() => {
+    let F = !0;
+    return (
+      (async () => {
+        let V = { tweaks: [], texts: [], images: [] };
+        try {
+          let k = await fetch("./game.config.json", { cache: "no-store" });
+          k.ok && (V = await k.json());
+        } catch {}
+        if (F) {
+          let k = vF(V);
+          e(k);
+          let D = Array.from({ length: 6 }, (_, index) => {
+            let family = index + 1;
+            return [
+              { id: "f" + family, img: k["FOOD_FRESH_" + family], fresh: !0 },
+              { id: "s" + family, img: k["FOOD_SPOIL_" + family], fresh: !1 },
+            ];
+          })
+            .flat()
+            .filter((O) => O.img);
+          u(D);
+        }
+      })(),
+      () => {
+        F = !1;
+      }
+    );
+  }, []);
+  let A = async () => {
+      if (!S.current)
+        try {
+          (await Gx(),
+            (v.current = new an().toDestination()),
+            (T.current = new yf(an).toDestination()),
+            (ME.volume.value = -8),
+            (S.current = !0));
+        } catch {
+          console.warn("Audio init failed");
+        }
+    },
+    w = (0, ve.useCallback)((F) => {
+      var k, D, O;
+      if (!S.current) return;
+      let V = DE();
+      try {
+        (F === "tap" &&
+          ((k = v.current) == null || k.triggerAttackRelease("C5", "32n", V)),
+          F === "correct" &&
+            ((D = T.current) == null ||
+              D.triggerAttackRelease(["C5", "E5", "G5"], "8n", V)),
+          F === "wrong" &&
+            ((O = T.current) == null ||
+              O.triggerAttackRelease(["C3", "Eb3"], "4n", V)));
+      } catch {}
+    }, []),
+    b = (0, ve.useCallback)(() => {
+      if (l.length === 0) return;
+      roundLock.current = !1;
+      if (q.current.length === 0) {
+        let F = {};
+        l.forEach((O) => {
+          let I = O.id.slice(1);
+          (F[I] || (F[I] = [])).push(O);
+        });
+        let V = Object.keys(F);
+        for (let O = V.length - 1; O > 0; O--) {
+          let I = Math.floor(Math.random() * (O + 1));
+          [V[O], V[I]] = [V[I], V[O]];
+        }
+        J.current && V.length > 1 && V[0] === J.current && V.push(V.shift());
+        V.forEach((O) => {
+          for (let I = F[O].length - 1; I > 0; I--) {
+            let Y = Math.floor(Math.random() * (I + 1));
+            [F[O][I], F[O][Y]] = [F[O][Y], F[O][I]];
+          }
+        });
+        let k = [];
+        for (let O = 0; O < 2; O++)
+          V.forEach((I) => {
+            F[I][O] && k.push(F[I][O]);
+          });
+        q.current = k.reverse();
+      }
+      let F = q.current.pop();
+      ((J.current = F.id.slice(1)),
+        p({ ...F, renderId: Math.random() }),
+        (x.current = m.current),
+        d(1),
+        f(null));
+    }, [l]),
+    C = (0, ve.useCallback)(() => {
+      ((roundLock.current = !0),
+        clearTimeout(roundTimer.current),
+        n("over"),
+        cancelAnimationFrame(y.current));
+    }, []),
+    N = (0, ve.useCallback)(
+      (F) => {
+        if (r !== "playing" || !c || roundLock.current) return;
+        if(!feedGate.current){feedGate.current=true;setFeedStarted(true);void A();}
+        roundLock.current = !0;
+        let correct = F !== "timeout" && F === c.fresh,
+          remaining = s;
+        if (correct) {
+          (i((k) => k + t.SCORE_PER_CORRECT),
+            w("correct"),
+            ry("notification_success"),
+            f("correct"),
+            (m.current = Math.max(t.MIN_TIME, m.current - t.TIME_DECREMENT)));
+        } else {
+          ((remaining = Math.max(0, s - 1)),
+            a(remaining),
+            w("wrong"),
+            ry("notification_error"),
+            f("wrong"));
+        }
+        if (remaining === 0) {
+          overTimer.current = setTimeout(C, 350);
+        } else {
+          roundTimer.current = setTimeout(b, 200);
+        }
+      },
+      [r, c, s, t, w, b, C],
+    ),
+    M = (0, ve.useCallback)(
+      (F) => {
+        g.current === 0 && (g.current = F);
+        let V = F - g.current;
+        if (((g.current = F), r === "playing" && feedGate.current && c && h === null)) {
+          x.current -= V;
+          let k = Math.max(0, x.current / m.current);
+          (d(k), x.current <= 0 && N("timeout"));
+        }
+        y.current = requestAnimationFrame(M);
+      },
+      [r, c, h, N],
+    );
+  (0, ve.useEffect)(
+    () => (
+      r === "playing" &&
+        ((g.current = performance.now()),
+        (y.current = requestAnimationFrame(M))),
+      () => cancelAnimationFrame(y.current)
+    ),
+    [r, M],
+  );
+  (0,ve.useEffect)(()=>{if(t&&l.length&&!c){m.current=t.INITIAL_TIME;b();}},[t,l,b]);
+  let j = () => {
+    feedGate.current=false;setFeedStarted(false);
+    (clearTimeout(roundTimer.current),
+      clearTimeout(overTimer.current),
+      (roundLock.current = !1),
+
+      ry("light"),
+      i(0),
+      a(3),
+      (m.current = t.INITIAL_TIME),
+      (q.current = []),
+      (J.current = null),
+      n("playing"),
+      b());
+  };
+  return t
+    ? (0, Z.jsxs)("div", {
+        style: {
+          width: "100%",
+          height: "100%",
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          containerType: "inline-size",
+        },
+        children: [
+          (0, Z.jsx)(wF, {}),
+          r === "playing" && !feedStarted && (0, Z.jsx)("p", {className:"feed-first-action",style:{position:"absolute",top:"100px",left:30,right:30,zIndex:12,margin:0,fontSize:18,lineHeight:1.35,textAlign:"center",pointerEvents:"none",color:"#285440"},children:"Eat fresh food. Pass spoiled food to start."}),
+          (0, Z.jsx)(Ws, {
+            children:
+              null,
+          }),
+          (0, Z.jsxs)("div", {
+            style: {
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              minHeight: 0,
+              opacity: 1,
+              transition: "opacity 0.3s",
+            },
+            children: [
+              (0, Z.jsxs)("div", {
+                style: {
+                  flex: "0 0 auto",
+                  padding:
+                    "calc(30 * var(--ui-unit) + env(safe-area-inset-top, 0px)) calc(30 * var(--ui-unit)) 16px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                },
+                children: [
+                  (0, Z.jsxs)("div", {
+                    style: {
+                      fontSize: "calc(28 * var(--ui-unit))",
+                      fontFamily: "var(--font-mono)",
+                      fontWeight: "bold",
+                      color: "var(--col-primary)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    },
+                    children: [
+                      (0, Z.jsx)("span", {
+                        style: {
+                          position: "absolute",
+                          width: 1,
+                          height: 1,
+                          overflow: "hidden",
+                          clipPath: "inset(50%)",
+                        },
+                        children: "Score ",
+                      }),
+                      o,
+                    ],
+                  }),
+                  (0, Z.jsx)("div", {
+                    style: { display: "flex", gap: "8px" },
+                    children: [1, 2, 3].map((F) =>
+                      (0, Z.jsx)(
+                        "img",
+                        {
+                          src: F <= s ? t.UI_HEART_FULL : t.UI_HEART_EMPTY,
+                          alt: "heart",
+                          style: {
+                            width: "28px",
+                            height: "28px",
+                            objectFit: "contain",
+                          },
+                        },
+                        F,
+                      ),
+                    ),
+                  }),
+                ],
+              }),
+              (0, Z.jsx)("div", {
+                style: {
+                  flex: "0 0 auto",
+                  padding: "0 calc(30 * var(--ui-unit))",
+                  height: "8px",
+                },
+                children: (0, Z.jsx)("div", {
+                  style: {
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "rgba(0,0,0,0.1)",
+                    borderRadius: "6px",
+                    overflow: "hidden",
+                  },
+                  children: (0, Z.jsx)("div", {
+                    style: {
+                      width: `${_ * 100}%`,
+                      height: "100%",
+                      backgroundColor:
+                        _ > 0.3 ? "var(--col-eat)" : "var(--col-pass)",
+                      transition: "width 0.1s linear, background-color 0.3s",
+                    },
+                  }),
+                }),
+              }),
+              (0, Z.jsx)("div", {
+                style: {
+                  flex: 1,
+                  minHeight: 0,
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "20px calc(30 * var(--ui-unit))",
+                },
+                children: (0, Z.jsx)(Ws, {
+                  mode: "popLayout",
+                  children:
+                    c &&
+                    (0, Z.jsxs)(
+                      zo.div,
+                      {
+                        initial: { scale: 0.96, opacity: 0 },
+                        animate: { scale: 1, opacity: 1 },
+                        exit: { opacity: 0 },
+                        transition: { duration: 0.16 },
+                        style: {
+                          width: "100%",
+                          maxWidth: "min(300px, 70cqi, 38vh)",
+                          aspectRatio: "1/1",
+                          position: "relative",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        },
+                        children: [
+                          (0, Z.jsx)("div", {
+                            style: {
+                              position: "absolute",
+                              inset: 0,
+                              background:
+                                "radial-gradient(ellipse at 40% 30%, #ffffff 40%, #f4f2ee 67%, #e3e1dc 69%, #fffefa 73%, #ece9e3 100%)",
+                              border: "6px solid #e8efe2",
+                              borderRadius: "50%",
+                              boxShadow:
+                                "0 12px 20px -12px rgba(37,53,45,0.25)",
+                              zIndex: 0,
+                            },
+                          }),
+                          (0, Z.jsx)("img", {
+                            src: c.img,
+                            alt: "food",
+                            style: {
+                              width: "64%",
+                              height: "64%",
+                              objectFit: "contain",
+                              zIndex: 1,
+                              filter: "none",
+                            },
+                            draggable: !1,
+                          }),
+                          (0, Z.jsxs)(Ws, {
+                            children: [
+                              h === "correct" &&
+                                (0, Z.jsx)(zo.div, {
+                                  initial: { scale: 0.8, opacity: 1 },
+                                  animate: { scale: 1.1, opacity: 0 },
+                                  exit: { opacity: 0 },
+                                  transition: { duration: 0.5 },
+                                  style: {
+                                    position: "absolute",
+                                    zIndex: 2,
+                                    fontSize: "56px",
+                                    pointerEvents: "none",
+                                    color:
+                                      h === "correct"
+                                        ? "var(--col-eat)"
+                                        : "var(--col-pass)",
+                                  },
+                                  children: "\u2713",
+                                }),
+                              h === "wrong" &&
+                                (0, Z.jsx)(zo.div, {
+                                  initial: { scale: 0.8, opacity: 1 },
+                                  animate: { scale: 1.1, opacity: 0 },
+                                  exit: { opacity: 0 },
+                                  transition: { duration: 0.5 },
+                                  style: {
+                                    position: "absolute",
+                                    zIndex: 2,
+                                    fontSize: "56px",
+                                    pointerEvents: "none",
+                                    color:
+                                      h === "correct"
+                                        ? "var(--col-eat)"
+                                        : "var(--col-pass)",
+                                  },
+                                  children: "\u00D7",
+                                }),
+                            ],
+                          }),
+                        ],
+                      },
+                      c.renderId,
+                    ),
+                }),
+              }),
+              (0, Z.jsxs)("div", {
+                style: {
+                  flex: "0 0 auto",
+                  display: "flex",
+                  gap: "12px",
+                  padding: "16px calc(30 * var(--ui-unit))",
+                  paddingBottom:
+                    "calc(50 * var(--ui-unit) + env(safe-area-inset-bottom, 0px) )",
+                },
+                children: [
+                  (0, Z.jsx)("button", {
+                    onClick: () => N(!1),
+                    disabled: r !== "playing" || h !== null,
+                    style: {
+                      flex: 1,
+                      minHeight: "48px",
+                      padding: "16px 12px",
+                      fontSize: "calc(18 * var(--ui-unit))",
+                      backgroundColor: "#fffefa",
+                      color: "var(--col-pass)",
+                      border: "1px solid #cbaaa2",
+                      borderRadius: "12px",
+                      opacity: r !== "playing" || h !== null ? 0.7 : 1,
+                    },
+                    children: t.BTN_PASS,
+                  }),
+                  (0, Z.jsx)("button", {
+                    onClick: () => N(!0),
+                    disabled: r !== "playing" || h !== null,
+                    style: {
+                      flex: 1,
+                      minHeight: "48px",
+                      padding: "16px 12px",
+                      fontSize: "calc(18 * var(--ui-unit))",
+                      backgroundColor: "var(--col-eat)",
+                      color: "#FFF",
+                      border: "1px solid var(--col-eat)",
+                      borderRadius: "12px",
+                      opacity: r !== "playing" || h !== null ? 0.7 : 1,
+                    },
+                    children: t.BTN_EAT,
+                  }),
+                ],
+              }),
+            ],
+          }),
+          (0, Z.jsx)(Ws, {
+            children:
+              r === "over" &&
+              (0, Z.jsx)(AF, { cfg: t, score: o, onRestart: j }, "end"),
+          }),
+        ],
+      })
+    : (0, Z.jsx)("div", {
+        style: { width: "100%", height: "100%", background: "#f2f0eb" },
+      });
+}
+;(0,PE.createRoot)(document.getElementById("root")).render((0,Z.jsx)(CF,{}));})();

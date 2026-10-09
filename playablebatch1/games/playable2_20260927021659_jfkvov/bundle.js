@@ -321,4 +321,307 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       position: absolute;
       inset: 0;
     }
-  `});function yV(){let t=typeof window<"u"&&typeof window.tt<"u"&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,ft.useState)(!1);(0,ft.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]);let n=(0,ft.useCallback)(()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] playableRecordingSubmission failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))},[e,t]);return{canSubmit:t,submitting:e,submitRecording:n}}function _V(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var vV=()=>{let[t,e]=(0,ft.useState)(null),[r,n]=(0,ft.useState)("idle"),[o,i]=(0,ft.useState)(0),[s,a]=(0,ft.useState)(0),[l,u]=(0,ft.useState)(-1),c=(0,ft.useRef)(!1),p=(0,ft.useRef)(null);(0,ft.useEffect)(()=>{let w=!0;return(async()=>{let k={tweaks:[],texts:[],images:[]};try{let C=await fetch("./game.config.json",{cache:"no-store"});C.ok&&(k=await C.json())}catch{}w&&e(_V(k))})(),()=>{w=!1}},[]);let h=(0,ft.useCallback)(async()=>{if(!c.current)try{await Wx(),p.current=new Jn().toDestination(),NE.volume.value=-10,c.current=!0}catch(w){console.warn("Audio init failed",w)}},[]),f=(0,ft.useCallback)(w=>{if(!p.current)return;let k=bE();w==="tap"?p.current.triggerAttackRelease("C4","16n",k):w==="correct"?p.current.triggerAttackRelease("C5","8n",k):w==="wrong"&&p.current.triggerAttackRelease("G2","8n",k)},[]),m=(0,ft.useMemo)(()=>t?[{text:t.Q1_TEXT,options:[t.Q1_O0,t.Q1_O1,t.Q1_O2,t.Q1_O3],answer:parseInt(t.Q1_A),exp:t.Q1_EXP},{text:t.Q2_TEXT,options:[t.Q2_O0,t.Q2_O1,t.Q2_O2,t.Q2_O3],answer:parseInt(t.Q2_A),exp:t.Q2_EXP},{text:t.Q3_TEXT,options:[t.Q3_O0,t.Q3_O1,t.Q3_O2,t.Q3_O3],answer:parseInt(t.Q3_A),exp:t.Q3_EXP},{text:t.Q4_TEXT,options:[t.Q4_O0,t.Q4_O1,t.Q4_O2,t.Q4_O3],answer:parseInt(t.Q4_A),exp:t.Q4_EXP}]:[],[t]),x=async()=>{await h(),f("tap"),n("playing"),i(0),a(0)},_=w=>{if(r!=="playing")return;u(w),w===m[o].answer?(f("correct"),a(C=>C+1)):f("wrong"),n("feedback")},d=()=>{f("tap"),o<m.length-1?(i(o+1),u(-1),n("playing")):n("result")},g=()=>{f("tap"),n("idle"),i(0),a(0),u(-1)},{canSubmit:y,submitting:S,submitRecording:v}=yV();if(!t)return(0,ce.jsx)("div",{style:{width:"100%",height:"100%",background:"#fff"}});let T=m[o]||{},A=l===T.answer;return(0,ce.jsxs)("div",{style:{width:"100%",height:"100%",position:"relative"},children:[(0,ce.jsx)(xV,{}),(0,ce.jsxs)(Kg,{mode:"wait",children:[r==="idle"&&(0,ce.jsxs)(Hs.div,{className:"screen-container",style:{justifyContent:"center",alignItems:"center",gap:"40px"},initial:{opacity:0,y:20},animate:{opacity:1,y:0},exit:{opacity:0,scale:.9},transition:{duration:.3},children:[(0,ce.jsx)("h1",{style:{fontFamily:"var(--font-display)",fontSize:"clamp(40px, 12cqi, 64px)",fontWeight:900,textAlign:"center",lineHeight:1.1,margin:0},children:t.GAME_TITLE}),(0,ce.jsx)("button",{className:"btn-black",onClick:x,children:t.START_BTN})]},"idle"),(r==="playing"||r==="feedback")&&(0,ce.jsxs)(Hs.div,{className:"screen-container",initial:{opacity:0,x:20},animate:{opacity:1,x:0},exit:{opacity:0,x:-20},transition:{duration:.3},children:[(0,ce.jsxs)("div",{style:{flex:"0 0 auto",display:"flex",justifyContent:"space-between",marginBottom:"20px",fontWeight:700,color:"var(--color-gray-dark)"},children:[(0,ce.jsxs)("span",{children:[t.HUD_QUESTION," ",o+1," / ",m.length]}),(0,ce.jsxs)("span",{children:[t.HUD_SCORE,": ",s]})]}),(0,ce.jsx)("div",{style:{flex:1,minHeight:0,overflowY:"auto",paddingBottom:"20px"},children:(0,ce.jsx)("h2",{style:{fontFamily:"var(--font-display)",fontSize:"clamp(24px, 7cqi, 36px)",lineHeight:1.3,margin:"0 0 24px 0"},children:T.text})}),(0,ce.jsx)("div",{style:{flex:"0 0 auto",paddingBottom:"max(16px, env(safe-area-inset-bottom, 0px))"},children:r==="playing"?(0,ce.jsx)("div",{style:{display:"flex",flexDirection:"column"},children:T.options.map((w,k)=>(0,ce.jsx)("button",{className:"btn-option",onClick:()=>_(k),children:w},k))}):(0,ce.jsxs)(Hs.div,{initial:{opacity:0,y:20},animate:{opacity:1,y:0},style:{background:A?"var(--color-correct)":"var(--color-wrong)",color:"#fff",padding:"24px",borderRadius:"16px",display:"flex",flexDirection:"column",gap:"16px"},children:[(0,ce.jsx)("h3",{style:{margin:0,fontSize:"24px"},children:A?t.FB_CORRECT:t.FB_WRONG}),(0,ce.jsx)("p",{style:{margin:0,fontSize:"16px",lineHeight:1.5,opacity:.9},children:T.exp}),(0,ce.jsx)("button",{onClick:d,style:{background:"#fff",color:"#000",border:"none",padding:"12px",borderRadius:"8px",fontWeight:700,fontSize:"16px",marginTop:"8px",cursor:"pointer"},children:t.BTN_NEXT})]})})]},`q-${o}`),r==="result"&&(0,ce.jsxs)(Hs.div,{className:"screen-container",style:{justifyContent:"center",alignItems:"center",gap:"32px"},initial:{opacity:0},animate:{opacity:1},transition:{duration:.4},children:[(0,ce.jsxs)("div",{style:{textAlign:"center"},children:[(0,ce.jsx)("h2",{style:{fontSize:"32px",margin:"0 0 16px 0"},children:t.RES_TITLE}),(0,ce.jsxs)("div",{style:{fontSize:"64px",fontWeight:900,fontFamily:"var(--font-display)",marginBottom:"16px"},children:[s," / ",m.length]}),(0,ce.jsx)("p",{style:{fontSize:"20px",color:"var(--color-gray-dark)",margin:0},children:s===m.length?t.RES_PERFECT:t.RES_NORMAL})]}),(0,ce.jsxs)("div",{style:{display:"flex",flexDirection:"column",gap:"16px",width:"100%",alignItems:"center"},children:[(0,ce.jsx)("button",{className:"btn-black",onClick:g,children:t.RESTART_BTN}),y&&(0,ce.jsx)("button",{className:"btn-black",style:{background:"transparent",color:"var(--color-text)",border:"2px solid var(--color-text)"},disabled:S,onClick:v,children:t.POST_BTN})]})]},"result")]})]})};(0,OE.createRoot)(document.getElementById("root")).render((0,ce.jsx)(vV,{}));})();
+  `});function yV(){let t=typeof window<"u"&&typeof window.tt<"u"&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,ft.useState)(!1);(0,ft.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]);let n=(0,ft.useCallback)(()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] playableRecordingSubmission failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))},[e,t]);return{canSubmit:t,submitting:e,submitRecording:n}}function _V(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var vV=
+() => {
+  let [t, e] = (0, ft.useState)(null),
+    [r, n] = (0, ft.useState)("playing"),
+    [o, i] = (0, ft.useState)(0),
+    [s, a] = (0, ft.useState)(0),
+    [l, u] = (0, ft.useState)(-1),
+    c = (0, ft.useRef)(!1),
+    p = (0, ft.useRef)(null);
+  (0, ft.useEffect)(() => {
+    let w = !0;
+    return (
+      (async () => {
+        let k = { tweaks: [], texts: [], images: [] };
+        try {
+          let C = await fetch("./game.config.json", { cache: "no-store" });
+          C.ok && (k = await C.json());
+        } catch {}
+        w && e(_V(k));
+      })(),
+      () => {
+        w = !1;
+      }
+    );
+  }, []);
+  let h = (0, ft.useCallback)(async () => {
+      if (!c.current)
+        try {
+          (await Wx(),
+            (p.current = new Jn().toDestination()),
+            (NE.volume.value = -10),
+            (c.current = !0));
+        } catch (w) {
+          console.warn("Audio init failed", w);
+        }
+    }, []),
+    f = (0, ft.useCallback)((w) => {
+      if (!p.current) return;
+      let k = bE();
+      w === "tap"
+        ? p.current.triggerAttackRelease("C4", "16n", k)
+        : w === "correct"
+          ? p.current.triggerAttackRelease("C5", "8n", k)
+          : w === "wrong" && p.current.triggerAttackRelease("G2", "8n", k);
+    }, []),
+    m = (0, ft.useMemo)(
+      () =>
+        t
+          ? [
+              {
+                text: t.Q1_TEXT,
+                options: [t.Q1_O0, t.Q1_O1, t.Q1_O2, t.Q1_O3],
+                answer: parseInt(t.Q1_A),
+                exp: t.Q1_EXP,
+              },
+              {
+                text: t.Q2_TEXT,
+                options: [t.Q2_O0, t.Q2_O1, t.Q2_O2, t.Q2_O3],
+                answer: parseInt(t.Q2_A),
+                exp: t.Q2_EXP,
+              },
+              {
+                text: t.Q3_TEXT,
+                options: [t.Q3_O0, t.Q3_O1, t.Q3_O2, t.Q3_O3],
+                answer: parseInt(t.Q3_A),
+                exp: t.Q3_EXP,
+              },
+              {
+                text: t.Q4_TEXT,
+                options: [t.Q4_O0, t.Q4_O1, t.Q4_O2, t.Q4_O3],
+                answer: parseInt(t.Q4_A),
+                exp: t.Q4_EXP,
+              },
+            ]
+          : [],
+      [t],
+    ),
+    x = async () => {
+      (await h(), f("tap"), n("playing"), i(0), a(0));
+    },
+    _ = (w) => {
+      if (r !== "playing") return;
+      void h();
+      (u(w),
+        w === m[o].answer ? (f("correct"), a((C) => C + 1)) : f("wrong"),
+        n("feedback"));
+    },
+    d = () => {
+      (f("tap"),
+        o < m.length - 1 ? (i(o + 1), u(-1), n("playing")) : n("result"));
+    },
+    g = () => {
+      (f("tap"), n("playing"), i(0), a(0), u(-1));
+    },
+    { canSubmit: y, submitting: S, submitRecording: v } = yV();
+  if (!t)
+    return (0, ce.jsx)("div", {
+      style: { width: "100%", height: "100%", background: "#fff" },
+    });
+  let T = m[o] || {},
+    A = l === T.answer;
+  return (0, ce.jsxs)("div", {
+    style: { width: "100%", height: "100%", position: "relative" },
+    children: [
+      (0, ce.jsx)(xV, {}),
+      (0, ce.jsxs)(Kg, {
+        mode: "wait",
+        children: [
+          null,
+          (r === "playing" || r === "feedback") &&
+            (0, ce.jsxs)(
+              Hs.div,
+              {
+                className: "screen-container",
+                initial: { opacity: 0, x: 20 },
+                animate: { opacity: 1, x: 0 },
+                exit: { opacity: 0, x: -20 },
+                transition: { duration: 0.3 },
+                children: [
+                  (0, ce.jsxs)("div", {
+                    style: {
+                      flex: "0 0 auto",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginBottom: "20px",
+                      fontWeight: 700,
+                      color: "var(--color-gray-dark)",
+                    },
+                    children: [
+                      (0, ce.jsxs)("span", {
+                        children: [t.HUD_QUESTION, " ", o + 1, " / ", m.length],
+                      }),
+                      (0, ce.jsxs)("span", {
+                        children: [t.HUD_SCORE, ": ", s],
+                      }),
+                    ],
+                  }),
+                  (0, ce.jsx)("div", {
+                    style: {
+                      flex: 1,
+                      minHeight: 0,
+                      overflowY: "auto",
+                      paddingBottom: "20px",
+                    },
+                    children: (0, ce.jsx)("h2", {
+                      style: {
+                        fontFamily: "var(--font-display)",
+                        fontSize: "clamp(24px, 7cqi, 36px)",
+                        lineHeight: 1.3,
+                        margin: "0 0 24px 0",
+                      },
+                      children: T.text,
+                    }),
+                  }),
+                  (0, ce.jsx)("div", {
+                    style: {
+                      flex: "0 0 auto",
+                      paddingBottom:
+                        "max(16px, env(safe-area-inset-bottom, 0px))",
+                    },
+                    children:
+                      r === "playing"
+                        ? (0, ce.jsx)("div", {
+                            style: { display: "flex", flexDirection: "column" },
+                            children: T.options.map((w, k) =>
+                              (0, ce.jsx)(
+                                "button",
+                                {
+                                  className: "btn-option",
+                                  onClick: () => _(k),
+                                  children: w,
+                                },
+                                k,
+                              ),
+                            ),
+                          })
+                        : (0, ce.jsxs)(Hs.div, {
+                            initial: { opacity: 0, y: 20 },
+                            animate: { opacity: 1, y: 0 },
+                            style: {
+                              background: A
+                                ? "var(--color-correct)"
+                                : "var(--color-wrong)",
+                              color: "#fff",
+                              padding: "24px",
+                              borderRadius: "16px",
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: "16px",
+                            },
+                            children: [
+                              (0, ce.jsx)("h3", {
+                                style: { margin: 0, fontSize: "24px" },
+                                children: A ? t.FB_CORRECT : t.FB_WRONG,
+                              }),
+                              (0, ce.jsx)("p", {
+                                style: {
+                                  margin: 0,
+                                  fontSize: "16px",
+                                  lineHeight: 1.5,
+                                  opacity: 0.9,
+                                },
+                                children: T.exp,
+                              }),
+                              (0, ce.jsx)("button", {
+                                onClick: d,
+                                style: {
+                                  background: "#fff",
+                                  color: "#000",
+                                  border: "none",
+                                  padding: "12px",
+                                  borderRadius: "8px",
+                                  fontWeight: 700,
+                                  fontSize: "16px",
+                                  marginTop: "8px",
+                                  cursor: "pointer",
+                                },
+                                children: t.BTN_NEXT,
+                              }),
+                            ],
+                          }),
+                  }),
+                ],
+              },
+              `q-${o}`,
+            ),
+          r === "result" &&
+            (0, ce.jsxs)(
+              Hs.div,
+              {
+                className: "screen-container",
+                style: {
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "32px",
+                },
+                initial: { opacity: 0 },
+                animate: { opacity: 1 },
+                transition: { duration: 0.4 },
+                children: [
+                  (0, ce.jsxs)("div", {
+                    style: { textAlign: "center" },
+                    children: [
+                      (0, ce.jsx)("h2", {
+                        style: { fontSize: "32px", margin: "0 0 16px 0" },
+                        children: t.RES_TITLE,
+                      }),
+                      (0, ce.jsxs)("div", {
+                        style: {
+                          fontSize: "64px",
+                          fontWeight: 900,
+                          fontFamily: "var(--font-display)",
+                          marginBottom: "16px",
+                        },
+                        children: [s, " / ", m.length],
+                      }),
+                      (0, ce.jsx)("p", {
+                        style: {
+                          fontSize: "20px",
+                          color: "var(--color-gray-dark)",
+                          margin: 0,
+                        },
+                        children: s === m.length ? t.RES_PERFECT : t.RES_NORMAL,
+                      }),
+                    ],
+                  }),
+                  (0, ce.jsxs)("div", {
+                    style: {
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "16px",
+                      width: "100%",
+                      alignItems: "center",
+                    },
+                    children: [
+                      (0, ce.jsx)("button", {
+                        className: "btn-black",
+                        onClick: g,
+                        children: t.RESTART_BTN,
+                      }),
+                      y &&
+                        (0, ce.jsx)("button", {
+                          className: "btn-black",
+                          style: {
+                            background: "transparent",
+                            color: "var(--color-text)",
+                            border: "2px solid var(--color-text)",
+                          },
+                          disabled: S,
+                          onClick: v,
+                          children: t.POST_BTN,
+                        }),
+                    ],
+                  }),
+                ],
+              },
+              "result",
+            ),
+        ],
+      }),
+    ],
+  });
+}
+;(0,OE.createRoot)(document.getElementById("root")).render((0,ce.jsx)(vV,{}));})();

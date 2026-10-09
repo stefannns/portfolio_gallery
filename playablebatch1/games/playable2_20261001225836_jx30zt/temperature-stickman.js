@@ -15,6 +15,7 @@
   var driftTarget = 0;
   var driftRemaining = 0;
   var pageActive = true;
+  var feedStarted = false;
 
   // Random external heat/cold, not an automatic return to the midpoint.
   // Velocity blends smoothly when a new gust changes direction or strength.
@@ -32,7 +33,7 @@
   }
 
   function startDrift() {
-    if (driftFrame || extreme || document.hidden || !pageActive) return;
+    if (!feedStarted || driftFrame || extreme || document.hidden || !pageActive) return;
     previousFrame = null;
     driftFrame = window.requestAnimationFrame(driftStep);
   }
@@ -138,7 +139,7 @@
       '<h1>Spicy Stickman</h1>',
       '</header>',
       '<div class="speech-region">',
-      '<div class="reaction" role="status" aria-live="polite">Tap treats to balance his temperature!</div>',
+      '<div class="reaction feed-first-action" role="status" aria-live="polite">Tap a treat to start · balance his temperature</div>',
       '<section class="recovery-bubble" hidden aria-label="Help the stickman">',
       '<p class="bubble-message" aria-live="polite"></p>',
       '<div class="bubble-options"><button type="button" class="help-button"></button></div>',
@@ -199,6 +200,11 @@
 
   function feed(kind) {
     if (extreme || (kind !== "chili" && kind !== "ice")) return;
+    if (!feedStarted) {
+      feedStarted = true;
+      root.querySelector(".reaction").classList.remove("feed-first-action");
+      startDrift();
+    }
     lastFood = kind;
     heat = Math.max(0, Math.min(100, heat + (kind === "chili" ? 17 : -17)));
     fed += 1;

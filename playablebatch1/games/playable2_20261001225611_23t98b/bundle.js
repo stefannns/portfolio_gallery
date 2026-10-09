@@ -221,47 +221,141 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 			return val;
 		}
 	}
-`;df(bb,lV);var lke=[1557/44100,1617/44100,1491/44100,1422/44100,1277/44100,1356/44100,1188/44100,1116/44100];var gke=[1687/25e3,1601/25e3,2053/25e3,2251/25e3];var Ea=class t extends L{constructor(){let e=k(t.getDefaults(),arguments,["solo"]);super(e),this.name="Solo",this.input=this.output=new $({context:this.context}),t._allSolos.has(this.context)||t._allSolos.set(this.context,new Set),t._allSolos.get(this.context).add(this),this.solo=e.solo}static getDefaults(){return Object.assign(L.getDefaults(),{solo:!1})}get solo(){return this._isSoloed()}set solo(e){e?this._addSolo():this._removeSolo(),t._allSolos.get(this.context).forEach(r=>r._updateSolo())}get muted(){return this.input.gain.value===0}_addSolo(){t._soloed.has(this.context)||t._soloed.set(this.context,new Set),t._soloed.get(this.context).add(this)}_removeSolo(){t._soloed.has(this.context)&&t._soloed.get(this.context).delete(this)}_isSoloed(){return t._soloed.has(this.context)&&t._soloed.get(this.context).has(this)}_noSolos(){return!t._soloed.has(this.context)||t._soloed.has(this.context)&&t._soloed.get(this.context).size===0}_updateSolo(){this._isSoloed()?this.input.gain.value=1:this._noSolos()?this.input.gain.value=1:this.input.gain.value=0}dispose(){return super.dispose(),t._allSolos.get(this.context).delete(this),this._removeSolo(),this}};Ea._allSolos=new Map;Ea._soloed=new Map;var vf=class t extends L{constructor(){let e=k(t.getDefaults(),arguments,["pan","volume"]);super(e),this.name="PanVol",this._panner=this.input=new Lu({context:this.context,pan:e.pan,channelCount:e.channelCount}),this.pan=this._panner.pan,this._volume=this.output=new Fr({context:this.context,volume:e.volume}),this.volume=this._volume.volume,this._panner.connect(this._volume),this.mute=e.mute,q(this,["pan","volume"])}static getDefaults(){return Object.assign(L.getDefaults(),{mute:!1,pan:0,volume:0,channelCount:1})}get mute(){return this._volume.mute}set mute(e){this._volume.mute=e}dispose(){return super.dispose(),this._panner.dispose(),this.pan.dispose(),this._volume.dispose(),this.volume.dispose(),this}};var Jx=class t extends L{constructor(){let e=k(t.getDefaults(),arguments,["volume","pan"]);super(e),this.name="Channel",this._solo=this.input=new Ea({solo:e.solo,context:this.context}),this._panVol=this.output=new vf({context:this.context,pan:e.pan,volume:e.volume,mute:e.mute,channelCount:e.channelCount}),this.pan=this._panVol.pan,this.volume=this._panVol.volume,this._solo.connect(this._panVol),q(this,["pan","volume"])}static getDefaults(){return Object.assign(L.getDefaults(),{pan:0,volume:0,mute:!1,solo:!1,channelCount:1})}get solo(){return this._solo.solo}set solo(e){this._solo.solo=e}get muted(){return this._solo.muted||this.mute}get mute(){return this._panVol.mute}set mute(e){this._panVol.mute=e}_getBus(e){return t.buses.has(e)||t.buses.set(e,new $({context:this.context})),t.buses.get(e)}send(e,r=0){let n=this._getBus(e),o=new $({context:this.context,units:"decibels",gain:r});return this.connect(o),o.connect(n),o}receive(e){return this._getBus(e).connect(this),this}dispose(){return super.dispose(),this._panVol.dispose(),this.pan.dispose(),this.volume.dispose(),this._solo.dispose(),this}};Jx.buses=new Map;var eDe=Ke().transport;var tDe=Ke().destination,rDe=Ke().destination;var nDe=Ke().listener;var oDe=Ke().draw;var iDe=Ke();var se=ne(Co()),ey={start:{ex:"Hey... are you awake?",options:[{text:"What do you want?",nextId:"defensive"},{text:"Yeah, what's up?",nextId:"friendly"},{text:"New phone, who dis?",nextId:"savage"}]},defensive:{ex:"Sorry to bother you. Just was thinking about last summer.",options:[{text:"Me too...",nextId:"nostalgic"},{text:"Move on.",nextId:"end_ignored"}]},friendly:{ex:"I just missed you. Can we talk?",options:[{text:"I miss you too.",nextId:"end_back_together"},{text:"It's too late.",nextId:"end_closure"}]},savage:{ex:"Wow. Very mature. I just wanted to return your sweater.",options:[{text:"Keep it.",nextId:"end_closure"},{text:"Mail it.",nextId:"end_angry"}]},nostalgic:{ex:"Maybe we can try again?",options:[{text:"Let's do it.",nextId:"end_back_together"},{text:"Some things are better left in the past.",nextId:"end_friends"}]}},gV={end_ignored:"Ending: Ignored. You protected your peace.",end_back_together:"Ending: Back Together? We'll see how long this lasts...",end_closure:"Ending: Closure. Time to move on for real.",end_angry:"Ending: Unresolved Anger. Blocked and deleted.",end_friends:"Ending: Just Friends. A mature, but bittersweet end."};function xV(){let t=typeof window<"u"&&typeof window.tt<"u"&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,ot.useState)(!1);return(0,ot.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]),{canSubmit:t,submitting:e,submitRecording:()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] playableRecordingSubmission failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))}}}function yV(){let{canSubmit:t,submitting:e,submitRecording:r}=xV();return t?(0,se.jsx)("button",{type:"button",disabled:e,onClick:r,className:"btn btn-secondary",style:{opacity:e?.6:1},children:"Post My Play"}):null}function _V(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var vV=()=>{
-  const h=ot.createElement;
-  const [config,setConfig]=(0,ot.useState)({});
-  const [screen,setScreen]=(0,ot.useState)("intro");
-  const [messages,setMessages]=(0,ot.useState)([]);
-  const [pending,setPending]=(0,ot.useState)(false);
-  const [turn,setTurn]=(0,ot.useState)(0);
-  const [ending,setEnding]=(0,ot.useState)("");
-  const chatEnd=(0,ot.useRef)(null);
-  const words=["sorry","hate u","my bad","whatever","no cap","u love me","bestie?","rizz","simp","savage","therapy","new girl","poetry","what?","yes","no","lol","ok","miss u","wyd","pull up","please","❤️","CAPS","essay","k","meme","🎵","drunk","gift","playlist","$$$","📍","FT","🎤","📸","new guy?","not jealous","hacked","wrong #"];
-  const reply=(word,i)=>{
-    if(["sorry","my bad","please","miss u"].includes(word))return["I appreciate you saying that.","Maybe we can talk.","I missed you too."][i%3];
-    if(["hate u","whatever","not jealous","wrong #"].includes(word))return["That's harsh.","I guess we're done talking.","Wow. Okay."][i%3];
-    if(["lol","meme","rizz","bestie?"].includes(word))return["Are you serious right now?","I can't believe you just said that.","You haven't changed 😂"][i%3];
-    return["We need to talk.","What do you really mean?","I don't know what to say to that."][i%3];
+`;df(bb,lV);var lke=[1557/44100,1617/44100,1491/44100,1422/44100,1277/44100,1356/44100,1188/44100,1116/44100];var gke=[1687/25e3,1601/25e3,2053/25e3,2251/25e3];var Ea=class t extends L{constructor(){let e=k(t.getDefaults(),arguments,["solo"]);super(e),this.name="Solo",this.input=this.output=new $({context:this.context}),t._allSolos.has(this.context)||t._allSolos.set(this.context,new Set),t._allSolos.get(this.context).add(this),this.solo=e.solo}static getDefaults(){return Object.assign(L.getDefaults(),{solo:!1})}get solo(){return this._isSoloed()}set solo(e){e?this._addSolo():this._removeSolo(),t._allSolos.get(this.context).forEach(r=>r._updateSolo())}get muted(){return this.input.gain.value===0}_addSolo(){t._soloed.has(this.context)||t._soloed.set(this.context,new Set),t._soloed.get(this.context).add(this)}_removeSolo(){t._soloed.has(this.context)&&t._soloed.get(this.context).delete(this)}_isSoloed(){return t._soloed.has(this.context)&&t._soloed.get(this.context).has(this)}_noSolos(){return!t._soloed.has(this.context)||t._soloed.has(this.context)&&t._soloed.get(this.context).size===0}_updateSolo(){this._isSoloed()?this.input.gain.value=1:this._noSolos()?this.input.gain.value=1:this.input.gain.value=0}dispose(){return super.dispose(),t._allSolos.get(this.context).delete(this),this._removeSolo(),this}};Ea._allSolos=new Map;Ea._soloed=new Map;var vf=class t extends L{constructor(){let e=k(t.getDefaults(),arguments,["pan","volume"]);super(e),this.name="PanVol",this._panner=this.input=new Lu({context:this.context,pan:e.pan,channelCount:e.channelCount}),this.pan=this._panner.pan,this._volume=this.output=new Fr({context:this.context,volume:e.volume}),this.volume=this._volume.volume,this._panner.connect(this._volume),this.mute=e.mute,q(this,["pan","volume"])}static getDefaults(){return Object.assign(L.getDefaults(),{mute:!1,pan:0,volume:0,channelCount:1})}get mute(){return this._volume.mute}set mute(e){this._volume.mute=e}dispose(){return super.dispose(),this._panner.dispose(),this.pan.dispose(),this._volume.dispose(),this.volume.dispose(),this}};var Jx=class t extends L{constructor(){let e=k(t.getDefaults(),arguments,["volume","pan"]);super(e),this.name="Channel",this._solo=this.input=new Ea({solo:e.solo,context:this.context}),this._panVol=this.output=new vf({context:this.context,pan:e.pan,volume:e.volume,mute:e.mute,channelCount:e.channelCount}),this.pan=this._panVol.pan,this.volume=this._panVol.volume,this._solo.connect(this._panVol),q(this,["pan","volume"])}static getDefaults(){return Object.assign(L.getDefaults(),{pan:0,volume:0,mute:!1,solo:!1,channelCount:1})}get solo(){return this._solo.solo}set solo(e){this._solo.solo=e}get muted(){return this._solo.muted||this.mute}get mute(){return this._panVol.mute}set mute(e){this._panVol.mute=e}_getBus(e){return t.buses.has(e)||t.buses.set(e,new $({context:this.context})),t.buses.get(e)}send(e,r=0){let n=this._getBus(e),o=new $({context:this.context,units:"decibels",gain:r});return this.connect(o),o.connect(n),o}receive(e){return this._getBus(e).connect(this),this}dispose(){return super.dispose(),this._panVol.dispose(),this.pan.dispose(),this.volume.dispose(),this._solo.dispose(),this}};Jx.buses=new Map;var eDe=Ke().transport;var tDe=Ke().destination,rDe=Ke().destination;var nDe=Ke().listener;var oDe=Ke().draw;var iDe=Ke();var se=ne(Co()),ey={start:{ex:"Hey... are you awake?",options:[{text:"What do you want?",nextId:"defensive"},{text:"Yeah, what's up?",nextId:"friendly"},{text:"New phone, who dis?",nextId:"savage"}]},defensive:{ex:"Sorry to bother you. Just was thinking about last summer.",options:[{text:"Me too...",nextId:"nostalgic"},{text:"Move on.",nextId:"end_ignored"}]},friendly:{ex:"I just missed you. Can we talk?",options:[{text:"I miss you too.",nextId:"end_back_together"},{text:"It's too late.",nextId:"end_closure"}]},savage:{ex:"Wow. Very mature. I just wanted to return your sweater.",options:[{text:"Keep it.",nextId:"end_closure"},{text:"Mail it.",nextId:"end_angry"}]},nostalgic:{ex:"Maybe we can try again?",options:[{text:"Let's do it.",nextId:"end_back_together"},{text:"Some things are better left in the past.",nextId:"end_friends"}]}},gV={end_ignored:"Ending: Ignored. You protected your peace.",end_back_together:"Ending: Back Together? We'll see how long this lasts...",end_closure:"Ending: Closure. Time to move on for real.",end_angry:"Ending: Unresolved Anger. Blocked and deleted.",end_friends:"Ending: Just Friends. A mature, but bittersweet end."};function xV(){let t=typeof window<"u"&&typeof window.tt<"u"&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,ot.useState)(!1);return(0,ot.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]),{canSubmit:t,submitting:e,submitRecording:()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] playableRecordingSubmission failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))}}}function yV(){let{canSubmit:t,submitting:e,submitRecording:r}=xV();return t?(0,se.jsx)("button",{type:"button",disabled:e,onClick:r,className:"btn btn-secondary",style:{opacity:e?.6:1},children:"Post My Play"}):null}function _V(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var vV=
+() => {
+  const h = ot.createElement;
+  const [config, setConfig] = (0, ot.useState)({});
+  const [screen, setScreen] = (0, ot.useState)("chat");
+  const [messages, setMessages] = (0, ot.useState)([{from:"ex",text:"We need to talk."}]);
+  const [pending, setPending] = (0, ot.useState)(false);
+  const [turn, setTurn] = (0, ot.useState)(0);
+  const [ending, setEnding] = (0, ot.useState)("");
+  const chatEnd = (0, ot.useRef)(null);
+  const words = [
+    "sorry",
+    "hate u",
+    "my bad",
+    "whatever",
+    "no cap",
+    "u love me",
+    "bestie?",
+    "rizz",
+    "simp",
+    "savage",
+    "therapy",
+    "new girl",
+    "poetry",
+    "what?",
+    "yes",
+    "no",
+    "lol",
+    "ok",
+    "miss u",
+    "wyd",
+    "pull up",
+    "please",
+    "❤️",
+    "CAPS",
+    "essay",
+    "k",
+    "meme",
+    "🎵",
+    "drunk",
+    "gift",
+    "playlist",
+    "$$$",
+    "📍",
+    "FT",
+    "🎤",
+    "📸",
+    "new guy?",
+    "not jealous",
+    "hacked",
+    "wrong #",
+  ];
+  const reply = (word, i) => {
+    if (["sorry", "my bad", "please", "miss u"].includes(word))
+      return [
+        "I appreciate you saying that.",
+        "Maybe we can talk.",
+        "I missed you too.",
+      ][i % 3];
+    if (["hate u", "whatever", "not jealous", "wrong #"].includes(word))
+      return ["That's harsh.", "I guess we're done talking.", "Wow. Okay."][
+        i % 3
+      ];
+    if (["lol", "meme", "rizz", "bestie?"].includes(word))
+      return [
+        "Are you serious right now?",
+        "I can't believe you just said that.",
+        "You haven't changed 😂",
+      ][i % 3];
+    return [
+      "We need to talk.",
+      "What do you really mean?",
+      "I don't know what to say to that.",
+    ][i % 3];
   };
-  const start=()=>{setMessages([{from:"ex",text:"We need to talk."}]);setTurn(0);setEnding("");setPending(false);setScreen("chat")};
-  const send=word=>{
-    if(pending||screen!=="chat")return;
-    const nextTurn=turn+1;
-    setTurn(nextTurn);setPending(true);
-    setMessages(old=>[...old,{from:"me",text:word}]);
-    if(navigator.vibrate)navigator.vibrate(8);
-    setTimeout(()=>{
-      setMessages(old=>[...old,{from:"ex",text:reply(word,nextTurn)}]);
-      setPending(false);
-      if(nextTurn>=5){
-        setEnding(["sorry","my bad","please","miss u"].includes(word)?"Maybe there's a second chance.":["hate u","whatever","wrong #"].includes(word)?"The conversation ends here.":"It's complicated...");
-        setScreen("ending");
-      }
-    },Math.max(300,Number(config.TYPING_SPEED)||1200));
+  const start = () => {
+    setMessages([{ from: "ex", text: "We need to talk." }]);
+    setTurn(0);
+    setEnding("");
+    setPending(false);
+    setScreen("chat");
   };
-  (0,ot.useEffect)(()=>{
-    let active=true;
-    fetch("./game.config.json",{cache:"no-store"}).then(response=>response.ok?response.json():null).then(value=>{if(active&&value)setConfig(_V(value))}).catch(()=>{});
-    return()=>{active=false};
-  },[]);
-  (0,ot.useEffect)(()=>{chatEnd.current?.scrollIntoView({block:"end",behavior:"smooth"})},[messages]);
-  const button={border:0,fontFamily:"inherit",fontWeight:600,cursor:"pointer",touchAction:"manipulation",WebkitTapHighlightColor:"transparent"};
-  const title=config.TITLE||"Text Your Ex";
-  const css=`
+  const send = (word) => {
+    if (pending || screen !== "chat") return;
+    const nextTurn = turn + 1;
+    setTurn(nextTurn);
+    setPending(true);
+    setMessages((old) => [...old, { from: "me", text: word }]);
+    if (navigator.vibrate) navigator.vibrate(8);
+    setTimeout(
+      () => {
+        setMessages((old) => [
+          ...old,
+          { from: "ex", text: reply(word, nextTurn) },
+        ]);
+        setPending(false);
+        if (nextTurn >= 5) {
+          setEnding(
+            ["sorry", "my bad", "please", "miss u"].includes(word)
+              ? "Maybe there's a second chance."
+              : ["hate u", "whatever", "wrong #"].includes(word)
+                ? "The conversation ends here."
+                : "It's complicated...",
+          );
+          setScreen("ending");
+        }
+      },
+      Math.max(300, Number(config.TYPING_SPEED) || 1200),
+    );
+  };
+  (0, ot.useEffect)(() => {
+    let active = true;
+    fetch("./game.config.json", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((value) => {
+        if (active && value) setConfig(_V(value));
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+  (0, ot.useEffect)(() => {
+    chatEnd.current?.scrollIntoView({ block: "end", behavior: "smooth" });
+  }, [messages]);
+  const button = {
+    border: 0,
+    fontFamily: "inherit",
+    fontWeight: 600,
+    cursor: "pointer",
+    touchAction: "manipulation",
+    WebkitTapHighlightColor: "transparent",
+  };
+  const title = config.TITLE || "Text Your Ex";
+  const css = `
     *{box-sizing:border-box}
     button:focus-visible{outline:3px solid rgba(0,122,255,.38);outline-offset:2px}
     button:active:not(:disabled){opacity:.72}
@@ -273,33 +367,409 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     .typing-dot:nth-child(2){animation-delay:.14s}.typing-dot:nth-child(3){animation-delay:.28s}
     @media (prefers-reduced-motion:reduce){.typing-dot{animation:none!important}}
   `;
-  const avatar=h("div",{style:{width:36,height:36,borderRadius:"50%",display:"grid",placeItems:"center",background:"linear-gradient(145deg,#b9bdc7,#7c8390)",color:"white",fontSize:16,fontWeight:700,boxShadow:"inset 0 0 0 1px #0001"}},"E");
-  return h("div",{style:{width:"100%",height:"100%",background:"#fff",fontFamily:'-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif',overflow:"hidden",color:"#111",boxSizing:"border-box",colorScheme:"light"}},
-    h("style",null,css),
-    screen==="intro"?h("div",{style:{height:"100%",display:"flex",flexDirection:"column",alignItems:"center",padding:"calc(40px + env(safe-area-inset-top, 0px)) 25px calc(40px + env(safe-area-inset-bottom, 0px))",background:"linear-gradient(155deg,#dbe8f7 0%,#f0e8ed 46%,#adbccf 100%)"}},
-      h("div",{style:{fontSize:14,fontWeight:600,letterSpacing:".01em",alignSelf:"stretch",textAlign:"center",color:"#202124"}},"9:41"),
-      h("div",{style:{marginTop:22,textAlign:"center",color:"#111"}},h("div",{style:{fontSize:64,fontWeight:300,letterSpacing:"-3px",lineHeight:1}},"9:41"),h("div",{style:{fontSize:16,marginTop:7}},"Monday, October 5")),
-      h("div",{style:{margin:"auto 0",width:"100%",maxWidth:360}},
-        h("div",{style:{padding:"13px 14px",borderRadius:22,background:"rgba(249,249,249,.88)",boxShadow:"0 12px 34px rgba(42,52,66,.18)",backdropFilter:"blur(22px)",WebkitBackdropFilter:"blur(22px)",border:"1px solid rgba(255,255,255,.72)"}},
-          h("div",{style:{display:"flex",alignItems:"center",gap:10}},
-            h("div",{style:{width:34,height:34,borderRadius:9,background:"#34c759",display:"grid",placeItems:"center",boxShadow:"inset 0 0 0 1px #0000000d"}},h("div",{style:{width:20,height:15,borderRadius:"50%",background:"white",position:"relative"}},h("div",{style:{position:"absolute",left:2,bottom:-3,width:7,height:7,background:"white",transform:"rotate(28deg)",borderRadius:"0 0 0 6px"}}))),
-            h("div",{style:{fontSize:13,fontWeight:650,flex:1}},"MESSAGES"),h("div",{style:{fontSize:13,color:"#6e6e73"}},"now")),
-          h("div",{style:{display:"flex",gap:10,marginTop:10,alignItems:"flex-start"}},avatar,h("div",{style:{minWidth:0}},h("div",{style:{fontSize:15,fontWeight:650}},"Your Ex"),h("div",{style:{fontSize:15,lineHeight:1.35,marginTop:2,color:"#2c2c2e"}},"We need to talk.")))),
-        h("button",{type:"button",onClick:start,"aria-label":config.BTN_START||"Open conversation",style:{...button,width:"100%",minHeight:50,marginTop:14,borderRadius:15,background:"#007aff",color:"#fff",fontSize:17,boxShadow:"0 8px 20px rgba(0,122,255,.24)"}},config.BTN_START||"Open Messages")),
-      h("div",{style:{fontSize:13,lineHeight:1.4,color:"#3a3a3c",textAlign:"center",maxWidth:280}},title," · Choose your words carefully")):
-    h("div",{style:{height:"100%",display:"flex",flexDirection:"column",paddingTop:"calc(40px + env(safe-area-inset-top, 0px))",paddingBottom:"calc(40px + env(safe-area-inset-bottom, 0px))",background:"#fff"}},
-      h("header",{style:{flex:"0 0 auto",minHeight:70,background:"rgba(249,249,249,.94)",display:"grid",gridTemplateColumns:"48px 1fr 48px",alignItems:"center",padding:"6px 25px 7px",borderBottom:"0.5px solid #c6c6c8",backdropFilter:"blur(18px)",WebkitBackdropFilter:"blur(18px)",zIndex:2}},
-        h("div",{"aria-hidden":"true",style:{width:44,height:44,display:"grid",placeItems:"center start"}},h("span",{style:{display:"block",width:12,height:12,borderLeft:"2px solid #007aff",borderBottom:"2px solid #007aff",transform:"rotate(45deg)",marginLeft:4}})),
-        h("div",{style:{display:"flex",flexDirection:"column",alignItems:"center",gap:3}},avatar,h("div",{style:{fontWeight:500,fontSize:12.5,lineHeight:1.1,display:"flex",alignItems:"center",gap:4}},"Your Ex",h("span",{"aria-hidden":"true",style:{display:"inline-block",width:5,height:5,borderTop:"1.5px solid #8e8e93",borderRight:"1.5px solid #8e8e93",transform:"rotate(45deg)"}}))),
-        h("div",{"aria-hidden":"true",style:{justifySelf:"end",width:29,height:29,borderRadius:"50%",border:"1.5px solid #007aff",position:"relative"}},h("div",{style:{position:"absolute",width:5,height:5,borderRadius:"50%",background:"#007aff",left:10.5,top:5}}),h("div",{style:{position:"absolute",width:11,height:7,borderRadius:"7px 7px 4px 4px",background:"#007aff",left:8,top:12}}))),
-      h("main",{className:"ios-scroll",style:{flex:1,minHeight:100,overflowY:"auto",padding:"14px 25px 18px",background:"#fff"}},
-        h("div",{style:{textAlign:"center",fontSize:11.5,color:"#8e8e93",fontWeight:500,margin:"0 0 16px"}},"iMessage · Today 9:41 AM"),
-        messages.map((m,i)=>h("div",{key:i,style:{display:"flex",justifyContent:m.from==="me"?"flex-end":"flex-start",margin:"0 0 7px"}},h("div",{style:{maxWidth:"78%",padding:"8px 12px 9px",borderRadius:18,borderBottomRightRadius:m.from==="me"?5:18,borderBottomLeftRadius:m.from==="me"?18:5,background:m.from==="me"?"#007aff":"#e9e9eb",color:m.from==="me"?"white":"#111",fontSize:16,lineHeight:1.28,letterSpacing:"-.01em",overflowWrap:"anywhere"}},m.text))),
-        pending&&h("div",{style:{display:"flex",justifyContent:"flex-start",marginTop:2}},h("div",{"aria-label":"Your Ex is typing",style:{height:34,minWidth:55,borderRadius:18,borderBottomLeftRadius:5,background:"#e9e9eb",display:"flex",alignItems:"center",justifyContent:"center",gap:4,padding:"0 12px"}},h("span",{className:"typing-dot"}),h("span",{className:"typing-dot"}),h("span",{className:"typing-dot"}))),h("div",{ref:chatEnd})),
-      screen==="chat"?h("section",{style:{flex:"0 0 auto",background:"#f2f2f7",borderTop:"0.5px solid #c6c6c8",padding:"9px 12px 10px"}},
-        h("div",{style:{height:40,border:"1px solid #c7c7cc",borderRadius:20,background:"#fff",display:"flex",alignItems:"center",padding:"0 5px 0 14px",margin:"0 0 9px",color:"#8e8e93",fontSize:15}},h("span",{style:{flex:1}},"Choose a reply…"),h("span",{"aria-hidden":"true",style:{width:30,height:30,borderRadius:"50%",display:"grid",placeItems:"center",background:"#d1d1d6",color:"white",fontSize:20,fontWeight:700,lineHeight:1}},"↑")),
-        h("div",{className:"ios-scroll",style:{maxHeight:"min(38vh, 284px)",overflowY:"auto",padding:"1px"}},h("div",{style:{display:"grid",gridTemplateColumns:"repeat(4,minmax(0,1fr))",gap:8}},words.map(word=>h("button",{key:word,type:"button",disabled:pending,onClick:()=>send(word),style:{...button,minHeight:44,padding:"5px 4px",borderRadius:12,background:"#fff",border:"1px solid #d1d1d6",color:"#007aff",fontSize:"clamp(10px,2.75vw,13px)",opacity:pending?.5:1,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",boxShadow:"0 1px 1px #00000008"}},word))))):
-      h("section",{style:{flex:"0 0 auto",padding:"14px 25px 0",background:"#f2f2f7",borderTop:"0.5px solid #c6c6c8",textAlign:"center"}},h("div",{style:{maxWidth:360,margin:"0 auto",padding:"17px 16px",borderRadius:18,background:"#fff",boxShadow:"0 5px 18px #00000012"}},h("div",{style:{fontSize:17,fontWeight:650,lineHeight:1.3,marginBottom:13}},ending),h("button",{type:"button",onClick:start,style:{...button,minHeight:48,width:"100%",borderRadius:12,background:"#007aff",color:"#fff",fontSize:17}},config.BTN_RESTART||"Play Again")))
-    )
+  const avatar = h(
+    "div",
+    {
+      style: {
+        width: 36,
+        height: 36,
+        borderRadius: "50%",
+        display: "grid",
+        placeItems: "center",
+        background: "linear-gradient(145deg,#b9bdc7,#7c8390)",
+        color: "white",
+        fontSize: 16,
+        fontWeight: 700,
+        boxShadow: "inset 0 0 0 1px #0001",
+      },
+    },
+    "E",
   );
-};;(0,Nb.createRoot)(document.getElementById("root")).render((0,se.jsx)(vV,{}));})();
+  return h(
+    "div",
+    {
+      style: {
+        width: "100%",
+        height: "100%",
+        background: "#fff",
+        fontFamily:
+          '-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif',
+        overflow: "hidden",
+        color: "#111",
+        boxSizing: "border-box",
+        colorScheme: "light",
+      },
+    },
+    h("style", null, css),
+    h(
+          "div",
+          {
+            style: {
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              paddingTop: "calc(40px + env(safe-area-inset-top, 0px))",
+              paddingBottom: "calc(40px + env(safe-area-inset-bottom, 0px))",
+              background: "#fff",
+            },
+          },
+          h(
+            "header",
+            {
+              style: {
+                flex: "0 0 auto",
+                minHeight: 70,
+                background: "rgba(249,249,249,.94)",
+                display: "grid",
+                gridTemplateColumns: "48px 1fr 48px",
+                alignItems: "center",
+                padding: "6px 25px 7px",
+                borderBottom: "0.5px solid #c6c6c8",
+                backdropFilter: "blur(18px)",
+                WebkitBackdropFilter: "blur(18px)",
+                zIndex: 2,
+              },
+            },
+            h(
+              "div",
+              {
+                "aria-hidden": "true",
+                style: {
+                  width: 44,
+                  height: 44,
+                  display: "grid",
+                  placeItems: "center start",
+                },
+              },
+              h("span", {
+                style: {
+                  display: "block",
+                  width: 12,
+                  height: 12,
+                  borderLeft: "2px solid #007aff",
+                  borderBottom: "2px solid #007aff",
+                  transform: "rotate(45deg)",
+                  marginLeft: 4,
+                },
+              }),
+            ),
+            h(
+              "div",
+              {
+                style: {
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 3,
+                },
+              },
+              avatar,
+              h(
+                "div",
+                {
+                  style: {
+                    fontWeight: 500,
+                    fontSize: 12.5,
+                    lineHeight: 1.1,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 4,
+                  },
+                },
+                "Your Ex",
+                h("span", {
+                  "aria-hidden": "true",
+                  style: {
+                    display: "inline-block",
+                    width: 5,
+                    height: 5,
+                    borderTop: "1.5px solid #8e8e93",
+                    borderRight: "1.5px solid #8e8e93",
+                    transform: "rotate(45deg)",
+                  },
+                }),
+              ),
+            ),
+            h(
+              "div",
+              {
+                "aria-hidden": "true",
+                style: {
+                  justifySelf: "end",
+                  width: 29,
+                  height: 29,
+                  borderRadius: "50%",
+                  border: "1.5px solid #007aff",
+                  position: "relative",
+                },
+              },
+              h("div", {
+                style: {
+                  position: "absolute",
+                  width: 5,
+                  height: 5,
+                  borderRadius: "50%",
+                  background: "#007aff",
+                  left: 10.5,
+                  top: 5,
+                },
+              }),
+              h("div", {
+                style: {
+                  position: "absolute",
+                  width: 11,
+                  height: 7,
+                  borderRadius: "7px 7px 4px 4px",
+                  background: "#007aff",
+                  left: 8,
+                  top: 12,
+                },
+              }),
+            ),
+          ),
+          h(
+            "main",
+            {
+              className: "ios-scroll",
+              style: {
+                flex: 1,
+                minHeight: 100,
+                overflowY: "auto",
+                padding: "14px 25px 18px",
+                background: "#fff",
+              },
+            },
+            h(
+              "div",
+              {
+                style: {
+                  textAlign: "center",
+                  fontSize: 11.5,
+                  color: "#8e8e93",
+                  fontWeight: 500,
+                  margin: "0 0 16px",
+                },
+              },
+              "iMessage · Today 9:41 AM",
+            ),
+            messages.map((m, i) =>
+              h(
+                "div",
+                {
+                  key: i,
+                  style: {
+                    display: "flex",
+                    justifyContent: m.from === "me" ? "flex-end" : "flex-start",
+                    margin: "0 0 7px",
+                  },
+                },
+                h(
+                  "div",
+                  {
+                    style: {
+                      maxWidth: "78%",
+                      padding: "8px 12px 9px",
+                      borderRadius: 18,
+                      borderBottomRightRadius: m.from === "me" ? 5 : 18,
+                      borderBottomLeftRadius: m.from === "me" ? 18 : 5,
+                      background: m.from === "me" ? "#007aff" : "#e9e9eb",
+                      color: m.from === "me" ? "white" : "#111",
+                      fontSize: 16,
+                      lineHeight: 1.28,
+                      letterSpacing: "-.01em",
+                      overflowWrap: "anywhere",
+                    },
+                  },
+                  m.text,
+                ),
+              ),
+            ),
+            pending &&
+              h(
+                "div",
+                {
+                  style: {
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    marginTop: 2,
+                  },
+                },
+                h(
+                  "div",
+                  {
+                    "aria-label": "Your Ex is typing",
+                    style: {
+                      height: 34,
+                      minWidth: 55,
+                      borderRadius: 18,
+                      borderBottomLeftRadius: 5,
+                      background: "#e9e9eb",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 4,
+                      padding: "0 12px",
+                    },
+                  },
+                  h("span", { className: "typing-dot" }),
+                  h("span", { className: "typing-dot" }),
+                  h("span", { className: "typing-dot" }),
+                ),
+              ),
+            h("div", { ref: chatEnd }),
+          ),
+          screen === "chat"
+            ? h(
+                "section",
+                {
+                  style: {
+                    flex: "0 0 auto",
+                    background: "#f2f2f7",
+                    borderTop: "0.5px solid #c6c6c8",
+                    padding: "9px 12px 10px",
+                  },
+                },
+                h(
+                  "div",
+                  {
+                    style: {
+                      height: 40,
+                      border: "1px solid #c7c7cc",
+                      borderRadius: 20,
+                      background: "#fff",
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "0 5px 0 14px",
+                      margin: "0 0 9px",
+                      color: "#8e8e93",
+                      fontSize: 15,
+                    },
+                  },
+                  h("span", { style: { flex: 1 } }, "Choose a reply…"),
+                  h(
+                    "span",
+                    {
+                      "aria-hidden": "true",
+                      style: {
+                        width: 30,
+                        height: 30,
+                        borderRadius: "50%",
+                        display: "grid",
+                        placeItems: "center",
+                        background: "#d1d1d6",
+                        color: "white",
+                        fontSize: 20,
+                        fontWeight: 700,
+                        lineHeight: 1,
+                      },
+                    },
+                    "↑",
+                  ),
+                ),
+                h(
+                  "div",
+                  {
+                    className: "ios-scroll",
+                    style: {
+                      maxHeight: "min(38vh, 284px)",
+                      overflowY: "auto",
+                      padding: "1px",
+                    },
+                  },
+                  h(
+                    "div",
+                    {
+                      style: {
+                        display: "grid",
+                        gridTemplateColumns: "repeat(4,minmax(0,1fr))",
+                        gap: 8,
+                      },
+                    },
+                    words.map((word) =>
+                      h(
+                        "button",
+                        {
+                          key: word,
+                          type: "button",
+                          disabled: pending,
+                          onClick: () => send(word),
+                          style: {
+                            ...button,
+                            minHeight: 44,
+                            padding: "5px 4px",
+                            borderRadius: 12,
+                            background: "#fff",
+                            border: "1px solid #d1d1d6",
+                            color: "#007aff",
+                            fontSize: "clamp(10px,2.75vw,13px)",
+                            opacity: pending ? 0.5 : 1,
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            boxShadow: "0 1px 1px #00000008",
+                          },
+                        },
+                        word,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : h(
+                "section",
+                {
+                  style: {
+                    flex: "0 0 auto",
+                    padding: "14px 25px 0",
+                    background: "#f2f2f7",
+                    borderTop: "0.5px solid #c6c6c8",
+                    textAlign: "center",
+                  },
+                },
+                h(
+                  "div",
+                  {
+                    style: {
+                      maxWidth: 360,
+                      margin: "0 auto",
+                      padding: "17px 16px",
+                      borderRadius: 18,
+                      background: "#fff",
+                      boxShadow: "0 5px 18px #00000012",
+                    },
+                  },
+                  h(
+                    "div",
+                    {
+                      style: {
+                        fontSize: 17,
+                        fontWeight: 650,
+                        lineHeight: 1.3,
+                        marginBottom: 13,
+                      },
+                    },
+                    ending,
+                  ),
+                  h(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: start,
+                      style: {
+                        ...button,
+                        minHeight: 48,
+                        width: "100%",
+                        borderRadius: 12,
+                        background: "#007aff",
+                        color: "#fff",
+                        fontSize: 17,
+                      },
+                    },
+                    config.BTN_RESTART || "Play Again",
+                  ),
+                ),
+              ),
+        ),
+  );
+}
+;;(0,Nb.createRoot)(document.getElementById("root")).render((0,se.jsx)(vV,{}));})();

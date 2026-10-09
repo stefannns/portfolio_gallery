@@ -213,4 +213,372 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 			return val;
 		}
 	}
-`;Kl(Rv,RT);var Bee=[1557/44100,1617/44100,1491/44100,1422/44100,1277/44100,1356/44100,1188/44100,1116/44100];var Zee=[1687/25e3,1601/25e3,2053/25e3,2251/25e3];var Cs=class t extends V{constructor(){let e=k(t.getDefaults(),arguments,["solo"]);super(e),this.name="Solo",this.input=this.output=new Q({context:this.context}),t._allSolos.has(this.context)||t._allSolos.set(this.context,new Set),t._allSolos.get(this.context).add(this),this.solo=e.solo}static getDefaults(){return Object.assign(V.getDefaults(),{solo:!1})}get solo(){return this._isSoloed()}set solo(e){e?this._addSolo():this._removeSolo(),t._allSolos.get(this.context).forEach(r=>r._updateSolo())}get muted(){return this.input.gain.value===0}_addSolo(){t._soloed.has(this.context)||t._soloed.set(this.context,new Set),t._soloed.get(this.context).add(this)}_removeSolo(){t._soloed.has(this.context)&&t._soloed.get(this.context).delete(this)}_isSoloed(){return t._soloed.has(this.context)&&t._soloed.get(this.context).has(this)}_noSolos(){return!t._soloed.has(this.context)||t._soloed.has(this.context)&&t._soloed.get(this.context).size===0}_updateSolo(){this._isSoloed()?this.input.gain.value=1:this._noSolos()?this.input.gain.value=1:this.input.gain.value=0}dispose(){return super.dispose(),t._allSolos.get(this.context).delete(this),this._removeSolo(),this}};Cs._allSolos=new Map;Cs._soloed=new Map;var ou=class t extends V{constructor(){let e=k(t.getDefaults(),arguments,["pan","volume"]);super(e),this.name="PanVol",this._panner=this.input=new Hi({context:this.context,pan:e.pan,channelCount:e.channelCount}),this.pan=this._panner.pan,this._volume=this.output=new lr({context:this.context,volume:e.volume}),this.volume=this._volume.volume,this._panner.connect(this._volume),this.mute=e.mute,q(this,["pan","volume"])}static getDefaults(){return Object.assign(V.getDefaults(),{mute:!1,pan:0,volume:0,channelCount:1})}get mute(){return this._volume.mute}set mute(e){this._volume.mute=e}dispose(){return super.dispose(),this._panner.dispose(),this.pan.dispose(),this._volume.dispose(),this.volume.dispose(),this}};var yh=class t extends V{constructor(){let e=k(t.getDefaults(),arguments,["volume","pan"]);super(e),this.name="Channel",this._solo=this.input=new Cs({solo:e.solo,context:this.context}),this._panVol=this.output=new ou({context:this.context,pan:e.pan,volume:e.volume,mute:e.mute,channelCount:e.channelCount}),this.pan=this._panVol.pan,this.volume=this._panVol.volume,this._solo.connect(this._panVol),q(this,["pan","volume"])}static getDefaults(){return Object.assign(V.getDefaults(),{pan:0,volume:0,mute:!1,solo:!1,channelCount:1})}get solo(){return this._solo.solo}set solo(e){this._solo.solo=e}get muted(){return this._solo.muted||this.mute}get mute(){return this._panVol.mute}set mute(e){this._panVol.mute=e}_getBus(e){return t.buses.has(e)||t.buses.set(e,new Q({context:this.context})),t.buses.get(e)}send(e,r=0){let n=this._getBus(e),o=new Q({context:this.context,units:"decibels",gain:r});return this.connect(o),o.connect(n),o}receive(e){return this._getBus(e).connect(this),this}dispose(){return super.dispose(),this._panVol.dispose(),this.pan.dispose(),this.volume.dispose(),this._solo.dispose(),this}};yh.buses=new Map;function Fv(){return De().now()}var Ise=De().transport;var Pse=De().destination,Vse=De().destination;var Lse=De().listener;var qse=De().draw;var jse=De();var we=mo(vh());function QT(){let t=typeof window<"u"&&typeof window.tt<"u"&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,Ue.useState)(!1);(0,Ue.useEffect)(()=>{let o=()=>r(!1),s=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",s),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",s),window.removeEventListener("pageshow",o)}},[]);let n=(0,Ue.useCallback)(()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))},[e,t]);return{canSubmit:t,submitting:e,submitRecording:n}}var It={ready:!1,synths:{}},Lv=async()=>{if(!It.ready)try{await uh(),It.synths.tick=new As({pitchDecay:.01,octaves:1}).toDestination(),It.synths.tick.volume.value=-15,It.synths.shoot=new ur({envelope:{attack:.01,decay:.2,sustain:0}}).toDestination(),It.synths.success=new Jl(ur).toDestination(),It.synths.success.volume.value=-5,It.synths.fail=new ur({oscillator:{type:"sawtooth"}}).toDestination(),It.synths.fail.volume.value=-10,It.ready=!0}catch(t){console.warn("Audio start failed",t)}},$i=t=>{if(!It.ready)return;let e=Fv();t==="tick"&&It.synths.tick.triggerAttackRelease("C2","32n",e),t==="shoot"&&It.synths.shoot.triggerAttackRelease("C5","16n",e),t==="success"&&It.synths.success.triggerAttackRelease(["E4","G4","C5"],"8n",e),t==="fail"&&It.synths.fail.triggerAttackRelease("C3","8n",e)};function HT(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var $T=()=>{let[t,e]=(0,Ue.useState)(null),[r,n]=(0,Ue.useState)("playing"),[o,s]=(0,Ue.useState)(null),{canSubmit:i,submitting:a,submitRecording:l}=QT(),u=(0,Ue.useRef)({battery:25,plugState:"swing",angle:0,cableY:0,plugTimer:0,drainMultiplier:1,lastTime:0,maxReach:200}),c=(0,Ue.useRef)(null),p=(0,Ue.useRef)(null),h=(0,Ue.useRef)(null),m=(0,Ue.useRef)(null),d=(0,Ue.useRef)(null),x=(0,Ue.useRef)(null);(0,Ue.useEffect)(()=>{let _=!0;return(async()=>{let v={tweaks:[],texts:[],images:[]};try{let y=await fetch("./game.config.json",{cache:"no-store"});y.ok&&(v=await y.json())}catch{}if(_){let y=HT(v);e(y),u.current.battery=y.BATTERY_START||25}})(),()=>{_=!1}},[]);let w=(0,Ue.useCallback)(_=>{if(!t||r!=="playing")return;let v=u.current;v.lastTime||(v.lastTime=_);let y=Math.min(_-v.lastTime,50);if(v.lastTime=_,v.battery-=t.DRAIN_BASE*v.drainMultiplier*y/1e3,v.battery<=0){v.battery=0,s("died"),n("over"),$i("fail");return}if(v.battery>=100){v.battery=100,s("full"),n("over"),$i("success");return}v.plugState==="swing"?(v.angle=Math.sin(_*t.SWING_SPEED)*t.MAX_ANGLE,v.cableY=0):v.plugState==="plugging"?(v.cableY+=y*1.5,v.cableY>=v.maxReach&&(Math.abs(v.angle)<=t.TOLERANCE_ANGLE?(v.plugState="plugged",v.angle=0,v.cableY=v.maxReach,v.battery=Math.min(100,v.battery+t.CHARGE_AMOUNT),v.battery>=100&&(s("full"),n("over")),$i("success")):(v.plugState="plugged_fail",v.drainMultiplier=t.DRAIN_PENALTY,$i("fail")),v.plugTimer=0)):v.plugState==="plugged"||v.plugState==="plugged_fail"?(v.plugTimer+=y,v.plugTimer>800&&(v.plugState="returning",v.drainMultiplier=1)):v.plugState==="returning"&&(v.cableY-=y*1.5,v.cableY<=0&&(v.cableY=0,v.plugState="swing")),p.current&&h.current&&(p.current.style.transform=`translateX(-50%) rotate(${v.angle}deg)`,h.current.style.transform=`translateY(${-v.cableY}px)`),m.current&&(m.current.innerText=Math.floor(v.battery)+"%",m.current.style.color=v.battery>50?"var(--color-green)":v.battery>20?"var(--color-yellow)":"var(--color-red)"),d.current&&(v.plugState==="plugged"?(d.current.innerText=t.TXT_CHARGING,d.current.style.color="var(--color-green)"):v.plugState==="plugged_fail"?(d.current.innerText=t.TXT_TIMEOUT,d.current.style.color="var(--color-red)"):v.battery<=20?(d.current.innerText=t.TXT_LOW,d.current.style.color="var(--color-red)"):(d.current.innerText=t.TXT_RECHARGE,d.current.style.color="var(--color-gray)")),x.current=requestAnimationFrame(w)},[t,r]);(0,Ue.useEffect)(()=>(x.current=requestAnimationFrame(w),()=>cancelAnimationFrame(x.current)),[w]);let f=()=>{if(r!=="playing")return;let _=u.current;if(_.plugState!=="swing")return;_.plugState="plugging";if(c.current){let v=c.current.getBoundingClientRect(),y=p.current?.querySelector(`img[alt="cable"]`)?.getBoundingClientRect();_.maxReach=Math.max(24,(y?y.top:window.innerHeight-40)-v.bottom+14)}Lv().then(()=>$i("shoot"))},g=async()=>{await Lv(),u.current.battery=t.BATTERY_START,u.current.plugState="swing",u.current.drainMultiplier=1,u.current.lastTime=performance.now(),n("playing")};return t?(0,we.jsxs)(we.Fragment,{children:[(0,we.jsx)("style",{}),(0,we.jsxs)("div",{style:{width:"100%",height:"100%",position:"relative",display:"flex",flexDirection:"column",alignItems:"center",touchAction:"none"},onPointerDown:f,children:[(0,we.jsxs)("div",{style:{position:"absolute",top:"calc(30px + env(safe-area-inset-top, 0px))",width:"52%",maxWidth:"230px",aspectRatio:"0.48",border:"6px solid var(--phone-border)",borderRadius:"32px",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"linear-gradient(180deg,rgba(30,41,59,.92),rgba(2,6,23,.96))",boxShadow:"0 18px 50px rgba(0,0,0,.42),inset 0 0 0 1px rgba(255,255,255,.08)",zIndex:5,pointerEvents:"none"},children:[(0,we.jsxs)("div",{ref:m,style:{fontFamily:"var(--font-display)",fontSize:"clamp(60px, 18cqi, 90px)",color:"var(--color-red)",letterSpacing:"2px",textShadow:"0 0 10px rgba(0,0,0,0.5)"},children:[Math.floor(u.current.battery),"%"]}),(0,we.jsx)("div",{ref:d,style:{width:"100%",padding:"0 10px",boxSizing:"border-box",textAlign:"center",whiteSpace:"normal",overflowWrap:"normal",fontFamily:"var(--font-body)",fontSize:"clamp(13px, 4vw, 17px)",lineHeight:1.15,fontWeight:"bold",color:"var(--color-red)",marginTop:"8px",letterSpacing:"1px",textTransform:"uppercase"},children:t.TXT_LOW}),(0,we.jsx)("div",{ref:c,style:{position:"absolute",bottom:"-6px",width:"40px",height:"6px",background:"var(--bg-color)",borderRadius:"4px"}})]}),(0,we.jsx)("div",{ref:p,style:{position:"absolute",bottom:0,left:"50%",width:"16px",height:"100vh",transformOrigin:"bottom center",transform:"translateX(-50%)",pointerEvents:"none",zIndex:6},children:(0,we.jsxs)("div",{ref:h,style:{width:"100%",height:"100%",position:"relative"},children:[(0,we.jsx)("div",{style:{position:"absolute",top:"40px",width:"100%",height:"100%",background:"#e5e7eb",borderRadius:"8px"}}),(0,we.jsx)("img",{src:t.CABLE_HEAD,alt:"cable",style:{position:"absolute",top:0,left:"50%",transform:"translateX(-50%)",width:"32px",height:"45px",objectFit:"contain"}})]})}),r==="over"&&(0,we.jsxs)("div",{style:{position:"absolute",inset:0,background:"rgba(0,0,0,0.85)",zIndex:20,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"},children:[(0,we.jsx)("h1",{style:{fontFamily:"var(--font-display)",fontSize:"48px",color:o==="full"?"var(--color-green)":"var(--color-red)",marginBottom:"40px"},children:o==="full"?t.TXT_FULL:t.TXT_DIED}),(0,we.jsxs)("div",{style:{display:"flex",gap:"16px",flexWrap:"wrap",justifyContent:"center"},children:[(0,we.jsx)("button",{onClick:g,style:{padding:"16px 32px",fontFamily:"var(--font-display)",fontSize:"24px",background:"white",color:"black",border:"none",borderRadius:"12px",cursor:"pointer",boxShadow:"0 4px 12px rgba(255,255,255,0.2)"},children:t.BTN_PLAY_AGAIN}),i&&(0,we.jsx)("button",{type:"button",disabled:a,onClick:l,style:{padding:"16px 32px",fontFamily:"var(--font-display)",fontSize:"24px",background:"var(--color-red)",color:"white",border:"none",borderRadius:"12px",cursor:"pointer",opacity:a?.55:1,boxShadow:"0 4px 12px rgba(248,113,113,0.3)"},children:"Post My Play"})]})]})]})]}):(0,we.jsx)("div",{style:{width:"100%",height:"100%",background:"var(--bg-color)"}})};(0,qv.createRoot)(document.getElementById("root")).render((0,we.jsx)($T,{}));})();
+`;Kl(Rv,RT);var Bee=[1557/44100,1617/44100,1491/44100,1422/44100,1277/44100,1356/44100,1188/44100,1116/44100];var Zee=[1687/25e3,1601/25e3,2053/25e3,2251/25e3];var Cs=class t extends V{constructor(){let e=k(t.getDefaults(),arguments,["solo"]);super(e),this.name="Solo",this.input=this.output=new Q({context:this.context}),t._allSolos.has(this.context)||t._allSolos.set(this.context,new Set),t._allSolos.get(this.context).add(this),this.solo=e.solo}static getDefaults(){return Object.assign(V.getDefaults(),{solo:!1})}get solo(){return this._isSoloed()}set solo(e){e?this._addSolo():this._removeSolo(),t._allSolos.get(this.context).forEach(r=>r._updateSolo())}get muted(){return this.input.gain.value===0}_addSolo(){t._soloed.has(this.context)||t._soloed.set(this.context,new Set),t._soloed.get(this.context).add(this)}_removeSolo(){t._soloed.has(this.context)&&t._soloed.get(this.context).delete(this)}_isSoloed(){return t._soloed.has(this.context)&&t._soloed.get(this.context).has(this)}_noSolos(){return!t._soloed.has(this.context)||t._soloed.has(this.context)&&t._soloed.get(this.context).size===0}_updateSolo(){this._isSoloed()?this.input.gain.value=1:this._noSolos()?this.input.gain.value=1:this.input.gain.value=0}dispose(){return super.dispose(),t._allSolos.get(this.context).delete(this),this._removeSolo(),this}};Cs._allSolos=new Map;Cs._soloed=new Map;var ou=class t extends V{constructor(){let e=k(t.getDefaults(),arguments,["pan","volume"]);super(e),this.name="PanVol",this._panner=this.input=new Hi({context:this.context,pan:e.pan,channelCount:e.channelCount}),this.pan=this._panner.pan,this._volume=this.output=new lr({context:this.context,volume:e.volume}),this.volume=this._volume.volume,this._panner.connect(this._volume),this.mute=e.mute,q(this,["pan","volume"])}static getDefaults(){return Object.assign(V.getDefaults(),{mute:!1,pan:0,volume:0,channelCount:1})}get mute(){return this._volume.mute}set mute(e){this._volume.mute=e}dispose(){return super.dispose(),this._panner.dispose(),this.pan.dispose(),this._volume.dispose(),this.volume.dispose(),this}};var yh=class t extends V{constructor(){let e=k(t.getDefaults(),arguments,["volume","pan"]);super(e),this.name="Channel",this._solo=this.input=new Cs({solo:e.solo,context:this.context}),this._panVol=this.output=new ou({context:this.context,pan:e.pan,volume:e.volume,mute:e.mute,channelCount:e.channelCount}),this.pan=this._panVol.pan,this.volume=this._panVol.volume,this._solo.connect(this._panVol),q(this,["pan","volume"])}static getDefaults(){return Object.assign(V.getDefaults(),{pan:0,volume:0,mute:!1,solo:!1,channelCount:1})}get solo(){return this._solo.solo}set solo(e){this._solo.solo=e}get muted(){return this._solo.muted||this.mute}get mute(){return this._panVol.mute}set mute(e){this._panVol.mute=e}_getBus(e){return t.buses.has(e)||t.buses.set(e,new Q({context:this.context})),t.buses.get(e)}send(e,r=0){let n=this._getBus(e),o=new Q({context:this.context,units:"decibels",gain:r});return this.connect(o),o.connect(n),o}receive(e){return this._getBus(e).connect(this),this}dispose(){return super.dispose(),this._panVol.dispose(),this.pan.dispose(),this.volume.dispose(),this._solo.dispose(),this}};yh.buses=new Map;function Fv(){return De().now()}var Ise=De().transport;var Pse=De().destination,Vse=De().destination;var Lse=De().listener;var qse=De().draw;var jse=De();var we=mo(vh());function QT(){let t=typeof window<"u"&&typeof window.tt<"u"&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,Ue.useState)(!1);(0,Ue.useEffect)(()=>{let o=()=>r(!1),s=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",s),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",s),window.removeEventListener("pageshow",o)}},[]);let n=(0,Ue.useCallback)(()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))},[e,t]);return{canSubmit:t,submitting:e,submitRecording:n}}var It={ready:!1,synths:{}},Lv=async()=>{if(!It.ready)try{await uh(),It.synths.tick=new As({pitchDecay:.01,octaves:1}).toDestination(),It.synths.tick.volume.value=-15,It.synths.shoot=new ur({envelope:{attack:.01,decay:.2,sustain:0}}).toDestination(),It.synths.success=new Jl(ur).toDestination(),It.synths.success.volume.value=-5,It.synths.fail=new ur({oscillator:{type:"sawtooth"}}).toDestination(),It.synths.fail.volume.value=-10,It.ready=!0}catch(t){console.warn("Audio start failed",t)}},$i=t=>{if(!It.ready)return;let e=Fv();t==="tick"&&It.synths.tick.triggerAttackRelease("C2","32n",e),t==="shoot"&&It.synths.shoot.triggerAttackRelease("C5","16n",e),t==="success"&&It.synths.success.triggerAttackRelease(["E4","G4","C5"],"8n",e),t==="fail"&&It.synths.fail.triggerAttackRelease("C3","8n",e)};function HT(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var $T=
+() => {
+  let [t, e] = (0, Ue.useState)(null),
+    [r, n] = (0, Ue.useState)("playing"),
+    [o, s] = (0, Ue.useState)(null),
+    { canSubmit: i, submitting: a, submitRecording: l } = QT(),
+    u = (0, Ue.useRef)({
+      battery: 25,
+      plugState: "swing",
+      angle: 0,
+      cableY: 0,
+      plugTimer: 0,
+      drainMultiplier: 1,
+      lastTime: 0,
+      maxReach: 200,
+    }),
+    c = (0, Ue.useRef)(null),
+    p = (0, Ue.useRef)(null),
+    h = (0, Ue.useRef)(null),
+    m = (0, Ue.useRef)(null),
+    d = (0, Ue.useRef)(null),
+    x = (0, Ue.useRef)(null);
+  const [feedStarted,setFeedStarted]=(0,Ue.useState)(false); const feedGate=(0,Ue.useRef)(false);
+
+  (0, Ue.useEffect)(() => {
+    let _ = !0;
+    return (
+      (async () => {
+        let v = { tweaks: [], texts: [], images: [] };
+        try {
+          let y = await fetch("./game.config.json", { cache: "no-store" });
+          y.ok && (v = await y.json());
+        } catch {}
+        if (_) {
+          let y = HT(v);
+          (e(y), (u.current.battery = y.BATTERY_START || 25));
+        }
+      })(),
+      () => {
+        _ = !1;
+      }
+    );
+  }, []);
+  let w = (0, Ue.useCallback)(
+    (_) => {
+      if (!t || r !== "playing") return;
+      let v = u.current;
+      v.lastTime || (v.lastTime = _);
+      let y = Math.min(_ - v.lastTime, 50);
+      if (
+        ((v.lastTime = _),
+        (feedGate.current && (v.battery -= (t.DRAIN_BASE * v.drainMultiplier * y) / 1e3)),
+        v.battery <= 0)
+      ) {
+        ((v.battery = 0), s("died"), n("over"), $i("fail"));
+        return;
+      }
+      if (v.battery >= 100) {
+        ((v.battery = 100), s("full"), n("over"), $i("success"));
+        return;
+      }
+      (v.plugState === "swing"
+        ? ((v.angle = Math.sin(_ * t.SWING_SPEED) * t.MAX_ANGLE),
+          (v.cableY = 0))
+        : v.plugState === "plugging"
+          ? ((v.cableY += y * 1.5),
+            v.cableY >= v.maxReach &&
+              (Math.abs(v.angle) <= t.TOLERANCE_ANGLE
+                ? ((v.plugState = "plugged"),
+                  (v.angle = 0),
+                  (v.cableY = v.maxReach),
+                  (v.battery = Math.min(100, v.battery + t.CHARGE_AMOUNT)),
+                  v.battery >= 100 && (s("full"), n("over")),
+                  $i("success"))
+                : ((v.plugState = "plugged_fail"),
+                  (v.drainMultiplier = t.DRAIN_PENALTY),
+                  $i("fail")),
+              (v.plugTimer = 0)))
+          : v.plugState === "plugged" || v.plugState === "plugged_fail"
+            ? ((v.plugTimer += y),
+              v.plugTimer > 800 &&
+                ((v.plugState = "returning"), (v.drainMultiplier = 1)))
+            : v.plugState === "returning" &&
+              ((v.cableY -= y * 1.5),
+              v.cableY <= 0 && ((v.cableY = 0), (v.plugState = "swing"))),
+        p.current &&
+          h.current &&
+          ((p.current.style.transform = `translateX(-50%) rotate(${v.angle}deg)`),
+          (h.current.style.transform = `translateY(${-v.cableY}px)`)),
+        m.current &&
+          ((m.current.innerText = Math.floor(v.battery) + "%"),
+          (m.current.style.color =
+            v.battery > 50
+              ? "var(--color-green)"
+              : v.battery > 20
+                ? "var(--color-yellow)"
+                : "var(--color-red)")),
+        d.current &&
+          (v.plugState === "plugged"
+            ? ((d.current.innerText = t.TXT_CHARGING),
+              (d.current.style.color = "var(--color-green)"))
+            : v.plugState === "plugged_fail"
+              ? ((d.current.innerText = t.TXT_TIMEOUT),
+                (d.current.style.color = "var(--color-red)"))
+              : v.battery <= 20
+                ? ((d.current.innerText = t.TXT_LOW),
+                  (d.current.style.color = "var(--color-red)"))
+                : ((d.current.innerText = t.TXT_RECHARGE),
+                  (d.current.style.color = "var(--color-gray)"))),
+        (x.current = requestAnimationFrame(w)));
+    },
+    [t, r],
+  );
+  (0, Ue.useEffect)(
+    () => (
+      (x.current = requestAnimationFrame(w)),
+      () => cancelAnimationFrame(x.current)
+    ),
+    [w],
+  );
+  let f = () => {
+      if (r !== "playing") return;
+      let _ = u.current;
+      if (_.plugState !== "swing") return;
+      feedGate.current=true;setFeedStarted(true);
+      _.plugState = "plugging";
+      if (c.current) {
+        let v = c.current.getBoundingClientRect(),
+          y = p.current
+            ?.querySelector(`img[alt="cable"]`)
+            ?.getBoundingClientRect();
+        _.maxReach = Math.max(
+          24,
+          (y ? y.top : window.innerHeight - 40) - v.bottom + 14,
+        );
+      }
+      Lv().then(() => $i("shoot")).catch(() => {});
+    },
+    g = () => {
+      feedGate.current=false;setFeedStarted(false);
+      ((u.current.battery = t.BATTERY_START),
+        (u.current.plugState = "swing"),
+        (u.current.cableY = 0),
+        (u.current.plugTimer = 0),
+        (u.current.drainMultiplier = 1),
+        (u.current.lastTime = performance.now()),
+        n("playing"));
+    };
+  return t
+    ? (0, we.jsxs)(we.Fragment, {
+        children: [
+          (0, we.jsx)("style", {}),
+          (0, we.jsxs)("div", {
+            style: {
+              width: "100%",
+              height: "100%",
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              touchAction: "none",
+            },
+            onPointerDown: event=>{if(event.isPrimary!==false && !(event.button>0))f();},
+            children: [
+              r === "playing" && !feedStarted && (0, we.jsx)("p", {className:"feed-first-action",style:{position:"absolute",top:"56%",left:30,right:30,zIndex:12,margin:0,fontSize:18,lineHeight:1.35,textAlign:"center",pointerEvents:"none",color:"#d1e8e9"},children:"Tap to plug in and start"}),
+              (0, we.jsxs)("div", {
+                style: {
+                  position: "absolute",
+                  top: "calc(30px + env(safe-area-inset-top, 0px))",
+                  width: "52%",
+                  maxWidth: "230px",
+                  aspectRatio: "0.48",
+                  border: "6px solid var(--phone-border)",
+                  borderRadius: "32px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background:
+                    "linear-gradient(180deg,rgba(30,41,59,.92),rgba(2,6,23,.96))",
+                  boxShadow:
+                    "0 18px 50px rgba(0,0,0,.42),inset 0 0 0 1px rgba(255,255,255,.08)",
+                  zIndex: 5,
+                  pointerEvents: "none",
+                },
+                children: [
+                  (0, we.jsxs)("div", {
+                    ref: m,
+                    style: {
+                      fontFamily: "var(--font-display)",
+                      fontSize: "clamp(52px, 16cqi, 76px)",
+                      fontWeight: 700,
+                      fontVariantNumeric: "tabular-nums",
+                      lineHeight: 1.1,
+                      color: "var(--color-red)",
+                      letterSpacing: "0px",
+                      textShadow: "0 0 10px rgba(0,0,0,0.5)",
+                    },
+                    children: [Math.floor(u.current.battery), "%"],
+                  }),
+                  (0, we.jsx)("div", {
+                    ref: d,
+                    style: {
+                      width: "100%",
+                      padding: "0 10px",
+                      boxSizing: "border-box",
+                      textAlign: "center",
+                      whiteSpace: "normal",
+                      overflowWrap: "normal",
+                      fontFamily: "var(--font-body)",
+                      fontSize: "clamp(14px, 4.3cqi, 18px)",
+                      lineHeight: 1.35,
+                      fontWeight: "bold",
+                      color: "var(--color-red)",
+                      marginTop: "8px",
+                      letterSpacing: "0px",
+                      textTransform: "uppercase",
+                    },
+                    children: t.TXT_LOW,
+                  }),
+                  (0, we.jsx)("div", {
+                    ref: c,
+                    style: {
+                      position: "absolute",
+                      bottom: "-6px",
+                      width: "40px",
+                      height: "6px",
+                      background: "var(--bg-color)",
+                      borderRadius: "4px",
+                    },
+                  }),
+                ],
+              }),
+              (0, we.jsx)("div", {
+                ref: p,
+                style: {
+                  position: "absolute",
+                  bottom: 0,
+                  left: "50%",
+                  width: "16px",
+                  height: "100vh",
+                  transformOrigin: "bottom center",
+                  transform: "translateX(-50%)",
+                  pointerEvents: "none",
+                  zIndex: 6,
+                },
+                children: (0, we.jsxs)("div", {
+                  ref: h,
+                  style: {
+                    width: "100%",
+                    height: "100%",
+                    position: "relative",
+                  },
+                  children: [
+                    (0, we.jsx)("div", {
+                      style: {
+                        position: "absolute",
+                        top: "40px",
+                        width: "100%",
+                        height: "100%",
+                        background: "#e5e7eb",
+                        borderRadius: "8px",
+                      },
+                    }),
+                    (0, we.jsx)("img", {
+                      src: t.CABLE_HEAD,
+                      alt: "cable",
+                      style: {
+                        position: "absolute",
+                        top: 0,
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        width: "32px",
+                        height: "45px",
+                        objectFit: "contain",
+                      },
+                    }),
+                  ],
+                }),
+              }),
+              r === "over" &&
+                (0, we.jsxs)("div", {
+                  style: {
+                    position: "absolute",
+                    inset: 0,
+                    background: "rgba(0,0,0,0.85)",
+                    zIndex: 20,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  },
+                  children: [
+                    (0, we.jsx)("h1", {
+                      style: {
+                        fontFamily: "var(--font-display)",
+                        fontSize: "24px",
+                        fontWeight: 700,
+                        lineHeight: 1.3,
+                        textAlign: "center",
+                        maxWidth: "calc(100% - 60px)",
+                        overflowWrap: "anywhere",
+                        color:
+                          o === "full"
+                            ? "var(--color-green)"
+                            : "var(--color-red)",
+                        marginBottom: "40px",
+                      },
+                      children: o === "full" ? t.TXT_FULL : t.TXT_DIED,
+                    }),
+                    (0, we.jsxs)("div", {
+                      style: {
+                        display: "flex",
+                        gap: "16px",
+                        flexWrap: "wrap",
+                        justifyContent: "center",
+                      },
+                      children: [
+                        (0, we.jsx)("button", {
+                          onClick: g,
+                          style: {
+                            padding: "16px 32px",
+                            fontFamily: "var(--font-display)",
+                            fontSize: "18px",
+                            fontWeight: 700,
+                            lineHeight: 1.35,
+                            background: "white",
+                            color: "black",
+                            border: "none",
+                            borderRadius: "12px",
+                            cursor: "pointer",
+                            boxShadow: "0 4px 12px rgba(255,255,255,0.2)",
+                          },
+                          children: t.BTN_PLAY_AGAIN,
+                        }),
+                        i &&
+                          (0, we.jsx)("button", {
+                            type: "button",
+                            disabled: a,
+                            onClick: l,
+                            style: {
+                              padding: "16px 32px",
+                              fontFamily: "var(--font-display)",
+                              fontSize: "18px",
+                              fontWeight: 700,
+                              lineHeight: 1.35,
+                              background: "var(--color-red)",
+                              color: "white",
+                              border: "none",
+                              borderRadius: "12px",
+                              cursor: "pointer",
+                              opacity: a ? 0.55 : 1,
+                              boxShadow: "0 4px 12px rgba(248,113,113,0.3)",
+                            },
+                            children: "Post My Play",
+                          }),
+                      ],
+                    }),
+                  ],
+                }),
+            ],
+          }),
+        ],
+      })
+    : (0, we.jsx)("div", {
+        style: { width: "100%", height: "100%", background: "var(--bg-color)" },
+      });
+}
+;(0,qv.createRoot)(document.getElementById("root")).render((0,we.jsx)($T,{}));})();

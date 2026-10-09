@@ -8,6 +8,13 @@
     html,body,#root{width:100%;height:100%;margin:0;padding:0;overflow:hidden;background:#a36a3d}
     body{-webkit-tap-highlight-color:transparent}
   </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
 </head>
 <body>
   <div id="root"></div>
@@ -34,5 +41,6 @@
   </script>
   <!-- playable-inline-config:end -->
   <script src="./bundle.js?v=slower-replay-20261007-5"></script>
+<script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject=".melody-hint, #root p, #root canvas"></script>
 </body>
 </html>

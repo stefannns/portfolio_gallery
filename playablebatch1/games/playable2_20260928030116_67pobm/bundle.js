@@ -258,4 +258,812 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       cursor: pointer; font-size: 16px;
     }
     .btn-upgrade:disabled { background: #ccc; border-color: #999; color: #666; }
-  `});function JT(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var bs={ctx:null,synths:{},async init(){if(!this.ctx)try{await dh(),this.ctx=!0,this.synths.jump=new Ns().toDestination(),this.synths.punch=new ru({noise:{type:"white"},envelope:{attack:.01,decay:.1,sustain:0}}).toDestination(),this.synths.coin=new Cr({oscillator:{type:"sine"},envelope:{attack:.01,decay:.2,sustain:0}}).toDestination(),this.synths.beg=new ou(Cr).toDestination(),zv.volume.value=-10}catch(t){console.warn("Audio init failed",t)}},play(t){if(!this.ctx)return;let e=jv();try{t==="jump"&&this.synths.jump.triggerAttackRelease("C2","8n",e),(t==="punch"||t==="hit")&&this.synths.punch.triggerAttackRelease("16n",e),t==="coin"&&this.synths.coin.triggerAttackRelease("E5","16n",e),t==="beg"&&this.synths.beg.triggerAttackRelease(["C4","E4","G4"],"8n",e)}catch{}}},Ki=1e3;var an=850,eA=()=>{let[t,e]=(0,mt.useState)(null),[r,n]=(0,mt.useState)("loading"),[o,s]=(0,mt.useState)(0),[i,a]=(0,mt.useState)(!1),[l,u]=(0,mt.useState)({beg:0,speed:0,punch:0,armor:0}),[c,p]=(0,mt.useState)(""),[health,setHealth]=(0,mt.useState)(100),[,h]=(0,mt.useState)(0),d=(0,mt.useRef)({hobo:{x:200,y:an,vx:0,vy:0,state:"idle",facingRight:!0,actionTimer:0},peds:[],cars:[],coins:[],cameraX:0,health:100,hitTimer:0,lastCarHit:-1e4,lastCarSpawn:-1e4,inputs:{left:!1,right:!1},lastFrame:0}),g=(0,mt.useRef)();(0,mt.useEffect)(()=>{let w=!0;return(async()=>{let T={tweaks:[],texts:[],images:[]};try{let y=await fetch("./game.config.json",{cache:"no-store"});y.ok&&(T=await y.json())}catch{}w&&(e(JT(T)),n("start"))})(),()=>{w=!1,cancelAnimationFrame(g.current)}},[]);let _=(0,mt.useCallback)(w=>{if(r!=="playing"||i){d.current.lastFrame=w,g.current=requestAnimationFrame(_);return}let T=Math.min((w-d.current.lastFrame)/1e3,.05);d.current.lastFrame=w;let y=d.current,{hobo:C}=y,N=1+l.speed*.2,D=Math.max(.2,.5-l.punch*.05),R=t.BASE_SPEED*N;C.actionTimer>0&&(C.actionTimer-=T,C.actionTimer<=0&&(C.state="idle")),C.state!=="hit"&&(C.state!=="punch"&&C.state!=="beg"?y.inputs.left?(C.vx=-R,C.facingRight=!1,C.state==="idle"&&(C.state="walk")):y.inputs.right?(C.vx=R,C.facingRight=!0,C.state==="idle"&&(C.state="walk")):(C.vx=0,C.state==="walk"&&(C.state="idle")):C.vx=0),C.vy+=t.GRAVITY*1e3*T,C.x+=C.vx*T,C.y+=C.vy*T;let j=!1;C.y>=an&&(C.y=an,C.vy=0,j=!0),!j&&C.state!=="hit"&&C.state!=="punch"&&C.state!=="beg"&&(C.state="jump"),y.hitTimer=Math.max(0,y.hitTimer-T);let z=Ki*.38,targetCamera=Math.max(0,C.x-z);y.cameraX+=(targetCamera-y.cameraX)*Math.min(1,T*7),C.x=Math.max(60,C.x),Math.random()<1-Math.exp(-.6*T)&&y.peds.push({id:Math.random(),x:y.cameraX+Ki+200,y:an,vx:-t.PED_SPEED,active:!0}),w-y.lastCarSpawn>4500&&Math.random()<1-Math.exp(-.8*T)&&(y.lastCarSpawn=w,y.cars.push({id:Math.random(),x:y.cameraX+Ki+300,y:an,vx:-t.CAR_SPEED})),y.peds.forEach(b=>{b.x+=b.vx*T;if(!b.active){b.y+=b.vy*T;b.vy+=t.GRAVITY*1e3*T;b.knockedTimer-=T}}),y.peds=y.peds.filter(b=>b.x>y.cameraX-300&&(b.active||b.knockedTimer>0)),y.cars.forEach(b=>b.x+=b.vx*T),y.cars=y.cars.filter(b=>b.x>y.cameraX-500),(()=>{const car=y.cars.find(b=>Math.abs(b.x-C.x)<90&&C.y>an-55);if(!car||w-y.lastCarHit<=1200)return;y.lastCarHit=w;const damage=Math.max(8,22-l.armor*3);y.health=Math.max(0,y.health-damage);setHealth(y.health);y.hitTimer=.6;C.hitDamage=damage;C.state="hit";C.actionTimer=.42;C.vx=Math.sign(car.vx||-1)*180;C.vy=-180;try{bs.play("hit")}catch{};if(y.health===0){y.inputs.left=y.inputs.right=!1;n("over")}})(),y.coins.forEach(b=>{b.vy+=t.GRAVITY*1e3*T,b.x+=b.vx*T,b.y+=b.vy*T,b.y>=an&&(b.y=an,b.vy=-b.vy*.5,b.vx*=.8),Math.abs(b.x-C.x)<80&&Math.abs(b.y-C.y)<100&&!b.picked&&(b.picked=!0,s(O=>O+(1+l.beg*.5)),bs.play("coin"))}),y.coins=y.coins.filter(b=>!b.picked&&b.x>y.cameraX-300),h(b=>b+1),g.current=requestAnimationFrame(_)},[r,i,t,l]);(0,mt.useEffect)(()=>(g.current=requestAnimationFrame(_),()=>cancelAnimationFrame(g.current)),[_]);(0,mt.useEffect)(()=>{const clear=()=>{d.current.inputs.left=d.current.inputs.right=!1;d.current.lastFrame=performance.now()},hidden=()=>{if(document.hidden)clear()};window.addEventListener("blur",clear);document.addEventListener("visibilitychange",hidden);return()=>{window.removeEventListener("blur",clear);document.removeEventListener("visibilitychange",hidden)}},[]);let S=()=>{if(r!=="start"&&r!=="over")return;bs.init().catch(()=>{});d.current={hobo:{x:200,y:an,vx:0,vy:0,state:"idle",facingRight:!0,actionTimer:0},peds:[],cars:[],coins:[],cameraX:0,health:100,hitTimer:0,lastCarHit:-1e4,lastCarSpawn:performance.now(),inputs:{left:!1,right:!1},lastFrame:performance.now()};setHealth(100);s(0);u({beg:0,speed:0,punch:0,armor:0});a(!1);p("");n("playing")},f=w=>{if(r!=="playing"||i)return;let T=d.current,{hobo:y}=T;if(y.state==="hit")return;if(w==="jump")y.y>=an-1&&(y.vy=-t.JUMP_FORCE,bs.play("jump"));else if(w==="punch"){if(y.actionTimer>0)return;y.state="punch",y.actionTimer=.3,bs.play("punch");let C=120+l.punch*20;T.peds.forEach(N=>{if(N.active&&Math.abs(N.x-y.x)<C&&Math.abs(N.y-y.y)<100){let D=y.facingRight?1:-1;(D===1&&N.x>y.x||D===-1&&N.x<y.x)&&(N.vx=D*300,N.vy=-250,N.knockedTimer=.5,N.active=!1,T.coins.push({id:Math.random(),x:N.x,y:N.y-50,vx:(Math.random()-.5)*200,vy:-300,picked:!1}))}})}else if(w==="beg"){if(y.actionTimer>0)return;y.state="beg",y.actionTimer=.5;let C=.3+l.beg*.1;Math.random()<C&&(bs.play("beg"),T.coins.push({id:Math.random(),x:y.x+(y.facingRight?50:-50),y:y.y-100,vx:0,vy:-200,picked:!1}))}},m=(w,T)=>{if(T&&(r!=="playing"||i))return;w==="left"&&(d.current.inputs.left=T),w==="right"&&(d.current.inputs.right=T)},x=(w,T)=>{o>=T?(s(y=>y-T),u(y=>({...y,[w]:y[w]+1})),bs.play("coin")):(p(t.TXT_NO_MONEY),setTimeout(()=>p(""),2e3))};if(!t)return(0,Z.jsx)("div",{style:{width:"100%",height:"100%",background:"#000"}});let A=d.current,v=[{id:"beg",name:t.UPG_BEG_NAME,lvl:l.beg,cost:Math.floor(t.COST_BEG*Math.pow(1.5,l.beg))},{id:"speed",name:t.UPG_SPEED_NAME,lvl:l.speed,cost:Math.floor(t.COST_SPEED*Math.pow(1.5,l.speed))},{id:"punch",name:t.UPG_PUNCH_NAME,lvl:l.punch,cost:Math.floor(t.COST_PUNCH*Math.pow(1.6,l.punch))},{id:"armor",name:t.UPG_ARMOR_NAME,lvl:l.armor,cost:Math.floor(t.COST_ARMOR*Math.pow(1.8,l.armor))}];return(0,Z.jsxs)("div",{style:{width:"100%",height:"100%",display:"flex",flexDirection:"column",position:"relative",containerType:"size"},children:[(0,Z.jsx)(KT,{}),(0,Z.jsxs)("div",{style:{flex:1,minHeight:0,position:"relative",overflow:"hidden",backgroundColor:"var(--col-bg)"},children:[(0,Z.jsx)("div",{style:{position:"absolute",inset:0,backgroundImage:`url(${t.BG_STREET})`,backgroundSize:"cover",backgroundPosition:"bottom",transform:`translateX(${-A.cameraX*.2%1e3}px)`,width:"200%"}}),(0,Z.jsxs)("div",{style:{position:"absolute",bottom:0,left:0,right:0,height:"100%",transform:`translateX(${-A.cameraX}px) scale(1)`},children:[A.peds.map(w=>(0,Z.jsx)("img",{src:t.CHAR_PED,style:{position:"absolute",left:w.x,top:w.y,width:"100px",height:"140px",transform:"translate(-50%, -100%)",objectFit:"contain",opacity:w.active?1:.5},alt:"ped"},w.id)),A.cars.map(w=>(0,Z.jsx)("img",{src:t.OBJ_CAR,style:{position:"absolute",left:w.x,top:w.y+24,width:"240px",height:"120px",transform:"translate(-50%, -100%)",objectFit:"contain"},alt:"car"},w.id)),A.coins.map(w=>(0,Z.jsx)("img",{src:t.ICON_COIN,style:{position:"absolute",left:w.x,top:w.y,width:"40px",height:"40px",transform:"translate(-50%, -50%)",objectFit:"contain"},alt:"coin"},w.id)),(0,Z.jsx)("img",{src:A.hobo.state==="beg"?t.CHAR_HOBO_BEG:A.hobo.state==="punch"?t.CHAR_HOBO_PUNCH:A.hobo.state==="jump"?t.CHAR_HOBO_JUMP:t.CHAR_HOBO_IDLE,style:{position:"absolute",left:A.hobo.x,top:A.hobo.y,width:"120px",height:"160px",transform:`translate(-50%, -100%) scaleX(${A.hobo.facingRight?1:-1})`,objectFit:"contain",filter:A.hitTimer>0?"drop-shadow(0 0 18px #ff4747) sepia(.65) saturate(2)":"drop-shadow(0 4px 4px rgba(0,0,0,0.3))"},alt:"hobo"}),A.hitTimer>0&&(0,Z.jsx)("div",{className:"hobo-damage",role:"status","aria-label":A.hobo.hitDamage+" damage",style:{position:"absolute",left:A.hobo.x,top:A.hobo.y-170-(1-A.hitTimer/.6)*45,transform:"translateX(-50%)",color:"#ff4747",fontFamily:"var(--font-display)",fontSize:36,textShadow:"2px 2px 0 #fff,0 0 12px #400",opacity:Math.min(1,A.hitTimer*5),pointerEvents:"none"},children:"−"+A.hobo.hitDamage})]}),(0,Z.jsxs)("div",{style:{position:"absolute",top:"calc(30px + env(safe-area-inset-top, 0px))",left:"calc(30px + env(safe-area-inset-left, 0px))",right:"calc(30px + env(safe-area-inset-right, 0px))",display:"flex",justifyContent:"space-between",alignItems:"flex-start"},children:[(0,Z.jsxs)("div",{"aria-label":"Cash "+o,style:{fontFamily:"var(--font-display)",fontSize:28,lineHeight:1.2,color:"#fff",textShadow:"2px 2px 0 #000",display:"flex",alignItems:"center",gap:6},children:[(0,Z.jsx)("img",{src:t.ICON_COIN,style:{width:24,height:24,objectFit:"contain"},alt:""}),"$",o.toLocaleString("en")]}),(0,Z.jsxs)("div",{style:{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:12},children:[(0,Z.jsxs)("div",{"aria-label":"Health "+health,style:{fontFamily:"var(--font-display)",fontSize:28,lineHeight:1.2,color:health>30?"#fff":"#ff6b6b",textShadow:"2px 2px 0 #000"},children:[(0,Z.jsx)("span",{style:{fontSize:14,marginRight:6},children:"HP"}),health]}),(0,Z.jsx)("button",{onClick:()=>{d.current.inputs.left=d.current.inputs.right=!1;a(!0)},disabled:r!=="playing",style:{minHeight:48,background:"var(--col-btn-shop)",border:"2px solid #476119",borderRadius:8,padding:"8px 16px",fontFamily:"var(--font-display)",fontSize:18,color:"#17200b",boxShadow:"0 4px 0 rgba(0,0,0,.2)",cursor:"pointer"},children:"SHOP"})]})]}),c&&(0,Z.jsx)("div",{style:{position:"absolute",top:"30%",left:"50%",transform:"translate(-50%, -50%)",background:"rgba(0,0,0,0.8)",color:"#fff",padding:"12px 24px",borderRadius:"8px",fontFamily:"var(--font-body)",textAlign:"center",pointerEvents:"none",zIndex:60,whiteSpace:"nowrap"},children:c})]}),(0,Z.jsxs)("div",{style:{flex:"0 0 auto",padding:"clamp(12px, 4cqi, 24px)",paddingBottom:"calc(50px + env(safe-area-inset-bottom, 0px))",background:"#333",display:"flex",justifyContent:"space-between",gap:"8px"},children:[(0,Z.jsxs)("div",{style:{display:"flex",gap:"8px",flex:1,justifyContent:"center"},children:[(0,Z.jsx)("button",{type:"button",className:"btn-control",style:{background:"var(--col-btn-left)"},onPointerDown:w=>{w.currentTarget.setPointerCapture(w.pointerId),m("left",!0)},onPointerUp:()=>m("left",!1),onPointerCancel:()=>m("left",!1),onLostPointerCapture:()=>m("left",!1),onKeyDown:w=>{if(w.key===" "||w.key==="Enter"){w.preventDefault();m("left",!0)}},onKeyUp:()=>m("left",!1),onBlur:()=>m("left",!1),"aria-label":"Move left",children:"<"}),(0,Z.jsx)("button",{type:"button",className:"btn-control",style:{background:"var(--col-btn-right)"},onPointerDown:w=>{w.currentTarget.setPointerCapture(w.pointerId),m("right",!0)},onPointerUp:()=>m("right",!1),onPointerCancel:()=>m("right",!1),onLostPointerCapture:()=>m("right",!1),onKeyDown:w=>{if(w.key===" "||w.key==="Enter"){w.preventDefault();m("right",!0)}},onKeyUp:()=>m("right",!1),onBlur:()=>m("right",!1),"aria-label":"Move right",children:">"})]}),(0,Z.jsxs)("div",{style:{display:"flex",gap:"8px",flex:1.5,justifyContent:"center"},children:[(0,Z.jsx)("button",{type:"button",className:"btn-control",style:{background:"var(--col-btn-beg)"},onClick:()=>f("beg"),children:"BEG"}),(0,Z.jsx)("button",{type:"button",className:"btn-control",style:{background:"var(--col-btn-punch)"},onClick:()=>f("punch"),children:"PUNCH"}),(0,Z.jsx)("button",{type:"button",className:"btn-control",style:{background:"var(--col-btn-jump)"},onClick:()=>f("jump"),children:"JUMP"})]})]}),A.hitTimer>0&&(0,Z.jsx)("div",{className:"hobo-hit-flash",style:{position:"absolute",inset:0,border:"8px solid rgba(255,70,70,.65)",boxShadow:"inset 0 0 60px rgba(255,70,70,.32)",opacity:A.hitTimer/.6,pointerEvents:"none",zIndex:9}}),r==="over"&&(0,Z.jsxs)("div",{role:"dialog","aria-modal":!0,"aria-label":"Game over",style:{position:"absolute",inset:0,zIndex:100,background:"rgba(12,19,28,.9)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:18,padding:"30px 30px 50px",color:"#fff",textAlign:"center"},children:[(0,Z.jsx)("h2",{style:{fontFamily:"var(--font-display)",fontSize:24,margin:0},children:"GAME OVER"}),(0,Z.jsx)("p",{style:{fontFamily:"var(--font-body)",fontSize:18,margin:0},children:"Jump over cars to avoid damage."}),(0,Z.jsx)("button",{onClick:S,autoFocus:!0,style:{minHeight:48,padding:"12px 28px",border:0,borderRadius:12,background:"#ffd700",color:"#282000",fontFamily:"var(--font-display)",fontSize:20,cursor:"pointer"},children:"PLAY AGAIN"})]}),r==="start"&&(0,Z.jsxs)("div",{style:{position:"absolute",inset:0,background:"rgba(0,0,0,0.8)",zIndex:100,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"24px"},children:[(0,Z.jsx)("p",{style:{fontFamily:"var(--font-body)",color:"#fff",fontSize:"18px",textAlign:"center",padding:"0 20px"},children:t.TXT_DESC}),(0,Z.jsx)("button",{onClick:S,style:{padding:"16px 48px",fontSize:"32px",fontFamily:"var(--font-display)",background:"#32cd32",color:"#fff",border:"4px solid #006400",borderRadius:"16px",textShadow:"2px 2px 0 #000",cursor:"pointer",boxShadow:"0 8px 0 rgba(0,0,0,0.5)"},children:t.TXT_START})]}),i&&(0,Z.jsx)("div",{className:"shop-modal",onClick:()=>a(!1),children:(0,Z.jsxs)("div",{className:"shop-panel",onClick:w=>w.stopPropagation(),children:[(0,Z.jsx)("h2",{style:{fontFamily:"var(--font-display)",margin:0,textAlign:"center",fontSize:"32px"},children:"UPGRADES SHOP"}),(0,Z.jsxs)("div",{style:{textAlign:"center",fontFamily:"var(--font-display)",fontSize:"20px",color:"#228b22"},children:["Cash: $",o.toLocaleString("en")]}),v.map(w=>(0,Z.jsxs)("div",{className:"upgrade-item",children:[(0,Z.jsxs)("div",{style:{flex:1,minWidth:0,marginRight:"12px"},children:[(0,Z.jsx)("div",{style:{fontFamily:"var(--font-display)",fontSize:"20px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"},children:w.name}),(0,Z.jsxs)("div",{style:{fontFamily:"var(--font-body)",fontSize:"14px",color:"#666"},children:["Lvl: ",w.lvl]})]}),(0,Z.jsxs)("button",{className:"btn-upgrade",onClick:()=>x(w.id,w.cost),style:{opacity:o>=w.cost?1:.5},children:["UPGRADE ($",w.cost,")"]})]},w.id)),(0,Z.jsx)("button",{onClick:()=>a(!1),style:{marginTop:"16px",padding:"12px",background:"#ccc",border:"none",borderRadius:"8px",fontFamily:"var(--font-display)",fontSize:"20px",cursor:"pointer"},children:"CLOSE"})]})})]})};(0,Gv.createRoot)(document.getElementById("root")).render((0,Z.jsx)(eA,{}));})();
+  `});function JT(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var bs={ctx:null,synths:{},async init(){if(!this.ctx)try{await dh(),this.ctx=!0,this.synths.jump=new Ns().toDestination(),this.synths.punch=new ru({noise:{type:"white"},envelope:{attack:.01,decay:.1,sustain:0}}).toDestination(),this.synths.coin=new Cr({oscillator:{type:"sine"},envelope:{attack:.01,decay:.2,sustain:0}}).toDestination(),this.synths.beg=new ou(Cr).toDestination(),zv.volume.value=-10}catch(t){console.warn("Audio init failed",t)}},play(t){if(!this.ctx)return;let e=jv();try{t==="jump"&&this.synths.jump.triggerAttackRelease("C2","8n",e),(t==="punch"||t==="hit")&&this.synths.punch.triggerAttackRelease("16n",e),t==="coin"&&this.synths.coin.triggerAttackRelease("E5","16n",e),t==="beg"&&this.synths.beg.triggerAttackRelease(["C4","E4","G4"],"8n",e)}catch{}}},Ki=1e3;var an=850,eA=
+() => {
+  let [t, e] = (0, mt.useState)(null),
+    [r, n] = (0, mt.useState)("loading"),
+    [o, s] = (0, mt.useState)(0),
+    [i, a] = (0, mt.useState)(!1),
+    [l, u] = (0, mt.useState)({ beg: 0, speed: 0, punch: 0, armor: 0 }),
+    [c, p] = (0, mt.useState)(""),
+    [health, setHealth] = (0, mt.useState)(100),
+    [, h] = (0, mt.useState)(0),
+    d = (0, mt.useRef)({
+      hobo: {
+        x: 200,
+        y: an,
+        vx: 0,
+        vy: 0,
+        state: "idle",
+        facingRight: !0,
+        actionTimer: 0,
+      },
+      peds: [],
+      cars: [],
+      coins: [],
+      cameraX: 0,
+      health: 100,
+      hitTimer: 0,
+      lastCarHit: -1e4,
+      lastCarSpawn: -1e4,
+      inputs: { left: !1, right: !1 },
+      lastFrame: 0,
+    }),
+    g = (0, mt.useRef)();
+  (0, mt.useEffect)(() => {
+    let w = !0;
+    return (
+      (async () => {
+        let T = { tweaks: [], texts: [], images: [] };
+        try {
+          let y = await fetch("./game.config.json", { cache: "no-store" });
+          y.ok && (T = await y.json());
+        } catch {}
+        w && (e(JT(T)), n("start"));
+      })(),
+      () => {
+        ((w = !1), cancelAnimationFrame(g.current));
+      }
+    );
+  }, []);
+  let _ = (0, mt.useCallback)(
+    (w) => {
+      if (r !== "playing" || i) {
+        ((d.current.lastFrame = w), (g.current = requestAnimationFrame(_)));
+        return;
+      }
+      let T = Math.min((w - d.current.lastFrame) / 1e3, 0.05);
+      d.current.lastFrame = w;
+      let y = d.current,
+        { hobo: C } = y,
+        N = 1 + l.speed * 0.2,
+        D = Math.max(0.2, 0.5 - l.punch * 0.05),
+        R = t.BASE_SPEED * N;
+      (C.actionTimer > 0 &&
+        ((C.actionTimer -= T), C.actionTimer <= 0 && (C.state = "idle")),
+        C.state !== "hit" &&
+          (C.state !== "punch" && C.state !== "beg"
+            ? y.inputs.left
+              ? ((C.vx = -R),
+                (C.facingRight = !1),
+                C.state === "idle" && (C.state = "walk"))
+              : y.inputs.right
+                ? ((C.vx = R),
+                  (C.facingRight = !0),
+                  C.state === "idle" && (C.state = "walk"))
+                : ((C.vx = 0), C.state === "walk" && (C.state = "idle"))
+            : (C.vx = 0)),
+        (C.vy += t.GRAVITY * 1e3 * T),
+        (C.x += C.vx * T),
+        (C.y += C.vy * T));
+      let j = !1;
+      (C.y >= an && ((C.y = an), (C.vy = 0), (j = !0)),
+        !j &&
+          C.state !== "hit" &&
+          C.state !== "punch" &&
+          C.state !== "beg" &&
+          (C.state = "jump"),
+        (y.hitTimer = Math.max(0, y.hitTimer - T)));
+      let z = Ki * 0.38,
+        targetCamera = Math.max(0, C.x - z);
+      ((y.cameraX += (targetCamera - y.cameraX) * Math.min(1, T * 7)),
+        (C.x = Math.max(60, C.x)),
+        Math.random() < 1 - Math.exp(-0.6 * T) &&
+          y.peds.push({
+            id: Math.random(),
+            x: y.cameraX + Ki + 200,
+            y: an,
+            vx: -t.PED_SPEED,
+            active: !0,
+          }),
+        w - y.lastCarSpawn > 4500 &&
+          Math.random() < 1 - Math.exp(-0.8 * T) &&
+          ((y.lastCarSpawn = w),
+          y.cars.push({
+            id: Math.random(),
+            x: y.cameraX + Ki + 300,
+            y: an,
+            vx: -t.CAR_SPEED,
+          })),
+        y.peds.forEach((b) => {
+          b.x += b.vx * T;
+          if (!b.active) {
+            b.y += b.vy * T;
+            b.vy += t.GRAVITY * 1e3 * T;
+            b.knockedTimer -= T;
+          }
+        }),
+        (y.peds = y.peds.filter(
+          (b) => b.x > y.cameraX - 300 && (b.active || b.knockedTimer > 0),
+        )),
+        y.cars.forEach((b) => (b.x += b.vx * T)),
+        (y.cars = y.cars.filter((b) => b.x > y.cameraX - 500)),
+        (() => {
+          const car = y.cars.find(
+            (b) => Math.abs(b.x - C.x) < 90 && C.y > an - 55,
+          );
+          if (!car || w - y.lastCarHit <= 1200) return;
+          y.lastCarHit = w;
+          const damage = Math.max(8, 22 - l.armor * 3);
+          y.health = Math.max(0, y.health - damage);
+          setHealth(y.health);
+          y.hitTimer = 0.6;
+          C.hitDamage = damage;
+          C.state = "hit";
+          C.actionTimer = 0.42;
+          C.vx = Math.sign(car.vx || -1) * 180;
+          C.vy = -180;
+          try {
+            bs.play("hit");
+          } catch {}
+          if (y.health === 0) {
+            y.inputs.left = y.inputs.right = !1;
+            n("over");
+          }
+        })(),
+        y.coins.forEach((b) => {
+          ((b.vy += t.GRAVITY * 1e3 * T),
+            (b.x += b.vx * T),
+            (b.y += b.vy * T),
+            b.y >= an && ((b.y = an), (b.vy = -b.vy * 0.5), (b.vx *= 0.8)),
+            Math.abs(b.x - C.x) < 80 &&
+              Math.abs(b.y - C.y) < 100 &&
+              !b.picked &&
+              ((b.picked = !0),
+              s((O) => O + (1 + l.beg * 0.5)),
+              bs.play("coin")));
+        }),
+        (y.coins = y.coins.filter((b) => !b.picked && b.x > y.cameraX - 300)),
+        h((b) => b + 1),
+        (g.current = requestAnimationFrame(_)));
+    },
+    [r, i, t, l],
+  );
+  (0, mt.useEffect)(
+    () => (
+      (g.current = requestAnimationFrame(_)),
+      () => cancelAnimationFrame(g.current)
+    ),
+    [_],
+  );
+  (0, mt.useEffect)(() => {
+    const clear = () => {
+        d.current.inputs.left = d.current.inputs.right = !1;
+        d.current.lastFrame = performance.now();
+      },
+      hidden = () => {
+        if (document.hidden) clear();
+      };
+    window.addEventListener("blur", clear);
+    document.addEventListener("visibilitychange", hidden);
+    return () => {
+      window.removeEventListener("blur", clear);
+      document.removeEventListener("visibilitychange", hidden);
+    };
+  }, []);
+  let S = () => {
+      if (r !== "start" && r !== "over") return;
+      bs.init().catch(() => {});
+      d.current = {
+        hobo: {
+          x: 200,
+          y: an,
+          vx: 0,
+          vy: 0,
+          state: "idle",
+          facingRight: !0,
+          actionTimer: 0,
+        },
+        peds: [],
+        cars: [],
+        coins: [],
+        cameraX: 0,
+        health: 100,
+        hitTimer: 0,
+        lastCarHit: -1e4,
+        lastCarSpawn: performance.now(),
+        inputs: { left: !1, right: !1 },
+        lastFrame: performance.now(),
+      };
+      setHealth(100);
+      s(0);
+      u({ beg: 0, speed: 0, punch: 0, armor: 0 });
+      a(!1);
+      p("");
+      n("playing");
+    },
+    f = (w) => {
+      if ((r !== "playing" && r !== "start") || i) return;
+      if(r === "start")S();
+      let T = d.current,
+        { hobo: y } = T;
+      if (y.state === "hit") return;
+      if (w === "jump")
+        y.y >= an - 1 && ((y.vy = -t.JUMP_FORCE), bs.play("jump"));
+      else if (w === "punch") {
+        if (y.actionTimer > 0) return;
+        ((y.state = "punch"), (y.actionTimer = 0.3), bs.play("punch"));
+        let C = 120 + l.punch * 20;
+        T.peds.forEach((N) => {
+          if (
+            N.active &&
+            Math.abs(N.x - y.x) < C &&
+            Math.abs(N.y - y.y) < 100
+          ) {
+            let D = y.facingRight ? 1 : -1;
+            ((D === 1 && N.x > y.x) || (D === -1 && N.x < y.x)) &&
+              ((N.vx = D * 300),
+              (N.vy = -250),
+              (N.knockedTimer = 0.5),
+              (N.active = !1),
+              T.coins.push({
+                id: Math.random(),
+                x: N.x,
+                y: N.y - 50,
+                vx: (Math.random() - 0.5) * 200,
+                vy: -300,
+                picked: !1,
+              }));
+          }
+        });
+      } else if (w === "beg") {
+        if (y.actionTimer > 0) return;
+        ((y.state = "beg"), (y.actionTimer = 0.5));
+        let C = 0.3 + l.beg * 0.1;
+        Math.random() < C &&
+          (bs.play("beg"),
+          T.coins.push({
+            id: Math.random(),
+            x: y.x + (y.facingRight ? 50 : -50),
+            y: y.y - 100,
+            vx: 0,
+            vy: -200,
+            picked: !1,
+          }));
+      }
+    },
+    m = (w, T) => {
+      if (T && ((r !== "playing" && r !== "start") || i)) return;
+      if(T && r === "start")S();
+      (w === "left" && (d.current.inputs.left = T),
+        w === "right" && (d.current.inputs.right = T));
+    },
+    x = (w, T) => {
+      o >= T
+        ? (s((y) => y - T),
+          u((y) => ({ ...y, [w]: y[w] + 1 })),
+          bs.play("coin"))
+        : (p(t.TXT_NO_MONEY), setTimeout(() => p(""), 2e3));
+    };
+  if (!t)
+    return (0, Z.jsx)("div", {
+      style: { width: "100%", height: "100%", background: "#000" },
+    });
+  let A = d.current,
+    v = [
+      {
+        id: "beg",
+        name: t.UPG_BEG_NAME,
+        lvl: l.beg,
+        cost: Math.floor(t.COST_BEG * Math.pow(1.5, l.beg)),
+      },
+      {
+        id: "speed",
+        name: t.UPG_SPEED_NAME,
+        lvl: l.speed,
+        cost: Math.floor(t.COST_SPEED * Math.pow(1.5, l.speed)),
+      },
+      {
+        id: "punch",
+        name: t.UPG_PUNCH_NAME,
+        lvl: l.punch,
+        cost: Math.floor(t.COST_PUNCH * Math.pow(1.6, l.punch)),
+      },
+      {
+        id: "armor",
+        name: t.UPG_ARMOR_NAME,
+        lvl: l.armor,
+        cost: Math.floor(t.COST_ARMOR * Math.pow(1.8, l.armor)),
+      },
+    ];
+  return (0, Z.jsxs)("div", {
+    style: {
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
+      containerType: "size",
+    },
+    children: [
+      (0, Z.jsx)(KT, {}),
+      (0, Z.jsxs)("div", {
+        style: {
+          flex: 1,
+          minHeight: 0,
+          position: "relative",
+          overflow: "hidden",
+          backgroundColor: "var(--col-bg)",
+        },
+        children: [
+          (0, Z.jsx)("div", {
+            style: {
+              position: "absolute",
+              inset: 0,
+              backgroundImage: `url(${t.BG_STREET})`,
+              backgroundSize: "cover",
+              backgroundPosition: "bottom",
+              transform: `translateX(${(-A.cameraX * 0.2) % 1e3}px)`,
+              width: "200%",
+            },
+          }),
+          (0, Z.jsxs)("div", {
+            style: {
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: "100%",
+              transform: `translateX(${-A.cameraX}px) scale(1)`,
+            },
+            children: [
+              A.peds.map((w) =>
+                (0, Z.jsx)(
+                  "img",
+                  {
+                    src: t.CHAR_PED,
+                    style: {
+                      position: "absolute",
+                      left: w.x,
+                      top: w.y,
+                      width: "100px",
+                      height: "140px",
+                      transform: "translate(-50%, -100%)",
+                      objectFit: "contain",
+                      opacity: w.active ? 1 : 0.5,
+                    },
+                    alt: "ped",
+                  },
+                  w.id,
+                ),
+              ),
+              A.cars.map((w) =>
+                (0, Z.jsx)(
+                  "img",
+                  {
+                    src: t.OBJ_CAR,
+                    style: {
+                      position: "absolute",
+                      left: w.x,
+                      top: w.y + 24,
+                      width: "240px",
+                      height: "120px",
+                      transform: "translate(-50%, -100%)",
+                      objectFit: "contain",
+                    },
+                    alt: "car",
+                  },
+                  w.id,
+                ),
+              ),
+              A.coins.map((w) =>
+                (0, Z.jsx)(
+                  "img",
+                  {
+                    src: t.ICON_COIN,
+                    style: {
+                      position: "absolute",
+                      left: w.x,
+                      top: w.y,
+                      width: "40px",
+                      height: "40px",
+                      transform: "translate(-50%, -50%)",
+                      objectFit: "contain",
+                    },
+                    alt: "coin",
+                  },
+                  w.id,
+                ),
+              ),
+              (0, Z.jsx)("img", {
+                src:
+                  A.hobo.state === "beg"
+                    ? t.CHAR_HOBO_BEG
+                    : A.hobo.state === "punch"
+                      ? t.CHAR_HOBO_PUNCH
+                      : A.hobo.state === "jump"
+                        ? t.CHAR_HOBO_JUMP
+                        : t.CHAR_HOBO_IDLE,
+                style: {
+                  position: "absolute",
+                  left: A.hobo.x,
+                  top: A.hobo.y,
+                  width: "120px",
+                  height: "160px",
+                  transform: `translate(-50%, -100%) scaleX(${A.hobo.facingRight ? 1 : -1})`,
+                  objectFit: "contain",
+                  filter:
+                    A.hitTimer > 0
+                      ? "drop-shadow(0 0 18px #ff4747) sepia(.65) saturate(2)"
+                      : "drop-shadow(0 4px 4px rgba(0,0,0,0.3))",
+                },
+                alt: "hobo",
+              }),
+              A.hitTimer > 0 &&
+                (0, Z.jsx)("div", {
+                  className: "hobo-damage",
+                  role: "status",
+                  "aria-label": A.hobo.hitDamage + " damage",
+                  style: {
+                    position: "absolute",
+                    left: A.hobo.x,
+                    top: A.hobo.y - 170 - (1 - A.hitTimer / 0.6) * 45,
+                    transform: "translateX(-50%)",
+                    color: "#ff4747",
+                    fontFamily: "var(--font-display)",
+                    fontSize: 36,
+                    textShadow: "2px 2px 0 #fff,0 0 12px #400",
+                    opacity: Math.min(1, A.hitTimer * 5),
+                    pointerEvents: "none",
+                  },
+                  children: "−" + A.hobo.hitDamage,
+                }),
+            ],
+          }),
+          (0, Z.jsxs)("div", {
+            style: {
+              position: "absolute",
+              top: "calc(30px + env(safe-area-inset-top, 0px))",
+              left: "calc(30px + env(safe-area-inset-left, 0px))",
+              right: "calc(30px + env(safe-area-inset-right, 0px))",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+            },
+            children: [
+              (0, Z.jsxs)("div", {
+                "aria-label": "Cash " + o,
+                style: {
+                  fontFamily: "var(--font-display)",
+                  fontSize: 28,
+                  lineHeight: 1.2,
+                  color: "#fff",
+                  textShadow: "2px 2px 0 #000",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                },
+                children: [
+                  (0, Z.jsx)("img", {
+                    src: t.ICON_COIN,
+                    style: { width: 24, height: 24, objectFit: "contain" },
+                    alt: "",
+                  }),
+                  "$",
+                  o.toLocaleString("en"),
+                ],
+              }),
+              (0, Z.jsxs)("div", {
+                style: {
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                  gap: 12,
+                },
+                children: [
+                  (0, Z.jsxs)("div", {
+                    "aria-label": "Health " + health,
+                    style: {
+                      fontFamily: "var(--font-display)",
+                      fontSize: 28,
+                      lineHeight: 1.2,
+                      color: health > 30 ? "#fff" : "#ff6b6b",
+                      textShadow: "2px 2px 0 #000",
+                    },
+                    children: [
+                      (0, Z.jsx)("span", {
+                        style: { fontSize: 14, marginRight: 6 },
+                        children: "HP",
+                      }),
+                      health,
+                    ],
+                  }),
+                  (0, Z.jsx)("button", {
+                    onClick: () => {
+                      d.current.inputs.left = d.current.inputs.right = !1;
+                      a(!0);
+                    },
+                    disabled: r !== "playing",
+                    style: {
+                      minHeight: 48,
+                      background: "var(--col-btn-shop)",
+                      border: "2px solid #476119",
+                      borderRadius: 8,
+                      padding: "8px 16px",
+                      fontFamily: "var(--font-display)",
+                      fontSize: 18,
+                      color: "#17200b",
+                      boxShadow: "0 4px 0 rgba(0,0,0,.2)",
+                      cursor: "pointer",
+                    },
+                    children: "SHOP",
+                  }),
+                ],
+              }),
+            ],
+          }),
+          c &&
+            (0, Z.jsx)("div", {
+              style: {
+                position: "absolute",
+                top: "30%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                background: "rgba(0,0,0,0.8)",
+                color: "#fff",
+                padding: "12px 24px",
+                borderRadius: "8px",
+                fontFamily: "var(--font-body)",
+                textAlign: "center",
+                pointerEvents: "none",
+                zIndex: 60,
+                whiteSpace: "nowrap",
+              },
+              children: c,
+            }),
+        ],
+      }),
+      (0, Z.jsxs)("div", {
+        style: {
+          flex: "0 0 auto",
+          padding: "clamp(12px, 4cqi, 24px)",
+          paddingBottom: "calc(50px + env(safe-area-inset-bottom, 0px))",
+          background: "#333",
+          display: "flex",
+          justifyContent: "space-between",
+          gap: "8px",
+        },
+        children: [
+          (0, Z.jsxs)("div", {
+            style: {
+              display: "flex",
+              gap: "8px",
+              flex: 1,
+              justifyContent: "center",
+            },
+            children: [
+              (0, Z.jsx)("button", {
+                type: "button",
+                className: "btn-control",
+                style: { background: "var(--col-btn-left)" },
+                onPointerDown: (w) => {
+                  (w.currentTarget.setPointerCapture(w.pointerId),
+                    m("left", !0));
+                },
+                onPointerUp: () => m("left", !1),
+                onPointerCancel: () => m("left", !1),
+                onLostPointerCapture: () => m("left", !1),
+                onKeyDown: (w) => {
+                  if (w.key === " " || w.key === "Enter") {
+                    w.preventDefault();
+                    m("left", !0);
+                  }
+                },
+                onKeyUp: () => m("left", !1),
+                onBlur: () => m("left", !1),
+                "aria-label": "Move left",
+                children: "<",
+              }),
+              (0, Z.jsx)("button", {
+                type: "button",
+                className: "btn-control",
+                style: { background: "var(--col-btn-right)" },
+                onPointerDown: (w) => {
+                  (w.currentTarget.setPointerCapture(w.pointerId),
+                    m("right", !0));
+                },
+                onPointerUp: () => m("right", !1),
+                onPointerCancel: () => m("right", !1),
+                onLostPointerCapture: () => m("right", !1),
+                onKeyDown: (w) => {
+                  if (w.key === " " || w.key === "Enter") {
+                    w.preventDefault();
+                    m("right", !0);
+                  }
+                },
+                onKeyUp: () => m("right", !1),
+                onBlur: () => m("right", !1),
+                "aria-label": "Move right",
+                children: ">",
+              }),
+            ],
+          }),
+          (0, Z.jsxs)("div", {
+            style: {
+              display: "flex",
+              gap: "8px",
+              flex: 1.5,
+              justifyContent: "center",
+            },
+            children: [
+              (0, Z.jsx)("button", {
+                type: "button",
+                className: "btn-control",
+                style: { background: "var(--col-btn-beg)" },
+                onClick: () => f("beg"),
+                children: "BEG",
+              }),
+              (0, Z.jsx)("button", {
+                type: "button",
+                className: "btn-control",
+                style: { background: "var(--col-btn-punch)" },
+                onClick: () => f("punch"),
+                children: "PUNCH",
+              }),
+              (0, Z.jsx)("button", {
+                type: "button",
+                className: "btn-control",
+                style: { background: "var(--col-btn-jump)" },
+                onClick: () => f("jump"),
+                children: "JUMP",
+              }),
+            ],
+          }),
+        ],
+      }),
+      A.hitTimer > 0 &&
+        (0, Z.jsx)("div", {
+          className: "hobo-hit-flash",
+          style: {
+            position: "absolute",
+            inset: 0,
+            border: "8px solid rgba(255,70,70,.65)",
+            boxShadow: "inset 0 0 60px rgba(255,70,70,.32)",
+            opacity: A.hitTimer / 0.6,
+            pointerEvents: "none",
+            zIndex: 9,
+          },
+        }),
+      r === "start" && (0, Z.jsx)("p", {className:"feed-first-action",style:{position:"absolute",top:"90px",left:30,right:30,zIndex:12,margin:0,fontSize:18,lineHeight:1.35,textAlign:"center",pointerEvents:"none",color:"#fff"},children:"Use the controls to start"}),
+      r === "over" &&
+        (0, Z.jsxs)("div", {
+          role: "dialog",
+          "aria-modal": !0,
+          "aria-label": "Game over",
+          style: {
+            position: "absolute",
+            inset: 0,
+            zIndex: 100,
+            background: "rgba(12,19,28,.9)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 18,
+            padding: "30px 30px 50px",
+            color: "#fff",
+            textAlign: "center",
+          },
+          children: [
+            (0, Z.jsx)("h2", {
+              style: {
+                fontFamily: "var(--font-display)",
+                fontSize: 24,
+                margin: 0,
+              },
+              children: "GAME OVER",
+            }),
+            (0, Z.jsx)("p", {
+              style: {
+                fontFamily: "var(--font-body)",
+                fontSize: 18,
+                margin: 0,
+              },
+              children: "Jump over cars to avoid damage.",
+            }),
+            (0, Z.jsx)("button", {
+              onClick: S,
+              autoFocus: !0,
+              style: {
+                minHeight: 48,
+                padding: "12px 28px",
+                border: 0,
+                borderRadius: 12,
+                background: "#ffd700",
+                color: "#282000",
+                fontFamily: "var(--font-display)",
+                fontSize: 20,
+                cursor: "pointer",
+              },
+              children: "PLAY AGAIN",
+            }),
+          ],
+        }),
+      null,
+      i &&
+        (0, Z.jsx)("div", {
+          className: "shop-modal",
+          onClick: () => a(!1),
+          children: (0, Z.jsxs)("div", {
+            className: "shop-panel",
+            onClick: (w) => w.stopPropagation(),
+            children: [
+              (0, Z.jsx)("h2", {
+                style: {
+                  fontFamily: "var(--font-display)",
+                  margin: 0,
+                  textAlign: "center",
+                  fontSize: "32px",
+                },
+                children: "UPGRADES SHOP",
+              }),
+              (0, Z.jsxs)("div", {
+                style: {
+                  textAlign: "center",
+                  fontFamily: "var(--font-display)",
+                  fontSize: "20px",
+                  color: "#228b22",
+                },
+                children: ["Cash: $", o.toLocaleString("en")],
+              }),
+              v.map((w) =>
+                (0, Z.jsxs)(
+                  "div",
+                  {
+                    className: "upgrade-item",
+                    children: [
+                      (0, Z.jsxs)("div", {
+                        style: { flex: 1, minWidth: 0, marginRight: "12px" },
+                        children: [
+                          (0, Z.jsx)("div", {
+                            style: {
+                              fontFamily: "var(--font-display)",
+                              fontSize: "20px",
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            },
+                            children: w.name,
+                          }),
+                          (0, Z.jsxs)("div", {
+                            style: {
+                              fontFamily: "var(--font-body)",
+                              fontSize: "14px",
+                              color: "#666",
+                            },
+                            children: ["Lvl: ", w.lvl],
+                          }),
+                        ],
+                      }),
+                      (0, Z.jsxs)("button", {
+                        className: "btn-upgrade",
+                        onClick: () => x(w.id, w.cost),
+                        style: { opacity: o >= w.cost ? 1 : 0.5 },
+                        children: ["UPGRADE ($", w.cost, ")"],
+                      }),
+                    ],
+                  },
+                  w.id,
+                ),
+              ),
+              (0, Z.jsx)("button", {
+                onClick: () => a(!1),
+                style: {
+                  marginTop: "16px",
+                  padding: "12px",
+                  background: "#ccc",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontFamily: "var(--font-display)",
+                  fontSize: "20px",
+                  cursor: "pointer",
+                },
+                children: "CLOSE",
+              }),
+            ],
+          }),
+        }),
+    ],
+  });
+}
+;(0,Gv.createRoot)(document.getElementById("root")).render((0,Z.jsx)(eA,{}));})();

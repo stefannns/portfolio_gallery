@@ -239,9 +239,9 @@
     } catch (_) {}
   }
 
-  function startGame() {
+  function startGame(withAudio) {
     if (state !== "idle" && state !== "over") return;
-    unlockAudio();
+    if (withAudio !== false) unlockAudio();
     if (state === "over") prepareRound();
     state = "playing";
     root.querySelector("#game-overlay").classList.add("overlay-hidden");
@@ -573,6 +573,7 @@
       buildInterface();
       prepareRound();
       state = "idle";
+      startGame(false);
       cancelAnimationFrame(animationFrame);
       lastFrame = performance.now();
       animationFrame = requestAnimationFrame(frame);

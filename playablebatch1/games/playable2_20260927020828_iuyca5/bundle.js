@@ -244,4 +244,310 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; background-color: var(--c-wood-dark); }
     * { box-sizing: border-box; touch-action: none; user-select: none; -webkit-user-drag: none; }
     button { font-family: var(--font-display); outline: none; border: none; cursor: pointer; }
-  `}),Sf=[{id:1,x:.35,y:.28},{id:2,x:.65,y:.32},{id:3,x:.22,y:.58},{id:4,x:.78,y:.62},{id:5,x:.5,y:.82}];function Ea(t="light"){try{typeof window<"u"&&window.tt&&window.tt.vibrate&&window.tt.vibrate({style:t})}catch{}}function vF(){let t=typeof window<"u"&&window.tt&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,Te.useState)(!1);(0,Te.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]);let n=(0,Te.useCallback)(()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))},[e,t]);return{canSubmit:t,submitting:e,submitRecording:n}}function wF(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var SF=()=>{let t=(0,Te.useRef)(!1),e=(0,Te.useRef)(null),r=(0,Te.useCallback)(async()=>{if(!t.current)try{await Gx(),e.current={success:new Jn({oscillator:{type:"sine"}}).toDestination(),error:new Ca().toDestination()},e.current.success.volume.value=-8,e.current.error.volume.value=-12,t.current=!0}catch(o){console.warn("Audio init failed",o)}},[]),n=(0,Te.useCallback)(o=>{if(!t.current||!e.current)return;let i=Ob();o==="success"?e.current.success.triggerAttackRelease("C5","16n",i):o==="error"&&e.current.error.triggerAttackRelease("C2","8n",i)},[]);return{initAudio:r,playSound:n}},Db=({src:t,spots:e,foundSpots:r,onSpotClick:n,readOnly:o})=>{let i=(0,Te.useRef)(null),s=(0,Te.useRef)(null),[a,l]=(0,Te.useState)(null),u=(0,Te.useCallback)(()=>{if(!i.current||!s.current)return;let h=s.current;if(!h.complete||h.naturalWidth===0)return;let f=i.current.clientWidth,m=i.current.clientHeight,x=h.naturalWidth,_=h.naturalHeight,d=x/_,g=f/m,y,w;g>d?(w=m,y=w*d):(y=f,w=y/d),l({w:y,h:w})},[]);(0,Te.useEffect)(()=>{let h=new ResizeObserver(u);return i.current&&h.observe(i.current),()=>h.disconnect()},[u]);let c=()=>u();return(0,Te.useEffect)(()=>{s.current&&s.current.complete&&s.current.naturalWidth>0&&u()},[u]),(0,se.jsxs)("div",{ref:i,onClick:()=>{!o&&n&&n(-1)},style:{flex:1,minHeight:0,position:"relative",display:"flex",alignItems:"center",justifyContent:"center",width:"100%",overflow:"hidden"},children:[(0,se.jsx)("img",{ref:s,src:t,onLoad:c,alt:"game scene",draggable:!1,style:{width:"100%",height:"100%",objectFit:"contain",position:"absolute",inset:0,pointerEvents:"none"}}),a&&(0,se.jsx)("div",{style:{position:"relative",width:a.w,height:a.h,zIndex:2},children:e.map(h=>{let f=r.has(h.id);return(0,se.jsx)("div",{onClick:m=>{m.stopPropagation(),!o&&!f&&n&&n(h.id)},style:{position:"absolute",left:`${h.x*100}%`,top:`${h.y*100}%`,width:"14%",aspectRatio:"1",transform:"translate(-50%, -50%)",borderRadius:"50%",border:f?"4px solid var(--c-green)":"none",cursor:f||o?"default":"pointer",pointerEvents:o?"none":"auto"}},h.id)})})]})},TF=()=>{let[t,e]=(0,Te.useState)(null),[r,n]=(0,Te.useState)(new Set),[o,i]=(0,Te.useState)(15e3),[s,a]=(0,Te.useState)("playing"),{initAudio:l,playSound:u}=SF(),c=(0,Te.useMemo)(()=>{let q=[6,6,6,7,7,6,6,6],b=[],k=1;return q.forEach((P,H)=>{for(let R=0;R<P;R++){let O=7+86*R/(P-1),Y=6+H*88/7;b.push({id:k++,x:O,y:Y})}}),b},[]);(0,Te.useEffect)(()=>{let q=!0;return fetch("./game.config.json",{cache:"no-store"}).then(v=>v.ok?v.json():Promise.reject()).then(v=>{if(q){let b=wF(v);e(b),i((b.TIME_LIMIT||15)*1e3),n(new Set),a("playing")}}).catch(()=>{q&&e({TIME_LIMIT:15,TITLE:"Dumpling Hunter",DESC:"Tap every dumpling before time runs out.",BTN_RESTART:"Try Again",TIME_UP:"Time's Up!",SCORE_UNIT:"dumplings",IMG_ORIGINAL:"./assets/steamer-covered-v3.webp",IMG_MODIFIED:"./assets/steamer-cartoon-bun-v4.webp"})}),()=>{q=!1}},[]),(0,Te.useEffect)(()=>{if(!t||s!=="playing")return;let q=(t.TIME_LIMIT||15)*1e3,v=performance.now()+q,b;i(q);let k=P=>{let H=Math.max(0,v-P);i(H),H<=0?(a("over"),Ea("notification_error")):b=requestAnimationFrame(k)};return b=requestAnimationFrame(k),()=>cancelAnimationFrame(b)},[t,s]);let p=q=>{s==="playing"&&!r.has(q)&&(l().then(()=>u("success")).catch(()=>{}),Ea("light"),n(v=>{if(v.has(q))return v;let b=new Set(v);return b.add(q),b.size===50&&setTimeout(()=>{a("over"),Ea("notification_success")},0),b}))},h=()=>{n(new Set),i(((t==null?void 0:t.TIME_LIMIT)||15)*1e3),a("playing"),Ea("light")};if(!t)return(0,se.jsxs)("div",{style:{width:"100%",height:"100%",display:"grid",placeItems:"center",background:"#6d3518",color:"#fff7e8",fontFamily:"system-ui,sans-serif",fontWeight:800},children:["🥟 Steaming…"]});let f=(o/1e3).toFixed(1),m=r.size,x=m===50;return(0,se.jsxs)("div",{role:"application","aria-label":t.TITLE+". "+t.DESC,style:{width:"100%",height:"100%",position:"relative",overflow:"hidden",touchAction:"none",background:"#f0e2c8",fontFamily:"system-ui,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif"},children:[(0,se.jsx)("style",{children:"@keyframes dumplingPop{0%{transform:scale(.35) rotate(-10deg);opacity:.2}70%{transform:scale(1.12) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(0)}}@keyframes wrapperPress{50%{transform:scale(.86)}}.dh-dumpling:active .dh-wrapper{animation:wrapperPress .13s ease}"}),(0,se.jsxs)("div",{style:{position:"absolute",top:"max(30px, env(safe-area-inset-top))",left:"30px",right:"30px",zIndex:10,display:"flex",justifyContent:"space-between",alignItems:"center",pointerEvents:"none"},children:[(0,se.jsxs)("div",{style:{minHeight:"42px",padding:"0 10px",display:"flex",alignItems:"center",gap:"8px",borderRadius:"24px",background:"rgba(255,255,255,.94)",color:"#b95628",fontWeight:900,fontSize:"28px",boxShadow:"0 4px 12px rgba(54,25,10,.24)"},children:[(0,se.jsx)("span",{"aria-hidden":!0,children:"⏳"}),(0,se.jsxs)("span",{children:[f,"s"]})]}),(0,se.jsxs)("div",{style:{minHeight:"42px",padding:"0 10px",display:"flex",alignItems:"center",gap:"8px",borderRadius:"24px",background:"rgba(255,255,255,.94)",color:"#b95628",fontWeight:900,fontSize:"28px",boxShadow:"0 4px 12px rgba(54,25,10,.24)"},children:[(0,se.jsx)("span",{"aria-hidden":!0,children:"🥟"}),(0,se.jsxs)("span",{children:[m,"/50"]})]})]}),(0,se.jsx)("div",{"aria-label":"Dumpling board",style:{position:"absolute",inset:"100px 30px 50px",zIndex:5},children:c.map(q=>{let v=r.has(q.id);return(0,se.jsx)("button",{className:"dh-dumpling","aria-label":v?"Dumpling "+q.id+" collected":"Collect dumpling "+q.id,disabled:v,onPointerDown:b=>{if(b.isPrimary===false||b.button>0)return;b.preventDefault(),p(q.id)},onClick:()=>p(q.id),style:{position:"absolute",left:q.x+"%",top:q.y+"%",width:"clamp(34px, 9.8vw, 42px)",height:"clamp(34px, 9.8vw, 42px)",transform:"translate(-50%,-50%)",padding:0,border:0,borderRadius:"50%",background:"transparent",cursor:v?"default":"pointer",touchAction:"manipulation",WebkitTapHighlightColor:"transparent"},children:(0,se.jsx)("img",{className:v?"dh-revealed":"dh-wrapper",src:v?t.IMG_MODIFIED:t.IMG_ORIGINAL,alt:"",draggable:!1,style:{display:"block",width:"100%",height:"100%",objectFit:"contain",pointerEvents:"none",animation:v?"dumplingPop .28s cubic-bezier(.2,.9,.3,1.25)":void 0}})},q.id)})}),s==="over"&&(0,se.jsx)("div",{style:{position:"absolute",inset:0,zIndex:30,display:"grid",placeItems:"center",padding:"40px 25px",background:"rgba(42,20,9,.62)",backdropFilter:"blur(3px)"},children:(0,se.jsxs)("div",{role:"dialog","aria-modal":!0,style:{width:"100%",maxWidth:"340px",boxSizing:"border-box",padding:"28px 22px 24px",borderRadius:"24px",background:"#fffaf0",color:"#6f3218",textAlign:"center",boxShadow:"0 18px 45px rgba(30,13,5,.45)"},children:[(0,se.jsx)("h2",{style:{margin:"0 0 10px",fontSize:"24px",lineHeight:1.2},children:x?"Perfect!":t.TIME_UP}),(0,se.jsxs)("p",{style:{margin:"0 0 22px",fontSize:"18px",lineHeight:1.4},children:["You found ",m," / 50 ",t.SCORE_UNIT,"."]}),(0,se.jsx)("button",{onClick:h,style:{minWidth:"152px",minHeight:"52px",padding:"0 24px",border:0,borderRadius:"26px",background:"#f47b2e",color:"#fff",fontSize:"18px",fontWeight:900,boxShadow:"0 5px 0 #a94b1c",cursor:"pointer"},children:t.BTN_RESTART})]})})]})};(0,Mb.createRoot)(document.getElementById("root")).render((0,se.jsx)(TF,{}));})();
+  `}),Sf=[{id:1,x:.35,y:.28},{id:2,x:.65,y:.32},{id:3,x:.22,y:.58},{id:4,x:.78,y:.62},{id:5,x:.5,y:.82}];function Ea(t="light"){try{typeof window<"u"&&window.tt&&window.tt.vibrate&&window.tt.vibrate({style:t})}catch{}}function vF(){let t=typeof window<"u"&&window.tt&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,Te.useState)(!1);(0,Te.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]);let n=(0,Te.useCallback)(()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))},[e,t]);return{canSubmit:t,submitting:e,submitRecording:n}}function wF(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var SF=()=>{let t=(0,Te.useRef)(!1),e=(0,Te.useRef)(null),r=(0,Te.useCallback)(async()=>{if(!t.current)try{await Gx(),e.current={success:new Jn({oscillator:{type:"sine"}}).toDestination(),error:new Ca().toDestination()},e.current.success.volume.value=-8,e.current.error.volume.value=-12,t.current=!0}catch(o){console.warn("Audio init failed",o)}},[]),n=(0,Te.useCallback)(o=>{if(!t.current||!e.current)return;let i=Ob();o==="success"?e.current.success.triggerAttackRelease("C5","16n",i):o==="error"&&e.current.error.triggerAttackRelease("C2","8n",i)},[]);return{initAudio:r,playSound:n}},Db=({src:t,spots:e,foundSpots:r,onSpotClick:n,readOnly:o})=>{let i=(0,Te.useRef)(null),s=(0,Te.useRef)(null),[a,l]=(0,Te.useState)(null),u=(0,Te.useCallback)(()=>{if(!i.current||!s.current)return;let h=s.current;if(!h.complete||h.naturalWidth===0)return;let f=i.current.clientWidth,m=i.current.clientHeight,x=h.naturalWidth,_=h.naturalHeight,d=x/_,g=f/m,y,w;g>d?(w=m,y=w*d):(y=f,w=y/d),l({w:y,h:w})},[]);(0,Te.useEffect)(()=>{let h=new ResizeObserver(u);return i.current&&h.observe(i.current),()=>h.disconnect()},[u]);let c=()=>u();return(0,Te.useEffect)(()=>{s.current&&s.current.complete&&s.current.naturalWidth>0&&u()},[u]),(0,se.jsxs)("div",{ref:i,onClick:()=>{!o&&n&&n(-1)},style:{flex:1,minHeight:0,position:"relative",display:"flex",alignItems:"center",justifyContent:"center",width:"100%",overflow:"hidden"},children:[(0,se.jsx)("img",{ref:s,src:t,onLoad:c,alt:"game scene",draggable:!1,style:{width:"100%",height:"100%",objectFit:"contain",position:"absolute",inset:0,pointerEvents:"none"}}),a&&(0,se.jsx)("div",{style:{position:"relative",width:a.w,height:a.h,zIndex:2},children:e.map(h=>{let f=r.has(h.id);return(0,se.jsx)("div",{onClick:m=>{m.stopPropagation(),!o&&!f&&n&&n(h.id)},style:{position:"absolute",left:`${h.x*100}%`,top:`${h.y*100}%`,width:"14%",aspectRatio:"1",transform:"translate(-50%, -50%)",borderRadius:"50%",border:f?"4px solid var(--c-green)":"none",cursor:f||o?"default":"pointer",pointerEvents:o?"none":"auto"}},h.id)})})]})},TF=
+() => {
+  let [t, e] = (0, Te.useState)(null),
+    [r, n] = (0, Te.useState)(new Set()),
+    [o, i] = (0, Te.useState)(15e3),
+    [s, a] = (0, Te.useState)("playing"),
+    { initAudio: l, playSound: u } = SF(),
+    c = (0, Te.useMemo)(() => {
+      let q = [6, 6, 6, 7, 7, 6, 6, 6],
+        b = [],
+        k = 1;
+      return (
+        q.forEach((P, H) => {
+          for (let R = 0; R < P; R++) {
+            let O = 7 + (86 * R) / (P - 1),
+              Y = 6 + (H * 88) / 7;
+            b.push({ id: k++, x: O, y: Y });
+          }
+        }),
+        b
+      );
+    }, []);
+  const [feedStarted,setFeedStarted]=(0,Te.useState)(false); const feedGate=(0,Te.useRef)(false);
+
+  ((0, Te.useEffect)(() => {
+    let q = !0;
+    return (
+      fetch("./game.config.json", { cache: "no-store" })
+        .then((v) => (v.ok ? v.json() : Promise.reject()))
+        .then((v) => {
+          if (q) {
+            let b = wF(v);
+            (e(b), i((b.TIME_LIMIT || 15) * 1e3), n(new Set()), a("playing"));
+          }
+        })
+        .catch(() => {
+          q &&
+            e({
+              TIME_LIMIT: 15,
+              TITLE: "Dumpling Hunter",
+              DESC: "Tap every dumpling before time runs out.",
+              BTN_RESTART: "Try Again",
+              TIME_UP: "Time's Up!",
+              SCORE_UNIT: "dumplings",
+              IMG_ORIGINAL: "./assets/steamer-covered-v3.webp",
+              IMG_MODIFIED: "./assets/steamer-cartoon-bun-v4.webp",
+            });
+        }),
+      () => {
+        q = !1;
+      }
+    );
+  }, []),
+    (0, Te.useEffect)(() => {
+      if (!t || s !== "playing" || !feedStarted) return;
+      let q = (t.TIME_LIMIT || 15) * 1e3,
+        v = performance.now() + q,
+        b;
+      i(q);
+      let k = (P) => {
+        let H = Math.max(0, v - P);
+        (i(H),
+          H <= 0
+            ? (a("over"), Ea("notification_error"))
+            : (b = requestAnimationFrame(k)));
+      };
+      return ((b = requestAnimationFrame(k)), () => cancelAnimationFrame(b));
+    }, [t, s, feedStarted]));
+  let p = (q) => {
+      if(s !== "playing" || r.has(q) || !c.some(spot=>spot.id===q))return;
+      if(!feedGate.current){feedGate.current=true;setFeedStarted(true);}
+      s === "playing" &&
+        !r.has(q) &&
+        (l()
+          .then(() => u("success"))
+          .catch(() => {}),
+        Ea("light"),
+        n((v) => {
+          if (v.has(q)) return v;
+          let b = new Set(v);
+          return (
+            b.add(q),
+            b.size === 50 &&
+              setTimeout(() => {
+                (a("over"), Ea("notification_success"));
+              }, 0),
+            b
+          );
+        }));
+    },
+    h = () => {
+      feedGate.current=false;setFeedStarted(false);
+      (n(new Set()),
+        i(((t == null ? void 0 : t.TIME_LIMIT) || 15) * 1e3),
+        a("playing"),
+        Ea("light"));
+    };
+  if (!t)
+    return (0, se.jsxs)("div", {
+      style: {
+        width: "100%",
+        height: "100%",
+        display: "grid",
+        placeItems: "center",
+        background: "#6d3518",
+        color: "#fff7e8",
+        fontFamily: "system-ui,sans-serif",
+        fontWeight: 800,
+      },
+      children: ["🥟 Steaming…"],
+    });
+  let f = (o / 1e3).toFixed(1),
+    m = r.size,
+    x = m === 50;
+  return (0, se.jsxs)("div", {
+    role: "application",
+    "aria-label": t.TITLE + ". " + t.DESC,
+    style: {
+      width: "100%",
+      height: "100%",
+      position: "relative",
+      overflow: "hidden",
+      touchAction: "none",
+      background: "#f0e2c8",
+      fontFamily:
+        'system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
+    },
+    children: [
+      (0, se.jsx)("style", {
+        children:
+          "@keyframes dumplingPop{0%{transform:scale(.35) rotate(-10deg);opacity:.2}70%{transform:scale(1.12) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(0)}}@keyframes wrapperPress{50%{transform:scale(.86)}}.dh-dumpling:active .dh-wrapper{animation:wrapperPress .13s ease}",
+      }),
+      (0, se.jsxs)("div", {
+        style: {
+          position: "absolute",
+          top: "max(30px, env(safe-area-inset-top))",
+          left: "30px",
+          right: "30px",
+          zIndex: 10,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          pointerEvents: "none",
+        },
+        children: [
+          (0, se.jsxs)("div", {
+            style: {
+              minHeight: "42px",
+              padding: "0 10px",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              borderRadius: "24px",
+              background: "rgba(255,255,255,.94)",
+              color: "#b95628",
+              fontWeight: 900,
+              fontSize: "28px",
+              boxShadow: "0 4px 12px rgba(54,25,10,.24)",
+            },
+            children: [
+              (0, se.jsx)("span", { "aria-hidden": !0, children: "⏳" }),
+              (0, se.jsxs)("span", { children: [f, "s"] }),
+            ],
+          }),
+          (0, se.jsxs)("div", {
+            style: {
+              minHeight: "42px",
+              padding: "0 10px",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              borderRadius: "24px",
+              background: "rgba(255,255,255,.94)",
+              color: "#b95628",
+              fontWeight: 900,
+              fontSize: "28px",
+              boxShadow: "0 4px 12px rgba(54,25,10,.24)",
+            },
+            children: [
+              (0, se.jsx)("span", { "aria-hidden": !0, children: "🥟" }),
+              (0, se.jsxs)("span", { children: [m, "/50"] }),
+            ],
+          }),
+        ],
+      }),
+      (0, se.jsx)("div", {
+        "aria-label": "Dumpling board",
+        style: { position: "absolute", inset: "100px 30px 50px", zIndex: 5 },
+        children: c.map((q) => {
+          let v = r.has(q.id);
+          return (0, se.jsx)(
+            "button",
+            {
+              className: "dh-dumpling",
+              "aria-label": v
+                ? "Dumpling " + q.id + " collected"
+                : "Collect dumpling " + q.id,
+              disabled: v,
+              onPointerDown: (b) => {
+                if (b.isPrimary === false || b.button > 0) return;
+                (b.preventDefault(), p(q.id));
+              },
+              onClick: () => p(q.id),
+              style: {
+                position: "absolute",
+                left: q.x + "%",
+                top: q.y + "%",
+                width: "clamp(34px, 9.8vw, 42px)",
+                height: "clamp(34px, 9.8vw, 42px)",
+                transform: "translate(-50%,-50%)",
+                padding: 0,
+                border: 0,
+                borderRadius: "50%",
+                background: "transparent",
+                cursor: v ? "default" : "pointer",
+                touchAction: "manipulation",
+                WebkitTapHighlightColor: "transparent",
+              },
+              children: (0, se.jsx)("img", {
+                className: v ? "dh-revealed" : "dh-wrapper",
+                src: v ? t.IMG_MODIFIED : t.IMG_ORIGINAL,
+                alt: "",
+                draggable: !1,
+                style: {
+                  display: "block",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  pointerEvents: "none",
+                  animation: v
+                    ? "dumplingPop .28s cubic-bezier(.2,.9,.3,1.25)"
+                    : void 0,
+                },
+              }),
+            },
+            q.id,
+          );
+        }),
+      }),
+      s === "playing" && !feedStarted && (0, se.jsx)("p", {className:"feed-first-action",style:{position:"absolute",top:"77px",left:30,right:30,zIndex:12,margin:0,fontSize:18,lineHeight:1.35,textAlign:"center",pointerEvents:"none",color:"#6f3218"},children:"Tap a steamer to start"}),
+      s === "over" &&
+        (0, se.jsx)("div", {
+          style: {
+            position: "absolute",
+            inset: 0,
+            zIndex: 30,
+            display: "grid",
+            placeItems: "center",
+            padding: "40px 25px",
+            background: "rgba(42,20,9,.62)",
+            backdropFilter: "blur(3px)",
+          },
+          children: (0, se.jsxs)("div", {
+            role: "dialog",
+            "aria-modal": !0,
+            style: {
+              width: "100%",
+              maxWidth: "340px",
+              boxSizing: "border-box",
+              padding: "28px 22px 24px",
+              borderRadius: "24px",
+              background: "#fffaf0",
+              color: "#6f3218",
+              textAlign: "center",
+              boxShadow: "0 18px 45px rgba(30,13,5,.45)",
+            },
+            children: [
+              (0, se.jsx)("h2", {
+                style: {
+                  margin: "0 0 10px",
+                  fontSize: "24px",
+                  lineHeight: 1.2,
+                },
+                children: x ? "Perfect!" : t.TIME_UP,
+              }),
+              (0, se.jsxs)("p", {
+                style: {
+                  margin: "0 0 22px",
+                  fontSize: "18px",
+                  lineHeight: 1.4,
+                },
+                children: ["You found ", m, " / 50 ", t.SCORE_UNIT, "."],
+              }),
+              (0, se.jsx)("button", {
+                onClick: h,
+                style: {
+                  minWidth: "152px",
+                  minHeight: "52px",
+                  padding: "0 24px",
+                  border: 0,
+                  borderRadius: "26px",
+                  background: "#f47b2e",
+                  color: "#fff",
+                  fontSize: "18px",
+                  fontWeight: 900,
+                  boxShadow: "0 5px 0 #a94b1c",
+                  cursor: "pointer",
+                },
+                children: t.BTN_RESTART,
+              }),
+            ],
+          }),
+        }),
+    ],
+  });
+}
+;(0,Mb.createRoot)(document.getElementById("root")).render((0,se.jsx)(TF,{}));})();

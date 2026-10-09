@@ -240,25 +240,673 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; background: var(--color-bg); }
     * { box-sizing: border-box; touch-action: none; user-select: none; -webkit-user-drag: none; }
     button { font-family: var(--font-body); }
-  `});function vV(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}function wV(){let t=typeof window<"u"&&typeof window.tt<"u"&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,ge.useState)(!1);(0,ge.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]);let n=(0,ge.useCallback)(()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] playableRecordingSubmission failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))},[e,t]);return{canSubmit:t,submitting:e,submitRecording:n}}var SV=({cfg:t})=>{let e=(0,ge.useRef)(null),r=(0,ge.useRef)(null),n=(0,ge.useRef)(null),o=(0,ge.useRef)(null),i=(0,ge.useRef)(performance.now()),[s,a]=(0,ge.useState)("playing"),[l,u]=(0,ge.useState)(null),[c,p]=(0,ge.useState)({current:0,total:t.MAX_ENEMIES}),h=(0,ge.useRef)({entities:[],particles:[],enemySpawned:0,playerTarget:null,dragging:!1,gameState:"playing"}),f=(0,ge.useRef)(0),m=(0,ge.useRef)(0),x=(0,ge.useRef)({ready:!1,synthShoot:null,synthHit:null,synthWin:null,synthLose:null,lastTime:{},lastShootReal:0}),_=async()=>{if(!x.current.ready)try{await bg();let C=x.current;C.synthShoot=new Xl(on).toDestination(),C.synthShoot.volume.value=-12,C.synthHit=new Ei().toDestination(),C.synthHit.volume.value=-15,C.synthWin=new Xl(on).toDestination(),C.synthWin.volume.value=-8,C.synthLose=new Ei().toDestination(),C.synthLose.volume.value=-8,yA.volume.value=-5,C.ready=!0}catch(C){console.warn("Audio init failed",C)}},d=(0,ge.useCallback)(C=>{let E=x.current,O=Kp(),R=E.lastTime[C]||0,P=O>R?O:R+.001;return E.lastTime[C]=P,P},[]),g=(0,ge.useCallback)(()=>{if(!x.current.ready)return;let C=Date.now();C-x.current.lastShootReal<60||(x.current.lastShootReal=C,x.current.synthShoot.triggerAttackRelease("G5","32n",d("shoot")))},[d]),y=(0,ge.useCallback)(()=>{x.current.ready&&x.current.synthWin.triggerAttackRelease(["C4","E4","G4","C5"],"2n",Kp())},[]),S=(0,ge.useCallback)(()=>{x.current.ready&&x.current.synthLose.triggerAttackRelease("G2","2n",Kp())},[]),v=(0,ge.useCallback)(()=>{if(h.current={entities:[],particles:[],enemySpawned:0,neutralTotal:0,neutralCap:9,neutralPending:0,neutralNextAt:0,playerTarget:null,dragging:!1,gameState:"playing"},e.current){let C=e.current.clientWidth,E=e.current.clientHeight;for(let O=0;O<15;O++)h.current.entities.push({id:Math.random(),team:"player",x:C/2+(Math.random()-.5)*80,y:E/2+150+(Math.random()-.5)*80,r:8,hp:30,maxHp:30,speed:t.PLAYER_SPEED||.12,atkDamage:5,atkRange:40,atkCooldown:600,lastAtk:0});h.current.neutralTotal=3;h.current.entities.push(...[[.25,.56],[.75,.47],[.52,.33]].map(([x,y])=>({id:Math.random(),team:"player",x:C*x,y:E*y,r:8,hp:75,maxHp:75,speed:0,atkDamage:0,atkRange:0,atkCooldown:600,lastAtk:0,__neutralTroop:!0,recruited:!1})))}a("playing"),u(null),p({current:0,total:t.MAX_ENEMIES}),f.current=0,m.current=0,i.current=performance.now()},[t]);(0,ge.useEffect)(()=>{v()},[v]);let T=(0,ge.useCallback)(C=>{let E=h.current;if(!e.current||E.gameState!=="playing")return;let O=e.current.clientWidth,R=e.current.clientHeight;if(f.current+=C,E.enemySpawned<t.MAX_ENEMIES&&f.current-m.current>t.ENEMY_SPAWN_INTERVAL){m.current=f.current;for(let j=0;j<2&&!(E.enemySpawned>=t.MAX_ENEMIES);j++)E.entities.push({id:Math.random(),team:"enemy",x:Math.random()*O,y:-20,r:8,hp:20,maxHp:20,speed:.08,atkDamage:5,atkRange:40,atkCooldown:800,lastAtk:0}),E.enemySpawned++}let P=Date.now();
-for(let j of E.entities){
-  if(j.__neutralTroop&&!j.recruited&&E.entities.some(K=>K.team==="player"&&!K.__neutralTroop&&K.hp>0&&Math.hypot(K.x-j.x,K.y-j.y)<=42)){
-    j.recruited=!0;j.speed=t.PLAYER_SPEED||.12;j.atkDamage=5;j.atkRange=40;j.hp=j.maxHp;
-    if(E.neutralTotal+E.neutralPending<E.neutralCap){
-      E.neutralPending++;
-      if(!E.neutralNextAt)E.neutralNextAt=f.current+4000;
-    }
-  }
+  `});function vV(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}function wV(){let t=typeof window<"u"&&typeof window.tt<"u"&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,ge.useState)(!1);(0,ge.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]);let n=(0,ge.useCallback)(()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] playableRecordingSubmission failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))},[e,t]);return{canSubmit:t,submitting:e,submitRecording:n}}var SV=
+({ cfg: t }) => {
+  let e = (0, ge.useRef)(null),
+    r = (0, ge.useRef)(null),
+    n = (0, ge.useRef)(null),
+    o = (0, ge.useRef)(null),
+    i = (0, ge.useRef)(performance.now()),
+    [s, a] = (0, ge.useState)("playing"),
+    [l, u] = (0, ge.useState)(null),
+    [c, p] = (0, ge.useState)({ current: 0, total: t.MAX_ENEMIES }),
+    h = (0, ge.useRef)({
+      entities: [],
+      particles: [],
+      enemySpawned: 0,
+      playerTarget: null,
+      dragging: !1,
+      gameState: "playing",
+    }),
+    f = (0, ge.useRef)(0),
+    m = (0, ge.useRef)(0),
+    x = (0, ge.useRef)({
+      ready: !1,
+      synthShoot: null,
+      synthHit: null,
+      synthWin: null,
+      synthLose: null,
+      lastTime: {},
+      lastShootReal: 0,
+    }),
+    _ = async () => {
+      if (!x.current.ready)
+        try {
+          await bg();
+          let C = x.current;
+          ((C.synthShoot = new Xl(on).toDestination()),
+            (C.synthShoot.volume.value = -12),
+            (C.synthHit = new Ei().toDestination()),
+            (C.synthHit.volume.value = -15),
+            (C.synthWin = new Xl(on).toDestination()),
+            (C.synthWin.volume.value = -8),
+            (C.synthLose = new Ei().toDestination()),
+            (C.synthLose.volume.value = -8),
+            (yA.volume.value = -5),
+            (C.ready = !0));
+        } catch (C) {
+          console.warn("Audio init failed", C);
+        }
+    },
+    d = (0, ge.useCallback)((C) => {
+      let E = x.current,
+        O = Kp(),
+        R = E.lastTime[C] || 0,
+        P = O > R ? O : R + 0.001;
+      return ((E.lastTime[C] = P), P);
+    }, []),
+    g = (0, ge.useCallback)(() => {
+      if (!x.current.ready) return;
+      let C = Date.now();
+      C - x.current.lastShootReal < 60 ||
+        ((x.current.lastShootReal = C),
+        x.current.synthShoot.triggerAttackRelease("G5", "32n", d("shoot")));
+    }, [d]),
+    y = (0, ge.useCallback)(() => {
+      x.current.ready &&
+        x.current.synthWin.triggerAttackRelease(
+          ["C4", "E4", "G4", "C5"],
+          "2n",
+          Kp(),
+        );
+    }, []),
+    S = (0, ge.useCallback)(() => {
+      x.current.ready &&
+        x.current.synthLose.triggerAttackRelease("G2", "2n", Kp());
+    }, []),
+    v = (0, ge.useCallback)(() => {
+      feedGate.current=false;setFeedStarted(false);
+      if (
+        ((h.current = {
+          entities: [],
+          particles: [],
+          enemySpawned: 0,
+          neutralTotal: 0,
+          neutralCap: 9,
+          neutralPending: 0,
+          neutralNextAt: 0,
+          playerTarget: null,
+          dragging: !1,
+          gameState: "playing",
+        }),
+        e.current)
+      ) {
+        let C = e.current.clientWidth,
+          E = e.current.clientHeight;
+        for (let O = 0; O < 15; O++)
+          h.current.entities.push({
+            id: Math.random(),
+            team: "player",
+            x: C / 2 + (Math.random() - 0.5) * 80,
+            y: E / 2 + 150 + (Math.random() - 0.5) * 80,
+            r: 8,
+            hp: 30,
+            maxHp: 30,
+            speed: t.PLAYER_SPEED || 0.12,
+            atkDamage: 5,
+            atkRange: 40,
+            atkCooldown: 600,
+            lastAtk: 0,
+          });
+        h.current.neutralTotal = 3;
+        h.current.entities.push(
+          ...[
+            [0.25, 0.56],
+            [0.75, 0.47],
+            [0.52, 0.33],
+          ].map(([x, y]) => ({
+            id: Math.random(),
+            team: "player",
+            x: C * x,
+            y: E * y,
+            r: 8,
+            hp: 75,
+            maxHp: 75,
+            speed: 0,
+            atkDamage: 0,
+            atkRange: 0,
+            atkCooldown: 600,
+            lastAtk: 0,
+            __neutralTroop: !0,
+            recruited: !1,
+          })),
+        );
+      }
+      (a("playing"),
+        u(null),
+        p({ current: 0, total: t.MAX_ENEMIES }),
+        (f.current = 0),
+        (m.current = 0),
+        (i.current = performance.now()));
+    }, [t]);
+  const [feedStarted,setFeedStarted]=(0,ge.useState)(false); const feedGate=(0,ge.useRef)(false);
+
+  (0, ge.useEffect)(() => {
+    v();
+  }, [v]);
+  let T = (0, ge.useCallback)(
+      (C) => {
+        let E = h.current;
+        if (!e.current || E.gameState !== "playing") return;
+        let O = e.current.clientWidth,
+          R = e.current.clientHeight;
+        if (
+          ((f.current += C),
+          E.enemySpawned < t.MAX_ENEMIES &&
+            f.current - m.current > t.ENEMY_SPAWN_INTERVAL)
+        ) {
+          m.current = f.current;
+          for (let j = 0; j < 2 && !(E.enemySpawned >= t.MAX_ENEMIES); j++)
+            (E.entities.push({
+              id: Math.random(),
+              team: "enemy",
+              x: Math.random() * O,
+              y: -20,
+              r: 8,
+              hp: 20,
+              maxHp: 20,
+              speed: 0.08,
+              atkDamage: 5,
+              atkRange: 40,
+              atkCooldown: 800,
+              lastAtk: 0,
+            }),
+              E.enemySpawned++);
+        }
+        let P = Date.now();
+        for (let j of E.entities) {
+          if (
+            j.__neutralTroop &&
+            !j.recruited &&
+            E.entities.some(
+              (K) =>
+                K.team === "player" &&
+                !K.__neutralTroop &&
+                K.hp > 0 &&
+                Math.hypot(K.x - j.x, K.y - j.y) <= 42,
+            )
+          ) {
+            j.recruited = !0;
+            j.speed = t.PLAYER_SPEED || 0.12;
+            j.atkDamage = 5;
+            j.atkRange = 40;
+            j.hp = j.maxHp;
+            if (E.neutralTotal + E.neutralPending < E.neutralCap) {
+              E.neutralPending++;
+              if (!E.neutralNextAt) E.neutralNextAt = f.current + 4000;
+            }
+          }
+        }
+        if (
+          E.neutralPending > 0 &&
+          E.neutralTotal < E.neutralCap &&
+          f.current >= E.neutralNextAt &&
+          E.entities.filter((j) => j.__neutralTroop && !j.recruited && j.hp > 0)
+            .length < 3
+        ) {
+          let spawn = null;
+          for (let attempt = 0; attempt < 32; attempt++) {
+            let x = 45 + Math.random() * Math.max(1, O - 90),
+              y = 90 + Math.random() * Math.max(1, R - 150);
+            if (
+              !E.entities.some(
+                (unit) =>
+                  unit.hp > 0 &&
+                  Math.hypot(unit.x - x, unit.y - y) <
+                    (unit.__neutralTroop && !unit.recruited
+                      ? 60
+                      : unit.team === "player"
+                        ? 100
+                        : 35),
+              )
+            ) {
+              spawn = { x, y };
+              break;
+            }
+          }
+          if (spawn) {
+            E.entities.push({
+              id: Math.random(),
+              team: "player",
+              x: spawn.x,
+              y: spawn.y,
+              r: 8,
+              hp: 75,
+              maxHp: 75,
+              speed: 0,
+              atkDamage: 0,
+              atkRange: 0,
+              atkCooldown: 600,
+              lastAtk: 0,
+              __neutralTroop: !0,
+              recruited: !1,
+            });
+            E.neutralTotal++;
+            E.neutralPending--;
+            E.neutralNextAt = E.neutralPending ? f.current + 4000 : 0;
+          } else E.neutralNextAt = f.current + 500;
+        }
+        for (let j of E.entities) {
+          if (j.hp <= 0 || (j.__neutralTroop && !j.recruited)) continue;
+          let re = null,
+            Y = 1 / 0;
+          for (let K of E.entities)
+            if (
+              K.team !== j.team &&
+              K.hp > 0 &&
+              (!K.__neutralTroop || K.recruited)
+            ) {
+              let ue = K.x - j.x,
+                W = K.y - j.y,
+                st = Math.sqrt(ue * ue + W * W);
+              st < Y && ((Y = st), (re = K));
+            }
+          if (re && Y <= j.atkRange) {
+            if (P - j.lastAtk > j.atkCooldown) {
+              ((re.hp -= j.atkDamage), (j.lastAtk = P));
+              for (let K = 0; K < 3; K++)
+                E.particles.push({
+                  x: re.x,
+                  y: re.y,
+                  vx: (Math.random() - 0.5) * 0.6,
+                  vy: (Math.random() - 0.5) * 0.6,
+                  life: 300,
+                  maxLife: 300,
+                  color: "#ffaa00",
+                });
+              g();
+            }
+          } else if (
+            (j.team === "enemy" && re && (j.targetPos = { x: re.x, y: re.y }),
+            j.team === "player" &&
+              E.playerTarget &&
+              (j.targetPos = E.playerTarget),
+            j.targetPos)
+          ) {
+            let K = j.targetPos.x - j.x,
+              ue = j.targetPos.y - j.y,
+              W = Math.sqrt(K * K + ue * ue);
+            W > j.speed * C
+              ? ((j.x += (K / W) * j.speed * C),
+                (j.y += (ue / W) * j.speed * C))
+              : ((j.x = j.targetPos.x),
+                (j.y = j.targetPos.y),
+                j.team === "player" && (j.targetPos = null));
+          }
+          ((j.x = Math.max(j.r, Math.min(O - j.r, j.x))),
+            (j.y = Math.max(j.r, Math.min(R - j.r, j.y))));
+        }
+        for (let j = 0; j < E.entities.length; j++)
+          for (let re = j + 1; re < E.entities.length; re++) {
+            let Y = E.entities[j],
+              K = E.entities[re];
+            if (Y.hp <= 0 || K.hp <= 0) continue;
+            let ue = Y.x - K.x,
+              W = Y.y - K.y,
+              st = ue * ue + W * W,
+              Je = Y.r + K.r;
+            if (st < Je * Je && st > 0.001) {
+              let un = Math.sqrt(st),
+                Br = (Je - un) * 0.5,
+                qu = ue / un,
+                zu = W / un;
+              ((Y.x += qu * Br),
+                (Y.y += zu * Br),
+                (K.x -= qu * Br),
+                (K.y -= zu * Br));
+            }
+          }
+        for (let j = E.particles.length - 1; j >= 0; j--) {
+          let re = E.particles[j];
+          ((re.x += re.vx * C),
+            (re.y += re.vy * C),
+            (re.life -= C),
+            re.life <= 0 && E.particles.splice(j, 1));
+        }
+        E.entities = E.entities.filter((j) => j.hp > 0);
+        let V = E.entities.filter(
+            (j) => j.team === "player" && (!j.__neutralTroop || j.recruited),
+          ).length,
+          te = E.entities.filter((j) => j.team === "enemy").length;
+        (V === 0
+          ? ((E.gameState = "over"), S(), u("lose"), a("over"))
+          : E.enemySpawned >= t.MAX_ENEMIES &&
+            te === 0 &&
+            ((E.gameState = "over"), y(), u("win"), a("over")),
+          p((j) => {
+            let re = E.enemySpawned - te;
+            return j.current !== re ? { current: re, total: t.MAX_ENEMIES } : j;
+          }));
+      },
+      [t, g, y, S],
+    ),
+    A = (0, ge.useCallback)(() => {
+      let C = n.current;
+      if (!C || !e.current) return;
+      let E = e.current.clientWidth,
+        O = e.current.clientHeight;
+      C.clearRect(0, 0, E, O);
+      let R = h.current;
+      R.playerTarget &&
+        ((C.strokeStyle = "rgba(255,255,255,0.4)"),
+        (C.lineWidth = 2),
+        C.beginPath(),
+        C.arc(R.playerTarget.x, R.playerTarget.y, 14, 0, Math.PI * 2),
+        C.stroke());
+      for (let P of R.entities)
+        if (
+          ((C.fillStyle =
+            P.__neutralTroop && !P.recruited
+              ? "#aeb4bb"
+              : P.team === "player"
+                ? "#2877d4"
+                : "#d84e45"),
+          C.beginPath(),
+          C.arc(P.x, P.y, P.r, 0, Math.PI * 2),
+          C.fill(),
+          P.__neutralTroop &&
+            !P.recruited &&
+            ((C.strokeStyle = "#747b84"), (C.lineWidth = 1.5), C.stroke()),
+          !1,
+          P.hp < P.maxHp)
+        ) {
+          let V = P.r * 2.5,
+            te = 3,
+            j = P.x - V / 2,
+            re = P.y - P.r - 6;
+          ((C.fillStyle = "rgba(0,0,0,0.4)"),
+            C.fillRect(j, re, V, te),
+            (C.fillStyle = P.team === "player" ? "#58d483" : "#ff746b"),
+            C.fillRect(j, re, V * (P.hp / P.maxHp), te));
+        }
+      for (let P of R.particles)
+        ((C.fillStyle = P.color),
+          (C.globalAlpha = Math.max(0, P.life / P.maxLife)),
+          C.beginPath(),
+          C.arc(P.x, P.y, 2, 0, Math.PI * 2),
+          C.fill(),
+          (C.globalAlpha = 1));
+    }, []),
+    w = (0, ge.useCallback)(() => {
+      o.current = requestAnimationFrame(w);
+      let C = performance.now(),
+        E = C - i.current;
+      (E > 100 && (E = 16),
+        (i.current = C),
+        h.current.gameState === "playing" && (feedGate.current && T(E), A()));
+    }, [T, A]);
+  (0, ge.useEffect)(() => {
+    let C = new ResizeObserver((E) => {
+      for (let O of E) {
+        let { width: R, height: P } = O.contentRect,
+          V = window.devicePixelRatio || 1;
+        r.current &&
+          R > 0 &&
+          P > 0 &&
+          ((r.current.width = R * V),
+          (r.current.height = P * V),
+          (r.current.style.width = R + "px"),
+          (r.current.style.height = P + "px"),
+          (n.current = r.current.getContext("2d")),
+          n.current.scale(V, V));
+      }
+    });
+    return (
+      e.current && C.observe(e.current),
+      (o.current = requestAnimationFrame(w)),
+      () => {
+        (C.disconnect(), cancelAnimationFrame(o.current));
+      }
+    );
+  }, [w]);
+  let N = (C) => {
+      if (!r.current) return;
+      feedGate.current=true;setFeedStarted(true);
+      let E = r.current.getBoundingClientRect();
+      h.current.playerTarget = { x: C.clientX - E.left, y: C.clientY - E.top };
+    },
+    k = (C) => {
+      C.isPrimary !== !1 &&
+        (_(),
+        s === "playing" &&
+          ((h.current.dragging = !0),
+          C.currentTarget.setPointerCapture?.(C.pointerId),
+          N(C)));
+    },
+    D = (C) => {
+      C.isPrimary === !1 || !h.current.dragging || s !== "playing" || N(C);
+    },
+    M = (C) => {
+      C.isPrimary !== !1 &&
+        ((h.current.dragging = !1),
+        C.currentTarget.hasPointerCapture?.(C.pointerId) &&
+          C.currentTarget.releasePointerCapture(C.pointerId));
+    },
+    { canSubmit: q, submitting: B, submitRecording: I } = wV();
+  return (0, qe.jsxs)("div", {
+    ref: e,
+    style: {
+      width: "100%",
+      height: "100%",
+      position: "relative",
+      containerType: "size",
+      background:
+        "radial-gradient(circle at 18% 24%,rgba(255,255,255,.22) 0 2px,transparent 3px),radial-gradient(circle at 76% 68%,rgba(104,83,48,.12) 0 1px,transparent 2px),linear-gradient(155deg,#e5d8b5 0%,#d8c89f 52%,#c7b487 100%)",
+      backgroundSize: "72px 72px,54px 54px,100% 100%",
+    },
+    children: [
+      (0, qe.jsx)(_V, {}),
+      !feedStarted && s === "playing" && (0, qe.jsx)("p", {className:"feed-first-action",style:{position:"absolute",top:"90px",left:30,right:30,zIndex:12,margin:0,fontSize:18,lineHeight:1.35,textAlign:"center",pointerEvents:"none",color:"#fff"},children:"Drag to command your troops to start"}),
+      (0, qe.jsx)("canvas", {
+        ref: r,
+        style: {
+          position: "relative",
+          zIndex: 1,
+          width: "100%",
+          height: "100%",
+          display: "block",
+        },
+        onPointerDown: k,
+        onPointerMove: D,
+        onPointerUp: M,
+        onPointerCancel: M,
+      }),
+      (0, qe.jsxs)("div", {
+        style: {
+          position: "absolute",
+          zIndex: 2,
+          top: "calc(30px + env(safe-area-inset-top, 0px))",
+          left: "30px",
+          right: "30px",
+          pointerEvents: "none",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        },
+        children: [
+          (0, qe.jsxs)("div", {
+            style: {
+              margin: "0 auto",
+              minHeight: "44px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "rgba(48,39,25,.74)",
+              borderRadius: "22px",
+              padding: "8px 18px",
+              fontFamily: "var(--font-mono)",
+              color: "#fffdf4",
+              fontSize: "18px",
+              fontWeight: 700,
+              border: "1px solid rgba(255,255,255,.35)",
+              boxShadow: "0 6px 20px rgba(70,52,25,.18)",
+            },
+            children: ["Enemies ", Math.max(0, c.total - c.current)],
+          }),
+        ],
+      }),
+      (0, qe.jsx)(Yx, {
+        children:
+          s === "over" &&
+          (0, qe.jsxs)(oy.div, {
+            initial: { opacity: 0, scale: 0.95 },
+            animate: { opacity: 1, scale: 1 },
+            exit: { opacity: 0, scale: 0.95 },
+            style: {
+              position: "absolute",
+              inset: 0,
+              zIndex: 20,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "rgba(0,0,0,0.68)",
+              backdropFilter: "blur(6px)",
+              padding:
+                "calc(40px + env(safe-area-inset-top, 0px)) 25px calc(40px + env(safe-area-inset-bottom, 0px))",
+              boxSizing: "border-box",
+            },
+            children: [
+              l === "lose"
+                ? (0, qe.jsxs)("div", {
+                    style: {
+                      width: "min(82%, 420px)",
+                      padding: "clamp(24px, 7vw, 40px)",
+                      background:
+                        "linear-gradient(180deg,#fff 0%,#f8fafc 100%)",
+                      borderRadius: "28px",
+                      border: "2px solid rgba(239,68,68,.18)",
+                      textAlign: "center",
+                      marginBottom: "32px",
+                      boxShadow: "0 24px 70px rgba(0,0,0,.28)",
+                    },
+                    children: [
+                      (0, qe.jsx)("div", {
+                        style: {
+                          width: "72px",
+                          height: "72px",
+                          margin: "0 auto 18px",
+                          borderRadius: "50%",
+                          display: "grid",
+                          placeItems: "center",
+                          background: "rgba(239,68,68,.12)",
+                          color: "#dc2626",
+                          fontSize: "42px",
+                          fontWeight: 900,
+                        },
+                        children: "!",
+                      }),
+                      (0, qe.jsx)("h1", {
+                        style: {
+                          fontFamily: "var(--font-display)",
+                          color: "#dc2626",
+                          fontSize: "clamp(36px, 10vw, 48px)",
+                          lineHeight: 1,
+                          margin: 0,
+                        },
+                        children: "DEFEATED",
+                      }),
+                      (0, qe.jsx)("p", {
+                        style: {
+                          fontFamily: "var(--font-body)",
+                          color: "#475569",
+                          fontSize: "18px",
+                          lineHeight: 1.45,
+                          margin: "14px 0 0",
+                        },
+                        children: "Your army was wiped out.",
+                      }),
+                    ],
+                  })
+                : (0, qe.jsxs)("div", {
+                    style: {
+                      width: "min(82%, 420px)",
+                      padding: "clamp(24px, 7vw, 40px)",
+                      background:
+                        "linear-gradient(180deg,#fff 0%,#f8fafc 100%)",
+                      borderRadius: "28px",
+                      textAlign: "center",
+                      marginBottom: "32px",
+                      boxShadow: "0 24px 70px rgba(0,0,0,.28)",
+                    },
+                    children: [
+                      (0, qe.jsx)("h1", {
+                        style: {
+                          fontFamily: "var(--font-display)",
+                          color: "#2d82fe",
+                          fontSize: "clamp(36px, 10vw, 48px)",
+                          lineHeight: 1,
+                          margin: 0,
+                        },
+                        children: t.TXT_VICTORY,
+                      }),
+                      (0, qe.jsx)("p", {
+                        style: {
+                          fontFamily: "var(--font-body)",
+                          color: "#4a5568",
+                          fontSize: "18px",
+                          lineHeight: 1.45,
+                          margin: "14px 0 0",
+                        },
+                        children: t.TXT_ALL_CLEARED,
+                      }),
+                    ],
+                  }),
+              (0, qe.jsxs)("div", {
+                style: {
+                  display: "flex",
+                  gap: "16px",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  width: "100%",
+                  padding: "0 20px",
+                },
+                children: [
+                  (0, qe.jsx)("button", {
+                    onClick: v,
+                    style: {
+                      flex: "1 1 auto",
+                      minWidth: "130px",
+                      padding: "16px 20px",
+                      fontFamily: "var(--font-body)",
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      color: "white",
+                      backgroundColor: "#2d82fe",
+                      border: "none",
+                      borderRadius: "32px",
+                      cursor: "pointer",
+                      boxShadow: "0 4px 12px rgba(45,130,254,0.3)",
+                    },
+                    children: t.TXT_TRY_AGAIN,
+                  }),
+                  q &&
+                    (0, qe.jsx)("button", {
+                      onClick: I,
+                      disabled: B,
+                      style: {
+                        flex: "1 1 auto",
+                        minWidth: "130px",
+                        padding: "16px 20px",
+                        fontFamily: "var(--font-body)",
+                        fontSize: "18px",
+                        fontWeight: "bold",
+                        color: "white",
+                        backgroundColor: "#ff2d55",
+                        border: "none",
+                        borderRadius: "32px",
+                        cursor: B ? "not-allowed" : "pointer",
+                        opacity: B ? 0.6 : 1,
+                        boxShadow: "0 4px 12px rgba(255,45,85,0.3)",
+                      },
+                      children: t.TXT_POST,
+                    }),
+                ],
+              }),
+            ],
+          }),
+      }),
+    ],
+  });
 }
-if(E.neutralPending>0&&E.neutralTotal<E.neutralCap&&f.current>=E.neutralNextAt&&E.entities.filter(j=>j.__neutralTroop&&!j.recruited&&j.hp>0).length<3){
-  let spawn=null;
-  for(let attempt=0;attempt<32;attempt++){
-    let x=45+Math.random()*Math.max(1,O-90),y=90+Math.random()*Math.max(1,R-150);
-    if(!E.entities.some(unit=>unit.hp>0&&Math.hypot(unit.x-x,unit.y-y)<(unit.__neutralTroop&&!unit.recruited?60:unit.team==="player"?100:35))){spawn={x,y};break;}
-  }
-  if(spawn){
-    E.entities.push({id:Math.random(),team:"player",x:spawn.x,y:spawn.y,r:8,hp:75,maxHp:75,speed:0,atkDamage:0,atkRange:0,atkCooldown:600,lastAtk:0,__neutralTroop:!0,recruited:!1});
-    E.neutralTotal++;E.neutralPending--;E.neutralNextAt=E.neutralPending?f.current+4000:0;
-  }else E.neutralNextAt=f.current+500;
-}
-for(let j of E.entities){if(j.hp<=0||j.__neutralTroop&&!j.recruited)continue;let re=null,Y=1/0;for(let K of E.entities)if(K.team!==j.team&&K.hp>0&&(!K.__neutralTroop||K.recruited)){let ue=K.x-j.x,W=K.y-j.y,st=Math.sqrt(ue*ue+W*W);st<Y&&(Y=st,re=K)}if(re&&Y<=j.atkRange){if(P-j.lastAtk>j.atkCooldown){re.hp-=j.atkDamage,j.lastAtk=P;for(let K=0;K<3;K++)E.particles.push({x:re.x,y:re.y,vx:(Math.random()-.5)*.6,vy:(Math.random()-.5)*.6,life:300,maxLife:300,color:"#ffaa00"});g()}}else if(j.team==="enemy"&&re&&(j.targetPos={x:re.x,y:re.y}),j.team==="player"&&E.playerTarget&&(j.targetPos=E.playerTarget),j.targetPos){let K=j.targetPos.x-j.x,ue=j.targetPos.y-j.y,W=Math.sqrt(K*K+ue*ue);W>j.speed*C?(j.x+=K/W*j.speed*C,j.y+=ue/W*j.speed*C):(j.x=j.targetPos.x,j.y=j.targetPos.y,j.team==="player"&&(j.targetPos=null))}j.x=Math.max(j.r,Math.min(O-j.r,j.x)),j.y=Math.max(j.r,Math.min(R-j.r,j.y))}for(let j=0;j<E.entities.length;j++)for(let re=j+1;re<E.entities.length;re++){let Y=E.entities[j],K=E.entities[re];if(Y.hp<=0||K.hp<=0)continue;let ue=Y.x-K.x,W=Y.y-K.y,st=ue*ue+W*W,Je=Y.r+K.r;if(st<Je*Je&&st>.001){let un=Math.sqrt(st),Br=(Je-un)*.5,qu=ue/un,zu=W/un;Y.x+=qu*Br,Y.y+=zu*Br,K.x-=qu*Br,K.y-=zu*Br}}for(let j=E.particles.length-1;j>=0;j--){let re=E.particles[j];re.x+=re.vx*C,re.y+=re.vy*C,re.life-=C,re.life<=0&&E.particles.splice(j,1)}E.entities=E.entities.filter(j=>j.hp>0);let V=E.entities.filter(j=>j.team==="player"&&(!j.__neutralTroop||j.recruited)).length,te=E.entities.filter(j=>j.team==="enemy").length;V===0?(E.gameState="over",S(),u("lose"),a("over")):E.enemySpawned>=t.MAX_ENEMIES&&te===0&&(E.gameState="over",y(),u("win"),a("over")),p(j=>{let re=E.enemySpawned-te;return j.current!==re?{current:re,total:t.MAX_ENEMIES}:j})},[t,g,y,S]),A=(0,ge.useCallback)(()=>{let C=n.current;if(!C||!e.current)return;let E=e.current.clientWidth,O=e.current.clientHeight;C.clearRect(0,0,E,O);let R=h.current;R.playerTarget&&(C.strokeStyle="rgba(255,255,255,0.4)",C.lineWidth=2,C.beginPath(),C.arc(R.playerTarget.x,R.playerTarget.y,14,0,Math.PI*2),C.stroke());for(let P of R.entities)if(C.fillStyle=P.__neutralTroop&&!P.recruited?"#aeb4bb":P.team==="player"?"#2877d4":"#d84e45",C.beginPath(),C.arc(P.x,P.y,P.r,0,Math.PI*2),C.fill(),P.__neutralTroop&&!P.recruited&&(C.strokeStyle="#747b84",C.lineWidth=1.5,C.stroke()),!1,P.hp<P.maxHp){let V=P.r*2.5,te=3,j=P.x-V/2,re=P.y-P.r-6;C.fillStyle="rgba(0,0,0,0.4)",C.fillRect(j,re,V,te),C.fillStyle=P.team==="player"?"#58d483":"#ff746b",C.fillRect(j,re,V*(P.hp/P.maxHp),te)}for(let P of R.particles)C.fillStyle=P.color,C.globalAlpha=Math.max(0,P.life/P.maxLife),C.beginPath(),C.arc(P.x,P.y,2,0,Math.PI*2),C.fill(),C.globalAlpha=1},[]),w=(0,ge.useCallback)(()=>{o.current=requestAnimationFrame(w);let C=performance.now(),E=C-i.current;E>100&&(E=16),i.current=C,h.current.gameState==="playing"&&(T(E),A())},[T,A]);(0,ge.useEffect)(()=>{let C=new ResizeObserver(E=>{for(let O of E){let{width:R,height:P}=O.contentRect,V=window.devicePixelRatio||1;r.current&&R>0&&P>0&&(r.current.width=R*V,r.current.height=P*V,r.current.style.width=R+"px",r.current.style.height=P+"px",n.current=r.current.getContext("2d"),n.current.scale(V,V))}});return e.current&&C.observe(e.current),o.current=requestAnimationFrame(w),()=>{C.disconnect(),cancelAnimationFrame(o.current)}},[w]);let N=C=>{if(!r.current)return;let E=r.current.getBoundingClientRect();h.current.playerTarget={x:C.clientX-E.left,y:C.clientY-E.top}},k=C=>{C.isPrimary!==!1&&(_(),s==="playing"&&(h.current.dragging=!0,C.currentTarget.setPointerCapture?.(C.pointerId),N(C)))},D=C=>{C.isPrimary===!1||!h.current.dragging||s!=="playing"||N(C)},M=C=>{C.isPrimary!==!1&&(h.current.dragging=!1,C.currentTarget.hasPointerCapture?.(C.pointerId)&&C.currentTarget.releasePointerCapture(C.pointerId))},{canSubmit:q,submitting:B,submitRecording:I}=wV();return(0,qe.jsxs)("div",{ref:e,style:{width:"100%",height:"100%",position:"relative",containerType:"size",background:"radial-gradient(circle at 18% 24%,rgba(255,255,255,.22) 0 2px,transparent 3px),radial-gradient(circle at 76% 68%,rgba(104,83,48,.12) 0 1px,transparent 2px),linear-gradient(155deg,#e5d8b5 0%,#d8c89f 52%,#c7b487 100%)",backgroundSize:"72px 72px,54px 54px,100% 100%"},children:[(0,qe.jsx)(_V,{}),(0,qe.jsx)("canvas",{ref:r,style:{position:"relative",zIndex:1,width:"100%",height:"100%",display:"block"},onPointerDown:k,onPointerMove:D,onPointerUp:M,onPointerCancel:M}),(0,qe.jsxs)("div",{style:{position:"absolute",zIndex:2,top:"calc(30px + env(safe-area-inset-top, 0px))",left:"30px",right:"30px",pointerEvents:"none",display:"flex",justifyContent:"space-between",alignItems:"center"},children:[(0,qe.jsxs)("div",{style:{margin:"0 auto",minHeight:"44px",display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(48,39,25,.74)",borderRadius:"22px",padding:"8px 18px",fontFamily:"var(--font-mono)",color:"#fffdf4",fontSize:"18px",fontWeight:700,border:"1px solid rgba(255,255,255,.35)",boxShadow:"0 6px 20px rgba(70,52,25,.18)"},children:["Enemies ",Math.max(0,c.total-c.current)]})]}),(0,qe.jsx)(Yx,{children:s==="over"&&(0,qe.jsxs)(oy.div,{initial:{opacity:0,scale:.95},animate:{opacity:1,scale:1},exit:{opacity:0,scale:.95},style:{position:"absolute",inset:0,zIndex:20,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",backgroundColor:"rgba(0,0,0,0.68)",backdropFilter:"blur(6px)",padding:"calc(40px + env(safe-area-inset-top, 0px)) 25px calc(40px + env(safe-area-inset-bottom, 0px))",boxSizing:"border-box"},children:[l==="lose"?(0,qe.jsxs)("div",{style:{width:"min(82%, 420px)",padding:"clamp(24px, 7vw, 40px)",background:"linear-gradient(180deg,#fff 0%,#f8fafc 100%)",borderRadius:"28px",border:"2px solid rgba(239,68,68,.18)",textAlign:"center",marginBottom:"32px",boxShadow:"0 24px 70px rgba(0,0,0,.28)"},children:[(0,qe.jsx)("div",{style:{width:"72px",height:"72px",margin:"0 auto 18px",borderRadius:"50%",display:"grid",placeItems:"center",background:"rgba(239,68,68,.12)",color:"#dc2626",fontSize:"42px",fontWeight:900},children:"!"}),(0,qe.jsx)("h1",{style:{fontFamily:"var(--font-display)",color:"#dc2626",fontSize:"clamp(36px, 10vw, 48px)",lineHeight:1,margin:0},children:"DEFEATED"}),(0,qe.jsx)("p",{style:{fontFamily:"var(--font-body)",color:"#475569",fontSize:"18px",lineHeight:1.45,margin:"14px 0 0"},children:"Your army was wiped out."})]}):(0,qe.jsxs)("div",{style:{width:"min(82%, 420px)",padding:"clamp(24px, 7vw, 40px)",background:"linear-gradient(180deg,#fff 0%,#f8fafc 100%)",borderRadius:"28px",textAlign:"center",marginBottom:"32px",boxShadow:"0 24px 70px rgba(0,0,0,.28)"},children:[(0,qe.jsx)("h1",{style:{fontFamily:"var(--font-display)",color:"#2d82fe",fontSize:"clamp(36px, 10vw, 48px)",lineHeight:1,margin:0},children:t.TXT_VICTORY}),(0,qe.jsx)("p",{style:{fontFamily:"var(--font-body)",color:"#4a5568",fontSize:"18px",lineHeight:1.45,margin:"14px 0 0"},children:t.TXT_ALL_CLEARED})]}),(0,qe.jsxs)("div",{style:{display:"flex",gap:"16px",flexWrap:"wrap",justifyContent:"center",width:"100%",padding:"0 20px"},children:[(0,qe.jsx)("button",{onClick:v,style:{flex:"1 1 auto",minWidth:"130px",padding:"16px 20px",fontFamily:"var(--font-body)",fontSize:"18px",fontWeight:"bold",color:"white",backgroundColor:"#2d82fe",border:"none",borderRadius:"32px",cursor:"pointer",boxShadow:"0 4px 12px rgba(45,130,254,0.3)"},children:t.TXT_TRY_AGAIN}),q&&(0,qe.jsx)("button",{onClick:I,disabled:B,style:{flex:"1 1 auto",minWidth:"130px",padding:"16px 20px",fontFamily:"var(--font-body)",fontSize:"18px",fontWeight:"bold",color:"white",backgroundColor:"#ff2d55",border:"none",borderRadius:"32px",cursor:B?"not-allowed":"pointer",opacity:B?.6:1,boxShadow:"0 4px 12px rgba(255,45,85,0.3)"},children:t.TXT_POST})]})]})})]})},TV=()=>{let[t,e]=(0,ge.useState)(null);return(0,ge.useEffect)(()=>{let r=!0;return(async()=>{let n={tweaks:[],texts:[],images:[]};try{let o=await fetch("./game.config.json",{cache:"no-store"});o.ok&&(n=await o.json())}catch{}r&&e(vV(n))})(),()=>{r=!1}},[]),t?(0,qe.jsx)(SV,{cfg:t}):(0,qe.jsx)("div",{style:{width:"100%",height:"100%",background:"#d8c89f"}})};(0,RE.createRoot)(document.getElementById("root")).render((0,qe.jsx)(TV,{}));})();
+,TV=()=>{let[t,e]=(0,ge.useState)(null);return(0,ge.useEffect)(()=>{let r=!0;return(async()=>{let n={tweaks:[],texts:[],images:[]};try{let o=await fetch("./game.config.json",{cache:"no-store"});o.ok&&(n=await o.json())}catch{}r&&e(vV(n))})(),()=>{r=!1}},[]),t?(0,qe.jsx)(SV,{cfg:t}):(0,qe.jsx)("div",{style:{width:"100%",height:"100%",background:"#d8c89f"}})};(0,RE.createRoot)(document.getElementById("root")).render((0,qe.jsx)(TV,{}));})();

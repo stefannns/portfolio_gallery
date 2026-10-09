@@ -408,70 +408,355 @@ Error generating stack: `+i.message+`
       --font-body:    "Poppins", "PingFang SC", system-ui, sans-serif;
       --font-mono:    ui-monospace, Menlo, monospace;
     }
-  `});function Kv(e){let n={};return(e.tweaks||[]).forEach(t=>{n[t.id]=t.value}),(e.texts||[]).forEach(t=>{n[t.id]=t.value}),(e.images||[]).forEach(t=>{n[t.id]=t.path}),(e.mentions||[]).forEach(t=>{n[t.id]=t.path!=null&&t.path!==""?t.path:t.value}),(e.motions||[]).forEach(t=>{!t||!t.id||(t.base_path!=null&&t.base_path!==""&&(n[t.id]=t.base_path,n[t.id+"_BASE"]=t.base_path),t.frame_count!=null&&(n[t.id+"_COUNT"]=t.frame_count))}),n}function Zv({basePath:e,frameCount:n,travel:t=.5,dissipation:r=2}){let l=(0,ge.useCallback)(c=>{if(!e)return"";let d=e.lastIndexOf(".");if(d===-1)return e;let S=e.slice(0,d),_=e.slice(d);return`${S}_${String(c).padStart(3,"0")}${_}`},[e]),i=(0,ge.useRef)(null),u=(0,ge.useRef)(null),[o,s]=(0,ge.useState)(!1),[v,h]=(0,ge.useState)(0),y=(0,ge.useRef)(0),g=(0,ge.useRef)(null);(0,ge.useEffect)(()=>{if(!e||!n)return;let c=!0,d=0;for(let S=0;S<n;S++){let _=new Image;_.onload=_.onerror=()=>{d++,c&&d===n&&s(!0)},_.src=l(S)}return()=>{c=!1}},[e,n,l]),(0,ge.useEffect)(()=>{u.current&&zf(u.current,{TRIGGER:"hover",IMMEDIATE:!0,DYE_RESOLUTION:512,BLOOM:!0,SUNRAYS:!0,DENSITY_DISSIPATION:r,VELOCITY_DISSIPATION:.5,SPLAT_RADIUS:.35})},[r]);let T=c=>{y.current=Math.max(0,Math.min(1,c)),h(Math.round(y.current*(n-1)))},x=c=>({x:c.clientX,y:c.clientY}),k=c=>{o&&(g.current=x(c))},j=c=>{if(!o||!g.current||!i.current)return;let d=x(c),S=i.current.getBoundingClientRect(),_=(d.x-g.current.x)/S.width,C=(d.y-g.current.y)/S.height;g.current=d;let D=Math.sqrt(_*_+C*C)/t;T(y.current+D)},f=()=>{g.current=null};return(0,Te.jsxs)("div",{ref:i,onPointerDown:k,onPointerMove:j,onPointerUp:f,onPointerCancel:f,style:{position:"absolute",inset:0,touchAction:"none"},children:[(0,Te.jsx)("img",{src:o?l(v):e,alt:"ancient relic",style:{width:"100%",height:"100%",objectFit:"cover",display:"block"},draggable:!1}),(0,Te.jsx)("canvas",{ref:u,style:{position:"absolute",inset:0,width:"100%",height:"100%",mixBlendMode:"screen",opacity:.32,filter:"saturate(.45)",pointerEvents:"auto"}})]})}var Jv=()=>{
-  const h=ge.createElement;
-  const canvas=(0,ge.useRef)(null);
-  const state=(0,ge.useRef)({snake:[{x:7,y:4},{x:6,y:4},{x:5,y:4}],food:{x:11,y:6},dir:{x:1,y:0},next:{x:1,y:0},score:0,over:false,paused:false});
-  const [score,setScore]=(0,ge.useState)(0),[over,setOver]=(0,ge.useState)(false),[paused,setPaused]=(0,ge.useState)(false);
-  const [consoleArt,setConsoleArt]=(0,ge.useState)("./assets/console-cutout-v2.webp");
-  const audio=(0,ge.useRef)(null),pressTimer=(0,ge.useRef)(null);
-  const [pressed,setPressed]=(0,ge.useState)("");
-  const press=(id,kind)=>{
-    setPressed(id);clearTimeout(pressTimer.current);
-    pressTimer.current=setTimeout(()=>setPressed(""),150);
-    try{audio.current ||= window.createSnakeConsoleFeedback?.();audio.current?.play(kind,true)}catch(_){}
+  `});function Kv(e){let n={};return(e.tweaks||[]).forEach(t=>{n[t.id]=t.value}),(e.texts||[]).forEach(t=>{n[t.id]=t.value}),(e.images||[]).forEach(t=>{n[t.id]=t.path}),(e.mentions||[]).forEach(t=>{n[t.id]=t.path!=null&&t.path!==""?t.path:t.value}),(e.motions||[]).forEach(t=>{!t||!t.id||(t.base_path!=null&&t.base_path!==""&&(n[t.id]=t.base_path,n[t.id+"_BASE"]=t.base_path),t.frame_count!=null&&(n[t.id+"_COUNT"]=t.frame_count))}),n}function Zv({basePath:e,frameCount:n,travel:t=.5,dissipation:r=2}){let l=(0,ge.useCallback)(c=>{if(!e)return"";let d=e.lastIndexOf(".");if(d===-1)return e;let S=e.slice(0,d),_=e.slice(d);return`${S}_${String(c).padStart(3,"0")}${_}`},[e]),i=(0,ge.useRef)(null),u=(0,ge.useRef)(null),[o,s]=(0,ge.useState)(!1),[v,h]=(0,ge.useState)(0),y=(0,ge.useRef)(0),g=(0,ge.useRef)(null);(0,ge.useEffect)(()=>{if(!e||!n)return;let c=!0,d=0;for(let S=0;S<n;S++){let _=new Image;_.onload=_.onerror=()=>{d++,c&&d===n&&s(!0)},_.src=l(S)}return()=>{c=!1}},[e,n,l]),(0,ge.useEffect)(()=>{u.current&&zf(u.current,{TRIGGER:"hover",IMMEDIATE:!0,DYE_RESOLUTION:512,BLOOM:!0,SUNRAYS:!0,DENSITY_DISSIPATION:r,VELOCITY_DISSIPATION:.5,SPLAT_RADIUS:.35})},[r]);let T=c=>{y.current=Math.max(0,Math.min(1,c)),h(Math.round(y.current*(n-1)))},x=c=>({x:c.clientX,y:c.clientY}),k=c=>{o&&(g.current=x(c))},j=c=>{if(!o||!g.current||!i.current)return;let d=x(c),S=i.current.getBoundingClientRect(),_=(d.x-g.current.x)/S.width,C=(d.y-g.current.y)/S.height;g.current=d;let D=Math.sqrt(_*_+C*C)/t;T(y.current+D)},f=()=>{g.current=null};return(0,Te.jsxs)("div",{ref:i,onPointerDown:k,onPointerMove:j,onPointerUp:f,onPointerCancel:f,style:{position:"absolute",inset:0,touchAction:"none"},children:[(0,Te.jsx)("img",{src:o?l(v):e,alt:"ancient relic",style:{width:"100%",height:"100%",objectFit:"cover",display:"block"},draggable:!1}),(0,Te.jsx)("canvas",{ref:u,style:{position:"absolute",inset:0,width:"100%",height:"100%",mixBlendMode:"screen",opacity:.32,filter:"saturate(.45)",pointerEvents:"auto"}})]})}var Jv=
+() => {
+  const h = ge.createElement;
+  const canvas = (0, ge.useRef)(null);
+  const state = (0, ge.useRef)({
+    snake: [
+      { x: 7, y: 4 },
+      { x: 6, y: 4 },
+      { x: 5, y: 4 },
+    ],
+    food: { x: 11, y: 6 },
+    dir: { x: 1, y: 0 },
+    next: { x: 1, y: 0 },
+    score: 0,
+    over: false,
+    paused: false,
+    started:false,
+  });
+  const [score, setScore] = (0, ge.useState)(0),
+    [over, setOver] = (0, ge.useState)(false),
+    [paused, setPaused] = (0, ge.useState)(false);
+  const [consoleArt, setConsoleArt] = (0, ge.useState)(
+    "./assets/console-cutout-v2.webp",
+  );
+  const audio = (0, ge.useRef)(null),
+    pressTimer = (0, ge.useRef)(null);
+  const [pressed, setPressed] = (0, ge.useState)("");
+  const press = (id, kind) => {
+    setPressed(id);
+    clearTimeout(pressTimer.current);
+    pressTimer.current = setTimeout(() => setPressed(""), 150);
+    try {
+      audio.current ||= window.createSnakeConsoleFeedback?.();
+      audio.current?.play(kind, true);
+    } catch (_) {}
   };
-  (0,ge.useEffect)(()=>()=>{clearTimeout(pressTimer.current);audio.current?.destroy()},[]);
-  (0,ge.useEffect)(()=>{
-    let active=true;
-    fetch("./game.config.json",{cache:"no-store"}).then(r=>r.ok?r.json():Promise.reject()).then(config=>{
-      const image=(config.images||[]).find(image=>image.id==="IMG_CONSOLE");
-      if(active&&image?.path)setConsoleArt(image.path);
-    }).catch(()=>{});
-    return()=>{active=false};
-  },[]);
-  const randomFood=snake=>{let spot;do{spot={x:Math.floor(Math.random()*16),y:Math.floor(Math.random()*10)}}while(snake.some(s=>s.x===spot.x&&s.y===spot.y));return spot};
-  const draw=()=>{
-    const c=canvas.current;if(!c)return;const ctx=c.getContext("2d"),s=state.current;
-    ctx.fillStyle="#aab194";ctx.fillRect(0,0,320,225);
-    ctx.fillStyle="#202921";ctx.font="bold 15px monospace";ctx.fillText("SCORE: "+s.score,13,22);
-    const cell=18,ox=16,oy=32;
-    ctx.fillStyle="#1d281f";ctx.fillRect(ox+s.food.x*cell+2,oy+s.food.y*cell+2,15,15);
-    s.snake.forEach((part,i)=>{ctx.fillStyle=i===0?"#1b251d":"#242d23";ctx.fillRect(ox+part.x*cell+2,oy+part.y*cell+2,15,15)});
-    if(s.over){ctx.fillStyle="#aab194df";ctx.fillRect(22,75,276,80);ctx.fillStyle="#19251e";ctx.textAlign="center";ctx.font="bold 23px monospace";ctx.fillText("GAME OVER",160,112);ctx.font="14px monospace";ctx.fillText("PRESS RESTART",160,139);ctx.textAlign="left"}
+  (0, ge.useEffect)(
+    () => () => {
+      clearTimeout(pressTimer.current);
+      audio.current?.destroy();
+    },
+    [],
+  );
+  (0, ge.useEffect)(() => {
+    let active = true;
+    fetch("./game.config.json", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((config) => {
+        const image = (config.images || []).find(
+          (image) => image.id === "IMG_CONSOLE",
+        );
+        if (active && image?.path) setConsoleArt(image.path);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+  const randomFood = (snake) => {
+    let spot;
+    do {
+      spot = {
+        x: Math.floor(Math.random() * 16),
+        y: Math.floor(Math.random() * 10),
+      };
+    } while (snake.some((s) => s.x === spot.x && s.y === spot.y));
+    return spot;
   };
-  (0,ge.useEffect)(()=>{
-    draw();const id=setInterval(()=>{
-      const s=state.current;if(s.over||s.paused)return;
-      s.dir=s.next;const head={x:s.snake[0].x+s.dir.x,y:s.snake[0].y+s.dir.y};
-      if(head.x<0||head.x>=16||head.y<0||head.y>=10||s.snake.some((p,i)=>i<s.snake.length-1&&p.x===head.x&&p.y===head.y)){
-        s.over=true;setOver(true);audio.current?.play("over");draw();return;
+  const draw = () => {
+    const c = canvas.current;
+    if (!c) return;
+    const ctx = c.getContext("2d"),
+      s = state.current;
+    ctx.fillStyle = "#aab194";
+    ctx.fillRect(0, 0, 320, 225);
+    ctx.fillStyle = "#202921";
+    ctx.font = "bold 15px monospace";
+    ctx.fillText("SCORE: " + s.score, 13, 22);
+    const cell = 18,
+      ox = 16,
+      oy = 32;
+    ctx.fillStyle = "#1d281f";
+    ctx.fillRect(ox + s.food.x * cell + 2, oy + s.food.y * cell + 2, 15, 15);
+    s.snake.forEach((part, i) => {
+      ctx.fillStyle = i === 0 ? "#1b251d" : "#242d23";
+      ctx.fillRect(ox + part.x * cell + 2, oy + part.y * cell + 2, 15, 15);
+    });
+    if(!s.started&&!s.over){ctx.textAlign="center";ctx.font="bold 15px monospace";ctx.fillText("PRESS AN ARROW TO START",160,210);ctx.textAlign="left";}
+    if (s.over) {
+      ctx.fillStyle = "#aab194df";
+      ctx.fillRect(22, 75, 276, 80);
+      ctx.fillStyle = "#19251e";
+      ctx.textAlign = "center";
+      ctx.font = "bold 23px monospace";
+      ctx.fillText("GAME OVER", 160, 112);
+      ctx.font = "14px monospace";
+      ctx.fillText("PRESS RESTART", 160, 139);
+      ctx.textAlign = "left";
+    }
+  };
+  (0, ge.useEffect)(() => {
+    draw();
+    const id = setInterval(() => {
+      const s = state.current;
+      if (s.over || s.paused || !s.started || document.hidden) return;
+      s.dir = s.next;
+      const head = { x: s.snake[0].x + s.dir.x, y: s.snake[0].y + s.dir.y };
+      if (
+        head.x < 0 ||
+        head.x >= 16 ||
+        head.y < 0 ||
+        head.y >= 10 ||
+        s.snake.some(
+          (p, i) => i < s.snake.length - 1 && p.x === head.x && p.y === head.y,
+        )
+      ) {
+        s.over = true;
+        setOver(true);
+        audio.current?.play("over");
+        draw();
+        return;
       }
       s.snake.unshift(head);
-      if(head.x===s.food.x&&head.y===s.food.y){s.score++;setScore(s.score);s.food=randomFood(s.snake);audio.current?.play("eat");if(navigator.vibrate)navigator.vibrate(10)}else s.snake.pop();
+      if (head.x === s.food.x && head.y === s.food.y) {
+        s.score++;
+        setScore(s.score);
+        s.food = randomFood(s.snake);
+        audio.current?.play("eat");
+        if (navigator.vibrate) navigator.vibrate(10);
+      } else s.snake.pop();
       draw();
-    },215);
-    const key=e=>{const dirs={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0],w:[0,-1],s:[0,1],a:[-1,0],d:[1,0]};if(dirs[e.key]){e.preventDefault();turn(...dirs[e.key])}};
-    window.addEventListener("keydown",key);return()=>{clearInterval(id);window.removeEventListener("keydown",key)};
-  },[]);
-  const turn=(x,y)=>{press("dir-"+x+","+y,"click");const s=state.current;if(s.dir.x+x===0&&s.dir.y+y===0)return;s.next={x,y}};
-  const restart=()=>{press("restart","restart");state.current={snake:[{x:7,y:4},{x:6,y:4},{x:5,y:4}],food:{x:11,y:6},dir:{x:1,y:0},next:{x:1,y:0},score:0,over:false,paused:false};setScore(0);setOver(false);setPaused(false);draw()};
-  const togglePause=()=>{press("pause",state.current.paused?"resume":"pause");state.current.paused=!state.current.paused;setPaused(state.current.paused)};
-  const buttonStyle={position:"absolute",width:44,height:44,padding:0,border:0,borderRadius:"50%",background:"transparent",color:"#f1f3ee",display:"grid",placeItems:"center",transform:"translate(-50%,-50%)",cursor:"pointer",touchAction:"manipulation"};
-  const icon=path=>h("svg",{width:20,height:20,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:2,strokeLinecap:"round",strokeLinejoin:"round","aria-hidden":true},h("path",{d:path}));
-  const control=(label,path,x,y,left,top)=>h("button",{type:"button",className:"snake-console-control","aria-label":label,"data-feedback":pressed==="dir-"+x+","+y,onClick:()=>turn(x,y),style:{...buttonStyle,left,top}},icon(path));
-  return h("div",{style:{width:"100%",height:"100%",overflow:"hidden",background:"transparent",display:"grid",placeItems:"center",padding:"env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)",boxSizing:"border-box",fontFamily:"Arial,sans-serif"}},
-    h("style",null,".snake-console-control{transition:box-shadow 100ms ease,color 100ms ease}.snake-console-control svg{transition:transform 100ms ease}.snake-console-control:active,.snake-console-control[data-feedback=true]{background:rgba(160,215,220,.2)!important;box-shadow:inset 0 3px 8px #000a,0 0 0 2px #b6dfdfa6,0 0 14px #96dada70;color:#fff!important}.snake-console-control:active svg,.snake-console-control[data-feedback=true] svg{transform:translateY(1px) scale(.88)}.snake-console-control:focus-visible{outline:2px solid #9bd8ed;outline-offset:3px}@media(prefers-reduced-motion:reduce){.snake-console-control,.snake-console-control svg{transition:none}.snake-console-control:active svg,.snake-console-control[data-feedback=true] svg{transform:none}}"),
-    h("div",{style:{position:"relative",width:"min(100%,calc((100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)) / 1.5))",aspectRatio:"2 / 3",overflow:"hidden"}},
-      h("img",{src:consoleArt,alt:"",width:780,height:1170,draggable:false,"aria-hidden":true,style:{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"contain",pointerEvents:"none",userSelect:"none"}}),
-      h("div",{style:{position:"absolute",top:"17.8%",left:"12.7%",width:"74.8%",height:"34.1%",borderRadius:4,overflow:"hidden"}},
-        h("canvas",{ref:canvas,width:320,height:225,"aria-label":"Snake game, score "+score,style:{width:"100%",height:"100%",display:"block",imageRendering:"pixelated"}})),
-      h("button",{type:"button",className:"snake-console-control","aria-label":paused?"Resume game":"Pause game","aria-pressed":paused,"data-feedback":pressed==="pause",onClick:togglePause,style:{...buttonStyle,left:"22%",top:"70.7%",width:"max(54px,19%)",borderRadius:22}},icon(paused?"M8 5l11 7-11 7Z":"M9 5v14M15 5v14")),
-      h("button",{type:"button",className:"snake-console-control","aria-label":"Restart game","data-feedback":pressed==="restart",onClick:restart,style:{...buttonStyle,left:"22%",top:"83%",width:"max(54px,19%)",borderRadius:22}},icon("M3 10a9 9 0 1 1 2 9M3 4v6h6")),
-      control("Move up","M6 15l6-6 6 6",0,-1,"71.2%","66.7%"),
-      control("Move left","M15 6l-6 6 6 6",-1,0,"56.4%","75.7%"),
-      control("Move right","M9 6l6 6-6 6",1,0,"86.4%","75.7%"),
-      control("Move down","M6 9l6 6 6-6",0,1,"71.2%","85%")
-    )
+    }, 215);
+    const key = (e) => {
+      const dirs = {
+        ArrowUp: [0, -1],
+        ArrowDown: [0, 1],
+        ArrowLeft: [-1, 0],
+        ArrowRight: [1, 0],
+        w: [0, -1],
+        s: [0, 1],
+        a: [-1, 0],
+        d: [1, 0],
+      };
+      if (dirs[e.key]) {
+        e.preventDefault();
+        turn(...dirs[e.key]);
+      }
+    };
+    window.addEventListener("keydown", key);
+    return () => {
+      clearInterval(id);
+      window.removeEventListener("keydown", key);
+    };
+  }, []);
+  const turn = (x, y) => {
+    press("dir-" + x + "," + y, "click");
+    const s = state.current;
+    if (s.dir.x + x === 0 && s.dir.y + y === 0) return;
+    if(s.over)return;
+    s.started=true;
+    s.next = { x, y };
+  };
+  const restart = () => {
+    press("restart", "restart");
+    state.current = {
+      snake: [
+        { x: 7, y: 4 },
+        { x: 6, y: 4 },
+        { x: 5, y: 4 },
+      ],
+      food: { x: 11, y: 6 },
+      dir: { x: 1, y: 0 },
+      next: { x: 1, y: 0 },
+      score: 0,
+      over: false,
+      paused: false,
+    started:false,
+    };
+    setScore(0);
+    setOver(false);
+    setPaused(false);
+    draw();
+  };
+  const togglePause = () => {
+    press("pause", state.current.paused ? "resume" : "pause");
+    state.current.paused = !state.current.paused;
+    setPaused(state.current.paused);
+  };
+  const buttonStyle = {
+    position: "absolute",
+    width: 44,
+    height: 44,
+    padding: 0,
+    border: 0,
+    borderRadius: "50%",
+    background: "transparent",
+    color: "#f1f3ee",
+    display: "grid",
+    placeItems: "center",
+    transform: "translate(-50%,-50%)",
+    cursor: "pointer",
+    touchAction: "manipulation",
+  };
+  const icon = (path) =>
+    h(
+      "svg",
+      {
+        width: 20,
+        height: 20,
+        viewBox: "0 0 24 24",
+        fill: "none",
+        stroke: "currentColor",
+        strokeWidth: 2,
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        "aria-hidden": true,
+      },
+      h("path", { d: path }),
+    );
+  const control = (label, path, x, y, left, top) =>
+    h(
+      "button",
+      {
+        type: "button",
+        className: "snake-console-control",
+        "aria-label": label,
+        "data-feedback": pressed === "dir-" + x + "," + y,
+        onClick: () => turn(x, y),
+        style: { ...buttonStyle, left, top },
+      },
+      icon(path),
+    );
+  return h(
+    "div",
+    {
+      style: {
+        width: "100%",
+        height: "100%",
+        overflow: "hidden",
+        background: "transparent",
+        display: "grid",
+        placeItems: "center",
+        padding:
+          "env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)",
+        boxSizing: "border-box",
+        fontFamily: "Arial,sans-serif",
+      },
+    },
+    h(
+      "style",
+      null,
+      ".snake-console-control{transition:box-shadow 100ms ease,color 100ms ease}.snake-console-control svg{transition:transform 100ms ease}.snake-console-control:active,.snake-console-control[data-feedback=true]{background:rgba(160,215,220,.2)!important;box-shadow:inset 0 3px 8px #000a,0 0 0 2px #b6dfdfa6,0 0 14px #96dada70;color:#fff!important}.snake-console-control:active svg,.snake-console-control[data-feedback=true] svg{transform:translateY(1px) scale(.88)}.snake-console-control:focus-visible{outline:2px solid #9bd8ed;outline-offset:3px}@media(prefers-reduced-motion:reduce){.snake-console-control,.snake-console-control svg{transition:none}.snake-console-control:active svg,.snake-console-control[data-feedback=true] svg{transform:none}}",
+    ),
+    h(
+      "div",
+      {
+        style: {
+          position: "relative",
+          width:
+            "min(100%,calc((100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)) / 1.5))",
+          aspectRatio: "2 / 3",
+          overflow: "hidden",
+        },
+      },
+      h("img", {
+        src: consoleArt,
+        alt: "",
+        width: 780,
+        height: 1170,
+        draggable: false,
+        "aria-hidden": true,
+        style: {
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "contain",
+          pointerEvents: "none",
+          userSelect: "none",
+        },
+      }),
+      h(
+        "div",
+        {
+          style: {
+            position: "absolute",
+            top: "17.8%",
+            left: "12.7%",
+            width: "74.8%",
+            height: "34.1%",
+            borderRadius: 4,
+            overflow: "hidden",
+          },
+        },
+        h("canvas", {
+          ref: canvas,
+          width: 320,
+          height: 225,
+          "aria-label": "Snake game, score " + score,
+          style: {
+            width: "100%",
+            height: "100%",
+            display: "block",
+            imageRendering: "pixelated",
+          },
+        }),
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "snake-console-control",
+          "aria-label": paused ? "Resume game" : "Pause game",
+          "aria-pressed": paused,
+          "data-feedback": pressed === "pause",
+          onClick: togglePause,
+          style: {
+            ...buttonStyle,
+            left: "22%",
+            top: "70.7%",
+            width: "max(54px,19%)",
+            borderRadius: 22,
+          },
+        },
+        icon(paused ? "M8 5l11 7-11 7Z" : "M9 5v14M15 5v14"),
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "snake-console-control",
+          "aria-label": "Restart game",
+          "data-feedback": pressed === "restart",
+          onClick: restart,
+          style: {
+            ...buttonStyle,
+            left: "22%",
+            top: "83%",
+            width: "max(54px,19%)",
+            borderRadius: 22,
+          },
+        },
+        icon("M3 10a9 9 0 1 1 2 9M3 4v6h6"),
+      ),
+      control("Move up", "M6 15l6-6 6 6", 0, -1, "71.2%", "66.7%"),
+      control("Move left", "M15 6l-6 6 6 6", -1, 0, "56.4%", "75.7%"),
+      control("Move right", "M9 6l6 6-6 6", 1, 0, "86.4%", "75.7%"),
+      control("Move down", "M6 9l6 6 6-6", 0, 1, "71.2%", "85%"),
+    ),
   );
-};;(0,Ff.createRoot)(document.getElementById("root")).render((0,Te.jsx)(Jv,{}));})();
+}
+;;(0,Ff.createRoot)(document.getElementById("root")).render((0,Te.jsx)(Jv,{}));})();

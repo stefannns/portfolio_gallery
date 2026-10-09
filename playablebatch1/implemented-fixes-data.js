@@ -20,7 +20,7 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
   "playable2_20260927020828_iuyca5": {
     "number": 5,
     "items": [
-      "Changed the round to 50 dumplings in 15 seconds.",
+      "50 dumplings in 15 seconds; countdown starts with the first steamer tap.",
       "Separated targets and expanded tap areas; fixed duplicate counting.",
       "Each target now opens its own bamboo steamer to reveal a cartoon bun."
     ],
@@ -28,7 +28,8 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "evidence": [
       "FB-005-8e7edd06",
       "Individual steamer correction",
-      "Cartoon bun follow-up"
+      "Cartoon bun follow-up",
+      "Feed-first entry request 20261008"
     ]
   },
   "playable2_20260927020828_oumj12": {
@@ -60,13 +61,14 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "number": 8,
     "items": [
       "Added six food families with matching realistic fresh/spoiled images.",
-      "Replaced the cover with a front-facing open fridge and simplified realistic UI.",
+      "Direct food scene without a cover; Eat/Pass starts the food timer on the first answer.",
       "Fixed food/plate clipping, timeout scoring, duplicate answers and replay cleanup."
     ],
     "status": "Implemented locally; review acceptance pending.",
     "evidence": [
       "FB-008-3decf4b5",
-      "FB-008-1c4dbe4e"
+      "FB-008-1c4dbe4e",
+      "Feed-first entry request 20261008"
     ]
   },
   "playable2_20260927020828_86gl5z": {
@@ -96,14 +98,15 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
   "playable2_20260927020825_z23fv4": {
     "number": 13,
     "items": [
-      "Larger standalone book with a separate button below and a zoom-in transition.",
+      "Opens directly on ASMR interactions; removed the book-cover start screen.",
       "Replaced bubble-wrap and spinner sounds with recordings; spinner is silent at rest.",
       "Made sand audio quieter with gradual fade-in/out."
     ],
     "status": "Implemented locally; review acceptance pending.",
     "evidence": [
       "FB-013-f88170a0",
-      "FB-013-347bfdcd"
+      "FB-013-347bfdcd",
+      "Feed-first entry request 20261008"
     ]
   },
   "playable2_20260927020825_hjn7q5": {
@@ -196,11 +199,12 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "items": [
       "Removed duplicate plug instructions and raised the phone.",
       "Raised/enlarged the connector while preserving its rotation pivot.",
-      "Centered and wrapped “CONNECTION TIMEOUT” feedback."
+      "Unified local Poppins typography, bold tabular battery digits and centered, wrapping “CONNECTION TIMEOUT” feedback."
     ],
     "status": "Implemented locally; review acceptance pending.",
     "evidence": [
-      "FB-026-d23724cb"
+      "FB-026-d23724cb",
+      "No.26 font request 20261008"
     ]
   },
   "playable2_20260928025305_2wpf3o": {

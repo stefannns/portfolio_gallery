@@ -33,7 +33,7 @@ window.createPocketRacerComponent = function (React, JSX, flatten, useSubmission
     const clear = useCallback(() => { inputs.current.clear(); if (live.current) setPressed({}); }, []);
     const tick = useCallback(now => {
       const k = game.current, cv = canvas.current;
-      if (!live.current || !k || k.ended || !cv) return;
+      if (!live.current || !k || k.ended || k.waiting || !cv) return;
       k.raf = null;
       if (document.hidden) { k.lastTime = null; return; }
       if (!cv.clientWidth || !cv.clientHeight) { k.lastTime = null; k.raf = requestAnimationFrame(tick); return; }
@@ -49,7 +49,7 @@ window.createPocketRacerComponent = function (React, JSX, flatten, useSubmission
     }, [draw, clear]);
     const start = useCallback(() => {
       // Duplicate start events must not create a second animation loop.
-      if (game.current && !game.current.ended) return;
+      if (game.current && !game.current.ended && !game.current.waiting) return;
       clear(); sound.current.stop();
       vibrate('light'); game.current = Racer.create(currentConfig.current, performance.now());
       const race = game.current;
@@ -57,6 +57,16 @@ window.createPocketRacerComponent = function (React, JSX, flatten, useSubmission
       setHud(Racer.stats(race)); setPhase('playing'); draw();
       if (!document.hidden) game.current.raf = requestAnimationFrame(tick);
     }, [clear, draw, tick]);
+    const prepare = useCallback(() => {
+      const old = game.current;
+      if (old?.raf !== null && old?.raf !== undefined) cancelAnimationFrame(old.raf);
+      clear(); sound.current.stop();
+      game.current = Racer.create(currentConfig.current, performance.now());
+      game.current.speed = 0;
+      game.current.waiting = true;
+      game.current.raf = null;
+      setHud(Racer.stats(game.current)); setPhase('idle'); draw();
+    }, [clear, draw]);
     useEffect(() => {
       let active = true;
       (async () => {
@@ -69,6 +79,7 @@ window.createPocketRacerComponent = function (React, JSX, flatten, useSubmission
     }, []);
     useEffect(() => {
       if (!config) return;
+      prepare();
       let active = true;
       const loaded = {};
       for (const key of ['CHAR_PLAYER', 'IMG_TRAFFIC_RED', 'IMG_TRAFFIC_BLUE', 'IMG_TRAFFIC_PURPLE', 'IMG_BACKGROUND', 'IMG_ROADSIDE']) {
@@ -80,7 +91,7 @@ window.createPocketRacerComponent = function (React, JSX, flatten, useSubmission
       }
       images.current = loaded; draw();
       return () => { active = false; Object.values(loaded).forEach(image => { image.onload = null; image.onerror = null; }); };
-    }, [config, draw]);
+    }, [config, draw, prepare]);
     useEffect(() => {
       const resize = () => {
         const cv = canvas.current; if (!cv) return;
@@ -92,14 +103,14 @@ window.createPocketRacerComponent = function (React, JSX, flatten, useSubmission
       if (canvas.current) observer?.observe(canvas.current);
       return () => { observer?.disconnect(); window.removeEventListener('resize', resize); };
     }, [config, draw]);
-    useEffect(() => { if (phase !== 'playing') actionButton.current?.focus({ preventScroll: true }); }, [phase]);
+    useEffect(() => { if (phase === 'over') actionButton.current?.focus({ preventScroll: true }); }, [phase]);
     useEffect(() => {
       live.current = true;
       const keyActions = { arrowleft: 'left', a: 'left', arrowright: 'right', d: 'right', arrowup: 'accelerate', w: 'accelerate', arrowdown: 'brake', s: 'brake' };
       const down = event => {
         if (!game.current || game.current.ended || event.altKey || event.metaKey || event.ctrlKey) return;
         const key = event.key.toLowerCase(), action = keyActions[key];
-        if (action) { event.preventDefault(); sound.current.unlock(); setPressed({ ...inputs.current.key(key, action, true) }); }
+        if (action) { event.preventDefault(); if(game.current.waiting)start(); sound.current.unlock(); setPressed({ ...inputs.current.key(key, action, true) }); }
       };
       const up = event => {
         const key = event.key.toLowerCase(), action = keyActions[key];
@@ -111,7 +122,7 @@ window.createPocketRacerComponent = function (React, JSX, flatten, useSubmission
       };
       const resume = () => {
         const k = game.current;
-        if (k && !k.ended && k.raf === null && !document.hidden && live.current) { k.lastTime = null; k.raf = requestAnimationFrame(tick); }
+        if (k && !k.ended && !k.waiting && k.raf === null && !document.hidden && live.current) { k.lastTime = null; k.raf = requestAnimationFrame(tick); }
       };
       const visibility = () => { if (document.hidden) pause(); else resume(); };
       window.addEventListener('keydown', down); window.addEventListener('keyup', up); window.addEventListener('blur', clear);
@@ -121,9 +132,10 @@ window.createPocketRacerComponent = function (React, JSX, flatten, useSubmission
         window.removeEventListener('keydown', down); window.removeEventListener('keyup', up); window.removeEventListener('blur', clear);
         window.removeEventListener('pagehide', pause); window.removeEventListener('pageshow', resume); document.removeEventListener('visibilitychange', visibility);
       };
-    }, [tick, clear]);
+    }, [tick, clear, start]);
     function pointer(action, down, event) {
       if (!game.current || game.current.ended) return;
+      if(down && game.current.waiting)start();
       // Every pointer owns its action, including non-primary touches (steer + gas).
       const id = event.pointerId ?? 'mouse';
       if (down) { event.preventDefault(); sound.current.unlock(); try { event.currentTarget.setPointerCapture(id); } catch (_) {} }
@@ -136,7 +148,7 @@ window.createPocketRacerComponent = function (React, JSX, flatten, useSubmission
         onPointerDown: e => pointer(action, true, e), onPointerUp: e => pointer(action, false, e),
         onPointerCancel: e => pointer(action, false, e), onLostPointerCapture: e => pointer(action, false, e),
         // Native keyboard activation gives a short hold, while arrows/WASD support continuous driving.
-        onKeyDown: e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); sound.current.unlock(); setPressed({ ...inputs.current.key('button:' + action, action, true) }); } },
+        onKeyDown: e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); if(game.current?.waiting)start(); sound.current.unlock(); setPressed({ ...inputs.current.key('button:' + action, action, true) }); } },
         onKeyUp: e => { if (e.key === ' ' || e.key === 'Enter') setPressed({ ...inputs.current.key('button:' + action, action, false) }); },
         onBlur: () => setPressed({ ...inputs.current.key('button:' + action, action, false) }),
         children: icon ? jsx('svg', { width: 24, height: 24, viewBox: '0 0 24 24', 'aria-hidden': true,
@@ -145,7 +157,7 @@ window.createPocketRacerComponent = function (React, JSX, flatten, useSubmission
     if (!config) return jsx('div', { className: 'racer-loading', role: 'status', children: 'Loading…' });
     return jsxs('div', { className: 'racer', children: [
       jsx('canvas', { ref: canvas, className: 'race-canvas', 'aria-label': 'Road with a rear-view car and approaching traffic' }),
-      phase === 'playing' && jsxs('div', { className: 'race-hud', children: [
+      phase !== 'over' && jsxs('div', { className: 'race-hud', children: [
         jsxs('div', { className: 'race-hud-top', children: [
           jsxs('div', { className: 'race-points', 'aria-label': hud.score + ' points', children: [
             jsx('span', { className: 'race-number', children: hud.score.toLocaleString('en') }), jsx('span', { className: 'race-unit', children: 'pts' })
@@ -153,14 +165,11 @@ window.createPocketRacerComponent = function (React, JSX, flatten, useSubmission
           jsx('div', { className: 'race-time race-number', 'aria-label': 'Elapsed time ' + Racer.formatTime(hud.elapsed), children: Racer.formatTime(hud.elapsed) })
         ] })
       ] }),
-      phase === 'playing' && jsx('canvas', { ref: speedDisplay, className: 'race-speed', role: 'img', 'aria-label': 'Speedometer: ' + hud.speed + ' kilometres per hour; scale 0 to 240' }),
-      phase === 'playing' && jsxs('div', { className: 'drive-controls', role: 'group', 'aria-label': 'Driving controls', children: [
+      phase !== 'over' && jsx('canvas', { ref: speedDisplay, className: 'race-speed', role: 'img', 'aria-label': 'Speedometer: ' + hud.speed + ' kilometres per hour; scale 0 to 240' }),
+      phase !== 'over' && jsxs('div', { className: 'drive-controls', role: 'group', 'aria-label': 'Driving controls', children: [
         control('left', 'Steer left', true), control('right', 'Steer right', true), control('accelerate', 'Accel'), control('brake', 'Brake')
       ] }),
-      phase === 'idle' && jsxs('div', { className: 'race-overlay', children: [
-        jsx('p', { className: 'race-instruction', children: 'Steer to dodge traffic. Drive faster for more points.' }),
-        jsx('button', { ref: actionButton, type: 'button', className: 'race-action', onClick: start, children: config.BTN_START || 'Start Race' })
-      ] }),
+      phase === 'idle' && jsx('p', { className: 'race-instruction feed-first-action', style:{position:'absolute',top:'18%',left:30,right:30,margin:0,textAlign:'center',pointerEvents:'none'}, children: 'Hold Accel to start · steer to dodge traffic.' }),
       phase === 'over' && jsxs('div', { className: 'race-overlay', role: 'dialog', 'aria-modal': true, 'aria-labelledby': 'crash-heading', children: [
         jsx('h2', { id: 'crash-heading', className: 'race-result', children: 'Crash' }),
         jsxs('p', { className: 'race-distance', children: [hud.score.toLocaleString('en'), jsx('span', { className: 'race-unit', children: ' pts' })] }),
@@ -169,7 +178,7 @@ window.createPocketRacerComponent = function (React, JSX, flatten, useSubmission
           jsx('span', { 'aria-label': 'Distance ' + Math.round(hud.distance) + ' metres', children: Math.round(hud.distance).toLocaleString('en') + ' m' })
         ] }),
         jsxs('div', { className: 'race-actions', children: [
-          jsx('button', { ref: actionButton, type: 'button', className: 'race-action', onClick: start, children: config.BTN_RESTART || 'Play Again' }),
+          jsx('button', { ref: actionButton, type: 'button', className: 'race-action', onClick: prepare, children: config.BTN_RESTART || 'Play Again' }),
           canSubmit && jsx('button', { type: 'button', className: 'race-action secondary', disabled: submitting, onClick: submitRecording, children: config.TXT_POST || 'Post My Play' })
         ] })
       ] })
