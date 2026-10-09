@@ -391,14 +391,15 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "items": [
       "Added a top-down variant with radial grass, natural flowers and refined visitors; flower tools stay independent of grass.",
       "Simplified to an anchored four-item picker plus Reset; removed Ferns.",
-      "Added varied grass/flower sounds and select/reset feedback, plus gentle music after first planting; leaving stops all audio."
+      "Added quieter, softer grass rustles and short flower pops, select/reset feedback and gentle music; leaving stops all audio."
     ],
     "status": "Custom variant; visual/audio acceptance pending.",
     "evidence": [
       "User-requested alternative 57b",
       "57b Ferns removal",
       "No.57b audio follow-up",
-      "No.57b gentle music follow-up"
+      "No.57b gentle music follow-up",
+      "No.57b soft grass and flower pops follow-up"
     ]
   },
   "playable2_20261001230112_0ivocb": {

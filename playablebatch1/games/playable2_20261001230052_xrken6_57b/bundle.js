@@ -35,21 +35,21 @@ Error generating stack: `+o.message+`
     const play=()=>{try{if(audio.current!==ctx||ctx.state!=="running"||state.disposed||state.epoch!==epoch||document.hidden||performance.now()-requested>300||voices.current>=4)return;
       if(kind!=="clear"&&kind!=="select")startMusic(ctx);
       const variation=state.variant++%3,key=kind+":"+(type||"")+":"+variation;let buffer=state.buffers.get(key);
-      if(!buffer){const duration=kind==="grass"?.28:kind==="clear"?.4:kind==="select"?.1:.42,rate=ctx.sampleRate;
+      if(!buffer){const flower=["daisy","tulip","sunflower"].includes(kind),duration=kind==="grass"?.28:kind==="clear"?.4:kind==="select"?.1:.18,rate=ctx.sampleRate;
         buffer=ctx.createBuffer(1,Math.ceil(rate*duration),rate);const data=buffer.getChannelData(0);let seed=5708+variation*7919,low=0,high=0,phase=0;
-        const frequency=({daisy:660,tulip:440,sunflower:330})[kind]||({daisy:660,tulip:440,sunflower:330})[type]||520;
+        const frequency=({daisy:240,tulip:210,sunflower:180})[kind]||520;
         for(let i=0;i<data.length;i++){const t=i/rate;seed=(1664525*seed+1013904223)>>>0;const noise=seed/2147483648-1;
-          low+=(noise-low)*(1-Math.exp(-2*Math.PI*650/rate));high+=(noise-high)*(1-Math.exp(-2*Math.PI*3600/rate));
-          phase+=2*Math.PI*frequency*(1+(variation-1)*.055)/rate;
-          const envelope=Math.min(1,t/.008,(duration-t)/.035);
-          const value=kind==="grass"?(high-low)*.8*Math.sin(Math.PI*t/duration)**1.2+Math.sin(phase*.28)*.08*Math.exp(-t*28):
+          low+=(noise-low)*(1-Math.exp(-2*Math.PI*(kind==="grass"?350:650)/rate));high+=(noise-high)*(1-Math.exp(-2*Math.PI*(kind==="grass"?1800:3600)/rate));
+          phase+=2*Math.PI*(flower?55+(frequency-55)*Math.exp(-t*36):frequency)*(1+(variation-1)*.055)/rate;
+          const envelope=Math.min(1,t/(kind==="grass"?.025:flower?.003:.008),(duration-t)/(kind==="grass"?.07:.035));
+          const value=kind==="grass"?(high-low)*.65*Math.sin(Math.PI*t/duration)**1.2+Math.sin(phase*.28)*.05*Math.exp(-t*28):
             kind==="clear"?(high-low)*.65*Math.sin(Math.PI*t/duration)*Math.exp(-t*3):
-            kind==="select"?Math.sin(phase)*.18*Math.exp(-t*45):
-            (Math.sin(phase)+.24*Math.sin(phase*2)+.08*Math.sin(phase*3))*.22*Math.exp(-t*10)+(high-low)*.12*Math.exp(-t*32);
+            kind==="select"?(high-low)*.2*Math.exp(-t*45):
+            Math.sin(phase)*.3*Math.exp(-t*28)+low*.18*Math.exp(-t*65);
           data[i]=value*envelope;
         }state.buffers.set(key,buffer);
       }
-      const source=ctx.createBufferSource(),gain=ctx.createGain(),at=ctx.currentTime,duration=buffer.duration;source.buffer=buffer;source.loop=false;gain.gain.setValueAtTime(.7,at);source.connect(gain).connect(ctx.destination);
+      const source=ctx.createBufferSource(),gain=ctx.createGain(),at=ctx.currentTime,duration=buffer.duration;source.buffer=buffer;source.loop=false;gain.gain.setValueAtTime(kind==="grass"?.45:.7,at);source.connect(gain).connect(ctx.destination);
       const voice={source,gain};state.active.add(voice);voices.current=state.active.size;
       source.onended=()=>{state.active.delete(voice);voices.current=state.active.size;try{source.disconnect();gain.disconnect()}catch{}};source.start(at);source.stop(at+duration+.01);
     }catch{}};
