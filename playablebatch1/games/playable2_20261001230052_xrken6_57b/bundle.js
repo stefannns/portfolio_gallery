@@ -11,14 +11,50 @@ Error generating stack: `+o.message+`
   const [stats,setStats]=(0,z.useState)({plants:0,grass:false,bugs:0}),[hasGrowth,setHasGrowth]=(0,z.useState)(false),[selected,setSelected]=(0,z.useState)("grass");
   const serial=(0,z.useRef)(0),reduced=(0,z.useRef)(false),keyboard=(0,z.useRef)({x:.5,y:.6,visible:false}),voices=(0,z.useRef)(0);
   const [menuOpen,setMenuOpen]=(0,z.useState)(false),picker=(0,z.useRef)(null),pickerButton=(0,z.useRef)(null),optionButtons=(0,z.useRef)({}),menuStart=(0,z.useRef)(null);
+  const sound=(0,z.useRef)({active:new Set(),buffers:new Map(),variant:0,epoch:0,disposed:false,music:null,musicBuffer:null});
   const growth=Fe(Number(e.GRAVITY)||1.2,.1,2),wander=Fe(Number(e.CREATURE_FORCE)||.05,.01,.2);
   const choices=[{id:"grass",label:"Grass"},{id:"daisy",label:"Daisies"},{id:"tulip",label:"Tulips"},{id:"sunflower",label:"Sunflowers"}];
   (0,z.useEffect)(()=>{const sources={ladybug:e.IMG_CREATURE,bee:e.IMG_FOOD,flower:e.IMG_BLOCK};let live=true;for(const [key,src] of Object.entries(sources)){const image=new Image;image.onload=()=>{if(live)images.current[key]=image};image.onerror=()=>{if(live)images.current[key]=null};image.src=src||""}return()=>{live=false}},[e.IMG_CREATURE,e.IMG_FOOD,e.IMG_BLOCK]);
   (0,z.useEffect)(()=>{const media=window.matchMedia?.("(prefers-reduced-motion: reduce)");const update=()=>{if(reduced.current&&!media?.matches)for(const plant of [...grass.current,...plants.current])plant.born=Math.min(plant.born,performance.now()-plant.duration/growth);reduced.current=!!media?.matches};update();media?.addEventListener?.("change",update);return()=>media?.removeEventListener?.("change",update)},[growth]);
-  const tone=(0,z.useCallback)(kind=>{try{const AudioCtor=window.AudioContext||window.webkitAudioContext;if(!AudioCtor)return;const ctx=audio.current||(audio.current=new AudioCtor);
-    const play=()=>{try{if(audio.current!==ctx||ctx.state!=="running"||voices.current>=4)return;const oscillator=ctx.createOscillator(),gain=ctx.createGain(),at=ctx.currentTime;oscillator.type="sine";const notes=kind==="bug"?[660,880]:kind==="clear"?[420,280]:kind==="select"?[520,650]:[440,550];oscillator.frequency.setValueAtTime(notes[0],at);oscillator.frequency.exponentialRampToValueAtTime(notes[1],at+.13);gain.gain.setValueAtTime(.0001,at);gain.gain.exponentialRampToValueAtTime(.035,at+.015);gain.gain.exponentialRampToValueAtTime(.0001,at+.21);oscillator.connect(gain).connect(ctx.destination);voices.current++;oscillator.onended=()=>{voices.current=Math.max(0,voices.current-1);try{oscillator.disconnect();gain.disconnect()}catch{}};oscillator.start(at);oscillator.stop(at+.22)}catch{}};
+  const stopSound=(0,z.useCallback)((keepMusic=false)=>{const state=sound.current;state.epoch++;for(const voice of state.active){voice.source.onended=null;try{voice.source.stop();voice.source.disconnect();voice.gain.disconnect()}catch{}}state.active.clear();voices.current=0;if(!keepMusic&&state.music){const music=state.music;state.music=null;try{music.source.stop();music.source.disconnect();music.gain.disconnect()}catch{}}},[]);
+  const startMusic=(0,z.useCallback)(ctx=>{const state=sound.current;if(state.music||state.disposed||document.hidden||ctx.state!=="running")return;
+    if(!state.musicBuffer){const rate=22050,duration=16,buffer=ctx.createBuffer(1,rate*duration,rate),data=buffer.getChannelData(0);
+      const chords=[[48,55,59],[45,52,60],[41,48,57],[43,50,59]],melody=[72,76,79,76,69,72,76,72,69,72,77,72,71,74,79,74],hz=note=>440*2**((note-69)/12);
+      for(let i=0;i<data.length;i++){const t=i/rate,section=Math.floor(t/4),age=t%4,beat=Math.floor(t),noteAge=t%1;
+        const chordEnvelope=Math.sin(Math.PI*age/4)**.7;let value=0;
+        for(const note of chords[section]){const phase=2*Math.PI*hz(note)*t;value+=(Math.sin(phase)+.12*Math.sin(phase*2))*chordEnvelope*.12;}
+        const phase=2*Math.PI*hz(melody[beat])*noteAge,attack=Math.min(1,noteAge/.035);
+        value+=(Math.sin(phase)+.15*Math.sin(phase*2))*attack*Math.exp(-noteAge*4.5)*.15;
+        data[i]=value*Math.min(1,t/.18,(duration-t)/.18);
+      }state.musicBuffer=buffer;
+    }
+    const source=ctx.createBufferSource(),gain=ctx.createGain(),at=ctx.currentTime;source.buffer=state.musicBuffer;source.loop=true;source.loopStart=0;source.loopEnd=16;
+    gain.gain.setValueAtTime(.0001,at);gain.gain.exponentialRampToValueAtTime(.16,at+.9);source.connect(gain).connect(ctx.destination);state.music={source,gain};source.start(at);
+  },[]);
+  const tone=(0,z.useCallback)((kind,type)=>{try{const state=sound.current,AudioCtor=window.AudioContext||window.webkitAudioContext;if(!AudioCtor||state.disposed||document.hidden)return;const ctx=audio.current||(audio.current=new AudioCtor),epoch=state.epoch,requested=performance.now();
+    const play=()=>{try{if(audio.current!==ctx||ctx.state!=="running"||state.disposed||state.epoch!==epoch||document.hidden||performance.now()-requested>300||voices.current>=4)return;
+      if(kind!=="clear"&&kind!=="select")startMusic(ctx);
+      const variation=state.variant++%3,key=kind+":"+(type||"")+":"+variation;let buffer=state.buffers.get(key);
+      if(!buffer){const duration=kind==="grass"?.28:kind==="clear"?.4:kind==="select"?.1:.42,rate=ctx.sampleRate;
+        buffer=ctx.createBuffer(1,Math.ceil(rate*duration),rate);const data=buffer.getChannelData(0);let seed=5708+variation*7919,low=0,high=0,phase=0;
+        const frequency=({daisy:660,tulip:440,sunflower:330})[kind]||({daisy:660,tulip:440,sunflower:330})[type]||520;
+        for(let i=0;i<data.length;i++){const t=i/rate;seed=(1664525*seed+1013904223)>>>0;const noise=seed/2147483648-1;
+          low+=(noise-low)*(1-Math.exp(-2*Math.PI*650/rate));high+=(noise-high)*(1-Math.exp(-2*Math.PI*3600/rate));
+          phase+=2*Math.PI*frequency*(1+(variation-1)*.055)/rate;
+          const envelope=Math.min(1,t/.008,(duration-t)/.035);
+          const value=kind==="grass"?(high-low)*.8*Math.sin(Math.PI*t/duration)**1.2+Math.sin(phase*.28)*.08*Math.exp(-t*28):
+            kind==="clear"?(high-low)*.65*Math.sin(Math.PI*t/duration)*Math.exp(-t*3):
+            kind==="select"?Math.sin(phase)*.18*Math.exp(-t*45):
+            (Math.sin(phase)+.24*Math.sin(phase*2)+.08*Math.sin(phase*3))*.22*Math.exp(-t*10)+(high-low)*.12*Math.exp(-t*32);
+          data[i]=value*envelope;
+        }state.buffers.set(key,buffer);
+      }
+      const source=ctx.createBufferSource(),gain=ctx.createGain(),at=ctx.currentTime,duration=buffer.duration;source.buffer=buffer;source.loop=false;gain.gain.setValueAtTime(.7,at);source.connect(gain).connect(ctx.destination);
+      const voice={source,gain};state.active.add(voice);voices.current=state.active.size;
+      source.onended=()=>{state.active.delete(voice);voices.current=state.active.size;try{source.disconnect();gain.disconnect()}catch{}};source.start(at);source.stop(at+duration+.01);
+    }catch{}};
     if(ctx.state==="suspended")Promise.resolve(ctx.resume()).then(play).catch(()=>{});else play();
-  }catch{}},[]);
+  }catch{}},[startMusic]);
   const isFlower=type=>type==="daisy"||type==="tulip"||type==="sunflower";
   const syncStats=(0,z.useCallback)(()=>setStats({plants:plants.current.length,grass:grass.current.length>0,bugs:bugs.current.length}),[]);
   const randomFor=seed=>()=>{seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;return(seed>>>0)/4294967296};
@@ -52,30 +88,30 @@ Error generating stack: `+o.message+`
     if(changed)setHasGrowth(true);return changed;
   },[selected]);
   const releasePointer=()=>{const active=drag.current;drag.current=null;if(active&&canvas.current?.hasPointerCapture?.(active.id))try{canvas.current.releasePointerCapture(active.id)}catch{}};
-  const pointerDown=event=>{if(menuOpen){event.preventDefault();setMenuOpen(false);return}if(event.isPrimary===false||event.button>0||drag.current)return;const el=canvas.current;if(!el)return;const rect=el.getBoundingClientRect(),x=(event.clientX-rect.left)/rect.width,y=(event.clientY-rect.top)/rect.height;if(!Number.isFinite(x)||!Number.isFinite(y)||x<0||x>1||y<0||y>1||rect.width<=0||rect.height<=0)return;event.preventDefault();try{el.setPointerCapture(event.pointerId)}catch{}drag.current={id:event.pointerId,type:selected,anchor:{x,y},carry:0,lastTone:performance.now()};keyboard.current={x,y,visible:false};if(addPlant(x,y,selected)){syncStats();tone("grow")}};
+  const pointerDown=event=>{if(menuOpen){event.preventDefault();setMenuOpen(false);return}if(event.isPrimary===false||event.button>0||drag.current)return;const el=canvas.current;if(!el)return;const rect=el.getBoundingClientRect(),x=(event.clientX-rect.left)/rect.width,y=(event.clientY-rect.top)/rect.height;if(!Number.isFinite(x)||!Number.isFinite(y)||x<0||x>1||y<0||y>1||rect.width<=0||rect.height<=0)return;event.preventDefault();try{el.setPointerCapture(event.pointerId)}catch{}drag.current={id:event.pointerId,type:selected,anchor:{x,y},carry:0,lastTone:performance.now()};keyboard.current={x,y,visible:false};if(addPlant(x,y,selected)){syncStats();tone(selected)}};
   const pointerMove=event=>{const active=drag.current,rect=canvas.current?.getBoundingClientRect();if(!active||active.id!==event.pointerId||event.isPrimary===false||!rect||rect.width<=0||rect.height<=0)return;event.preventDefault();const native=event.nativeEvent||event,coalesced=native.getCoalescedEvents?.()||[],points=[...coalesced.slice(-64),event];let changed=false;
     for(const point of points){const x=(point.clientX-rect.left)/rect.width,y=(point.clientY-rect.top)/rect.height;if(!Number.isFinite(x)||!Number.isFinite(y))continue;if(x<0||x>1||y<0||y>1){active.anchor=null;active.carry=0;continue}
       if(!active.anchor){changed=addPlant(x,y,active.type,true)||changed;active.anchor={x,y};continue}const dx=(x-active.anchor.x)*rect.width,dy=(y-active.anchor.y)*rect.height,distance=Math.hypot(dx,dy),spacing=(active.type==="grass"?10:28)*plantScale();if(distance<.001)continue;
       let steps=0,lastSample=0;for(let d=(active.spacing||spacing)-active.carry;d<=distance&&steps<128;d+=active.spacing||spacing,steps++){const t=d/distance;changed=addPlant(active.anchor.x+(x-active.anchor.x)*t,active.anchor.y+(y-active.anchor.y)*t,active.type,true)||changed;lastSample=d;if(isFlower(active.type))active.spacing=be(20,40)*plantScale()}active.carry=steps>=128?0:steps?distance-lastSample:active.carry+distance;active.anchor={x,y};keyboard.current={x,y,visible:false};
     }
-    if(changed){syncStats();if(performance.now()-active.lastTone>=260){tone("grow");active.lastTone=performance.now()}}
+    if(changed){syncStats();if(performance.now()-active.lastTone>=260){tone(active.type);active.lastTone=performance.now()}}
   };
   const pointerUp=event=>{if(drag.current?.id===event.pointerId){pointerMove(event);releasePointer()}};
   const pointerCancel=event=>{if(drag.current?.id===event.pointerId)releasePointer()};
   const keyDown=event=>{if(menuOpen){if(event.key==="Escape"){event.preventDefault();setMenuOpen(false);pickerButton.current?.focus()}return}if(event.ctrlKey||event.metaKey||event.altKey)return;const rect=canvas.current?.getBoundingClientRect();if(!rect||rect.width<=0||rect.height<=0)return;const cursor=keyboard.current;
     if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(event.key)){event.preventDefault();cursor.visible=true;cursor.x=Fe(cursor.x+(event.key==="ArrowRight"?1:event.key==="ArrowLeft"?-1:0)*12/rect.width,.05,.95);cursor.y=Fe(cursor.y+(event.key==="ArrowDown"?1:event.key==="ArrowUp"?-1:0)*12/rect.height,.05,.95)}
-    else if(event.key==="Enter"||event.key===" "){event.preventDefault();if(event.repeat)return;cursor.visible=true;if(addPlant(cursor.x,cursor.y)){syncStats();tone("grow")}}
+    else if(event.key==="Enter"||event.key===" "){event.preventDefault();if(event.repeat)return;cursor.visible=true;if(addPlant(cursor.x,cursor.y)){syncStats();tone(selected)}}
     else if(event.key==="Escape"){cursor.visible=false;releasePointer()}
   };
   const spawnBug=(0,z.useCallback)((type,targets)=>{if(!targets.length||bugs.current.length>=14)return;const target=targets[Math.floor(Math.random()*targets.length)];bugs.current.push({type,x:Fe(target.x+be(-.06,.06),.04,.96),y:Fe(target.y+be(-.06,.06),.04,.96),target,born:performance.now(),phase:be(0,Math.PI*2),heading:be(0,Math.PI*2),nextTarget:performance.now()+be(1400,2800)})},[]);
-  const clear=()=>{releasePointer();setMenuOpen(false);plants.current=[];grass.current=[];grassCache.current.canvas=null;grassCache.current.seen.clear();bugs.current=[];keyboard.current.visible=false;lastSpawn.current=performance.now();setHasGrowth(false);syncStats();tone("clear")};
+  const clear=()=>{releasePointer();stopSound(true);setMenuOpen(false);plants.current=[];grass.current=[];grassCache.current.canvas=null;grassCache.current.seen.clear();bugs.current=[];keyboard.current.visible=false;lastSpawn.current=performance.now();setHasGrowth(false);syncStats();tone("clear")};
   const closePicker=()=>{setMenuOpen(false);pickerButton.current?.focus()};
-  const selectType=type=>{if(choices.some(choice=>choice.id===type)){setSelected(type);closePicker();tone("select")}};
+  const selectType=type=>{if(choices.some(choice=>choice.id===type)){setSelected(type);closePicker();tone("select",type)}};
   const openPicker=index=>{releasePointer();menuStart.current=index;setMenuOpen(true)};
   const pickerKeys=event=>{if(event.key==="ArrowDown"||event.key==="ArrowUp"){event.preventDefault();openPicker(event.key==="ArrowDown"?0:choices.length-1)}else if(event.key==="Escape"&&menuOpen){event.preventDefault();closePicker()}};
   const optionKeys=(event,index)=>{let next;if(event.key==="ArrowDown")next=(index+1)%choices.length;else if(event.key==="ArrowUp")next=(index+choices.length-1)%choices.length;else if(event.key==="Home")next=0;else if(event.key==="End")next=choices.length-1;else if(event.key==="Escape"){event.preventDefault();closePicker();return}else if(event.key==="Enter"||event.key===" "){event.preventDefault();selectType(choices[index].id);return}if(next!==undefined){event.preventDefault();optionButtons.current[choices[next].id]?.focus()}};
   (0,z.useEffect)(()=>{if(menuOpen){const index=menuStart.current??choices.findIndex(choice=>choice.id===selected);menuStart.current=null;optionButtons.current[choices[index]?.id]?.focus()}},[menuOpen]);
-  (0,z.useEffect)(()=>{let live=true;
+  (0,z.useEffect)(()=>{let live=true;sound.current.disposed=false;
     const ageOf=(plant,now)=>reduced.current?1:Fe((now-plant.born)*growth/plant.duration,0,1);
     const drawGrass=(ctx,plant,now,scale,w,hgt)=>{const age=ageOf(plant,now);if(age<=0)return;const ease=1-Math.pow(1-age,3),radius=plant.radius*scale;
       ctx.save();ctx.translate(plant.x*w,plant.y*hgt);
@@ -120,8 +156,9 @@ Error generating stack: `+o.message+`
       if(keyboard.current.visible){ctx.save();ctx.strokeStyle="#424533";ctx.lineWidth=1.5;ctx.setLineDash([3,4]);ctx.beginPath();ctx.arc(keyboard.current.x*w,keyboard.current.y*hgt,9*scale,0,Math.PI*2);ctx.stroke();ctx.restore()}
       raf.current=requestAnimationFrame(frame);
     };
-    raf.current=requestAnimationFrame(frame);return()=>{live=false;cancelAnimationFrame(raf.current);releasePointer();if(audio.current){Promise.resolve(audio.current.close()).catch(()=>{});audio.current=null}voices.current=0};
-  },[growth,wander,spawnBug,syncStats]);
+    raf.current=requestAnimationFrame(frame);return()=>{live=false;cancelAnimationFrame(raf.current);releasePointer();stopSound();sound.current.disposed=true;sound.current.buffers.clear();sound.current.musicBuffer=null;if(audio.current){Promise.resolve(audio.current.close()).catch(()=>{});audio.current=null}};
+  },[growth,wander,spawnBug,syncStats,stopSound]);
+  (0,z.useEffect)(()=>{sound.current.disposed=false;const hide=()=>{if(document.hidden){releasePointer();stopSound()}},leave=()=>{releasePointer();stopSound()};document.addEventListener("visibilitychange",hide);window.addEventListener("pagehide",leave);window.addEventListener("blur",leave);return()=>{document.removeEventListener("visibilitychange",hide);window.removeEventListener("pagehide",leave);window.removeEventListener("blur",leave)}},[stopSound]);
   return h(z.default.Fragment,null,h("style",null,`
 @font-face{font-family:DynaPuff;src:url('./assets/fonts/dynapuff/DynaPuff-SemiBold.woff2') format('woff2');font-display:swap}
 html,body,#root{width:100%;height:100%;margin:0;overflow:hidden;background:#d6d6d3}
