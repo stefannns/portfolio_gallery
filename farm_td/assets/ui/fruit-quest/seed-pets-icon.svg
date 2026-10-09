@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Seed pets</title>
+  <path d="M18 24C11 19 10 12 12 6c8 1 14 6 17 14" fill="#8bd65f" stroke="#211c31" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M46 24c7-5 8-12 6-18-8 1-14 6-17 14" fill="#6bc66d" stroke="#211c31" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M32 20c-14 0-23 8-23 21 0 11 9 18 23 18s23-7 23-18c0-13-9-21-23-21Z" fill="#fff5dc" stroke="#211c31" stroke-width="4.5" stroke-linejoin="round"/>
+  <path d="M16 34c4-5 10-7 16-7s12 2 16 7" fill="none" stroke="#d7e9ad" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="24" cy="40" r="3.1" fill="#211c31"/>
+  <circle cx="40" cy="40" r="3.1" fill="#211c31"/>
+  <path d="M28 48c2.5 3 5.5 3 8 0" fill="none" stroke="#211c31" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="17" cy="46" r="2.8" fill="#f5a5a0"/>
+  <circle cx="47" cy="46" r="2.8" fill="#f5a5a0"/>
+</svg>

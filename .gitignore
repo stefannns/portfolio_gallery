@@ -19,3 +19,6 @@ node_modules/
 # local vite build output; only about/ is committed, and that is written by its own build
 dist/
 **/dist/
+
+# Small transparent animations required by the Farm TD game build.
+!farm_td/assets/ui/fruit-quest/*.webm

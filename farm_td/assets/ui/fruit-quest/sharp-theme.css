@@ -1,0 +1,255 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800;900&display=swap');
+@font-face{
+  font-family:"Bungee";
+  src:url("fonts/Bungee-Regular.ttf") format("truetype");
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+}
+
+/* Default angular art direction. Add ?theme=classic to view the earlier style. */
+html.theme-sharp{
+  --sharp-ink:#191626;
+  --sharp-plum:#29243b;
+  --sharp-yellow:#ffcb46;
+  --sharp-cream:#fff7df;
+}
+html.theme-sharp .app-shell,
+html.theme-sharp .app-shell *{font-family:"Kanit","Trebuchet MS",Arial,sans-serif!important}
+html.theme-sharp .app-shell :is(h1,h2,h3){font-weight:800;letter-spacing:-.015em}
+html.theme-sharp .app-shell :is(.primary-button,.secondary-button,.tab,.packet-pull-button){font-weight:800;letter-spacing:.005em}
+html.theme-sharp .app-shell :is(.resource-pill strong,.battle-wave-button strong,.battle-energy strong,.result-reward strong){font-weight:800;font-variant-numeric:tabular-nums}
+html.theme-sharp body{background:#272238}
+html.theme-sharp .app-shell{background:#6e4c81}
+html.theme-sharp .app-shell::before{background:none}
+@media(min-width:600px){html.theme-sharp .app-shell{border-radius:3px;box-shadow:8px 12px 0 #171321,12px 18px 48px #17132180}}
+
+/* Currency strips retain the large illustrated emblems on the left. */
+html.theme-sharp .profile-button,
+html.theme-sharp .profile-avatar,
+html.theme-sharp .profile-level{border-radius:2px}
+html.theme-sharp .profile-button{box-shadow:4px 4px 0 var(--sharp-ink)}
+html.theme-sharp .profile-level{box-shadow:2px 2px 0 var(--sharp-ink)}
+html.theme-sharp .topbar .resource-pill::after{
+  border-radius:0;
+  background:linear-gradient(110deg,#11101b 0 78%,#30273d 78.2% 100%);
+  clip-path:polygon(0 0,calc(100% - 11px) 0,100% 100%,0 100%);
+  box-shadow:none;
+}
+html.theme-sharp .topbar .resource-pill strong{text-shadow:2px 2px 0 #08070e}
+
+/* Level select: one clear diagonal in the backdrop, with the island left open. */
+html.theme-sharp .app-shell.layout-scene .scene-layout{
+  background:linear-gradient(158deg,#246b83 0 43%,#287c88 43.2% 73%,#367d68 73.2% 100%);
+}
+html.theme-sharp .app-shell.layout-scene .screen-levels{background:#246b83}
+html.theme-sharp .app-shell.layout-scene .scene-layout::before{
+  opacity:.23;
+  background:radial-gradient(circle,#fff1d4 0 1.7px,transparent 2px) 0 0/30px 30px;
+  mask-image:linear-gradient(to bottom,#000,transparent 62%);
+  -webkit-mask-image:linear-gradient(to bottom,#000,transparent 62%);
+}
+html.theme-sharp .scene-level-copy h2{font-weight:800;line-height:1.08;text-shadow:3px 3px 0 var(--sharp-ink)}
+html.theme-sharp .scene-arrow svg{stroke-width:3.2;filter:drop-shadow(3px 2px 0 var(--sharp-ink))}
+html.theme-sharp .scene-play.primary-button{
+  border-radius:2px;
+  background:linear-gradient(112deg,#ffe27d 0 22%,#ffd04c 22.2% 77%,#f1a82f 77.2%);
+  box-shadow:6px 6px 0 var(--sharp-ink);
+}
+html.theme-sharp .scene-play.primary-button:disabled{background:#aaa0ae;box-shadow:5px 5px 0 var(--sharp-ink)}
+
+/* Navigation uses flat facets and upright labels. */
+html.theme-sharp .tabbar{
+  background:linear-gradient(112deg,#242033 0 48%,#302a43 48.2%);
+  border-top-color:var(--sharp-ink);
+  box-shadow:0 -4px 0 var(--sharp-ink);
+}
+html.theme-sharp .tab{border-radius:2px}
+html.theme-sharp .tab.is-active{
+  border:2px solid #171423;
+  border-left:5px solid var(--sharp-yellow);
+  background:linear-gradient(112deg,#514269 0 80%,#735891 80.2%);
+  box-shadow:3px 3px 0 #171423;
+}
+html.theme-sharp .tab-icon{border-radius:2px;transform:rotate(-5deg)}
+html.theme-sharp .tab.is-active .tab-icon{transform:rotate(4deg)}
+
+/* Collection cards read as a crisp grid without changing the portraits. */
+html.theme-sharp .screen-pets{
+  background:linear-gradient(157deg,#805ab5 0 50%,#704ba2 50.2% 100%);
+}
+html.theme-sharp .collection-heading h1{text-shadow:3px 3px 0 #30213e}
+html.theme-sharp .collection-heading h1::after{
+  content:"";
+  display:block;
+  width:62%;
+  height:4px;
+  margin-top:7px;
+  transform:skewX(-24deg);
+  background:var(--sharp-yellow);
+  box-shadow:3px 3px 0 #30213e;
+}
+html.theme-sharp .collection-count,
+html.theme-sharp .screen-pets .pet-card,
+html.theme-sharp .screen-pets .pet-tag,
+html.theme-sharp .screen-pets .seed-lock{border-radius:2px}
+html.theme-sharp .screen-pets .pet-card{box-shadow:4px 4px 0 var(--sharp-ink)}
+html.theme-sharp .screen-pets .pet-card:active{box-shadow:2px 2px 0 var(--sharp-ink)}
+html.theme-sharp .screen-pets .pet-name{
+  background:linear-gradient(112deg,#fff9e8 0 84%,#ead8b9 84.2%);
+}
+html.theme-sharp .screen-pets .pet-card.is-locked .pet-name{background:#e2dce7}
+html.theme-sharp .screen-pets .pet-tag{box-shadow:2px 2px 0 var(--sharp-ink)}
+
+/* The pack tabs select one pull page at a time. */
+html.theme-sharp .screen-shop{
+  justify-content:flex-start;
+  background:
+    radial-gradient(circle,#edd9ff18 0 1.3px,transparent 1.7px) 0 0/17px 17px,
+    linear-gradient(156deg,#7955aa 0 53%,#674591 53.2% 100%);
+}
+html.theme-sharp .screen-shop[data-active-pack="frost"]{
+  background:
+    radial-gradient(circle,#d7f7ff20 0 1.3px,transparent 1.7px) 0 0/17px 17px,
+    linear-gradient(156deg,#527bab 0 53%,#485c98 53.2% 100%);
+}
+html.theme-sharp .shop-pack-tab[aria-selected="true"]{background:#ffcb46}
+html.theme-sharp .shop-pack-tab[data-pack-tab="frost"][aria-selected="true"]{background:#a1e6f4}
+html.theme-sharp .shop-heading h2{text-shadow:3px 3px 0 #322142}
+html.theme-sharp .shop-pool-trigger{min-height:40px;padding-top:0;padding-bottom:0}
+html.theme-sharp .shop-pool-preview>span{border-radius:2px;box-shadow:2px 2px 0 var(--sharp-ink)}
+html.theme-sharp .basic-pack-hero{flex:none;height:clamp(235px,38dvh,305px);min-height:0}
+html.theme-sharp .basic-pack-art{width:auto;height:clamp(210px,35dvh,275px);max-width:min(70%,215px);max-height:100%;filter:drop-shadow(0 6px 0 #4b306f);animation:basic-pack-float-tight 3.6s ease-in-out infinite alternate}
+@keyframes basic-pack-float-tight{from{transform:translateY(3px)}to{transform:translateY(-3px)}}
+html.theme-sharp .basic-pack-hero::before{opacity:.38}
+html.theme-sharp .basic-pack-glow{filter:none;opacity:.38}
+html.theme-sharp .packet-actions{position:relative;z-index:2;margin-top:-4px}
+@media(max-height:700px) and (orientation:portrait){
+  html.theme-sharp .basic-pack-hero{height:clamp(220px,36dvh,265px)}
+  html.theme-sharp .basic-pack-art{height:clamp(198px,32dvh,240px)}
+}
+@media(orientation:landscape) and (max-height:500px){
+  html.theme-sharp .basic-pack-hero{height:clamp(134px,32dvh,190px)}
+  html.theme-sharp .basic-pack-art{height:clamp(108px,27dvh,160px)}
+}
+
+/* Controls keep their full touch area while the faces become angular. */
+html.theme-sharp .primary-button,
+html.theme-sharp .secondary-button,
+html.theme-sharp .icon-button,
+html.theme-sharp .battle-speed,
+html.theme-sharp .battle-settings{
+  border-radius:2px;
+  box-shadow:4px 4px 0 var(--sharp-ink);
+}
+html.theme-sharp .primary-button{
+  background:linear-gradient(112deg,#ffe078 0 23%,#ffca46 23.2% 78%,#edae32 78.2%);
+}
+html.theme-sharp .secondary-button{background:linear-gradient(112deg,#fff9e9 0 80%,#eadbbb 80.2%)}
+html.theme-sharp #pull-ten{background:linear-gradient(112deg,#b9e978 0 23%,#89ce58 23.2% 78%,#6dae46 78.2%)}
+html.theme-sharp .packet-pull-button{box-shadow:4px 4px 0 var(--sharp-ink)}
+html.theme-sharp .primary-button:active:not(:disabled),
+html.theme-sharp .secondary-button:active:not(:disabled),
+html.theme-sharp .icon-button:active:not(:disabled){box-shadow:2px 2px 0 var(--sharp-ink)}
+
+/* Preview and battle still leave the actual playfield unillustrated. */
+html.theme-sharp .screen-preview,
+html.theme-sharp .screen-battle{background:linear-gradient(155deg,#aad786 0 58%,#9bce79 58.2%)}
+html.theme-sharp .screen-preview #preview-board,
+html.theme-sharp .screen-battle .battle-scene{background:transparent}
+html.theme-sharp .preview-seed-pool{
+  background:linear-gradient(156deg,#fff9e9 0 67%,#f0e4c9 67.2%);
+  border-top-color:var(--sharp-ink);
+}
+html.theme-sharp .preview-seed-pool .team-count-pill{
+  padding-right:25px;
+  border-radius:0;
+  background:var(--sharp-plum);
+  clip-path:polygon(0 0,calc(100% - 13px) 0,100% 100%,0 100%);
+  box-shadow:none;
+}
+html.theme-sharp .selected-lineup .squad-slot,
+html.theme-sharp .preview-seed-pool .picker-card,
+html.theme-sharp .picker-check{border-radius:2px}
+html.theme-sharp .preview-seed-pool .picker-card{box-shadow:3px 3px 0 var(--sharp-ink)}
+html.theme-sharp .preview-seed-pool .picker-card.is-picked{box-shadow:3px 3px 0 var(--sharp-ink),inset 0 0 0 2px #86d35f}
+html.theme-sharp .preview-actions{background:linear-gradient(112deg,#29243d 0 69%,#3a3050 69.2%)}
+html.theme-sharp .battle-wave-button,
+html.theme-sharp .battle-energy,
+html.theme-sharp .battle-speed,
+html.theme-sharp .battle-settings{border-radius:2px;box-shadow:4px 4px 0 var(--sharp-ink)}
+html.theme-sharp .battle-wave-button,
+html.theme-sharp .battle-energy{background:linear-gradient(110deg,#29243b 0 84%,#453753 84.2%)}
+html.theme-sharp .battle-tray-shell{background:linear-gradient(110deg,#29243d 0 70%,#382f4c 70.2%)}
+html.theme-sharp .screen-battle .tray-plant{border-radius:2px;box-shadow:4px 4px 0 var(--sharp-ink)}
+html.theme-sharp .screen-battle .tray-plant.is-selected{box-shadow:4px 4px 0 var(--sharp-ink),inset 0 0 0 2px #edaf31}
+
+/* Bungee carries the game labels; Kanit stays on compact stats and card copy. */
+html.theme-sharp .app-shell :is(
+  .scene-level-copy h2,
+  .scene-play,
+  .screen-pets .collection-heading h1,
+  .shop-heading h2,
+  .profile-page-header h1,
+  .tab > span:last-child,
+  .screen-preview .preview-actions .flow-primary,
+  .results-card h1,
+  .result-actions button,
+  .seed-detail-heading h2,
+  .seed-upgrade-button,
+  .packet-result-card h2,
+  .packet-done-button,
+  .packet-pull-button,
+  .shop-pack-tab,
+  .frost-pack-status,
+  .card-pool-dialog h2,
+  .battle-menu h2
+){font-family:"Bungee","Kanit",sans-serif!important;font-weight:400!important;font-synthesis:none;letter-spacing:0}
+html.theme-sharp .scene-level-copy h2{font-size:clamp(17px,5.25vw,23px);line-height:1.15;-webkit-text-stroke:0}
+html.theme-sharp .scene-play{font-size:clamp(20px,6vw,26px)}
+html.theme-sharp .screen-pets .collection-heading h1{font-size:clamp(23px,6.5vw,28px)}
+html.theme-sharp .shop-heading h2{font-size:clamp(27px,7.2vw,33px)}
+html.theme-sharp .profile-page-header h1{font-size:27px}
+html.theme-sharp .tab > span:last-child{font-size:clamp(12px,3.5vw,15px);line-height:1.05}
+html.theme-sharp .screen-preview .preview-actions .flow-primary{font-size:clamp(17px,5vw,21px)}
+html.theme-sharp .results-card h1{font-size:clamp(24px,7vw,34px);line-height:1.13}
+html.theme-sharp .result-actions button{font-size:clamp(13px,4vw,16px)}
+html.theme-sharp .seed-detail-heading h2{font-size:clamp(18px,5.3vw,25px);line-height:1.15}
+html.theme-sharp .packet-result-card h2,
+html.theme-sharp .card-pool-dialog h2{font-size:clamp(21px,6vw,28px);line-height:1.15}
+html.theme-sharp .packet-pull-button{font-size:clamp(13px,3.4vw,16px);padding-inline:6px}
+html.theme-sharp .battle-menu h2{font-size:28px}
+html.theme-sharp .frost-pack-status{font-size:clamp(17px,5vw,21px)}
+
+/* Results, profile, and dialogs use open spacing with angular dividers. */
+html.theme-sharp .screen-results{background:linear-gradient(155deg,#a4d977 0 52%,#7bc568 52.2%)}
+html.theme-sharp .result-emblem{border-radius:2px;transform:rotate(-4deg);box-shadow:5px 5px 0 var(--sharp-ink)}
+html.theme-sharp .result-rewards{border-top-color:var(--sharp-ink)}
+html.theme-sharp .screen-profile{background:linear-gradient(155deg,#7054a8 0 53%,#534579 53.2%)}
+html.theme-sharp .profile-picture,
+html.theme-sharp .profile-name span,
+html.theme-sharp .profile-seed-art{border-radius:2px;box-shadow:4px 4px 0 var(--sharp-ink)}
+html.theme-sharp .profile-identity{border-bottom-color:#cfb9da}
+html.theme-sharp .profile-stats{border-bottom-color:#cfb9da}
+html.theme-sharp .seed-detail-card,
+html.theme-sharp .packet-result-card,
+html.theme-sharp .card-pool-dialog,
+html.theme-sharp .battle-menu{
+  border-radius:3px;
+  border-top:6px solid var(--sharp-yellow);
+  box-shadow:6px 6px 0 #11101dcc;
+}
+html.theme-sharp .seed-detail-card{background:linear-gradient(155deg,#41415e 0 41%,#33344e 41.2%)}
+html.theme-sharp .seed-detail-art,
+html.theme-sharp .seed-detail-close,
+html.theme-sharp .packet-reward,
+html.theme-sharp .card-pool-item,
+html.theme-sharp .piece-cost-art{border-radius:2px}
+html.theme-sharp .seed-detail-close{box-shadow:3px 3px 0 var(--sharp-ink)}
+html.theme-sharp .seed-detail-role,
+html.theme-sharp .seed-detail-bonus,
+html.theme-sharp .seed-detail-unlock,
+html.theme-sharp .seed-upgrade-costs{border-radius:0}
+html.theme-sharp .packet-result-card{background:linear-gradient(155deg,#4c4168 0 42%,#332e4b 42.2%)}
+html.theme-sharp .card-pool-dialog{background:linear-gradient(155deg,#4b3a66 0 42%,#332d49 42.2%)}
+html.theme-sharp .battle-menu{background:linear-gradient(155deg,#fff9e9 0 80%,#eddec1 80.2%)}

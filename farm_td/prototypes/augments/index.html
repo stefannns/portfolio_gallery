@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en" class="theme-sharp">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Augment styles · Farm TD</title>
+    <link rel="stylesheet" href="/farm_td/assets/ui/fruit-quest/styles.css" />
+    <link rel="stylesheet" href="/farm_td/assets/ui/fruit-quest/sharp-theme.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" />
+    <script type="module" crossorigin src="/farm_td/assets/augments-CCavoq_w.js"></script>
+    <link rel="modulepreload" crossorigin href="/farm_td/assets/typography-Bv92xBIB.js">
+    <link rel="modulepreload" crossorigin href="/farm_td/assets/augmentCard-BcwfR_EL.js">
+    <link rel="stylesheet" crossorigin href="/farm_td/assets/typography-DeqjSeVP.css">
+    <link rel="stylesheet" crossorigin href="/farm_td/assets/augments-NbyL4k-B.css">
+  </head>
+  <body data-screen="battle">
+    <header class="preview-toolbar">
+      <h1>Augment styles</h1>
+      <fieldset class="style-picker">
+        <legend>Choose a look</legend>
+        <label><input type="radio" name="style" value="seed-packet" checked />A · Seed packet</label>
+        <label><input type="radio" name="style" value="orchard-tag" />B · Orchard tag</label>
+        <label><input type="radio" name="style" value="leaf-card" />C · Leaf card</label>
+      </fieldset>
+      <p class="style-note" id="style-note">Warm paper and a golden seal.</p>
+      <div class="preview-controls">
+        <button id="previous" type="button" aria-label="Previous augments">←</button>
+        <span id="page" role="status" aria-live="polite"></span>
+        <button id="next" type="button" aria-label="Next augments">→</button>
+        <button id="shuffle" type="button">Shuffle</button>
+        <button id="battle-layout" type="button" aria-pressed="false">Battle layout</button>
+        <button id="compare" type="button" aria-pressed="false">Compare all</button>
+      </div>
+      <p class="preview-hint">A selected for battle · preview without playing</p>
+    </header>
+    <div id="shell">
+      <div class="app-shell augment-preview-stage">
+        <main class="combat-draft combat-augment-draft" aria-label="Augment cards">
+          <section class="combat-choice-panel"><div class="combat-choice-cards" id="cards"></div></section>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
