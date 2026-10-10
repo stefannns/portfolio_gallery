@@ -35,6 +35,11 @@
       note: 'Three custom obstacle layouts with a 100-ball target.',
       evidence: 'User requested custom levels, later changed the target to 100 balls and said 17 looks fine.'
     },
+    playable2_20260927020825_ufhwuj: {
+      scope: 'Round ending',
+      note: 'Untimed stacking: keep going until a placement misses.',
+      evidence: 'User requested removing the timer for No.18 on October 9, 2026.'
+    },
     playable2_20260927021136_x3i163: {
       scope: 'Spawn behavior and cube sizes',
       note: 'One starting cube; tap blank space for more 120px cubes. Smaller pieces share a color by size; no automatic spawning.',

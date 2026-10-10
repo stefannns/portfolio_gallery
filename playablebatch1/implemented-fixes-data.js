@@ -1,4 +1,4 @@
-/* Concise projection of feedback-tracking/feedback-tracker.md, October 8, 2026.
+/* Concise projection of feedback-tracking/feedback-tracker.md, October 9, 2026.
  * Lists current implementations, not pending suggestions or superseded versions.
  * Task IDs isolate games and variants. Local status is not database status.
  * Update this snapshot alongside the tracker when work changes.
@@ -8,13 +8,14 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "number": 3,
     "items": [
       "Simplified progress to n/4; removed Hint and duplicate instructions.",
-      "Kept four puzzles in order old 4 → 6 → 1 → 2.",
-      "Added a circular success check badge."
+      "Kept puzzles old 4 → 6 → 1 → 2, with a circular success check badge.",
+      "Moved the puzzle upward and opening guide below it; first contact hides the guide without shifting the board."
     ],
     "status": "Original HUD cleanup accepted; newer changes await review.",
     "evidence": [
       "FB-003-3e1fcc45",
-      "FB-003-ceef90d6"
+      "FB-003-ceef90d6",
+      "One Stroke layout follow-up 20261009"
     ]
   },
   "playable2_20260927020828_iuyca5": {
@@ -132,6 +133,18 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "evidence": [
       "FB-017-7dd1f6be",
       "Sand Digging target follow-up"
+    ]
+  },
+  "playable2_20260927020825_ufhwuj": {
+    "number": 18,
+    "items": [
+      "Removed the countdown and time limit; the round ends only after a missed placement.",
+      "Centered the score at the top, with fixed-width digit slots in the bundled Audiowide font.",
+      "Preloaded the font, removed synthetic bold and old shrinking HUD overrides; fixed result spacing."
+    ],
+    "status": "Implemented locally; visual review pending.",
+    "evidence": [
+      "Synthwave Stack untimed/font follow-up 20261009"
     ]
   },
   "playable2_20260927020825_kxh9p4": {

@@ -51,7 +51,6 @@ var ys=new class{constructor(){this.ready=!1,this.synth=null,this.failSynth=null
     [r, i] = (0, O.useState)(null),
     [a, s] = (0, O.useState)("idle"),
     [o, l] = (0, O.useState)(0),
-    [u, c] = (0, O.useState)(60),
     h = (0, O.useRef)(null),
     d = (0, O.useRef)(null),
     p = (0, O.useRef)(null),
@@ -122,7 +121,6 @@ var ys=new class{constructor(){this.ready=!1,this.synth=null,this.failSynth=null
         d.current.blocks.push({ x: 200, w: 600, y: 0, color: 0 }),
         (d.current.active = { x: 0, w: 600, y: 50, color: 1 }),
         l(0),
-        c(r.TIME_LIMIT || 60),
         (m.current = "ready"),
         s("ready"));
     }, [r]),
@@ -425,13 +423,6 @@ var ys=new class{constructor(){this.ready=!1,this.synth=null,this.failSynth=null
     if (r) g();
   }, [r, g]);
   return (
-    (0, O.useEffect)(() => {
-      if ("playing" !== a) return;
-      let e = setInterval(() => {
-        c((e) => (e <= 1 ? (v(), 0) : e - 1));
-      }, 1e3);
-      return () => clearInterval(e);
-    }, [a, v]),
     (0, O.useEffect)(
       () => (
         ("ready" === a || "playing" === a || "over" === a) &&
@@ -500,40 +491,14 @@ var ys=new class{constructor(){this.ready=!1,this.synth=null,this.failSynth=null
               }),
             }),
             (a === "ready" || a === "playing") &&
-              (0, _s.jsxs)("div", {
-                style: {
-                  position: "absolute",
-                  top: "calc(30px + env(safe-area-inset-top, 0px))",
-                  left: 0,
-                  right: 0,
-                  display: "flex",
-                  justifyContent: "space-between",
-                  padding: "0 30px",
-                  zIndex: 10,
-                  pointerEvents: "none",
-                },
-                children: [
-                  (0, _s.jsxs)("div", {
-                    style: {
-                      fontFamily: "var(--font-mono)",
-                      color: "var(--neon-cyan)",
-                      fontSize: "24px",
-                      textShadow: "0 0 5px var(--neon-cyan)",
-                    },
-                    children: [u, "s"],
-                  }),
-                  (0, _s.jsxs)("div", {
-                    style: {
-                      fontFamily: "var(--font-mono)",
-                      color: "var(--neon-magenta)",
-                      fontSize: "24px",
-                      textShadow: "0 0 5px var(--neon-magenta)",
-                    },
-                    children: o,
-                  }),
-                ],
+              (0, _s.jsx)("output", {
+                className: "synth-score",
+                "aria-label": "Score",
+                children: String(o).split("").map((digit, index) =>
+                  (0, _s.jsx)("span", { className: "synth-score-digit", children: digit }, index),
+                ),
               }),
-            a === "ready" && (0, _s.jsx)("p", { className: "feed-first-action", style: { position: "absolute", top: "100px", left: 30, right: 30, margin: 0, textAlign: "center", color: "#e8e3ff", font: "18px/1.4 var(--font-body)", zIndex: 12, pointerEvents: "none" }, children: "Tap to stack and start" }),
+            a === "ready" && (0, _s.jsx)("p", { className: "feed-first-action", style: { position: "absolute", top: "100px", left: 30, right: 30, margin: 0, textAlign: "center", color: "#e8e3ff", font: "18px/1.4 var(--font-body)", zIndex: 12, pointerEvents: "none" }, children: "Tap to stack" }),
             "over" === a &&
               (0, _s.jsxs)("div", {
                 style: {
@@ -551,17 +516,27 @@ var ys=new class{constructor(){this.ready=!1,this.synth=null,this.failSynth=null
                     style: {
                       fontFamily: "var(--font-display)",
                       color: "var(--neon-magenta)",
-                      textShadow: "0 0 15px var(--neon-magenta)",
+                      textShadow: "0 0 6px var(--neon-magenta)",
                       fontSize: "clamp(28px, 8cqi, 40px)",
-                      marginBottom: "10px",
+                      fontWeight: 400,
+                      fontSynthesis: "none",
+                      lineHeight: 1.3,
+                      margin: "0 0 12px",
                     },
                     children: r.TXT_GAMEOVER || "GAME OVER",
                   }),
                   (0, _s.jsxs)("div", {
                     style: {
-                      fontFamily: "var(--font-mono)",
+                      fontFamily: "var(--font-display)",
                       color: "#fff",
-                      fontSize: "32px",
+                      fontSize: "28px",
+                      fontWeight: 400,
+                      fontSynthesis: "none",
+                      fontVariantNumeric: "tabular-nums",
+                      lineHeight: 1.4,
+                      maxWidth: "calc(100% - 60px)",
+                      overflowWrap: "anywhere",
+                      textAlign: "center",
                       marginBottom: "40px",
                     },
                     children: ["SCORE: ", o],
