@@ -50,10 +50,14 @@
   .action[hidden] { display: none; }
   .primary { background: #24232b; color: white; }
   .secondary { background: #efeff3; color: #292935; }
+  .download { display: inline-flex; justify-content: center; align-items: center; gap: 7px; transition: background .15s; }
+  .download:hover { background: #e3e3eb; }
+  .download:active { background: #d8d8e4; }
+  .download svg { flex: none; }
   .note { margin: 12px 0 0; color: #858596; font-size: 11px; line-height: 1.45; }
   @media (max-width: 930px) { .layout { grid-template-columns: 1fr; } .preview { position: static; } .results { max-height: 480px; min-height: 260px; } }
   @media (max-width: 570px) { .shell { padding: 22px 13px 30px; } .header { align-items: flex-start; } .count { font-size: 11px; padding: 8px 10px; } .panel { border-radius: 15px; } .preview { padding: 14px; } .stage { margin: 13px 0; padding: 10px; min-height: 370px; } }
-  @media (prefers-reduced-motion: reduce) { .row { transition: none; } .row:hover { transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .row, .download { transition: none; } .row:hover { transform: none; } }
 </style>
 </head>
 <body>
@@ -61,10 +65,11 @@
   <header class="header"><div><h1>Playable Batch 1</h1><p class="lede">Games numbered in spreadsheet order. Numbers without supplied packs are omitted.</p></div><div class="count" id="count"></div></header>
   <main class="layout">
     <section class="panel library" aria-label="Game list"><div class="toolbar"><input id="search" class="search" type="search" placeholder="Search by number, game, or task ID" aria-label="Search by number, game, or task ID"></div><div id="results" class="results"></div></section>
-    <aside class="panel preview" aria-label="Game preview"><div class="preview-head"><div><div class="eyebrow">Portrait preview · 390 × 693</div><h2 id="preview-title">Select a game</h2><p class="preview-sub" id="preview-sub"></p></div><button id="reload" class="reload" type="button" aria-label="Restart preview">Restart</button></div><div class="stage" id="stage"><div class="preview-fit" id="preview-fit"><div class="phone" id="phone"><iframe id="frame" title="Selected game preview" sandbox="allow-scripts allow-same-origin allow-pointer-lock"></iframe></div></div></div><div class="actions"><a id="open" class="action primary" target="_blank" rel="noopener">Open game directly</a><a id="reference" class="action secondary" target="_blank" rel="noopener noreferrer">Original reference</a></div><p class="note">Choose Restart to begin again. Some games use sound; tap inside the game to enable it. Original reference opens the source game for comparison.</p></aside>
+    <aside class="panel preview" aria-label="Game preview"><div class="preview-head"><div><div class="eyebrow">Portrait preview · 390 × 693</div><h2 id="preview-title">Select a game</h2><p class="preview-sub" id="preview-sub"></p></div><button id="reload" class="reload" type="button" aria-label="Restart preview">Restart</button></div><div class="stage" id="stage"><div class="preview-fit" id="preview-fit"><div class="phone" id="phone"><iframe id="frame" title="Selected game preview" sandbox="allow-scripts allow-same-origin allow-pointer-lock"></iframe></div></div></div><div class="actions"><a id="open" class="action primary" target="_blank" rel="noopener">Open game directly</a><a id="reference" class="action secondary" target="_blank" rel="noopener noreferrer">Original reference</a><a id="download" class="action secondary download" download hidden><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 16v5h14v-5"/></svg><span>Download game (ZIP)</span></a></div><p class="note">Choose Restart to begin again. Some games use sound; tap inside the game to enable it. Original reference opens the source game for comparison. Download ZIP includes the current game folder, code and assets.</p></aside>
   </main>
 </div>
 <script src="/playablebatch1/feedback-config.js?v=2"></script>
+<script src="/playablebatch1/game-downloads.js?v=20261009-1"></script>
 <script src="/playablebatch1/developer-notes.js?v=tracker-fixes-20261009-20"></script>
 <script src="/playablebatch1/implemented-fixes-data.js?v=tracker-fixes-20261009-20"></script>
 <script src="/playablebatch1/implemented-fixes.js?v=tracker-fixes-20261009-20"></script>
@@ -97,6 +102,20 @@ function select(game) {
   $('reference').hidden = !game.referenceUrl;
   $('reference').href = game.referenceUrl || '';
   $('reference').setAttribute('aria-label', 'Open original reference for ' + game.number + '. ' + game.name);
+  const archive = window.PlayableGameDownloads?.[game.base];
+  const download = $('download');
+  download.hidden = !archive;
+  if (archive) {
+    download.href = archive.url + '?v=' + archive.sha256.slice(0, 16);
+    download.download = archive.filename;
+    download.setAttribute('aria-label', 'Download current game folder for ' + game.number + '. ' + game.name + ' as a ZIP');
+    download.title = 'Current game files · ' + (archive.bytes / 1048576).toFixed(1) + ' MB';
+  } else {
+    download.removeAttribute('href');
+    download.removeAttribute('download');
+    download.removeAttribute('title');
+    download.removeAttribute('aria-label');
+  }
   window.PlayableDeveloperNotes?.selectGame(game);
   window.PlayableImplementedFixes?.selectGame(game);
   window.PlayableFeedback?.selectGame(game);
