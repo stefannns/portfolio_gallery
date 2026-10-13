@@ -281,7 +281,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       ctx.fillStyle="rgba(255,255,255,.22)";ctx.fillRect(x0+10,top+21,x1-x0-20,bottom-top-27);
       ctx.strokeStyle="#fff9";ctx.lineWidth=4;ctx.setLineDash([18,17]);ctx.beginPath();ctx.moveTo(w/2,top+5);ctx.lineTo(w/2,bottom-5);ctx.stroke();ctx.setLineDash([]);
       ctx.strokeStyle="#f7f3e9";ctx.lineWidth=3;ctx.strokeRect(x0,top+18,x1-x0,bottom-top-18);
-      ctx.fillStyle="#fff";ctx.font="bold 16px Arial";ctx.fillText("SCORE",25,64);ctx.font="bold 34px Arial";ctx.fillText(String(m.score),25,101);
+      ctx.fillStyle="#fff";ctx.font="bold 28px Arial";ctx.textAlign="center";ctx.textBaseline="top";ctx.fillText(String(m.score),w/2,30);ctx.textAlign="left";ctx.textBaseline="alphabetic";
       if(m.mode==="playing"){
         for(const ball of m.balls){
           ball.vy+=.32*step;ball.vx+=m.tilt*step;ball.vx*=Math.pow(.992,step);

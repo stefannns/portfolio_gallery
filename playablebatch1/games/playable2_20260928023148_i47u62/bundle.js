@@ -696,7 +696,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     },
     children: [
       (0, qe.jsx)(_V, {}),
-      !feedStarted && s === "playing" && (0, qe.jsx)("p", {className:"feed-first-action",style:{position:"absolute",top:"90px",left:30,right:30,zIndex:12,margin:0,fontSize:18,lineHeight:1.35,textAlign:"center",pointerEvents:"none",color:"#fff"},children:"Drag to command your troops to start"}),
+      !feedStarted && s === "playing" && (0, qe.jsx)("p", {className:"feed-first-action",style:{position:"absolute",top:"90px",left:30,right:30,zIndex:12,margin:0,fontSize:18,lineHeight:1.35,textAlign:"center",pointerEvents:"none",color:"#fff"},children:"Drag to command troops"}),
       (0, qe.jsx)("canvas", {
         ref: r,
         style: {
@@ -741,7 +741,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
               border: "1px solid rgba(255,255,255,.35)",
               boxShadow: "0 6px 20px rgba(70,52,25,.18)",
             },
-            children: ["Enemies ", Math.max(0, c.total - c.current)],
+            "aria-label":"Enemies remaining "+Math.max(0,c.total-c.current),children:[(0,qe.jsx)("span",{style:{fontSize:14,marginRight:8},children:"Enemies"}),(0,qe.jsx)("span",{style:{fontSize:28,lineHeight:1.2},children:Math.max(0,c.total-c.current)})],
           }),
         ],
       }),

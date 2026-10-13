@@ -104,7 +104,7 @@
     }
     .tap-duel__instruction {
       font-family: ui-sans-serif, system-ui, sans-serif;
-      font-size: clamp(12px, 3vw, 18px);
+      font-size: 18px;
       font-weight: 800;
       letter-spacing: .16em;
     }
@@ -200,7 +200,7 @@
       .tap-duel__orb { width: clamp(84px, 23vh, 142px); }
       .tap-duel__player { gap: 8px; }
       .tap-duel__name { font-size: 20px; }
-      .tap-duel__instruction { font-size: 12px; }
+      .tap-duel__instruction { font-size: 18px; }
     }
   `;
   document.head.appendChild(style);

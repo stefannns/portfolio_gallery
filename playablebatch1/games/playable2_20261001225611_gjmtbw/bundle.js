@@ -320,14 +320,14 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     if(dist===0){setWon(true);if(navigator.vibrate)navigator.vibrate(25)}
   };
   const cellStyle={width:"100%",height:"100%",minWidth:0,minHeight:0,padding:0,boxSizing:"border-box",border:"1px solid #eee5f2",background:"#c7b3d0",color:"#222",fontSize:"clamp(16px, 4.5vw, 26px)",display:"grid",placeItems:"center",cursor:"pointer",touchAction:"manipulation"};
-  return h("div",{style:{width:"100%",height:"100%",minHeight:0,background:"#bba3c5",color:"#111",fontFamily:"Arial, sans-serif",display:"flex",flexDirection:"column",alignItems:"center",padding:"calc(42px + env(safe-area-inset-top)) calc(25px + env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) calc(25px + env(safe-area-inset-left))",boxSizing:"border-box",overflow:"hidden"}},
-    h("h1",{style:{margin:"0 0 16px",fontSize:"clamp(22px, 6vw, 29px)",fontWeight:800,textAlign:"center"}},"Find the Animal"),
-    h("div",{style:{width:"100%",maxWidth:390,background:"#d4c0d9",borderRadius:8,padding:"10px 6px",display:"flex",flexWrap:"wrap",justifyContent:"space-around",gap:4,fontSize:"clamp(10px, 2.75vw, 13px)",whiteSpace:"nowrap"}},
+  return h("div",{style:{width:"100%",height:"100%",minHeight:0,background:"#bba3c5",color:"#111",fontFamily:"Arial, sans-serif",display:"flex",flexDirection:"column",alignItems:"center",padding:"calc(30px + env(safe-area-inset-top)) calc(30px + env(safe-area-inset-right)) calc(50px + env(safe-area-inset-bottom)) calc(30px + env(safe-area-inset-left))",boxSizing:"border-box",overflow:"hidden"}},
+    h("div",{"aria-label":"Taps "+taps,style:{margin:"0 0 14px",fontSize:"28px",lineHeight:1.2,fontWeight:800,textAlign:"center"}},taps),
+    h("div",{style:{width:"100%",maxWidth:390,background:"#d4c0d9",borderRadius:8,padding:"10px 6px",display:"flex",flexWrap:"wrap",justifyContent:"space-around",gap:4,fontSize:"14px",whiteSpace:"nowrap"}},
       h("span",null,"🔥 On fire!"),h("span",null,"🌶️ Hot"),h("span",null,"💜 Warm"),h("span",null,"🥶 Cold")),
     h("div",{style:{flex:1,minHeight:0,display:"flex",alignItems:"center",justifyContent:"center",width:"100%",containerType:"size"}},
       h("div",{"aria-label":"8 by 8 animal search map",style:{width:"min(100%, 100cqh)",maxWidth:440,aspectRatio:"1",flexShrink:0,boxSizing:"border-box",display:"grid",gridTemplateColumns:`repeat(${side},minmax(0,1fr))`,gridTemplateRows:`repeat(${side},minmax(0,1fr))`,gap:1,border:"1px solid #e3d7e9",boxShadow:"0 4px 12px #6c547052"}},
         Array.from({length:cells},(_,i)=>h("button",{key:round+"-"+i,type:"button",onClick:()=>choose(i),"aria-label":opened[i]?"Cell "+(i+1)+": "+(opened[i]===animal?"animal found":"clue "+opened[i]):"Check cell "+(i+1),style:{...cellStyle,background:opened[i]?"#dcc7e5":"#c7b3d0"}},opened[i]||"")))),
-    h("div",{style:{fontSize:15,minHeight:24,textAlign:"center",marginTop:14}},won?"Found it in "+taps+" taps!":"Taps: "+taps),
+    h("div",{style:{fontSize:15,minHeight:24,textAlign:"center",marginTop:14}},won?"Found it in "+taps+" taps!":""),
     won&&h("button",{type:"button",onClick:restart,style:{minHeight:46,minWidth:140,marginTop:12,border:0,borderRadius:12,background:"#744e92",color:"white",fontSize:16,fontWeight:700,cursor:"pointer"}},"Play Again")
   );
 };;(0,VE.createRoot)(document.getElementById("root")).render((0,se.jsx)(CV,{}));})();

@@ -816,8 +816,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       (0, Z.jsxs)("div", {
         style: {
           flex: "0 0 auto",
-          padding: "clamp(12px, 4cqi, 24px)",
-          paddingBottom: "calc(50px + env(safe-area-inset-bottom, 0px))",
+          padding:"12px 30px",paddingBottom: "calc(50px + env(safe-area-inset-bottom, 0px))",
           background: "#333",
           display: "flex",
           justifyContent: "space-between",

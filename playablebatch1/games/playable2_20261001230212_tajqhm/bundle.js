@@ -93,7 +93,7 @@
         </section>
         <section class="timer-wrap">
           <div class="timer" id="timer">00.00</div>
-          <div class="feedback" id="feedback" role="status" aria-live="polite">Tap PLAY, then tap STOP on the target</div>
+          <div class="feedback" id="feedback" role="status" aria-live="polite">PLAY, then STOP at the target</div>
         </section>
         <section class="control"><button class="action" id="action" type="button"></button></section>
       </main>
@@ -246,7 +246,7 @@
       phase = 'ready';
       elapsed = 0;
       newTarget();
-      els.feedback.textContent = hasPlayed ? '' : 'Tap PLAY, then tap STOP on the target';
+      els.feedback.textContent = hasPlayed ? '' : 'PLAY, then STOP at the target';
       els.feedback.className = 'feedback';
       tone(300, .07, 'sine', .045);
       render();

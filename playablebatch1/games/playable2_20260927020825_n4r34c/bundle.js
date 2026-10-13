@@ -240,11 +240,11 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       --font-display: "Poppins", "PingFang SC", system-ui, sans-serif;
       --font-body:    "Poppins", "PingFang SC", system-ui, sans-serif;
       --font-mono:    ui-monospace, Menlo, monospace;
-      --bg-dark: #090e17;
-      --surface: #141b2d;
-      --primary: #3b82f6;
-      --text-main: #ffffff;
-      --text-dim: #8ba0c1;
+      --bg-dark: #152C3A;
+      --surface: #1D3846;
+      --primary: #FFAA53;
+      --text-main: #EFF7FA;
+      --text-dim: #ACC4D0;
     }
     html, body, #root {
       width: 100%;
@@ -337,7 +337,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
           E.scale(f, f),
           E.beginPath(),
           E.arc(F, b, D, 0, Math.PI * 2),
-          (E.strokeStyle = "#2d3b5c"),
+          (E.strokeStyle = "#658594"),
           (E.lineWidth = 4),
           E.setLineDash([12, 12]),
           E.stroke(),
@@ -345,17 +345,17 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
           s === "idle" &&
             (E.beginPath(),
             E.arc(F, b - D, 12, 0, Math.PI * 2),
-            (E.fillStyle = "#ffffff"),
+            (E.fillStyle = "#FFAA53"),
             E.fill(),
             (E.shadowBlur = 10),
-            (E.shadowColor = "rgba(255, 255, 255, 0.5)"),
+            (E.shadowColor = "rgba(255,170,83,0.5)"),
             E.fill(),
             (E.shadowBlur = 0)));
         let V = c.current;
         if (V && V.length > 0) {
           (E.beginPath(), E.moveTo(V[0].x, V[0].y));
           for (let P = 1; P < V.length; P++) E.lineTo(V[P].x, V[P].y);
-          ((E.strokeStyle = "#3b82f6"),
+          ((E.strokeStyle = "#FFAA53"),
             (E.lineWidth = 6),
             (E.lineCap = "round"),
             (E.lineJoin = "round"),
@@ -536,11 +536,9 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                     children: (0, Ge.jsx)("p", {
                       style: {
                         margin: 0,
-                        fontSize: "clamp(14px, 4cqi, 18px)",
-                        color: "var(--text-dim)",
-                        lineHeight: 1.4,
+                        fontSize:"18px",color:"var(--text-dim)",lineHeight:1.3,
                       },
-                      children: t.GUIDE_TEXT,
+                      children:"Draw a circle to start",
                     }),
                   }),
               }),
@@ -559,7 +557,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                       flexDirection: "column",
                       alignItems: "center",
                       justifyContent: "center",
-                      backgroundColor: "rgba(20, 27, 45, 0.85)",
+                      backgroundColor: "rgba(29,56,70,0.92)",
                       backdropFilter: "blur(4px)",
                       WebkitBackdropFilter: "blur(4px)",
                     },
@@ -606,10 +604,10 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                               padding: "16px 24px",
                               borderRadius: "100px",
                               backgroundColor: "var(--primary)",
-                              color: "#fff",
+                              color: "#152C3A",
                               fontSize: "16px",
                               fontWeight: 700,
-                              boxShadow: "0 4px 16px rgba(59, 130, 246, 0.4)",
+                              boxShadow: "0 4px 16px rgba(255,170,83,0.25)",
                               transition: "transform 0.1s",
                             },
                             onPointerDown: (k) =>

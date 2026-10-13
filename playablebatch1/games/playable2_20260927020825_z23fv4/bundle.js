@@ -418,7 +418,7 @@ IF=
       (0, ye.jsx)("div", {
         style: {
           flex: "0 0 auto",
-          padding: "15px 10px",
+          padding:"30px 30px 12px",
           display: "flex",
           overflowX: "auto",
           gap: "10px",
@@ -457,8 +457,7 @@ IF=
           flexDirection: "column",
           position: "relative",
           backgroundColor: "#fff",
-          margin: "0 10px",
-          borderRadius: "24px",
+          margin:"0 30px",borderRadius:"24px",
           boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
         },
         children: (0, ye.jsx)(s, { config: t }, `${e}-${r}`),

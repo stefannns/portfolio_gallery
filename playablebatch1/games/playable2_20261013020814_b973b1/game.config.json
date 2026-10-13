@@ -1,0 +1,115 @@
+{
+  "tweaks": [
+    {
+      "id": "MAX_SPEED",
+      "kind": "number",
+      "label": "Max Speed",
+      "value": 0.4,
+      "default": 0.4,
+      "min": 0.2,
+      "max": 0.8,
+      "step": 0.05
+    },
+    {
+      "id": "ACCELERATION",
+      "kind": "number",
+      "label": "Acceleration",
+      "value": 0.0008,
+      "default": 0.0008,
+      "min": 0.0002,
+      "max": 0.002,
+      "step": 0.0001
+    },
+    {
+      "id": "STEER_SPEED",
+      "kind": "number",
+      "label": "Steering Speed",
+      "value": 0.003,
+      "default": 0.003,
+      "min": 0.001,
+      "max": 0.006,
+      "step": 0.0005
+    }
+  ],
+  "texts": [
+    {
+      "id": "TXT_LEVEL_CLEAR",
+      "label": "Level Clear Title",
+      "value": "Level Cleared!",
+      "default": "Level Cleared!",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_NEXT_LEVEL",
+      "label": "Next Level Btn",
+      "value": "Next Level",
+      "default": "Next Level",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_GAME_OVER",
+      "label": "Crash Title",
+      "value": "Crashed!",
+      "default": "Crashed!",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_RESTART",
+      "label": "Try Again Btn",
+      "value": "Try Again",
+      "default": "Try Again",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_ALL_CLEAR",
+      "label": "All Clear Title",
+      "value": "You are a Parking Master!",
+      "default": "You are a Parking Master!",
+      "max_length": 30
+    },
+    {
+      "id": "TXT_RESTART_ALL",
+      "label": "Play Again Btn",
+      "value": "Play Again",
+      "default": "Play Again",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_POST_PLAY",
+      "label": "Post Play Btn",
+      "value": "Post My Play",
+      "default": "Post My Play",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "IMG_PLAYER",
+      "label": "Player Car",
+      "path": "./assets/car_player.webp",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_PARKED",
+      "label": "Parked Car",
+      "path": "./assets/car_parked.webp",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_BG",
+      "label": "Cartoon Parking Lot",
+      "path": "./assets/bg_cartoon_parking.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "103312816458762873",
+    "version_id": "103312816458754163",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

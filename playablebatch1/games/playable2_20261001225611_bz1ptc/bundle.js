@@ -754,7 +754,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
             margin: 0,
           },
         },
-        "Tap the heart to start · follow the 100 BPM beat.",
+        "Tap the heart to start",
       ),
     phase === "over" &&
       h(

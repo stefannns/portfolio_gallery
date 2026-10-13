@@ -634,7 +634,7 @@ function DT() {
       *{box-sizing:border-box}.shell{width:100%;height:100%;position:relative;overflow:hidden;font-family:Poppins,system-ui,sans-serif;color:#fff}
       canvas{display:block;width:100%;height:100%;touch-action:none}.top{position:absolute;left:calc(30 * var(--ui-unit) + env(safe-area-inset-left));right:calc(30 * var(--ui-unit) + env(safe-area-inset-right));top:calc(30 * var(--ui-unit) + env(safe-area-inset-top));pointer-events:none}
       .heading{font-size:clamp(23px,6.5vw,32px);font-weight:700;text-align:center;color:#422715;text-shadow:0 1px 1px #fff1ba;line-height:1.15}
-      .meters{display:flex;justify-content:space-between;align-items:flex-start;gap:calc(16 * var(--ui-unit))}.meter{flex:1;width:auto;max-width:240px;min-width:0}.elapsed{flex:none;min-width:3.5ch;text-align:right;color:#321d11;font-size:calc(28 * var(--ui-unit));font-weight:700;font-variant-numeric:tabular-nums;line-height:1.4;white-space:nowrap}.meter label{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#321d11;font-weight:700;font-size:calc(18 * var(--ui-unit));line-height:1.4;margin-bottom:5px}.stress-value{font-size:calc(28 * var(--ui-unit));font-variant-numeric:tabular-nums}
+      .meters{display:flex;justify-content:space-between;align-items:flex-start;gap:calc(16 * var(--ui-unit))}.meter{flex:1;width:auto;max-width:240px;min-width:0}.elapsed{flex:none;min-width:3.5ch;text-align:right;color:#321d11;font-size:calc(28 * var(--ui-unit));font-weight:700;font-variant-numeric:tabular-nums;line-height:1.4;white-space:nowrap}.meter label{display:flex;align-items:center;justify-content:flex-start;gap:12px;color:#321d11;font-weight:700;font-size:calc(18 * var(--ui-unit));line-height:1.4;margin-bottom:5px}.stress-value{font-size:calc(28 * var(--ui-unit));font-variant-numeric:tabular-nums}
       .track{height:15px;border:2px solid #5b3218;border-radius:10px;background:#51351f;overflow:hidden;box-shadow:0 2px 4px #3c210a66}.fill{height:100%;background:linear-gradient(90deg,#ffef93,#f9a84a);transition:width .08s linear}.fill.stress{background:linear-gradient(90deg,#ffbf65,#ee4832)}
       .hint{position:absolute;left:calc(30 * var(--ui-unit) + env(safe-area-inset-left));right:calc(30 * var(--ui-unit) + env(safe-area-inset-right));bottom:calc(50 * var(--ui-unit) + env(safe-area-inset-bottom) + 5px);text-align:center;font-size:calc(18 * var(--ui-unit));font-weight:700;color:#fff7d9;text-shadow:0 2px 5px #4b2718;pointer-events:none;line-height:1.3}
       .overlay{position:absolute;inset:0;z-index:3;display:flex;align-items:center;justify-content:center;padding:calc(30 * var(--ui-unit) + env(safe-area-inset-top)) calc(30 * var(--ui-unit) + env(safe-area-inset-right)) calc(50 * var(--ui-unit) + env(safe-area-inset-bottom)) calc(30 * var(--ui-unit) + env(safe-area-inset-left));background:#201307a8;backdrop-filter:blur(4px)}
@@ -704,7 +704,7 @@ function DT() {
             style: { visibility: guideUsed ? "hidden" : "visible" },
             "aria-hidden": guideUsed,
           },
-          s === "ready" ? "Hold to carve and start · release to cool" : (n?.MSG_HOLD_CARVE || "Hold to carve \xB7 release to cool"),
+          s === "ready" ? "Hold to carve · release to cool" : (n?.MSG_HOLD_CARVE || "Hold to carve \xB7 release to cool"),
         ),
       null,
       (s === "won" || s === "over") &&

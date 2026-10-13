@@ -115,14 +115,14 @@ function computeGroupPlacements({ bounds, slots }) {
         * { box-sizing: border-box; }
         button { font: 700 clamp(14px, 3.8vw, 18px)/1.2 Poppins, sans-serif; border: 0; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
         .face-game { width: 100%; height: 100%; min-height: 0; overflow: hidden; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; background: var(--paper); color: var(--ink); font-family: Poppins, sans-serif; }
-        .face-game__header { padding: calc(40px + env(safe-area-inset-top)) 25px 12px; text-align: center; }
-        .face-game__step { margin: 0 0 5px; font-size: clamp(12px, 3.2vw, 16px); letter-spacing: .14em; color: #736e64; }
+        .face-game__header { padding: calc(30px + env(safe-area-inset-top)) 30px 12px; text-align: center; }
+        .face-game__step { margin: 0 0 5px; font-size: 28px; letter-spacing: 0; line-height: 1.2; color: #736e64; }
         .face-game__prompt { margin: 0; max-width: 100%; font-size: clamp(19px, 5.4vw, 30px); line-height: 1.15; overflow-wrap: anywhere; }
-        .face-game__workspace { min-height: 0; display: grid; place-items: center; padding: 4px 25px 12px; overflow: hidden; container-type: size; }
+        .face-game__workspace { min-height: 0; display: grid; place-items: center; padding: 4px 30px 12px; overflow: hidden; container-type: size; }
         .face-game__canvas-wrap { position: relative; width: min(100%, calc(100vh - 280px), 560px); max-width: 100%; max-height: 100%; aspect-ratio: 1; border: 2px dashed var(--guide); border-radius: 22px; overflow: hidden; background: rgba(255,255,255,.08); touch-action: none; }
         .face-game canvas { display: block; width: 100%; height: 100%; }
         #draw-canvas { cursor: crosshair; touch-action: none; }
-        .face-game__toolbar { width: min(calc(100% - 50px), 560px); margin: 0 auto; padding: 8px 0 calc(40px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: minmax(105px,.72fr) 1.28fr; gap: 14px; }
+        .face-game__toolbar { width: min(calc(100% - 60px), 560px); margin: 0 auto; padding: 8px 0 calc(50px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: minmax(105px,.72fr) 1.28fr; gap: 14px; }
         .face-game__button { min-height: 54px; border-radius: 14px; padding: 11px 18px; box-shadow: 0 7px 17px rgba(54,46,36,.12); transition: transform .12s ease, filter .12s ease; white-space: normal; overflow-wrap: anywhere; }
         .face-game__button:active { transform: translateY(2px) scale(.985); filter: brightness(.96); }
         .face-game__button:disabled { cursor: default; opacity: .42; transform: none; filter: none; }
@@ -130,7 +130,7 @@ function computeGroupPlacements({ bounds, slots }) {
         .face-game__button--next { color: #fff; background: var(--purple); }
         .face-game__result-title { margin: 0; max-width: 100%; font-size: clamp(24px, 6vw, 34px); line-height: 1.1; overflow-wrap: anywhere; }
         .face-game__result-wrap { position: relative; width: min(100%, calc(100vh - 270px), 620px); max-width: 100%; max-height: 100%; aspect-ratio: 1; }
-        .face-game__actions { width: min(calc(100% - 50px), 700px); margin: 0 auto; padding: 10px 0 calc(40px + env(safe-area-inset-bottom)); }
+        .face-game__actions { width: min(calc(100% - 60px), 700px); margin: 0 auto; padding: 10px 0 calc(50px + env(safe-area-inset-bottom)); }
         .face-game__action-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         .face-game__action { min-height: clamp(56px, 12vw, 76px); color: #fff; border-radius: 14px; box-shadow: 0 9px 20px rgba(55,45,35,.15); }
         .face-game__action--blink { background: var(--purple); }
@@ -341,7 +341,7 @@ function computeGroupPlacements({ bounds, slots }) {
     }
 
     function updateStep() {
-      stepLabel.textContent = `${copy.TXT_STEP} ${step + 1} ${copy.TXT_OF} ${STEP_COUNT}`;
+      stepLabel.textContent = `${step + 1}/${STEP_COUNT}`;
       promptLabel.textContent = copy[`PROMPT_${step + 1}`] || FALLBACK[`PROMPT_${step + 1}`];
       nextButton.textContent = step === STEP_COUNT - 1 ? copy.BTN_FINISH : copy.BTN_NEXT;
       updateNextAvailability();

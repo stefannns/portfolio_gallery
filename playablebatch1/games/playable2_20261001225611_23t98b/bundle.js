@@ -626,7 +626,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                     flex: "0 0 auto",
                     background: "#f2f2f7",
                     borderTop: "0.5px solid #c6c6c8",
-                    padding: "9px 12px 10px",
+                    padding:"9px 30px 10px",
                   },
                 },
                 h(
@@ -681,8 +681,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                     {
                       style: {
                         display: "grid",
-                        gridTemplateColumns: "repeat(4,minmax(0,1fr))",
-                        gap: 8,
+                        gridTemplateColumns:"repeat(3,minmax(0,1fr))",gap:8,
                       },
                     },
                     words.map((word) =>
@@ -701,11 +700,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                             background: "#fff",
                             border: "1px solid #d1d1d6",
                             color: "#007aff",
-                            fontSize: "clamp(10px,2.75vw,13px)",
-                            opacity: pending ? 0.5 : 1,
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
+                            fontSize:"16px",lineHeight:1.25,opacity:pending?.5:1,whiteSpace:"normal",overflowWrap:"anywhere",
                             boxShadow: "0 1px 1px #00000008",
                           },
                         },

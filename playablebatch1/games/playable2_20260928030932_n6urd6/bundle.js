@@ -716,7 +716,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         .btn-secondary { background:#ffaa00; box-shadow:0 6px 0 #cc8800; }
         .btn-secondary:active:not(:disabled) { box-shadow:0 2px 0 #cc8800; }
         .btn:disabled { opacity:0.6; cursor:not-allowed; }
-        .hud { position:absolute; top:calc(40px + env(safe-area-inset-top, 0px)); left:25px; right:25px; display:flex; justify-content:space-between; pointer-events:none; font-family:var(--font-display); font-size:32px; color:#fff; text-shadow:0 3px 6px rgba(0,0,0,0.8); z-index:10; }
+        .hud { position:absolute; top:calc(30px + env(safe-area-inset-top, 0px)); left:30px; right:30px; display:flex; justify-content:space-between; pointer-events:none; font-family:var(--font-display); font-size:28px; color:#fff; text-shadow:0 3px 6px rgba(0,0,0,0.8); z-index:10; }
         .btn-group { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; padding:0 20px; }
       `,
           }),
@@ -749,21 +749,10 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                 className: "hud",
                 children: [
                   (0, Ee.jsxs)("div", {
-                    children: [
-                      t.LBL_SCORE,
-                      ": ",
-                      (0, Ee.jsx)("span", { ref: s, children: "0" }),
-                    ],
+                    "aria-label":"Score",children:[(0,Ee.jsx)("span",{ref:s,children:"0"})],
                   }),
                   (0, Ee.jsxs)("div", {
-                    children: [
-                      t.LBL_TIME,
-                      ": ",
-                      (0, Ee.jsxs)("span", {
-                        ref: a,
-                        children: [t.TIME_LIMIT, "s"],
-                      }),
-                    ],
+                    "aria-label":"Time remaining",children:[(0,Ee.jsxs)("span",{ref:a,children:[t.TIME_LIMIT,"s"]})],
                   }),
                 ],
               }),

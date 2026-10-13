@@ -4,10 +4,41 @@
  * Update this snapshot alongside the tracker when work changes.
  */
 window.PLAYABLE_IMPLEMENTED_FIXES = {
+  "playable2_20261013020814_twgfzt": {
+    "number": 68,
+    "items": [
+      "A one-direction pull launches an automatic elliptical swing on release, curling into an inward swirl as it slows.",
+      "Added spring-following pull resistance, stretch/squash feedback and a stronger inward recoil before the ellipse.",
+      "The long, fading rainbow path records the released motion only. Pulling again clears it; no trail appears while held.",
+      "Kept the visible first-frame orb and compact action guide. Added tap/keyboard alternatives and guarded cancellation, resizing and hidden-page behavior."
+    ],
+    "status": "Release-only elliptical rainbow motion implemented locally; awaiting review.",
+    "evidence": ["Neon Swing release follow-up 20261013"]
+  },
+  "playable2_20261013020814_woay2o": {
+    "number": 70,
+    "items": [
+      "Added a blue-paper/pink-car example stamp inspired by the original reference, visible immediately instead of an empty text prompt.",
+      "Replaced the dotted mask with a solid white postage frame, scalloped edge perforations, a light paper shadow and slight tilt. Captured and uploaded photos share the same frame.",
+      "Capture, photo upload, remove and camera hide/show remain available; frame sizing leaves room for rotation and shadow at short portrait sizes."
+    ],
+    "status": "Postage frame and generated example implemented locally; awaiting review.",
+    "evidence": ["Pocket Stamp frame follow-up 20261013"]
+  },
+  "playable2_20261013020955_2hyyml": {
+    "number": 72,
+    "items": [
+      "Six camera treatments: worn silver-plate, black-and-white film, soft color film, analog video, early digital and clean modern.",
+      "Older eras add grain, dust, scratches, soft detail, dark edges and subtle film weave; color film adds edge light leaks, while analog video adds scanlines and tracking.",
+      "Live preview and saved photos share the same effects and crop. Camera controls remain clear; reduced motion stops decorative film movement."
+    ],
+    "status": "Era effects implemented locally; awaiting review.",
+    "evidence": ["Time Camera era effects follow-up 20261013"]
+  },
   "playable2_20260927020828_5pmrhn": {
     "number": 3,
     "items": [
-      "Simplified progress to n/4; removed Hint and duplicate instructions.",
+      "Orchid Paper colors; simplified progress to n/4, removed Hint and duplicate instructions.",
       "Kept puzzles old 4 → 6 → 1 → 2, with a circular success check badge.",
       "Moved the puzzle upward and opening guide below it; first contact hides the guide without shifting the board."
     ],
@@ -15,7 +46,8 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "evidence": [
       "FB-003-3e1fcc45",
       "FB-003-ceef90d6",
-      "One Stroke layout follow-up 20261009"
+      "One Stroke layout follow-up 20261009",
+      "Simple color themes follow-up 20261009"
     ]
   },
   "playable2_20260927020828_iuyca5": {
@@ -37,13 +69,14 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "number": 6,
     "items": [
       "Centered results on the target circle at different preview sizes.",
-      "Removed the emoji after “Missed!”.",
+      "Mint Draft colors; removed the emoji after “Missed!”.",
       "Shows actual string-length percentage, including values above 100%."
     ],
     "status": "Implemented locally; review acceptance pending.",
     "evidence": [
       "FB-006-6eb08583",
-      "String Drawing percentage follow-up"
+      "String Drawing percentage follow-up",
+      "Simple color themes follow-up 20261009"
     ]
   },
   "playable2_20260927020828_9vxaxo": {
@@ -122,17 +155,30 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
       "FB-015-c8cb9ca1"
     ]
   },
+  "playable2_20260927020825_n4r34c": {
+    "number": 16,
+    "items": [
+      "Midnight Tangerine colors: deep-blue canvas, warm-orange dot and drawn path.",
+      "Matched results and Retry colors; retained readable light text and a clear target ring.",
+      "Circle geometry, input, scoring, retry and audio are unchanged."
+    ],
+    "status": "Color theme implemented locally; visual review pending.",
+    "evidence": [
+      "Simple color themes follow-up 20261009"
+    ]
+  },
   "playable2_20260927020825_lnwh1h": {
     "number": 17,
     "items": [
       "Added three obstacle layouts with a 100-ball target; shortened Level 2 blocks and Level 3 curves.",
       "Smoothed excavation edges and aligned visible holes with collision boundaries.",
-      "Separated initial balls; fixed reset, progression and pointer cleanup."
+      "Apricot Quarry colors; separated initial balls and fixed reset, progression and pointer cleanup."
     ],
-    "status": "User accepted the current game.",
+    "status": "User accepted the gameplay; new color theme awaits visual review.",
     "evidence": [
       "FB-017-7dd1f6be",
-      "Sand Digging target follow-up"
+      "Sand Digging target follow-up",
+      "Simple color themes follow-up 20261009"
     ]
   },
   "playable2_20260927020825_ufhwuj": {

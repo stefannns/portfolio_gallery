@@ -136,10 +136,9 @@
       '<div class="temperature-track" role="meter" aria-label="Stickman temperature" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">',
       '<span class="cold-label">COLD</span><span class="hot-label">HOT</span><div class="temperature-marker"></div>',
       '</div>',
-      '<h1>Spicy Stickman</h1>',
       '</header>',
       '<div class="speech-region">',
-      '<div class="reaction feed-first-action" role="status" aria-live="polite">Tap a treat to start · balance his temperature</div>',
+      '<div class="reaction feed-first-action" role="status" aria-live="polite">Tap treats to balance him</div>',
       '<section class="recovery-bubble" hidden aria-label="Help the stickman">',
       '<p class="bubble-message" aria-live="polite"></p>',
       '<div class="bubble-options"><button type="button" class="help-button"></button></div>',
@@ -254,7 +253,7 @@
     reaction.style.animation = "";
     clearTimeout(reactionTimer);
     reactionTimer = window.setTimeout(function () {
-      reaction.textContent = "Tap treats to balance his temperature!";
+      reaction.textContent = "";
       reaction.className = "reaction";
     }, 1100);
   }
@@ -276,7 +275,7 @@
     root.querySelectorAll(".food-button").forEach(function (button) { button.disabled = false; });
     updateTemperature();
     root.querySelector(".reaction").hidden = false;
-    root.querySelector(".reaction").textContent = "Tap treats to balance his temperature!";
+    root.querySelector(".reaction").textContent = "Tap treats to balance him";
     root.querySelector(".reaction").className = "reaction";
     root.querySelector(".reset-button").hidden = true;
     sound("reset");

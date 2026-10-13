@@ -451,10 +451,10 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                     },
                     children: [
                       (0, ce.jsxs)("span", {
-                        children: [t.HUD_QUESTION, " ", o + 1, " / ", m.length],
+                        "aria-label":"Question "+(o+1)+" of "+m.length,style:{fontSize:"28px",lineHeight:1.2},children:[o+1,"/",m.length],
                       }),
                       (0, ce.jsxs)("span", {
-                        children: [t.HUD_SCORE, ": ", s],
+                        "aria-label":"Score "+s,style:{fontSize:"28px",lineHeight:1.2},children:s,
                       }),
                     ],
                   }),

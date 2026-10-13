@@ -169,7 +169,7 @@ window.createPocketRacerComponent = function (React, JSX, flatten, useSubmission
       phase !== 'over' && jsxs('div', { className: 'drive-controls', role: 'group', 'aria-label': 'Driving controls', children: [
         control('left', 'Steer left', true), control('right', 'Steer right', true), control('accelerate', 'Accel'), control('brake', 'Brake')
       ] }),
-      phase === 'idle' && jsx('p', { className: 'race-instruction feed-first-action', style:{position:'absolute',top:'18%',left:30,right:30,margin:0,textAlign:'center',pointerEvents:'none'}, children: 'Hold Accel to start · steer to dodge traffic.' }),
+      phase === 'idle' && jsx('p', { className: 'race-instruction feed-first-action', style:{position:'absolute',top:'18%',left:30,right:30,margin:0,textAlign:'center',pointerEvents:'none'}, children: 'Hold Accel to start' }),
       phase === 'over' && jsxs('div', { className: 'race-overlay', role: 'dialog', 'aria-modal': true, 'aria-labelledby': 'crash-heading', children: [
         jsx('h2', { id: 'crash-heading', className: 'race-result', children: 'Crash' }),
         jsxs('p', { className: 'race-distance', children: [hud.score.toLocaleString('en'), jsx('span', { className: 'race-unit', children: ' pts' })] }),
