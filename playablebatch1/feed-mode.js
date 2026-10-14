@@ -30,7 +30,7 @@
   function load(){
     ready=false;controls();error.hidden=true;inlineError.hidden=true;
     status.textContent='Loading FYP review…';help.querySelector('[role="status"]').textContent='Loading FYP Mode…';
-    const url=new URL(runtime);url.searchParams.set('review','batch');url.searchParams.set('feed','playable-batch-'+selected.taskId);url.searchParams.set('reviewHost',location.origin);url.searchParams.set('v','native-fyp-20261013-5');
+    const url=new URL(runtime);url.searchParams.set('review','batch');url.searchParams.set('feed','playable-batch-'+selected.taskId);url.searchParams.set('reviewHost',location.origin);url.searchParams.set('v','native-fyp-only-20261013-6');
     activeFrame().src=url.href;clearTimeout(timer);
     timer=setTimeout(()=>{error.hidden=false;inlineError.hidden=false;status.textContent='Feed unavailable';},15000);
   }
