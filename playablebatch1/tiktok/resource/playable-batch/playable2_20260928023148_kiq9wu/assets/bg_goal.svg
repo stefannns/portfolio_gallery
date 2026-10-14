@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Safe escape target">
+  <style>
+    @font-face {
+      font-family: "Poppins Chase";
+      src: url("fonts/poppins/Poppins-Bold.woff2") format("woff2");
+      font-weight: 700;
+    }
+    text { font-family: "Poppins Chase", "Arial Narrow", Arial, sans-serif; font-weight: 700; }
+  </style>
+  <circle cx="100" cy="100" r="92" fill="#166534" fill-opacity=".36" stroke="#22c55e" stroke-width="10"/>
+  <circle cx="100" cy="100" r="66" fill="#16a34a" fill-opacity=".84" stroke="#bbf7d0" stroke-width="4"/>
+  <text x="100" y="93" text-anchor="middle" fill="#fff" font-size="37" letter-spacing=".5">SAFE</text>
+  <text x="100" y="125" text-anchor="middle" fill="#ecfdf5" font-size="23" letter-spacing=".3">ESCAPE</text>
+</svg>

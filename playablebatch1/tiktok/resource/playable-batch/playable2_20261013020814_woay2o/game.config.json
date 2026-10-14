@@ -1,0 +1,44 @@
+{
+  "tweaks": [],
+  "texts": [
+    {
+      "id": "TXT_EMPTY_HINT",
+      "label": "空状态提示",
+      "value": "SNAP A PHOTO",
+      "default": "SNAP A PHOTO",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_UPLOAD_ONLY",
+      "label": "无相机权限提示",
+      "value": "UPLOAD",
+      "default": "UPLOAD",
+      "max_length": 10
+    },
+    {
+      "id": "BTN_SNAP",
+      "label": "快门按钮文字",
+      "value": "SNAP",
+      "default": "SNAP",
+      "max_length": 10
+    },
+    {
+      "id": "BTN_HIDE",
+      "label": "隐藏相机按钮",
+      "value": "HIDE CAM",
+      "default": "HIDE CAM",
+      "max_length": 15
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "103312816467335686",
+    "version_id": "103312816467327249",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "image_expression",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 88">
+  <defs><radialGradient id="g"><stop stop-color="#163c3e"/><stop offset="1" stop-color="#102631"/></radialGradient></defs>
+  <circle cx="44" cy="44" r="41" fill="url(#g)" stroke="#c9a960" stroke-width="2"/>
+  <circle cx="44" cy="44" r="32" fill="none" stroke="#7ed6bd" stroke-opacity=".72" stroke-width="1.5"/>
+  <circle cx="44" cy="44" r="24" fill="none" stroke="#7ed6bd" stroke-opacity=".46"/>
+  <path d="M44 10v12M44 66v12M10 44h12M66 44h12" stroke="#d8bf78" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="m44 24 5.6 14.4L64 44l-14.4 5.6L44 64l-5.6-14.4L24 44l14.4-5.6z" fill="#f3d47e" stroke="#fff2be" stroke-width="1.5"/>
+  <circle cx="44" cy="44" r="4" fill="#f9f6e1"/>
+</svg>

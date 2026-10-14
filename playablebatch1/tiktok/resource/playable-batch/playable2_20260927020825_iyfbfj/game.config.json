@@ -1,0 +1,118 @@
+{
+  "tweaks": [
+    {
+      "id": "BASE_POINT_VALUE",
+      "kind": "number",
+      "label": "Base Point Value",
+      "value": 0.05,
+      "default": 0.05,
+      "min": 0.01,
+      "max": 0.5,
+      "step": 0.01
+    },
+    {
+      "id": "COST_BASE_AXES",
+      "kind": "number",
+      "label": "Axes Upgrade Base Cost",
+      "value": 50,
+      "default": 50,
+      "min": 10,
+      "max": 500,
+      "step": 10
+    },
+    {
+      "id": "COST_BASE_BRUSH",
+      "kind": "number",
+      "label": "Brush Upgrade Base Cost",
+      "value": 30,
+      "default": 30,
+      "min": 10,
+      "max": 500,
+      "step": 10
+    },
+    {
+      "id": "COST_BASE_MULT",
+      "kind": "number",
+      "label": "Multiplier Upgrade Base Cost",
+      "value": 100,
+      "default": 100,
+      "min": 10,
+      "max": 1000,
+      "step": 10
+    }
+  ],
+  "texts": [
+    {
+      "id": "LANG_CODE",
+      "label": "Language Code (Internal)",
+      "value": "en",
+      "default": "en",
+      "max_length": 5
+    },
+    {
+      "id": "TXT_BALANCE",
+      "label": "Balance Label",
+      "value": "BALANCE",
+      "default": "BALANCE",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_SELL",
+      "label": "Sell Button Text",
+      "value": "SELL ART",
+      "default": "SELL ART",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_SHOP",
+      "label": "Shop Title",
+      "value": "Upgrades",
+      "default": "Upgrades",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_DRAG_HINT",
+      "label": "Canvas Hint Text",
+      "value": "Drag to create magic",
+      "default": "Drag to create magic",
+      "max_length": 30
+    },
+    {
+      "id": "TXT_UPGRADE_AXES",
+      "label": "Upgrade Axes Text",
+      "value": "More Symmetry",
+      "default": "More Symmetry",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_UPGRADE_BRUSH",
+      "label": "Upgrade Brush Text",
+      "value": "Thicker Brush",
+      "default": "Thicker Brush",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_UPGRADE_MULT",
+      "label": "Upgrade Multiplier Text",
+      "value": "Higher Value",
+      "default": "Higher Value",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN_REF",
+      "label": "Active Button Background Reference",
+      "path": "./assets/bg_main_clean.svg",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script src="/resource/playable-batch/review-host.js"></script><script src="/resource/playable-feed/pocket-host.js" data-seed-random="off"></script>
+<script data-playable-feed-gate="v1">
+// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
+(() => {
+  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
+  let active=false,alive=true;
+  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
+  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
+  if(navigator.mediaDevices?.getUserMedia){
+    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia=async constraints=>{
+      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
+      const stream=await native(constraints);
+      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
+      streams.add(stream);return stream;
+    };
+  }
+  for(const key of ['AudioContext','webkitAudioContext']){
+    const Native=window[key];if(!Native)continue;
+    window[key]=class FeedAudioContext extends Native {
+      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
+      async resume(){if(!active)await wait();if(alive)return super.resume();}
+    };
+  }
+  const nativePlay=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
+  addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    active=alive&&event.data.active===true;
+    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
+    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
+  });
+  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
+})();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-config-inline" type="application/json">{
+  "tweaks": [
+    {
+      "id": "GAME_DURATION",
+      "kind": "number",
+      "label": "Survival Time (s)",
+      "value": 15,
+      "default": 15,
+      "min": 10,
+      "max": 60,
+      "step": 5
+    },
+    {
+      "id": "PASS_ACCURACY",
+      "kind": "number",
+      "label": "Pass Accuracy (%)",
+      "value": 60,
+      "default": 60,
+      "min": 10,
+      "max": 100,
+      "step": 5
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "Stayin' Alive CPR",
+      "default": "Stayin' Alive CPR",
+      "max_length": 30
+    },
+    {
+      "id": "GAME_SUBTITLE",
+      "label": "Subtitle",
+      "value": "Tap to the beat to save a life!",
+      "default": "Tap to the beat to save a life!",
+      "max_length": 40
+    },
+    {
+      "id": "INSTRUCTION",
+      "label": "Instruction",
+      "value": "Ideally, perform compressions at 100-120 beats per minute",
+      "default": "Ideally, perform compressions at 100-120 beats per minute",
+      "max_length": 80
+    },
+    {
+      "id": "TXT_PERFECT",
+      "label": "Perfect Feedback",
+      "value": "Perfect!",
+      "default": "Perfect!",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_TOO_FAST",
+      "label": "Fast Feedback",
+      "value": "Too Fast!",
+      "default": "Too Fast!",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_TOO_SLOW",
+      "label": "Slow Feedback",
+      "value": "Too Slow!",
+      "default": "Too Slow!",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_START",
+      "label": "Start Button",
+      "value": "START",
+      "default": "START",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "PLAY AGAIN",
+      "default": "PLAY AGAIN",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_SUCCESS",
+      "label": "Success Result",
+      "value": "Life Saved!",
+      "default": "Life Saved!",
+      "max_length": 25
+    },
+    {
+      "id": "TXT_FAIL",
+      "label": "Fail Result",
+      "value": "Keep Practicing",
+      "default": "Keep Practicing",
+      "max_length": 25
+    }
+  ],
+  "images": [
+    {
+      "id": "BTN_PLAY",
+      "label": "Play Button Icon",
+      "path": "./assets/btn_play.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99278216778511579",
+    "version_id": "99278216778645925",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}</script>
+  <script>
+    // file:// pages cannot fetch their adjacent JSON in Chrome. Keep the normal
+    // package fetch path on HTTP, and serve only the local config from this copy.
+    if (location.protocol === "file:") {
+      const config = document.getElementById("playable-config-inline").textContent;
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = function(input, options) {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url && /(?:^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve(new Response(config, {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return originalFetch(input, options);
+      };
+    }
+  </script>
+  <script src="./bundle.js?ui=5f6a3510bfd8"></script>
+<script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject=".feed-first-action"></script>
+</body>
+</html>

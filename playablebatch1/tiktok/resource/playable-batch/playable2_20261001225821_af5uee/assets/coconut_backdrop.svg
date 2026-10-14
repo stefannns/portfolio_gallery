@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 693" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="sun" cx=".5" cy=".4" r=".73">
+      <stop stop-color="#fff0a3"/>
+      <stop offset=".54" stop-color="#d9a143"/>
+      <stop offset="1" stop-color="#70411f"/>
+    </radialGradient>
+  </defs>
+  <rect width="390" height="693" fill="url(#sun)"/>
+</svg>

@@ -1,0 +1,80 @@
+{
+  "tweaks": [
+    {
+      "id": "DRAW_SPEED",
+      "kind": "number",
+      "label": "Drawing Speed",
+      "value": 0.4,
+      "default": 0.4,
+      "min": 0.1,
+      "max": 1.0,
+      "step": 0.05
+    },
+    {
+      "id": "MIN_RADIUS",
+      "kind": "number",
+      "label": "Min Radius",
+      "value": 50,
+      "default": 50,
+      "min": 30,
+      "max": 80,
+      "step": 1
+    },
+    {
+      "id": "MAX_RADIUS",
+      "kind": "number",
+      "label": "Max Radius",
+      "value": 140,
+      "default": 140,
+      "min": 100,
+      "max": 180,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "TXT_PROMPT",
+      "label": "Prompt Text",
+      "value": "Hold to draw string!",
+      "default": "Hold to draw string!",
+      "max_length": 30
+    },
+    {
+      "id": "TXT_PERFECT",
+      "label": "Perfect Text",
+      "value": "Perfect! 🎯",
+      "default": "Perfect! 🎯",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_GOOD",
+      "label": "Good Text",
+      "value": "Good! 👍",
+      "default": "Good! 👍",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_OK",
+      "label": "OK Text",
+      "value": "Not Bad 🤔",
+      "default": "Not Bad 🤔",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_MISS",
+      "label": "Miss Text",
+      "value": "Missed!",
+      "default": "Missed!",
+      "max_length": 15
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

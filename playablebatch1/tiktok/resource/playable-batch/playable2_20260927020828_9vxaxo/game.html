@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script src="/resource/playable-batch/review-host.js"></script><script src="/resource/playable-feed/pocket-host.js" data-seed-random="off"></script>
+<script data-playable-feed-gate="v1">
+// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
+(() => {
+  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
+  let active=false,alive=true;
+  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
+  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
+  if(navigator.mediaDevices?.getUserMedia){
+    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia=async constraints=>{
+      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
+      const stream=await native(constraints);
+      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
+      streams.add(stream);return stream;
+    };
+  }
+  for(const key of ['AudioContext','webkitAudioContext']){
+    const Native=window[key];if(!Native)continue;
+    window[key]=class FeedAudioContext extends Native {
+      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
+      async resume(){if(!active)await wait();if(alive)return super.resume();}
+    };
+  }
+  const nativePlay=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
+  addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    active=alive&&event.data.active===true;
+    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
+    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
+  });
+  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
+})();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <link rel="stylesheet" href="./bundle.css" />
+  <link rel="stylesheet" href="./art-v2.css?v=pixel-grass-sky-1" />
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    /* Generated pixel grass and dirt; original collision geometry is retained. */
+    #root { --color-plat: #7b4b29; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<style id="confirmed-ui-20261013">
+.hint-pill{font-size:18px!important;line-height:1.3!important;letter-spacing:0!important;padding:12px 8px!important}.hud-text{padding:0!important;background:none!important;border:0!important}
+</style>
+</head>
+<body>
+  <div id="root"></div>
+  <!-- playable-inline-config:start -->
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"STRETCH_SPEED","kind":"number","label":"Stretch Speed","value":0.09,"default":0.04,"min":0.01,"max":0.1,"step":0.01},{"id":"DROP_SPEED","kind":"number","label":"Drop Speed","value":0.3,"default":0.3,"min":0.1,"max":0.8,"step":0.1},{"id":"MIN_GAP","kind":"number","label":"Min Gap Width","value":30,"default":12,"min":8,"max":30,"step":1},{"id":"MAX_GAP","kind":"number","label":"Max Gap Width","value":40,"default":28,"min":20,"max":40,"step":1},{"id":"PLAT_MIN","kind":"number","label":"Platform Min Width","value":10,"default":22,"min":10,"max":25,"step":1},{"id":"PLAT_MAX","kind":"number","label":"Platform Max Width","value":18,"default":34,"min":18,"max":40,"step":1},{"id":"BRIDGE_THIN","kind":"number","label":"Ladder Initial Length","value":5,"default":5,"min":3,"max":10,"step":1}],"texts":[{"id":"GAME_TITLE","label":"Game Title","value":"Sky Ladder Stretch","default":"Sky Ladder Stretch","max_length":30},{"id":"HINT_TEXT","label":"Hint Text","value":"Hold to extend ladder\nRelease to drop!","default":"Hold to extend ladder\nRelease to drop!","max_length":40}],"images":[{"id":"BG_MAIN","label":"Background Image","path":"./assets/pixel-sky-v1.webp","replaceable":true},{"id":"ITEM_RING","label":"Ladder Texture","path":"./assets/pixel-ladder-segment-v1.webp","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    (function () {
+      if (window.location.protocol !== 'file:') return;
+      var configText = document.getElementById('playable-inline-config').textContent;
+      var nativeFetch = window.fetch;
+      window.fetch = function (input) {
+        var url = typeof input === 'string' ? input : (input && input.url) || '';
+        if (/(^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: function () { return Promise.resolve(JSON.parse(configText)); },
+            text: function () { return Promise.resolve(configText); }
+          });
+        }
+        return nativeFetch.apply(window, arguments);
+      };
+    }());
+  </script>
+  <!-- playable-inline-config:end -->
+  <script src="./bundle.js?ui=c1583696f626"></script>
+<script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject="#root canvas"></script>
+</body>
+</html>

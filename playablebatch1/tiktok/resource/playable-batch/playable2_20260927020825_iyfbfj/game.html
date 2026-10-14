@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script src="/resource/playable-batch/review-host.js"></script><script src="/resource/playable-feed/pocket-host.js" data-seed-random="off"></script>
+<script data-playable-feed-gate="v1">
+// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
+(() => {
+  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
+  let active=false,alive=true;
+  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
+  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
+  if(navigator.mediaDevices?.getUserMedia){
+    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia=async constraints=>{
+      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
+      const stream=await native(constraints);
+      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
+      streams.add(stream);return stream;
+    };
+  }
+  for(const key of ['AudioContext','webkitAudioContext']){
+    const Native=window[key];if(!Native)continue;
+    window[key]=class FeedAudioContext extends Native {
+      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
+      async resume(){if(!active)await wait();if(alive)return super.resume();}
+    };
+  }
+  const nativePlay=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
+  addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    active=alive&&event.data.active===true;
+    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
+    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
+  });
+  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
+})();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <link rel="stylesheet" href="./bundle.css" />
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    /* Iteration repair: stop the resize loop from recursively shrinking the drawing surface. */
+    canvas {
+      width: min(76vw, 480px) !important;
+      height: min(76vw, 480px) !important;
+      aspect-ratio: 1 / 1 !important;
+    }
+    /* Keep the empty Sell state visibly solid while retaining a muted disabled treatment. */
+    button[style*="max-width: 320px"] {
+      opacity: 1 !important;
+    }
+    button[style*="max-width: 320px"][style*="background: var(--bg-panel)"] {
+      background: #334155 !important;
+      color: #f8fafc !important;
+      border: 1px solid #64748b !important;
+      box-shadow: 0 6px 14px rgba(2, 6, 23, 0.35) !important;
+    }
+    button[style*="max-width: 320px"]:not([style*="background: var(--bg-panel)"]) {
+      background: linear-gradient(135deg, #fde047, #f59e0b) !important;
+      color: #111827 !important;
+      border: 1px solid #fbbf24 !important;
+      box-shadow: 0 8px 18px rgba(245, 158, 11, 0.4) !important;
+    }
+    button[style*="max-width: 320px"] > div[style*="position: absolute"] {
+      display: none !important;
+    }
+    #root > div > div:nth-of-type(1) { padding-top: 40px !important; }
+    #root > div > div:nth-of-type(3) { padding-bottom: 40px !important; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<style id="confirmed-ui-20261013">
+#root>div>div:nth-of-type(1){padding-top:30px!important}#root>div>div:nth-of-type(3){padding-bottom:50px!important}
+</style>
+</head>
+<body>
+  <div id="root"></div>
+  <!-- playable-inline-config:start -->
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"BASE_POINT_VALUE","kind":"number","label":"Base Point Value","value":0.05,"default":0.05,"min":0.01,"max":0.5,"step":0.01},{"id":"COST_BASE_AXES","kind":"number","label":"Axes Upgrade Base Cost","value":50,"default":50,"min":10,"max":500,"step":10},{"id":"COST_BASE_BRUSH","kind":"number","label":"Brush Upgrade Base Cost","value":30,"default":30,"min":10,"max":500,"step":10},{"id":"COST_BASE_MULT","kind":"number","label":"Multiplier Upgrade Base Cost","value":100,"default":100,"min":10,"max":1000,"step":10}],"texts":[{"id":"LANG_CODE","label":"Language Code (Internal)","value":"en","default":"en","max_length":5},{"id":"TXT_BALANCE","label":"Balance Label","value":"BALANCE","default":"BALANCE","max_length":15},{"id":"TXT_SELL","label":"Sell Button Text","value":"SELL ART","default":"SELL ART","max_length":20},{"id":"TXT_SHOP","label":"Shop Title","value":"Upgrades","default":"Upgrades","max_length":20},{"id":"TXT_DRAG_HINT","label":"Canvas Hint Text","value":"Drag to create magic","default":"Drag to create magic","max_length":30},{"id":"TXT_UPGRADE_AXES","label":"Upgrade Axes Text","value":"More Symmetry","default":"More Symmetry","max_length":20},{"id":"TXT_UPGRADE_BRUSH","label":"Upgrade Brush Text","value":"Thicker Brush","default":"Thicker Brush","max_length":20},{"id":"TXT_UPGRADE_MULT","label":"Upgrade Multiplier Text","value":"Higher Value","default":"Higher Value","max_length":20}],"images":[{"id":"BG_MAIN_REF","label":"Active Button Background Reference","path":"./assets/bg_main_clean.svg","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    (function () {
+      if (window.location.protocol !== 'file:') return;
+      var configText = document.getElementById('playable-inline-config').textContent;
+      var nativeFetch = window.fetch;
+      window.fetch = function (input) {
+        var url = typeof input === 'string' ? input : (input && input.url) || '';
+        if (/(^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: function () { return Promise.resolve(JSON.parse(configText)); },
+            text: function () { return Promise.resolve(configText); }
+          });
+        }
+        return nativeFetch.apply(window, arguments);
+      };
+    }());
+  </script>
+  <!-- playable-inline-config:end -->
+  <script src="./bundle.js?ui=d6b9f165592e"></script>
+<script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject="#root canvas"></script>
+</body>
+</html>

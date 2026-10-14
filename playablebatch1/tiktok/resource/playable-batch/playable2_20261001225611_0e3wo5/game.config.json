@@ -1,0 +1,102 @@
+{
+  "tweaks": [
+    {
+      "id": "GRID_SIZE",
+      "kind": "number",
+      "label": "Grid Size",
+      "value": 15,
+      "default": 15,
+      "min": 10,
+      "max": 20,
+      "step": 1
+    },
+    {
+      "id": "INITIAL_SPEED",
+      "kind": "number",
+      "label": "Initial Speed",
+      "value": 300,
+      "default": 300,
+      "min": 100,
+      "max": 500,
+      "step": 10
+    },
+    {
+      "id": "MIN_SPEED",
+      "kind": "number",
+      "label": "Min Speed",
+      "value": 80,
+      "default": 80,
+      "min": 50,
+      "max": 150,
+      "step": 10
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "CATS SNAKE",
+      "default": "CATS SNAKE",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_START",
+      "label": "Start Button",
+      "value": "START GAME",
+      "default": "START GAME",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "PLAY AGAIN",
+      "default": "PLAY AGAIN",
+      "max_length": 20
+    },
+    {
+      "id": "TEXT_SCORE",
+      "label": "Score Label",
+      "value": "SCORE",
+      "default": "SCORE",
+      "max_length": 10
+    },
+    {
+      "id": "TEXT_BEST",
+      "label": "Best Score Label",
+      "value": "BEST",
+      "default": "BEST",
+      "max_length": 10
+    },
+    {
+      "id": "TEXT_POST_PLAY",
+      "label": "Post Play Button",
+      "value": "POST MY PLAY",
+      "default": "POST MY PLAY",
+      "max_length": 30
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Cats Background Image",
+      "path": "./assets/bg_main.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CHAR_CAT",
+      "label": "Snake Cat Head",
+      "path": "./assets/char_cat_clear.png",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99278216795270197",
+    "version_id": "99278216795338640",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

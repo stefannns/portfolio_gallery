@@ -1,0 +1,102 @@
+{
+  "tweaks": [
+    {
+      "id": "GRAVITY",
+      "kind": "number",
+      "label": "Gravity",
+      "value": 0.0015,
+      "default": 0.0015,
+      "min": 0.0005,
+      "max": 0.003,
+      "step": 0.0001
+    },
+    {
+      "id": "SPAWN_INTERVAL",
+      "kind": "number",
+      "label": "Spawn Interval (ms)",
+      "value": 1000,
+      "default": 1000,
+      "min": 500,
+      "max": 2000,
+      "step": 100
+    },
+    {
+      "id": "TARGET_BASE_SPEED",
+      "kind": "number",
+      "label": "Target Speed",
+      "value": 0.1,
+      "default": 0.1,
+      "min": 0.05,
+      "max": 0.3,
+      "step": 0.01
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "Draw Your Blade",
+      "default": "Draw Your Blade",
+      "max_length": 20
+    },
+    {
+      "id": "GAME_DESC",
+      "label": "Description",
+      "value": "Draw your own blade, equip it to the dot fighter, and drag the fighter through enemies while the blade swings.",
+      "default": "Draw your own blade, equip it to the dot fighter, and drag the fighter through enemies while the blade swings.",
+      "max_length": 150
+    },
+    {
+      "id": "TEXT_DRAW_PROMPT",
+      "label": "Draw Prompt",
+      "value": "DRAW A BLADE",
+      "default": "DRAW A BLADE",
+      "max_length": 20
+    },
+    {
+      "id": "TEXT_GAMEOVER",
+      "label": "Game Over Text",
+      "value": "GAME OVER",
+      "default": "GAME OVER",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "PLAY AGAIN",
+      "default": "PLAY AGAIN",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_POST",
+      "label": "Post Button",
+      "value": "Post My Play",
+      "default": "Post My Play",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Background",
+      "path": "./assets/bg_metal.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TARGET_IMG",
+      "label": "Obstacle Target",
+      "path": "./assets/obj_enemy.svg",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99278216799469012",
+    "version_id": "99278216799463098",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

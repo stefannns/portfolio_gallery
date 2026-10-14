@@ -1,0 +1,94 @@
+{
+  "tweaks": [
+    {
+      "id": "TARGET_SCORE",
+      "kind": "number",
+      "label": "Target Score",
+      "value": 3,
+      "default": 3,
+      "min": 1,
+      "max": 10,
+      "step": 1
+    },
+    {
+      "id": "MIN_DELAY",
+      "kind": "number",
+      "label": "Min Delay (s)",
+      "value": 2.0,
+      "default": 2.0,
+      "min": 1.0,
+      "max": 5.0,
+      "step": 0.5
+    },
+    {
+      "id": "MAX_DELAY",
+      "kind": "number",
+      "label": "Max Delay (s)",
+      "value": 5.0,
+      "default": 5.0,
+      "min": 3.0,
+      "max": 10.0,
+      "step": 0.5
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "DUAL TAP DUEL",
+      "default": "DUAL TAP DUEL",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_START",
+      "label": "Start Button",
+      "value": "START",
+      "default": "START",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "PLAY AGAIN",
+      "default": "PLAY AGAIN",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_WAIT",
+      "label": "Wait Text",
+      "value": "WAIT...",
+      "default": "WAIT...",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_FIRE",
+      "label": "Fire Text",
+      "value": "TAP TO FIRE!",
+      "default": "TAP TO FIRE!",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_FAULT",
+      "label": "Fault Text",
+      "value": "TOO EARLY!",
+      "default": "TOO EARLY!",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_WIN",
+      "label": "Win Text",
+      "value": "NICE SHOT!",
+      "default": "NICE SHOT!",
+      "max_length": 15
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

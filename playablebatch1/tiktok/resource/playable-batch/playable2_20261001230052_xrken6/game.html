@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script src="/resource/playable-batch/review-host.js"></script><script src="/resource/playable-feed/pocket-host.js" data-seed-random="off"></script>
+<script data-playable-feed-gate="v1">
+// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
+(() => {
+  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
+  let active=false,alive=true;
+  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
+  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
+  if(navigator.mediaDevices?.getUserMedia){
+    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia=async constraints=>{
+      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
+      const stream=await native(constraints);
+      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
+      streams.add(stream);return stream;
+    };
+  }
+  for(const key of ['AudioContext','webkitAudioContext']){
+    const Native=window[key];if(!Native)continue;
+    window[key]=class FeedAudioContext extends Native {
+      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
+      async resume(){if(!active)await wait();if(alive)return super.resume();}
+    };
+  }
+  const nativePlay=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
+  addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    active=alive&&event.data.active===true;
+    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
+    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
+  });
+  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
+})();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #dff3dc; -webkit-tap-highlight-color: transparent; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<style id="confirmed-ui-20261013">
+.plant-controls{padding:3px!important;height:104px;box-sizing:border-box}.plant-picker{display:flex!important;gap:6px!important;overflow-x:auto;scrollbar-width:none;height:48px;scroll-padding:3px}.plant-picker::-webkit-scrollbar{display:none}.plant-choice{flex:0 0 88px;min-height:48px!important;height:48px;gap:2px!important;padding:2px 4px!important;font-size:14px!important;white-space:nowrap}.plant-choice svg{width:20px;height:20px}.plant-choice:focus-visible{outline-offset:-3px}.action-row{gap:6px!important;margin-top:4px!important}.action-button{min-height:44px!important;padding:4px!important}
+</style>
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-config-inline" type="application/json">{
+  "tweaks": [
+    {
+      "id": "GRAVITY",
+      "kind": "number",
+      "label": "Growth Speed",
+      "value": 1.2,
+      "default": 1.2,
+      "min": 0.1,
+      "max": 2.0,
+      "step": 0.1
+    },
+    {
+      "id": "CREATURE_FORCE",
+      "kind": "number",
+      "label": "Bug Wander Speed",
+      "value": 0.05,
+      "default": 0.05,
+      "min": 0.01,
+      "max": 0.2,
+      "step": 0.01
+    }
+  ],
+  "texts": [
+    {
+      "id": "TITLE",
+      "label": "Title",
+      "value": "Creature Sandbox",
+      "default": "Creature Sandbox",
+      "max_length": 25
+    },
+    {
+      "id": "BTN_ADD_CREATURE",
+      "label": "Invite Bugs Button",
+      "value": "Invite Bugs",
+      "default": "Invite Bugs",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_ADD_BLOCK",
+      "label": "Grow Patch Button",
+      "value": "Grow Patch",
+      "default": "Grow Patch",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_CLEAR",
+      "label": "Clear Button",
+      "value": "Start Over",
+      "default": "Start Over",
+      "max_length": 15
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Background",
+      "path": "./assets/meadow_bg.svg",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_CREATURE",
+      "label": "Ladybug Image",
+      "path": "./assets/ladybug.svg",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_FOOD",
+      "label": "Bee Image",
+      "path": "./assets/bee.svg",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_BLOCK",
+      "label": "Flower Image",
+      "path": "./assets/flower.svg",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99279393805132897",
+    "version_id": "99279393805126700",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}</script>
+  <script>
+    // Support direct local preview without changing the normal HTTP/platform path.
+    if (location.protocol === "file:") {
+      const config = document.getElementById("playable-config-inline").textContent;
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = function(input, options) {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url && /(?:^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve(new Response(config, {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return originalFetch(input, options);
+      };
+    }
+  </script>
+  <script src="./grass-audio.js?v=grass-rustle-20261007-1"></script>
+  <script src="./bundle.js?v=grass-rustle-20261007-1"></script>
+<script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject="#root canvas"></script>
+</body>
+</html>

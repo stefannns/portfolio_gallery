@@ -1,0 +1,112 @@
+{
+  "tweaks": [
+    {
+      "id": "SPEED_INITIAL",
+      "kind": "number",
+      "label": "Initial Speed",
+      "value": 0.04,
+      "default": 0.04,
+      "min": 0.02,
+      "max": 0.1,
+      "step": 0.01
+    },
+    {
+      "id": "DENSITY",
+      "kind": "number",
+      "label": "Traffic Density",
+      "value": 1500,
+      "default": 1500,
+      "min": 800,
+      "max": 3000,
+      "step": 100
+    },
+    {
+      "id": "LANE_SPEED",
+      "kind": "number",
+      "label": "Steering Speed",
+      "value": 0.05,
+      "default": 0.05,
+      "min": 0.02,
+      "max": 0.1,
+      "step": 0.01
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "POCKET RACER",
+      "default": "POCKET RACER",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_START",
+      "label": "Start Button",
+      "value": "Start Race",
+      "default": "Start Race",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "Play Again",
+      "default": "Play Again",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_POST",
+      "label": "Post Button",
+      "value": "Post My Play",
+      "default": "Post My Play",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "CHAR_PLAYER",
+      "label": "Player Car",
+      "path": "./assets/car-player-v2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_TRAFFIC_RED",
+      "label": "Red Traffic Car",
+      "path": "./assets/car-traffic-red-v2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_TRAFFIC_BLUE",
+      "label": "Blue Traffic Car",
+      "path": "./assets/car-traffic-blue-v2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_TRAFFIC_PURPLE",
+      "label": "Purple Traffic Car",
+      "path": "./assets/car-traffic-purple-v2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_BACKGROUND",
+      "label": "Alpine Horizon",
+      "path": "./assets/alpine-horizon-v2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_ROADSIDE",
+      "label": "Roadside Pine",
+      "path": "./assets/roadside-pine-v2.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99280066550480227",
+    "version_id": "99280066554654271",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

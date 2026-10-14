@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {"source": "/app/:path*", "destination": "/playablebatch1/tiktok/index.html"},
+    {"source": "/resource/playable-feed/bella.png", "destination": "https://lf3-static.bytednsdoc.com/obj/eden-cn/nuhboeh7uhopg/desagent/minitt/v1/playable-feed/bella.png"},
+    {"source": "/resource/playable-feed/hotpot.png", "destination": "https://lf3-static.bytednsdoc.com/obj/eden-cn/nuhboeh7uhopg/desagent/minitt/v1/playable-feed/hotpot.png"},
+    {"source": "/resource/playable-feed/joystick.svg", "destination": "https://lf3-static.bytednsdoc.com/obj/eden-cn/nuhboeh7uhopg/desagent/minitt/v1/playable-feed/joystick.svg"},
+    {"source": "/resource/playable-feed/sparkles.svg", "destination": "https://lf3-static.bytednsdoc.com/obj/eden-cn/nuhboeh7uhopg/desagent/minitt/v1/playable-feed/sparkles.svg"},
+    {"source": "/resource/playable-feed/clip.svg", "destination": "https://lf3-static.bytednsdoc.com/obj/eden-cn/nuhboeh7uhopg/desagent/minitt/v1/playable-feed/clip.svg"},
+    {"source": "/resource/playable-feed/clip-frame-snow.jpg", "destination": "https://lf3-static.bytednsdoc.com/obj/eden-cn/nuhboeh7uhopg/desagent/minitt/v1/playable-feed/clip-frame-snow.jpg"},
+    {"source": "/resource/playable-batch/:path*", "destination": "/playablebatch1/tiktok/resource/playable-batch/:path*"},
+    {"source": "/resource/playable-feed/:path*", "destination": "/playablebatch1/tiktok/resource/playable-feed/:path*"},
+    {"source": "/resource/playable-local/:path*", "destination": "/playablebatch1/tiktok/resource/playable-local/:path*"},
+    {"source": "/resource/playable/:path*", "destination": "/playablebatch1/tiktok/resource/playable/:path*"},
+    {"source": "/resource/:path*", "destination": "https://lf3-static.bytednsdoc.com/obj/eden-cn/nuhboeh7uhopg/desagent/minitt/v1/:path*"}
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "tweaks": [
+    {
+      "id": "ANT_SPEED",
+      "kind": "number",
+      "label": "Ant speed",
+      "value": 3,
+      "default": 3,
+      "min": 1,
+      "max": 10,
+      "step": 0.5
+    },
+    {
+      "id": "REWARD_AMOUNT",
+      "kind": "number",
+      "label": "Hit reward ($)",
+      "value": 10,
+      "default": 10,
+      "min": 1,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "id": "ADD_ANT_COST",
+      "kind": "number",
+      "label": "Add ant cost ($)",
+      "value": 50,
+      "default": 50,
+      "min": 0,
+      "max": 500,
+      "step": 10
+    }
+  ],
+  "texts": [
+    {
+      "id": "TITLE_ANTS",
+      "label": "Ant count text",
+      "value": "Ants",
+      "default": "Ants",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_ADD_ANT",
+      "label": "Add ant button",
+      "value": "Add Ant",
+      "default": "Add Ant",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_CLEAR",
+      "label": "Clear all button",
+      "value": "Clear All",
+      "default": "Clear All",
+      "max_length": 15
+    },
+    {
+      "id": "HINT_TEXT",
+      "label": "Hint text",
+      "value": "Draw lines to trap ants! Earn $10 on hit",
+      "default": "Draw lines to trap ants! Earn $10 on hit",
+      "max_length": 50
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Paper background",
+      "path": "./assets/bg_paper_clean.svg",
+      "replaceable": true
+    },
+    {
+      "id": "CHAR_ANT",
+      "label": "Ant sprite",
+      "path": "./assets/ant-ink-v2.svg",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

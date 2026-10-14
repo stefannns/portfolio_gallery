@@ -1,0 +1,67 @@
+{
+  "tweaks": [
+    {
+      "id": "MAX_LEVEL",
+      "kind": "number",
+      "label": "Max Level",
+      "value": 12,
+      "default": 25,
+      "min": 10,
+      "max": 200,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "TITLE_MAIN",
+      "label": "Main Title",
+      "value": "Find the mistake!",
+      "default": "Find the mistake!",
+      "max_length": 25
+    },
+    {
+      "id": "SUB_TITLE",
+      "label": "Footer Prompt",
+      "value": "TAP THE ODD ONE OUT",
+      "default": "TAP THE ODD ONE OUT",
+      "max_length": 30
+    },
+    {
+      "id": "LEVEL_LABEL",
+      "label": "Level Label",
+      "value": "Level",
+      "default": "Level",
+      "max_length": 15
+    },
+    {
+      "id": "VICTORY_TITLE",
+      "label": "Victory Title",
+      "value": "All Levels Complete!",
+      "default": "All Levels Complete!",
+      "max_length": 30
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "Play Again",
+      "default": "Play Again",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_POST",
+      "label": "Post Button",
+      "value": "Post My Play",
+      "default": "Post My Play",
+      "max_length": 20
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

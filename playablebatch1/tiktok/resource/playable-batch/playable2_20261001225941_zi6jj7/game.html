@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script src="/resource/playable-batch/review-host.js"></script><script src="/resource/playable-feed/pocket-host.js" data-seed-random="off"></script>
+<script data-playable-feed-gate="v1">
+// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
+(() => {
+  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
+  let active=false,alive=true;
+  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
+  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
+  if(navigator.mediaDevices?.getUserMedia){
+    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia=async constraints=>{
+      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
+      const stream=await native(constraints);
+      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
+      streams.add(stream);return stream;
+    };
+  }
+  for(const key of ['AudioContext','webkitAudioContext']){
+    const Native=window[key];if(!Native)continue;
+    window[key]=class FeedAudioContext extends Native {
+      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
+      async resume(){if(!active)await wait();if(alive)return super.resume();}
+    };
+  }
+  const nativePlay=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
+  addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    active=alive&&event.data.active===true;
+    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
+    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
+  });
+  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
+})();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    #root > div > main > div > div {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+    #root > div > main + div {
+      padding-left: calc(30px + env(safe-area-inset-left, 0px)) !important;
+      padding-right: calc(30px + env(safe-area-inset-right, 0px)) !important;
+    }
+    #code-color-legend {
+      width: 100%;
+      max-width: 500px;
+      margin: 16px auto 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+      color: #f4f4f5;
+      font: 400 18px/1.4 var(--font-body, system-ui, sans-serif);
+      letter-spacing: 0;
+      text-align: left;
+    }
+    .code-color-key {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .code-color-key > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+    .code-color-swatch {
+      flex: 0 0 12px;
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+    }
+    #root > div > header > h1 { line-height: 1.2 !important; letter-spacing: 0; }
+    main[aria-label="Guess history"] { padding-top: 16px !important; }
+    main[aria-label="Guess history"] > div { gap: 8px !important; }
+    main[aria-label="Guess history"] > div > div {
+      flex-basis: 38px !important;
+      min-height: 38px !important;
+    }
+    main[aria-label="Guess history"] > div > div > div {
+      height: 38px !important;
+      min-height: 38px !important;
+      min-width: 0;
+      font-family: var(--font-mono) !important;
+      font-size: 20px !important;
+      line-height: 1 !important;
+    }
+    [role="dialog"] > div {
+      max-width: 360px !important;
+      padding: 24px 16px !important;
+    }
+    [role="dialog"] h2 { text-wrap: balance; }
+    [role="dialog"] p { line-height: 1.5 !important; }
+    [role="dialog"] > div > div:not(:last-child) {
+      font-size: 28px !important;
+      letter-spacing: .035em !important;
+      line-height: 1.4;
+      font-variant-numeric: tabular-nums;
+    }
+    [role="dialog"] button { line-height: 1.4; overflow-wrap: anywhere; }
+    #root > div > main + div button { line-height: 1.2; letter-spacing: 0; }
+    button:focus-visible { outline: 3px solid #ffcf69; outline-offset: 3px; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-config-inline" type="application/json">{
+  "tweaks": [
+    {
+      "id": "CODE_LENGTH",
+      "kind": "number",
+      "label": "Code Length",
+      "value": 8,
+      "default": 8,
+      "min": 3,
+      "max": 8,
+      "step": 1
+    },
+    {
+      "id": "MAX_ATTEMPTS",
+      "kind": "number",
+      "label": "Max Attempts",
+      "value": 11,
+      "default": 11,
+      "min": 3,
+      "max": 11,
+      "step": 1
+    },
+    {
+      "id": "ALLOW_DUPLICATES",
+      "kind": "boolean",
+      "label": "Allow Duplicate Digits",
+      "value": true,
+      "default": true
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "CRACK THE CODE",
+      "default": "CRACK THE CODE",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_GUESS",
+      "label": "Guess Button Text",
+      "value": "GUESS",
+      "default": "GUESS",
+      "max_length": 10
+    },
+    {
+      "id": "MSG_WIN",
+      "label": "Win Message",
+      "value": "CODE CRACKED!",
+      "default": "CODE CRACKED!",
+      "max_length": 30
+    },
+    {
+      "id": "MSG_LOSE",
+      "label": "Lose Message",
+      "value": "ACCESS DENIED",
+      "default": "ACCESS DENIED",
+      "max_length": 30
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button Text",
+      "value": "PLAY AGAIN",
+      "default": "PLAY AGAIN",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_POST",
+      "label": "Post Button Text",
+      "value": "Post My Play",
+      "default": "Post My Play",
+      "max_length": 15
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Optional Background Overlay",
+      "path": "./assets/bg_overlay.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99279099402845675",
+    "version_id": "99279099402698785",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}</script>
+  <script>
+    // Support direct local preview without changing the normal HTTP/platform path.
+    if (location.protocol === "file:") {
+      const config = document.getElementById("playable-config-inline").textContent;
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = function(input, options) {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url && /(?:^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve(new Response(config, {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return originalFetch(input, options);
+      };
+    }
+  </script>
+  <script src="./bundle.js?v=readable-code-text-20261006-3"></script>
+  <script>
+    (() => {
+      function addColorLegend() {
+        const header = document.querySelector("#root > div > header");
+        if (!header) {
+          requestAnimationFrame(addColorLegend);
+          return;
+        }
+        if (document.getElementById("code-color-legend")) return;
+
+        const legend = document.createElement("div");
+        legend.id = "code-color-legend";
+        legend.setAttribute("role", "note");
+        legend.setAttribute("aria-label", "Guess color meanings");
+
+        const keys = [
+          ["#34c759", "Green", "Right digit, right spot", "Correct digit and position."],
+          ["#ff9f0a", "Orange", "Right digit, wrong spot", "Correct digit, but a different position."],
+          ["#636366", "Gray", "No match", "No unmatched copy of this digit remains in the code."]
+        ];
+
+        keys.forEach(([color, label, explanation, detail]) => {
+          const item = document.createElement("div");
+          item.className = "code-color-key";
+          item.setAttribute("aria-label", label + ": " + detail);
+          item.title = detail;
+
+          const swatch = document.createElement("span");
+          swatch.className = "code-color-swatch";
+          swatch.style.background = color;
+          swatch.setAttribute("aria-hidden", "true");
+
+          const text = document.createElement("span");
+          text.textContent = explanation;
+          item.append(swatch, text);
+          legend.appendChild(item);
+        });
+
+        header.appendChild(legend);
+      }
+
+      addColorLegend();
+    })();
+  </script>
+<script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject="#root button"></script>
+</body>
+</html>

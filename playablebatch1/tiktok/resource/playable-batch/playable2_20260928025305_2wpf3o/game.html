@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="/resource/playable-batch/review-host.js"></script><script src="/resource/playable-feed/pocket-host.js" data-seed-random="off"></script>
+<script data-playable-feed-gate="v1">
+// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
+(() => {
+  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
+  let active=false,alive=true;
+  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
+  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
+  if(navigator.mediaDevices?.getUserMedia){
+    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia=async constraints=>{
+      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
+      const stream=await native(constraints);
+      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
+      streams.add(stream);return stream;
+    };
+  }
+  for(const key of ['AudioContext','webkitAudioContext']){
+    const Native=window[key];if(!Native)continue;
+    window[key]=class FeedAudioContext extends Native {
+      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
+      async resume(){if(!active)await wait();if(alive)return super.resume();}
+    };
+  }
+  const nativePlay=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
+  addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    active=alive&&event.data.active===true;
+    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
+    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
+  });
+  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
+})();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    #root { isolation: isolate; }
+    canvas { touch-action: none; }
+    button, input, select, textarea { touch-action: manipulation; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-inline-config" type="application/json">
+  {
+    "tweaks": [
+      {
+        "id": "MIN_AGE",
+        "kind": "number",
+        "label": "Minimum Age",
+        "value": 1,
+        "default": 1,
+        "min": 1,
+        "max": 10,
+        "step": 1
+      },
+      {
+        "id": "MAX_AGE",
+        "kind": "number",
+        "label": "Maximum Age",
+        "value": 100,
+        "default": 100,
+        "min": 80,
+        "max": 120,
+        "step": 1
+      },
+      {
+        "id": "POINTS_MAX",
+        "kind": "number",
+        "label": "Max Points Per Round",
+        "value": 1000,
+        "default": 1000,
+        "min": 100,
+        "max": 5000,
+        "step": 100
+      },
+      {
+        "id": "POINTS_PENALTY",
+        "kind": "number",
+        "label": "Penalty Per Year Off",
+        "value": 50,
+        "default": 50,
+        "min": 10,
+        "max": 200,
+        "step": 10
+      }
+    ],
+    "texts": [
+      {
+        "id": "TXT_SCORE",
+        "label": "Score Label",
+        "value": "SCORE",
+        "default": "SCORE",
+        "max_length": 15
+      },
+      {
+        "id": "TXT_GUESS_AGE",
+        "label": "Guess Age Title",
+        "value": "Guess Age",
+        "default": "Guess Age",
+        "max_length": 20
+      },
+      {
+        "id": "TXT_BTN_GUESS",
+        "label": "Guess Button",
+        "value": "GUESS",
+        "default": "GUESS",
+        "max_length": 15
+      },
+      {
+        "id": "TXT_BTN_NEXT",
+        "label": "Next Button",
+        "value": "NEXT",
+        "default": "NEXT",
+        "max_length": 15
+      },
+      {
+        "id": "TXT_REAL_AGE",
+        "label": "Real Age Prefix",
+        "value": "Real Age: ",
+        "default": "Real Age: ",
+        "max_length": 20
+      },
+      {
+        "id": "TXT_FEEDBACK_PERFECT",
+        "label": "Perfect Feedback",
+        "value": "Perfect!",
+        "default": "Perfect!",
+        "max_length": 20
+      },
+      {
+        "id": "TXT_FEEDBACK_GOOD",
+        "label": "Good Feedback",
+        "value": "Close!",
+        "default": "Close!",
+        "max_length": 20
+      },
+      {
+        "id": "TXT_FEEDBACK_BAD",
+        "label": "Bad Feedback",
+        "value": "Way off!",
+        "default": "Way off!",
+        "max_length": 20
+      }
+    ],
+    "images": [
+      {
+        "id": "CHAR_1",
+        "label": "Character 1 (Baby)",
+        "path": "./assets/char_baby.webp",
+        "replaceable": true
+      },
+      {
+        "id": "CHAR_2",
+        "label": "Character 2 (Young)",
+        "path": "./assets/char_young.webp",
+        "replaceable": true
+      },
+      {
+        "id": "CHAR_3",
+        "label": "Character 3 (Adult)",
+        "path": "./assets/char_adult.webp",
+        "replaceable": true
+      },
+      {
+        "id": "CHAR_4",
+        "label": "Character 4 (Elder)",
+        "path": "./assets/char_elder.webp",
+        "replaceable": true
+      },
+      {
+        "id": "CHAR_5",
+        "label": "Character 5 (Teen)",
+        "path": "./assets/char_teen.webp",
+        "replaceable": true
+      }
+    ],
+    "config_version": "2.0",
+    "playable": {
+      "runtime_target": "h5",
+      "h5_playstyle_type": "general_game",
+      "content_locale": "en",
+      "min_capability_level": 1,
+      "full_capability_level": 1
+    }
+  }
+  </script>
+  <script>
+    (() => {
+      if (window.location.protocol !== "file:" || !window.fetch) return;
+      const configNode = document.getElementById("playable-inline-config");
+      if (!configNode) return;
+      let inlineConfig;
+      try { inlineConfig = JSON.parse(configNode.textContent); } catch (_) { return; }
+      const nativeFetch = window.fetch.bind(window);
+      window.fetch = (input, init) => {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url === "./game.config.json" || url === "game.config.json") {
+          return Promise.resolve(new Response(JSON.stringify(inlineConfig), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return nativeFetch(input, init);
+      };
+    })();
+  </script>
+  <script src="./bundle.js?v=realistic-people-20261006-1"></script>
+<script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject="#root img"></script>
+</body>
+</html>

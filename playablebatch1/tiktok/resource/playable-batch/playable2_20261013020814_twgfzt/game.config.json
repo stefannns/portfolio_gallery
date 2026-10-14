@@ -1,0 +1,54 @@
+{
+  "tweaks": [
+    {
+      "id": "SPRING_K",
+      "kind": "number",
+      "label": "Spring Stiffness",
+      "value": 3e-05,
+      "default": 3e-05,
+      "min": 1e-05,
+      "max": 0.0001,
+      "step": 1e-05
+    },
+    {
+      "id": "DAMPING",
+      "kind": "number",
+      "label": "Damping Friction",
+      "value": 0.0003,
+      "default": 0.0003,
+      "min": 0.0001,
+      "max": 0.001,
+      "step": 0.0001
+    },
+    {
+      "id": "TRAIL_LENGTH",
+      "kind": "number",
+      "label": "Trail Length",
+      "value": 100,
+      "default": 50,
+      "min": 20,
+      "max": 100,
+      "step": 5
+    }
+  ],
+  "texts": [
+    {
+      "id": "HINT_TEXT",
+      "label": "Interaction Hint",
+      "value": "Pull and release to swirl",
+      "default": "Drag the orb to swing",
+      "max_length": 30
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "103312816450468741",
+    "version_id": "103312816450543816",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

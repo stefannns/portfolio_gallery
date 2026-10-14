@@ -1,0 +1,18 @@
+Whistle and Explosion Single_Firework
+Creator: Rudmer_Rotteveel
+Source: https://freesound.org/people/Rudmer_Rotteveel/sounds/336008/
+License: Creative Commons Zero (CC0 1.0)
+License URL: https://creativecommons.org/publicdomain/zero/1.0/
+
+Derived from the author's publicly accessible HQ MP3 preview:
+https://cdn.freesound.org/previews/336/336008_4921277-hq.mp3
+The original login-gated WAV was not used.
+
+The whistle excerpt (0.000-1.135 s) is filtered, amplified, faded and encoded
+as 44.1 kHz mono 64 kbps MP3. The blast excerpt (1.160-2.240 s) is attenuated,
+faded and encoded as 44.1 kHz mono 96 kbps MP3. Both excerpts are embedded in
+firework-audio.js for offline/direct-file loading without audio fetch requests.
+Playback uses a shortened whistle excerpt for short launches and starts the
+blast independently when the visual firework bursts. Attribution is retained
+for provenance although CC0 does not require it.
+

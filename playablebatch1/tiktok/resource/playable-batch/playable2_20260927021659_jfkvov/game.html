@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script src="/resource/playable-batch/review-host.js"></script><script src="/resource/playable-feed/pocket-host.js" data-seed-random="off"></script>
+<script data-playable-feed-gate="v1">
+// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
+(() => {
+  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
+  let active=false,alive=true;
+  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
+  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
+  if(navigator.mediaDevices?.getUserMedia){
+    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia=async constraints=>{
+      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
+      const stream=await native(constraints);
+      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
+      streams.add(stream);return stream;
+    };
+  }
+  for(const key of ['AudioContext','webkitAudioContext']){
+    const Native=window[key];if(!Native)continue;
+    window[key]=class FeedAudioContext extends Native {
+      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
+      async resume(){if(!active)await wait();if(alive)return super.resume();}
+    };
+  }
+  const nativePlay=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
+  addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    active=alive&&event.data.active===true;
+    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
+    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
+  });
+  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
+})();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <link rel="stylesheet" href="./bundle.css" />
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    .screen-container { padding: 40px 25px !important; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<style id="confirmed-ui-20261013">
+.screen-container{padding:30px 30px 50px!important}@media(max-height:560px){.btn-option{min-height:44px;padding:8px 12px!important;margin-bottom:8px!important;font-size:16px!important;line-height:1.25!important}.btn-option:last-child{margin-bottom:0!important}.screen-container>div:last-child{padding-bottom:0!important}.screen-container h2{margin-bottom:12px!important;font-size:24px!important}}
+</style>
+</head>
+<body>
+  <div id="root"></div>
+  <!-- playable-inline-config:start -->
+  <script id="playable-inline-config" type="application/json">{"tweaks":[],"texts":[{"id":"GAME_TITLE","label":"Game Title","value":"are you dumb","default":"are you dumb","max_length":30},{"id":"START_BTN","label":"Start Button","value":"Start Test","default":"Start Test","max_length":15},{"id":"HUD_QUESTION","label":"HUD Question Label","value":"Question","default":"Question","max_length":15},{"id":"HUD_SCORE","label":"HUD Score Label","value":"Score","default":"Score","max_length":10},{"id":"Q1_TEXT","label":"Q1 Text","value":"Some months have 31 days, others have 30 days. How many have 28 days?","default":"Some months have 31 days, others have 30 days. How many have 28 days?","max_length":150},{"id":"Q1_O0","label":"Q1 Option 1","value":"1","default":"1","max_length":30},{"id":"Q1_O1","label":"Q1 Option 2","value":"6","default":"6","max_length":30},{"id":"Q1_O2","label":"Q1 Option 3","value":"12","default":"12","max_length":30},{"id":"Q1_O3","label":"Q1 Option 4","value":"Depends on leap year","default":"Depends on leap year","max_length":30},{"id":"Q1_A","label":"Q1 Correct Index (0-3)","value":"2","default":"2","max_length":1},{"id":"Q1_EXP","label":"Q1 Explanation","value":"All 12 months have at least 28 days!","default":"All 12 months have at least 28 days!","max_length":100},{"id":"Q2_TEXT","label":"Q2 Text","value":"What has a head and a tail, but no body?","default":"What has a head and a tail, but no body?","max_length":150},{"id":"Q2_O0","label":"Q2 Option 1","value":"A snake","default":"A snake","max_length":30},{"id":"Q2_O1","label":"Q2 Option 2","value":"A coin","default":"A coin","max_length":30},{"id":"Q2_O2","label":"Q2 Option 3","value":"A comet","default":"A comet","max_length":30},{"id":"Q2_O3","label":"Q2 Option 4","value":"A river","default":"A river","max_length":30},{"id":"Q2_A","label":"Q2 Correct Index (0-3)","value":"1","default":"1","max_length":1},{"id":"Q2_EXP","label":"Q2 Explanation","value":"A coin has a 'heads' side and a 'tails' side.","default":"A coin has a 'heads' side and a 'tails' side.","max_length":100},{"id":"Q3_TEXT","label":"Q3 Text","value":"If you are running in a race and you pass the person in second place, what place are you in?","default":"If you are running in a race and you pass the person in second place, what place are you in?","max_length":150},{"id":"Q3_O0","label":"Q3 Option 1","value":"First place","default":"First place","max_length":30},{"id":"Q3_O1","label":"Q3 Option 2","value":"Second place","default":"Second place","max_length":30},{"id":"Q3_O2","label":"Q3 Option 3","value":"Third place","default":"Third place","max_length":30},{"id":"Q3_O3","label":"Q3 Option 4","value":"Last place","default":"Last place","max_length":30},{"id":"Q3_A","label":"Q3 Correct Index (0-3)","value":"1","default":"1","max_length":1},{"id":"Q3_EXP","label":"Q3 Explanation","value":"You took their spot, so now you are in second place.","default":"You took their spot, so now you are in second place.","max_length":100},{"id":"Q4_TEXT","label":"Q4 Text","value":"What has keys but can't open locks?","default":"What has keys but can't open locks?","max_length":150},{"id":"Q4_O0","label":"Q4 Option 1","value":"A piano","default":"A piano","max_length":30},{"id":"Q4_O1","label":"Q4 Option 2","value":"A treasure chest","default":"A treasure chest","max_length":30},{"id":"Q4_O2","label":"Q4 Option 3","value":"A map","default":"A map","max_length":30},{"id":"Q4_O3","label":"Q4 Option 4","value":"A door","default":"A door","max_length":30},{"id":"Q4_A","label":"Q4 Correct Index (0-3)","value":"0","default":"0","max_length":1},{"id":"Q4_EXP","label":"Q4 Explanation","value":"A piano has musical keys, but no physical locks.","default":"A piano has musical keys, but no physical locks.","max_length":100},{"id":"FB_CORRECT","label":"Feedback Correct Text","value":"Correct!","default":"Correct!","max_length":15},{"id":"FB_WRONG","label":"Feedback Wrong Text","value":"Wrong!","default":"Wrong!","max_length":15},{"id":"BTN_NEXT","label":"Next Button","value":"Next","default":"Next","max_length":10},{"id":"RES_TITLE","label":"Result Title","value":"Test Complete!","default":"Test Complete!","max_length":25},{"id":"RES_PERFECT","label":"Result Perfect Comment","value":"Wow, you're actually smart!","default":"Wow, you're actually smart!","max_length":50},{"id":"RES_NORMAL","label":"Result Normal Comment","value":"Well... at least you tried.","default":"Well... at least you tried.","max_length":50},{"id":"RESTART_BTN","label":"Restart Button","value":"Restart Test","default":"Restart Test","max_length":20},{"id":"POST_BTN","label":"Post My Play Button","value":"Post My Play","default":"Post My Play","max_length":20}],"images":[],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    (function () {
+      if (window.location.protocol !== 'file:') return;
+      var configText = document.getElementById('playable-inline-config').textContent;
+      var nativeFetch = window.fetch;
+      window.fetch = function (input) {
+        var url = typeof input === 'string' ? input : (input && input.url) || '';
+        if (/(^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: function () { return Promise.resolve(JSON.parse(configText)); },
+            text: function () { return Promise.resolve(configText); }
+          });
+        }
+        return nativeFetch.apply(window, arguments);
+      };
+    }());
+  </script>
+  <!-- playable-inline-config:end -->
+  <script src="./bundle.js?ui=43e17f88a9f9"></script>
+<script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject=".btn-option"></script>
+</body>
+</html>
