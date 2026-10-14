@@ -54,9 +54,9 @@ h1 { font-size:clamp(26px,3vw,38px);letter-spacing:-.045em;margin:7px 0 8px; }
 .review-tiktok-button:hover { background:#eaf0e7; }
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible { outline:3px solid #478462;outline-offset:3px; }
 .fyp-viewport[hidden],.preview-fit[hidden] { display:none; }
-.fyp-viewport { width:100%;max-width:430px;height:800px;position:relative;overflow:hidden;border-radius:16px;background:#171717; }
-.stage.is-fyp { padding:0;background:transparent;min-height:0; }
-.fyp-frame { width:100%;height:100%;border:0;background:#171717; }
+.fyp-viewport { width:390px;height:844px;position:relative; }
+.fyp-phone { position:absolute;top:0;left:0;width:390px;height:844px;overflow:hidden;border-radius:23px;background:#171717;outline:1px solid #202a23;transform-origin:top left; }
+.fyp-frame { width:390px;height:844px;border:0;background:#171717; }
 .fyp-error { position:absolute;z-index:10;inset:0;display:grid;place-content:center;gap:12px;text-align:center;padding:24px;background:#f1f4ef;color:#304b37; }
 .fyp-error[hidden] { display:none; }
 .fyp-error button { min-height:44px;cursor:pointer; }
@@ -68,14 +68,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible { 
 .batch-player-body { flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;padding-top:8px; }
 .batch-player-controls { width:calc(100% - 24px);flex:none; }
 .batch-player-content { position:relative;flex:1;min-height:0;display:grid;place-items:center;overflow:hidden; }
-.batch-view-frame { grid-area:1/1;min-height:0;width:100%;height:100%; }
-.batch-view-frame[hidden],.batch-direct-fit[hidden] { display:none; }
-.batch-direct-fit { position:relative;width:400px;height:703px;grid-area:1/1; }
-.batch-direct-phone { position:absolute;inset:0 auto auto 0;width:400px;height:703px;border:5px solid #202a23;border-radius:18px;overflow:hidden;background:#fff;transform-origin:top left; }
-.batch-direct-frame { width:390px;height:693px;border:0;background:#fff; }
+.batch-view-frame,.batch-direct-frame { display:block;width:390px;height:844px;border:0;background:#fff; }
+.batch-view-frame[hidden],.batch-direct-fit[hidden],.batch-fyp-fit[hidden] { display:none; }
+.batch-direct-fit,.batch-fyp-fit { position:relative;width:390px;height:844px;grid-area:1/1; }
+.batch-direct-phone,.batch-fyp-phone { position:absolute;inset:0 auto auto 0;width:390px;height:844px;border:0;outline:1px solid #202a23;border-radius:23px;overflow:hidden;background:#fff;transform-origin:top left; }
 .batch-view-toolbar h2 { font-size:17px; }
-@media(min-width:931px) { .preview-head { gap:20px; } .fyp-viewport { height:min(850px,calc(100dvh - 130px));min-height:680px; } }
-@media(max-width:930px) { .layout { grid-template-columns:260px minmax(0,1fr);gap:16px; } .library { top:16px; } .preview { padding:16px; } .results { max-height:calc(100dvh - 220px); } .fyp-viewport { height:760px; } }
-@media(max-width:720px) { .layout { grid-template-columns:minmax(0,1fr); } .library { position:static; } .results { max-height:210px;min-height:140px; } .header { align-items:flex-start;flex-wrap:wrap;margin-bottom:20px; } .review-header-actions { justify-content:flex-start; } .preview h2 { font-size:23px; } .fyp-viewport { height:min(820px,calc(100dvh - 80px));min-height:600px; } }
+@media(min-width:931px) { .preview-head { gap:20px; } }
+@media(max-width:930px) { .layout { grid-template-columns:260px minmax(0,1fr);gap:16px; } .library { top:16px; } .preview { padding:16px; } .results { max-height:calc(100dvh - 220px); } }
+@media(max-width:720px) { .layout { grid-template-columns:minmax(0,1fr); } .library { position:static; } .results { max-height:210px;min-height:140px; } .header { align-items:flex-start;flex-wrap:wrap;margin-bottom:20px; } .review-header-actions { justify-content:flex-start; } .preview h2 { font-size:23px; } }
 @media(max-width:570px) { .player-controls { justify-content:flex-start; } .player-navigation { flex:1 1 100%;justify-content:space-between; } .player-mode-switch { flex:1; } .player-mode-switch button { flex:1; } .player-shell>.player-controls { top:8px; } .batch-player-controls .player-navigation { flex-basis:100%; } .batch-view-toolbar { padding:10px 12px; } .batch-player-body { gap:8px;padding-top:4px; } }
 @media(prefers-reduced-motion:reduce) { .row { transition:none; } }

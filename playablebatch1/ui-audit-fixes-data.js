@@ -381,9 +381,9 @@
   {
     "number": 73,
     "taskId": "playable2_20261013021144_kzqdfu",
-    "summary": "Compact food toolbar near the 20% allocation with readable single-line labels. Score remains removed; feeding effects retained.",
+    "summary": "All eleven food props are visible in two centered rows instead of a horizontal scroller. Selected-state feedback and feeding effects retained; score remains removed.",
     "ids": [
-      "UI-20261013-73-1"
+      "UI-20261013-73-1", "Koi two-row props follow-up 20261013"
     ]
   }
 ];

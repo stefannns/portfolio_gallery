@@ -4,17 +4,18 @@
   if(!api||!trigger||!script?.src)return;
   const runtime=new URL(trigger.dataset.feedRuntime||'/app/home',script.src), origin=runtime.origin;
   const inlineControls=document.querySelector('[data-inline-controls]'), announcement=document.getElementById('player-status');
-  const viewport=document.createElement('div');viewport.className='fyp-viewport';viewport.hidden=true;
-  viewport.innerHTML='<iframe class="fyp-frame" title="FYP game review" allow="camera; microphone; autoplay; fullscreen"></iframe><div class="fyp-error" hidden><p>Couldn’t load FYP Mode.</p><button type="button">Try again</button></div>';
+  const viewport=document.createElement('div');viewport.id='fyp-fit';viewport.className='fyp-viewport';viewport.hidden=true;
+  viewport.innerHTML='<div id="fyp-phone" class="fyp-phone"><iframe class="fyp-frame" title="FYP game review" allow="camera; microphone; autoplay; fullscreen"></iframe><div class="fyp-error" hidden><p>Couldn’t load FYP Mode.</p><button type="button">Try again</button></div></div>';
   document.getElementById('stage').append(viewport);
   const withoutIds=html=>html.replace(/\s+id="[^"]*"/g,'');
   const navigation=withoutIds(inlineControls.querySelector('.player-navigation').innerHTML);
   const modes=withoutIds(inlineControls.querySelector('.player-mode-switch').innerHTML);
   const dialog=document.createElement('dialog');dialog.className='batch-view-dialog';dialog.setAttribute('aria-labelledby','batch-view-heading');
-  dialog.innerHTML='<header class="batch-view-toolbar"><div class="batch-view-summary"><h2 id="batch-view-heading">Game review</h2><p class="batch-view-status" role="status"></p></div><label class="batch-view-picker">Choose game<select aria-label="Choose game"></select></label><nav class="batch-view-controls"><button type="button" class="batch-view-close">Back to review</button></nav></header><p class="batch-view-error" hidden>Couldn’t load the feed. <button type="button" class="batch-view-retry">Try again</button></p><div class="batch-player-body"><div class="player-controls batch-player-controls" role="group" aria-label="Full-screen player controls"><nav class="player-navigation" aria-label="Game navigation">'+navigation+'</nav><div class="player-mode-switch" role="group" aria-label="Preview mode">'+modes+'</div></div><div class="batch-player-content"><iframe class="batch-view-frame" title="Full-screen FYP review" allow="camera; microphone; autoplay; fullscreen"></iframe><div class="batch-direct-fit" hidden><div class="batch-direct-phone"><iframe class="batch-direct-frame" title="Full-screen direct game" sandbox="allow-scripts allow-same-origin allow-pointer-lock" allow="camera; microphone; autoplay; fullscreen"></iframe></div></div></div></div>';
+  dialog.innerHTML='<header class="batch-view-toolbar"><div class="batch-view-summary"><h2 id="batch-view-heading">Game review</h2><p class="batch-view-status" role="status"></p></div><label class="batch-view-picker">Choose game<select aria-label="Choose game"></select></label><nav class="batch-view-controls"><button type="button" class="batch-view-close">Back to review</button></nav></header><p class="batch-view-error" hidden>Couldn’t load the feed. <button type="button" class="batch-view-retry">Try again</button></p><div class="batch-player-body"><div class="player-controls batch-player-controls" role="group" aria-label="Full-screen player controls"><nav class="player-navigation" aria-label="Game navigation">'+navigation+'</nav><div class="player-mode-switch" role="group" aria-label="Preview mode">'+modes+'</div></div><div class="batch-player-content"><div class="batch-fyp-fit" hidden><div class="batch-fyp-phone"><iframe class="batch-view-frame" title="Full-screen FYP review" allow="camera; microphone; autoplay; fullscreen"></iframe></div></div><div class="batch-direct-fit" hidden><div class="batch-direct-phone"><iframe class="batch-direct-frame" title="Full-screen direct game" sandbox="allow-scripts allow-same-origin allow-pointer-lock" allow="camera; microphone; autoplay; fullscreen"></iframe></div></div></div></div>';
   document.body.append(dialog);
   const inline=viewport.querySelector('iframe'), full=dialog.querySelector('.batch-view-frame'), direct=dialog.querySelector('.batch-direct-frame');
   const directFit=dialog.querySelector('.batch-direct-fit'), directPhone=dialog.querySelector('.batch-direct-phone'), content=dialog.querySelector('.batch-player-content');
+  const fullFit=dialog.querySelector('.batch-fyp-fit'), fullPhone=dialog.querySelector('.batch-fyp-phone');
   const picker=dialog.querySelector('select'), status=dialog.querySelector('[role="status"]'), heading=dialog.querySelector('h2');
   const error=dialog.querySelector('.batch-view-error'), inlineError=viewport.querySelector('.fyp-error');
   const controlSets=[inlineControls,dialog.querySelector('.batch-player-controls')];
@@ -32,18 +33,19 @@
     if(selected){picker.value=selected.taskId;status.textContent=selected.number+'. '+selected.name;}
     heading.textContent=view==='fyp'?'FYP review':'Game review';
   }
-  function fitDirect(){
-    if(!expanded||view!=='direct')return;
-    const scale=Math.max(.1,Math.min(1,(content.clientWidth-24)/400,(content.clientHeight-24)/703));
-    directFit.style.width=400*scale+'px';directFit.style.height=703*scale+'px';directPhone.style.transform='scale('+scale+')';
+  function fitExpanded(){
+    if(!expanded)return;
+    const width=Math.max(1,content.clientWidth-24),height=Math.max(1,content.clientHeight-24);
+    api.fitPhone(directFit,directPhone,width,height);
+    api.fitPhone(fullFit,fullPhone,width,height);
   }
-  new ResizeObserver(fitDirect).observe(content);
+  new ResizeObserver(fitExpanded).observe(content);
   function paint(){
     viewport.hidden=expanded||view!=='fyp';
     document.getElementById('preview-fit').hidden=managed();
     document.getElementById('stage').classList.toggle('is-fyp',!expanded&&view==='fyp');
-    full.hidden=view!=='fyp';directFit.hidden=view!=='direct';
-    controls();fitDirect();
+    full.hidden=view!=='fyp';fullFit.hidden=view!=='fyp';directFit.hidden=view!=='direct';
+    controls();api.fitPreview();fitExpanded();
   }
   function stop(){
     clearTimeout(timer);pending=null;ready=false;
@@ -54,12 +56,12 @@
     error.hidden=true;inlineError.hidden=true;
     if(view==='direct'){
       ready=true;announcement.textContent='';
-      if(expanded){direct.src=new URL(api.previewSource(selected),location.href).href;fitDirect();}
+      if(expanded){direct.src=new URL(api.previewSource(selected),location.href).href;fitExpanded();}
       else api.resume();
       controls();return;
     }
     ready=false;controls();announcement.textContent='Loading FYP view';
-    const url=new URL(runtime);url.searchParams.set('review','batch');url.searchParams.set('feed','playable-batch-'+selected.taskId);url.searchParams.set('reviewHost',location.origin);url.searchParams.set('v','player-toolbar-20261013-7');
+    const url=new URL(runtime);url.searchParams.set('review','batch');url.searchParams.set('feed','playable-batch-'+selected.taskId);url.searchParams.set('reviewHost',location.origin);url.searchParams.set('v','iphone-ratio-swipe-20261013-1');
     nativeFrame().src=url.href;clearTimeout(timer);
     timer=setTimeout(()=>{error.hidden=false;inlineError.hidden=false;announcement.textContent='FYP view unavailable. Use Try again to reload.';},15000);
   }
@@ -87,7 +89,7 @@
   for(const button of buttons('[data-action="restart"]'))button.addEventListener('click',restart);
   trigger.addEventListener('click',()=>{
     if(expanded)return;selected=api.getCurrent();stop();expanded=true;paint();
-    dialog.showModal();document.body.classList.add('batch-view-open');fitDirect();load();dialog.querySelector('.batch-view-close').focus();
+    dialog.showModal();document.body.classList.add('batch-view-open');fitExpanded();load();dialog.querySelector('.batch-view-close').focus();
   });
   dialog.querySelector('.batch-view-close').addEventListener('click',()=>dialog.close());
   dialog.addEventListener('close',()=>{stop();expanded=false;document.body.classList.remove('batch-view-open');paint();load();trigger.focus();});
