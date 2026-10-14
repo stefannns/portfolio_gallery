@@ -1,7 +1,7 @@
 /* Review studio: quiet surfaces, compact index, generous playable stage. */
 :root { color:#202522;background:#f2f4f1;font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
 .shell { max-width:1360px;padding:28px clamp(16px,3vw,40px) 48px; }
-.header { align-items:center;margin-bottom:28px;gap:20px; }
+.header { align-items:center;margin-bottom:16px;gap:20px; }
 .eyebrow { color:#617369;letter-spacing:.11em;font-size:11px; }
 h1 { font-size:clamp(26px,3vw,38px);letter-spacing:-.045em;margin:7px 0 8px; }
 .lede { color:#647068;font-size:14px;max-width:600px; }
