@@ -76,9 +76,9 @@
       evidence: 'User requested four other mirrored balls, smaller radius and 1.5-second fading.'
     },
     playable2_20261001230052_xrken6b: {
-      scope: 'Separate custom variant — 57b only',
-      note: '57b is a separate top-down variant with gray ground, low radial grass, layered flowers, and simplified controls; No.57 is unchanged.',
-      evidence: 'User requested preserving No.57 and adding 57b, iterated its custom visuals, and explicitly cited 57b as a game that need not fully match the original.'
+      scope: 'Custom top-down version',
+      note: 'Top-down version with gray ground, low radial grass, layered flowers, and simplified controls.',
+      evidence: 'User created and iterated 57b as a custom reference exception, then requested removing No.57 from the review list and keeping only 57b.'
     },
     playable2_20261001230147_id39lj: {
       scope: 'Audio trigger only',

@@ -381,9 +381,9 @@
   {
     "number": 73,
     "taskId": "playable2_20261013021144_kzqdfu",
-    "summary": "All eleven food props are visible in two centered rows instead of a horizontal scroller. Selected-state feedback and feeding effects retained; score remains removed.",
+    "summary": "Removed Soap, including from Mix. Ten food props are visible in two equal rows of five instead of a horizontal scroller. Selected-state feedback and the remaining feeding effects are retained; score remains removed.",
     "ids": [
-      "UI-20261013-73-1", "Koi two-row props follow-up 20261013"
+      "UI-20261013-73-1", "Koi two-row props follow-up 20261013", "Koi five-plus-five without Soap 20261013"
     ]
   }
 ];
