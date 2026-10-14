@@ -4,6 +4,12 @@
  * Update this snapshot alongside the tracker when work changes.
  */
 window.PLAYABLE_IMPLEMENTED_FIXES = {
+  "playable2_20261013020814_b973b1": {
+    "number": 69,
+    "items": ["Accepts simultaneous drive and steer touches. Each finger holds its own control; releasing, cancelling or shifting button focus does not clear the other finger.", "Input resets when changing levels, hiding the page or losing window focus."],
+    "status": "Two-thumb controls implemented; awaiting mobile retest.",
+    "evidence": ["Precision Parking multi-touch follow-up 20261013"]
+  },
   "playable2_20261013020814_twgfzt": {
     "number": 68,
     "items": [
@@ -18,22 +24,24 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
   "playable2_20261013020814_woay2o": {
     "number": 70,
     "items": [
-      "Added a blue-paper/pink-car example stamp inspired by the original reference, visible immediately instead of an empty text prompt.",
+      "Replaced the car example with a newly generated woodland fox-and-mushroom illustration, visible immediately inside the stamp frame.",
       "Replaced the dotted mask with a solid white postage frame, scalloped edge perforations, a light paper shadow and slight tilt. Captured and uploaded photos share the same frame.",
-      "Capture, photo upload, remove and camera hide/show remain available; frame sizing leaves room for rotation and shadow at short portrait sizes."
+      "Capture, photo upload, remove and camera hide/show remain available; frame sizing leaves room for rotation and shadow at short portrait sizes.",
+      "Fixed the jumping lower panel: a compact, reserved camera dock stays stable, without blur flicker or spring overshoot. Hidden controls are inactive and old camera callbacks cannot blank a new preview."
     ],
-    "status": "Postage frame and generated example implemented locally; awaiting review.",
-    "evidence": ["Pocket Stamp frame follow-up 20261013"]
+    "status": "New fox artwork and stable camera controls implemented; awaiting review.",
+    "evidence": ["Pocket Stamp frame follow-up 20261013", "Pocket Stamp fox/dock follow-up 20261013"]
   },
   "playable2_20261013020955_2hyyml": {
     "number": 72,
     "items": [
       "Six camera treatments: worn silver-plate, black-and-white film, soft color film, analog video, early digital and clean modern.",
       "Older eras add grain, dust, scratches, soft detail, dark edges and subtle film weave; color film adds edge light leaks, while analog video adds scanlines and tracking.",
-      "Live preview and saved photos share the same effects and crop. Camera controls remain clear; reduced motion stops decorative film movement."
+      "Live preview and saved photos share the same effects and crop. Camera controls remain clear; reduced motion stops decorative film movement.",
+      "Timeline drags move five years per eight pixels, so short swipes reach different eras. Exact year entry remains available."
     ],
-    "status": "Era effects implemented locally; awaiting review.",
-    "evidence": ["Time Camera era effects follow-up 20261013"]
+    "status": "Era effects and more sensitive timeline implemented; awaiting review.",
+    "evidence": ["Time Camera era effects follow-up 20261013", "Time Camera timeline sensitivity follow-up 20261013"]
   },
   "playable2_20260927020828_5pmrhn": {
     "number": 3,
