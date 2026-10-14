@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const config = window.PLAYABLE_FEEDBACK_CONFIG;
-  const host = document.querySelector('.preview');
+  const host = document.querySelector('[data-review-content]') || document.querySelector('.preview');
   if (!host || !config) return;
   const categories = {visual: 'Visual issue', gameplay: 'Gameplay issue', other: 'Other feedback'};
   const statuses = {needs_review: 'Needs review', fixed: 'Fixed', approved: 'Approved'};

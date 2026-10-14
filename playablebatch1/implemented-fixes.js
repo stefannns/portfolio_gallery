@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   const records = window.PLAYABLE_IMPLEMENTED_FIXES || {};
-  const host = document.querySelector('.preview');
+  const host = document.querySelector('[data-review-content]') || document.querySelector('.preview');
   if (!host) return;
   const make = (tag, className, text) => {
     const element = document.createElement(tag);

@@ -97,7 +97,7 @@
     }
   };
   window.PLAYABLE_DEVELOPER_NOTES = decisions;
-  const host = document.querySelector('.preview');
+  const host = document.querySelector('[data-review-content]') || document.querySelector('.preview');
   if (!host) return;
   const make = (tag, className, text) => {
     const element = document.createElement(tag);
