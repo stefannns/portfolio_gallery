@@ -22,7 +22,6 @@ own in a Lark doc.
 |---|---|
 | `/` | the combined site (about + gallery) |
 | `/about` | the badge on its own |
-| `/farm_td/` | Farm TD garden defense game |
 | `/doggystack`, `/sheepjump`, `/voiceescape`, `/zoostacker` | playable Phaser builds |
 | `/stattest` | mini-game test harness |
 | `/playablebatch1` | 61-game playable review library with a fixed portrait preview |
@@ -78,11 +77,3 @@ cd about-src && npm run build
 - **Drag / wheel / two-finger swipe** — move sideways (loops both ways)
 - **Click** a centered card — reveal the reel; **✕** to close
 - **Arrow keys** — previous / next
-
-## Farm TD
-
-The `/farm_td/` folder contains the production build from `stefannns/farm_td`.
-Build the current game checkout with `npm run build:gallery`, then replace this
-folder with the contents of `dist-gallery/` and commit the output. The export
-scopes asset paths to `/farm_td/`, including runtime Phaser and UI images.
-Vercel deploys it with the existing static site when `main` is pushed.
