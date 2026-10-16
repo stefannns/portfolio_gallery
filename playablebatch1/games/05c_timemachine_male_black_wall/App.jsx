@@ -23,6 +23,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import * as Tone from 'tone';
 import {uiCss, useUiStage, useToneGate, loadConfig} from './playable-ui.js';
+import {themeCss} from './playable-theme.js';
 
 // --- 常量与数据 ---
 const AGE_DATA = [
@@ -157,12 +158,12 @@ const App = () => {
   const containerStyle = {
     width: '100%',
     height: '100%',
-    backgroundColor: '#191918',
-    backgroundImage: 'radial-gradient(circle at 50% 22%, rgba(255,255,255,0.035), transparent 42%), radial-gradient(circle at 15% 85%, rgba(118,108,92,0.05), transparent 38%)',
-    color: '#fff',
+    backgroundColor: '#efeee8',
+    backgroundImage: 'radial-gradient(ellipse at 50% 30%, #faf9f5 0%, transparent 75%)',
+    color: '#30352f',
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+    fontFamily: 'var(--font-body)',
     overflow: 'hidden',
     userSelect: 'none',
     WebkitUserSelect: 'none'
@@ -184,9 +185,9 @@ const App = () => {
 
   const subtitleStyle = {
     fontSize: 'calc(28px * var(--ui-scale))',
-    fontWeight: 650,
+    fontWeight: 700,
     margin: 0,
-    letterSpacing: '1px'
+    letterSpacing: '-.6px',fontVariantNumeric:'tabular-nums'
   };
 
   const mainAreaStyle = {
@@ -195,7 +196,7 @@ const App = () => {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '16px var(--ui-side) 46px',
+    padding: '8px var(--ui-side) 8px',
     containerType: 'size'
   };
 
@@ -207,14 +208,25 @@ const App = () => {
     alignItems: 'center'
   };
 
-  const portraitStyle = {
-    width: 'min(100cqw, 75cqh)',
-    height: 'min(100cqh, 133.333cqw)',
-    aspectRatio: '3 / 4',
+  const printStyle = {
+    '--print-width': 'min(100cqw, calc(100cqh * 30 / 43))',
+    width: 'var(--print-width)',
+    height: 'calc(var(--print-width) * 43 / 30)',
+    padding: 'calc(var(--print-width) * .06) calc(var(--print-width) * .06) calc(var(--print-width) * .20)',
+    margin: 0,
+    flexShrink: 0,
     position: 'relative',
-    borderRadius: '22px',
+    borderRadius: '1px',
+    background: 'linear-gradient(115deg, #fffefa, #f8f7f2)',
+    boxShadow: '0 14px 24px -10px #36332a35, 0 2px 5px #36332a12, inset 0 0 0 1px #ffffffc0'
+  };
+
+  const portraitStyle = {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
     overflow: 'hidden',
-    boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
+    boxShadow: '0 0 0 1px #24292420',
     backgroundColor: '#222'
   };
 
@@ -251,7 +263,9 @@ const App = () => {
           background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");
         }
         .app-shell > *:not(.ui-guide) { position: relative; z-index: 1; }
+        .time-print-guide{left:6%;right:6%;bottom:calc(var(--print-width) * .055);font-size:max(14px,calc(18px * var(--ui-scale)));color:#666b61;line-height:1.4}
       `}</style>
+      <style>{themeCss}</style>
 
       {/* 顶部区域 */}
       <div style={headerStyle}>
@@ -261,7 +275,8 @@ const App = () => {
       {/* 中间肖像区域 */}
       <div style={mainAreaStyle}>
         <div style={portraitWrapperStyle}>
-          <div style={portraitStyle}>
+          <figure className="time-print" style={printStyle}>
+          <div className="time-print-window" style={portraitStyle}>
             {AGE_DATA.map((d, i) => (
               <img
                 key={d.imgId}
@@ -282,11 +297,12 @@ const App = () => {
               />
             ))}
           </div>
+          {!hasInteracted && <figcaption className="ui-guide ui-float time-print-guide">Drag to change age</figcaption>}
+          </figure>
         </div>
       </div>
 
       {/* 底部时间轴区域 */}
-      {!hasInteracted && <p className="ui-guide ui-float" style={{bottom:'calc(var(--ui-bottom) + 68px * var(--ui-scale))'}}>Drag to change age</p>}
       <div style={footerStyle}>
         <div 
           ref={trackRef}
@@ -300,10 +316,10 @@ const App = () => {
           onKeyDown={e=>{const delta={ArrowLeft:-1,ArrowDown:-1,ArrowRight:1,ArrowUp:1}[e.key];if(delta===undefined&&!['Home','End'].includes(e.key))return;e.preventDefault();initAudio();setHasInteracted(true);const index=e.key==='Home'?0:e.key==='End'?14:Math.max(0,Math.min(14,activeIndexRef.current+delta));if(index!==activeIndexRef.current)playTick();activeIndexRef.current=index;setActiveIndex(index);setProgress(index/14);}}
         >
           {/* 背景线 */}
-          <div style={{ position: 'absolute', left: 0, right: 0, height: '2px', background: 'rgba(255,255,255,0.15)', borderRadius: '1px' }} />
+          <div style={{ position: 'absolute', left: 0, right: 0, height: '2px', background: '#cccfc5', borderRadius: '1px' }} />
           
           {/* 激活线 */}
-          <div style={{ position: 'absolute', left: 0, width: `${progress * 100}%`, height: '2px', background: '#fff', borderRadius: '1px' }} />
+          <div style={{ position: 'absolute', left: 0, width: `${progress * 100}%`, height: '2px', background: '#8c75bd', borderRadius: '1px' }} />
 
           {/* 刻度点 */}
           {AGE_DATA.map((item, i) => {
@@ -315,17 +331,17 @@ const App = () => {
                 left: `${(i / 14) * 100}%`,
                 width: isMajor ? '8px' : '4px',
                 height: isMajor ? '8px' : '4px',
-                background: i <= activeIndex ? '#fff' : 'rgba(255,255,255,0.28)',
+                background: i <= activeIndex ? '#8c75bd' : '#b7bbb1',
                 transform: 'translate(-50%, -50%)',
                 top: '50%',
                 borderRadius: '50%',
-                boxShadow: isMajor ? '0 0 0 3px #121110, 0 0 0 4px rgba(255,255,255,.28)' : 'none',
+                boxShadow: isMajor ? '0 0 0 3px #efeee8, 0 0 0 4px #b7bbb1' : 'none',
                 transition: 'background 0.2s, transform .2s'
               }}>
                 {i===0||i===14 ? <span aria-hidden="true" style={{
                   position: 'absolute', left: '50%', top: '24px', transform: 'translateX(-50%)',
                   fontSize: '14px', fontWeight: 500,
-                  color: '#ddd',
+                  color: '#646b60',
                   background: 'transparent', padding: 0,
                   whiteSpace: 'nowrap', pointerEvents: 'none'
                 }}>{item.age}</span> : null}
@@ -342,8 +358,8 @@ const App = () => {
             width: '22px',
             height: '22px',
             borderRadius: '50%',
-            background: '#fff',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.5)',
+            background: '#8c75bd',
+            boxShadow: '0 2px 7px #40324d2c',
             transition: isDragging ? 'none' : 'left 0.2s cubic-bezier(0.2, 0, 0, 1)',
             pointerEvents: 'none'
           }}>
@@ -352,7 +368,7 @@ const App = () => {
               position: 'absolute',
               inset: '7px',
               borderRadius: '50%',
-              background: '#121110'
+              background: '#fffefa'
             }} />
           </div>
         </div>

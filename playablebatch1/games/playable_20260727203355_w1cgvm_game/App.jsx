@@ -1,6 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {uiCss, useUiStage, loadConfig} from './playable-ui.js';
+import {themeCss} from './playable-theme.js';
+
+// Invalidate only bundled replacements; leave editor/custom image URLs exact.
+const outfitSrc = url=>/^\.\/assets\/(?:bg_base|bg_a|bg_b|bg_ab|item_a|item_b)\.webp$/.test(url)?url+'?art=street-restored-67-20261016-7':url;
 
 function flattenConfig(raw) {
   const values={};
@@ -41,20 +45,21 @@ function App(){
       .outfit-item{position:absolute;width:35%;aspect-ratio:1;border:0;padding:0;background:transparent;cursor:pointer;z-index:10}
       .outfit-item img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 6px 7px #0004)}
       .outfit-item:active img{filter:drop-shadow(0 3px 4px #0006) brightness(.94)}
-      .look-guide{top:12%;padding:8px 10px;color:#fff;background:#151917bf;border-radius:12px;text-shadow:0 1px 2px #0003}
+      .look-guide{top:auto;bottom:var(--ui-bottom);left:50%;right:auto;transform:translateX(-50%);width:max-content;max-width:calc(100% - 2 * var(--ui-side));padding:8px 16px;color:#202322;background:#fffffff0;border:1px solid #ffffff90;border-radius:999px;text-shadow:none;box-shadow:0 3px 14px #10181218}
     `}</style>
+    <style>{themeCss}</style>
     <div className="look-plane" style={{...plane,zIndex:1}}>
-      {['BG_BASE','BG_A','BG_B','BG_AB'].map(key=><img key={key} src={cfg[key]} alt={key===active?'Current outfit':''} aria-hidden={key!==active} draggable={false} style={{opacity:key===active?1:0}}/>)}
-      {wearA&&<button ref={removeA} className="look-remove" type="button" aria-label="Remove scarf" onClick={e=>toggle('A',false,e.detail===0)} style={{top:'45%',left:'35%',width:'30%',height:'15%',zIndex:12}}/>}
-      {wearB&&<button ref={removeB} className="look-remove" type="button" aria-label="Remove top" onClick={e=>toggle('B',false,e.detail===0)} style={{top:'55%',left:'20%',width:'60%',height:'35%',zIndex:11}}/>}
+      {['BG_BASE','BG_A','BG_B','BG_AB'].map(key=><img key={key} src={outfitSrc(cfg[key])} alt={key===active?'Current outfit':''} aria-hidden={key!==active} draggable={false} style={{opacity:key===active?1:0}}/>)}
+      {wearA&&<button ref={removeA} className="look-remove" type="button" aria-label="Remove scarf" onClick={e=>toggle('A',false,e.detail===0)} style={{top:'48%',left:'44%',width:'28%',height:'14%',zIndex:12}}/>}
+      {wearB&&<button ref={removeB} className="look-remove" type="button" aria-label="Remove top" onClick={e=>toggle('B',false,e.detail===0)} style={{top:'60%',left:'20%',width:'60%',height:'9%',zIndex:11}}/>}
     </div>
     {!wearA&&<button ref={itemA} type="button" className="outfit-item" aria-label="Try on scarf" onClick={e=>toggle('A',true,e.detail===0)} style={{left:'var(--ui-side)',top:'24%'}}>
-      <img className="ui-float" style={{animationDuration:`${cfg.FLOAT_SPEED||2.5}s`}} src={cfg.ITEM_A} alt="" draggable={false}/>
+      <img className="ui-float" style={{animationDuration:`${cfg.FLOAT_SPEED||2.5}s`}} src={outfitSrc(cfg.ITEM_A)} alt="" draggable={false}/>
     </button>}
     {!wearB&&<button ref={itemB} type="button" className="outfit-item" aria-label="Try on top" onClick={e=>toggle('B',true,e.detail===0)} style={{right:'max(var(--ui-side), 16%)',bottom:'22%',width:'38%'}}>
-      <img className="ui-float" style={{animationDuration:`${(cfg.FLOAT_SPEED||2.5)*1.1}s`}} src={cfg.ITEM_B} alt="" draggable={false}/>
+      <img className="ui-float" style={{animationDuration:`${(cfg.FLOAT_SPEED||2.5)*1.1}s`}} src={outfitSrc(cfg.ITEM_B)} alt="" draggable={false}/>
     </button>}
-    {!started&&<p className="ui-guide look-guide">Tap clothing to try it on</p>}
+    {!started&&<p className="ui-guide look-guide">Tap a piece to try it on</p>}
   </main>;
 }
 createRoot(document.getElementById('root')).render(<App/>);

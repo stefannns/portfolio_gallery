@@ -26,6 +26,42 @@ import { createRoot } from 'react-dom/client';
 import * as Tone from 'tone';
 import { motion, AnimatePresence } from 'framer-motion';
 import {uiCss, useUiStage, useToneGate, loadConfig} from './playable-ui.js';
+import {themeCss} from './playable-theme.js';
+import {PetBlend, HairField} from './pet-effects.mjs';
+
+// All photo slots stay preloaded; the mix can retarget immediately from its
+// current weights, without empty frames, brightness dips or animation-end gates.
+function PetScene({cfg,petState,reduced}){
+  const blend=useRef(null),frame=useRef(null),last=useRef(null),wake=useRef(()=>{});
+  if(!blend.current)blend.current=new PetBlend();
+  const[layers,setLayers]=useState(()=>blend.current.view());
+  useEffect(()=>{
+    const draw=time=>{
+      frame.current=null;
+      const dt=last.current===null?0:Math.min(.05,(time-last.current)/1000);last.current=time;
+      setLayers(blend.current.step(dt,reduced));
+      if(blend.current.active&&!document.hidden)frame.current=requestAnimationFrame(draw);else last.current=null;
+    };
+    const run=()=>{
+      if(document.hidden||reduced){setLayers(blend.current.step(0,true));return;}
+      if(frame.current===null)frame.current=requestAnimationFrame(draw);
+    };
+    wake.current=run;
+    const visibility=()=>{if(document.hidden){cancelAnimationFrame(frame.current);frame.current=null;last.current=null;}run();};
+    document.addEventListener('visibilitychange',visibility);run();
+    return()=>{cancelAnimationFrame(frame.current);frame.current=null;last.current=null;wake.current=()=>{};document.removeEventListener('visibilitychange',visibility);};
+  },[reduced]);
+  useEffect(()=>{blend.current.request(petState,reduced);wake.current();},[petState,reduced]);
+  const ids={base:'PET_BASE',happy:'PET_HAPPY',resist:'PET_RESIST',finish:'PET_FINISH'};
+  const labels={base:'Pet waiting to be groomed',happy:'Happy pet',resist:'Pet resisting',finish:'Comfortable pet'};
+  const visible=layers.reduce((best,layer)=>layer.weight>best.weight?layer:best,layers[0]).state;
+  return <div className="pet-scene" data-pet-state={visible}>
+    {layers.map(({state,opacity},index)=><img key={state} src={cfg[ids[state]]} className="pet-layer" data-pet-layer={state}
+      alt={labels[state]} aria-hidden={state!==visible} draggable={false} style={{opacity,zIndex:index}}
+      onLoad={()=>{blend.current.loaded(state,reduced);wake.current();}}
+      onError={()=>{blend.current.failed(state);wake.current();}}/>)}
+  </div>;
+}
 
 // --- 字体与全局基线样式 ---
 const GlobalStyle = () => (
@@ -43,7 +79,7 @@ const GlobalStyle = () => (
       --font-body:    "DynaPuff", "PingFang SC", system-ui, sans-serif;
       --font-mono:    ui-monospace, Menlo, monospace;
       --c-primary: #8B5A2B;
-      --c-bg: #f5f5f5;
+      --c-bg: #514942;
     }
     html, body, #root {
       width: 100%;
@@ -59,6 +95,7 @@ const GlobalStyle = () => (
     * {
       box-sizing: border-box;
     }
+    .pet-scene{position:absolute;inset:0;overflow:hidden;pointer-events:none;isolation:isolate}
     .pet-layer {
       position: absolute;
       inset: 0;
@@ -66,7 +103,6 @@ const GlobalStyle = () => (
       height: 100%;
       object-fit: cover;
       object-position: center;
-      transition: opacity 0.3s ease;
       pointer-events: none;
     }
   `}</style>
@@ -81,42 +117,6 @@ function flattenConfig(raw) {
   return c;
 }
 
-// --- 粒子类 ---
-class HairParticle {
-  constructor(x, y, vx, vy) {
-    this.x = x;
-    this.y = y;
-    this.vx = vx;
-    this.vy = vy;
-    this.life = 1.0;
-    this.decay = Math.random() * 0.03 + 0.02;
-    this.angle = Math.random() * Math.PI * 2;
-    this.spin = (Math.random() - 0.5) * 0.2;
-    this.length = Math.random() * 12 + 8;
-  }
-  update() {
-    this.x += this.vx;
-    this.y += this.vy;
-    this.vy += 0.15; // 重力
-    this.angle += this.spin;
-    this.life -= this.decay;
-  }
-  draw(ctx) {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    ctx.rotate(this.angle);
-    ctx.globalAlpha = Math.max(0, this.life);
-    ctx.strokeStyle = '#8B5A2B'; // 棕色毛发
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.moveTo(-this.length / 2, 0);
-    ctx.quadraticCurveTo(0, 4, this.length / 2, 0);
-    ctx.stroke();
-    ctx.restore();
-  }
-}
-
 const App = () => {
   const [cfg, setCfg] = useState(null);
   const [comfort, setComfort] = useState(0);
@@ -127,7 +127,9 @@ const App = () => {
   
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
-  const particlesRef = useRef([]);
+  const particlesRef = useRef(null);
+  if(!particlesRef.current)particlesRef.current=new HairField();
+  const hairLoopRef=useRef({start:()=>{},clear:()=>{}});
   const lastPosRef = useRef({ x: 0, y: 0 });
   const audioRef = useRef({ ready: false, noise: null, winSynth: null, lastNoiseTime: 0 });
   const rafRef = useRef(null);
@@ -158,11 +160,15 @@ const App = () => {
     if (!cfg || !containerRef.current) return;
     const handleResize = () => {
       if (canvasRef.current && containerRef.current) {
-        canvasRef.current.width = containerRef.current.clientWidth;
-        canvasRef.current.height = containerRef.current.clientHeight;
+        const dpr=Math.min(window.devicePixelRatio||1,2);
+        canvasRef.current.width = Math.round(containerRef.current.clientWidth*dpr);
+        canvasRef.current.height = Math.round(containerRef.current.clientHeight*dpr);
+        canvasRef.current.getContext('2d')?.setTransform(dpr,0,0,dpr,0,0);
+        particlesRef.current.clear();
       }
     };
     handleResize();
+    const observer=new ResizeObserver(handleResize);observer.observe(containerRef.current);
     window.addEventListener('resize', handleResize);
     
     // 初始梳子位置
@@ -171,31 +177,31 @@ const App = () => {
       y: containerRef.current.clientHeight * 0.7
     });
 
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {observer.disconnect();window.removeEventListener('resize', handleResize);};
   }, [cfg]);
 
-  // 3. 粒子动画循环
+  // 3. Demand-driven fur loop: no idle RAF, no hidden/reduced-motion particles.
   useEffect(() => {
     if (!cfg) return;
-    const loop = () => {
-      if (canvasRef.current && !document.hidden) {
-        const ctx = canvasRef.current.getContext('2d');
-        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-        
-        for (let i = particlesRef.current.length - 1; i >= 0; i--) {
-          const p = particlesRef.current[i];
-          p.update();
-          p.draw(ctx);
-          if (p.life <= 0) {
-            particlesRef.current.splice(i, 1);
-          }
-        }
-      }
-      rafRef.current = requestAnimationFrame(loop);
+    let last=null;
+    const clear=()=>{
+      cancelAnimationFrame(rafRef.current);rafRef.current=null;last=null;particlesRef.current.clear();
+      const canvas=canvasRef.current;canvas?.getContext('2d')?.clearRect(0,0,canvas.width,canvas.height);
     };
-    rafRef.current = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [cfg]);
+    const loop=time=>{
+      rafRef.current=null;
+      const canvas=canvasRef.current,ctx=canvas?.getContext('2d');
+      if(!ctx||document.hidden||reduced){clear();return;}
+      const dt=last===null?1/60:Math.min(.05,Math.max(0,(time-last)/1000));last=time;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      if(particlesRef.current.step(dt,ctx))rafRef.current=requestAnimationFrame(loop);else last=null;
+    };
+    const start=()=>{if(!reduced&&!document.hidden&&particlesRef.current.particles.length&&rafRef.current===null)rafRef.current=requestAnimationFrame(loop);};
+    hairLoopRef.current={start,clear};
+    const hidden=()=>{if(document.hidden)clear();};document.addEventListener('visibilitychange',hidden);
+    if(reduced)clear();
+    return()=>{clear();hairLoopRef.current={start:()=>{},clear:()=>{}};document.removeEventListener('visibilitychange',hidden);};
+  }, [cfg,reduced]);
 
   // 4. 状态恢复定时器
   useEffect(() => {
@@ -235,6 +241,7 @@ const App = () => {
   const handlePointerDown = (e) => {
     if (petState === 'finish' || pointerRef.current !== null || e.isPrimary === false || e.button !== 0) return;
     pointerRef.current = e.pointerId;
+    particlesRef.current.remainder=0;
     e.currentTarget.setPointerCapture?.(e.pointerId);
     ensureAudio();
     setIsDragging(true);
@@ -255,17 +262,6 @@ const App = () => {
     
     // 只有产生有效位移才算梳理
     if (dist > 3) {
-      // 1. 生成粒子
-      const numParticles = Math.min(Math.floor(dist / 4), 6);
-      for (let i = 0; i < numParticles; i++) {
-        particlesRef.current.push(new HairParticle(
-          x + (Math.random() - 0.5) * 40, 
-          y + (Math.random() - 0.5) * 40, 
-          (Math.random() - 0.5) * 3, 
-          Math.random() * 2 - 1
-        ));
-      }
-      
       // 2. 播放音效
       const now = Tone.now();
       if (audioRef.current.ready && now - audioRef.current.lastNoiseTime > 0.08) {
@@ -276,6 +272,14 @@ const App = () => {
       // 3. 区域判定与进度更新
       const relY = y / rect.height;
       const relX = x / rect.width;
+
+      // Small, multi-strand tufts lift off the brush head only over the pet.
+      if(!reduced&&!document.hidden&&relX>.2&&relX<.8&&relY>.3&&relY<.8){
+        const scale=Math.max(.65,Math.min(1.2,rect.width/390,rect.height/598));
+        const from={x:Math.max(rect.width*.2,Math.min(rect.width*.8,lastPosRef.current.x)),y:Math.max(rect.height*.3,Math.min(rect.height*.8,lastPosRef.current.y))};
+        particlesRef.current.emit(from,{x,y},scale);
+        hairLoopRef.current.start();
+      }else particlesRef.current.remainder=0;
       
       // 假设宠物在画面中央，x: 20%-80%
       if (relX > 0.2 && relX < 0.8) {
@@ -309,7 +313,7 @@ const App = () => {
     setIsDragging(false);
   };
 
-  if (!cfg) return <div style={{ width: '100%', height: '100%', background: '#f5f5f5' }} />;
+  if (!cfg) return <div style={{ width: '100%', height: '100%', background: '#514942' }} />;
 
   return (
     <div 
@@ -323,17 +327,15 @@ const App = () => {
       onLostPointerCapture={handlePointerUp}
     >
       <GlobalStyle />
+      <style>{themeCss}</style>
       
       {/* 宠物图层 (固定场景，仅切换透明度) */}
-      <img src={cfg.PET_BASE} className="pet-layer" aria-hidden={petState!=='base'} style={{ opacity: petState === 'base' ? 1 : 0 }} alt="Pet waiting to be groomed" draggable={false} />
-      <img src={cfg.PET_HAPPY} className="pet-layer" aria-hidden={petState!=='happy'} style={{ opacity: petState === 'happy' ? 1 : 0 }} alt="Happy pet" draggable={false} />
-      <img src={cfg.PET_RESIST} className="pet-layer" aria-hidden={petState!=='resist'} style={{ opacity: petState === 'resist' ? 1 : 0 }} alt="Pet resisting" draggable={false} />
-      <img src={cfg.PET_FINISH} className="pet-layer" aria-hidden={petState!=='finish'} style={{ opacity: petState === 'finish' ? 1 : 0 }} alt="Comfortable pet" draggable={false} />
+      <PetScene cfg={cfg} petState={petState} reduced={reduced}/>
 
       {/* 粒子画布 */}
       <canvas 
         ref={canvasRef} 
-        style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 5 }}
+        aria-hidden="true" style={{ position: 'absolute', inset: 0, width:'100%',height:'100%',pointerEvents: 'none', zIndex: 5 }}
       />
 
       {/* 梳子 */}
@@ -366,17 +368,17 @@ const App = () => {
       {/* HUD: 进度条与提示 */}
       <div style={{ position: 'absolute', top: 'var(--ui-top)', left: 'var(--ui-side)', right: 'var(--ui-side)', zIndex: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', pointerEvents: 'none' }}>
         <div role="progressbar" aria-label="Comfort" aria-valuemin={0} aria-valuemax={cfg.COMFORT_MAX ?? 100} aria-valuenow={Math.round(comfort)} style={{
-          width: '60%', height: '16px', 
-          background: 'rgba(255,255,255,0.4)', 
-          borderRadius: '8px', 
-          border: '2px solid rgba(255,255,255,0.8)',
+          width: 'min(160px, 60%)', height: '10px',
+          background: 'rgba(255,255,255,0.28)',
+          borderRadius: '999px',
+          border: '1px solid rgba(255,255,255,0.72)',
           overflow: 'hidden',
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
         }}>
           <div style={{ 
             width: `${100*comfort/(cfg.COMFORT_MAX ?? 100)}%`,
             height: '100%', 
-            background: 'linear-gradient(90deg, #FFB6C1, #FF69B4)', 
+            background: '#edbb88',
             transition: 'width 0.2s ease-out' 
           }} />
         </div>
@@ -392,9 +394,9 @@ const App = () => {
                 fontFamily: 'var(--font-display)',
                 fontSize: 'calc(24px * var(--ui-scale))',
                 textAlign: 'center', overflowWrap: 'anywhere',
-                color: '#fff',
-                textShadow: '0 2px 8px rgba(0,0,0,0.3), 0 0 4px #FF69B4',
-                fontWeight: 'bold'
+                color: '#4b3426', background: 'rgba(255,253,248,.94)', padding:'8px 16px',borderRadius:16,
+                textShadow: 'none',
+                fontWeight: 800
               }}
             >
               {cfg.TXT_FINISH}
@@ -408,12 +410,12 @@ const App = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 style={{
-                  marginTop: '12px',
+                  marginTop: '12px', padding:'6px 14px',borderRadius:999,background:'rgba(255,253,248,.94)',
                   fontFamily: 'var(--font-body)',
                 fontSize: 'calc(18px * var(--ui-scale))',
                 textAlign: 'center', lineHeight: 1.4,
-                  color: 'rgba(255,255,255,0.9)',
-                  textShadow: '0 1px 4px rgba(0,0,0,0.5)'
+                  color: '#4b3426', fontWeight:650,
+                  textShadow: 'none'
                 }}
               >
                 {cfg.TXT_GUIDE}
@@ -424,9 +426,9 @@ const App = () => {
       </div>
       {petState === 'finish' && <button autoFocus type="button" onPointerDown={e=>e.stopPropagation()} onClick={()=>{
         unlock.stop();
-        pointerRef.current=null;comfortRef.current=0;particlesRef.current=[];setComfort(0);setPetState('base');setHasInteracted(false);
+        pointerRef.current=null;comfortRef.current=0;hairLoopRef.current.clear();setComfort(0);setPetState('base');setHasInteracted(false);
         setCombPos({x:containerRef.current.clientWidth*.72,y:containerRef.current.clientHeight*.7});
-      }} style={{position:'absolute',bottom:'var(--ui-bottom)',left:'50%',transform:'translateX(-50%)',padding:'10px 24px',border:0,borderRadius:14,background:'#8B5A2B',color:'#fff',font:'18px var(--font-body)',zIndex:30}}>Again</button>}
+      }} style={{position:'absolute',bottom:'var(--ui-bottom)',left:'50%',transform:'translateX(-50%)',padding:'12px 28px',border:'1px solid #ffffff50',borderRadius:999,background:'#4b3426',color:'#fff',font:'700 18px var(--font-body)',zIndex:30}}>Again</button>}
     </div>
   );
 };

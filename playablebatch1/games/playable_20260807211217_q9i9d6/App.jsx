@@ -1,9 +1,8 @@
 /*
   [架构蓝图思考]
-  1. 状态模型: 
+  1. 状态模型:
      - `cfg`: 游戏配置，就绪后渲染。
-     - `landscape`: 主图是否为横图（用于背景模糊兜底）。
-     - `wrapperRect`: 主图实际渲染的像素尺寸（用于 C.6 多图层套准，确保物品相对位置不漂移）。
+     - 主图等比例 cover 全屏，物品使用稳定的游戏画布坐标，不随 hover 改变点击区域。
      - `collected`: 已收集的物品 ID 数组。
      - `flyingItems`: 正在飞行的物品状态数组（含起点、终点、ID）。
      - `showSuccess`: 是否展示成功弹窗。
@@ -13,7 +12,7 @@
      - 收集：飞行结束 -> 移出 `flyingItems`，加入 `collected` -> 对应底部槽位点亮，播放收集音效。
      - 终止态：`collected.length === 3` -> 延迟 500ms 弹出成功提示，播放胜利音效。
   3. 关键路径与边界:
-     - C.5 & C.6 结合：用户图比例未知。主视觉区用 flex:1，内部根据图片真实比例计算 wrapper 宽高（contain 逻辑），物品在 wrapper 内按 % 定位。
+     - 背景始终全屏；三个独立透明收集格叠在图上，不占用图片高度。
      - 跨坐标系飞行：起点用 e.clientX/Y，终点用槽位的 getBoundingClientRect()，飞行元素用 position:fixed 挂在顶层，避免被 overflow 裁切或受相对定位影响。
   4. 降级兜底: 图片加载失败不崩，音频加载失败 try/catch。
 */
@@ -23,13 +22,18 @@ import { createRoot } from 'react-dom/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Tone from 'tone';
 import {uiCss, useUiStage, useToneGate, loadConfig} from './playable-ui.js';
+import {themeCss} from './playable-theme.js';
 
 // --- 常量与初始数据 ---
 const ITEM_DEFS = [
-  { id: 'item1', cfgKey: 'ITEM_1', initPos: { left: '15%', top: '25%' } },
-  { id: 'item2', cfgKey: 'ITEM_2', initPos: { left: '75%', top: '35%' } },
-  { id: 'item3', cfgKey: 'ITEM_3', initPos: { left: '20%', top: '70%' } },
+  { id: 'item1', cfgKey: 'ITEM_1', initPos: { left: '30%', top: '59%' } },
+  { id: 'item2', cfgKey: 'ITEM_2', initPos: { left: '28%', top: '76%' } },
+  { id: 'item3', cfgKey: 'ITEM_3', initPos: { left: '82%', top: '73%' } },
 ];
+
+// Revision only bundled collectible sprites; replacement/custom URLs stay unchanged.
+const itemSrc = src => /^\.\/assets\/item_(starfish|shell|coconut)\.webp$/.test(src)
+  ? `${src}?art=grounded-voxel70-20261015-1` : src;
 
 // --- 辅助函数 ---
 function flattenConfig(raw) {
@@ -43,39 +47,26 @@ function flattenConfig(raw) {
 // --- 样式定义 (提前定义以修复 ESLint no-use-before-define) ---
 const styles = {
   root: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: 'block',
     width: '100%',
     height: '100%',
     position: 'relative',
-    containerType: 'inline-size'
+    containerType: 'size'
   },
   mainArea: {
-    flex: 1,
-    minHeight: 0,
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: 'absolute',
+    inset: 0,
     overflow: 'hidden',
     backgroundColor: '#000'
   },
-  blurBg: {
-    position: 'absolute',
-    inset: -20,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    filter: 'blur(15px) brightness(0.6)',
-    zIndex: 0
-  },
   wrapper: {
-    position: 'relative',
+    position: 'absolute',
+    inset: 0,
     zIndex: 1,
-    transition: 'opacity 0.2s'
   },
   itemWrapper: {
     position: 'absolute',
-    width: '15%',
+    width: 'var(--voxel-item-size)',
     aspectRatio: '1/1',
     minWidth:44,minHeight:44,border:0,padding:0,background:'transparent',
     transform: 'translate(-50%, -50%)',
@@ -84,6 +75,15 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center'
   },
+  itemVisual: {
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none'
+  },
   itemImg: {
     width: '100%',
     height: '100%',
@@ -91,45 +91,27 @@ const styles = {
     position: 'relative',
     zIndex: 2
   },
-  itemGlow: {
+  slotsContainer: {
     position: 'absolute',
-    width: '120%',
-    height: '120%',
-    background: 'radial-gradient(circle, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 70%)',
-    zIndex: 1,
-    animation: 'pulse 2s infinite'
-  },
-  hudArea: {
-    flex: '0 0 auto',
-    padding: '12px var(--ui-side) var(--ui-bottom)',
-    backgroundColor: 'var(--color-hud)',
-    borderTop: '4px solid #795548',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '8px',
+    left: '50%',
+    bottom: 'var(--ui-bottom)',
+    transform: 'translateX(-50%)',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, var(--voxel-slot-size))',
+    gap: '12px',
+    background: 'transparent',
+    pointerEvents: 'none',
     zIndex: 10
   },
-  hudTitle: {
-    fontFamily: 'var(--font-display)',
-    fontSize: 'clamp(20px, 6cqi, 28px)',
-    color: 'var(--color-text)',
-    textShadow: '1px 1px 0px #fff'
-  },
-  slotsContainer: {
-    display: 'flex',
-    gap: '16px',
-    justifyContent: 'center'
-  },
   slot: {
-    width: 'clamp(48px, 12cqi, 64px)',
-    height: 'clamp(48px, 12cqi, 64px)',
-    border: '3px solid',
-    borderRadius: '8px',
+    width: 'var(--voxel-slot-size)',
+    height: 'var(--voxel-slot-size)',
+    border: '2px solid',
+    borderRadius: '12px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)'
+    boxShadow: '0 0 0 1px rgba(12,34,26,.55), 0 2px 8px rgba(12,34,26,.2)'
   },
   slotImg: {
     width: '80%',
@@ -145,45 +127,39 @@ const styles = {
     zIndex: 50,
     pointerEvents: 'none'
   },
-  modalOverlay: {
+  resultOverlay: {
     position: 'absolute',
     inset: 0,
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: 'transparent',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 100,
-    backdropFilter: 'blur(4px)'
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    padding: '24px',
-    maxWidth:'calc(100% - 2 * var(--ui-side))',textAlign:'center',overflowWrap:'anywhere',
-    borderRadius: '16px',
-    border: '4px solid var(--color-accent)',
-    display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    gap: '24px',
-    boxShadow: '0 10px 25px rgba(0,0,0,0.5)'
+    gap: '20px',
+    padding: 'var(--ui-top) var(--ui-side) var(--ui-bottom)',
+    zIndex: 100,
   },
-  modalText: {
+  resultText: {
     margin: 0,
+    maxWidth: '100%',
+    textAlign: 'center',
+    overflowWrap: 'anywhere',
     fontFamily: 'var(--font-display)',
-    fontSize: 'calc(24px * var(--ui-scale))',
-    color: 'var(--color-accent)',
-    textShadow: '2px 2px 0px rgba(0,0,0,0.1)'
+    fontSize: 'max(20px, calc(24px * var(--ui-scale)))',
+    color: '#fff',
+    textShadow: '0 2px 6px rgba(0,0,0,.75)',fontWeight:700,lineHeight:1.25
   },
   btn: {
     fontFamily: 'var(--font-display)',
     fontSize: '18px',
+    minWidth: 112,
+    minHeight: 44,
     padding: '12px 32px',
     backgroundColor: 'var(--color-accent)',
     color: '#fff',
     border: 'none',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    boxShadow: '0 4px 0 #388E3C'
+    borderRadius: '999px',
+    cursor: 'pointer'
   }
 };
 
@@ -192,16 +168,12 @@ const App = () => {
   const [cfg, setCfg] = useState(null);
   
   // 状态
-  const [landscape, setLandscape] = useState(false);
-  const [wrapperRect, setWrapperRect] = useState({ width: 0, height: 0 });
   const [collected, setCollected] = useState([]);
   const [flyingItems, setFlyingItems] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [hasInteracted,setHasInteracted]=useState(false);
 
   // Refs
-  const containerRef = useRef(null);
-  const imgRef = useRef(null);
   const slotRefs = useRef({});
   const audioBank = useRef({ready:false});
   const synthRef = useRef(null);
@@ -249,36 +221,6 @@ const App = () => {
     } catch (e) {}
   }, []);
 
-  // 3. C.6 多图层套准计算
-  const calcWrapper = useCallback(() => {
-    if (!imgRef.current || !containerRef.current) return;
-    const img = imgRef.current;
-    const cont = containerRef.current;
-    if (!img.complete || img.naturalWidth === 0) return;
-
-    const isLand = img.naturalWidth > img.naturalHeight;
-    setLandscape(isLand);
-
-    const imgRatio = img.naturalWidth / img.naturalHeight;
-    const contRatio = cont.clientWidth / cont.clientHeight;
-
-    let w, h;
-    if (imgRatio > contRatio) {
-      w = cont.clientWidth;
-      h = w / imgRatio;
-    } else {
-      h = cont.clientHeight;
-      w = h * imgRatio;
-    }
-    setWrapperRect({ width: w, height: h });
-  }, []);
-
-  useEffect(() => {
-    if(!containerRef.current)return;
-    const observer=new ResizeObserver(calcWrapper);observer.observe(containerRef.current);calcWrapper();
-    return () => observer.disconnect();
-  }, [calcWrapper,cfg]);
-
   // 4. 交互逻辑
   const handleItemClick = (e, itemDef) => {
     e.preventDefault();
@@ -298,17 +240,19 @@ const App = () => {
     const slotNode = slotRefs.current[itemDef.id];
     let endX = window.innerWidth / 2;
     let endY = window.innerHeight;
+    let endSize = 38;
     if (slotNode) {
       const sRect = slotNode.getBoundingClientRect();
       endX = sRect.left + sRect.width / 2;
       endY = sRect.top + sRect.height / 2;
+      endSize = sRect.width * .8;
     }
 
     setFlyingItems(prev => [...prev, {
       id: itemDef.id,
       cfgKey: itemDef.cfgKey,
       round:roundRef.current,
-      startX, startY, endX, endY,
+      startX, startY, endX, endY, startSize:rect.width, endSize,
       key: `${itemDef.id}_${Date.now()}`
     }]);
   };
@@ -339,7 +283,7 @@ const App = () => {
   const heroSrc = cfg.BG_MAIN || '';
 
   return (
-    <div ref={rootRef} className="ui-game" style={styles.root} aria-label={cfg.GAME_TITLE}>
+    <div ref={rootRef} className="ui-game voxel-game" style={{...styles.root,'--voxel-item-size':`max(44px, ${cfg.ITEM_SIZE ?? 15}cqmin)`}} aria-label={cfg.GAME_TITLE}>
       <style>{`
         ${uiCss}
         @font-face {
@@ -361,35 +305,30 @@ const App = () => {
         html, body, #root { width:100%; height:100%; margin:0; overflow:hidden; background: var(--color-bg); }
         * { box-sizing: border-box; touch-action: none; user-select: none; -webkit-user-drag: none; }
         
-        @keyframes pulse {
-          0% { transform: scale(0.9); opacity: 0.5; }
-          50% { transform: scale(1.1); opacity: 0.8; }
-          100% { transform: scale(0.9); opacity: 0.5; }
+        .voxel-game{--voxel-slot-size:clamp(48px,12cqmin,64px);--voxel-item-inset:calc(var(--voxel-item-size) * .55 + 4px);--voxel-guide-top:max(var(--ui-top),12cqh);--voxel-guide-height:calc(18px * var(--ui-scale) * 1.35 + 14px)}
+        .voxel-item{border-radius:50%}
+        .voxel-item-visual{transition:transform .14s ease-out}
+        @media(hover:hover) and (pointer:fine){.voxel-item:hover .voxel-item-visual{transform:scale(1.05)}}
+        @media(orientation:landscape){
+          .voxel-item[data-item="item1"]{--voxel-item-left:35%;--voxel-item-top:64%}
+          .voxel-item[data-item="item2"]{--voxel-item-left:25%;--voxel-item-top:85%;--voxel-item-floor:calc(100% - var(--ui-bottom) - var(--voxel-item-inset))}
+          .voxel-item[data-item="item3"]{--voxel-item-left:76%;--voxel-item-top:85%;--voxel-item-floor:calc(100% - var(--ui-bottom) - var(--voxel-item-inset))}
         }
-        .ui-game[data-page-hidden="true"] .item-glow{animation-play-state:paused}
-        .ui-game[data-reduced-motion="true"] .item-glow{animation:none}
+        .voxel-item:active .voxel-item-visual{transform:scale(.95)}
+        .ui-game .voxel-item:focus-visible{outline:3px solid #fff;outline-offset:4px;box-shadow:0 0 0 6px #244237}
+        .ui-game[data-reduced-motion="true"] .voxel-item-visual{transform:none!important;transition:none!important}
+        .voxel-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
       `}</style>
+      <style>{themeCss}</style>
 
-      {/* 主视觉区 (弹性) */}
-      <div ref={containerRef} style={styles.mainArea}>
-        {/* C.5 模糊背景兜底 */}
-        {landscape && (
-          <div style={{...styles.blurBg, backgroundImage: `url(${heroSrc})`}} />
-        )}
-        
-        {/* C.6 套准 Wrapper */}
-        <div style={{
-          ...styles.wrapper,
-          width: wrapperRect.width || '100%',
-          height: wrapperRect.height || '100%',
-          opacity: wrapperRect.width ? 1 : 0
-        }}>
+      {/* 全屏场景；背景等比例 cover，物品独立定位在可见画布内。 */}
+      <div className="voxel-scene" style={styles.mainArea}>
+        <div style={styles.wrapper}>
           <img 
-            ref={imgRef}
             src={heroSrc} 
-            alt="bg" 
-            onLoad={calcWrapper}
-            style={{ width: '100%', height: '100%', objectFit: landscape ? 'contain' : 'cover' }} 
+            alt="Voxel beach scene"
+            draggable={false}
+            style={{ display:'block',width: '100%', height: '100%', objectFit:'cover' }}
           />
           
           {/* 可收集物品 */}
@@ -399,43 +338,46 @@ const App = () => {
             if (isCollected || isFlying) return null;
 
             return (
-              <motion.button type="button"
+              <button type="button" className="voxel-item"
                 key={def.id}
+                data-item={def.id}
                 aria-label={`Collect ${['starfish','shell','coconut'][ITEM_DEFS.indexOf(def)]}`}
-                style={{ ...styles.itemWrapper, width:`${cfg.ITEM_SIZE ?? 15}%`, left: def.initPos.left, top: def.initPos.top }}
-                whileHover={reduced ? undefined : { scale: 1.05 }}
-                whileTap={reduced ? undefined : { scale: 0.95 }}
+                style={{ ...styles.itemWrapper,
+                  left:`clamp(calc(var(--ui-side) + var(--voxel-item-inset)), var(--voxel-item-left, ${def.initPos.left}), calc(100% - var(--ui-side) - var(--voxel-item-inset)))`,
+                  top:`clamp(calc(var(--voxel-guide-top) + var(--voxel-guide-height) + 8px + var(--voxel-item-inset)), var(--voxel-item-top, ${def.initPos.top}), var(--voxel-item-floor, calc(100% - var(--ui-bottom) - var(--voxel-slot-size) - 12px - var(--voxel-item-inset))))`
+                }}
                 onClick={(e) => handleItemClick(e, def)}
               >
-                <img src={cfg[def.cfgKey]} alt="" style={styles.itemImg} />
-                <div className="item-glow" style={styles.itemGlow} aria-hidden="true" />
-              </motion.button>
+                <span className="voxel-item-visual" style={styles.itemVisual}>
+                  <img src={itemSrc(cfg[def.cfgKey])} alt="" draggable={false} style={styles.itemImg} />
+                </span>
+              </button>
             );
           })}
         </div>
       </div>
 
-      {/* 底部 HUD 区 (固定) */}
-      <div style={styles.hudArea}>
-        <div style={styles.slotsContainer}>
+      {/* 独立透明收集格：不占据场景高度，不拦截游戏操作。 */}
+        <div className="voxel-collection" role="list" aria-label="Collection slots" style={styles.slotsContainer}>
           {ITEM_DEFS.map(def => {
             const isCollected = collected.includes(def.id);
             return (
               <div 
                 key={`slot_${def.id}`} 
+                role="listitem" aria-label={`${['Starfish','Shell','Coconut'][ITEM_DEFS.indexOf(def)]}: ${isCollected?'collected':'not collected'}`}
                 ref={el => slotRefs.current[def.id] = el}
                 style={{
                   ...styles.slot,
-                  borderColor: isCollected ? 'var(--color-accent)' : '#ccc',
-                  backgroundColor: isCollected ? '#fff' : 'rgba(255,255,255,0.3)'
+                  borderColor: isCollected ? '#b6edc7' : 'rgba(255,255,255,.8)',
+                  backgroundColor: isCollected ? 'rgba(255,255,255,.12)' : 'transparent'
                 }}
               >
                 {isCollected && (
                   <motion.img 
-                    alt={`Collected ${['starfish','shell','coconut'][ITEM_DEFS.indexOf(def)]}`}
-                    initial={{ scale: 0 }}
+                    alt="" aria-hidden="true"
+                    initial={reduced?false:{scale:0}}
                     animate={{ scale: 1 }}
-                    src={cfg[def.cfgKey]} 
+                    src={itemSrc(cfg[def.cfgKey])}
                     style={styles.slotImg} 
                   />
                 )}
@@ -443,40 +385,36 @@ const App = () => {
             );
           })}
         </div>
-      </div>
-      {!hasInteracted&&<p className="ui-guide ui-float" style={{top:'max(var(--ui-top), 12%)',fontFamily:'var(--font-body)',color:'#fff',textShadow:'0 2px 6px #000'}}>Tap the hidden items</p>}
+      <span className="voxel-status" role="status" aria-live="polite" aria-atomic="true">{collected.length} of 3 items collected</span>
+      {!hasInteracted&&<p className="ui-guide ui-float" style={{top:'var(--voxel-guide-top)',fontFamily:'var(--font-body)',fontWeight:400,color:'#fff',textShadow:'none',background:'rgba(32,51,47,.8)',borderRadius:12,padding:'7px 12px'}}>Tap the hidden items</p>}
 
       {/* 飞行层 (Fixed 跨坐标系) */}
       {flyingItems.map(fly => (
         <motion.img
           alt="" aria-hidden="true"
           key={fly.key}
-          src={cfg[fly.cfgKey]}
-          initial={{ scale: 1, x: fly.startX - 30, y: fly.startY - 30 }}
-          animate={{ x: fly.endX - 20, y: fly.endY - 20, scale: 0.5, rotate: 360 }}
+          src={itemSrc(cfg[fly.cfgKey])}
+          initial={{ scale:fly.startSize/60, x:fly.startX-30, y:fly.startY-30 }}
+          animate={{ x:fly.endX-30,y:fly.endY-30,scale:fly.endSize/60,rotate:360 }}
           transition={{ duration: reduced ? .05 : 0.6, ease: "easeInOut" }}
           onAnimationComplete={() => handleFlyComplete(fly)}
           style={styles.flyingImg}
         />
       ))}
 
-      {/* 成功弹窗 */}
+      {/* 透明完成层：文字直接覆盖场景，保留独立重玩按钮。 */}
       <AnimatePresence>
         {showSuccess && (
           <motion.div 
-            role="dialog" aria-modal="true" aria-label="Collection complete"
-            style={styles.modalOverlay}
-            initial={{ opacity: 0 }}
+            className="voxel-result" role="dialog" aria-modal="true" aria-label="Collection complete" aria-describedby="voxel-result-text"
+            style={styles.resultOverlay}
+            initial={reduced ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
+            transition={{duration:reduced?0:.18}}
           >
-            <motion.div 
-              style={styles.modalContent}
-              initial={reduced ? false : { scale: 0.9, y: 12 }}
-              animate={{ scale: 1, y: 0 }}
-              transition={{ type: 'spring', bounce: 0.5 }}
-            >
-              <h2 style={styles.modalText}>{cfg.SUCCESS_MSG}</h2>
+              <h2 id="voxel-result-text" className="voxel-result-text" style={styles.resultText}>{cfg.SUCCESS_MSG}</h2>
               <button 
+                type="button" className="voxel-again"
                 autoFocus
                 style={styles.btn}
                 onClick={() => {
@@ -488,7 +426,6 @@ const App = () => {
               >
                 Again
               </button>
-            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -458,57 +458,57 @@ window.PlayableGameDownloads = {
   "01_petme_9gw00a_game": {
     "url": "/playablebatch1/downloads/66-01_petme_9gw00a_game.zip",
     "filename": "66-01_petme_9gw00a_game.zip",
-    "bytes": 4939811,
-    "files": 11,
-    "sha256": "19c85341807bdae8239309d9e5f45005b392b5904d6a20fef782d408aab56468"
+    "bytes": 5207999,
+    "files": 15,
+    "sha256": "45a1f7fc8e5dcfbf9ec027570b9551d9f4b468e4c94be37fe73e22cce6b0e7ab"
   },
   "playable_20260727203355_w1cgvm_game": {
     "url": "/playablebatch1/downloads/67-playable_20260727203355_w1cgvm_game.zip",
     "filename": "67-playable_20260727203355_w1cgvm_game.zip",
-    "bytes": 6032906,
-    "files": 11,
-    "sha256": "353924ec411b37478f03c210e13a2e9ca825a0a4e2d494244efcf8310a9d7a60"
+    "bytes": 1930133,
+    "files": 14,
+    "sha256": "dcf0070378b8e06dc1d33b94470be82076108475645e146db036a2ffe7281bdd"
   },
   "05c_timemachine_male_black_wall": {
     "url": "/playablebatch1/downloads/68-05c_timemachine_male_black_wall.zip",
     "filename": "68-05c_timemachine_male_black_wall.zip",
-    "bytes": 3168272,
-    "files": 21,
-    "sha256": "79a1cb4a0d809aae1d51b39b21e315ff4355053d679b6fb04c29bc2fb3f55b3b"
+    "bytes": 3280103,
+    "files": 24,
+    "sha256": "73483320871ad0e90919ec1699cf15664424d267ad27c888f0768cda4c3d962d"
   },
   "mianbao": {
     "url": "/playablebatch1/downloads/69-mianbao.zip",
     "filename": "69-mianbao.zip",
-    "bytes": 968278,
-    "files": 11,
-    "sha256": "e158e2d97f2638a2fdbab36cc62cf574ee8b1a57be4a9b9439de221732c629f9"
+    "bytes": 2288814,
+    "files": 14,
+    "sha256": "7abbd10bff218a528911cd92087ae4cd590b9ba66a56ca3729194ed31ef18313"
   },
   "playable_20260807211217_q9i9d6": {
     "url": "/playablebatch1/downloads/70-playable_20260807211217_q9i9d6.zip",
     "filename": "70-playable_20260807211217_q9i9d6.zip",
-    "bytes": 1996267,
-    "files": 10,
-    "sha256": "7138cdc2a5474eb419ba481661f8d147c6fae9d11c52485c51f609db18b156f2"
+    "bytes": 2523349,
+    "files": 14,
+    "sha256": "396dbf67fe39993be29ff87ba2340f8a1564ea4a798c0e9b136892c5ab6f7f02"
   },
   "06a_coloring_game_final": {
     "url": "/playablebatch1/downloads/71-06a_coloring_game_final.zip",
     "filename": "71-06a_coloring_game_final.zip",
-    "bytes": 3158590,
-    "files": 8,
-    "sha256": "0ffef99c1d7083a6ce1593642ea3ec543127affc774982710459d077ebb4e509"
+    "bytes": 3422415,
+    "files": 10,
+    "sha256": "9ef8c999a6635ed1e2e3f1a70ee6c81be4071e5f134c30df8e944e68886c2c3c"
   },
   "02e_pickalook_p8xys3_game": {
     "url": "/playablebatch1/downloads/72-02e_pickalook_p8xys3_game.zip",
     "filename": "72-02e_pickalook_p8xys3_game.zip",
-    "bytes": 3224539,
-    "files": 8,
-    "sha256": "b2cfd3a3b682aa8555128d23544aab64afc91ac3e44c6b15fd6fc8d8fdbbd39a"
+    "bytes": 3336373,
+    "files": 11,
+    "sha256": "678da85b31c47c22ee83314701726ec4f32b7d769901881e60f5e790b0c28a1b"
   },
   "playable_20261015220925_0pn002_game": {
     "url": "/playablebatch1/downloads/73-playable_20261015220925_0pn002_game.zip",
     "filename": "73-playable_20261015220925_0pn002_game.zip",
-    "bytes": 494319,
-    "files": 7,
-    "sha256": "52eb4437efc7aff9b754699abf4542406f74dab66106b8a7886cb450d0d1341d"
+    "bytes": 832961,
+    "files": 9,
+    "sha256": "e9d7007f73b108f3dcebc732005ebebe688ef63990f6d30708c1a59f0ca1a00c"
   }
 };

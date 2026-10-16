@@ -47,12 +47,14 @@ function BeadBoard({cfg}) {
   const root=React.useRef(null),board=React.useRef(null),canvas=React.useRef(null),steam=React.useRef(null);
   const image=React.useRef(null),pointer=React.useRef(null),last=React.useRef(null),cursor=React.useRef(null);
   const particles=React.useRef([]),keyboard=React.useRef({x:.5,y:.5}),steamLoop=React.useRef(null),clearSteam=React.useRef(null);
+  const lastSteam=React.useRef(null);
   const [ready,setReady]=React.useState(false),[started,setStarted]=React.useState(false),[error,setError]=React.useState(false);
   const [ratio,setRatio]=React.useState(1);
   const brush=Math.max(.05,Math.min(.3,Number(cfg.BRUSH_RATIO)||.12));
+  const ironSrc=cfg.CURSOR_IRON==='./assets/cursor_iron.webp'?cfg.CURSOR_IRON+'?art=top-down-iron73-20261015-1':cfg.CURSOR_IRON||'';
   // Migrate only the package's hover-era default copy; keep custom replacement text intact.
   const guide=cfg.HINT_TEXT&&cfg.HINT_TEXT!=='Move around to reveal!'?cfg.HINT_TEXT:'Drag the iron over the beads';
-  const end=()=>{const id=pointer.current;pointer.current=null;last.current=null;
+  const end=()=>{const id=pointer.current;pointer.current=null;last.current=null;lastSteam.current=null;
     if(id!==null&&canvas.current?.hasPointerCapture?.(id))canvas.current.releasePointerCapture(id);};
   const suspend=()=>{end();clearSteam.current?.();};
   function restore(){
@@ -81,6 +83,16 @@ function BeadBoard({cfg}) {
   },[]);
   React.useEffect(()=>{
     let raf=null,previous=0;const media=window.matchMedia('(prefers-reduced-motion: reduce)');
+    // Feathered, irregular vapor is cached once, rather than drawing shiny bubble rims.
+    const vapor=document.createElement('canvas');vapor.width=96;vapor.height=128;
+    const mist=vapor.getContext('2d');
+    if(mist)for(const [x,y,r,alpha] of[[48,86,28,.82],[36,64,25,.6],[58,44,29,.65],[40,25,22,.45],[65,75,19,.4]]){
+      const falloff=mist.createRadialGradient(x,y,0,x,y,r);
+      falloff.addColorStop(0,`rgba(255,255,255,${alpha})`);
+      falloff.addColorStop(.42,`rgba(226,231,228,${alpha*.55})`);
+      falloff.addColorStop(1,'rgba(237,240,238,0)');
+      mist.fillStyle=falloff;mist.fillRect(x-r,y-r,r*2,r*2);
+    }
     function clear(){if(raf!==null)cancelAnimationFrame(raf);raf=null;previous=0;particles.current=[];
       const surface=steam.current;if(surface)surface.getContext('2d').clearRect(0,0,surface.width,surface.height);}
     function frame(now){raf=null;const surface=steam.current;if(!surface||document.hidden||media.matches){clear();return;}
@@ -88,9 +100,15 @@ function BeadBoard({cfg}) {
       const width=Math.round(bounds.width*dpr),height=Math.round(bounds.height*dpr);
       if(surface.width!==width||surface.height!==height){surface.width=width;surface.height=height;}
       const ctx=surface.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,bounds.width,bounds.height);
-      const dt=Math.min(32,now-(previous||now));previous=now;
-      particles.current=particles.current.filter(p=>{p.age+=dt;p.y-=dt*.045;if(p.age>500)return false;
-        ctx.globalAlpha=(1-p.age/500)*.45;ctx.fillStyle='#a4ada9';ctx.fillRect(p.x,p.y,p.size,p.size);return true;});
+      const dt=Math.min(50,previous?now-previous:16.7);previous=now;
+      particles.current=particles.current.filter(p=>{p.age+=dt;p.y-=dt*p.rise;p.x+=p.drift*dt;if(p.age>p.life)return false;
+        const progress=p.age/p.life,radius=p.size*(1+progress*1.8);
+        const curl=Math.sin(p.phase+progress*4.8)*progress*11;
+        ctx.save();ctx.translate(p.x+curl,p.y);ctx.rotate(p.tilt+progress*p.turn);
+        ctx.globalAlpha=Math.min(1,p.age/70)*Math.pow(1-progress,1.15)*.85;
+        if(mist)ctx.drawImage(vapor,-radius,-radius*1.6,radius*2,radius*2.7);
+        ctx.restore();
+        return true;});
       ctx.globalAlpha=1;
       if(particles.current.length)raf=requestAnimationFrame(frame);else previous=0;
     }
@@ -109,9 +127,16 @@ function BeadBoard({cfg}) {
     last.current={x,y};setStarted(true);
     const localX=clientX-outer.left,localY=clientY-outer.top;
     if(cursor.current){cursor.current.style.left=localX+'px';cursor.current.style.top=localY+'px';cursor.current.style.opacity='1';}
-    for(let i=0;i<Math.min(10,Number(cfg.PARTICLE_COUNT)||3);i++)particles.current.push({x:localX+(Math.random()-.5)*14,y:localY-8,size:3+Math.random()*4,age:0});
-    if(particles.current.length>90)particles.current.splice(0,particles.current.length-90);
-    steamLoop.current?.();
+    const now=Date.now(),previousSteam=lastSteam.current;
+    if(!document.hidden&&root.current?.dataset?.reducedMotion!=='true'&&(!previousSteam||Math.hypot(localX-previousSteam.x,localY-previousSteam.y)>=12||now-previousSteam.time>=60)){
+      lastSteam.current={x:localX,y:localY,time:now};
+      for(let i=0;i<Math.min(10,Number(cfg.PARTICLE_COUNT)||3);i++)particles.current.push({
+        x:localX+(Math.random()-.5)*18,y:localY-26,size:7+Math.random()*4,
+        life:1100+Math.random()*400,rise:.032+Math.random()*.018,drift:(Math.random()-.5)*.014,
+        phase:Math.random()*Math.PI*2,tilt:(Math.random()-.5)*.35,turn:(Math.random()-.5)*.7,age:0});
+    }
+    if(particles.current.length>60)particles.current.splice(0,particles.current.length-60);
+    if(particles.current.length)steamLoop.current?.();
     return true;
   }
   function down(event){
@@ -129,7 +154,7 @@ function BeadBoard({cfg}) {
     const r=canvas.current.getBoundingClientRect();paint(r.left+keyboard.current.x*r.width,r.top+keyboard.current.y*r.height);
   }
   return h('main',{ref:root,className:'bead-game ui-game','aria-label':cfg.GAME_TITLE},
-    h('style',null,"\n.ui-game{--ui-scale:1;--ui-top:calc(30px * var(--ui-scale) + env(safe-area-inset-top,0px));--ui-bottom:calc(50px * var(--ui-scale) + env(safe-area-inset-bottom,0px));--ui-side:calc(30px * var(--ui-scale))}\n.ui-guide{position:absolute;left:var(--ui-side);right:var(--ui-side);margin:0;text-align:center;font-size:calc(18px * var(--ui-scale));line-height:1.4;font-weight:500;overflow-wrap:anywhere;pointer-events:none;z-index:20}\n.ui-float{animation:ui-guide-float 2.4s ease-in-out infinite}\n@keyframes ui-guide-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}\n.ui-game[data-page-hidden=\"true\"] .ui-float{animation-play-state:paused}\n.ui-game button{font-family:inherit;min-height:44px;min-width:44px;touch-action:manipulation}\n.ui-game button:focus-visible,.ui-game [tabindex]:focus-visible{outline:3px solid #78baff;outline-offset:3px}\n.ui-game[data-reduced-motion=\"true\"] .ui-float{animation:none}\n.ui-game[data-reduced-motion=\"true\"] *{transition-duration:.001ms!important;animation-duration:.001ms!important;animation-iteration-count:1!important}\n@media(prefers-reduced-motion:reduce){.ui-float{animation:none}}\n\nhtml,body,#root{width:100%;height:100%;margin:0;overflow:hidden;background:#fafaf7}\n.bead-game{position:relative;width:100%;height:100%;container-type:size;background:#fafaf7;font-family:var(--font-body);touch-action:none;overflow:hidden}\n.bead-board{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(calc(100cqw - 2 * var(--ui-side)),62cqh)}\n.bead-board>img,.bead-board>canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;image-rendering:pixelated}\n.bead-board>canvas{cursor:grab;touch-action:none}\n.bead-board>canvas:active{cursor:grabbing}\n.bead-board>canvas:focus-visible{outline:3px solid #287b67;outline-offset:4px}\n.bead-guide{top:12%;color:#303c37}\n.bead-steam{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}\n.bead-iron{position:absolute;left:0;top:0;opacity:0;transform:translate(-50%,-50%);pointer-events:none;z-index:10;image-rendering:pixelated}\n.bead-loading{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;background:#fafaf7;color:#303c37;font-size:18px}\n.bead-reset{position:absolute;left:50%;bottom:var(--ui-bottom);transform:translateX(-50%);border:1.5px solid #355e50;border-radius:12px;padding:10px 26px;color:#284f41;background:#fff;font-size:calc(18px * var(--ui-scale));cursor:pointer}\n.bead-reset:active{background:#e6efe9}\n"),
+    h('style',null,"\n.ui-game{--ui-scale:1;--ui-top:calc(30px * var(--ui-scale) + env(safe-area-inset-top,0px));--ui-bottom:calc(50px * var(--ui-scale) + env(safe-area-inset-bottom,0px));--ui-side:calc(30px * var(--ui-scale))}\n.ui-guide{position:absolute;left:var(--ui-side);right:var(--ui-side);margin:0;text-align:center;font-size:calc(18px * var(--ui-scale));line-height:1.4;font-weight:500;overflow-wrap:anywhere;pointer-events:none;z-index:20}\n.ui-float{animation:ui-guide-float 2.4s ease-in-out infinite}\n@keyframes ui-guide-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}\n.ui-game[data-page-hidden=\"true\"] .ui-float{animation-play-state:paused}\n.ui-game button{font-family:inherit;min-height:44px;min-width:44px;touch-action:manipulation}\n.ui-game button:focus-visible,.ui-game [tabindex]:focus-visible{outline:3px solid #78baff;outline-offset:3px}\n.ui-game[data-reduced-motion=\"true\"] .ui-float{animation:none}\n.ui-game[data-reduced-motion=\"true\"] *{transition-duration:.001ms!important;animation-duration:.001ms!important;animation-iteration-count:1!important}\n@media(prefers-reduced-motion:reduce){.ui-float{animation:none}}\n\n@font-face{font-family:\"Nunito Sans\";src:url(\"./assets/fonts/ui/NunitoSans.woff\") format(\"woff\");font-style:normal;font-weight:100 1000;font-display:swap}\n:root{--font-display:\"Nunito Sans\",\"PingFang SC\",system-ui,sans-serif;--font-body:\"Nunito Sans\",\"PingFang SC\",system-ui,sans-serif;--ui-ink:#244e68;--ui-surface:#fafaf7}\n.ui-game{font-family:var(--font-body);font-optical-sizing:auto;font-synthesis:none;-webkit-font-smoothing:antialiased}\n.ui-game button{font-family:var(--font-body);font-weight:700;letter-spacing:0;line-height:1.25}\n.ui-game .ui-guide{font-family:var(--font-body);font-weight:600;letter-spacing:0;line-height:1.35}\n\nhtml,body,#root{width:100%;height:100%;margin:0;overflow:hidden;background:#fafaf7}\n.bead-game{position:relative;width:100%;height:100%;container-type:size;background:#fafaf7;font-family:\"Nunito Sans\",sans-serif;touch-action:none;overflow:hidden}\n.bead-board{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(calc(100cqw - 2 * var(--ui-side)),62cqh,calc(100cqh - 2 * var(--ui-bottom) - 104px))}\n.bead-board>img,.bead-board>canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;image-rendering:pixelated}\n.bead-board>canvas{cursor:grab;touch-action:none}\n.bead-board>canvas:active{cursor:grabbing}\n.bead-board>canvas:focus-visible{outline:3px solid #287b67;outline-offset:4px}\n.bead-guide{top:12%;color:#244e68;font-weight:650;letter-spacing:0}\n.bead-steam{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}\n.bead-iron{position:absolute;left:0;top:0;opacity:0;transform:translate(-50%,-50%);pointer-events:none;z-index:10;image-rendering:auto;object-fit:contain}\n.bead-loading{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;background:#fafaf7;color:#303c37;font-size:18px}\n.bead-reset{position:absolute;left:50%;bottom:var(--ui-bottom);transform:translateX(-50%);border:1px solid #b2cbdc;border-radius:999px;padding:11px 28px;color:#244e68;background:#f2f8fb;font:700 calc(18px * var(--ui-scale))/1.25 \"Nunito Sans\",sans-serif;cursor:pointer}\n.bead-reset:active{background:#deedf6}\n"),
     !started&&h('p',{className:'bead-guide ui-guide ui-float'},guide),
     h('div',{ref:board,className:'bead-board',style:{aspectRatio:String(ratio)}},
       h('img',{src:cfg.BG_PIXEL||'',alt:'Fused pixel artwork',draggable:false,style:{visibility:ready?'visible':'hidden'}}),
@@ -137,7 +162,7 @@ function BeadBoard({cfg}) {
       !ready&&h('p',{className:'bead-loading',role:'status'},error?'Image unavailable. Reload to try again.':'Loading beads…')
     ),
     h('canvas',{ref:steam,className:'bead-steam','aria-hidden':true}),
-    h('img',{ref:cursor,className:'bead-iron',src:cfg.CURSOR_IRON||'',alt:'',draggable:false,'aria-hidden':true,style:{width:`max(44px, ${brush*100}cqw)`}}),
+    h('img',{ref:cursor,className:'bead-iron',src:ironSrc,alt:'',draggable:false,'aria-hidden':true,style:{width:`max(88px, ${brush*196}cqmin)`}}),
     started&&h('button',{type:'button',className:'bead-reset',onClick:restore},'Reset')
   );
 },mp=()=>{let[e,n]=(0,W.useState)(null);return(0,W.useEffect)(()=>{let t=!0;return(async()=>{let r={tweaks:[],texts:[],images:[]};try{if(location.protocol==="file:")r=JSON.parse(document.getElementById("playable-inline-config")?.textContent||"{}");else{let l=await fetch("./game.config.json",{cache:"no-store"});r=l.ok?await l.json():JSON.parse(document.getElementById("playable-inline-config")?.textContent||"{}");}}catch{}t&&n(fp(r))})(),()=>{t=!1}},[]),e?(0,V.jsxs)("div",{style:{width:"100%",height:"100%",position:"relative",containerType:"size"},children:[(0,V.jsx)(cp,{}),(0,V.jsx)(pp,{cfg:e})]}):(0,V.jsx)("div",{style:{width:"100%",height:"100%",background:"#fff"}})};(0,Oc.createRoot)(document.getElementById("root")).render((0,V.jsx)(mp,{}));})();

@@ -23,6 +23,7 @@ import { createRoot } from 'react-dom/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Tone from 'tone';
 import {uiCss, useUiStage, useToneGate, loadConfig} from './playable-ui.js';
+import {themeCss} from './playable-theme.js';
 
 // --- 字体与全局样式 ---
 const GlobalStyle = () => (
@@ -339,6 +340,7 @@ const App = () => {
       }}
     >
       <GlobalStyle />
+      <style>{themeCss+`.scratch-guide{display:inline-block;max-width:100%;padding:7px 14px;border-radius:999px;background:rgba(20,29,24,.83);color:#fff;font-family:var(--font-body);font-weight:600;line-height:1.35;letter-spacing:0;text-transform:none;text-shadow:none;-webkit-text-stroke:0}`}</style>
 
       {/* 模糊背景层 (仅横图显示，C.5 规范) */}
       {layout?.isLandscape && (
@@ -424,16 +426,16 @@ const App = () => {
             }}
           >
             <div
-              className="comic-text ui-float"
+              className="scratch-guide ui-float"
               style={{ fontSize: 'calc(18px * var(--ui-scale))', overflowWrap:'anywhere' }}
             >
-              {cfg.HINT_TEXT}
+              {cfg.HINT_TEXT === 'SCRATCH TO REVEAL!' ? 'Scratch to reveal' : cfg.HINT_TEXT}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
       {isRevealed && <button autoFocus type="button" onClick={()=>{unlock.stop();hasDrawnRef.current=false;scratchDistanceRef.current=0;setShowHint(true);setIsRevealed(false);}}
-        style={{position:'absolute',bottom:'var(--ui-bottom)',left:'50%',transform:'translateX(-50%)',padding:'10px 24px',font:'18px var(--font-body)',color:'#111',background:'#ffeb3b',border:'2px solid #111',borderRadius:12,zIndex:20}}>Again</button>}
+        style={{position:'absolute',bottom:'var(--ui-bottom)',left:'50%',transform:'translateX(-50%)',padding:'12px 28px',font:'700 18px var(--font-body)',color:'#202722',background:'#fffef9',border:'1px solid #d8dfd9',borderRadius:999,boxShadow:'0 4px 14px #0002',zIndex:20}}>Again</button>}
     </div>
   );
 };

@@ -6,8 +6,8 @@
   2. 流程衔接:
      - 拖动手柄超过阈值 -> 触发 toasting，手柄固定在底部，面包下降，烤面包机震动，播放音效。
      - 经过 TOAST_DURATION -> 触发 popping，手柄回弹，面包瞬间切换为焦面包并弹出，播放音效。
-     - 弹出动画结束 -> 触发 done，显示 "Burnt!" 弹窗。
-     - 点击弹窗可重置回 idle 状态。
+     - 弹出动画结束 -> 触发 done，在场景上显示无面板的 "Burnt!" 文字。
+     - 独立 Again 按钮重置回 idle 状态。
   3. 关键路径与边界:
      - 拖动未达阈值释放：手柄平滑回弹。
      - 面包裁剪：使用一个 overflow:hidden 的 Mask 容器，底部对齐烤面包机插槽，面包在其中上下移动实现自然进出。
@@ -24,6 +24,7 @@ import { createRoot } from 'react-dom/client';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import * as Tone from 'tone';
 import {uiCss, useUiStage, useToneGate, loadConfig} from './playable-ui.js';
+import {themeCss} from './playable-theme.js';
 
 const GlobalStyle = () => (
   <style>{`
@@ -59,6 +60,10 @@ function flattenConfig(raw) {
   (raw.images || []).forEach(im => { c[im.id] = im.path; });
   return c;
 }
+
+// Version only the four bundled sprites; preserve custom/remote image URLs verbatim.
+const spriteSrc = src => /^\.\/assets\/(toaster|toaster_handle|normal_bread|burnt_bread)\.webp$/.test(src)
+  ? `${src}?art=retro69-20261015-1` : src;
 
 const App = () => {
   const [cfg, setCfg] = useState(null);
@@ -190,7 +195,7 @@ const App = () => {
   const currentBread = (gameState === 'popping' || gameState === 'done') ? cfg.BURNT_BREAD_IMG : cfg.NORMAL_BREAD_IMG;
 
   return (
-    <div ref={rootRef} className="ui-game" style={{
+    <div ref={rootRef} className="ui-game toaster-game" style={{
       width: '100%', height: '100%', 
       display: 'flex', flexDirection: 'column', 
       justifyContent: 'center', alignItems: 'center',
@@ -199,18 +204,21 @@ const App = () => {
       position: 'relative'
     }}>
       <GlobalStyle />
+      <style>{themeCss}</style>
       
       <motion.div 
+        className="toaster-assembly"
         animate={toasterControls} 
         style={{ 
           position: 'relative', 
           width: 'min(72cqi, calc(280px * var(--ui-scale)))',
           top: 'calc(36px * var(--ui-scale))',
-          aspectRatio: '451 / 358' 
+          aspectRatio: '1402 / 1122'
         }}
       >
-        {/* 手柄轨道与手柄 (z-index: 1) */}
+        {/* 手柄在机身后方：侧孔遮住金属连接杆，外侧握柄仍可见；保持44px触控区。 */}
         <div 
+          className="toaster-lever-track"
           ref={trackRef} 
           style={{ 
             position: 'absolute', 
@@ -218,10 +226,11 @@ const App = () => {
             top: '25%', 
             width: '15%', minWidth:44,
             height: '45%', 
-            zIndex: 1 
+            zIndex: 0
           }}
         >
           <motion.div
+            className="toaster-lever"
             drag={gameState === 'idle' ? "y" : false}
             dragConstraints={trackRef}
             dragElastic={0}
@@ -235,7 +244,7 @@ const App = () => {
             style={{ width: '100%', minHeight:44, cursor: gameState === 'idle' ? 'grab' : 'default', touchAction: 'none' }}
           >
             <img 
-              src={cfg.HANDLE_IMG} 
+              src={spriteSrc(cfg.HANDLE_IMG)}
               draggable={false} 
               alt="handle"
               style={{ width: '100%', display: 'block', pointerEvents: 'none', objectFit: 'contain', aspectRatio: '67 / 56' }} 
@@ -244,10 +253,10 @@ const App = () => {
         </div>
 
         {/* 面包遮罩层 (z-index: 2) */}
-        <div style={{
+        <div className="toaster-bread-mask" style={{
           position: 'absolute',
           left: '22.5%',
-          bottom: '90%', // 底部对齐烤面包机插槽口 (距离底部90%)
+          bottom: '86.5%', // 与新素材的黑色插槽前沿对齐
           width: '55%',
           height: '150%', // 足够高以容纳面包
           overflow: 'hidden',
@@ -255,25 +264,27 @@ const App = () => {
           pointerEvents: 'none'
         }}>
           <motion.div
+            className="toaster-bread"
             animate={breadControls}
             style={{
               position: 'absolute',
               bottom: 0,
               width: '100%',
-              aspectRatio: '149 / 189'
+              aspectRatio: '1122 / 1402'
             }}
           >
             <img 
-              src={currentBread} 
+              src={spriteSrc(currentBread)}
               alt="bread"
               style={{ width: '100%', height: '100%', display: 'block', objectFit: 'contain' }} 
             />
           </motion.div>
         </div>
 
-        {/* 烤面包机机身 (z-index: 3) */}
+        {/* 机身在面包后方，面包遮罩在插槽前沿结束。 */}
         <img 
-          src={cfg.TOASTER_IMG} 
+          className="toaster-body"
+          src={spriteSrc(cfg.TOASTER_IMG)}
           alt="toaster"
           style={{ 
             position: 'absolute', 
@@ -282,7 +293,7 @@ const App = () => {
             height: '100%', 
             display: 'block', 
             objectFit: 'contain',
-            zIndex: 3,
+            zIndex: 1,
             pointerEvents: 'none'
           }} 
         />
@@ -328,12 +339,10 @@ const App = () => {
         </AnimatePresence>
 
       </motion.div>
-      {!hasInteracted && <p className="ui-guide ui-float" style={{bottom:'max(var(--ui-bottom), 20%)',fontFamily:'var(--font-body)',color:'#42352c'}}>Pull the lever down</p>}
-      {gameState==='done'&&<div role="dialog" aria-modal="true" aria-label="Toast result" style={{position:'absolute',inset:0,zIndex:30,display:'flex',alignItems:'center',justifyContent:'center',background:'#ffffff99',padding:'var(--ui-top) var(--ui-side) var(--ui-bottom)'}}>
-        <div style={{maxWidth:'100%',padding:24,borderRadius:18,border:'2px solid #42352c',background:'#fff',fontFamily:'var(--font-body)',textAlign:'center'}}>
-          <p style={{margin:'0 0 18px',fontSize:'calc(24px * var(--ui-scale))',lineHeight:1.4,overflowWrap:'anywhere',fontWeight:700}}>{cfg.RESULT_TEXT}</p>
-          <button autoFocus type="button" onClick={resetGame} style={{border:0,borderRadius:12,padding:'10px 24px',background:'#42352c',color:'#fff',fontSize:18}}>Again</button>
-        </div>
+      {!hasInteracted && <p className="ui-guide ui-float" style={{bottom:'max(var(--ui-bottom), 20%)',fontFamily:'var(--font-body)',color:'#4b352a',fontWeight:650}}>Pull the lever down</p>}
+      {gameState==='done'&&<div className="toaster-result" role="dialog" aria-modal="true" aria-label="Toast result" aria-describedby="toaster-result-text" style={{position:'absolute',inset:0,zIndex:30,display:'flex',alignItems:'center',justifyContent:'center',background:'transparent',padding:'var(--ui-top) var(--ui-side) var(--ui-bottom)',fontFamily:'var(--font-body)',textAlign:'center'}}>
+        <p id="toaster-result-text" className="toaster-result-text" style={{margin:0,maxWidth:'100%',fontSize:'max(20px, calc(24px * var(--ui-scale)))',lineHeight:1.3,overflowWrap:'anywhere',fontWeight:800,color:'#4b352a'}}>{cfg.RESULT_TEXT}</p>
+        <button className="toaster-again" autoFocus type="button" onClick={resetGame} style={{position:'absolute',left:'50%',bottom:'var(--ui-bottom)',transform:'translateX(-50%)',minWidth:112,minHeight:44,border:0,borderRadius:999,padding:'12px 28px',background:'#4b352a',color:'#fff',fontFamily:'var(--font-body)',fontSize:18,fontWeight:700}}>Again</button>
       </div>}
     </div>
   );
