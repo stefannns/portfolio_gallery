@@ -77,7 +77,7 @@
     {
       "id": "TEXT_DEAD_END",
       "label": "Dead End Toast",
-      "value": "Dead end! Try resetting.",
+      "value": "Dead end. Draw again.",
       "default": "Dead end! Try resetting.",
       "max_length": 30
     },

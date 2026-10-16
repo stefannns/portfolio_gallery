@@ -4,6 +4,86 @@
  * Update this snapshot alongside the tracker when work changes.
  */
 window.PLAYABLE_IMPLEMENTED_FIXES = {
+  "playable2_20260927020825_iyfbfj": {
+    "number": 14,
+    "items": [
+      "Drawing starts immediately, even without audio. Captured strokes continue across the canvas edge and back.",
+      "Resize preserves artwork and its value; selling is immediate and late audio cannot restart an ended stroke.",
+      "Existing patterns, upgrades, colors and layout retained; broader art-quality feedback remains open."
+    ],
+    "status": "Gameplay repairs implemented locally; awaiting review. Visual redesign/removal not decided.",
+    "evidence": ["Gameplay round 2 — October 14, 2026", "52649991-cb83-40ea-8a7a-5b604131d822"]
+  },
+  "playable2_20260928030211_tdjer2": {
+    "number": 34,
+    "items": [
+      "Particle springs now run at a fixed simulation rate, keeping the same motion on 30/60/120 Hz displays.",
+      "One pointer owns each drag; secondary fingers, capture loss and hidden pages no longer leave interaction stuck.",
+      "Checked the original's text, shape, color and media functions. Broader reference matching and control-layout changes remain open."
+    ],
+    "status": "Interaction/motion repairs implemented locally; broader reference-fidelity review remains open. UI placement held.",
+    "evidence": ["Gameplay round 2 — October 14, 2026", "b6202dc3-729f-427f-9f78-6f89e6001246"]
+  },
+  "playable2_20261001225611_gjmtbw": {
+    "number": 43,
+    "items": [
+      "Hot/warm clue ranges now scale to the 8×8 map, so large distant regions no longer all show the same cold clue.",
+      "Verified an animal at every target location; duplicate taps and previous-round input cannot corrupt the round.",
+      "Kept the 64-cell map, tap count, clue legend and replay. No animal-generation failure was reproduced."
+    ],
+    "status": "Clue/input repairs implemented locally; awaiting gameplay review.",
+    "evidence": ["Gameplay round 2 — October 14, 2026", "6da4aa14-17c9-4bf1-95f5-7bfa32da7622"]
+  },
+  "playable2_20260928025330_g1w5ss": {
+    "number": 30,
+    "items": [
+      "A 30-second round starts on the first valid tile selection and continues across levels. That first answer counts immediately.",
+      "Three wrong-answer chances; the round ends when time runs out or all chances are used. Completing all 12 levels still wins.",
+      "Play Again restores 30 seconds and all three chances, waiting for the next selection. Gameplay works even when audio is unavailable."
+    ],
+    "status": "October 14 countdown and chances implemented locally; awaiting review. Layout and overlay work held.",
+    "evidence": ["e1e4826e-3953-416e-b7c4-11c5f034bd40"]
+  },
+  "playable2_20260928023148_kiq9wu": {
+    "number": 24,
+    "items": [
+      "Try Again and Play Again work through the framework wrapper; result taps no longer get captured as drawing gestures.",
+      "The car keeps its configured speed regardless of how densely a route is drawn; police turning is consistent across refresh rates. Repeatable escape routes are verified.",
+      "Replay restores the same starting positions and headings. Cancelled and unrelated pointers cannot corrupt a route."
+    ],
+    "status": "October 14 gameplay fixes implemented locally; awaiting review. Layout and overlay work held.",
+    "evidence": ["cbc5e006-c262-4f2b-88ce-a2b2886a4c4c"]
+  },
+  "playable2_20260928024805_31g1lw": {
+    "number": 27,
+    "items": [
+      "Balls resume bouncing when they settle on the floor or inside a ring, so play does not get stuck.",
+      "Physics uses consistent elapsed time across refresh rates. Circle drawing safely handles cancellation and unrelated pointers.",
+      "Kept one starting ball, paid additional balls and collision-only earnings. Recovery does not spawn balls or award free cash."
+    ],
+    "status": "October 14 gameplay fixes implemented locally; awaiting review. Layout and overlay work held.",
+    "evidence": ["d83bc8d4-e547-4937-a9b4-e0a248a5ffc1"]
+  },
+  "playable_20260924213804_34rslj": {
+    "number": 2,
+    "items": [
+      "Centered FYP drawing area and eye-drawing guide; retained vertical feed clearance without a leftward offset.",
+      "Clear and Next appear only after drawing; reserved toolbar space prevents the canvas from jumping. No extra Start screen.",
+      "All seven steps, Clear, result and Draw Again remain available. Restored the decorative eye-drawing preview; it never changes saved drawings."
+    ],
+    "status": "October 14 entry fixes implemented locally; awaiting review.",
+    "evidence": ["b1441e66-a61f-4901-93b9-80c1c52b1fc0"]
+  },
+  "playable2_20260927020828_hix8pk": {
+    "number": 4,
+    "items": [
+      "Cobalt backdrop and coral ring retained; the gold ball now has rounded 3D shading and a highlight.",
+      "Player-placed pads are flat blue circles with a soft cyan glow, no 3D shading. Their upper edge keeps the existing bounce point.",
+      "Kept the 64px ball, bounce physics, rewards, relaunch and centered layout. Preview demonstration remains deferred."
+    ],
+    "status": "October 14 visual fixes implemented locally; awaiting review. Demo request deferred.",
+    "evidence": ["32779fe9-b644-4704-b71f-2ba97c6ee50c", "Gameplay round 2 — October 14, 2026"]
+  },
   "playable2_20261013020814_b973b1": {
     "number": 69,
     "items": ["Accepts simultaneous drive and steer touches. Each finger holds its own control; releasing, cancelling or shifting button focus does not clear the other finger.", "Input resets when changing levels, hiding the page or losing window focus."],
@@ -46,16 +126,19 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
   "playable2_20260927020828_5pmrhn": {
     "number": 3,
     "items": [
-      "Orchid Paper colors; simplified progress to n/4, removed Hint and duplicate instructions.",
-      "Kept puzzles old 4 → 6 → 1 → 2, with a circular success check badge.",
-      "Moved the puzzle upward and opening guide below it; first contact hides the guide without shifting the board."
+      "Orchid Paper colors; n/4 with no Hint, puzzles old 4 → 6 → 1 → 2, and a circular success check badge.",
+      "Puzzle higher, opening guide below; valid first node hides guidance without shifting the board. Centered decorative FYP demo retained.",
+      "Impossible paths turn red with failure feedback. Drawing from a node retries the same level immediately, without Reset."
     ],
-    "status": "Original HUD cleanup accepted; newer changes await review.",
+    "status": "Original HUD cleanup accepted; October 14 entry/failure fixes implemented locally, awaiting review.",
     "evidence": [
       "FB-003-3e1fcc45",
       "FB-003-ceef90d6",
       "One Stroke layout follow-up 20261009",
-      "Simple color themes follow-up 20261009"
+      "Simple color themes follow-up 20261009",
+      "21e5e10f-0c95-44ea-9fab-f84e3b51f543",
+      "Gameplay round 2 — October 14, 2026",
+      "a3b52305-bbcf-4b01-a3e2-1a1177ccfd25"
     ]
   },
   "playable2_20260927020828_iuyca5": {
@@ -63,14 +146,17 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "items": [
       "50 dumplings in 15 seconds; countdown starts with the first steamer tap.",
       "Separated targets and expanded tap areas; fixed duplicate counting.",
-      "Each target now opens its own bamboo steamer to reveal a cartoon bun."
+      "Each target now opens its own bamboo steamer to reveal a cartoon bun.",
+      "Opening guidance states the 50-bun goal and first-tap start; centered FYP board retains vertical clearance.",
+      "Restored the decorative steamer-reveal preview; it never collects a bun or starts time. The first real steamer tap still starts the 15-second round."
     ],
     "status": "Implemented locally; review acceptance pending.",
     "evidence": [
       "FB-005-8e7edd06",
       "Individual steamer correction",
       "Cartoon bun follow-up",
-      "Feed-first entry request 20261008"
+      "Feed-first entry request 20261008",
+      "209bd1dd-bd45-4552-8a47-98a839ae8909"
     ]
   },
   "playable2_20260927020828_oumj12": {
@@ -78,13 +164,16 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "items": [
       "Centered results on the target circle at different preview sizes.",
       "Mint Draft colors; removed the emoji after “Missed!”.",
-      "Shows actual string-length percentage, including values above 100%."
+      "Shows actual string-length percentage, including values above 100%.",
+      "Larger, centered circle and raised FYP play area, with clear static guidance. Short screens reserve room below the target.",
+      "Displayed string and circle share the same visual scale; drawing speed, length percentages and scoring are unchanged. Input works while audio is pending or denied."
     ],
     "status": "Implemented locally; review acceptance pending.",
     "evidence": [
       "FB-006-6eb08583",
       "String Drawing percentage follow-up",
-      "Simple color themes follow-up 20261009"
+      "Simple color themes follow-up 20261009",
+      "cbcf80cc-fcd1-4dd7-a932-bd81b08b79cf"
     ]
   },
   "playable2_20260927020828_9vxaxo": {
@@ -130,11 +219,14 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "items": [
       "Removed duplicate instructions.",
       "Corrected the needle direction, center pivot and scoring alignment.",
-      "Retained random direction reversals after taps."
+      "Retained random direction reversals after taps.",
+      "Raised and centered the wheel, preserving circular proportions at short sizes; removed obsolete mobile sizing that stretched it.",
+      "Added a static action guide that hides after a real tap and returns on replay. Kept the target visible, without redundant TARGET text. Audio no longer delays scoring."
     ],
     "status": "Implemented locally; review acceptance pending.",
     "evidence": [
-      "FB-010-8f8e3166"
+      "FB-010-8f8e3166",
+      "c2f80a6d-63d5-4c92-95d7-f77da5e5a3b2"
     ]
   },
   "playable2_20260927020825_z23fv4": {
@@ -386,11 +478,13 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "items": [
       "Simplified drawing/movement guides and split KOs/HP HUD.",
       "Kept draw → equip → fight with five-hit enemies and unlimited KOs.",
-      "Tuned continuous spin to 9.5 rad/s and hit cooldown to 0.22s."
+      "Increased continuous spin from 9.5 to 11 rad/s, about 16% faster; kept the 0.22s hit cooldown and other combat rules."
     ],
     "status": "Implemented locally; review acceptance pending.",
     "evidence": [
-      "FB-048-6dc0acb5"
+      "FB-048-6dc0acb5",
+      "Gameplay round 2 — October 14, 2026",
+      "17473cc8-9291-411b-9a20-2ecf9486112a"
     ]
   },
   "playable2_20261001225821_af5uee": {
@@ -523,13 +617,15 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
   "playable2_20261001230222_8qptsc": {
     "number": 64,
     "items": [
-      "Removed Strings/mute; centered the opening guide and added four wave colors.",
-      "Simplified to four thin strands plus two translucent filled layers.",
+      "Centered opening guide and four colors; retained four thin strands with two translucent layers and no Strings/mute controls.",
+      "Supports drag-release or two-point taps; fast releases and lost capture no longer drop unfinished lines. Clear/cancel stay reliable.",
       "Replaced continuous hum with softer independent interval tones and proper silence/cleanup."
     ],
     "status": "Implemented locally; review acceptance pending.",
     "evidence": [
-      "FB-064-9bace1ed"
+      "FB-064-9bace1ed",
+      "Gameplay round 2 — October 14, 2026",
+      "4319497c-94bb-463f-981e-3b5300357f94"
     ]
   },
   "playable2_20261001230332_5af21q": {

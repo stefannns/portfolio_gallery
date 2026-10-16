@@ -1,0 +1,36 @@
+<!--
+  入口 HTML 模板 —— v3 React 链路的 h5_react_pack 节点（实际由 build.js 执
+  行）会把这份模板拷贝进每个 task 的产物目录 dist/，**重命名为 game.html**
+  （客户端按 game.html 读 zip 入口，与零构建链路 h5_pack 保持一致）。仓库内
+  这份源文件保留 ``index.html`` 名字仅是 Web 项目源码约定。
+
+  为什么不让 LLM 产入口 HTML：
+   1. 模板 100% 固定（容器中立 + #root + 加载 bundle.js），无创作空间；
+   2. 让 LLM 只关注 App.jsx 一个文件，认知负载最小；
+   3. 模板由仓库统一维护，安全策略 / meta 标签 / preload 等可统一升级。
+
+  关于 bundle.css：
+   - 当 LLM 用了会抽取 CSS 的 npm 包时，esbuild 会附带产出 dist/bundle.css；
+     这里的 <link> 始终保留即可。
+   - 没有用到任何带 CSS 的库时，esbuild 不产 bundle.css，浏览器对该 link
+     会静默 404（不阻塞 JS 执行、不影响玩法），可放心忽略。
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script src="/resource/playable-batch/review-host.js"></script><script src="/resource/playable-feed/pocket-host.js" data-seed-random="off"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <style>
+    /* 容器中立硬规：html / body / #root 三层撑满 + overflow:hidden + 无 vh/vw */
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+  </style>
+<script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"DEFAULT_INDEX","kind":"number","label":"默认年龄索引","value":7,"default":7,"min":0,"max":14,"step":1}],"texts":[{"id":"TITLE","label":"标题","value":"TIME MACHINE","default":"TIME MACHINE","max_length":20}],"images":[{"id":"AGE_01","label":"1岁","path":"./assets/age_01.webp","replaceable":true},{"id":"AGE_03","label":"3岁","path":"./assets/age_03.webp","replaceable":true},{"id":"AGE_05","label":"5岁","path":"./assets/age_05.webp","replaceable":true},{"id":"AGE_07","label":"7岁","path":"./assets/age_07.webp","replaceable":true},{"id":"AGE_10","label":"10岁","path":"./assets/age_10.webp","replaceable":true},{"id":"AGE_12","label":"12岁","path":"./assets/age_12.webp","replaceable":true},{"id":"AGE_16","label":"16岁","path":"./assets/age_16.webp","replaceable":true},{"id":"AGE_22","label":"22岁","path":"./assets/age_22.webp","replaceable":true},{"id":"AGE_28","label":"28岁","path":"./assets/age_28.webp","replaceable":true},{"id":"AGE_38","label":"38岁","path":"./assets/age_38.webp","replaceable":true},{"id":"AGE_47","label":"47岁","path":"./assets/age_47.webp","replaceable":true},{"id":"AGE_55","label":"55岁","path":"./assets/age_55.webp","replaceable":true},{"id":"AGE_65","label":"65岁","path":"./assets/age_65_v2.webp","replaceable":true},{"id":"AGE_75","label":"75岁","path":"./assets/age_75.webp","replaceable":true},{"id":"AGE_85","label":"85岁","path":"./assets/age_85.webp","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"image_expression"}}</script>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="./bundle.js?ui=imports-4c1e392c472a"></script>
+</body>
+</html>

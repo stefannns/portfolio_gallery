@@ -1,0 +1,37 @@
+/* Higher specificity overrides the original runtime CSS without changing segmentation/art. */
+html body .stage{background:#f5f6f8}
+html body .game{--ui-scale:var(--design-scale,1);container-type:size;width:100%;max-width:none;padding:calc(30px * var(--ui-scale)) calc(30px * var(--ui-scale)) calc(50px * var(--ui-scale));box-shadow:none;gap:4px;background:#f5f6f8}
+html body .stage{container-type:size}
+html body .topbar{flex:0 0 44px;height:44px;align-items:center}
+html body .left-tools{width:44px}
+html body .round-btn,html body .hint-btn{height:44px;min-height:44px;border-radius:14px;box-shadow:0 3px 10px #272d3910;border:1px solid #dfe3e8}
+html body .round-btn{width:44px;min-width:44px}
+html body .round-btn svg{width:24px;height:24px}
+html body .hint-btn{width:64px;min-width:64px;font-size:18px;padding:0 7px;gap:4px}
+html body .bulb{width:27px;height:27px;flex-basis:27px;border-width:1px}
+html body .bulb svg{width:19px;height:19px}
+html body .progress-card{width:auto;max-width:calc(100% - 142px);height:44px;border:0;border-radius:0;background:transparent;box-shadow:none;padding:4px 0;overflow:visible}
+html body .progress-copy,html body .progress-copy b{font-size:calc(28px * var(--ui-scale));line-height:1.2;font-weight:750;letter-spacing:-.7px;color:#333746;font-variant-numeric:tabular-nums}
+html body .track{display:none}
+html body .canvas-zone{container-type:size;margin-top:26px;overflow:hidden}
+html body .canvas-wrap{width:min(100cqw,80cqh);max-height:100%;border:3px solid #fff;border-radius:16px;box-shadow:0 4px 12px #272d3915}
+/* Compact the tray rather than shrinking targets: ten colors still have 44px
+   hitboxes and 8px spacing, but no oversized enclosing card or extra padding. */
+html body .palette-shell{flex:0 0 auto;align-self:center;max-width:100%;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:visible}
+html body .palette-shell:before,html body .palette-shell:after{display:none}
+html body .palette{display:grid;grid-template-columns:repeat(5,minmax(44px,1fr));grid-auto-rows:44px;gap:8px;padding:0;overflow:visible}
+html body .swatch{width:44px;height:44px;min-width:44px;min-height:44px;justify-self:center}
+html body .swatch span{width:29px;height:29px;font-size:17px}
+html body .toast{bottom:calc(50px * var(--ui-scale) + 106px);max-width:calc(100% - 60px * var(--ui-scale));white-space:normal;overflow-wrap:anywhere;font-size:calc(18px * var(--ui-scale));text-align:center;border-radius:12px}
+html body .coloring-guide{position:absolute;left:calc(30px * var(--ui-scale));right:calc(30px * var(--ui-scale));top:calc(30px * var(--ui-scale) + 48px);margin:0;text-align:center;font-size:calc(18px * var(--ui-scale));line-height:1.35;color:#434958;pointer-events:none}
+html body .win{padding:calc(30px * var(--ui-scale)) calc(30px * var(--ui-scale)) calc(50px * var(--ui-scale));overflow:auto}
+html body .win-card{transform:none;padding:20px;max-height:100%;overflow:auto;border-radius:20px;box-shadow:0 8px 30px #272d3920}
+html body .win h2{font-family:inherit;font-size:calc(24px * var(--ui-scale));line-height:1.25;overflow-wrap:anywhere;letter-spacing:0;margin-bottom:12px;color:#5a4fc0}
+html body .win p{font-size:calc(18px * var(--ui-scale));line-height:1.4;color:#535c6b}
+html body .again{min-height:44px;min-width:44px;font-family:inherit;font-size:calc(18px * var(--ui-scale));border-radius:12px;background:#5a4fc0;letter-spacing:0}
+html body button:focus-visible{outline:3px solid #5a4fc0;outline-offset:3px}
+@keyframes coloring-guide-float{50%{transform:translateY(-3px)}}
+html body .coloring-guide{animation:coloring-guide-float 2.6s ease-in-out infinite}
+html[data-design-hidden="true"] .coloring-guide{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){html body .game *{animation:none!important;transition-duration:.001ms!important}}
+@media(max-height:440px){html body .canvas-zone{margin-top:22px}}

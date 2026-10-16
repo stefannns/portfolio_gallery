@@ -1,0 +1,24 @@
+{
+  "version": "2.0-frontal-normalized",
+  "model": "Image 2",
+  "input_role": "Image 1 is the sole identity-feature reference. Extract stable identity traits and underlying natural hair texture only; do not preserve its pose, angle, crop, background, lighting, clothing, accessories, braids, cornrows, locks, twists, extensions, hairstyle arrangement, grooming pattern, or expression.",
+  "universality": "The prompt must work for any person regardless of gender, ethnicity, starting age, pose, selfie angle, or framing. Infer identity and gender presentation only from Image 1; never add unsupported assumptions. Every output is normalized to one fixed front-facing composition.",
+  "template": "Use case: identity-preserve. Asset type: standardized 3:4 portrait state for a vertical mobile Time Machine playable. Extract only stable identity traits from Image 1: facial-feature geometry, eye shape and color, nose and mouth structure, skin tone and undertone, ethnicity, underlying natural hair color and texture, and distinctive likeness cues. Never copy the input's specific hairstyle, braids, cornrows, dreadlocks, twists, locs, extensions, beads, or grooming pattern. Generate the same recognizable person at exactly age {{age}}, {{stage}} stage. Use an identical clean warm-neutral light gray studio wall in every state. The subject must be strictly front-facing: face centered, head level, both eyes equally visible, gaze directly at camera, shoulders squared and parallel to camera, torso facing straight forward, neutral relaxed posture, gentle natural expression. Show a realistic chest-up portrait with head, shoulders, and upper torso fully visible, wearing {{clothing}}. Give the person a natural, contemporary, age-appropriate hairstyle derived only from their underlying hair texture; progressively adjust hairline, density, and gray color with age. Use an exact vertical 3:4 canvas, fixed eye-level camera, fixed 70mm portrait-lens perspective, and identical head size, crop, subject scale, center position, camera distance, soft frontal lighting, exposure, and white balance. Change only biologically plausible age-{{age}} development, facial volume, jaw and cheek structure, skin texture, hairline, hair density and color, neck/posture, body proportions, and age-appropriate clothing. Preserve strong identity, ethnicity, skin tone, core facial proportions, and distinctive likeness. Make every adjacent age clearly different. No three-quarter view, profile, head tilt, turned shoulders, asymmetrical pose, source background, source clothing, source text, logos, watermark, border, UI, props, fantasy, illustration, cartoon, beauty filter, theatrical costume, or exaggerated aging.",
+  "states": [
+    { "age": 1, "stage": "Toddler", "clothing": "realistic age-appropriate toddler clothing", "asset": "./assets/age_01.png" },
+    { "age": 3, "stage": "Toddler", "clothing": "realistic age-appropriate toddler clothing", "asset": "./assets/age_03.png" },
+    { "age": 5, "stage": "Toddler", "clothing": "realistic age-appropriate toddler clothing", "asset": "./assets/age_05.png" },
+    { "age": 7, "stage": "Childhood", "clothing": "realistic age-appropriate children’s everyday clothing", "asset": "./assets/age_07.png" },
+    { "age": 10, "stage": "Childhood", "clothing": "realistic age-appropriate children’s everyday clothing", "asset": "./assets/age_10.png" },
+    { "age": 12, "stage": "Childhood", "clothing": "realistic age-appropriate children’s everyday clothing", "asset": "./assets/age_12.png" },
+    { "age": 16, "stage": "Youth", "clothing": "realistic teenage everyday clothing", "asset": "./assets/age_16.png" },
+    { "age": 22, "stage": "Youth", "clothing": "realistic contemporary young-adult everyday clothing", "asset": "./assets/age_22.png" },
+    { "age": 28, "stage": "Youth", "clothing": "realistic contemporary young-adult everyday clothing", "asset": "./assets/age_28.png" },
+    { "age": 38, "stage": "Middle Age", "clothing": "realistic contemporary mature everyday clothing", "asset": "./assets/age_38.png" },
+    { "age": 47, "stage": "Middle Age", "clothing": "realistic contemporary mature everyday clothing", "asset": "./assets/age_47.png" },
+    { "age": 55, "stage": "Middle Age", "clothing": "realistic contemporary mature everyday clothing", "asset": "./assets/age_55.png" },
+    { "age": 65, "stage": "Elderly", "clothing": "realistic contemporary older-adult everyday clothing", "asset": "./assets/age_65_v2.png" },
+    { "age": 75, "stage": "Elderly", "clothing": "realistic contemporary older-adult everyday clothing", "asset": "./assets/age_75.png" },
+    { "age": 85, "stage": "Elderly", "clothing": "realistic contemporary older-adult everyday clothing", "asset": "./assets/age_85.png" }
+  ]
+}

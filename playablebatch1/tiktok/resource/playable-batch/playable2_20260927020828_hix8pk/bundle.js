@@ -226,11 +226,11 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       --font-body:    -apple-system, "Helvetica Neue", "PingFang SC", system-ui, sans-serif;
       --font-mono:    ui-monospace, Menlo, monospace;
       
-      --color-bg: #090910;
-      --color-grid: rgba(255, 255, 255, 0.04);
-      --color-cyan: #00f0ff;
+      --color-bg: #153D70;
+      --color-grid: rgba(218, 234, 255, 0.09);
+      --color-cyan: #B9F4FF;
       --color-pink: #ff007f;
-      --color-yellow: #ffea00;
+      --color-yellow: #FF8068;
     }
     html, body, #root { 
       width: 100%; height: 100%; 
@@ -342,16 +342,26 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     
     .ball {
       position: absolute; top: 0; left: 0;
-      width: 50px; height: 50px;
-      background: var(--color-cyan);
+      width: 64px; height: 64px;
+      background: radial-gradient(circle at 31% 26%, #FFF9DD 0%, #FFE8A0 15%, #FFD16B 39%, #EBA53B 68%, #A65B1D 100%);
+      border: 1px solid #A65B1D;
       border-radius: 50%;
-      box-shadow: 0 0 22px var(--color-cyan), 0 0 44px var(--color-cyan);
+      box-shadow: inset -5px -7px 10px rgba(111,52,15,.28), inset 2px 2px 5px rgba(255,255,235,.65);
       transform: translate(-50%, -50%);
       will-change: transform;
+    }
+    .ball::after {
+      content: "";
+      position: absolute; left: 15%; top: 13%;
+      width: 25%; height: 16%; border-radius: 50%;
+      background: rgba(255,255,244,.85);
+      transform: rotate(-35deg);
+      pointer-events: none;
     }
     
     .pad {
       position: absolute; top: 0; left: 0;
+      filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.7));
       transform: translate(-50%, -50%);
       will-change: transform, opacity;
       transition: opacity 0.2s;
@@ -359,10 +369,10 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     
     .bonus-ring {
       position: absolute; top: 0; left: 0;
-      width: 48px; height: 48px;
-      border: 3px solid var(--color-yellow);
+      width: 60px; height: 60px;
+      border: 5px solid var(--color-yellow);
       border-radius: 50%;
-      box-shadow: 0 0 15px var(--color-yellow), inset 0 0 10px var(--color-yellow);
+      box-shadow: 0 0 0 2px #FFD1BE, 0 4px 12px rgba(0,0,0,.2);
       transform: translate(-50%, -50%);
       will-change: transform, opacity;
       transition: opacity 0.3s, transform 0.3s;
@@ -378,4 +388,4 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       pointer-events: none;
       z-index: 2;
     }
-  `});function GT(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var QT=()=>{let[t,e]=(0,ot.useState)(null);return(0,ot.useEffect)(()=>{let r=!0;return fetch("./game.config.json",{cache:"no-store"}).then(n=>n.ok?n.json():{tweaks:[],texts:[],images:[]}).catch(()=>({tweaks:[],texts:[],images:[]})).then(n=>r&&e(GT(n))),()=>{r=!1}},[]),t?(0,pe.jsx)($T,{cfg:t}):(0,pe.jsx)("div",{style:{width:"100%",height:"100%",background:"#090910"}})},$T=({cfg:t})=>{let e=(0,ot.useRef)(null),r=(0,ot.useRef)(null),n=(0,ot.useRef)(null),o=(0,ot.useRef)(null),[s,i]=(0,ot.useState)(0),[a,l]=(0,ot.useState)(!1),[uiStarted,setUiStarted]=(0,ot.useState)(!1),started=(0,ot.useRef)(!1),u=(0,ot.useRef)({w:0,h:0,ball:{x:0,y:-100,vx:0,vy:0,r:25,isLanded:!1},pad:{x:-100,y:-100,w:90,h:24,active:!1},bonus:{x:200,y:-200,r:24,active:!0},score:0}),c=(0,ot.useRef)(!1),p=(0,ot.useRef)(null),f=async()=>{if(!c.current)try{await ah(),Rv.volume.value=-8,p.current={bounce:new Ts().toDestination(),bonus:new Zl(Cr).toDestination(),launch:new Cr().toDestination()},c.current=!0}catch{}},m=(h,d,_,T=0)=>{if(p.current)try{let y=Mv()+T;h==="bounce"&&p.current.bounce.triggerAttackRelease(d,_,y),h==="bonus"&&p.current.bonus.triggerAttackRelease(d,_,y),h==="launch"&&p.current.launch.triggerAttackRelease(d,_,y)}catch{}},g=(0,ot.useCallback)(()=>{let h=u.current;if(h.w===0)return;let d=50,_=100;h.bonus.x=d+Math.random()*(h.w-d*2),h.bonus.y=_+Math.random()*(h.h*.5),h.bonus.active=!0,o.current&&(o.current.style.opacity="1",o.current.style.transform=`translate(${h.bonus.x}px, ${h.bonus.y}px) scale(1) translate(-50%, -50%)`)},[]);(0,ot.useEffect)(()=>{let h,d=performance.now(),_=()=>{if(!e.current)return;let y=e.current.getBoundingClientRect();u.current.w=y.width,u.current.h=y.height};_(),window.addEventListener("resize",_),u.current.ball.x=u.current.w/2,u.current.ball.y=u.current.h*.2,g();let T=y=>{if(h=requestAnimationFrame(T),a){d=y;return}if(!started.current){d=y;let idle=u.current.ball;r.current&&(r.current.style.transform=`translate(${idle.x}px, ${idle.y}px) translate(-50%, -50%)`);return}let S=y-d;S>100&&(S=16),d=y;let A=u.current,{ball:v,pad:E,bonus:C,w:M,h:D}=A;if(!v.isLanded){if(v.vy+=(t.GRAVITY||.002)*S,v.x+=v.vx*S,v.y+=v.vy*S,v.x<v.r&&(v.x=v.r,v.vx*=-1),v.x>M-v.r&&(v.x=M-v.r,v.vx*=-1),E.active&&v.vy>0){let z=Math.abs(v.x-E.x),j=Math.abs(v.y-E.y);if(z<E.w/2+v.r&&j<E.h/2+v.r){v.y=E.y-E.h/2-v.r,v.vy=-(t.BOUNCE_SPEED||.8);let L=(v.x-E.x)/(E.w/2);v.vx=L*.4,m("bounce","C2","8n"),A.score+=t.SCORE_PAD||10}}if(C.active){let z=v.x-C.x,j=v.y-C.y;z*z+j*j<(v.r+C.r)*(v.r+C.r)&&(C.active=!1,m("bonus",["E4","G4","C5"],"8n"),A.score+=t.SCORE_BONUS||100,o.current&&(o.current.style.opacity="0",o.current.style.transform=`translate(${C.x}px, ${C.y}px) scale(1.5) translate(-50%, -50%)`),setTimeout(g,1200))}v.y>D-v.r&&(v.y=D-v.r,v.vy=0,v.vx=0,v.isLanded=!0)}r.current&&(r.current.style.transform=`translate(${v.x}px, ${v.y}px) translate(-50%, -50%)`),i(B=>B===A.score?B:A.score)};return h=requestAnimationFrame(T),()=>{cancelAnimationFrame(h),window.removeEventListener("resize",_)}},[t,a,g]);let x=async h=>{if(a||h.isPrimary===false||h.button>0||!e.current)return;let rect=e.current.getBoundingClientRect(),px=h.clientX-rect.left,py=h.clientY-rect.top;if(px<0||py<0||px>rect.width||py>rect.height)return;started.current=!0;setUiStarted(!0);void f();let d=u.current;d.pad.x=px,d.pad.y=py,d.pad.active=!0,n.current&&(n.current.style.opacity="1",n.current.style.transform=`translate(${d.pad.x}px, ${d.pad.y}px) translate(-50%, -50%)`),d.ball.isLanded&&(d.ball.x=d.pad.x,d.ball.y=d.pad.y-d.pad.h/2-d.ball.r-5,d.ball.vy=-(t.BOUNCE_SPEED||.8)*1.1,d.ball.vx=(Math.random()-.5)*.4,d.ball.isLanded=!1,m("launch","G3","8n"))};return(0,pe.jsxs)(pe.Fragment,{children:[(0,pe.jsx)(UT,{}),(0,pe.jsxs)("div",{ref:e,onPointerDown:x,style:{width:"100%",height:"100%",position:"relative"},children:[(0,pe.jsx)("div",{className:"bg-grid"}),(0,pe.jsx)("div",{className:"tip-text",style:{visibility:uiStarted?"hidden":"visible"},"aria-hidden":uiStarted,children:t.TIP_TEXT||"TAP TO PLACE BOUNCE PAD"}),(0,pe.jsxs)("div",{className:"hud-panel",children:[(0,pe.jsx)("div",{className:"hud-label",children:t.SCORE_LABEL||"CASH"}),(0,pe.jsxs)("div",{className:"hud-score",children:["$",s.toLocaleString("en")]})]}),(0,pe.jsxs)("div",{className:"game-layer",children:[(0,pe.jsx)("img",{ref:n,className:"pad",src:t.IMG_PAD,alt:"pad",style:{width:u.current.pad.w+"px",height:u.current.pad.h+"px",objectFit:"contain",opacity:0},draggable:!1}),(0,pe.jsx)("div",{ref:o,className:"bonus-ring"}),(0,pe.jsx)("div",{ref:r,className:"ball"})]})]}),]})};(0,Vv.createRoot)(document.getElementById("root")).render((0,pe.jsx)(QT,{}));})();
+  `});function GT(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var QT=()=>{let[t,e]=(0,ot.useState)(null);return(0,ot.useEffect)(()=>{let r=!0;return fetch("./game.config.json",{cache:"no-store"}).then(n=>n.ok?n.json():{tweaks:[],texts:[],images:[]}).catch(()=>({tweaks:[],texts:[],images:[]})).then(n=>r&&e(GT(n))),()=>{r=!1}},[]),t?(0,pe.jsx)($T,{cfg:t}):(0,pe.jsx)("div",{style:{width:"100%",height:"100%",background:"#090910"}})},$T=({cfg:s})=>{let p=(0,ot.useRef)(null),y=(0,ot.useRef)(null),b=(0,ot.useRef)(null),x=(0,ot.useRef)(null),[S,N]=(0,ot.useState)(0),[g,$]=(0,ot.useState)(!1),[R,D]=(0,ot.useState)(!1),w=(0,ot.useRef)(!1),a=(0,ot.useRef)({w:0,h:0,ball:{x:0,y:-100,vx:0,vy:0,r:32,isLanded:!1},pad:{x:-100,y:-100,w:90,h:24,active:!1},bonus:{x:200,y:-200,r:30,active:!0},score:0}),A=(0,ot.useRef)(!1),h=(0,ot.useRef)(null),L=async()=>{if(!A.current)try{await ah(),Rv.volume.value=-8,h.current={bounce:new Ts().toDestination(),bonus:new Zl(Cr).toDestination(),launch:new Cr().toDestination()},A.current=!0}catch{}},E=(r,n,l,o=0)=>{if(h.current)try{let t=Mv()+o;r==="bounce"&&h.current.bounce.triggerAttackRelease(n,l,t),r==="bonus"&&h.current.bonus.triggerAttackRelease(n,l,t),r==="launch"&&h.current.launch.triggerAttackRelease(n,l,t)}catch{}},f=(0,ot.useCallback)(()=>{let r=a.current;if(r.w===0)return;let n=60;r.bonus.x=n+Math.random()*(r.w-n*2),r.bonus.y=r.h*(.28+Math.random()*.16),r.bonus.active=!0,x.current&&(x.current.style.opacity="1",x.current.style.transform=`translate(${r.bonus.x}px, ${r.bonus.y}px) scale(1) translate(-50%, -50%)`)},[]);(0,ot.useEffect)(()=>{let r,n=performance.now(),l=()=>{if(!p.current)return;const t=a.current.w>0;let c=p.current.getBoundingClientRect();a.current.w=c.width,a.current.h=c.height,w.current||(a.current.ball.x=c.width/2,a.current.ball.y=c.height*.34,t&&f())};l(),window.addEventListener("resize",l),a.current.ball.x=a.current.w/2,a.current.ball.y=a.current.h*.34,f();let o=t=>{if(r=requestAnimationFrame(o),g){n=t;return}if(!w.current){n=t;let i=a.current.ball;y.current&&(y.current.style.transform=`translate(${i.x}px, ${i.y}px) translate(-50%, -50%)`);return}let c=t-n;c>100&&(c=16),n=t;let v=a.current,{ball:e,pad:u,bonus:d,w:C,h:j}=v;if(!e.isLanded){if(e.vy+=(s.GRAVITY||.002)*c,e.x+=e.vx*c,e.y+=e.vy*c,e.x<e.r&&(e.x=e.r,e.vx*=-1),e.x>C-e.r&&(e.x=C-e.r,e.vx*=-1),u.active&&e.vy>0){let i=Math.abs(e.x-u.x),m=Math.abs(e.y-u.y);if(i<u.w/2+e.r&&m<u.h/2+e.r){e.y=u.y-u.h/2-e.r,e.vy=-(s.BOUNCE_SPEED||.8);let T=(e.x-u.x)/(u.w/2);e.vx=T*.4,E("bounce","C2","8n"),v.score+=s.SCORE_PAD||10}}if(d.active){let i=e.x-d.x,m=e.y-d.y;i*i+m*m<(e.r+d.r)*(e.r+d.r)&&(d.active=!1,E("bonus",["E4","G4","C5"],"8n"),v.score+=s.SCORE_BONUS||100,x.current&&(x.current.style.opacity="0",x.current.style.transform=`translate(${d.x}px, ${d.y}px) scale(1.5) translate(-50%, -50%)`),setTimeout(f,1200))}e.y>j-e.r&&(e.y=j-e.r,e.vy=0,e.vx=0,e.isLanded=!0)}y.current&&(y.current.style.transform=`translate(${e.x}px, ${e.y}px) translate(-50%, -50%)`),N(i=>i===v.score?i:v.score)};return r=requestAnimationFrame(o),()=>{cancelAnimationFrame(r),window.removeEventListener("resize",l)}},[s,g,f]);let P=async r=>{if(g||r.isPrimary===!1||r.button>0||!p.current)return;let n=p.current.getBoundingClientRect(),l=r.clientX-n.left,o=r.clientY-n.top;if(l<0||o<0||l>n.width||o>n.height)return;w.current=!0,D(!0),L();let t=a.current;t.pad.x=l,t.pad.y=o,t.pad.active=!0,b.current&&(b.current.style.opacity="1",b.current.style.transform=`translate(${t.pad.x}px, ${t.pad.y}px) translate(-50%, -50%)`),t.ball.isLanded&&(t.ball.x=t.pad.x,t.ball.y=t.pad.y-t.pad.h/2-t.ball.r-5,t.ball.vy=-(s.BOUNCE_SPEED||.8)*1.1,t.ball.vx=(Math.random()-.5)*.4,t.ball.isLanded=!1,E("launch","G3","8n"))};return(0,pe.jsxs)(pe.Fragment,{children:[(0,pe.jsx)(UT,{}),(0,pe.jsxs)("div",{ref:p,className:"cash-game",onPointerDown:P,style:{width:"100%",height:"100%",position:"relative"},children:[(0,pe.jsx)("div",{className:"bg-grid"}),(0,pe.jsx)("div",{className:"tip-text",style:{visibility:R?"hidden":"visible"},"aria-hidden":R,children:s.TIP_TEXT||"TAP TO PLACE BOUNCE PAD"}),(0,pe.jsxs)("div",{className:"hud-panel",children:[(0,pe.jsx)("div",{className:"hud-label",children:s.SCORE_LABEL||"CASH"}),(0,pe.jsxs)("div",{className:"hud-score",children:["$",S.toLocaleString("en")]})]}),(0,pe.jsxs)("div",{className:"game-layer",children:[(0,pe.jsx)("img",{ref:b,className:"pad",src:s.IMG_PAD==="./assets/pad.svg"?s.IMG_PAD+"?v=flat-blue-circle-20261014-2":s.IMG_PAD,alt:"pad",style:{width:a.current.pad.w+"px",height:a.current.pad.w+"px",marginTop:(a.current.pad.w-a.current.pad.h)/2+"px",objectFit:"contain",opacity:0},draggable:!1}),(0,pe.jsx)("div",{ref:x,className:"bonus-ring"}),(0,pe.jsx)("div",{ref:y,className:"ball"})]})]})]})};(0,Vv.createRoot)(document.getElementById("root")).render((0,pe.jsx)(QT,{}));})();

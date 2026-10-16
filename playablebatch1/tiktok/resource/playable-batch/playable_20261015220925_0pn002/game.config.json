@@ -1,0 +1,68 @@
+{
+  "tweaks": [
+    {
+      "id": "BRUSH_RATIO",
+      "kind": "number",
+      "label": "Iron Size Ratio",
+      "value": 0.12,
+      "default": 0.12,
+      "min": 0.05,
+      "max": 0.3,
+      "step": 0.01
+    },
+    {
+      "id": "PARTICLE_COUNT",
+      "kind": "number",
+      "label": "Steam Intensity",
+      "value": 3,
+      "default": 3,
+      "min": 1,
+      "max": 10,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "Ironing Fuse Beads",
+      "default": "Ironing Fuse Beads",
+      "max_length": 30
+    },
+    {
+      "id": "HINT_TEXT",
+      "label": "Hint Text",
+      "value": "Move around to reveal!",
+      "default": "Move around to reveal!",
+      "max_length": 50
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_PIXEL",
+      "label": "Pixel Art (Bottom)",
+      "path": "./assets/bg_pixel.webp",
+      "replaceable": true
+    },
+    {
+      "id": "BG_BEAD",
+      "label": "Fuse Bead (Top)",
+      "path": "./assets/bg_bead.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CURSOR_IRON",
+      "label": "Iron Cursor",
+      "path": "./assets/cursor_iron.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "image_expression",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

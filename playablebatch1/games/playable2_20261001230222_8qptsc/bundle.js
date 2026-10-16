@@ -104,7 +104,7 @@
     const rgba = (rgb, alpha) => 'rgba(' + rgb.join(',') + ',' + alpha + ')';
     root.innerHTML = `
       <main class="instrument">
-        <canvas id="strings" tabindex="0" aria-label="Drag between two points to create a gently pulsing string. Or press Enter, use arrow keys to set the endpoint, then Enter to finish. Escape cancels."></canvas>
+        <canvas id="strings" tabindex="0" aria-label="Drag, or tap two points, to create a gently pulsing string. Or press Enter, use arrow keys to set the endpoint, then Enter to finish. Escape cancels."></canvas>
         <p class="prompt" id="prompt"></p>
         <button class="clear" id="clear" type="button" aria-label="Clear all strings"></button>
         <div class="palette" role="group" aria-label="Wave color">
@@ -367,10 +367,15 @@
     };
 
     canvas.addEventListener('pointerdown', event => {
-      if (event.isPrimary === false || (event.button !== undefined && event.button !== 0) || draft) return;
+      if (event.isPrimary === false || (event.button !== undefined && event.button !== 0) || draft && draft.pointerId !== null) return;
       event.preventDefault();
       try { canvas.setPointerCapture(event.pointerId); } catch (_) {}
       const point = pointFromEvent(event);
+      if (draft) {
+        draft.pointerId = event.pointerId;
+        draft.end = point;
+        return;
+      }
       draft = {
         pointerId: event.pointerId,
         start: point,
@@ -386,7 +391,7 @@
     });
 
     canvas.addEventListener('pointermove', event => {
-      if (!draft || event.pointerId !== draft.pointerId) return;
+      if (!draft || event.isPrimary === false || draft.pointerId !== null && event.pointerId !== draft.pointerId) return;
       event.preventDefault();
       draft.end = pointFromEvent(event);
       const length = distance(draft.start, draft.end);
@@ -395,10 +400,16 @@
 
     const finishDraft = (event, cancelled = false) => {
       if (!draft || event.pointerId !== draft.pointerId) return;
+      if (!cancelled && Number.isFinite(event.clientX) && Number.isFinite(event.clientY)) draft.end = pointFromEvent(event);
       const finished = draft;
+      const length = distance(finished.start, finished.end);
+      if (!cancelled && length < 34 && event.pointerId !== 'keyboard') {
+        finished.pointerId = null;
+        try { if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId); } catch (_) {}
+        return;
+      }
       draft = null;
       try { if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId); } catch (_) {}
-      const length = distance(finished.start, finished.end);
       if (cancelled || length < 34) {
         stopVoice(finished.voice);
         balanceVoices();
@@ -423,11 +434,15 @@
     canvas.addEventListener('pointerup', event => finishDraft(event, false));
     canvas.addEventListener('pointercancel', event => finishDraft(event, true));
     canvas.addEventListener('lostpointercapture', event => {
-      if (draft && event.pointerId === draft.pointerId) finishDraft(event, true);
+      if (draft && event.pointerId === draft.pointerId) draft.pointerId = null;
     });
 
     const clearStrings = () => {
-      if (draft) { stopVoice(draft.voice); draft = null; }
+      if (draft) {
+        const pointer = draft.pointerId;
+        stopVoice(draft.voice); draft = null;
+        try { if (pointer !== null && canvas.hasPointerCapture(pointer)) canvas.releasePointerCapture(pointer); } catch (_) {}
+      }
       strings.forEach(string => stopVoice(string.voice));
       strings = [];
       balanceVoices();
@@ -460,8 +475,8 @@
           balanceVoices();
           prompt.classList.add('hidden'); prompt.setAttribute('aria-hidden', 'true');
         }
-      } else if (event.key === 'Escape' && draft?.pointerId === 'keyboard') {
-        event.preventDefault(); finishDraft({ pointerId: 'keyboard' }, true);
+      } else if (event.key === 'Escape' && draft) {
+        event.preventDefault(); finishDraft({ pointerId: draft.pointerId }, true);
       } else if (draft?.pointerId === 'keyboard' && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
         event.preventDefault();
         const step = event.shiftKey ? 40 : 12;

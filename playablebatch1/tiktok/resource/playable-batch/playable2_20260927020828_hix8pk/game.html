@@ -39,16 +39,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Playable</title>
-  <link rel="stylesheet" href="./bundle.css" />
   <style>
     html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
     body { background: #050510; -webkit-tap-highlight-color: transparent; }
-    .pad {
-      width: 112px !important;
-      height: 112px !important;
-      translate: 0 44px;
-      filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.7));
-    }
     .hud-panel { top: max(40px, calc(env(safe-area-inset-top, 0px) + 16px)) !important; }
     .tip-text { bottom: max(40px, calc(env(safe-area-inset-bottom, 0px) + 16px)) !important; }
   </style>
@@ -87,7 +80,8 @@ html[data-feed-background] .feed-first-action{animation-play-state:paused}
     }());
   </script>
   <!-- playable-inline-config:end -->
-  <script src="./bundle.js?ui=7894a2450e88"></script>
-<script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject="#root img"></script>
+  <script src="./ui-batch2-layout.js?v=6bf3509b6677"></script>
+  <script src="./bundle.js?ui-batch2=51cf6f84b219"></script>
+<script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject="#root .ball"></script>
 </body>
 </html>

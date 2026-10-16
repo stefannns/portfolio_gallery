@@ -38,16 +38,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Playable</title>
-  <link rel="stylesheet" href="./bundle.css" />
   <style>
     html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
     body { background: #050510; -webkit-tap-highlight-color: transparent; }
-    /* Keep the wheel below the HUD and inside portrait safe margins. */
-    @media (max-height: 600px) {
-      #root > div > div:nth-of-type(1) { padding: calc(40px + env(safe-area-inset-top, 0px)) 25px 10px !important; }
-      #root > div > div:nth-of-type(1) .hud-text[style*="4rem"] { font-size: 2.75rem !important; }
-      #root > div > div:nth-of-type(2) > div { width: min(64vw, 250px) !important; }
-    }
+    /* The wheel component now sizes from its available stage, preserving its aspect ratio. */
   </style>
 <style id="feed-entry-motion">
 @keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
@@ -81,7 +75,8 @@ html[data-feed-background] .feed-first-action{animation-play-state:paused}
     }());
   </script>
   <!-- playable-inline-config:end -->
-  <script src="./bundle.js?ui=70e3e4c991c3"></script>
+  <script src="./ui-batch2-layout.js?v=6bf3509b6677"></script>
+  <script src="./bundle.js?ui-batch2=1c49b625f3be"></script>
 <script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject="#root img"></script>
 </body>
 </html>

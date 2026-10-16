@@ -122,7 +122,7 @@ function computeGroupPlacements({ bounds, slots }) {
         .face-game__canvas-wrap { position: relative; width: min(100%, calc(100vh - 280px), 560px); max-width: 100%; max-height: 100%; aspect-ratio: 1; border: 2px dashed var(--guide); border-radius: 22px; overflow: hidden; background: rgba(255,255,255,.08); touch-action: none; }
         .face-game canvas { display: block; width: 100%; height: 100%; }
         #draw-canvas { cursor: crosshair; touch-action: none; }
-        .face-game__toolbar { width: min(calc(100% - 60px), 560px); margin: 0 auto; padding: 8px 0 calc(50px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: minmax(105px,.72fr) 1.28fr; gap: 14px; }
+        .face-game__toolbar { width: min(calc(100% - 60px), 560px); min-height: calc(112px + env(safe-area-inset-bottom)); margin: 0 auto; padding: 8px 0 calc(50px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: minmax(105px,.72fr) 1.28fr; gap: 14px; }
         .face-game__button { min-height: 54px; border-radius: 14px; padding: 11px 18px; box-shadow: 0 7px 17px rgba(54,46,36,.12); transition: transform .12s ease, filter .12s ease; white-space: normal; overflow-wrap: anywhere; }
         .face-game__button:active { transform: translateY(2px) scale(.985); filter: brightness(.96); }
         .face-game__button:disabled { cursor: default; opacity: .42; transform: none; filter: none; }
@@ -338,6 +338,8 @@ function computeGroupPlacements({ bounds, slots }) {
     function updateNextAvailability() {
       nextButton.disabled = !hasInk[step];
       nextButton.setAttribute("aria-disabled", String(nextButton.disabled));
+      clearButton.hidden = !hasInk[step];
+      nextButton.hidden = !hasInk[step];
     }
 
     function updateStep() {
@@ -357,7 +359,8 @@ function computeGroupPlacements({ bounds, slots }) {
     }
 
     drawCanvas.addEventListener("pointerdown", (event) => {
-      if (!event.isPrimary) return;
+      if (event.isPrimary === false || event.button > 0) return;
+      window.PlayableEntryPreview?.stop();
       event.preventDefault();
       drawCanvas.setPointerCapture(event.pointerId);
       drawing = true;
