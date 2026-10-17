@@ -216,17 +216,19 @@ const App = () => {
           aspectRatio: '1402 / 1122'
         }}
       >
-        {/* 手柄在机身后方：侧孔遮住金属连接杆，外侧握柄仍可见；保持44px触控区。 */}
+        {/* The shaft crosses over the black opening but enters behind the
+            casing lip to its left. The grip stays in front and draggable. */}
         <div 
           className="toaster-lever-track"
           ref={trackRef} 
           style={{ 
             position: 'absolute', 
-            right: '-8%', 
+            left: '92%',
+            transform: 'translateX(-4%)', // Tuck the shaft tip behind the casing's left lip.
             top: '25%', 
             width: '15%', minWidth:44,
             height: '45%', 
-            zIndex: 0
+            zIndex: 3
           }}
         >
           <motion.div
@@ -298,7 +300,19 @@ const App = () => {
           }} 
         />
 
-        {/* 蒸汽与光效 (z-index: 4) */}
+        {/* Reuse only the casing strip LEFT of the slot as the front lip.
+            Leave the black opening below the shaft; retain exact registration
+            and the existing body replacement slot without a new bitmap. */}
+        <img
+          className="toaster-casing-occluder"
+          src={spriteSrc(cfg.TOASTER_IMG)}
+          alt="" aria-hidden="true" draggable={false}
+          style={{position:'absolute',inset:0,width:'100%',height:'100%',display:'block',objectFit:'contain',
+            clipPath:'polygon(89.5% 26.5%,93.58% 26.95%,92.93% 27.43%,92.57% 28.55%,92.54% 30%,93.39% 57.95%,93.73% 59.35%,94.10% 60.08%,94.71% 60.27%,94.71% 62%,89.5% 62%)',
+            zIndex:4,pointerEvents:'none'}}
+        />
+
+        {/* 蒸汽与光效 (z-index: 5) */}
         <AnimatePresence>
           {gameState === 'toasting' && (
             <>
@@ -313,7 +327,7 @@ const App = () => {
                   width: '60%',
                   height: '15%',
                   background: 'radial-gradient(ellipse at center, rgba(255,150,0,0.6) 0%, transparent 70%)',
-                  zIndex: 4,
+                  zIndex: 5,
                   pointerEvents: 'none',
                   filter: 'blur(8px)'
                 }}
@@ -329,7 +343,7 @@ const App = () => {
                   width: '40%',
                   height: '30%',
                   background: 'radial-gradient(circle, rgba(200,200,200,0.8) 0%, transparent 70%)',
-                  zIndex: 4,
+                  zIndex: 5,
                   pointerEvents: 'none',
                   filter: 'blur(12px)'
                 }}

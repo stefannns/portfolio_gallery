@@ -32,11 +32,11 @@ html body .swatch span{width:29px;height:29px;font-size:17px;font-weight:800;tex
 html body .swatch.active{box-shadow:inset 0 0 0 2px #354e61,inset 0 0 0 5px #fff}
 html body .toast{bottom:calc(50px * var(--ui-scale) + 64px);max-width:calc(100% - 60px * var(--ui-scale));white-space:normal;overflow-wrap:anywhere;font:600 calc(18px * var(--ui-scale))/1.35 "Nunito Sans",sans-serif;text-align:center;border-radius:12px}
 html body .coloring-guide{position:absolute;left:var(--ui-side);right:var(--ui-side);top:calc(30px * var(--ui-scale) + 47px);margin:0;text-align:center;font-size:calc(18px * var(--ui-scale));font-weight:600;line-height:1.3;color:#4c5964;pointer-events:none}
-html body .win{padding:calc(30px * var(--ui-scale)) calc(30px * var(--ui-scale)) calc(50px * var(--ui-scale));overflow:auto}
-html body .win-card{transform:none;padding:20px;max-height:100%;overflow:auto;border-radius:22px;border:1px solid #dce3e4;box-shadow:0 12px 36px #303a4320}
-html body .win h2{font-family:inherit;font-size:calc(24px * var(--ui-scale));font-weight:800;line-height:1.25;overflow-wrap:anywhere;letter-spacing:0;margin-bottom:12px;color:#354e61}
-html body .win p{font-size:calc(18px * var(--ui-scale));line-height:1.4;color:#535c6b}
-html body .again{min-height:44px;min-width:44px;font-family:inherit;font-size:calc(18px * var(--ui-scale));font-weight:700;border-radius:999px;background:#354e61;letter-spacing:0}
+html body .game[data-complete="true"] .topbar,html body .game[data-complete="true"] .palette-shell{visibility:hidden;pointer-events:none}
+html body .game[data-complete="true"] .toast{display:none}
+html body .win{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:calc(30px * var(--ui-scale)) calc(30px * var(--ui-scale)) calc(50px * var(--ui-scale));background:transparent;border:0;border-radius:0;box-shadow:none;backdrop-filter:none;overflow:visible;pointer-events:none}
+html body .win h2{font-family:inherit;font-size:max(20px,calc(24px * var(--ui-scale)));font-weight:800;line-height:1.25;max-width:100%;overflow-wrap:anywhere;letter-spacing:0;margin:0;padding:0;background:transparent;border:0;box-shadow:none;color:#fff;text-shadow:0 2px 8px #182a3a90,0 0 2px #182a3a;animation:coloring-beautiful .25s ease-out both}
+@keyframes coloring-beautiful{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
 html body button:focus-visible{outline:3px solid #354e61;outline-offset:2px}
 @keyframes coloring-guide-float{50%{transform:translateY(-2px)}}
 html body .coloring-guide{animation:coloring-guide-float 2.6s ease-in-out infinite}

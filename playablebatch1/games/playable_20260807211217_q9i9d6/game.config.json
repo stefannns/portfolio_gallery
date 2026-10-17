@@ -51,6 +51,18 @@
       "label": "收集物3",
       "path": "./assets/item_coconut.webp",
       "replaceable": true
+    },
+    {
+      "id": "ITEM_4",
+      "label": "收集物4：树叶",
+      "path": "./assets/item_leaf.webp",
+      "replaceable": true
+    },
+    {
+      "id": "ITEM_5",
+      "label": "收集物5：小鱼",
+      "path": "./assets/item_fish.webp",
+      "replaceable": true
     }
   ],
   "config_version": "2.0",

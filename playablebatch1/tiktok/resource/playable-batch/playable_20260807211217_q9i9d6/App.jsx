@@ -7,12 +7,12 @@
      - `flyingItems`: 正在飞行的物品状态数组（含起点、终点、ID）。
      - `showSuccess`: 是否展示成功弹窗。
   2. 流程衔接:
-     - 初始态：3 个物品散布在主图 wrapper 内。
+     - 初始态：5 个物品藏在相近颜色的场景区域内，坐标随 cover 图片适配。
      - 交互：点击物品 -> 触发首次音频解锁 -> 物品从原位消失，加入 `flyingItems` -> 播放飞行 CSS/Framer 动画。
      - 收集：飞行结束 -> 移出 `flyingItems`，加入 `collected` -> 对应底部槽位点亮，播放收集音效。
-     - 终止态：`collected.length === 3` -> 延迟 500ms 弹出成功提示，播放胜利音效。
+     - 终止态：收齐 ITEM_DEFS 中所有物品后提示成功，播放胜利音效。
   3. 关键路径与边界:
-     - 背景始终全屏；三个独立透明收集格叠在图上，不占用图片高度。
+     - 背景始终全屏；五个独立透明收集格叠在图上，不占用图片高度。
      - 跨坐标系飞行：起点用 e.clientX/Y，终点用槽位的 getBoundingClientRect()，飞行元素用 position:fixed 挂在顶层，避免被 overflow 裁切或受相对定位影响。
   4. 降级兜底: 图片加载失败不崩，音频加载失败 try/catch。
 */
@@ -26,13 +26,15 @@ import {themeCss} from './playable-theme.js';
 
 // --- 常量与初始数据 ---
 const ITEM_DEFS = [
-  { id: 'item1', cfgKey: 'ITEM_1', initPos: { left: '30%', top: '59%' } },
-  { id: 'item2', cfgKey: 'ITEM_2', initPos: { left: '28%', top: '76%' } },
-  { id: 'item3', cfgKey: 'ITEM_3', initPos: { left: '82%', top: '73%' } },
+  { id: 'item1', cfgKey: 'ITEM_1', name: 'Starfish', scene: [.565, .70], landscape: [.57, .60], filter: 'saturate(.55) hue-rotate(12deg)', size: .76 },
+  { id: 'item2', cfgKey: 'ITEM_2', name: 'Shell', scene: [.35, .71], landscape: [.30, .61], filter: 'brightness(.93) saturate(.7)', size: .82 },
+  { id: 'item3', cfgKey: 'ITEM_3', name: 'Coconut', scene: [.62, .347], landscape: [.68, .49], filter: 'brightness(.68) saturate(.7)', size: .95 },
+  { id: 'item4', cfgKey: 'ITEM_4', name: 'Leaf', scene: [.72, .52], landscape: [.80, .42], filter: 'brightness(.62) saturate(.7)', size: .85 },
+  { id: 'item5', cfgKey: 'ITEM_5', name: 'Fish', scene: [.30, .53], landscape: [.18, .55], filter: 'brightness(.8) saturate(.75)', size: .85 },
 ];
 
 // Revision only bundled collectible sprites; replacement/custom URLs stay unchanged.
-const itemSrc = src => /^\.\/assets\/item_(starfish|shell|coconut)\.webp$/.test(src)
+const itemSrc = src => /^\.\/assets\/item_(starfish|shell|coconut|leaf|fish)\.webp$/.test(src)
   ? `${src}?art=grounded-voxel70-20261015-1` : src;
 
 // --- 辅助函数 ---
@@ -97,8 +99,8 @@ const styles = {
     bottom: 'var(--ui-bottom)',
     transform: 'translateX(-50%)',
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, var(--voxel-slot-size))',
-    gap: '12px',
+    gridTemplateColumns: `repeat(${ITEM_DEFS.length}, var(--voxel-slot-size))`,
+    gap: '8px',
     background: 'transparent',
     pointerEvents: 'none',
     zIndex: 10
@@ -305,14 +307,12 @@ const App = () => {
         html, body, #root { width:100%; height:100%; margin:0; overflow:hidden; background: var(--color-bg); }
         * { box-sizing: border-box; touch-action: none; user-select: none; -webkit-user-drag: none; }
         
-        .voxel-game{--voxel-slot-size:clamp(48px,12cqmin,64px);--voxel-item-inset:calc(var(--voxel-item-size) * .55 + 4px);--voxel-guide-top:max(var(--ui-top),12cqh);--voxel-guide-height:calc(18px * var(--ui-scale) * 1.35 + 14px)}
+        .voxel-game{--voxel-slot-size:clamp(44px,12cqmin,56px);--voxel-item-inset:calc(var(--voxel-item-size) * .55 + 4px);--voxel-guide-top:max(var(--ui-top),12cqh);--voxel-guide-height:calc(18px * var(--ui-scale) * 1.35 + 14px);--voxel-scene-width:max(100cqw,calc(100cqh * 928 / 1152));--voxel-scene-height:max(100cqh,calc(100cqw * 1152 / 928))}
         .voxel-item{border-radius:50%}
         .voxel-item-visual{transition:transform .14s ease-out}
         @media(hover:hover) and (pointer:fine){.voxel-item:hover .voxel-item-visual{transform:scale(1.05)}}
         @media(orientation:landscape){
-          .voxel-item[data-item="item1"]{--voxel-item-left:35%;--voxel-item-top:64%}
-          .voxel-item[data-item="item2"]{--voxel-item-left:25%;--voxel-item-top:85%;--voxel-item-floor:calc(100% - var(--ui-bottom) - var(--voxel-item-inset))}
-          .voxel-item[data-item="item3"]{--voxel-item-left:76%;--voxel-item-top:85%;--voxel-item-floor:calc(100% - var(--ui-bottom) - var(--voxel-item-inset))}
+          .voxel-item{--voxel-scene-x:var(--voxel-landscape-x);--voxel-scene-y:var(--voxel-landscape-y)}
         }
         .voxel-item:active .voxel-item-visual{transform:scale(.95)}
         .ui-game .voxel-item:focus-visible{outline:3px solid #fff;outline-offset:4px;box-shadow:0 0 0 6px #244237}
@@ -341,15 +341,17 @@ const App = () => {
               <button type="button" className="voxel-item"
                 key={def.id}
                 data-item={def.id}
-                aria-label={`Collect ${['starfish','shell','coconut'][ITEM_DEFS.indexOf(def)]}`}
+                aria-label={`Collect ${def.name.toLowerCase()}`}
                 style={{ ...styles.itemWrapper,
-                  left:`clamp(calc(var(--ui-side) + var(--voxel-item-inset)), var(--voxel-item-left, ${def.initPos.left}), calc(100% - var(--ui-side) - var(--voxel-item-inset)))`,
-                  top:`clamp(calc(var(--voxel-guide-top) + var(--voxel-guide-height) + 8px + var(--voxel-item-inset)), var(--voxel-item-top, ${def.initPos.top}), var(--voxel-item-floor, calc(100% - var(--ui-bottom) - var(--voxel-slot-size) - 12px - var(--voxel-item-inset))))`
+                  '--voxel-portrait-x':def.scene[0] - .5,'--voxel-portrait-y':def.scene[1] - .5,
+                  '--voxel-landscape-x':def.landscape[0] - .5,'--voxel-landscape-y':def.landscape[1] - .5,
+                  left:'clamp(calc(var(--ui-side) + var(--voxel-item-inset)), calc(50% + var(--voxel-scene-width) * var(--voxel-scene-x, var(--voxel-portrait-x))), calc(100% - var(--ui-side) - var(--voxel-item-inset)))',
+                  top:'clamp(calc(var(--voxel-guide-top) + var(--voxel-guide-height) + 8px + var(--voxel-item-inset)), calc(50% + var(--voxel-scene-height) * var(--voxel-scene-y, var(--voxel-portrait-y))), calc(100% - var(--ui-bottom) - var(--voxel-slot-size) - 12px - var(--voxel-item-inset)))'
                 }}
                 onClick={(e) => handleItemClick(e, def)}
               >
                 <span className="voxel-item-visual" style={styles.itemVisual}>
-                  <img src={itemSrc(cfg[def.cfgKey])} alt="" draggable={false} style={styles.itemImg} />
+                  <img src={itemSrc(cfg[def.cfgKey])} alt="" draggable={false} style={{...styles.itemImg,width:`${def.size * 100}%`,height:`${def.size * 100}%`,filter:def.filter}} />
                 </span>
               </button>
             );
@@ -364,7 +366,7 @@ const App = () => {
             return (
               <div 
                 key={`slot_${def.id}`} 
-                role="listitem" aria-label={`${['Starfish','Shell','Coconut'][ITEM_DEFS.indexOf(def)]}: ${isCollected?'collected':'not collected'}`}
+                role="listitem" aria-label={`${def.name}: ${isCollected?'collected':'not collected'}`}
                 ref={el => slotRefs.current[def.id] = el}
                 style={{
                   ...styles.slot,
@@ -385,7 +387,7 @@ const App = () => {
             );
           })}
         </div>
-      <span className="voxel-status" role="status" aria-live="polite" aria-atomic="true">{collected.length} of 3 items collected</span>
+      <span className="voxel-status" role="status" aria-live="polite" aria-atomic="true">{collected.length} of {ITEM_DEFS.length} items collected</span>
       {!hasInteracted&&<p className="ui-guide ui-float" style={{top:'var(--voxel-guide-top)',fontFamily:'var(--font-body)',fontWeight:400,color:'#fff',textShadow:'none',background:'rgba(32,51,47,.8)',borderRadius:12,padding:'7px 12px'}}>Tap the hidden items</p>}
 
       {/* 飞行层 (Fixed 跨坐标系) */}

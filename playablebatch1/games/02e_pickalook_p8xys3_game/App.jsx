@@ -94,10 +94,15 @@ const App = () => {
   const synthRef = useRef(null);
   const pointerRef = useRef(null);
   const hasDrawnRef = useRef(false);
+  const actionAudioRef = useRef(null);
+  const actionAudio=()=>{
+    if(!actionAudioRef.current||actionAudioRef.current.disposed)actionAudioRef.current=globalThis.PlayableActionAudio?.create('scratch');
+    return actionAudioRef.current;
+  };
   const reduced = useUiStage(containerRef, !!cfg);
   const unlock = useToneGate(Tone, audioBank);
   useEffect(() => {
-    const stop=()=>{pointerRef.current=null;isDrawingRef.current=false;lastPosRef.current=null;};
+    const stop=()=>{pointerRef.current=null;isDrawingRef.current=false;lastPosRef.current=null;actionAudioRef.current?.stop();};
     const hidden=()=>{if(document.hidden)stop();};
     window.addEventListener('blur',stop);document.addEventListener('visibilitychange',hidden);
     return()=>{window.removeEventListener('blur',stop);document.removeEventListener('visibilitychange',hidden);};
@@ -196,6 +201,7 @@ const App = () => {
 
     const dpr = window.devicePixelRatio || 1;
     pointerRef.current=null;isDrawingRef.current=false;lastPosRef.current=null;
+    actionAudioRef.current?.stop();
     let previous;
     if (hasDrawnRef.current) {previous=document.createElement('canvas');previous.width=canvas.width;previous.height=canvas.height;previous.getContext('2d').drawImage(canvas,0,0);}
     canvas.width = layout.w * dpr;
@@ -211,6 +217,7 @@ const App = () => {
     ctx.lineWidth = (cfg.BRUSH_SIZE || 40) * dpr;
 
   }, [layout, assets, cfg, isRevealed]);
+  useEffect(()=>()=>actionAudioRef.current?.dispose(),[]);
 
   // --- 音频初始化 ---
   const ensureAudio = () => unlock(() => {
@@ -226,6 +233,7 @@ const App = () => {
   }, []);
 
   const triggerReveal = useCallback(() => {
+    actionAudioRef.current?.stop();
     setIsRevealed(true);
     playRevealSound();
   }, [playRevealSound]);
@@ -246,6 +254,8 @@ const App = () => {
     pointerRef.current=e.pointerId;
     e.currentTarget.setPointerCapture?.(e.pointerId);
     ensureAudio();
+    actionAudio()?.arm();
+    actionAudio()?.move(.35);
     setShowHint(false);
     isDrawingRef.current = true;
     lastPosRef.current = getPointerPos(e);
@@ -270,7 +280,10 @@ const App = () => {
     // 累加滑动距离 (用于兜底)
     const dx = pos.x - lastPosRef.current.x;
     const dy = pos.y - lastPosRef.current.y;
-    scratchDistanceRef.current += Math.sqrt(dx * dx + dy * dy);
+    const distance=Math.sqrt(dx * dx + dy * dy);
+    scratchDistanceRef.current += distance;
+    if(pos.x<0||pos.x>canvasRef.current.width||pos.y<0||pos.y>canvasRef.current.height)actionAudioRef.current?.stop();
+    else if(distance>=1)actionAudio()?.move(.6+Math.min(distance/60,.4));
 
     lastPosRef.current = pos;
   }, [isRevealed, getPointerPos]);
@@ -313,11 +326,13 @@ const App = () => {
     pointerRef.current=null;
     isDrawingRef.current = false;
     lastPosRef.current = null;
+    actionAudioRef.current?.stop();
     checkReveal();
   }, [checkReveal,handlePointerMove]);
   const cancelPointer = e => {
     if (pointerRef.current !== e.pointerId) return;
     pointerRef.current=null;isDrawingRef.current=false;lastPosRef.current=null;
+    actionAudioRef.current?.stop();
   };
 
   // --- 渲染 ---
@@ -434,7 +449,7 @@ const App = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      {isRevealed && <button autoFocus type="button" onClick={()=>{unlock.stop();hasDrawnRef.current=false;scratchDistanceRef.current=0;setShowHint(true);setIsRevealed(false);}}
+      {isRevealed && <button autoFocus type="button" onClick={()=>{unlock.stop();actionAudioRef.current?.stop();hasDrawnRef.current=false;scratchDistanceRef.current=0;setShowHint(true);setIsRevealed(false);}}
         style={{position:'absolute',bottom:'var(--ui-bottom)',left:'50%',transform:'translateX(-50%)',padding:'12px 28px',font:'700 18px var(--font-body)',color:'#202722',background:'#fffef9',border:'1px solid #d8dfd9',borderRadius:999,boxShadow:'0 4px 14px #0002',zIndex:20}}>Again</button>}
     </div>
   );

@@ -48,6 +48,11 @@ function BeadBoard({cfg}) {
   const image=React.useRef(null),pointer=React.useRef(null),last=React.useRef(null),cursor=React.useRef(null);
   const particles=React.useRef([]),keyboard=React.useRef({x:.5,y:.5}),steamLoop=React.useRef(null),clearSteam=React.useRef(null);
   const lastSteam=React.useRef(null);
+  const actionAudioRef=React.useRef(null);
+  const actionAudio=()=>{
+    if(!actionAudioRef.current||actionAudioRef.current.disposed)actionAudioRef.current=globalThis.PlayableActionAudio?.create('steam');
+    return actionAudioRef.current;
+  };
   const [ready,setReady]=React.useState(false),[started,setStarted]=React.useState(false),[error,setError]=React.useState(false);
   const [ratio,setRatio]=React.useState(1);
   const brush=Math.max(.05,Math.min(.3,Number(cfg.BRUSH_RATIO)||.12));
@@ -55,6 +60,7 @@ function BeadBoard({cfg}) {
   // Migrate only the package's hover-era default copy; keep custom replacement text intact.
   const guide=cfg.HINT_TEXT&&cfg.HINT_TEXT!=='Move around to reveal!'?cfg.HINT_TEXT:'Drag the iron over the beads';
   const end=()=>{const id=pointer.current;pointer.current=null;last.current=null;lastSteam.current=null;
+    actionAudioRef.current?.stop();
     if(id!==null&&canvas.current?.hasPointerCapture?.(id))canvas.current.releasePointerCapture(id);};
   const suspend=()=>{end();clearSteam.current?.();};
   function restore(){
@@ -115,15 +121,18 @@ function BeadBoard({cfg}) {
     steamLoop.current=()=>{if(raf===null&&!document.hidden&&!media.matches)raf=requestAnimationFrame(frame);};clearSteam.current=clear;
     return()=>{clear();steamLoop.current=null;clearSteam.current=null;};
   },[]);
+  React.useEffect(()=>()=>actionAudioRef.current?.dispose(),[]);
   function paint(clientX,clientY){
     if(!ready||!canvas.current)return false;
     const rect=canvas.current.getBoundingClientRect(),outer=root.current.getBoundingClientRect();
-    if(clientX<rect.left||clientX>rect.right||clientY<rect.top||clientY>rect.bottom){last.current=null;return false;}
+    if(clientX<rect.left||clientX>rect.right||clientY<rect.top||clientY>rect.bottom){last.current=null;actionAudioRef.current?.stop();return false;}
     const x=(clientX-rect.left)*canvas.current.width/rect.width,y=(clientY-rect.top)*canvas.current.height/rect.height;
     const ctx=canvas.current.getContext('2d'),radius=outer.width*brush*.5*canvas.current.width/rect.width;
     ctx.globalCompositeOperation='destination-out';ctx.lineWidth=radius*2;ctx.lineCap='round';ctx.lineJoin='round';
     ctx.beginPath();if(last.current){ctx.moveTo(last.current.x,last.current.y);ctx.lineTo(x,y);ctx.stroke();}
     else{ctx.arc(x,y,radius,0,Math.PI*2);ctx.fill();}
+    const distance=last.current?Math.hypot(x-last.current.x,y-last.current.y):1;
+    if(distance>=.6)actionAudio()?.move(.65+Math.min(distance/60,.35));
     last.current={x,y};setStarted(true);
     const localX=clientX-outer.left,localY=clientY-outer.top;
     if(cursor.current){cursor.current.style.left=localX+'px';cursor.current.style.top=localY+'px';cursor.current.style.opacity='1';}
@@ -142,6 +151,7 @@ function BeadBoard({cfg}) {
   function down(event){
     if(event.isPrimary===false||event.button!==0||pointer.current!==null||!ready)return;
     if(!paint(event.clientX,event.clientY))return;
+    actionAudio()?.arm();actionAudio()?.move(.75);
     pointer.current=event.pointerId;event.currentTarget.setPointerCapture?.(event.pointerId);
   }
   function move(event){if(pointer.current!==event.pointerId)return;paint(event.clientX,event.clientY);}
@@ -151,6 +161,7 @@ function BeadBoard({cfg}) {
     const change={ArrowLeft:[-.025,0],ArrowRight:[.025,0],ArrowUp:[0,-.025],ArrowDown:[0,.025]}[event.key];
     if(!ready||(!change&&![' ','Enter'].includes(event.key)))return;
     event.preventDefault();if(change){keyboard.current.x=Math.max(0,Math.min(1,keyboard.current.x+change[0]));keyboard.current.y=Math.max(0,Math.min(1,keyboard.current.y+change[1]));}
+    actionAudio()?.arm();
     const r=canvas.current.getBoundingClientRect();paint(r.left+keyboard.current.x*r.width,r.top+keyboard.current.y*r.height);
   }
   return h('main',{ref:root,className:'bead-game ui-game','aria-label':cfg.GAME_TITLE},
@@ -158,7 +169,7 @@ function BeadBoard({cfg}) {
     !started&&h('p',{className:'bead-guide ui-guide ui-float'},guide),
     h('div',{ref:board,className:'bead-board',style:{aspectRatio:String(ratio)}},
       h('img',{src:cfg.BG_PIXEL||'',alt:'Fused pixel artwork',draggable:false,style:{visibility:ready?'visible':'hidden'}}),
-      h('canvas',{ref:canvas,style:{visibility:ready?'visible':'hidden'},tabIndex:0,role:'application','aria-label':'Fuse bead canvas. Drag to iron, or use arrow keys and Space.',onPointerDown:down,onPointerMove:move,onPointerUp:up,onPointerCancel:cancel,onLostPointerCapture:cancel,onKeyDown:key,onKeyUp:()=>{last.current=null;}}),
+      h('canvas',{ref:canvas,style:{visibility:ready?'visible':'hidden'},tabIndex:0,role:'application','aria-label':'Fuse bead canvas. Drag to iron, or use arrow keys and Space.',onPointerDown:down,onPointerMove:move,onPointerUp:up,onPointerCancel:cancel,onLostPointerCapture:cancel,onKeyDown:key,onKeyUp:()=>{last.current=null;actionAudioRef.current?.stop();}}),
       !ready&&h('p',{className:'bead-loading',role:'status'},error?'Image unavailable. Reload to try again.':'Loading beads…')
     ),
     h('canvas',{ref:steam,className:'bead-steam','aria-hidden':true}),

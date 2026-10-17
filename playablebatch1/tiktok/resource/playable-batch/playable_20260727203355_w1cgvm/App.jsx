@@ -17,6 +17,11 @@ function App(){
   const [cfg,setCfg]=useState(null),[wearA,setWearA]=useState(false),[wearB,setWearB]=useState(false);
   const [started,setStarted]=useState(false),[plane,setPlane]=useState({width:0,height:0});
   const root=useRef(null),removeA=useRef(null),removeB=useRef(null),itemA=useRef(null),itemB=useRef(null);
+  const actionAudioRef=useRef(null);
+  const actionAudio=()=>{
+    if(!actionAudioRef.current||actionAudioRef.current.disposed)actionAudioRef.current=globalThis.PlayableActionAudio?.create('outfit');
+    return actionAudioRef.current;
+  };
   useUiStage(root,!!cfg);
   useEffect(()=>{let alive=true;loadConfig().then(raw=>{if(alive)setCfg(flattenConfig(raw));});return()=>{alive=false;};},[]);
   useEffect(()=>{
@@ -24,7 +29,9 @@ function App(){
     const fit=()=>{const scale=Math.max(node.clientWidth/3,node.clientHeight/4);setPlane({width:3*scale,height:4*scale});};
     const observer=new ResizeObserver(fit);observer.observe(node);fit();return()=>observer.disconnect();
   },[cfg]);
+  useEffect(()=>()=>actionAudioRef.current?.dispose(),[]);
   function toggle(kind,on,keyboard){
+    actionAudio()?.tap(on);
     setStarted(true);kind==='A'?setWearA(on):setWearB(on);
     if(keyboard)requestAnimationFrame(()=>{
       const ref=kind==='A'?(on?removeA:itemA):(on?removeB:itemB);

@@ -465,9 +465,9 @@ window.PlayableGameDownloads = {
   "playable_20260727203355_w1cgvm_game": {
     "url": "/playablebatch1/downloads/67-playable_20260727203355_w1cgvm_game.zip",
     "filename": "67-playable_20260727203355_w1cgvm_game.zip",
-    "bytes": 1930133,
-    "files": 14,
-    "sha256": "dcf0070378b8e06dc1d33b94470be82076108475645e146db036a2ffe7281bdd"
+    "bytes": 1932730,
+    "files": 15,
+    "sha256": "66699443b9748aed4b72f5288dc51373719f73642da15af8e6a0e3f2657e4143"
   },
   "05c_timemachine_male_black_wall": {
     "url": "/playablebatch1/downloads/68-05c_timemachine_male_black_wall.zip",
@@ -479,36 +479,36 @@ window.PlayableGameDownloads = {
   "mianbao": {
     "url": "/playablebatch1/downloads/69-mianbao.zip",
     "filename": "69-mianbao.zip",
-    "bytes": 2288814,
+    "bytes": 2289260,
     "files": 14,
-    "sha256": "7abbd10bff218a528911cd92087ae4cd590b9ba66a56ca3729194ed31ef18313"
+    "sha256": "0eb6e01c5b421af0dfef46f4c9dc3e21589b774b62bc7ba2473824b9bb555d11"
   },
   "playable_20260807211217_q9i9d6": {
     "url": "/playablebatch1/downloads/70-playable_20260807211217_q9i9d6.zip",
     "filename": "70-playable_20260807211217_q9i9d6.zip",
-    "bytes": 2523349,
-    "files": 14,
-    "sha256": "396dbf67fe39993be29ff87ba2340f8a1564ea4a798c0e9b136892c5ab6f7f02"
+    "bytes": 2765863,
+    "files": 16,
+    "sha256": "e359999898a436b779667ae2dcab0f9b6b10457d0ecec5835ea296ce73739519"
   },
   "06a_coloring_game_final": {
     "url": "/playablebatch1/downloads/71-06a_coloring_game_final.zip",
     "filename": "71-06a_coloring_game_final.zip",
-    "bytes": 3422415,
+    "bytes": 3423037,
     "files": 10,
-    "sha256": "9ef8c999a6635ed1e2e3f1a70ee6c81be4071e5f134c30df8e944e68886c2c3c"
+    "sha256": "005ee983e7d30a16c6a7e40837737d6d34443cdce013c3b7a1baaa47e30756e1"
   },
   "02e_pickalook_p8xys3_game": {
     "url": "/playablebatch1/downloads/72-02e_pickalook_p8xys3_game.zip",
     "filename": "72-02e_pickalook_p8xys3_game.zip",
-    "bytes": 3336373,
-    "files": 11,
-    "sha256": "678da85b31c47c22ee83314701726ec4f32b7d769901881e60f5e790b0c28a1b"
+    "bytes": 3339106,
+    "files": 12,
+    "sha256": "6639807f08d1d86ffb6003ddf01d39e68a2062b6634724bdccb755a89d34bce4"
   },
   "playable_20261015220925_0pn002_game": {
     "url": "/playablebatch1/downloads/73-playable_20261015220925_0pn002_game.zip",
     "filename": "73-playable_20261015220925_0pn002_game.zip",
-    "bytes": 832961,
-    "files": 9,
-    "sha256": "e9d7007f73b108f3dcebc732005ebebe688ef63990f6d30708c1a59f0ca1a00c"
+    "bytes": 835543,
+    "files": 10,
+    "sha256": "b7fdfb4d968968a87a4445211f6d805e66a43295b55cf0c46aaf4c76c73f4e5c"
   }
 };
