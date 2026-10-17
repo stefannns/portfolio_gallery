@@ -20,7 +20,7 @@ Object.assign(window.PLAYABLE_IMPLEMENTED_FIXES || (window.PLAYABLE_IMPLEMENTED_
   },
   "mianbao": {
     "number": 69,
-    "items": ["Generated a coordinated ivory/chrome toaster, dark lever and matching normal/burnt face-toast sprites with transparent backgrounds.", "The handle crosses in front of the black slot but passes behind the casing lip immediately to its left. Retained the 44px drag target, keyboard controls and toast timing.", "Removed the result card and dimming layer: Burnt! now appears directly over the scene with a separate Again control."],
+    "items": ["Generated a coordinated ivory/chrome toaster, dark lever and matching normal/burnt face-toast sprites with transparent backgrounds.", "The handle crosses in front of the black slot but passes behind the casing lip immediately to its left. Retained the 44px drag target, keyboard controls and toast timing.", "Toast changes to burnt while hidden inside, then pops out already burnt without a visible image swap.", "Removed the result card and dimming layer: Burnt! now appears directly over the scene with a separate Again control."],
     "status": "Implemented locally; user review pending.",
     "evidence": ["UI imports review — October 15, 2026"]
   },

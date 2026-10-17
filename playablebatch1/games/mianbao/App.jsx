@@ -80,6 +80,7 @@ const App = () => {
   const toasterControls = useAnimation();
   const rootRef=useRef(null),timerRef=useRef(null),roundRef=useRef(0),stateRef=useRef('idle');
   const [hasInteracted,setHasInteracted]=useState(false);
+  const [breadBurnt,setBreadBurnt]=useState(false);
   const reduced=useUiStage(rootRef,!!cfg);
   const unlock=useToneGate(Tone,audioBank);
 
@@ -150,7 +151,13 @@ const App = () => {
       noise.current?.triggerAttackRelease(cfg.TOAST_DURATION / 1000);
     }
     
-    breadControls.start({ y: '100%', transition: { duration: 0.5, ease: 'easeInOut' } });
+    const round=roundRef.current;
+    breadControls.start({ y: '100%', transition: { duration: 0.5, ease: 'easeInOut' } }).then(() => {
+      // Prepare the burnt face only once the bread is fully below the slot.
+      // Both sprites are already mounted, so the pop never starts a new image load.
+      if(round!==roundRef.current||stateRef.current!=='toasting')return;
+      setBreadBurnt(true);
+    });
     
     if(!reduced)toasterControls.start({
       x: [-2, 2, -2, 2, 0],
@@ -178,7 +185,7 @@ const App = () => {
 
   const resetGame = useCallback(() => {
     unlock.stop();
-    clearTimeout(timerRef.current);roundRef.current++;stateRef.current='idle';setHasInteracted(false);
+    clearTimeout(timerRef.current);roundRef.current++;stateRef.current='idle';setHasInteracted(false);setBreadBurnt(false);
     toasterControls.stop();toasterControls.set({x:0});
     setGameState('idle');
     handleControls.set({ y: 0 });
@@ -192,7 +199,7 @@ const App = () => {
 
   if (!cfg) return <div style={{ width: '100%', height: '100%', background: '#fff' }} />;
 
-  const currentBread = (gameState === 'popping' || gameState === 'done') ? cfg.BURNT_BREAD_IMG : cfg.NORMAL_BREAD_IMG;
+  const isBurnt = breadBurnt || gameState === 'popping' || gameState === 'done';
 
   return (
     <div ref={rootRef} className="ui-game toaster-game" style={{
@@ -275,10 +282,19 @@ const App = () => {
               aspectRatio: '1122 / 1402'
             }}
           >
-            <img 
-              src={spriteSrc(currentBread)}
-              alt="bread"
-              style={{ width: '100%', height: '100%', display: 'block', objectFit: 'contain' }} 
+            <img
+              className="toaster-bread-normal"
+              src={spriteSrc(cfg.NORMAL_BREAD_IMG)}
+              alt={isBurnt ? '' : 'bread'} aria-hidden={isBurnt} draggable={false}
+              loading="eager" decoding="sync"
+              style={{ position:'absolute',inset:0,width:'100%',height:'100%',display:'block',objectFit:'contain',opacity:isBurnt?0:1 }}
+            />
+            <img
+              className="toaster-bread-burnt"
+              src={spriteSrc(cfg.BURNT_BREAD_IMG)}
+              alt={isBurnt ? 'burnt bread' : ''} aria-hidden={!isBurnt} draggable={false}
+              loading="eager" decoding="sync"
+              style={{ position:'absolute',inset:0,width:'100%',height:'100%',display:'block',objectFit:'contain',opacity:isBurnt?1:0 }}
             />
           </motion.div>
         </div>

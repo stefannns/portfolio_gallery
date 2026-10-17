@@ -479,9 +479,9 @@ window.PlayableGameDownloads = {
   "mianbao": {
     "url": "/playablebatch1/downloads/69-mianbao.zip",
     "filename": "69-mianbao.zip",
-    "bytes": 2289260,
+    "bytes": 2289566,
     "files": 14,
-    "sha256": "0eb6e01c5b421af0dfef46f4c9dc3e21589b774b62bc7ba2473824b9bb555d11"
+    "sha256": "4e79746c5c771e7a2c4da8453bc4bf07ecadce13fc88076815e616cb107b88bc"
   },
   "playable_20260807211217_q9i9d6": {
     "url": "/playablebatch1/downloads/70-playable_20260807211217_q9i9d6.zip",
