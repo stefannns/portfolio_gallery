@@ -145,6 +145,12 @@ function select(game, options = {}) {
   history.replaceState(null, '', '#' + game.taskId);
   $('preview-title').textContent = (game.number ? game.number + '. ' : '') + game.name;
   $('preview-title').title = $('preview-title').textContent;
+  const individualFyp = game.taskId === 'playable2_20261001230052_xrken6b' ? 'fyp-creature-sandbox.html' : game.taskId === 'playable_20260924213804_34rslj' ? 'fyp-draw-face.html' : null;
+  const showcaseRuntime = new URL($('tiktok-view').dataset.feedRuntime, location.href), fypLink = $('two-game-fyp');
+  fypLink.href = new URL('/' + (individualFyp || 'fyp-51-2.html'), showcaseRuntime).href;
+  fypLink.textContent = individualFyp ? 'Standalone FYP ↗' : '51 + 2 · FYP ↗';
+  fypLink.setAttribute('aria-label', individualFyp ? 'Open ' + game.name + ' in its own FYP page' : 'Open Creature Sandbox and Draw Face in a separate FYP');
+  fypLink.title = individualFyp ? game.name + ' · FYP' : 'Creature Sandbox + Draw Face';
   $('preview-sub').textContent = game.taskId + ' · ' + (game.sheetRow ? 'Spreadsheet row ' + game.sheetRow : game.sourceLabel);
   if (options.preview !== false) {
     if (window.PlayableFypMode?.active) window.PlayableFypMode.select(game);
@@ -215,9 +221,5 @@ window.PlayableReviewLibrary = { games, previewSource, viewport: phoneViewport, 
 </script>
 <script src="/playablebatch1/feed-mode.js?v=creature-draw-fyp-20261019-1"></script>
 <script src="/playablebatch1/review-layout.js?v=creature-draw-fyp-20261019-1"></script>
-<script>
-  const showcaseRuntime = new URL(document.getElementById('tiktok-view').dataset.feedRuntime, location.href);
-  document.getElementById('two-game-fyp').href = new URL('/fyp-51-2.html', showcaseRuntime).href;
-</script>
 </body>
 </html>
