@@ -562,7 +562,7 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "number": "57b",
     "items": [
       "Added a top-down variant with radial grass, natural flowers and refined visitors; flower tools stay independent of grass.",
-      "Added a silent looping opening: grass and flowers grow into a small meadow, with a bee, butterfly and ladybug moving around it. First planting replaces the demo; Reset restores it.",
+      "Added a silent looping opening: grass grows along a continuous swipe path, flowers bloom, and a bee, butterfly and ladybug move around it. First planting replaces the demo; Reset restores it.",
       "Simplified to an anchored four-item picker plus Reset; removed Ferns.",
       "Added quieter, softer grass rustles and short flower pops, select/reset feedback and gentle music; leaving stops all audio."
     ],

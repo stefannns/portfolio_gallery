@@ -146,9 +146,14 @@ Error generating stack: `+o.message+`
     const drawIntro=(ctx,now,dt,scale,w,hgt)=>{
       const state=intro.current;if(!state.active)return;
       if(!state.scene){
-        const tufts=[[.27,.53],[.30,.45],[.39,.39],[.50,.40],[.60,.46],[.60,.55],[.50,.59],[.39,.56]];
-        const flowers=[[.32,.48,"daisy"],[.44,.40,"tulip"],[.57,.51,"sunflower"],[.44,.57,"daisy"]];
-        state.scene=[...tufts.map(([x,y],i)=>({...makePlant(x,y,"grass",5101+i),radius:29,delay:i*140,duration:900})),...flowers.map(([x,y,type],i)=>({...makePlant(x,y,type,5201+i),radius:10,delay:700+i*270,duration:760}))];
+        // Overlapping samples follow a single curved swipe, not isolated radial patches.
+        // Preview seeds and timing stay entirely separate from the live garden/input.
+        const curves=[[[.28,.56],[.25,.44],[.64,.60],[.60,.46]],[[.60,.46],[.55,.35],[.31,.48],[.37,.36]]];
+        const path=Array.from({length:129},(_,i)=>{const progress=i/128*2,segment=Math.min(1,Math.floor(progress)),t=progress-segment,q=1-t,p=curves[segment];return[0,1].map(axis=>q*q*q*p[0][axis]+3*q*q*t*p[1][axis]+3*q*t*t*p[2][axis]+t*t*t*p[3][axis])});
+        path[0][2]=0;for(let i=1;i<path.length;i++)path[i][2]=path[i-1][2]+Math.hypot((path[i][0]-path[i-1][0])*390,(path[i][1]-path[i-1][1])*598);
+        const tufts=Array.from({length:44},(_,i)=>{const distance=i/43*path.at(-1)[2],index=Math.max(1,path.findIndex(p=>p[2]>=distance)),a=path[index-1],b=path[index],t=(distance-a[2])/(b[2]-a[2]);return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]});
+        const flowers=[[.32,.51,"daisy"],[.52,.51,"tulip"],[.55,.44,"sunflower"],[.40,.40,"daisy"]];
+        state.scene=[...tufts.map(([x,y],i)=>({...makePlant(x,y,"grass",5101+i),radius:29,delay:i*45,duration:440})),...flowers.map(([x,y,type],i)=>({...makePlant(x,y,type,5201+i),radius:10,delay:900+i*350,duration:760}))];
       }
       if(!reduced.current)state.elapsed+=dt;
       const cycle=reduced.current?2400:state.elapsed%8000,fade=reduced.current?1:Math.min(1,cycle/220,(8000-cycle)/900);
