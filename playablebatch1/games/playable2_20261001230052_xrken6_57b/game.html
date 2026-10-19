@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+<script id="creature-preview-controls">
+(() => {
+  const query = new URLSearchParams(location.search);
+  if (window.parent === window || (!/^batch(?:-[a-z0-9-]+)?$/i.test(query.get('review') || '') && query.get('feedReview') !== '1')) return;
+  const root = document.documentElement;
+  root.dataset.creaturePreview = 'true';
+  window.addEventListener('message', event => {
+    if (event.source !== window.parent || event.origin !== location.origin || event.data?.type !== 'playable-active') return;
+    root.dataset.creaturePreview = event.data.active === true ? 'false' : 'true';
+  });
+})();
+</script>
+<style id="creature-preview-controls-style">
+/* Keep the guide and scene in place; these tools return upon entering play. */
+html[data-creature-preview="true"] .plant-controls > :is(.plant-picker,button){visibility:hidden;pointer-events:none}
+</style>
 <script data-playable-feed-gate="v1">
 // Active only inside the feed reviewer. Ordinary standalone games are unchanged.
 (() => {

@@ -353,9 +353,9 @@ window.PlayableGameDownloads = {
   "playable2_20261001230052_xrken6_57b": {
     "url": "/playablebatch1/downloads/51-playable2_20261001230052_xrken6_57b.zip",
     "filename": "51-playable2_20261001230052_xrken6_57b.zip",
-    "bytes": 103281,
+    "bytes": 103559,
     "files": 11,
-    "sha256": "9e538b7b5b160aac570f6311d089ebeb082eefc5d51004eeef3cf1aee31432c1"
+    "sha256": "df211c2042f2de1f2eaa116271da2d08611daa63a25cf36f386cda091df55231"
   },
   "playable2_20261001230112_0ivocb": {
     "url": "/playablebatch1/downloads/52-playable2_20261001230112_0ivocb.zip",
