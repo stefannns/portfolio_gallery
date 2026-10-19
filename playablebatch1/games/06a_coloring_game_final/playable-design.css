@@ -21,6 +21,9 @@ html body .progress-copy,html body .progress-copy b{font-family:inherit;font-siz
 html body .track{display:none}
 html body .canvas-zone{container-type:size;margin-top:22px;overflow:hidden;min-height:0}
 html body .canvas-wrap{width:min(calc(100cqw - 8px),80cqh);max-height:100%;border:0;border-radius:10px;box-shadow:0 2px 9px #303a4310;aspect-ratio:4/5}
+html body .loading{width:100%;max-width:100%;padding:16px;gap:12px;text-align:center;color:#4c5964}
+html body .load-title{max-width:100%;font-family:inherit;font-size:calc(24px * var(--ui-scale));font-weight:800;line-height:1.25;letter-spacing:0;overflow-wrap:anywhere}
+html body .load-sub{max-width:100%;font-family:inherit;font-size:calc(18px * var(--ui-scale));font-weight:600;line-height:1.4;color:#4c5964;overflow-wrap:anywhere}
 html body .palette-shell{flex:0 0 auto;align-self:center;width:calc(100% - 2 * var(--ui-side));max-width:100%;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:visible}
 html body .palette-shell:before,html body .palette-shell:after{display:block;width:18px;pointer-events:none}
 html body .palette-shell:before{background:linear-gradient(90deg,#f7f8f8,transparent)}

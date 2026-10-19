@@ -49,3 +49,15 @@ Object.assign(window.PLAYABLE_IMPLEMENTED_FIXES || (window.PLAYABLE_IMPLEMENTED_
     "evidence": ["Eight-game design pass — October 15, 2026"]
   }
 });
+
+// October 17 compliance pass: retain per-game creative decisions and note only
+// the new local changes, rather than rewriting the approved implementation history.
+for (const id of ["01_petme_9gw00a_game","playable_20260727203355_w1cgvm","05c_timemachine_male_black_wall","mianbao","playable_20260807211217_q9i9d6","06a_coloring_game_final","02e_pickalook_p8xys3_game","playable_20261015220925_0pn002"]) {
+  const record = window.PLAYABLE_IMPLEMENTED_FIXES[id];
+  record.items.push("Removed the page-level browser-zoom restriction; kept the initial mobile layout unchanged.");
+  record.evidence.push("UI compliance review — October 17, 2026");
+}
+window.PLAYABLE_IMPLEMENTED_FIXES["06a_coloring_game_final"].items.push("Matched loading/error typography to the local Nunito Sans UI and improved secondary-text contrast and wrapping.");
+window.PLAYABLE_IMPLEMENTED_FIXES["playable_20261015220925_0pn002"].items.push("Reset returns keyboard focus to the ironing canvas without scrolling or starting another stroke.");
+window.PLAYABLE_IMPLEMENTED_FIXES["01_petme_9gw00a_game"].items.push("Reduced-motion mode skips the decorative finish entrance and comb-shrink effect; normal grooming feedback is unchanged.");
+window.PLAYABLE_IMPLEMENTED_FIXES["02e_pickalook_p8xys3_game"].items.push("Reduced-motion mode skips the guide's slide/scale effects; scratching, reveal timing and normal playback are unchanged.");

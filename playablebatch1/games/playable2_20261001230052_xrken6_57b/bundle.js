@@ -12,6 +12,7 @@ Error generating stack: `+o.message+`
   const serial=(0,z.useRef)(0),reduced=(0,z.useRef)(false),keyboard=(0,z.useRef)({x:.5,y:.6,visible:false}),voices=(0,z.useRef)(0);
   const [menuOpen,setMenuOpen]=(0,z.useState)(false),picker=(0,z.useRef)(null),pickerButton=(0,z.useRef)(null),optionButtons=(0,z.useRef)({}),menuStart=(0,z.useRef)(null);
   const sound=(0,z.useRef)({active:new Set(),buffers:new Map(),variant:0,epoch:0,disposed:false,music:null,musicBuffer:null});
+  const intro=(0,z.useRef)({active:true,elapsed:0,scene:null});
   const growth=Fe(Number(e.GRAVITY)||1.2,.1,2),wander=Fe(Number(e.CREATURE_FORCE)||.05,.01,.2);
   const choices=[{id:"grass",label:"Grass"},{id:"daisy",label:"Daisies"},{id:"tulip",label:"Tulips"},{id:"sunflower",label:"Sunflowers"}];
   (0,z.useEffect)(()=>{const sources={ladybug:e.IMG_CREATURE,bee:e.IMG_FOOD,flower:e.IMG_BLOCK};let live=true;for(const [key,src] of Object.entries(sources)){const image=new Image;image.onload=()=>{if(live)images.current[key]=image};image.onerror=()=>{if(live)images.current[key]=null};image.src=src||""}return()=>{live=false}},[e.IMG_CREATURE,e.IMG_FOOD,e.IMG_BLOCK]);
@@ -59,7 +60,7 @@ Error generating stack: `+o.message+`
   const syncStats=(0,z.useCallback)(()=>setStats({plants:plants.current.length,grass:grass.current.length>0,bugs:bugs.current.length}),[]);
   const randomFor=seed=>()=>{seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;return(seed>>>0)/4294967296};
   // Each brush sample has a fixed radial silhouette, not an upright plant or painted disk.
-  const makePlant=(x,y,type)=>{const id=++serial.current,seed=(((Math.random()*4294967296)>>>0)^id)||1,rand=randomFor(seed),range=(a,b)=>a+rand()*(b-a),radius=range(type==="grass"?23:5.2,type==="grass"?39:9.5);
+  const makePlant=(x,y,type,previewSeed)=>{const id=previewSeed===undefined?++serial.current:-previewSeed,seed=previewSeed===undefined?(((Math.random()*4294967296)>>>0)^id)||1:previewSeed,rand=randomFor(seed),range=(a,b)=>a+rand()*(b-a),radius=range(type==="grass"?23:5.2,type==="grass"?39:9.5);
     const plant={id,seed,x,y,type,radius,phase:range(0,Math.PI*2),duration:range(type==="grass"?200:320,type==="grass"?420:600),born:performance.now(),tint:Math.floor(range(0,3)),petals:Math.floor(range(5,8))};
     if(type==="grass"){
       const count=Math.floor(range(44,63));plant.blades=Array.from({length:count},(_,i)=>({angle:i/count*Math.PI*2+range(-.075,.075),root:range(0,.33),length:range(.88,1.2),halfWidth:range(.045,.15),bend:range(-.15,.15),delay:range(0,.18),tint:Math.floor(range(0,4))}));
@@ -85,7 +86,7 @@ Error generating stack: `+o.message+`
     }else{
       if(isFlower(type)){const angle=scatter?Math.random()*Math.PI*2:0,radius=scatter?(8+Math.sqrt(Math.random())*16)*scale:0;addFlower(x+Math.cos(angle)*radius/w,y+Math.sin(angle)*radius/hgt,type,w,hgt)}else{if(plants.current.length>=500)plants.current.splice(0,1);plants.current.push(makePlant(x,y,type))}changed=true;
     }
-    if(changed)setHasGrowth(true);return changed;
+    if(changed){intro.current.active=false;setHasGrowth(true)}return changed;
   },[selected]);
   const releasePointer=()=>{const active=drag.current;drag.current=null;if(active&&canvas.current?.hasPointerCapture?.(active.id))try{canvas.current.releasePointerCapture(active.id)}catch{}};
   const pointerDown=event=>{if(menuOpen){event.preventDefault();setMenuOpen(false);return}if(event.isPrimary===false||event.button>0||drag.current)return;const el=canvas.current;if(!el)return;const rect=el.getBoundingClientRect(),x=(event.clientX-rect.left)/rect.width,y=(event.clientY-rect.top)/rect.height;if(!Number.isFinite(x)||!Number.isFinite(y)||x<0||x>1||y<0||y>1||rect.width<=0||rect.height<=0)return;event.preventDefault();try{el.setPointerCapture(event.pointerId)}catch{}drag.current={id:event.pointerId,type:selected,anchor:{x,y},carry:0,lastTone:performance.now()};keyboard.current={x,y,visible:false};if(addPlant(x,y,selected)){syncStats();tone(selected)}};
@@ -104,7 +105,7 @@ Error generating stack: `+o.message+`
     else if(event.key==="Escape"){cursor.visible=false;releasePointer()}
   };
   const spawnBug=(0,z.useCallback)((type,targets)=>{if(!targets.length||bugs.current.length>=14)return;const target=targets[Math.floor(Math.random()*targets.length)];bugs.current.push({type,x:Fe(target.x+be(-.06,.06),.04,.96),y:Fe(target.y+be(-.06,.06),.04,.96),target,born:performance.now(),phase:be(0,Math.PI*2),heading:be(0,Math.PI*2),nextTarget:performance.now()+be(1400,2800)})},[]);
-  const clear=()=>{releasePointer();stopSound(true);setMenuOpen(false);plants.current=[];grass.current=[];grassCache.current.canvas=null;grassCache.current.seen.clear();bugs.current=[];keyboard.current.visible=false;lastSpawn.current=performance.now();setHasGrowth(false);syncStats();tone("clear")};
+  const clear=()=>{releasePointer();stopSound(true);setMenuOpen(false);plants.current=[];grass.current=[];grassCache.current.canvas=null;grassCache.current.seen.clear();bugs.current=[];keyboard.current.visible=false;lastSpawn.current=performance.now();intro.current.active=true;intro.current.elapsed=0;setHasGrowth(false);syncStats();tone("clear")};
   const closePicker=()=>{setMenuOpen(false);pickerButton.current?.focus()};
   const selectType=type=>{if(choices.some(choice=>choice.id===type)){setSelected(type);closePicker();tone("select",type)}};
   const openPicker=index=>{releasePointer();menuStart.current=index;setMenuOpen(true)};
@@ -141,8 +142,30 @@ Error generating stack: `+o.message+`
         ctx.fillStyle=bug.type==="bee"?"#ffd65c":"#ec574b";ctx.beginPath();ctx.ellipse(0,0,size*.28,size*.42,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle="#424533";ctx.lineWidth=1.2*scale;ctx.beginPath();if(bug.type==="bee"){ctx.moveTo(-size*.25,0);ctx.lineTo(size*.25,0);ctx.moveTo(-size*.23,size*.2);ctx.lineTo(size*.23,size*.2)}else{ctx.moveTo(0,-size*.4);ctx.lineTo(0,size*.4)}ctx.stroke();ctx.fillStyle="#424533";ctx.beginPath();ctx.arc(0,-size*.35,size*.16,0,Math.PI*2);ctx.fill();
       }ctx.restore();
     };
-    const frame=now=>{if(!live||!canvas.current)return;const el=canvas.current,rect=el.getBoundingClientRect(),w=rect.width,hgt=rect.height,dpr=Math.min(2,window.devicePixelRatio||1),width=Math.round(w*dpr),height=Math.round(hgt*dpr);if(w<=0||hgt<=0){raf.current=requestAnimationFrame(frame);return}
+    // A deterministic decorative meadow, never added to the player's garden or visitor count.
+    const drawIntro=(ctx,now,dt,scale,w,hgt)=>{
+      const state=intro.current;if(!state.active)return;
+      if(!state.scene){
+        const tufts=[[.27,.53],[.30,.45],[.39,.39],[.50,.40],[.60,.46],[.60,.55],[.50,.59],[.39,.56]];
+        const flowers=[[.32,.48,"daisy"],[.44,.40,"tulip"],[.57,.51,"sunflower"],[.44,.57,"daisy"]];
+        state.scene=[...tufts.map(([x,y],i)=>({...makePlant(x,y,"grass",5101+i),radius:29,delay:i*140,duration:900})),...flowers.map(([x,y,type],i)=>({...makePlant(x,y,type,5201+i),radius:10,delay:700+i*270,duration:760}))];
+      }
+      if(!reduced.current)state.elapsed+=dt;
+      const cycle=reduced.current?2400:state.elapsed%8000,fade=reduced.current?1:Math.min(1,cycle/220,(8000-cycle)/900);
+      ctx.save();ctx.globalAlpha=fade;
+      for(const plant of state.scene){plant.born=now-cycle+plant.delay;(plant.type==="grass"?drawGrass:drawPlant)(ctx,plant,now,scale,w,hgt)}
+      if(cycle>1700){
+        const t=cycle/1000;
+        for(const [i,type]of["bee","butterfly","ladybug"].entries()){
+          const angle=t*(i===2?.35:.7)+i*2.1,rx=i===2?.10:.19,ry=i===2?.07:.135;
+          drawBug(ctx,{type,x:.45+Math.cos(angle)*rx,y:.49+Math.sin(angle)*ry,phase:i*1.8,heading:Math.atan2(Math.cos(angle)*ry,-Math.sin(angle)*rx)+Math.PI/2},now,scale*1.15,w,hgt);
+        }
+      }
+      ctx.restore();
+    };
+    const frame=now=>{raf.current=0;if(!live||!canvas.current||document.hidden)return;const el=canvas.current,rect=el.getBoundingClientRect(),w=rect.width,hgt=rect.height,dpr=Math.min(2,window.devicePixelRatio||1),width=Math.round(w*dpr),height=Math.round(hgt*dpr);if(w<=0||hgt<=0){raf.current=requestAnimationFrame(frame);return}
       if(el.width!==width||el.height!==height){el.width=width;el.height=height}const ctx=el.getContext("2d");if(!ctx){raf.current=requestAnimationFrame(frame);return}ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,hgt);const dt=Math.min(50,Math.max(0,now-(lastFrame.current||now))),scale=plantScale();lastFrame.current=now;
+      drawIntro(ctx,now,dt,scale,w,hgt);
       // Cache complete blade-based tufts in one layer, preserving their visible interior detail.
       const cache=grassCache.current;if(!cache.canvas||cache.canvas.width!==width||cache.canvas.height!==height||cache.scale!==scale){cache.canvas=document.createElement("canvas");cache.canvas.width=width;cache.canvas.height=height;cache.scale=scale;cache.seen.clear()}
       const ground=cache.canvas.getContext("2d");ground.setTransform(dpr,0,0,dpr,0,0);for(const plant of grass.current)if(ageOf(plant,now)>=1&&!cache.seen.has(plant.id)){drawGrass(ground,plant,now,scale,w,hgt);cache.seen.add(plant.id)}ctx.drawImage(cache.canvas,0,0,w,hgt);for(const plant of grass.current)if(!cache.seen.has(plant.id))drawGrass(ctx,plant,now,scale,w,hgt);
@@ -156,9 +179,10 @@ Error generating stack: `+o.message+`
       if(keyboard.current.visible){ctx.save();ctx.strokeStyle="#424533";ctx.lineWidth=1.5;ctx.setLineDash([3,4]);ctx.beginPath();ctx.arc(keyboard.current.x*w,keyboard.current.y*hgt,9*scale,0,Math.PI*2);ctx.stroke();ctx.restore()}
       raf.current=requestAnimationFrame(frame);
     };
-    raf.current=requestAnimationFrame(frame);return()=>{live=false;cancelAnimationFrame(raf.current);releasePointer();stopSound();sound.current.disposed=true;sound.current.buffers.clear();sound.current.musicBuffer=null;if(audio.current){Promise.resolve(audio.current.close()).catch(()=>{});audio.current=null}};
+    const visibility=()=>{lastFrame.current=0;if(document.hidden){cancelAnimationFrame(raf.current);raf.current=0}else if(live&&!raf.current)raf.current=requestAnimationFrame(frame)};
+    intro.current.visibility=visibility;if(!document.hidden)raf.current=requestAnimationFrame(frame);return()=>{live=false;if(intro.current.visibility===visibility)intro.current.visibility=null;cancelAnimationFrame(raf.current);releasePointer();stopSound();sound.current.disposed=true;sound.current.buffers.clear();sound.current.musicBuffer=null;if(audio.current){Promise.resolve(audio.current.close()).catch(()=>{});audio.current=null}};
   },[growth,wander,spawnBug,syncStats,stopSound]);
-  (0,z.useEffect)(()=>{sound.current.disposed=false;const hide=()=>{if(document.hidden){releasePointer();stopSound()}},leave=()=>{releasePointer();stopSound()};document.addEventListener("visibilitychange",hide);window.addEventListener("pagehide",leave);window.addEventListener("blur",leave);return()=>{document.removeEventListener("visibilitychange",hide);window.removeEventListener("pagehide",leave);window.removeEventListener("blur",leave)}},[stopSound]);
+  (0,z.useEffect)(()=>{sound.current.disposed=false;const hide=()=>{intro.current.visibility?.();if(document.hidden){releasePointer();stopSound()}},leave=()=>{releasePointer();stopSound()};document.addEventListener("visibilitychange",hide);window.addEventListener("pagehide",leave);window.addEventListener("blur",leave);return()=>{document.removeEventListener("visibilitychange",hide);window.removeEventListener("pagehide",leave);window.removeEventListener("blur",leave)}},[stopSound]);
   return h(z.default.Fragment,null,h("style",null,`
 @font-face{font-family:DynaPuff;src:url('./assets/fonts/dynapuff/DynaPuff-SemiBold.woff2') format('woff2');font-display:swap}
 html,body,#root{width:100%;height:100%;margin:0;overflow:hidden;background:#d6d6d3}
@@ -181,7 +205,8 @@ html,body,#root{width:100%;height:100%;margin:0;overflow:hidden;background:#d6d6
     h("div",{className:"garden-stage"},h("canvas",{ref:canvas,onPointerDown:pointerDown,onPointerMove:pointerMove,onPointerUp:pointerUp,onPointerCancel:pointerCancel,onLostPointerCapture:pointerCancel,onKeyDown:keyDown,onBlur:()=>{keyboard.current.visible=false},tabIndex:0,role:"button","aria-label":"Tap or drag to place "+selected,"aria-description":"Use arrow keys to move the planting cursor, then Enter or Space to place the selected plant."})),
     h("div",{className:"sandbox-status",role:"status","aria-live":"polite","aria-atomic":"true"},stats.plants+" flowers, "+(stats.grass?"grass planted":"no grass")+", "+stats.bugs+" visitors")
   ));
-}function zp(){let[e,t]=(0,z.useState)(null);return(0,z.useEffect)(()=>{let n=!0;return fetch("./game.config.json",{cache:"no-store"}).then(r=>r.json()).catch(()=>({})).then(r=>{n&&t(Pp(r))}),()=>{n=!1}},[]),e?z.default.createElement(Np,{cfg:e}):z.default.createElement("div",{style:{width:"100%",height:"100%",background:"#dff3dc"}})}(0,ef.createRoot)(document.getElementById("root")).render(z.default.createElement(zp,null));})();
+}
+function zp(){let[e,t]=(0,z.useState)(null);return(0,z.useEffect)(()=>{let n=!0;return fetch("./game.config.json",{cache:"no-store"}).then(r=>r.json()).catch(()=>({})).then(r=>{n&&t(Pp(r))}),()=>{n=!1}},[]),e?z.default.createElement(Np,{cfg:e}):z.default.createElement("div",{style:{width:"100%",height:"100%",background:"#dff3dc"}})}(0,ef.createRoot)(document.getElementById("root")).render(z.default.createElement(zp,null));})();
 /*! Bundled license information:
 
 react/cjs/react.production.min.js:

@@ -427,9 +427,9 @@ const App = () => {
       <AnimatePresence>
         {showHint && layout && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={reduced ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9 }}
+            exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
             style={{
               position: 'absolute',
               top: 'max(12%, var(--ui-top))',

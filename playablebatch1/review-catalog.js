@@ -2,7 +2,13 @@
 (function (root) {
   'use strict';
   // Only explicit, task-ID-specific removals belong here; never remove games by display position.
-  const removedTaskIds = Object.freeze(['07b_lifesim_ss41g7','playable_20260909035048_1wdfrh']); // Explicit duplicate voxel and body-ranking removals.
+  const removedTaskIds = Object.freeze([
+    '07b_lifesim_ss41g7', // Duplicate voxel.
+    'playable_20260909035048_1wdfrh', // Body ranking.
+    'playable2_20261001225856_15hv2j', // Former48:2048 Ball Merge.
+    'playable2_20261001225937_72e2ez', // Former50:Sky Cycle.
+    'playable2_20261001230147_id39lj', // Former56:Northern Lights.
+  ]);
   function normalize(games) {
     return games.filter(game => !removedTaskIds.includes(game.taskId)).map((game, index) => ({
       ...game,

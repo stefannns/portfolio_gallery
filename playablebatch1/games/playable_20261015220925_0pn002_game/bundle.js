@@ -174,6 +174,6 @@ function BeadBoard({cfg}) {
     ),
     h('canvas',{ref:steam,className:'bead-steam','aria-hidden':true}),
     h('img',{ref:cursor,className:'bead-iron',src:ironSrc,alt:'',draggable:false,'aria-hidden':true,style:{width:`max(88px, ${brush*196}cqmin)`}}),
-    started&&h('button',{type:'button',className:'bead-reset',onClick:restore},'Reset')
+    started&&h('button',{type:'button',className:'bead-reset',onClick:()=>{restore();canvas.current?.focus({preventScroll:true});}},'Reset')
   );
 },mp=()=>{let[e,n]=(0,W.useState)(null);return(0,W.useEffect)(()=>{let t=!0;return(async()=>{let r={tweaks:[],texts:[],images:[]};try{if(location.protocol==="file:")r=JSON.parse(document.getElementById("playable-inline-config")?.textContent||"{}");else{let l=await fetch("./game.config.json",{cache:"no-store"});r=l.ok?await l.json():JSON.parse(document.getElementById("playable-inline-config")?.textContent||"{}");}}catch{}t&&n(fp(r))})(),()=>{t=!1}},[]),e?(0,V.jsxs)("div",{style:{width:"100%",height:"100%",position:"relative",containerType:"size"},children:[(0,V.jsx)(cp,{}),(0,V.jsx)(pp,{cfg:e})]}):(0,V.jsx)("div",{style:{width:"100%",height:"100%",background:"#fff"}})};(0,Oc.createRoot)(document.getElementById("root")).render((0,V.jsx)(mp,{}));})();

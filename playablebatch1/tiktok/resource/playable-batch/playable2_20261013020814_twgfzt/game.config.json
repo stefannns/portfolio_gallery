@@ -4,7 +4,7 @@
       "id": "SPRING_K",
       "kind": "number",
       "label": "Spring Stiffness",
-      "value": 3e-05,
+      "value": 6e-05,
       "default": 3e-05,
       "min": 1e-05,
       "max": 0.0001,

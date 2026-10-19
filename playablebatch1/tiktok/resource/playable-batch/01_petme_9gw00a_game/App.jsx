@@ -347,7 +347,7 @@ const App = () => {
             draggable={false}
             initial={reduced ? false : { opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5 }}
+            exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.5 }}
             transformTemplate={(_,transform)=>`translate(-50%, -70%) ${transform}`}
             style={{
               position: 'absolute',
@@ -387,7 +387,7 @@ const App = () => {
           {petState === 'finish' ? (
             <motion.div
               key="finish"
-              initial={{ opacity: 0, y: 10, scale: 0.8 }}
+              initial={reduced ? false : { opacity: 0, y: 10, scale: 0.8 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               style={{
                 marginTop: '16px',

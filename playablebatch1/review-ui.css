@@ -40,6 +40,7 @@ h1 { font-size:clamp(26px,3vw,38px);letter-spacing:-.045em;margin:7px 0 8px; }
 .player-navigation { display:flex;align-items:center;gap:4px; }
 .player-control,.player-expand { display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;min-width:44px;padding:8px;border:0;border-radius:8px;background:transparent;color:#3b4e40;font:inherit;font-size:13px;font-weight:600;cursor:pointer; }
 .player-control svg,.player-expand svg { width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none; }
+#two-game-fyp { flex:none;text-decoration:none;white-space:nowrap;font-size:12px; }
 .player-control:hover,.player-expand:hover { background:#f0f4ed; }
 .player-control:active,.player-expand:active { background:#e4ecdf; }
 .player-control:disabled { color:#889287;opacity:.45;cursor:default;background:transparent; }

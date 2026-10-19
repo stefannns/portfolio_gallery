@@ -19,12 +19,12 @@
       --font-display: "Poppins", "Helvetica Neue", "PingFang SC", sans-serif;
       --font-body: var(--font-display);
       --font-mono: var(--font-display);
-      --bg-color: #121212;
+      --bg-color: #e5f1ed;
       --phone-border: #333;
       --color-green: #4ade80;
       --color-red: #f87171;
       --color-yellow: #facc15;
-      --color-gray: #9ca3af;
+      --color-gray: #c7ddd5;
     }
     html, body, #root {
       width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
@@ -35,6 +35,15 @@
     }
     button { font-family: var(--font-body); font-weight: 700; }
     * { box-sizing: border-box; }
+    .phone-speaker { position:absolute;top:10px;width:34%;height:10px;background:#041114;border-radius:8px; }
+    .charge-ring { width:66%;max-width:140px;flex-shrink:0;overflow:visible; }
+    .charge-bolt { opacity:.55; }
+    [data-charging="true"] .charge-ring { filter:drop-shadow(0 0 6px #70e9a366); }
+    [data-charging="true"] .charge-bolt { opacity:1;animation:charge-pulse .8s ease-in-out infinite alternate; }
+    @keyframes charge-pulse { to { opacity:.6; } }
+    .charging-game:focus-visible { outline:3px solid #287966;outline-offset:-4px; }
+    @media (prefers-reduced-motion:reduce) { .charge-bolt { animation:none!important; } }
+    @media (max-height:450px) { .charging-phone { width:min(30cqw,37cqh)!important;top:18px!important; } .charge-ring {width:48%;} .charging-phone > div {font-size:16px!important;margin-top:4px!important;} .charging-game .feed-first-action {left:62%!important;right:12px!important;top:35%!important;} }
   `;
   document.head.appendChild(style);
 

@@ -19,10 +19,11 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "items": [
       "Particle springs now run at a fixed simulation rate, keeping the same motion on 30/60/120 Hz displays.",
       "One pointer owns each drag; secondary fingers, capture loss and hidden pages no longer leave interaction stuck.",
-      "Checked the original's text, shape, color and media functions. Broader reference matching and control-layout changes remain open."
+      "Opening now shows only an animated LOOP demo and a short drag guide; the first action takes effect immediately and hides the guide.",
+      "Enlarged particle artwork; replaced the permanent panel with a compact color/text strip, upload/save icons and optional settings. Font, shape, theme, filter and density controls remain available."
     ],
-    "status": "Interaction/motion repairs implemented locally; broader reference-fidelity review remains open. UI placement held.",
-    "evidence": ["Gameplay round 2 — October 14, 2026", "b6202dc3-729f-427f-9f78-6f89e6001246"]
+    "status": "October 19 opening/control-layout fixes implemented locally; awaiting review. Host gradient unchanged.",
+    "evidence": ["Gameplay round 2 — October 14, 2026", "b6202dc3-729f-427f-9f78-6f89e6001246", "ui24-31-20261019"]
   },
   "playable2_20261001225611_gjmtbw": {
     "number": 43,
@@ -95,6 +96,7 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "items": [
       "A one-direction pull launches an automatic elliptical swing on release, curling into an inward swirl as it slows.",
       "Added spring-following pull resistance, stretch/squash feedback and a stronger inward recoil before the ellipse.",
+      "Sped up the released swing about 40%, while keeping the held-drag spring, resistance, damping and rainbow trail settings unchanged.",
       "The long, fading rainbow path records the released motion only. Pulling again clears it; no trail appears while held.",
       "Kept the visible first-frame orb and compact action guide. Added tap/keyboard alternatives and guarded cancellation, resizing and hidden-page behavior."
     ],
@@ -358,14 +360,17 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
   "playable2_20260928024549_3bsc4d": {
     "number": 26,
     "items": [
-      "Removed duplicate plug instructions and raised the phone.",
+      "Light mint background distinguishes the game from the dark feed. Lowered the phone and guide24px after review, retaining the phone size and cable alignment.",
+      "Rebuilt the phone display with a charging ring, lightning indicator, live battery percentage and centered charging/timeout feedback.",
       "Raised/enlarged the connector while preserving its rotation pivot.",
       "Unified local Poppins typography, bold tabular battery digits and centered, wrapping “CONNECTION TIMEOUT” feedback."
     ],
-    "status": "Implemented locally; review acceptance pending.",
+    "status": "October 19 charging-display fixes and lower-phone follow-up implemented locally; verified in portrait Direct/FYP, review acceptance pending.",
     "evidence": [
       "FB-026-d23724cb",
-      "No.26 font request 20261008"
+      "No.26 font request 20261008",
+      "fe7f3730-3fcb-4d6c-85d5-565249d3f74f",
+      "ui24-31-20261019"
     ]
   },
   "playable2_20260928025305_2wpf3o": {
@@ -557,16 +562,18 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "number": "57b",
     "items": [
       "Added a top-down variant with radial grass, natural flowers and refined visitors; flower tools stay independent of grass.",
+      "Added a silent looping opening: grass and flowers grow into a small meadow, with a bee, butterfly and ladybug moving around it. First planting replaces the demo; Reset restores it.",
       "Simplified to an anchored four-item picker plus Reset; removed Ferns.",
       "Added quieter, softer grass rustles and short flower pops, select/reset feedback and gentle music; leaving stops all audio."
     ],
-    "status": "Custom variant; visual/audio acceptance pending.",
+    "status": "Custom variant; October19 opening animation implemented locally and checked in portrait Direct/FYP. User acceptance pending.",
     "evidence": [
       "User-requested alternative 57b",
       "57b Ferns removal",
       "No.57b audio follow-up",
       "No.57b gentle music follow-up",
-      "No.57b soft grass and flower pops follow-up"
+      "No.57b soft grass and flower pops follow-up",
+      "creature51-intro-20261019"
     ]
   },
   "playable2_20261001230112_0ivocb": {
@@ -583,11 +590,12 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "number": 60,
     "items": [
       "Replaced the code-drawn case with a generated realistic handheld-console image.",
-      "Removed the backdrop; enlarged the device while keeping its LCD and six controls aligned.",
-      "Added short button, pickup and game-over sounds plus press highlights; silent when idle."
+      "Centered the handheld horizontally and vertically in Feed preview and portrait play, per review feedback. Kept its size and placed the guide between the LCD and controls.",
+      "Added a silent looping snake/food demo and one readable start guide. First valid direction starts the real round and hides the guide; idle animation never scores or plays sound.",
+      "Kept short button, pickup and game-over sounds plus press highlights; reduced-motion/hidden-page handling and host preview/play gating are supported."
     ],
-    "status": "Implemented locally; visual acceptance pending.",
-    "evidence": ["FB-060-640413cf", "Snake console art follow-up", "Snake fullscreen follow-up", "Snake button feedback follow-up"]
+    "status": "October 19 Feed adaptation, opening demo and centering follow-up implemented locally; user review pending.",
+    "evidence": ["FB-060-640413cf", "Snake console art follow-up", "Snake fullscreen follow-up", "Snake button feedback follow-up", "snake53-feed-20261019"]
   },
   "playable2_20261001230147_id39lj": {
     "number": 61,
