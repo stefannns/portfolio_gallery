@@ -423,9 +423,9 @@ window.PlayableGameDownloads = {
   "playable2_20261013020955_2hyyml": {
     "url": "/playablebatch1/downloads/61-playable2_20261013020955_2hyyml.zip",
     "filename": "61-playable2_20261013020955_2hyyml.zip",
-    "bytes": 229158,
+    "bytes": 229346,
     "files": 6,
-    "sha256": "45625ce758b5588456825da94929aa7b16c27a3df795b5fc6a9c62ca7551be40"
+    "sha256": "6ebc6fafdd3597e1e6a4ac68bcc983406d0bd5d9d02361a9b6db14039dd3798f"
   },
   "playable2_20261013021144_kzqdfu": {
     "url": "/playablebatch1/downloads/62-playable2_20261013021144_kzqdfu.zip",
