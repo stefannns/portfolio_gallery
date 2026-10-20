@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Height Together</title><link rel="preload" href="./assets/fonts/DMSans.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="./game.css?v=856fc0ed67ac"></head>
+<body><main id="game" aria-label="Height comparison simulator">
+  <header id="top"><output id="difference" aria-label="Height difference">18 <small>cm apart</small></output>
+    <nav id="views" aria-label="Camera view"><button data-view="free" aria-pressed="true">Free view</button><button data-view="a" aria-pressed="false">A’s eyes</button><button data-view="b" aria-pressed="false">B’s eyes</button></nav>
+  </header>
+  <section id="stage" tabindex="0" aria-label="3D height comparison" aria-describedby="keyboard-help"><div id="labels" aria-hidden="true"><svg id="leaders"><line id="leader-a"/><line id="leader-b"/></svg><span id="label-a" class="person-label"></span><span id="label-b" class="person-label"></span></div><p id="guide">Drag or pinch to explore</p>
+  </section>
+  <footer id="toolbar"><label class="scene-picker"><span class="sr-only">Shared scene</span><select id="scene"><option value="together">Side by side</option><option value="umbrella">Share an umbrella</option><option value="cafe">Coffee date</option><option value="shelf">Reach the shelf</option><option value="hug">A little hug</option><option value="scarf">Share a scarf</option><option value="piggyback">Piggyback</option><option value="carry">In your arms</option></select></label>
+    <div class="actions"><button id="edit"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="7" r="3"/><path d="M2 21v-3a6 6 0 0 1 12 0v3M16 4a3 3 0 0 1 0 6m1 4a5 5 0 0 1 5 5v2"/></svg>People</button><button id="swap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h17m-4-4 4 4-4 4M21 17H4m4-4-4 4 4 4"/></svg>Swap</button><button id="photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h4l2-3h6l2 3h4v15H3z"/><circle cx="12" cy="13" r="4"/></svg>Photo</button></div>
+  </footer>
+  <p id="status" class="sr-only" role="status" aria-live="polite"></p><p id="keyboard-help" class="sr-only">Drag or use arrow keys to rotate. Pinch or use the plus and minus keys to zoom. Use Free view, A’s eyes or B’s eyes to change perspective.</p>
+  <div id="error" hidden role="alert"><p>3D could not start. Refresh to try again.</p><button id="retry">Try again</button></div>
+  <dialog id="people-dialog" aria-labelledby="people-title"><form id="people-form" novalidate><div class="dialog-heading"><h2 id="people-title">Your heights</h2><button type="button" id="close" aria-label="Cancel editing">×</button></div>
+    <fieldset><legend>Person A</legend><label>Name<input id="a-name" name="aName" maxlength="20" autocomplete="off"></label><label>Height <span>cm</span><input id="a-height" name="aHeight" type="number" inputmode="decimal" min="50" max="500" step="0.1" required aria-describedby="a-error"></label><p class="field-error" id="a-error"></p></fieldset>
+    <fieldset><legend>Person B</legend><label>Name<input id="b-name" name="bName" maxlength="20" autocomplete="off"></label><label>Height <span>cm</span><input id="b-height" name="bHeight" type="number" inputmode="decimal" min="50" max="500" step="0.1" required aria-describedby="b-error"></label><p class="field-error" id="b-error"></p></fieldset>
+    <button id="apply" type="submit">Compare heights</button><p class="privacy">Stays on this device.</p>
+  </form></dialog>
+  </main><script id="playable-inline-config" type="application/json">{"config_version":"2.0","tweaks":[],"texts":[{"id":"HINT_TEXT","label":"Camera guide","value":"Drag or pinch to explore","default":"Drag or pinch to explore","max_length":42}],"images":[]}</script><script src="./bundle.js?v=856fc0ed67ac"></script></body></html>

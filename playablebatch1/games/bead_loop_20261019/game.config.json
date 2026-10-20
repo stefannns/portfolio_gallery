@@ -1,0 +1,10 @@
+{
+  "config_version": "2.0",
+  "tweaks": [],
+  "texts": [
+    {"id":"HINT_TEXT","label":"Spin instruction","value":"Swipe the beads to spin","default":"Swipe the beads to spin","max_length":40}
+  ],
+  "images": [
+    {"id":"CAT_TEXTURE","label":"Cat bead texture","path":"assets/textures/tabby-face.jpg"}
+  ]
+}

@@ -5,6 +5,11 @@
 (function () {
   'use strict';
   const decisions = {
+    one_life_20261020: {
+      scope: 'Short mobile adaptation',
+      note: 'Short, tap-through fictional lives with no choices. Birthplace odds follow the reference’s birth statistics; the opening uses a horizontal bar chart and Be born.',
+      evidence: 'User chose the horizontal bar chart, requested the reference’s statistics, removed the source captions and asked for the playable demo.'
+    },
     playable2_20260927020828_5pmrhn: {
       scope: 'Level selection only',
       note: 'Four levels only, ordered from the old levels 4, 6, 1 and 2.',

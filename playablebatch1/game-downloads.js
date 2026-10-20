@@ -489,5 +489,26 @@ window.PlayableGameDownloads = {
     "bytes": 835547,
     "files": 10,
     "sha256": "18ed896d91fb710f5635b8124960b1c2d3050a7e19d505e5610fa187ca66a0e3"
+  },
+  "bead_loop_20261019": {
+    "url": "/playablebatch1/downloads/71-bead_loop_20261019.zip",
+    "filename": "71-bead_loop_20261019.zip",
+    "bytes": 637596,
+    "files": 8,
+    "sha256": "04f9cb6c425a3a47867517675c494403b9b4debe4957405b7c899319d0562d57"
+  },
+  "height_together_20261019": {
+    "url": "/playablebatch1/downloads/72-height_together_20261019.zip",
+    "filename": "72-height_together_20261019.zip",
+    "bytes": 267242,
+    "files": 7,
+    "sha256": "cd2a9d6a4b87dfe33123cdb65f3ba50005b3c11a7645996246ece0899c310b18"
+  },
+  "one_life_20261020": {
+    "url": "/playablebatch1/downloads/73-one_life_20261020.zip",
+    "filename": "73-one_life_20261020.zip",
+    "bytes": 125217,
+    "files": 6,
+    "sha256": "9b3d93ee4849cccfa3011b3e50fb1a3d5a51f5a1cac9d25958ef921ec3674cf5"
   }
 };

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#edf2ee">
+  <title>Bead Loop</title>
+  <link rel="stylesheet" href="./game.css?v=67e68e9fb2bf">
+</head>
+<body>
+  <main id="game" data-material="jade">
+    <output id="counter" aria-label="0 beads rolled" aria-live="off">0</output>
+    <div id="stage" tabindex="0" role="button" aria-label="Spin the beads" aria-description="Swipe the beads up or down. Arrow keys, Space or Enter also spin them." data-material="jade" data-ready="false" data-started="false" data-turns="0"></div>
+    <p id="guide">Swipe the beads to spin</p>
+    <div id="materials" role="group" aria-label="Bead textures">
+      <output id="material-name" aria-live="off">Jade</output>
+      <div id="material-grid">
+      <button class="material" data-material="jade" aria-label="Jade texture" aria-pressed="true"><span class="swatch jade" aria-hidden="true"></span><span>Jade</span></button>
+      <button class="material" data-material="wood" aria-label="Wood texture" aria-pressed="false"><span class="swatch wood" aria-hidden="true"></span><span>Wood</span></button>
+      <button class="material" data-material="stone" aria-label="Stone texture" aria-pressed="false"><span class="swatch stone" aria-hidden="true"></span><span>Stone</span></button>
+      <button class="material" data-material="cat" aria-label="Cat texture" aria-pressed="false"><span class="swatch cat" aria-hidden="true"></span><span>Cat</span></button>
+      <button class="material" data-material="pearl" aria-label="Pearl texture" aria-pressed="false"><span class="swatch pearl" aria-hidden="true"></span><span>Pearl</span></button>
+      <button class="material" data-material="amber" aria-label="Amber texture" aria-pressed="false"><span class="swatch amber" aria-hidden="true"></span><span>Amber</span></button>
+      <button class="material" data-material="porcelain" aria-label="Blue and white porcelain texture" aria-pressed="false"><span class="swatch porcelain" aria-hidden="true"></span><span>Porcelain</span></button>
+      <button class="material" data-material="amethyst" aria-label="Amethyst texture" aria-pressed="false"><span class="swatch amethyst" aria-hidden="true"></span><span>Amethyst</span></button>
+      <button class="material" data-material="gold" aria-label="Gold texture" aria-pressed="false"><span class="swatch gold" aria-hidden="true"></span><span>Gold</span></button>
+      <button class="material" data-material="obsidian" aria-label="Obsidian texture" aria-pressed="false"><span class="swatch obsidian" aria-hidden="true"></span><span>Obsidian</span></button>
+      </div>
+    </div>
+    <span id="material-feedback" aria-live="polite"></span>
+    <section id="error" role="alert" hidden><p>3D was interrupted. Please try again.</p><button id="retry">Try again</button></section>
+  </main>
+  <script id="playable-inline-config" type="application/json">{
+  "config_version": "2.0",
+  "tweaks": [],
+  "texts": [
+    {"id":"HINT_TEXT","label":"Spin instruction","value":"Swipe the beads to spin","default":"Swipe the beads to spin","max_length":40}
+  ],
+  "images": [
+    {"id":"CAT_TEXTURE","label":"Cat bead texture","path":"assets/textures/tabby-face.jpg"}
+  ]
+}
+</script>
+  <script src="./bundle.js?v=67e68e9fb2bf"></script>
+</body>
+</html>

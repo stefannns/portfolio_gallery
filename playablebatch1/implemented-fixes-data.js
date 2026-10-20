@@ -4,6 +4,24 @@
  * Update this snapshot alongside the tracker when work changes.
  */
 window.PLAYABLE_IMPLEMENTED_FIXES = {
+  "one_life_20261020": {
+    "number": 73,
+    "items": ["Approved horizontal birth-probability chart with One Life and Be born. Both source-caption lines removed from the opening.", "Birth draws follow the reference’s nine leading shares plus Other 163; all 172 countries/regions can be selected. Life events remain fictional and automatically generated, with Continue and no choices.", "Four changing qualities, education/work/relationships, savings-sensitive events, journal and replay. Local typography/audio, portrait layout and synced Direct/FYP versions."],
+    "status": "Prototype implemented; awaiting review.",
+    "evidence": ["One Life 20261020"]
+  },
+  "height_together_20261019": {
+    "number": 72,
+    "items": ["New 3D height simulator with editable names/heights and proportional geometric people.", "Eight shared scenes, drag/pinch camera controls and both eye-level perspectives. Floating plus/minus/reset buttons removed; keyboard shortcuts retained.", "Local photo export, responsive portrait layout, initial breathing animation and local licensed typography. Names/heights are not uploaded or stored externally."],
+    "status": "Prototype implemented; awaiting review.",
+    "evidence": ["Height Together 20261019"]
+  },
+  "bead_loop_20261019": {
+    "number": 71,
+    "items": ["New 3D loop with swipe-driven rolling, release inertia and a bead counter. The silent idle motion never adds counts.", "Ten textures: jade, wood, stone, cat, pearl, amber, blue-and-white porcelain, amethyst, gold and obsidian. Different procedural patterns/finishes; switching preserves spin and counts. Cat faces remain upright and camera-facing.", "All ten choices visible in a compact two-row picker with a selected-material name and accessible touch buttons. Portrait layout, dismissing swipe guide, local typography/libraries, keyboard spinning and restrained bead sounds."],
+    "status": "Prototype implemented; awaiting review.",
+    "evidence": ["Bead Loop 20261019", "Bead textures 20261020"]
+  },
   "playable2_20260927020825_iyfbfj": {
     "number": 14,
     "items": [

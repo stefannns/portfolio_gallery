@@ -1,0 +1,14 @@
+{
+  "config_version": "2.0",
+  "tweaks": [],
+  "texts": [
+    {
+      "id": "HINT_TEXT",
+      "label": "Continue action",
+      "value": "Continue",
+      "default": "Continue",
+      "max_length": 42
+    }
+  ],
+  "images": []
+}
