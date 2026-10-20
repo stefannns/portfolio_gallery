@@ -83,10 +83,10 @@
   </main>
 </div>
 <dialog id="review-drawer" class="review-drawer" aria-labelledby="review-drawer-heading"><header class="review-details-head"><h2 id="review-drawer-heading">Review</h2><button class="review-drawer-close" type="button">Close</button></header><div class="review-drawer-body"></div></dialog>
-<script src="/playablebatch1/game-downloads.js?v=creature-draw-fyp-20261019-1"></script>
+<script src="/playablebatch1/game-downloads.js?v=time-camera-fyp-20261019-1"></script>
 <script src="/playablebatch1/feedback-config.js?v=creature-draw-fyp-20261019-1"></script>
 <script src="/playablebatch1/developer-notes.js?v=creature-draw-fyp-20261019-1"></script>
-  <script src="/playablebatch1/implemented-fixes-data.js?v=creature-draw-fyp-20261019-1"></script>
+  <script src="/playablebatch1/implemented-fixes-data.js?v=time-camera-fyp-20261019-1"></script>
 <script src="/playablebatch1/ui-imports-fixes-data.js?v=creature-draw-fyp-20261019-1"></script>
 <script src="/playablebatch1/ui-audit-fixes-data.js?v=creature-draw-fyp-20261019-1"></script>
 <script src="/playablebatch1/implemented-fixes.js?v=creature-draw-fyp-20261019-1"></script>
@@ -145,7 +145,7 @@ function select(game, options = {}) {
   history.replaceState(null, '', '#' + game.taskId);
   $('preview-title').textContent = (game.number ? game.number + '. ' : '') + game.name;
   $('preview-title').title = $('preview-title').textContent;
-  const individualFyp = game.taskId === 'playable2_20261001230052_xrken6b' ? 'fyp-creature-sandbox.html' : game.taskId === 'playable_20260924213804_34rslj' ? 'fyp-draw-face.html' : null;
+  const individualFyp = game.taskId === 'playable2_20261001230052_xrken6b' ? 'fyp-creature-sandbox.html' : game.taskId === 'playable_20260924213804_34rslj' ? 'fyp-draw-face.html' : game.taskId === 'playable2_20261013020955_2hyyml' ? 'fyp-time-camera.html' : null;
   const showcaseRuntime = new URL($('tiktok-view').dataset.feedRuntime, location.href), fypLink = $('two-game-fyp');
   fypLink.href = new URL('/' + (individualFyp || 'fyp-51-2.html'), showcaseRuntime).href;
   fypLink.textContent = individualFyp ? 'Standalone FYP ↗' : '51 + 2 · FYP ↗';
