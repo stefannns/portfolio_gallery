@@ -510,5 +510,40 @@ window.PlayableGameDownloads = {
     "bytes": 125217,
     "files": 6,
     "sha256": "9b3d93ee4849cccfa3011b3e50fb1a3d5a51f5a1cac9d25958ef921ec3674cf5"
+  },
+  "eh_catch_the_beat_20261020": {
+    "url": "/playablebatch1/downloads/74-eh_catch_the_beat_20261020.zip",
+    "filename": "74-eh_catch_the_beat_20261020.zip",
+    "bytes": 26561178,
+    "files": 80,
+    "sha256": "a10885d6b9e780286e489508a5eb9dde92f7d576574ff8a979716d956cf83d8d"
+  },
+  "eh_feed_your_friend_20261020": {
+    "url": "/playablebatch1/downloads/75-eh_feed_your_friend_20261020.zip",
+    "filename": "75-eh_feed_your_friend_20261020.zip",
+    "bytes": 934356,
+    "files": 23,
+    "sha256": "7a575808ac7d65bd9b80c8529e6470c5bcd9670b16a40300e314cb779ded3d11"
+  },
+  "eh_hair_shave_20261020": {
+    "url": "/playablebatch1/downloads/76-eh_hair_shave_20261020.zip",
+    "filename": "76-eh_hair_shave_20261020.zip",
+    "bytes": 2191894,
+    "files": 47,
+    "sha256": "632b3bed727764dc769d6c8d141dc4b2df221e29c68e78aa00b1a7cc3e69419a"
+  },
+  "eh_catch_the_hair_20261020": {
+    "url": "/playablebatch1/downloads/77-eh_catch_the_hair_20261020.zip",
+    "filename": "77-eh_catch_the_hair_20261020.zip",
+    "bytes": 414063,
+    "files": 17,
+    "sha256": "5aadb8c9f74e46a4d80e8199eb62135d1fd36bc9b4d9a41dbce960eac8d61e4f"
+  },
+  "eh_makeover_20261020": {
+    "url": "/playablebatch1/downloads/78-eh_makeover_20261020.zip",
+    "filename": "78-eh_makeover_20261020.zip",
+    "bytes": 3219123,
+    "files": 186,
+    "sha256": "44b704a4a2d22942548177421a6ebc9ed77486c7f1af6094d90e9d651b005bf2"
   }
 };

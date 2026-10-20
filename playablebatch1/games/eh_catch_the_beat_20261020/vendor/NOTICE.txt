@@ -1,0 +1,6 @@
+Browser photo segmentation uses Google MediaPipe Tasks Vision 0.10.21.
+Copyright The MediaPipe Authors. Licensed under the Apache License, Version 2.0.
+Source: https://github.com/google-ai-edge/mediapipe
+Model: selfie_multiclass_256x256, float32, version 1.
+Model source: https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/1/selfie_multiclass_256x256.tflite
+Photo processing runs locally in the browser. Selected photos are not uploaded.

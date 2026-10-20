@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en" data-playable-loading="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5b3af">
+  <meta http-equiv="Content-Security-Policy" content="connect-src 'self' blob:; form-action 'none'; object-src 'none'">
+  <title>Catch the Beat</title>
+  <link rel="stylesheet" href="game.css">
+  <script defer src="scene-data.js"></script>
+  <script defer src="engine.js"></script>
+  <script defer src="solo-layout.js"></script>
+  <script defer src="game.js"></script>
+</head>
+<body>
+  <main id="game" aria-label="Catch the Beat rhythm game">
+    <canvas id="stage" role="img" aria-label="Your solo dancer. Upload your photo, then tap to dance to the music."></canvas>
+    <button id="dance" aria-label="Dance to the beat. You can also press Space."></button>
+    <p id="guide" aria-live="polite">Loading your dancer…</p>
+    <div id="photo-controls">
+      <button id="photo-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l1.6-2h4.8L16 5h3a2 2 0 012 2v12H3V7a2 2 0 012-2z"/><circle cx="12" cy="12" r="4"/></svg><span>Use your photo</span></button>
+      <button id="default-button" type="button" hidden aria-label="Use the original character">Original</button>
+    </div>
+    <input id="photo-input" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" hidden>
+    <div id="result" hidden>
+      <p id="result-score" aria-live="polite">0%</p>
+      <img id="result-label" alt="">
+      <button id="retry" type="button">Play again<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 8v6h-6M20 14a8 8 0 11-.8-7.5"/></svg></button>
+    </div>
+    <div id="pause" hidden><button id="resume" type="button">Tap to resume</button></div>
+    <p id="notice" role="status" hidden></p>
+    <div id="editor" class="modal" role="dialog" aria-modal="true" aria-labelledby="editor-title" hidden>
+      <section class="editor-sheet">
+        <header><h1 id="editor-title">Your dance face</h1><button id="editor-close" class="icon-button" aria-label="Cancel photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
+        <div id="photo-preview"><img id="cutout-preview" alt="Your head cutout preview"></div>
+        <p id="photo-status" aria-live="polite">Finding your face…</p>
+        <div id="photo-options" hidden><label>Head size<input id="photo-size" type="range" min=".75" max="1.45" step=".01" value="1"></label></div>
+        <button id="apply-photo" type="button" disabled>Use this photo</button>
+        <p class="privacy">Processed on this device. Never uploaded.</p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

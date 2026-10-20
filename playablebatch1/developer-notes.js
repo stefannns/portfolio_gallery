@@ -5,6 +5,11 @@
 (function () {
   'use strict';
   const decisions = {
+    eh_catch_the_beat_20261020: {scope:'Browser conversion',note:'Solo dancer with local photo upload and browser head cutout.',evidence:'User requested a single person with the uploaded image.'},
+    eh_feed_your_friend_20261020: {scope:'Pre-generated photo states',note:'Pre-generated food reactions replace the original runtime AI. Remix is handled separately.',evidence:'User selected pre-generated images for the converted templates.'},
+    eh_hair_shave_20261020: {scope:'Pre-generated photo states',note:'Pre-generated hair-removal photos replace runtime AI; shaving reveals them in strips.',evidence:'User selected pre-generated images for the converted templates.'},
+    eh_catch_the_hair_20261020: {scope:'Browser conversion',note:'Original five-style catching game, with a cleaned character cutout and tap feedback.',evidence:'User requested conversion of the remaining Effect House templates.'},
+    eh_makeover_20261020: {scope:'Pre-generated photo states',note:'Pre-generated expressions and makeup replace runtime AI. Original props, effects and tap stages remain.',evidence:'User selected pre-generated images; another agent will implement remix.'},
     one_life_20261020: {
       scope: 'Short mobile adaptation',
       note: 'Short, tap-through fictional lives with no choices. Birthplace odds follow the reference’s birth statistics; the opening uses a horizontal bar chart and Be born.',

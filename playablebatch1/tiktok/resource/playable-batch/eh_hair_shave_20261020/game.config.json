@@ -1,0 +1,279 @@
+{
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game"
+  },
+  "tweaks": [
+    {
+      "id": "totalTaps",
+      "kind": "number",
+      "label": "totalTaps",
+      "value": 3,
+      "default": 3,
+      "min": 1,
+      "max": 20,
+      "step": 1
+    },
+    {
+      "id": "bladeWidth",
+      "kind": "number",
+      "label": "bladeWidth",
+      "value": 0.16,
+      "default": 0.16,
+      "min": 0.01,
+      "max": 0.3,
+      "step": 0.01
+    },
+    {
+      "id": "panSpeed",
+      "kind": "number",
+      "label": "panSpeed",
+      "value": 0.3,
+      "default": 0.3,
+      "min": 0.01,
+      "max": 2,
+      "step": 0.01
+    },
+    {
+      "id": "shaveSpeed",
+      "kind": "number",
+      "label": "shaveSpeed",
+      "value": 0.65,
+      "default": 0.65,
+      "min": 0.01,
+      "max": 3,
+      "step": 0.01
+    },
+    {
+      "id": "preset",
+      "kind": "number",
+      "label": "preset",
+      "value": 0,
+      "default": 0,
+      "min": 0,
+      "max": 2,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Opening guide",
+      "value": "Tap to shave a strip",
+      "max_length": 64
+    }
+  ],
+  "images": [
+    {
+      "id": "PHOTO_ORIGINAL",
+      "label": "Unshaved portrait",
+      "path": "./assets/photo_original.webp",
+      "replaceable": true
+    },
+    {
+      "id": "PHOTO_SHAVE_BALD",
+      "label": "Bald scalp",
+      "path": "./assets/photo_shave_bald.webp",
+      "replaceable": true
+    },
+    {
+      "id": "PHOTO_SHAVE_BROWS",
+      "label": "Eyebrows removed",
+      "path": "./assets/photo_shave_brows.webp",
+      "replaceable": true
+    },
+    {
+      "id": "PHOTO_SHAVE_BEARD",
+      "label": "Clean-shaven face",
+      "path": "./assets/photo_shave_beard.webp",
+      "replaceable": true
+    },
+    {
+      "id": "BUZZER",
+      "label": "Electric hair clipper",
+      "path": "./assets/buzzer.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FRAME",
+      "label": "Result photo frame",
+      "path": "./assets/frame.webp",
+      "replaceable": true
+    },
+    {
+      "id": "SWITCH",
+      "label": "Change shaving direction",
+      "path": "./assets/switch.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FX_FLASH_00",
+      "label": "FX_FLASH frame 0",
+      "path": "./assets/fx_flash_00.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_01",
+      "label": "FX_FLASH frame 1",
+      "path": "./assets/fx_flash_01.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_02",
+      "label": "FX_FLASH frame 2",
+      "path": "./assets/fx_flash_02.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_03",
+      "label": "FX_FLASH frame 3",
+      "path": "./assets/fx_flash_03.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_04",
+      "label": "FX_FLASH frame 4",
+      "path": "./assets/fx_flash_04.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_05",
+      "label": "FX_FLASH frame 5",
+      "path": "./assets/fx_flash_05.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_06",
+      "label": "FX_FLASH frame 6",
+      "path": "./assets/fx_flash_06.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_07",
+      "label": "FX_FLASH frame 7",
+      "path": "./assets/fx_flash_07.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_08",
+      "label": "FX_FLASH frame 8",
+      "path": "./assets/fx_flash_08.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_09",
+      "label": "FX_FLASH frame 9",
+      "path": "./assets/fx_flash_09.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_10",
+      "label": "FX_FLASH frame 10",
+      "path": "./assets/fx_flash_10.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_11",
+      "label": "FX_FLASH frame 11",
+      "path": "./assets/fx_flash_11.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_12",
+      "label": "FX_FLASH frame 12",
+      "path": "./assets/fx_flash_12.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_13",
+      "label": "FX_FLASH frame 13",
+      "path": "./assets/fx_flash_13.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_14",
+      "label": "FX_FLASH frame 14",
+      "path": "./assets/fx_flash_14.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_15",
+      "label": "FX_FLASH frame 15",
+      "path": "./assets/fx_flash_15.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_16",
+      "label": "FX_FLASH frame 16",
+      "path": "./assets/fx_flash_16.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_17",
+      "label": "FX_FLASH frame 17",
+      "path": "./assets/fx_flash_17.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_18",
+      "label": "FX_FLASH frame 18",
+      "path": "./assets/fx_flash_18.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_19",
+      "label": "FX_FLASH frame 19",
+      "path": "./assets/fx_flash_19.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_20",
+      "label": "FX_FLASH frame 20",
+      "path": "./assets/fx_flash_20.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_21",
+      "label": "FX_FLASH frame 21",
+      "path": "./assets/fx_flash_21.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_22",
+      "label": "FX_FLASH frame 22",
+      "path": "./assets/fx_flash_22.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_23",
+      "label": "FX_FLASH frame 23",
+      "path": "./assets/fx_flash_23.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_24",
+      "label": "FX_FLASH frame 24",
+      "path": "./assets/fx_flash_24.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_25",
+      "label": "FX_FLASH frame 25",
+      "path": "./assets/fx_flash_25.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_26",
+      "label": "FX_FLASH frame 26",
+      "path": "./assets/fx_flash_26.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FLASH_27",
+      "label": "FX_FLASH frame 27",
+      "path": "./assets/fx_flash_27.webp",
+      "replaceable": false
+    }
+  ]
+}

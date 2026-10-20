@@ -1,0 +1,1059 @@
+{
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game"
+  },
+  "tweaks": [
+    {
+      "id": "sequenceCount",
+      "kind": "number",
+      "label": "sequenceCount",
+      "value": 4,
+      "default": 4,
+      "min": 1,
+      "max": 4,
+      "step": 1
+    },
+    {
+      "id": "moveSec",
+      "kind": "number",
+      "label": "moveSec",
+      "value": 0.35,
+      "default": 0.35,
+      "min": 0.1,
+      "max": 1,
+      "step": 0.05
+    }
+  ],
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Opening guide",
+      "value": "Tap to brush",
+      "max_length": 64
+    }
+  ],
+  "images": [
+    {
+      "id": "PHOTO_BASE",
+      "label": "Base portrait",
+      "path": "./assets/photo_base.webp",
+      "replaceable": true
+    },
+    {
+      "id": "PHOTO_SMILE",
+      "label": "Broad smile",
+      "path": "./assets/photo_smile.webp",
+      "replaceable": true
+    },
+    {
+      "id": "PHOTO_SAD",
+      "label": "Sad expression",
+      "path": "./assets/photo_sad.webp",
+      "replaceable": true
+    },
+    {
+      "id": "PHOTO_PUCKER",
+      "label": "Puckered lips",
+      "path": "./assets/photo_pucker.webp",
+      "replaceable": true
+    },
+    {
+      "id": "PHOTO_GLAM",
+      "label": "Final makeup look",
+      "path": "./assets/photo_glam.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_1",
+      "label": "Toothbrush",
+      "path": "./assets/tool_1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_2",
+      "label": "Toy hammer",
+      "path": "./assets/tool_2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_3",
+      "label": "Tissue",
+      "path": "./assets/tool_3.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_4",
+      "label": "Makeup brush",
+      "path": "./assets/tool_4.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FX_0_00",
+      "label": "FX_0 frame 0",
+      "path": "./assets/fx_0_00.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_01",
+      "label": "FX_0 frame 1",
+      "path": "./assets/fx_0_01.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_02",
+      "label": "FX_0 frame 2",
+      "path": "./assets/fx_0_02.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_03",
+      "label": "FX_0 frame 3",
+      "path": "./assets/fx_0_03.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_04",
+      "label": "FX_0 frame 4",
+      "path": "./assets/fx_0_04.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_05",
+      "label": "FX_0 frame 5",
+      "path": "./assets/fx_0_05.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_06",
+      "label": "FX_0 frame 6",
+      "path": "./assets/fx_0_06.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_07",
+      "label": "FX_0 frame 7",
+      "path": "./assets/fx_0_07.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_08",
+      "label": "FX_0 frame 8",
+      "path": "./assets/fx_0_08.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_09",
+      "label": "FX_0 frame 9",
+      "path": "./assets/fx_0_09.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_10",
+      "label": "FX_0 frame 10",
+      "path": "./assets/fx_0_10.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_11",
+      "label": "FX_0 frame 11",
+      "path": "./assets/fx_0_11.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_12",
+      "label": "FX_0 frame 12",
+      "path": "./assets/fx_0_12.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_13",
+      "label": "FX_0 frame 13",
+      "path": "./assets/fx_0_13.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_14",
+      "label": "FX_0 frame 14",
+      "path": "./assets/fx_0_14.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_15",
+      "label": "FX_0 frame 15",
+      "path": "./assets/fx_0_15.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_16",
+      "label": "FX_0 frame 16",
+      "path": "./assets/fx_0_16.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_17",
+      "label": "FX_0 frame 17",
+      "path": "./assets/fx_0_17.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_18",
+      "label": "FX_0 frame 18",
+      "path": "./assets/fx_0_18.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_19",
+      "label": "FX_0 frame 19",
+      "path": "./assets/fx_0_19.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_20",
+      "label": "FX_0 frame 20",
+      "path": "./assets/fx_0_20.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_21",
+      "label": "FX_0 frame 21",
+      "path": "./assets/fx_0_21.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_22",
+      "label": "FX_0 frame 22",
+      "path": "./assets/fx_0_22.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_23",
+      "label": "FX_0 frame 23",
+      "path": "./assets/fx_0_23.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_24",
+      "label": "FX_0 frame 24",
+      "path": "./assets/fx_0_24.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_25",
+      "label": "FX_0 frame 25",
+      "path": "./assets/fx_0_25.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_26",
+      "label": "FX_0 frame 26",
+      "path": "./assets/fx_0_26.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_27",
+      "label": "FX_0 frame 27",
+      "path": "./assets/fx_0_27.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_28",
+      "label": "FX_0 frame 28",
+      "path": "./assets/fx_0_28.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_29",
+      "label": "FX_0 frame 29",
+      "path": "./assets/fx_0_29.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_30",
+      "label": "FX_0 frame 30",
+      "path": "./assets/fx_0_30.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_31",
+      "label": "FX_0 frame 31",
+      "path": "./assets/fx_0_31.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_32",
+      "label": "FX_0 frame 32",
+      "path": "./assets/fx_0_32.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_33",
+      "label": "FX_0 frame 33",
+      "path": "./assets/fx_0_33.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_34",
+      "label": "FX_0 frame 34",
+      "path": "./assets/fx_0_34.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_35",
+      "label": "FX_0 frame 35",
+      "path": "./assets/fx_0_35.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_36",
+      "label": "FX_0 frame 36",
+      "path": "./assets/fx_0_36.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_37",
+      "label": "FX_0 frame 37",
+      "path": "./assets/fx_0_37.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_38",
+      "label": "FX_0 frame 38",
+      "path": "./assets/fx_0_38.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_39",
+      "label": "FX_0 frame 39",
+      "path": "./assets/fx_0_39.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_40",
+      "label": "FX_0 frame 40",
+      "path": "./assets/fx_0_40.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_41",
+      "label": "FX_0 frame 41",
+      "path": "./assets/fx_0_41.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_42",
+      "label": "FX_0 frame 42",
+      "path": "./assets/fx_0_42.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_43",
+      "label": "FX_0 frame 43",
+      "path": "./assets/fx_0_43.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_44",
+      "label": "FX_0 frame 44",
+      "path": "./assets/fx_0_44.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_45",
+      "label": "FX_0 frame 45",
+      "path": "./assets/fx_0_45.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_46",
+      "label": "FX_0 frame 46",
+      "path": "./assets/fx_0_46.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_47",
+      "label": "FX_0 frame 47",
+      "path": "./assets/fx_0_47.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_48",
+      "label": "FX_0 frame 48",
+      "path": "./assets/fx_0_48.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_49",
+      "label": "FX_0 frame 49",
+      "path": "./assets/fx_0_49.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_50",
+      "label": "FX_0 frame 50",
+      "path": "./assets/fx_0_50.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_0_51",
+      "label": "FX_0 frame 51",
+      "path": "./assets/fx_0_51.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_00",
+      "label": "FX_1 frame 0",
+      "path": "./assets/fx_1_00.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_01",
+      "label": "FX_1 frame 1",
+      "path": "./assets/fx_1_01.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_02",
+      "label": "FX_1 frame 2",
+      "path": "./assets/fx_1_02.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_03",
+      "label": "FX_1 frame 3",
+      "path": "./assets/fx_1_03.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_04",
+      "label": "FX_1 frame 4",
+      "path": "./assets/fx_1_04.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_05",
+      "label": "FX_1 frame 5",
+      "path": "./assets/fx_1_05.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_06",
+      "label": "FX_1 frame 6",
+      "path": "./assets/fx_1_06.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_07",
+      "label": "FX_1 frame 7",
+      "path": "./assets/fx_1_07.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_08",
+      "label": "FX_1 frame 8",
+      "path": "./assets/fx_1_08.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_09",
+      "label": "FX_1 frame 9",
+      "path": "./assets/fx_1_09.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_10",
+      "label": "FX_1 frame 10",
+      "path": "./assets/fx_1_10.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_11",
+      "label": "FX_1 frame 11",
+      "path": "./assets/fx_1_11.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_12",
+      "label": "FX_1 frame 12",
+      "path": "./assets/fx_1_12.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_13",
+      "label": "FX_1 frame 13",
+      "path": "./assets/fx_1_13.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_14",
+      "label": "FX_1 frame 14",
+      "path": "./assets/fx_1_14.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_15",
+      "label": "FX_1 frame 15",
+      "path": "./assets/fx_1_15.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_16",
+      "label": "FX_1 frame 16",
+      "path": "./assets/fx_1_16.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_17",
+      "label": "FX_1 frame 17",
+      "path": "./assets/fx_1_17.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_18",
+      "label": "FX_1 frame 18",
+      "path": "./assets/fx_1_18.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_19",
+      "label": "FX_1 frame 19",
+      "path": "./assets/fx_1_19.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_20",
+      "label": "FX_1 frame 20",
+      "path": "./assets/fx_1_20.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_21",
+      "label": "FX_1 frame 21",
+      "path": "./assets/fx_1_21.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_22",
+      "label": "FX_1 frame 22",
+      "path": "./assets/fx_1_22.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_23",
+      "label": "FX_1 frame 23",
+      "path": "./assets/fx_1_23.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_24",
+      "label": "FX_1 frame 24",
+      "path": "./assets/fx_1_24.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_25",
+      "label": "FX_1 frame 25",
+      "path": "./assets/fx_1_25.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_26",
+      "label": "FX_1 frame 26",
+      "path": "./assets/fx_1_26.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_1_27",
+      "label": "FX_1 frame 27",
+      "path": "./assets/fx_1_27.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_00",
+      "label": "FX_2 frame 0",
+      "path": "./assets/fx_2_00.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_01",
+      "label": "FX_2 frame 1",
+      "path": "./assets/fx_2_01.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_02",
+      "label": "FX_2 frame 2",
+      "path": "./assets/fx_2_02.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_03",
+      "label": "FX_2 frame 3",
+      "path": "./assets/fx_2_03.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_04",
+      "label": "FX_2 frame 4",
+      "path": "./assets/fx_2_04.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_05",
+      "label": "FX_2 frame 5",
+      "path": "./assets/fx_2_05.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_06",
+      "label": "FX_2 frame 6",
+      "path": "./assets/fx_2_06.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_07",
+      "label": "FX_2 frame 7",
+      "path": "./assets/fx_2_07.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_08",
+      "label": "FX_2 frame 8",
+      "path": "./assets/fx_2_08.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_09",
+      "label": "FX_2 frame 9",
+      "path": "./assets/fx_2_09.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_10",
+      "label": "FX_2 frame 10",
+      "path": "./assets/fx_2_10.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_11",
+      "label": "FX_2 frame 11",
+      "path": "./assets/fx_2_11.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_12",
+      "label": "FX_2 frame 12",
+      "path": "./assets/fx_2_12.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_13",
+      "label": "FX_2 frame 13",
+      "path": "./assets/fx_2_13.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_14",
+      "label": "FX_2 frame 14",
+      "path": "./assets/fx_2_14.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_15",
+      "label": "FX_2 frame 15",
+      "path": "./assets/fx_2_15.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_16",
+      "label": "FX_2 frame 16",
+      "path": "./assets/fx_2_16.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_17",
+      "label": "FX_2 frame 17",
+      "path": "./assets/fx_2_17.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_18",
+      "label": "FX_2 frame 18",
+      "path": "./assets/fx_2_18.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_19",
+      "label": "FX_2 frame 19",
+      "path": "./assets/fx_2_19.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_20",
+      "label": "FX_2 frame 20",
+      "path": "./assets/fx_2_20.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_21",
+      "label": "FX_2 frame 21",
+      "path": "./assets/fx_2_21.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_22",
+      "label": "FX_2 frame 22",
+      "path": "./assets/fx_2_22.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_23",
+      "label": "FX_2 frame 23",
+      "path": "./assets/fx_2_23.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_24",
+      "label": "FX_2 frame 24",
+      "path": "./assets/fx_2_24.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_25",
+      "label": "FX_2 frame 25",
+      "path": "./assets/fx_2_25.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_26",
+      "label": "FX_2 frame 26",
+      "path": "./assets/fx_2_26.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_27",
+      "label": "FX_2 frame 27",
+      "path": "./assets/fx_2_27.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_2_28",
+      "label": "FX_2 frame 28",
+      "path": "./assets/fx_2_28.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_00",
+      "label": "FX_3 frame 0",
+      "path": "./assets/fx_3_00.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_01",
+      "label": "FX_3 frame 1",
+      "path": "./assets/fx_3_01.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_02",
+      "label": "FX_3 frame 2",
+      "path": "./assets/fx_3_02.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_03",
+      "label": "FX_3 frame 3",
+      "path": "./assets/fx_3_03.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_04",
+      "label": "FX_3 frame 4",
+      "path": "./assets/fx_3_04.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_05",
+      "label": "FX_3 frame 5",
+      "path": "./assets/fx_3_05.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_06",
+      "label": "FX_3 frame 6",
+      "path": "./assets/fx_3_06.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_07",
+      "label": "FX_3 frame 7",
+      "path": "./assets/fx_3_07.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_08",
+      "label": "FX_3 frame 8",
+      "path": "./assets/fx_3_08.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_09",
+      "label": "FX_3 frame 9",
+      "path": "./assets/fx_3_09.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_10",
+      "label": "FX_3 frame 10",
+      "path": "./assets/fx_3_10.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_11",
+      "label": "FX_3 frame 11",
+      "path": "./assets/fx_3_11.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_12",
+      "label": "FX_3 frame 12",
+      "path": "./assets/fx_3_12.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_13",
+      "label": "FX_3 frame 13",
+      "path": "./assets/fx_3_13.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_14",
+      "label": "FX_3 frame 14",
+      "path": "./assets/fx_3_14.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_15",
+      "label": "FX_3 frame 15",
+      "path": "./assets/fx_3_15.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_16",
+      "label": "FX_3 frame 16",
+      "path": "./assets/fx_3_16.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_17",
+      "label": "FX_3 frame 17",
+      "path": "./assets/fx_3_17.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_18",
+      "label": "FX_3 frame 18",
+      "path": "./assets/fx_3_18.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_19",
+      "label": "FX_3 frame 19",
+      "path": "./assets/fx_3_19.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_3_20",
+      "label": "FX_3 frame 20",
+      "path": "./assets/fx_3_20.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_00",
+      "label": "FX_FINAL frame 0",
+      "path": "./assets/fx_final_00.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_01",
+      "label": "FX_FINAL frame 1",
+      "path": "./assets/fx_final_01.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_02",
+      "label": "FX_FINAL frame 2",
+      "path": "./assets/fx_final_02.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_03",
+      "label": "FX_FINAL frame 3",
+      "path": "./assets/fx_final_03.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_04",
+      "label": "FX_FINAL frame 4",
+      "path": "./assets/fx_final_04.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_05",
+      "label": "FX_FINAL frame 5",
+      "path": "./assets/fx_final_05.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_06",
+      "label": "FX_FINAL frame 6",
+      "path": "./assets/fx_final_06.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_07",
+      "label": "FX_FINAL frame 7",
+      "path": "./assets/fx_final_07.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_08",
+      "label": "FX_FINAL frame 8",
+      "path": "./assets/fx_final_08.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_09",
+      "label": "FX_FINAL frame 9",
+      "path": "./assets/fx_final_09.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_10",
+      "label": "FX_FINAL frame 10",
+      "path": "./assets/fx_final_10.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_11",
+      "label": "FX_FINAL frame 11",
+      "path": "./assets/fx_final_11.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_12",
+      "label": "FX_FINAL frame 12",
+      "path": "./assets/fx_final_12.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_13",
+      "label": "FX_FINAL frame 13",
+      "path": "./assets/fx_final_13.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_14",
+      "label": "FX_FINAL frame 14",
+      "path": "./assets/fx_final_14.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_15",
+      "label": "FX_FINAL frame 15",
+      "path": "./assets/fx_final_15.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_16",
+      "label": "FX_FINAL frame 16",
+      "path": "./assets/fx_final_16.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_17",
+      "label": "FX_FINAL frame 17",
+      "path": "./assets/fx_final_17.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_18",
+      "label": "FX_FINAL frame 18",
+      "path": "./assets/fx_final_18.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_19",
+      "label": "FX_FINAL frame 19",
+      "path": "./assets/fx_final_19.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_20",
+      "label": "FX_FINAL frame 20",
+      "path": "./assets/fx_final_20.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_21",
+      "label": "FX_FINAL frame 21",
+      "path": "./assets/fx_final_21.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_22",
+      "label": "FX_FINAL frame 22",
+      "path": "./assets/fx_final_22.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_23",
+      "label": "FX_FINAL frame 23",
+      "path": "./assets/fx_final_23.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_24",
+      "label": "FX_FINAL frame 24",
+      "path": "./assets/fx_final_24.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_25",
+      "label": "FX_FINAL frame 25",
+      "path": "./assets/fx_final_25.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_26",
+      "label": "FX_FINAL frame 26",
+      "path": "./assets/fx_final_26.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_27",
+      "label": "FX_FINAL frame 27",
+      "path": "./assets/fx_final_27.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_28",
+      "label": "FX_FINAL frame 28",
+      "path": "./assets/fx_final_28.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_29",
+      "label": "FX_FINAL frame 29",
+      "path": "./assets/fx_final_29.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FX_FINAL_30",
+      "label": "FX_FINAL frame 30",
+      "path": "./assets/fx_final_30.webp",
+      "replaceable": false
+    }
+  ]
+}

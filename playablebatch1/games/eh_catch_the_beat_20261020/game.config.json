@@ -1,0 +1,398 @@
+{
+  "tweaks": [
+    {
+      "id": "BEAT",
+      "kind": "number",
+      "label": "Beat interval",
+      "value": 0.428,
+      "default": 0.428,
+      "min": 0.1,
+      "max": 1,
+      "step": 0.001
+    },
+    {
+      "id": "DIFFICULTY",
+      "kind": "number",
+      "label": "Difficulty",
+      "value": 4,
+      "default": 4,
+      "min": 1,
+      "max": 5,
+      "step": 1
+    },
+    {
+      "id": "HOLD_BEATS",
+      "kind": "number",
+      "label": "Count-in beats",
+      "value": 2,
+      "default": 2,
+      "min": 0,
+      "max": 8,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Opening instruction",
+      "value": "Tap to catch the beat",
+      "default": "Tap to catch the beat",
+      "max_length": 48
+    }
+  ],
+  "images": [
+    {
+      "id": "IMAGE_0",
+      "label": "char intro 0 compressed",
+      "path": "./assets/Textures/Char_intro/char_intro_0-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_1",
+      "label": "char intro 1 compressed",
+      "path": "./assets/Textures/Char_intro/char_intro_1-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_2",
+      "label": "char intro 2 compressed",
+      "path": "./assets/Textures/Char_intro/char_intro_2-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_3",
+      "label": "char intro 3 compressed",
+      "path": "./assets/Textures/Char_intro/char_intro_3-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_4",
+      "label": "char intro 4 compressed",
+      "path": "./assets/Textures/Char_intro/char_intro_4-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_5",
+      "label": "char intro 5 compressed",
+      "path": "./assets/Textures/Char_intro/char_intro_5-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_6",
+      "label": "char intro 6 compressed",
+      "path": "./assets/Textures/Char_intro/char_intro_6-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_7",
+      "label": "char intro 7 compressed",
+      "path": "./assets/Textures/Char_intro/char_intro_7-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_8",
+      "label": "char s1 0 compressed",
+      "path": "./assets/Textures/char_s1/char_s1_0-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_9",
+      "label": "char s1 1 compressed",
+      "path": "./assets/Textures/char_s1/char_s1_1-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_10",
+      "label": "char s1 2 compressed",
+      "path": "./assets/Textures/char_s1/char_s1_2-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_11",
+      "label": "char s1 3 compressed",
+      "path": "./assets/Textures/char_s1/char_s1_3-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_12",
+      "label": "char s1 4 compressed",
+      "path": "./assets/Textures/char_s1/char_s1_4-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_13",
+      "label": "char s1 5 compressed",
+      "path": "./assets/Textures/char_s1/char_s1_5-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_14",
+      "label": "char s1 6 compressed",
+      "path": "./assets/Textures/char_s1/char_s1_6-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_15",
+      "label": "char s1 7 compressed",
+      "path": "./assets/Textures/char_s1/char_s1_7-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_16",
+      "label": "char s2 0 compressed",
+      "path": "./assets/Textures/Char_s2/char_s2_0-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_17",
+      "label": "char s2 1 compressed",
+      "path": "./assets/Textures/Char_s2/char_s2_1-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_18",
+      "label": "char s2 2 compressed",
+      "path": "./assets/Textures/Char_s2/char_s2_2-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_19",
+      "label": "char s2 3 compressed",
+      "path": "./assets/Textures/Char_s2/char_s2_3-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_20",
+      "label": "char s2 4 compressed",
+      "path": "./assets/Textures/Char_s2/char_s2_4-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_21",
+      "label": "char s2 5 compressed",
+      "path": "./assets/Textures/Char_s2/char_s2_5-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_22",
+      "label": "char s2 6 compressed",
+      "path": "./assets/Textures/Char_s2/char_s2_6-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_23",
+      "label": "char s2 7 compressed",
+      "path": "./assets/Textures/Char_s2/char_s2_7-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_24",
+      "label": "char s3 0 compressed",
+      "path": "./assets/Textures/Char_s3/char_s3_0-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_25",
+      "label": "char s3 1 compressed",
+      "path": "./assets/Textures/Char_s3/char_s3_1-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_26",
+      "label": "char s3 2 compressed",
+      "path": "./assets/Textures/Char_s3/char_s3_2-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_27",
+      "label": "char s3 3 compressed",
+      "path": "./assets/Textures/Char_s3/char_s3_3-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_28",
+      "label": "char s3 4 compressed",
+      "path": "./assets/Textures/Char_s3/char_s3_4-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_29",
+      "label": "char s3 5 compressed",
+      "path": "./assets/Textures/Char_s3/char_s3_5-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_30",
+      "label": "char s3 6 compressed",
+      "path": "./assets/Textures/Char_s3/char_s3_6-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_31",
+      "label": "char s3 7 compressed",
+      "path": "./assets/Textures/Char_s3/char_s3_7-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_32",
+      "label": "char end 0 compressed",
+      "path": "./assets/Textures/Char_end/char_end_0-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_33",
+      "label": "char end 1 compressed",
+      "path": "./assets/Textures/Char_end/char_end_1-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_34",
+      "label": "char end 2 compressed",
+      "path": "./assets/Textures/Char_end/char_end_2-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_35",
+      "label": "char end 3 compressed",
+      "path": "./assets/Textures/Char_end/char_end_3-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_36",
+      "label": "char end 4 compressed",
+      "path": "./assets/Textures/Char_end/char_end_4-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_37",
+      "label": "char end 5 compressed",
+      "path": "./assets/Textures/Char_end/char_end_5-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_38",
+      "label": "char end 6 compressed",
+      "path": "./assets/Textures/Char_end/char_end_6-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_39",
+      "label": "char end 7 compressed",
+      "path": "./assets/Textures/Char_end/char_end_7-compressed.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_40",
+      "label": "Text Intro",
+      "path": "./assets/Textures/TEXT/Text_Intro.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_41",
+      "label": "Text Perfect",
+      "path": "./assets/Textures/TEXT/Text_Perfect.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_42",
+      "label": "Text Close",
+      "path": "./assets/Textures/TEXT/Text_Close.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_43",
+      "label": "Text Miss",
+      "path": "./assets/Textures/TEXT/Text_Miss.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_44",
+      "label": "UI circle1",
+      "path": "./assets/Textures/UI/UI_circle1.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_45",
+      "label": "UI circle2",
+      "path": "./assets/Textures/UI/UI_circle2.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_46",
+      "label": "UI Circle Center",
+      "path": "./assets/Textures/UI/UI_Circle_Center.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_47",
+      "label": "UI hitRing 01",
+      "path": "./assets/Textures/UI/UI_hitRing_01.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_48",
+      "label": "UI Line",
+      "path": "./assets/Textures/UI/UI_Line.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_49",
+      "label": "Text OnBeat",
+      "path": "./assets/Textures/TEXT/Text_OnBeat.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_50",
+      "label": "Text YouAreIn",
+      "path": "./assets/Textures/TEXT/Text_YouAreIn.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_51",
+      "label": "Text CallBack",
+      "path": "./assets/Textures/TEXT/Text_CallBack.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_52",
+      "label": "Text KeepPracticing",
+      "path": "./assets/Textures/TEXT/Text_KeepPracticing.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_53",
+      "label": "Text Next",
+      "path": "./assets/Textures/TEXT/Text_Next.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_54",
+      "label": "UI PlayAgain",
+      "path": "./assets/Textures/UI/UI_PlayAgain.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_55",
+      "label": "BG color",
+      "path": "./assets/Textures/BG_color.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_56",
+      "label": "BG1",
+      "path": "./assets/Textures/BG1.png",
+      "replaceable": true
+    },
+    {
+      "id": "IMAGE_57",
+      "label": "UI Head",
+      "path": "./assets/User Media Textures/UI_Head.png",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game"
+  }
+}

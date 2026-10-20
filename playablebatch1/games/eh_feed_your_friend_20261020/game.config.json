@@ -1,0 +1,127 @@
+{
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game"
+  },
+  "tweaks": [
+    {
+      "id": "gameDuration",
+      "kind": "number",
+      "label": "gameDuration",
+      "value": 15,
+      "default": 15,
+      "min": 10,
+      "max": 60,
+      "step": 1
+    },
+    {
+      "id": "scrollSpeed",
+      "kind": "number",
+      "label": "scrollSpeed",
+      "value": 400,
+      "default": 400,
+      "min": 100,
+      "max": 800,
+      "step": 10
+    },
+    {
+      "id": "negativePercent",
+      "kind": "number",
+      "label": "negativePercent",
+      "value": 20,
+      "default": 20,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Opening guide",
+      "value": "Tap the plate to feed",
+      "max_length": 64
+    }
+  ],
+  "images": [
+    {
+      "id": "GOOD_0",
+      "label": "Good food 1",
+      "path": "./assets/good_0.webp",
+      "replaceable": true
+    },
+    {
+      "id": "GOOD_1",
+      "label": "Good food 2",
+      "path": "./assets/good_1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "GOOD_2",
+      "label": "Good food 3",
+      "path": "./assets/good_2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "GOOD_3",
+      "label": "Good food 4",
+      "path": "./assets/good_3.webp",
+      "replaceable": true
+    },
+    {
+      "id": "GOOD_4",
+      "label": "Good food 5",
+      "path": "./assets/good_4.webp",
+      "replaceable": true
+    },
+    {
+      "id": "GOOD_5",
+      "label": "Good food 6",
+      "path": "./assets/good_5.webp",
+      "replaceable": true
+    },
+    {
+      "id": "BAD_0",
+      "label": "Bad food 1",
+      "path": "./assets/bad_0.webp",
+      "replaceable": true
+    },
+    {
+      "id": "BAD_1",
+      "label": "Bad food 2",
+      "path": "./assets/bad_1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "PLATE",
+      "label": "Food target plate",
+      "path": "./assets/plate.webp",
+      "replaceable": true
+    },
+    {
+      "id": "PHOTO_NORMAL",
+      "label": "Neutral portrait",
+      "path": "./assets/photo_normal.webp",
+      "replaceable": true
+    },
+    {
+      "id": "PHOTO_SMILE",
+      "label": "Happy eating reaction",
+      "path": "./assets/photo_smile.webp",
+      "replaceable": true
+    },
+    {
+      "id": "PHOTO_YELL",
+      "label": "Bad food reaction",
+      "path": "./assets/photo_yell.webp",
+      "replaceable": true
+    },
+    {
+      "id": "PHOTO_FULL",
+      "label": "Full-cheek result",
+      "path": "./assets/photo_full.webp",
+      "replaceable": true
+    }
+  ]
+}

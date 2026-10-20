@@ -187,6 +187,9 @@
   }
   let sampledOnce = false;
   function sample() {
+    // Converted photo templates explicitly mark their asynchronous preload. Never lock
+    // the feed palette to an empty canvas or loading veil instead of the actual scene.
+    if (document.documentElement.dataset.playableLoading === 'true') return;
     const land = (found) => { if (found) { sampledOnce = true; post(...found); } return !!found; };
     const source = mainCanvas();
     if (!source) { if (document.body?.childElementCount) land(sampleDom()); return; }
