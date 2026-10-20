@@ -121,7 +121,7 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
       "Older eras add grain, dust, scratches, soft detail, dark edges and subtle film weave; color film adds edge light leaks, while analog video adds scanlines and tracking.",
       "Live preview and saved photos share the same effects and crop. Camera controls remain clear; reduced motion stops decorative film movement.",
       "Timeline drags move five years per eight pixels, so short swipes reach different eras. Exact year entry remains available.",
-      "Added a swipe-hand opening guide and a gently breathing camera icon. Guidance hides after the first year change or camera activation. Removed the large build button and assembly wait."
+      "Added a circular camera button with gentle tap guidance and locally bundled DM Sans typography. Retained the style label above the year and year labels beneath the dial; removed descriptive prose. ‘tap camera to enter’ hides after a year change or camera activation. No large build button or assembly wait."
     ],
     "status": "Era effects, sensitive timeline and simplified guided opening implemented; awaiting review.",
     "evidence": ["Time Camera era effects follow-up 20261013", "Time Camera timeline sensitivity follow-up 20261013"]
