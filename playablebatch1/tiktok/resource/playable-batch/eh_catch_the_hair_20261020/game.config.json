@@ -37,7 +37,7 @@
   "images": [
     {
       "id": "PERSON",
-      "label": "Clean bald model cutout",
+      "label": "Reference-inspired bald character",
       "path": "./assets/person.webp",
       "replaceable": true
     },

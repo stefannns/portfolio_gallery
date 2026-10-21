@@ -535,9 +535,9 @@ window.PlayableGameDownloads = {
   "eh_catch_the_hair_20261020": {
     "url": "/playablebatch1/downloads/77-eh_catch_the_hair_20261020.zip",
     "filename": "77-eh_catch_the_hair_20261020.zip",
-    "bytes": 414063,
+    "bytes": 396695,
     "files": 17,
-    "sha256": "5aadb8c9f74e46a4d80e8199eb62135d1fd36bc9b4d9a41dbce960eac8d61e4f"
+    "sha256": "442d40003c17583e0949379f68e29e87f8ea957cd1c74737312d6b54edb22e52"
   },
   "eh_makeover_20261020": {
     "url": "/playablebatch1/downloads/78-eh_makeover_20261020.zip",
