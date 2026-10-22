@@ -211,7 +211,7 @@ html,body,#root{width:100%;height:100%;margin:0;overflow:hidden;background:#d6d6
     h("div",{className:"sandbox-status",role:"status","aria-live":"polite","aria-atomic":"true"},stats.plants+" fiori, "+(stats.grass?"erba piantata":"senza erba")+", "+stats.bugs+" visitatori")
   ));
 }
-function zp(){let[e,t]=(0,z.useState)(null);return(0,z.useEffect)(()=>{let n=!0;return fetch("./game.config.it.json?l10n=71c915452fa9",{cache:"no-store"}).then(r=>r.json()).catch(()=>({})).then(r=>{n&&t(Pp(r))}),()=>{n=!1}},[]),e?z.default.createElement(Np,{cfg:e}):z.default.createElement("div",{style:{width:"100%",height:"100%",background:"#dff3dc"}})}(0,ef.createRoot)(document.getElementById("root")).render(z.default.createElement(zp,null));})();
+function zp(){let[e,t]=(0,z.useState)(null);return(0,z.useEffect)(()=>{let n=!0;return fetch("./game.config.it.json?l10n=a7468a295205",{cache:"no-store"}).then(r=>r.json()).catch(()=>({})).then(r=>{n&&t(Pp(r))}),()=>{n=!1}},[]),e?z.default.createElement(Np,{cfg:e}):z.default.createElement("div",{style:{width:"100%",height:"100%",background:"#dff3dc"}})}(0,ef.createRoot)(document.getElementById("root")).render(z.default.createElement(zp,null));})();
 /*! Bundled license information:
 
 react/cjs/react.production.min.js:

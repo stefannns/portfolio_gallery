@@ -76,7 +76,7 @@ window.PlayableItalianGames={
     "number": 32,
     "name": "Sfida del pelapatate",
     "entry": "/playablebatch1/games/playable2_20260928030642_uthymy/game.it.html",
-    "revision": "eb2eaff9e7e3"
+    "revision": "2b960746431f"
   },
   "playable2_20260928031559_rckaf4": {
     "number": 35,
@@ -94,7 +94,7 @@ window.PlayableItalianGames={
     "number": 40,
     "name": "Laboratorio di pixel",
     "entry": "/playablebatch1/games/playable2_20261001225611_zgfls0/game.it.html",
-    "revision": "37c5a3d534d3"
+    "revision": "355d85a029d5"
   },
   "playable2_20261001225611_23t98b": {
     "number": 41,
@@ -106,19 +106,19 @@ window.PlayableItalianGames={
     "number": 45,
     "name": "Incidi una stella",
     "entry": "/playablebatch1/games/playable2_20261001225821_af5uee/game.it.html",
-    "revision": "25397fb4742a"
+    "revision": "fa90b386668a"
   },
   "playable2_20261001230052_xrken6b": {
     "number": 51,
     "name": "Giardino delle creature",
     "entry": "/playablebatch1/games/playable2_20261001230052_xrken6_57b/game.it.html",
-    "revision": "71c915452fa9"
+    "revision": "a7468a295205"
   },
   "playable2_20261001230122_0sowkn": {
     "number": 53,
     "name": "Serpente",
     "entry": "/playablebatch1/games/playable2_20261001230122_0sowkn/game.it.html",
-    "revision": "1b211047a33e"
+    "revision": "8d8dd897b8c4"
   },
   "playable2_20261001230352_h4uxll": {
     "number": 57,
@@ -130,7 +130,7 @@ window.PlayableItalianGames={
     "number": 58,
     "name": "Torre",
     "entry": "/playablebatch1/games/playable2_20261001230412_o52e38/game.it.html",
-    "revision": "473c8d82d7a5"
+    "revision": "386bfc8d474a"
   },
   "playable2_20261013020955_2hyyml": {
     "number": 61,
@@ -148,7 +148,7 @@ window.PlayableItalianGames={
     "number": 63,
     "name": "Coccolami",
     "entry": "/playablebatch1/games/01_petme_9gw00a_game/game.it.html",
-    "revision": "992ad33d79b1"
+    "revision": "5912be76be6f"
   },
   "playable_20260727203355_w1cgvm": {
     "number": 64,

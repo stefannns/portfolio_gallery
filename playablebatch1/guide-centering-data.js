@@ -80,7 +80,7 @@
   [
     32,
     "playable2_20260928030642_uthymy",
-    "Above the long peeler handle; centering would cover its working area"
+    "User follow-up: raised farther above the long peeler handle to avoid overlap"
   ],
   [
     33,
@@ -125,7 +125,7 @@
   [
     45,
     "playable2_20261001225821_af5uee",
-    "Above the knife/star working area"
+    "User follow-up: responsive clearance above the full moving knife handle and star working area"
   ],
   [
     46,
@@ -150,7 +150,7 @@
   [
     51,
     "playable2_20261001230052_xrken6b",
-    "User follow-up: just above the opening grass-swipe demo"
+    "User follow-up: raised farther above the opening grass-swipe demo to avoid overlap"
   ],
   [
     56,
@@ -180,7 +180,7 @@
   [
     63,
     "01_petme_9gw00a_game",
-    "Below the pet face; HUD remains at the top"
+    "User follow-up: above the dog, clear of its head and grooming area; HUD remains unchanged"
   ],
   [
     64,
