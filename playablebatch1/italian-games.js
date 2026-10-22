@@ -118,7 +118,7 @@ window.PlayableItalianGames={
     "number": 53,
     "name": "Serpente",
     "entry": "/playablebatch1/games/playable2_20261001230122_0sowkn/game.it.html",
-    "revision": "8d8dd897b8c4"
+    "revision": "bb87bb23cdb8"
   },
   "playable2_20261001230352_h4uxll": {
     "number": 57,
