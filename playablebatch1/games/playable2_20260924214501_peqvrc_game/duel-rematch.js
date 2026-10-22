@@ -78,19 +78,22 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: clamp(10px, 2.3vh, 18px);
+      top: 0;
+      height: 100%;
       width: min(76vw, 460px);
       transform: translateX(-50%);
       pointer-events: none;
     }
     .tap-duel__hitbox--red .tap-duel__player {
-      top: max(24px, calc(env(safe-area-inset-top) + 18px));
+      top: 0;
       transform: translateX(-50%) rotate(180deg);
     }
     .tap-duel__hitbox--blue .tap-duel__player {
-      bottom: max(24px, calc(env(safe-area-inset-bottom) + 18px));
+      top: 0;
     }
     .tap-duel__copy {
+      position: absolute;
+      bottom: calc(50% - 12px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -105,11 +108,15 @@
     .tap-duel__instruction {
       font-family: ui-sans-serif, system-ui, sans-serif;
       font-size: 18px;
+      line-height: 24px;
       font-weight: 800;
       letter-spacing: .16em;
     }
     .tap-duel__orb {
-      width: clamp(104px, 29vw, 186px);
+      position: absolute;
+      top: calc(50% + 20px);
+      height: min(clamp(104px, 29vw, 186px), calc(50% - 50px));
+      width: auto;
       aspect-ratio: 1;
       border-radius: 50%;
       transition: transform 70ms ease;
@@ -197,8 +204,7 @@
       border: 0;
     }
     @media (max-height: 620px) {
-      .tap-duel__orb { width: clamp(84px, 23vh, 142px); }
-      .tap-duel__player { gap: 8px; }
+      .tap-duel__orb { height: min(clamp(84px, 23vh, 142px), calc(50% - 50px)); }
       .tap-duel__name { font-size: 20px; }
       .tap-duel__instruction { font-size: 18px; }
     }

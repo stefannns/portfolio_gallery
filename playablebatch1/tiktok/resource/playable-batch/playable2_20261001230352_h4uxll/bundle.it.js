@@ -16,7 +16,7 @@
 
   const loadConfig = async () => {
     try {
-      const response = await fetch("./game.config.it.json?l10n=de6b957dcb56", { cache: 'no-store' });
+      const response = await fetch("./game.config.it.json?l10n=55d27bb900b0", { cache: 'no-store' });
       if (response.ok) return flattenConfig(await response.json());
     } catch (_) {}
     const inline = document.getElementById('playable-config-inline');

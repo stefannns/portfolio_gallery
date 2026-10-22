@@ -4,7 +4,7 @@ export async function loadConfig() {
   let fallback={tweaks:[],texts:[],images:[]};
   try {fallback=JSON.parse(document.getElementById('playable-inline-config')?.textContent || '{}');} catch {}
   if(location.protocol==='file:')return fallback;
-  try {const response=await fetch("./game.config.it.json?l10n=fa81dbc8c2f2",{cache:'no-store'});if(response.ok)return await response.json();} catch {}
+  try {const response=await fetch("./game.config.it.json?l10n=a781beda1399",{cache:'no-store'});if(response.ok)return await response.json();} catch {}
   return fallback;
 }
 

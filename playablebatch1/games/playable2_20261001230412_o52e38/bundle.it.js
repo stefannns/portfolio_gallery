@@ -298,7 +298,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   let [config,setConfig]=(0,Ve.useState)(null),[phase,setPhase]=(0,Ve.useState)("playing"),[score,setScore]=(0,Ve.useState)(0);
   let canvas=(0,Ve.useRef)(null),world=(0,Ve.useRef)(null),surface=(0,Ve.useRef)(null),audio=(0,Ve.useRef)(null),raf=(0,Ve.useRef)(0);
   let {canSubmit,submitting,submitRecording}=GT();
-  (0,Ve.useEffect)(()=>{let live=true;(async()=>{let data={tweaks:[],texts:[],images:[]};try{let response=await fetch("./game.config.it.json?l10n=40b7c08f9f67",{cache:"no-store"});if(response.ok)data=await response.json()}catch{}if(live)setConfig(QT(data))})();return()=>{live=false}},[]);
+  (0,Ve.useEffect)(()=>{let live=true;(async()=>{let data={tweaks:[],texts:[],images:[]};try{let response=await fetch("./game.config.it.json?l10n=473c8d82d7a5",{cache:"no-store"});if(response.ok)data=await response.json()}catch{}if(live)setConfig(QT(data))})();return()=>{live=false}},[]);
   (0,Ve.useEffect)(()=>{if(!config?.BLOCK_IMG)return;let image=new Image;image.onload=()=>surface.current=image;image.src=config.BLOCK_IMG;return()=>{surface.current=null}},[config]);
   let colors=[
     {top:"#f7a9ba",front:"#d96f8a",side:"#bd526f"},

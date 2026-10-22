@@ -289,7 +289,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       (async () => {
         let C = { tweaks: [], texts: [], images: [] };
         try {
-          let E = await fetch("./game.config.it.json?l10n=302c45ec0906", { cache: "no-store" });
+          let E = await fetch("./game.config.it.json?l10n=7e4c5ad5961d", { cache: "no-store" });
           E.ok && (C = await E.json());
         } catch {}
         if (k) {

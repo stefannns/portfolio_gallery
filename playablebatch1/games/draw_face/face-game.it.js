@@ -92,7 +92,7 @@ function computeGroupPlacements({ bounds, slots }) {
       } catch (_) {}
     } else {
       try {
-        const response = await fetch("./game.config.it.json?l10n=dd5a1011047b", { cache: "no-store" });
+        const response = await fetch("./game.config.it.json?l10n=523249e2d4e0", { cache: "no-store" });
         if (response.ok) config = await response.json();
       } catch (_) {
         if (inlineConfig) {

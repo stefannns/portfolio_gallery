@@ -311,9 +311,10 @@ var melodyStrings=(()=>{
   }
   function backdrop(ctx,g,texture){
     const {w,h,scale}=g;
-    const base=ctx.createLinearGradient(0,0,w,h);base.addColorStop(0,'#344552');base.addColorStop(.55,'#293844');base.addColorStop(1,'#24313c');ctx.fillStyle=base;ctx.fillRect(0,0,w,h);
-    // Retain the configured replaceable texture at a quiet material-only strength.
-    if(texture){ctx.save();ctx.globalAlpha=.035;const r=Math.max(w/texture.width,h/texture.height),tw=texture.width*r,th=texture.height*r;ctx.drawImage(texture,(w-tw)/2,(h-th)/2,tw,th);ctx.restore();}
+    const base=ctx.createLinearGradient(0,0,w,h);base.addColorStop(0,'#765235');base.addColorStop(.55,'#64452f');base.addColorStop(1,'#4d3628');ctx.fillStyle=base;ctx.fillRect(0,0,w,h);
+    // Reuse the original replaceable wood, softened at render time. Keep the
+    // broad grain but suppress fine pores/contrast behind the musical lines.
+    if(texture){ctx.save();ctx.globalAlpha=.48;ctx.filter='blur(1.25px)';const r=Math.max((w+8)/texture.width,(h+8)/texture.height),tw=texture.width*r,th=texture.height*r;ctx.drawImage(texture,(w-tw)/2,(h-th)/2,tw,th);ctx.restore();}
     const shade=ctx.createLinearGradient(0,0,w,0);shade.addColorStop(0,'rgba(25,13,7,.16)');shade.addColorStop(.3,'rgba(255,212,152,.03)');shade.addColorStop(1,'rgba(25,13,7,.22)');ctx.fillStyle=shade;ctx.fillRect(0,0,w,h);
     for(const y of [g.top,g.bottom]){
       ctx.shadowColor='rgba(31,15,4,.5)';ctx.shadowBlur=7*scale;ctx.shadowOffsetY=4*scale;
@@ -376,7 +377,7 @@ var NV=()=>{
   const world=Yt.useRef({g:null,strings:melodyStrings.createStrings(),pointer:null,keyboard:7,raf:0,draw:null,background:null,strokes:[],notes:[],started:null,duration:0,playback:null,version:0});
   const sound=Yt.useRef({ready:false,pending:null,synth:null,reverb:null,lastNote:-1,lastTime:-1,latest:null,disposed:false});
   const [hasRecording,setHasRecording]=Yt.useState(false),[playing,setPlaying]=Yt.useState(false),[status,setStatus]=Yt.useState('');
-  Yt.useEffect(()=>{let live=true;(async()=>{let c={tweaks:[],texts:[],images:[]};try{const r=await fetch("./game.config.it.json?l10n=863f8334920c",{cache:'no-store'});if(r.ok)c=await r.json();}catch{}if(live)setConfig(bV(c));})();return()=>{live=false;};},[]);
+  Yt.useEffect(()=>{let live=true;(async()=>{let c={tweaks:[],texts:[],images:[]};try{const r=await fetch("./game.config.it.json?l10n=2df598154a58",{cache:'no-store'});if(r.ok)c=await r.json();}catch{}if(live)setConfig(bV(c));})();return()=>{live=false;};},[]);
   const playNote=(index,velocity,gain=1)=>{
     const audio=sound.current;if(!audio.ready||!audio.synth||audio.disposed)return;
     const now=BE();

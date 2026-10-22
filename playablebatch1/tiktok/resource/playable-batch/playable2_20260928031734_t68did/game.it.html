@@ -53,7 +53,9 @@
 html[data-feed-background] .feed-first-action{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
 </style>
-<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=354ab4b26e2f&v=da29b6c2711e">
+<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=47b6a105cb3f&v=da29b6c2711e">
+<link data-guide-breathing="20261021" rel="stylesheet" href="./guide-breathing.it.css?l10n=47b6a105cb3f&v=0a3574fd6a1e">
+<script data-guide-breathing="20261021" defer src="./guide-breathing.it.js?l10n=47b6a105cb3f&v=0a3574fd6a1e"></script>
 <link data-italian-layout rel="stylesheet" href="./locale.it.css?v=20261021-1">
 </head>
 <body>
@@ -69,7 +71,7 @@ html[data-feed-background] .feed-first-action{animation-play-state:paused}
       const nativeFetch = window.fetch.bind(window);
       window.fetch = (input, init) => {
         const url = typeof input === "string" ? input : input && input.url;
-        if (url === "./game.config.it.json?l10n=354ab4b26e2f" || url === "game.config.it.json?l10n=354ab4b26e2f") {
+        if (url === "./game.config.it.json?l10n=47b6a105cb3f" || url === "game.config.it.json?l10n=47b6a105cb3f") {
           return Promise.resolve(new Response(JSON.stringify(inlineConfig), {
             status: 200,
             headers: { "Content-Type": "application/json" }
@@ -79,7 +81,7 @@ html[data-feed-background] .feed-first-action{animation-play-state:paused}
       };
     })();
   </script>
-  <script src="./bundle.it.js?l10n=354ab4b26e2f&pixel-dive36=3f2153583b7c"></script>
-<script defer src="./feed-entry-motion.it.js?l10n=354ab4b26e2f&v=feed-first-20261008-1" data-subject=".pixel-dive-canvas"></script>
+  <script src="./bundle.it.js?l10n=47b6a105cb3f&pixel-dive36=3f2153583b7c"></script>
+<script defer src="./feed-entry-motion.it.js?l10n=47b6a105cb3f&v=feed-first-20261008-1" data-subject=".pixel-dive-canvas"></script>
 </body>
 </html>

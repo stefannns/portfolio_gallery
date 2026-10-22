@@ -52,7 +52,9 @@
 html[data-feed-background] .feed-first-action{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
 </style>
-<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=a7dff6d39e51&v=53e95e606048">
+<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=39a9b6b68911&v=53e95e606048">
+<link data-guide-breathing="20261021" rel="stylesheet" href="./guide-breathing.it.css?l10n=39a9b6b68911&v=d458f3754570">
+<script data-guide-breathing="20261021" defer src="./guide-breathing.it.js?l10n=39a9b6b68911&v=d458f3754570"></script>
 <link data-italian-layout rel="stylesheet" href="./locale.it.css?v=20261021-1">
 </head>
 <body>
@@ -68,7 +70,7 @@ html[data-feed-background] .feed-first-action{animation-play-state:paused}
       const nativeFetch = window.fetch.bind(window);
       window.fetch = (input, init) => {
         const url = typeof input === "string" ? input : input && input.url;
-        if (url === "./game.config.it.json?l10n=a7dff6d39e51" || url === "game.config.it.json?l10n=a7dff6d39e51") {
+        if (url === "./game.config.it.json?l10n=39a9b6b68911" || url === "game.config.it.json?l10n=39a9b6b68911") {
           return Promise.resolve(new Response(JSON.stringify(inlineConfig), {
             status: 200,
             headers: { "Content-Type": "application/json" }
@@ -78,8 +80,8 @@ html[data-feed-background] .feed-first-action{animation-play-state:paused}
       };
     })();
   </script>
-  <script src="./bundle.it.js?l10n=a7dff6d39e51&ui=24-31-dc5980fc670e"></script>
-  <script src="./phone-cable-repair.it.js?l10n=a7dff6d39e51&ui=light-phone-20261019-1"></script>
-<script defer src="./feed-entry-motion.it.js?l10n=a7dff6d39e51&v=feed-first-20261008-1" data-subject="#root img[alt=&quot;cable&quot;]"></script>
+  <script src="./bundle.it.js?l10n=39a9b6b68911&ui=24-31-dc5980fc670e"></script>
+  <script src="./phone-cable-repair.it.js?l10n=39a9b6b68911&ui=light-phone-20261019-1"></script>
+<script defer src="./feed-entry-motion.it.js?l10n=39a9b6b68911&v=feed-first-20261008-1" data-subject="#root img[alt=&quot;cable&quot;]"></script>
 </body>
 </html>

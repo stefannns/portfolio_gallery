@@ -225,7 +225,7 @@
   [
     72,
     "height_together_20261019",
-    null
+    "User follow-up: above both figures, using stage-relative placement and a reserved gap below the view controls"
   ],
   [
     74,
@@ -254,7 +254,7 @@
   ]
 ];
   for(const [number,id,exception]of rows){
-    const previous=map[id]||{},item='Opening guide is horizontally centered and placed near the main play area, clear of FYP Tap to play.'+(exception?' '+exception+'.':'')+([63,70].includes(number)?' White extra-bold text with no background panel.':'');
+    const previous=map[id]||{},item='Opening guide is horizontally centered and placed near the main play area, clear of FYP Tap to play.'+(exception?' '+exception+'.':'')+(number===63?' White extra-bold text with no background panel.':number===70?' Black extra-bold hint text on a compact light capsule for improved readability.':'');
     map[id]={...previous,number,items:[...(previous.items||[]).filter(text=>!text.startsWith('Opening guide is horizontally centered')),item],status:'Updated locally; awaiting user review.',evidence:[...new Set([...(previous.evidence||[]),'Guide-centering follow-up 20261021'])]};
   }
 })();
