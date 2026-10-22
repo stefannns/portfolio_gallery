@@ -8,17 +8,26 @@
   const home = content?.parentElement;
   if (!api || !picker || !trigger || !dialog || !content || !home) return;
 
-  for (const game of api.games) {
-    const option = document.createElement('option');
-    option.value = game.taskId;
-    option.textContent = game.number + '. ' + game.name;
-    picker.append(option);
+  function refreshPicker() {
+    const games = api.getPoolGames?.() || api.games;
+    picker.replaceChildren(); picker.disabled = !games.length;
+    if (!games.length) {
+      const option = document.createElement('option'); option.value = ''; option.textContent = 'No matching games'; picker.append(option);
+    }
+    for (const game of games) {
+      const option = document.createElement('option');
+      option.value = game.taskId;
+      option.textContent = game.number + '. ' + game.name;
+      picker.append(option);
+    }
   }
+  refreshPicker();
   const reflect = game => { if (game) picker.value = game.taskId; };
   picker.addEventListener('change', () => {
     const game = api.games.find(item => item.taskId === picker.value);
     if (game) api.select(game, {reveal: true});
   });
+  window.addEventListener('playable-review-filter-change', () => { refreshPicker(); reflect(api.getCurrent()); });
   trigger.addEventListener('click', () => {
     dialog.querySelector('.review-drawer-body').append(content);
     dialog.showModal();

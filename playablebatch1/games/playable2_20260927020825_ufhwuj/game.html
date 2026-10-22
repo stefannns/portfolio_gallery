@@ -38,7 +38,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Playable</title>
-  <link rel="preload" href="./assets/fonts/audiowide/Audiowide-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="./assets/fonts/exo2/Exo2-Latin.woff" as="font" type="font/woff" crossorigin />
   <style>
     html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
     body { background: #050510; -webkit-tap-highlight-color: transparent; }
@@ -105,6 +105,9 @@
 html[data-feed-background] .feed-first-action{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
 </style>
+<link rel="stylesheet" href="./fyp-meeting.css?v=meeting-fyp-early-20261021-5">
+<link data-ui-polish="20261021" rel="stylesheet" href="./ui-polish.css?v=b6a5ae45c5c5">
+<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.css?v=c11cdb983696">
 </head>
 <body>
   <div id="root"></div>
@@ -130,7 +133,8 @@ html[data-feed-background] .feed-first-action{animation-play-state:paused}
     }());
   </script>
   <!-- playable-inline-config:end -->
-  <script src="./bundle.js?v=untimed-font-20261009-1"></script>
+  <script src="./bundle.js?v=meeting-fyp-early-20261021-5"></script>
 <script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject="#root canvas"></script>
+<script defer src="./fyp-meeting.js?v=meeting-fyp-early-20261021-5" data-game="17"></script>
 </body>
 </html>

@@ -311,9 +311,9 @@ var melodyStrings=(()=>{
   }
   function backdrop(ctx,g,texture){
     const {w,h,scale}=g;
-    ctx.fillStyle='#a36a3d';ctx.fillRect(0,0,w,h);
-    if(texture){const r=Math.max(w/texture.width,h/texture.height),tw=texture.width*r,th=texture.height*r;ctx.drawImage(texture,(w-tw)/2,(h-th)/2,tw,th);}
-    else{for(let i=0;i<50;i++){ctx.strokeStyle=i%3?'rgba(51,27,14,.05)':'rgba(232,173,107,.09)';ctx.lineWidth=(i%4+1)*scale;ctx.beginPath();ctx.moveTo(w*i/50,0);ctx.bezierCurveTo(w*i/50+4,h*.3,w*i/50-5,h*.7,w*i/50,h);ctx.stroke();}}
+    const base=ctx.createLinearGradient(0,0,w,h);base.addColorStop(0,'#344552');base.addColorStop(.55,'#293844');base.addColorStop(1,'#24313c');ctx.fillStyle=base;ctx.fillRect(0,0,w,h);
+    // Retain the configured replaceable texture at a quiet material-only strength.
+    if(texture){ctx.save();ctx.globalAlpha=.035;const r=Math.max(w/texture.width,h/texture.height),tw=texture.width*r,th=texture.height*r;ctx.drawImage(texture,(w-tw)/2,(h-th)/2,tw,th);ctx.restore();}
     const shade=ctx.createLinearGradient(0,0,w,0);shade.addColorStop(0,'rgba(25,13,7,.16)');shade.addColorStop(.3,'rgba(255,212,152,.03)');shade.addColorStop(1,'rgba(25,13,7,.22)');ctx.fillStyle=shade;ctx.fillRect(0,0,w,h);
     for(const y of [g.top,g.bottom]){
       ctx.shadowColor='rgba(31,15,4,.5)';ctx.shadowBlur=7*scale;ctx.shadowOffsetY=4*scale;

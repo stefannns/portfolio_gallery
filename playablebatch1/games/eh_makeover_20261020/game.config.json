@@ -30,7 +30,7 @@
     {
       "id": "GUIDE",
       "label": "Opening guide",
-      "value": "Tap to brush",
+      "value": "Drag to brush",
       "max_length": 64
     }
   ],

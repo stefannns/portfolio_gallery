@@ -207,6 +207,7 @@ window.GAME_SPEC={
       "FX_FINAL_30"
     ]
   },
+  "photoFraming": {"x":0.55,"y":0.40,"screenY":0.45,"zoom":1.16},
   "photoPoints": {
     "mouth": {
       "x": 0.56,

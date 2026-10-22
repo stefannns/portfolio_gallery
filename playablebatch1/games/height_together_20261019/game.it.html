@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Altezze a confronto</title><link rel="preload" href="./assets/fonts/DMSans.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="./game.it.css?l10n=ec0ac5f7930a&v=bcdc6dca3033"><link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=ec0ac5f7930a&v=6691daecb549">
+<link data-italian-layout rel="stylesheet" href="./locale.it.css?v=20261021-1">
+</head>
+<body><main id="game" aria-label="Simulatore di altezze">
+  <header id="top"><output id="difference" aria-label="Differenza di altezza">18 <small>cm di differenza</small></output>
+    <nav id="views" aria-label="Punto di vista"><button data-view="free" aria-pressed="true">Vista libera</button><button data-view="a" aria-pressed="false">Vista A</button><button data-view="b" aria-pressed="false">Vista B</button></nav>
+  </header>
+  <section id="stage" tabindex="0" aria-label="Confronto delle altezze in 3D" aria-describedby="keyboard-help"><div id="labels" aria-hidden="true"><svg id="leaders"><line id="leader-a"/><line id="leader-b"/></svg><span id="label-a" class="person-label"></span><span id="label-b" class="person-label"></span></div><p id="guide">Trascina o pizzica per esplorare</p>
+  </section>
+  <footer id="toolbar"><label class="scene-picker"><span class="sr-only">Scena condivisa</span><select id="scene"><option value="together">Fianco a fianco</option><option value="umbrella">Sotto l’ombrello</option><option value="cafe">Un caffè insieme</option><option value="shelf">Sul ripiano</option><option value="hug">Un abbraccio</option><option value="scarf">Una sciarpa per due</option><option value="piggyback">Sulle spalle</option><option value="carry">In braccio</option></select></label>
+    <div class="actions"><button id="edit"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="7" r="3"/><path d="M2 21v-3a6 6 0 0 1 12 0v3M16 4a3 3 0 0 1 0 6m1 4a5 5 0 0 1 5 5v2"/></svg>Persone</button><button id="swap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h17m-4-4 4 4-4 4M21 17H4m4-4-4 4 4 4"/></svg>Scambia</button><button id="photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h4l2-3h6l2 3h4v15H3z"/><circle cx="12" cy="13" r="4"/></svg>Foto</button></div>
+  </footer>
+  <p id="status" class="sr-only" role="status" aria-live="polite"></p><p id="keyboard-help" class="sr-only">Trascina o usa le frecce per ruotare. Pizzica o usa più e meno per lo zoom. Cambia prospettiva con Vista libera, Vista A o Vista B.</p>
+  <div id="error" hidden role="alert"><p>Impossibile avviare il 3D. Ricarica per riprovare.</p><button id="retry">Riprova</button></div>
+  <dialog id="people-dialog" aria-labelledby="people-title"><form id="people-form" novalidate><div class="dialog-heading"><h2 id="people-title">Le vostre altezze</h2><button type="button" id="close" aria-label="Annulla le modifiche">×</button></div>
+    <fieldset><legend>Persona A</legend><label>Nome<input id="a-name" name="aName" maxlength="20" autocomplete="off"></label><label>Altezza <span>cm</span><input id="a-height" name="aHeight" type="number" inputmode="decimal" min="50" max="500" step="0.1" required aria-describedby="a-error"></label><p class="field-error" id="a-error"></p></fieldset>
+    <fieldset><legend>Persona B</legend><label>Nome<input id="b-name" name="bName" maxlength="20" autocomplete="off"></label><label>Altezza <span>cm</span><input id="b-height" name="bHeight" type="number" inputmode="decimal" min="50" max="500" step="0.1" required aria-describedby="b-error"></label><p class="field-error" id="b-error"></p></fieldset>
+    <button id="apply" type="submit">Confronta le altezze</button><p class="privacy">Resta su questo dispositivo.</p>
+  </form></dialog>
+  </main><script id="playable-inline-config" type="application/json">{"config_version":"2.0","tweaks":[],"texts":[{"id":"HINT_TEXT","label":"Camera guide","value":"Trascina o pizzica per esplorare","default":"Trascina o pizzica per esplorare","max_length":42}],"images":[]}</script><script src="./bundle.it.js?l10n=ec0ac5f7930a&v=bcdc6dca3033"></script></body></html>

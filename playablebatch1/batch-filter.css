@@ -1,0 +1,7 @@
+/* One quiet category control beside the existing game chooser, also on phones. */
+.review-batch-filter { display:flex;align-items:center;gap:8px;flex:none;color:var(--review-accent,#294f3d);font-size:13px;font-weight:650; }
+.review-batch-filter select { min-height:44px;max-width:142px;padding:8px 26px 8px 10px;border:1px solid var(--review-line,#dfe5de);border-radius:9px;background:var(--review-surface,#fff);color:var(--review-ink,#202522);font:inherit;font-size:14px;cursor:pointer; }
+.review-batch-filter select:hover { background:#f7f9f6; }
+.review-batch-filter select:focus-visible { outline:3px solid #478462;outline-offset:3px; }
+@media(max-width:900px) { .review-batch-filter { gap:6px;font-size:12px; } .review-batch-filter select { width:108px;max-width:108px;padding-left:8px;font-size:14px; } }
+@media(max-width:570px) { .review-batch-filter { position:relative; } .review-batch-filter>span { position:absolute;left:10px;top:5px;font-size:10px;line-height:12px;pointer-events:none; } .review-batch-filter select { width:96px;max-width:96px;min-height:44px;padding:16px 20px 3px 9px;font-size:13px; } }

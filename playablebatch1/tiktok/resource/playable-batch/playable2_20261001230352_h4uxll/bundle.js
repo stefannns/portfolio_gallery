@@ -64,6 +64,9 @@
       .storm-control:focus-visible { outline: 3px solid #d6e6ff; outline-offset: 4px; }
       .storm-control[aria-busy="true"] svg { opacity: .5; }
       .guide.hidden { opacity: 0; transform: translateY(-5px); }
+      .storm[data-feed-preview="true"] .storm-controls,.storm[data-feed-preview="true"] .counter{visibility:hidden;pointer-events:none}
+      .storm[data-feed-preview="true"] .counter{display:none}
+      .storm[data-feed-preview="true"] .hud{top:18%}
       .tap-ripple {
         position: absolute;
         z-index: 2;
@@ -107,6 +110,19 @@
     const musicToggle = document.getElementById('music-toggle');
     const musicLabel = document.getElementById('music-label');
     guide.textContent = cfg.GUIDE_TEXT || 'Tap the clouds to call lightning';
+    const storm=root.querySelector('.storm');
+    let feedPreview=new URLSearchParams(location.search).has('review')||new URLSearchParams(location.search).get('feedReview')==='1';
+    storm.dataset.feedPreview=String(feedPreview);
+    let previewElapsed=0,previewPlayed=false;
+    let previewVisible=false;
+    const previewObserver=new IntersectionObserver(entries=>{previewVisible=entries.some(entry=>entry.isIntersecting&&entry.intersectionRatio>.1);},{threshold:[0,.1]});
+    previewObserver.observe(storm);
+    addEventListener('pagehide',()=>previewObserver.disconnect(),{once:true});
+    addEventListener('message',e=>{
+      if(e.source!==parent||e.origin!==location.origin||e.data?.type!=='playable-active')return;
+      feedPreview=e.data.active!==true;storm.dataset.feedPreview=String(feedPreview);
+      if(!feedPreview){bolts=[];flash=0;}
+    });
 
     const cloudSpeed = Math.max(.05, Number(cfg.CLOUD_SPEED) || .34);
     const cloudDensity = Math.max(8, Math.min(30, Math.round(Number(cfg.CLOUD_DENSITY) || 18)));
@@ -368,6 +384,10 @@
     const frame = now => {
       const dt = Math.min(.04, Math.max(0, (now - lastFrame) / 1000));
       lastFrame = now;
+      if(!document.hidden&&previewVisible&&feedPreview&&!previewPlayed&&!reducedMotion){
+        previewElapsed+=dt*1000;
+        if(previewElapsed>=900){previewPlayed=true;createBolt(width*.48,height*.5);storm.dataset.previewStrikes='1';}
+      }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       drawSky(now);
       drawClouds(dt, now);
@@ -539,7 +559,7 @@
     };
 
     canvas.addEventListener('pointerdown', event => {
-      if (event.isPrimary === false || event.button > 0) return;
+      if (feedPreview || event.isPrimary === false || event.button > 0) return;
       hasInteracted = true;
       startRain();
       const rect = canvas.getBoundingClientRect();

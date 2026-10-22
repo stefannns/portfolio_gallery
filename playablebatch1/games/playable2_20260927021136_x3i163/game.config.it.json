@@ -1,0 +1,49 @@
+{
+  "tweaks": [
+    {
+      "id": "GRAVITY_SCALE",
+      "kind": "number",
+      "label": "Gravity Scale",
+      "value": 1.2,
+      "default": 1.2,
+      "min": 0.5,
+      "max": 3,
+      "step": 0.1
+    },
+    {
+      "id": "SPAWN_RATE",
+      "kind": "number",
+      "label": "Spawn Interval (ms)",
+      "value": 1500,
+      "default": 1500,
+      "min": 500,
+      "max": 4000,
+      "step": 100
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "CUBI IN MOVIMENTO",
+      "default": "CUBI IN MOVIMENTO",
+      "max_length": 20
+    },
+    {
+      "id": "SUBTITLE",
+      "label": "Subtitle",
+      "value": "Tocca il vuoto per aggiungere cubi",
+      "default": "Tocca il cubo che cade!",
+      "max_length": 40
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

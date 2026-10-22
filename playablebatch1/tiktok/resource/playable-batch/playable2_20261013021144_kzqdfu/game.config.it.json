@@ -1,0 +1,218 @@
+{
+  "tweaks": [
+    {
+      "id": "KOI_COUNT",
+      "kind": "number",
+      "label": "Koi Count",
+      "value": 4,
+      "default": 4,
+      "min": 1,
+      "max": 10,
+      "step": 1
+    },
+    {
+      "id": "KOI_BASE_SPEED",
+      "kind": "number",
+      "label": "Koi Base Speed",
+      "value": 0.08,
+      "default": 0.08,
+      "min": 0.02,
+      "max": 0.2,
+      "step": 0.01
+    }
+  ],
+  "texts": [
+    {
+      "id": "TXT_SCORE_LABEL",
+      "label": "Score Label",
+      "value": "Punti",
+      "default": "Punti",
+      "max_length": 10
+    },
+    {
+      "id": "TXT_FOOD_PELLETS",
+      "label": "Food Name Pellets",
+      "value": "Mangime",
+      "default": "Mangime",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_FOOD_CHILI",
+      "label": "Food Name Chili",
+      "value": "Peperoncino",
+      "default": "Peperoncino",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_FOOD_ICE",
+      "label": "Food Name Ice",
+      "value": "Ghiaccio",
+      "default": "Ghiaccio",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_FOOD_GHOST",
+      "label": "Food Name Ghost",
+      "value": "Fantasma",
+      "default": "Fantasma",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_FOOD_DISCO",
+      "label": "Food Name Disco",
+      "value": "Disco",
+      "default": "Disco",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_FOOD_DONUT",
+      "label": "Food Name Donut",
+      "value": "Ciambella",
+      "default": "Ciambella",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_FOOD_STAR",
+      "label": "Food Name Star",
+      "value": "Stella",
+      "default": "Stella",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_FOOD_SODA",
+      "label": "Food Name Soda",
+      "value": "Bibita",
+      "default": "Bibita",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_FOOD_SOAP",
+      "label": "Food Name Soap",
+      "value": "Sapone",
+      "default": "Sapone",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_FOOD_MAGNET",
+      "label": "Food Name Magnet",
+      "value": "Magnete",
+      "default": "Magnete",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_FOOD_MIX",
+      "label": "Food Name Mix",
+      "value": "Mix",
+      "default": "Mix",
+      "max_length": 15
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_WATER",
+      "label": "Water Background",
+      "path": "./assets/cartoon-pond-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "KOI_FISH",
+      "label": "Koi Sprite",
+      "path": "./assets/cartoon-koi-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "LILY_PAD",
+      "label": "Lily Pad",
+      "path": "./assets/cartoon-lily-pad-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FX_STAR_HALO",
+      "label": "Star Halo FX",
+      "path": "./assets/cartoon-star-halo-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "FX_ICE",
+      "label": "Ice Block FX",
+      "path": "./assets/cartoon-ice-effect-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "ICON_PELLET",
+      "label": "Icon Pellets",
+      "path": "./assets/cartoon-pellets-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "ICON_CHILI",
+      "label": "Icon Chili",
+      "path": "./assets/cartoon-chili-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "ICON_ICE",
+      "label": "Icon Ice",
+      "path": "./assets/cartoon-ice-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "ICON_GHOST",
+      "label": "Icon Ghost",
+      "path": "./assets/cartoon-ghost-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "ICON_DISCO",
+      "label": "Icon Disco",
+      "path": "./assets/cartoon-disco-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "ICON_DONUT",
+      "label": "Icon Donut",
+      "path": "./assets/cartoon-donut-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "ICON_STAR",
+      "label": "Icon Star",
+      "path": "./assets/cartoon-star-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "ICON_SODA",
+      "label": "Icon Soda",
+      "path": "./assets/cartoon-soda-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "ICON_SOAP",
+      "label": "Icon Soap",
+      "path": "./assets/cartoon-soap-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "ICON_MAGNET",
+      "label": "Icon Magnet",
+      "path": "./assets/cartoon-magnet-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "ICON_MIX",
+      "label": "Icon Mix",
+      "path": "./assets/cartoon-mix-v1.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "103313693563206036",
+    "version_id": "103313693563295272",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

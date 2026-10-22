@@ -1,0 +1,2 @@
+/* User override 2026-10-21: favor visual center, not a fixed upper band. */
+html:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) p.dive-guide{position:fixed!important;top:36%!important;bottom:auto!important;left:50%!important;right:auto!important;width:max-content!important;max-width:calc(100vw - 60px)!important;min-height:0!important;margin:0!important;text-align:center!important;translate:-50% -50%!important;transform:none!important;pointer-events:none!important;z-index:25!important;overflow-wrap:anywhere}

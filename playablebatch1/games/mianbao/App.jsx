@@ -23,7 +23,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import * as Tone from 'tone';
-import {uiCss, useUiStage, useToneGate, loadConfig} from './playable-ui.js';
+import {uiCss, useUiStage, useToneGate, useFeedPreview, useFeedVisibility, loadConfig} from './playable-ui.js';
 import {themeCss} from './playable-theme.js';
 
 const GlobalStyle = () => (
@@ -82,6 +82,8 @@ const App = () => {
   const [hasInteracted,setHasInteracted]=useState(false);
   const [breadBurnt,setBreadBurnt]=useState(false);
   const reduced=useUiStage(rootRef,!!cfg);
+  const feedPreview=useFeedPreview();
+  const previewVisible=useFeedVisibility(rootRef,!!cfg);
   const unlock=useToneGate(Tone,audioBank);
 
   useEffect(() => {
@@ -191,6 +193,7 @@ const App = () => {
     handleControls.set({ y: 0 });
     breadControls.set({ y: 0 });
   }, [handleControls, breadControls,toasterControls]);
+  useEffect(()=>{if(feedPreview)resetGame();},[feedPreview,resetGame]);
   useEffect(()=>{
     const hidden=()=>{if(document.hidden)resetGame();};
     document.addEventListener('visibilitychange',hidden);
@@ -202,7 +205,7 @@ const App = () => {
   const isBurnt = breadBurnt || gameState === 'popping' || gameState === 'done';
 
   return (
-    <div ref={rootRef} className="ui-game toaster-game" style={{
+    <div ref={rootRef} data-feed-preview={feedPreview} data-stage-visible={previewVisible} className="ui-game toaster-game" style={{
       width: '100%', height: '100%', 
       display: 'flex', flexDirection: 'column', 
       justifyContent: 'center', alignItems: 'center',
@@ -212,6 +215,17 @@ const App = () => {
     }}>
       <GlobalStyle />
       <style>{themeCss}</style>
+      <style>{`
+        .toaster-game[data-feed-preview="true"] .toaster-assembly{top:calc(84px * var(--ui-scale))!important}
+        .toaster-game[data-feed-preview="true"] .ui-guide{top:16%;bottom:auto!important}
+        .toaster-game[data-feed-preview="true"] .toaster-lever{animation:preview-lever 3.2s .7s ease-in-out both}
+        .toaster-game[data-feed-preview="true"] .toaster-bread{animation:preview-bread 3.2s .7s ease-in-out both}
+        .toaster-game[data-page-hidden="true"] .toaster-lever,.toaster-game[data-page-hidden="true"] .toaster-bread{animation-play-state:paused}
+        .toaster-game[data-stage-visible="false"] .toaster-lever,.toaster-game[data-stage-visible="false"] .toaster-bread{animation-play-state:paused}
+        @keyframes preview-lever{0%,100%{transform:translateY(0)}25%,60%{transform:translateY(40px)}}
+        @keyframes preview-bread{0%,100%{transform:translateY(0)}25%,60%{transform:translateY(100%)}76%{transform:translateY(-10%)}}
+        @media(prefers-reduced-motion:reduce){.toaster-game .toaster-lever,.toaster-game .toaster-bread{animation:none!important}}
+      `}</style>
       
       <motion.div 
         className="toaster-assembly"

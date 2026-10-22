@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<script src="/resource/playable-batch/review-host.js"></script><script src="/resource/playable-feed/pocket-host.js" data-seed-random="off"></script>
+<script data-playable-feed-gate="v1">
+// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
+(() => {
+  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
+  let active=false,alive=true;
+  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
+  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
+  if(navigator.mediaDevices?.getUserMedia){
+    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia=async constraints=>{
+      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
+      const stream=await native(constraints);
+      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
+      streams.add(stream);return stream;
+    };
+  }
+  for(const key of ['AudioContext','webkitAudioContext']){
+    const Native=window[key];if(!Native)continue;
+    window[key]=class FeedAudioContext extends Native {
+      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
+      async resume(){if(!active)await wait();if(alive)return super.resume();}
+    };
+  }
+  const nativePlay=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
+  addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    active=alive&&event.data.active===true;
+    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
+    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
+  });
+  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
+})();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Fulmini al crepuscolo</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #11151d; -webkit-tap-highlight-color: transparent; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=de6b957dcb56&v=d27e31e0453e">
+<link data-italian-layout rel="stylesheet" href="./locale.it.css?v=20261021-1">
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-config-inline" type="application/json">{"tweaks":[{"id":"CLOUD_SPEED","kind":"number","label":"Cloud Speed","value":0.34,"default":0.34,"min":0.1,"max":1,"step":0.02},{"id":"CLOUD_DENSITY","kind":"number","label":"Cloud Density","value":18,"default":18,"min":8,"max":30,"step":1},{"id":"LIGHTNING_GLOW","kind":"number","label":"Lightning Glow","value":30,"default":30,"min":10,"max":60,"step":2},{"id":"THUNDER_VOLUME","kind":"number","label":"Thunder Volume","value":0.28,"default":0.28,"min":0,"max":0.6,"step":0.02}],"texts":[{"id":"GAME_TITLE","label":"Game Title","value":"Temporale al crepuscolo","default":"Temporale al crepuscolo","max_length":30},{"id":"GUIDE_TEXT","label":"Guide Text","value":"Tocca le nuvole per i fulmini","default":"Tocca le nuvole per i fulmini","max_length":44}],"images":[],"motions":[],"config_version":"2.0","playable":{"post_id":"99280150965238575","version_id":"99280150965135547","runtime_target":"h5","h5_playstyle_type":"image_expression","content_locale":"it","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    if (location.protocol === "file:") {
+      const config = document.getElementById("playable-config-inline").textContent;
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = function(input, options) {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url && /(?:^|\/)game\.config\.it\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve(new Response(config, {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return originalFetch(input, options);
+      };
+    }
+  </script>
+  <script src="./scene-audio.it.js?l10n=de6b957dcb56&v=scene-audio-20261007-1"></script>
+<script src="./bundle.it.js?l10n=de6b957dcb56&v=meeting-fyp-20261021-1"></script>
+<script defer src="./feed-entry-motion.it.js?l10n=de6b957dcb56&v=feed-first-20261008-1" data-subject="#root canvas"></script>
+</body>
+</html>

@@ -25,6 +25,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import * as Tone from 'tone';
 import { motion, AnimatePresence } from 'framer-motion';
+import {GROOMING_DURATION_MS,movingContactMs} from './grooming-time.mjs';
 import {uiCss, useUiStage, useToneGate, loadConfig} from './playable-ui.js';
 import {themeCss} from './playable-theme.js';
 import {PetBlend, HairField} from './pet-effects.mjs';
@@ -136,13 +137,16 @@ const App = () => {
   const stateTimeoutRef = useRef(null);
   const pointerRef = useRef(null);
   const comfortRef = useRef(0);
+  const groomingTimeRef = useRef({total:0,last:0});
   const reduced = useUiStage(containerRef, !!cfg);
   const unlock = useToneGate(Tone, audioRef);
   useEffect(() => {
-    const stop = () => {pointerRef.current=null;setIsDragging(false);};
+    const stop = () => {const id=pointerRef.current;pointerRef.current=null;setIsDragging(false);if(id!==null&&containerRef.current?.hasPointerCapture?.(id))containerRef.current.releasePointerCapture(id);};
     const hidden = () => {if (document.hidden) stop();};
+    const host=e=>{if(e.source===parent&&e.origin===location.origin&&e.data?.type==='playable-active'&&e.data.active!==true)stop();};
     window.addEventListener('blur',stop);document.addEventListener('visibilitychange',hidden);
-    return () => {window.removeEventListener('blur',stop);document.removeEventListener('visibilitychange',hidden);};
+    window.addEventListener('message',host);
+    return () => {window.removeEventListener('message',host);window.removeEventListener('blur',stop);document.removeEventListener('visibilitychange',hidden);};
   }, []);
 
   // 1. 加载配置
@@ -241,6 +245,7 @@ const App = () => {
   const handlePointerDown = (e) => {
     if (petState === 'finish' || pointerRef.current !== null || e.isPrimary === false || e.button !== 0) return;
     pointerRef.current = e.pointerId;
+    groomingTimeRef.current.last=e.timeStamp;
     particlesRef.current.remainder=0;
     e.currentTarget.setPointerCapture?.(e.pointerId);
     ensureAudio();
@@ -259,9 +264,11 @@ const App = () => {
     const dx = x - lastPosRef.current.x;
     const dy = y - lastPosRef.current.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
+    const elapsedMs=e.timeStamp-groomingTimeRef.current.last;
+    groomingTimeRef.current.last=e.timeStamp;
     
     // 只有产生有效位移才算梳理
-    if (dist > 3) {
+    if (dist > .5 * Math.min(rect.width/390,rect.height/598)) {
       // 2. 播放音效
       const now = Tone.now();
       if (audioRef.current.ready && now - audioRef.current.lastNoiseTime > 0.08) {
@@ -281,26 +288,17 @@ const App = () => {
         hairLoopRef.current.start();
       }else particlesRef.current.remainder=0;
       
-      // 假设宠物在画面中央，x: 20%-80%
-      if (relX > 0.2 && relX < 0.8) {
-        if (relY > 0.3 && relY < 0.8) setHasInteracted(true);
-        if (relY > 0.3 && relY < 0.55) {
-          // 舒服区 (头部/背部)
-          setPetState('happy');
-          const goal = cfg.COMFORT_MAX ?? 100;
-          const next = Math.min(goal, comfortRef.current + (cfg.COMFORT_SPEED_HAPPY ?? 0.5));
-          comfortRef.current=next;setComfort(next);
-          if (next >= goal) triggerFinish();
-        } else if (relY >= 0.55 && relY < 0.8) {
-          // 敏感区 (肚子/尾巴)
-          setPetState('resist');
-          comfortRef.current=Math.max(0,comfortRef.current+(cfg.COMFORT_SPEED_RESIST ?? -0.2));setComfort(comfortRef.current);
-        } else {
-          setPetState('base');
-        }
-      } else {
-        setPetState('base');
-      }
+      // All visible fur has the same positive response. Contact outside the pet
+      // is ignored, never penalized; holding still cannot advance the meter.
+      const onPet=relX>.2&&relX<.8&&relY>.3&&relY<.8;
+      const credit=movingContactMs({distance:dist,elapsedMs,scale:Math.min(rect.width/390,rect.height/598),onPet});
+      if(credit>0){
+        setHasInteracted(true);setPetState('happy');
+        groomingTimeRef.current.total=Math.min(GROOMING_DURATION_MS,groomingTimeRef.current.total+credit);
+        const goal=cfg.COMFORT_MAX??100,next=goal*groomingTimeRef.current.total/GROOMING_DURATION_MS;
+        comfortRef.current=next;setComfort(next);
+        if(next>=goal)triggerFinish();
+      }else setPetState('base');
     }
     
     setCombPos({ x, y });
@@ -426,7 +424,7 @@ const App = () => {
       </div>
       {petState === 'finish' && <button autoFocus type="button" onPointerDown={e=>e.stopPropagation()} onClick={()=>{
         unlock.stop();
-        pointerRef.current=null;comfortRef.current=0;hairLoopRef.current.clear();setComfort(0);setPetState('base');setHasInteracted(false);
+        pointerRef.current=null;comfortRef.current=0;groomingTimeRef.current={total:0,last:0};hairLoopRef.current.clear();setComfort(0);setPetState('base');setHasInteracted(false);
         setCombPos({x:containerRef.current.clientWidth*.72,y:containerRef.current.clientHeight*.7});
       }} style={{position:'absolute',bottom:'var(--ui-bottom)',left:'50%',transform:'translateX(-50%)',padding:'12px 28px',border:'1px solid #ffffff50',borderRadius:999,background:'#4b3426',color:'#fff',font:'700 18px var(--font-body)',zIndex:30}}>Again</button>}
     </div>

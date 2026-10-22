@@ -29,8 +29,43 @@ Error generating stack: `+o.message+`
       .look-plane>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .25s ease;pointer-events:none}
       .look-remove{position:absolute;border:0;background:transparent;padding:0;pointer-events:auto;cursor:pointer}
       .look-remove:focus-visible{background:#ffffff24;border-radius:18px}
-      .outfit-item{position:absolute;width:35%;aspect-ratio:1;border:0;padding:0;background:transparent;cursor:pointer;z-index:10}
+      .outfit-item{position:absolute;width:25%;aspect-ratio:1;border:0;padding:0;background:transparent;cursor:pointer;z-index:10}
       .outfit-item img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 6px 7px #0004)}
       .outfit-item:active img{filter:drop-shadow(0 3px 4px #0006) brightness(.94)}
-      .look-guide{top:auto;bottom:var(--ui-bottom);left:50%;right:auto;transform:translateX(-50%);width:max-content;max-width:calc(100% - 2 * var(--ui-side));padding:8px 16px;color:#202322;background:#fffffff0;border:1px solid #ffffff90;border-radius:999px;text-shadow:none;box-shadow:0 3px 14px #10181218}
-    `),T.default.createElement("style",null,Rc),T.default.createElement("div",{className:"look-plane",style:{...s,zIndex:1}},["BG_BASE","BG_A","BG_B","BG_AB"].map(c=>T.default.createElement("img",{key:c,src:Ki(e[c]),alt:c===a?"Current outfit":"","aria-hidden":c!==a,draggable:!1,style:{opacity:c===a?1:0}})),n&&T.default.createElement("button",{ref:v,className:"look-remove",type:"button","aria-label":"Remove scarf",onClick:c=>f("A",!1,c.detail===0),style:{top:"48%",left:"44%",width:"28%",height:"14%",zIndex:12}}),l&&T.default.createElement("button",{ref:p,className:"look-remove",type:"button","aria-label":"Remove top",onClick:c=>f("B",!1,c.detail===0),style:{top:"60%",left:"20%",width:"60%",height:"9%",zIndex:11}})),!n&&T.default.createElement("button",{ref:g,type:"button",className:"outfit-item","aria-label":"Try on scarf",onClick:c=>f("A",!0,c.detail===0),style:{left:"var(--ui-side)",top:"24%"}},T.default.createElement("img",{className:"ui-float",style:{animationDuration:`${e.FLOAT_SPEED||2.5}s`},src:Ki(e.ITEM_A),alt:"",draggable:!1})),!l&&T.default.createElement("button",{ref:S,type:"button",className:"outfit-item","aria-label":"Try on top",onClick:c=>f("B",!0,c.detail===0),style:{right:"max(var(--ui-side), 16%)",bottom:"22%",width:"38%"}},T.default.createElement("img",{className:"ui-float",style:{animationDuration:`${(e.FLOAT_SPEED||2.5)*1.1}s`},src:Ki(e.ITEM_B),alt:"",draggable:!1})),!i&&T.default.createElement("p",{className:"ui-guide look-guide"},"Tap a piece to try it on"))}(0,Mc.createRoot)(document.getElementById("root")).render(T.default.createElement(op,null));})();
+      .look-guide{top:12%;bottom:auto;left:50%;right:auto;transform:translateX(-50%);width:max-content;max-width:calc(100% - 2 * var(--ui-side));padding:8px 16px;color:#202322;background:#fffffff0;border:1px solid #ffffff90;border-radius:999px;text-shadow:none;box-shadow:0 3px 14px #10181218}
+    `),T.default.createElement("style",null,Rc),T.default.createElement("div",{className:"look-plane",style:{...s,zIndex:1}},["BG_BASE","BG_A","BG_B","BG_AB"].map(c=>T.default.createElement("img",{key:c,src:Ki(e[c]),alt:c===a?"Current outfit":"","aria-hidden":c!==a,draggable:!1,style:{opacity:c===a?1:0}})),n&&T.default.createElement("button",{ref:v,className:"look-remove",type:"button","aria-label":"Remove scarf",onClick:c=>f("A",!1,c.detail===0),style:{top:"48%",left:"44%",width:"28%",height:"14%",zIndex:12}}),l&&T.default.createElement("button",{ref:p,className:"look-remove",type:"button","aria-label":"Remove top",onClick:c=>f("B",!1,c.detail===0),style:{top:"60%",left:"20%",width:"60%",height:"9%",zIndex:11}})),!n&&T.default.createElement("button",{ref:g,type:"button",className:"outfit-item","aria-label":"Try on scarf",onClick:c=>f("A",!0,c.detail===0),style:{left:"var(--ui-side)",top:"25%"}},T.default.createElement("img",{className:"ui-float",style:{animationDuration:`${e.FLOAT_SPEED||2.5}s`},src:Ki(e.ITEM_A),alt:"",draggable:!1})),!l&&T.default.createElement("button",{ref:S,type:"button",className:"outfit-item","aria-label":"Try on top",onClick:c=>f("B",!0,c.detail===0),style:{left:"var(--ui-side)",bottom:"29%"}},T.default.createElement("img",{className:"ui-float",style:{animationDuration:`${(e.FLOAT_SPEED||2.5)*1.1}s`},src:Ki(e.ITEM_B),alt:"",draggable:!1})),!i&&T.default.createElement("p",{className:"ui-guide look-guide"},"Tap a piece to try it on"))}(0,Mc.createRoot)(document.getElementById("root")).render(T.default.createElement(op,null));})();
+/*! Bundled license information:
+
+react/cjs/react.production.min.js:
+  (**
+   * @license React
+   * react.production.min.js
+   *
+   * Copyright (c) Facebook, Inc. and its affiliates.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   *)
+
+scheduler/cjs/scheduler.production.min.js:
+  (**
+   * @license React
+   * scheduler.production.min.js
+   *
+   * Copyright (c) Facebook, Inc. and its affiliates.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   *)
+
+react-dom/cjs/react-dom.production.min.js:
+  (**
+   * @license React
+   * react-dom.production.min.js
+   *
+   * Copyright (c) Facebook, Inc. and its affiliates.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   *)
+*/

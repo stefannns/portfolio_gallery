@@ -337,7 +337,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
           E.scale(f, f),
           E.beginPath(),
           E.arc(F, b, D, 0, Math.PI * 2),
-          (E.strokeStyle = "#658594"),
+          (E.strokeStyle = "#789d96"),
           (E.lineWidth = 4),
           E.setLineDash([12, 12]),
           E.stroke(),
@@ -345,7 +345,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
           s === "idle" &&
             (E.beginPath(),
             E.arc(F, b - D, 12, 0, Math.PI * 2),
-            (E.fillStyle = "#FFAA53"),
+            (E.fillStyle = "#d66e4d"),
             E.fill(),
             (E.shadowBlur = 10),
             (E.shadowColor = "rgba(255,170,83,0.5)"),
@@ -355,7 +355,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         if (V && V.length > 0) {
           (E.beginPath(), E.moveTo(V[0].x, V[0].y));
           for (let P = 1; P < V.length; P++) E.lineTo(V[P].x, V[P].y);
-          ((E.strokeStyle = "#FFAA53"),
+          ((E.strokeStyle = "#d66e4d"),
             (E.lineWidth = 6),
             (E.lineCap = "round"),
             (E.lineJoin = "round"),
@@ -557,7 +557,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                       flexDirection: "column",
                       alignItems: "center",
                       justifyContent: "center",
-                      backgroundColor: "rgba(29,56,70,0.92)",
+                      backgroundColor: "rgba(237,245,243,0.97)",
                       backdropFilter: "blur(4px)",
                       WebkitBackdropFilter: "blur(4px)",
                     },
@@ -571,7 +571,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                               fontWeight: 700,
                               fontFamily: "var(--font-mono)",
                               color: "var(--text-main)",
-                              textShadow: "0 4px 16px rgba(0,0,0,0.5)",
+                              textShadow: "none",
                             },
                             children: [l.score, "%"],
                           }),

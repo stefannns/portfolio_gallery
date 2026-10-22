@@ -22,7 +22,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import * as Tone from 'tone';
-import {uiCss, useUiStage, useToneGate, loadConfig} from './playable-ui.js';
+import {uiCss, useUiStage, useToneGate, useFeedPreview, useFeedVisibility, loadConfig} from './playable-ui.js';
 import {themeCss} from './playable-theme.js';
 
 // --- 常量与数据 ---
@@ -66,13 +66,27 @@ const App = () => {
   const activeIndexRef = useRef(7);
   const audioRef = useRef({ ready: false, lastTime: 0, synth: null });
   const rootRef = useRef(null), pointerRef = useRef(null);
-  useUiStage(rootRef, !!cfg);
+  const reduced=useUiStage(rootRef, !!cfg),feedPreview=useFeedPreview(),previewVisible=useFeedVisibility(rootRef,!!cfg);
+  useEffect(()=>{
+    if(!cfg||!feedPreview||!previewVisible||reduced)return;
+    // Decorative demonstration only: snapshots, no sound or gameplay input.
+    let elapsed=0,last=performance.now(),frame;
+    const draw=now=>{const dt=Math.min(80,now-last);last=now;if(!document.hidden)elapsed+=dt;
+      const index=elapsed<900?7:elapsed<1750?9:elapsed<2600?12:7;
+      setActiveIndex(index);setProgress(index/14);
+      if(elapsed<3350)frame=requestAnimationFrame(draw);
+    };
+    frame=requestAnimationFrame(draw);
+    return()=>{cancelAnimationFrame(frame);setActiveIndex(activeIndexRef.current);setProgress(activeIndexRef.current/14);};
+  },[cfg,feedPreview,previewVisible,reduced]);
   const unlock = useToneGate(Tone, audioRef);
   useEffect(()=>{
     const stop=()=>{pointerRef.current=null;setIsDragging(false);setProgress(activeIndexRef.current/14);};
     const hidden=()=>{if(document.hidden)stop();};
+    const host=e=>{if(e.source===parent&&e.origin===location.origin&&e.data?.type==='playable-active'&&e.data.active!==true)stop();};
     window.addEventListener('blur',stop);document.addEventListener('visibilitychange',hidden);
-    return()=>{window.removeEventListener('blur',stop);document.removeEventListener('visibilitychange',hidden);};
+    window.addEventListener('message',host);
+    return()=>{window.removeEventListener('message',host);window.removeEventListener('blur',stop);document.removeEventListener('visibilitychange',hidden);};
   },[]);
 
   // --- 初始化 Config ---
@@ -246,7 +260,7 @@ const App = () => {
   };
 
   return (
-    <div ref={rootRef} className="app-shell ui-game" style={containerStyle} aria-label={cfg.TITLE}>
+    <div ref={rootRef} data-feed-preview={feedPreview} className="app-shell ui-game" style={containerStyle} aria-label={cfg.TITLE}>
       <style>{`
         ${uiCss}
         * { box-sizing: border-box; }
@@ -264,6 +278,7 @@ const App = () => {
         }
         .app-shell > *:not(.ui-guide) { position: relative; z-index: 1; }
         .time-print-guide{left:6%;right:6%;bottom:calc(var(--print-width) * .055);font-size:max(14px,calc(18px * var(--ui-scale)));color:#666b61;line-height:1.4}
+        .app-shell[data-feed-preview="true"] .time-footer{visibility:hidden;pointer-events:none}
       `}</style>
       <style>{themeCss}</style>
 
@@ -297,13 +312,14 @@ const App = () => {
               />
             ))}
           </div>
-          {!hasInteracted && <figcaption className="ui-guide ui-float time-print-guide">Drag to change age</figcaption>}
           </figure>
         </div>
       </div>
 
+      {!hasInteracted && <p className="ui-guide ui-float time-print-guide">Drag to change age</p>}
+
       {/* 底部时间轴区域 */}
-      <div style={footerStyle}>
+      <div className="time-footer" style={footerStyle}>
         <div 
           ref={trackRef}
           style={trackContainerStyle}

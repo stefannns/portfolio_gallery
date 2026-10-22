@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head>
-<script src="/resource/playable-batch/review-host.js"></script><script src="/resource/playable-feed/pocket-host.js" data-seed-random="off"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>One Life</title><link rel="preload" href="./assets/fonts/DMSans.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="./game.css?v=e41d73bbb593"></head>
+<script src="/resource/playable-batch/review-host.js"></script><script src="/resource/playable-feed/pocket-host.js" data-seed-random="off"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>One Life</title><link rel="preload" href="./assets/fonts/DMSans.woff" as="font" type="font/woff" crossorigin><link rel="stylesheet" href="./game.css?v=a00af5d3ac78"></head>
 <body><main id="game" aria-label="One Life, a fictional life simulator">
   <section id="opening" aria-labelledby="opening-title">
     <div class="opening-heading"><h1 id="opening-title">One Life</h1><p>Where will you be born?</p></div>
@@ -10,15 +10,20 @@
     </div>
     <button id="birth">Be born</button>
   </section>
+  <section id="birth-reveal" aria-labelledby="reveal-title" hidden>
+    <h2 id="reveal-title">You’ll be born in</h2>
+    <div id="country-window" aria-hidden="true"><div id="country-reel"></div></div>
+    <output id="birth-result" class="sr-only" role="status" aria-live="polite"></output>
+  </section>
   <div id="layout" hidden>
-    <header><div id="age-block"><output id="age" aria-label="Age">0</output><span>years old</span></div><div id="identity"><strong id="name"></strong><span id="place"></span></div><button id="journal-button" aria-label="Your journal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h15v18H4zM8 3v18M11 8h5m-5 4h5"/></svg></button></header>
-    <div id="scene" aria-hidden="true"><svg id="illustration" viewBox="0 0 330 125"></svg><div id="life-path"></div></div>
+    <header><div id="age-block"><output id="age" aria-label="Age" aria-live="off"><span id="age-value">0</span><span id="age-window" aria-hidden="true" hidden><span id="age-reel"></span></span></output><span>years old</span></div><div id="identity"><strong id="name"></strong><span id="place"></span></div><button id="journal-button" aria-label="Your journal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h15v18H4zM8 3v18M11 8h5m-5 4h5"/></svg></button></header>
     <section id="qualities" aria-label="Your qualities, out of 100"></section>
     <section id="story" tabindex="-1" aria-labelledby="event-title"><div class="story-top"><span id="chapter"></span><span id="step" aria-label="Chapter progress"></span></div><h2 id="event-title"></h2><p id="event-body"></p><div id="changes" aria-label="Changes from this event"></div></section>
-    <div id="actions"><button id="continue">Continue</button><button id="another-life" hidden>Another life</button></div>
+    <div id="actions"><div id="choices" role="group" aria-label="Choose your path" hidden><button id="choice-a"></button><button id="choice-b"></button><button id="choice-c"></button><button id="choice-d"></button></div><button id="continue">Continue</button><button id="another-life" hidden>Another life</button></div>
+    <div id="life-path" aria-hidden="true"></div>
   </div>
   <p id="announcement" class="sr-only" role="status" aria-live="polite"></p>
-  <dialog id="journal" aria-labelledby="journal-title"><div class="dialog-head"><h2 id="journal-title">Your life so far</h2><button data-close="journal" aria-label="Close journal">×</button></div><p id="journal-person"></p><ol id="memories"></ol><button id="about-button">About these fictional lives</button><button class="dialog-done" data-close="journal">Back to life</button></dialog>
-  <dialog id="about" aria-labelledby="about-title"><div class="dialog-head"><h2 id="about-title">A small life story</h2><button data-close="about" aria-label="Close information">×</button></div><p>Birthplace odds use the reference’s published birth shares for 172 countries and regions. People, household details, life events, qualities and lifespan are fictional, not demographic or medical predictions.</p><p>Birth data: UN World Population Prospects 2024, births in 2023, via 1in8b.life. Rounded shares set the odds; the smallest shares use the published 1-in-N values.</p><p>Life events unfold on their own. Tap Continue to see the next chapter; there are no decisions to make. Nothing is sent or saved online.</p><button class="dialog-done" data-close="about">Back to life</button></dialog>
+  <dialog id="journal" aria-labelledby="journal-title"><div class="dialog-head"><h2 id="journal-title">Your life</h2><button data-close="journal" aria-label="Close journal">×</button></div><p id="journal-person"></p><ol id="memories"></ol><button id="about-button">About</button><button class="dialog-done" data-close="journal">Back to life</button></dialog>
+  <dialog id="about" aria-labelledby="about-title"><div class="dialog-head"><h2 id="about-title">About One Life</h2><button data-close="about" aria-label="Close information">×</button></div><p>Birth odds cover 172 countries and regions.</p><p>Source: UN WPP 2024, births in 2023, via 1in8b.life. Rounded shares and 1-in-N odds.</p><p>People, events, stats and lifespan are fictional. Choose a path, then continue. Nothing is saved online.</p><button class="dialog-done" data-close="about">Back to life</button></dialog>
   <div id="load-error" hidden role="alert"><p>The story could not load.</p><button id="retry">Try again</button></div>
-</main><script id="playable-inline-config" type="application/json">{"config_version":"2.0","tweaks":[],"texts":[{"id":"HINT_TEXT","label":"Continue action","value":"Continue","default":"Continue","max_length":42}],"images":[]}</script><script src="./bundle.js?v=e41d73bbb593"></script></body></html>
+</main><script id="playable-inline-config" type="application/json">{"config_version":"2.0","tweaks":[],"texts":[{"id":"HINT_TEXT","label":"Continue action","value":"Continue","default":"Continue","max_length":42}],"images":[]}</script><script src="./bundle.js?v=a00af5d3ac78"></script></body></html>

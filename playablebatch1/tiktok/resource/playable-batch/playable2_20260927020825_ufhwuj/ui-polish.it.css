@@ -1,0 +1,27 @@
+/* Requested game UI only. Native feed chrome, game coordinates and input are unchanged. */
+html[data-meeting-game="16"] .meeting-sand-ball-count{
+  flex-direction:row!important;
+  align-items:baseline!important;
+  gap:8px!important;
+}
+html[data-meeting-game="16"] .meeting-sand-ball-count>small{order:1}
+
+@font-face{
+  font-family:"Exo 2 Playable";
+  src:url("./assets/fonts/exo2/Exo2-Latin.woff") format("woff");
+  font-style:normal;
+  font-weight:100 900;
+  font-display:swap;
+}
+html[data-meeting-game="17"]{
+  --font-display:"Exo 2 Playable","Arial",sans-serif!important;
+  --font-body:"Exo 2 Playable","Arial",sans-serif!important;
+  --font-mono:"Exo 2 Playable","Arial",sans-serif!important;
+}
+html[data-meeting-game="17"] #root,
+html[data-meeting-game="17"] #root button{font-family:var(--font-body)!important}
+html[data-meeting-game="17"] .feed-first-action{font-family:var(--font-body)!important;font-weight:600!important}
+html[data-meeting-game="17"] .synth-score{font-weight:700;font-variant-numeric:tabular-nums;text-shadow:none;letter-spacing:.015em}
+html[data-meeting-game="17"] .meeting-synth-result h2{font-weight:700!important;letter-spacing:.025em}
+html[data-meeting-game="17"] .meeting-synth-result>div{font-weight:600!important;font-variant-numeric:tabular-nums}
+html[data-meeting-game="17"] .btn-neon{font-weight:600;letter-spacing:.035em;text-shadow:none;font-size:18px;line-height:1.4;padding:12px 24px;min-width:176px;max-width:calc(100vw - 60px)}

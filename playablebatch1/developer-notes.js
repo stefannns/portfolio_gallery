@@ -5,15 +5,17 @@
 (function () {
   'use strict';
   const decisions = {
+    playable2_20260928031734_t68did: {scope:'Pixel-art diving adaptation',note:'Pixel diver with simulated depth; results show time and depth.',evidence:'User requested pixel art, downward diving, a vertical depth axis/live value, and duration-plus-depth results on October21.'},
+    '01_petme_9gw00a_game': {scope:'Simplified grooming',note:'All fur areas count; five seconds of moving brushing completes the activity.',evidence:'User-confirmed meeting change removes comfortable/uncomfortable body zones.'},
     eh_catch_the_beat_20261020: {scope:'Browser conversion',note:'Solo dancer with local photo upload and browser head cutout.',evidence:'User requested a single person with the uploaded image.'},
     eh_feed_your_friend_20261020: {scope:'Pre-generated photo states',note:'Pre-generated food reactions replace the original runtime AI. Remix is handled separately.',evidence:'User selected pre-generated images for the converted templates.'},
     eh_hair_shave_20261020: {scope:'Pre-generated photo states',note:'Pre-generated hair-removal photos replace runtime AI; shaving reveals them in strips.',evidence:'User selected pre-generated images for the converted templates.'},
     eh_catch_the_hair_20261020: {scope:'Browser conversion',note:'Original five-style catching game, with a cleaned character cutout and tap feedback.',evidence:'User requested conversion of the remaining Effect House templates.'},
-    eh_makeover_20261020: {scope:'Pre-generated photo states',note:'Pre-generated expressions and makeup replace runtime AI. Original props, effects and tap stages remain.',evidence:'User selected pre-generated images; another agent will implement remix.'},
+    eh_makeover_20261020: {scope:'Photo states and drag interaction',note:'Pre-generated photo states replace runtime AI. Tools use press-and-drag; other EH templates keep tap.',evidence:'User confirmed: only78 needs dragging; all other EH templates keep tap.'},
     one_life_20261020: {
-      scope: 'Short mobile adaptation',
-      note: 'Short, tap-through fictional lives with no choices. Birthplace odds follow the reference’s birth statistics; the opening uses a horizontal bar chart and Be born.',
-      evidence: 'User chose the horizontal bar chart, requested the reference’s statistics, removed the source captions and asked for the playable demo.'
+      scope: 'Choice-driven mobile adaptation',
+      note: 'Short mobile lives with four choices per stage and fictional stories. Keeps weighted birth odds; no story illustrations.',
+      evidence: 'User requested more story detail and four options. The approved birth chart, country roll and text-only art direction remain.'
     },
     playable2_20260927020828_5pmrhn: {
       scope: 'Level selection only',

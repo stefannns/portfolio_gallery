@@ -1,0 +1,38 @@
+<!--
+  入口 HTML 模板 —— v3 React 链路的 h5_react_pack 节点（实际由 build.js 执
+  行）会把这份模板拷贝进每个 task 的产物目录 dist/，**重命名为 game.html**
+  （客户端按 game.html 读 zip 入口，与零构建链路 h5_pack 保持一致）。仓库内
+  这份源文件保留 ``index.html`` 名字仅是 Web 项目源码约定。
+
+  为什么不让 LLM 产入口 HTML：
+   1. 模板 100% 固定（容器中立 + #root + 加载 bundle.js），无创作空间；
+   2. 让 LLM 只关注 App.jsx 一个文件，认知负载最小；
+   3. 模板由仓库统一维护，安全策略 / meta 标签 / preload 等可统一升级。
+
+  关于 bundle.css：
+   - 当 LLM 用了会抽取 CSS 的 npm 包时，esbuild 会附带产出 dist/bundle.css；
+     这里的 <link> 始终保留即可。
+   - 没有用到任何带 CSS 的库时，esbuild 不产 bundle.css，浏览器对该 link
+     会静默 404（不阻塞 JS 执行、不影响玩法），可放心忽略。
+-->
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<script src="/resource/playable-batch/review-host.js"></script><script src="/resource/playable-feed/pocket-host.js" data-seed-random="off"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Colora con i numeri</title>
+  <style>
+    /* 容器中立硬规：html / body / #root 三层撑满 + overflow:hidden + 无 vh/vw */
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+  </style>
+<script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"ENABLE_SOUND","kind":"boolean","label":"Enable Sound","value":true,"default":true}],"texts":[{"id":"GAME_TITLE","label":"Game Title","value":"Colora con i numeri","default":"Colora con i numeri","max_length":20},{"id":"TXT_WIN","label":"Win Message","value":"Bellissimo!","default":"Bellissimo!","max_length":20},{"id":"BTN_PLAY_AGAIN","label":"Play Again Button","value":"Rigioca","default":"Rigioca","max_length":15}],"images":[{"id":"SOURCE_ORIGINAL","label":"Original Input Image","path":"./assets/source_original.png","replaceable":true},{"id":"BG_CARTOON","label":"Generated Color-by-Number Artwork","path":"./assets/bg_cartoon_canonical_v5.png","replaceable":false}],"image_pipeline":{"source_slot":"SOURCE_ORIGINAL","output_slot":"BG_CARTOON","execution_stage":"authoring_preprocess","accepted_source":"person_animal_or_scene_image","preprocess":["preserve_main_subject_and_scene","redraw_as_flat_color_by_number_illustration","simplify_into_large_closed_regions","limit_to_10_to_12_distinct_colors","validate_mobile_tappable_regions"],"output_contract":"One fully colored 4:5 portrait illustration with a large centered subject, 10-12 flat colors, and clean closed organic regions suitable for color-by-number segmentation.","runtime_behavior":"The browser converts the preprocessed colored illustration into a numbered grayscale board and restores each region color when correctly tapped.","region_contract":"The generated color artwork is the canonical source for both the preview/result and the playable segmentation. Every visible semantic shape in that artwork must survive as one or more spatially connected regions, and every visible pixel must belong to a region. Disconnected areas that share a palette color remain separate completion steps. Merge gradients, shadows, decorative shading, narrow contour ribbons and outline-like slivers into a directly touching semantic region; never expose those effects as standalone color numbers. Preserve compact enclosed identity-bearing accents such as eyes, irises, pupils, noses, lips, buttons, signs, windows, petals and flower centers as playable regions. Preserve extremely small enclosed highlights as always-visible decorative details rather than assigning unreadable numbers to them. The numbered board must assign contrasting gray values to adjacent palette regions so separate shapes remain visibly distinct without drawing outlines.","preserve_source_asset":true,"completion_before_source":"SOURCE_ORIGINAL","transform_prompt":"Redraw any supplied person, pet, animal, object, street, interior, landscape, or building photo as a highly simplified premium children's color-by-number illustration. Preserve the recognizable main subject, pose, composition, and identity-defining structures. Simplification is semantic, not destructive: remove photographic texture and secondary clutter, while retaining logical facial features and object parts. For faces and animals keep eyes as readable nested closed shapes including sclera or eye base when visible, iris, pupil and one simple highlight; also keep nose, mouth and inner ears. For plants and scenes keep meaningful separations such as petals versus flower centers, trunk versus canopy, doors versus walls, windows versus buildings, road versus ground, and signs versus their supports. Normalize every source to a fixed 4:5 portrait composition, intelligently recomposing or extending a simplified background without stretching. Make the subject large, centered, and fully visible. Use approximately 28-38 broad, smooth, rounded, organic closed regions and only 9-12 harmonious solid colors. Every visible shape must be a flat, closed, contiguous color area large enough for mobile tapping and one clear uniform-sized number. Neighboring semantic parts must never be fused merely because their colors are similar. Use perfectly smooth silhouettes with no fur spikes, sawtooth edges, individual grass blades, leaf clusters, bark texture, layered foliage detail, thin slivers, narrow gaps, gradients, shading, texture, blur, shadows, glow, line art, borders, outlines, or decorative highlights. Output only the fully colored canonical illustration with no numbers, UI, palette, text, watermark, transparency, or unfilled gaps."},"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"image_expression","content_locale":"it","min_capability_level":1,"full_capability_level":1}}</script><link rel="stylesheet" href="./playable-design.it.css?l10n=7e178d80bd23&v=2af4c7036f"><script src="./playable-design.it.js?l10n=7e178d80bd23" defer></script>
+<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=7e178d80bd23&v=afb398188a56">
+<link data-italian-layout rel="stylesheet" href="./locale.it.css?v=20261021-1">
+</head>
+<body>
+  <div id="root"></div>
+  <script src="./bundle.it.js?l10n=7e178d80bd23&ui=design-f1a4d96675fb"></script>
+</body>
+</html>

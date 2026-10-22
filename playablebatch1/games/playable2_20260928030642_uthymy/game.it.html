@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<script data-playable-feed-gate="v1">
+// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
+(() => {
+  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
+  let active=false,alive=true;
+  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
+  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
+  if(navigator.mediaDevices?.getUserMedia){
+    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia=async constraints=>{
+      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
+      const stream=await native(constraints);
+      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
+      streams.add(stream);return stream;
+    };
+  }
+  for(const key of ['AudioContext','webkitAudioContext']){
+    const Native=window[key];if(!Native)continue;
+    window[key]=class FeedAudioContext extends Native {
+      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
+      async resume(){if(!active)await wait();if(alive)return super.resume();}
+    };
+  }
+  const nativePlay=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
+  addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    active=alive&&event.data.active===true;
+    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
+    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
+  });
+  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
+})();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Sfida del pelapatate</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    #root { isolation: isolate; }
+    canvas { touch-action: none; }
+    button, input, select, textarea { touch-action: manipulation; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<style id="confirmed-ui-20261013">
+.peeler-hud{display:flex;flex-direction:column}.peeler-hud>h1{order:2;font-size:24px!important;margin-top:16px!important}.peeler-hud>div{order:1;margin:0!important}.peeler-hud .glass-panel{background:none;border:0;box-shadow:none;padding:0!important}.peeler-hud .glass-panel:first-child{text-align:left}.peeler-hud .glass-panel:last-child{text-align:right}.peeler-hud span[style*="display: block"]{display:inline!important;font-size:12px!important;margin-right:6px}
+</style>
+<link rel="stylesheet" href="./fyp-meeting.it.css?l10n=8bd7ec4fbfb8&v=meeting-fyp-early-20261021-5">
+<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=8bd7ec4fbfb8&v=d9efd1cdaab7">
+<link data-italian-layout rel="stylesheet" href="./locale.it.css?v=20261021-1">
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"TRIES_BASE","kind":"number","label":"Base Tries","value":6,"default":6,"min":3,"max":10,"step":1},{"id":"PEELER_SPEED","kind":"number","label":"Peeler Speed","value":0.08,"default":0.08,"min":0.02,"max":0.2,"step":0.01},{"id":"DROP_SPEED","kind":"number","label":"Drop Speed","value":0.3,"default":0.3,"min":0.1,"max":1,"step":0.05},{"id":"PEEL_WIDTH","kind":"number","label":"Peel Width","value":46.8,"default":46.8,"min":20,"max":80,"step":4}],"texts":[{"id":"TXT_PERFECT","label":"Perfect Peel Text","value":"Taglio perfetto!","default":"Taglio perfetto!","max_length":20},{"id":"TXT_FAIL_TITLE","label":"Fail Title","value":"TENTATIVI FINITI!","default":"TENTATIVI FINITI!","max_length":20},{"id":"TXT_FAIL_DESC","label":"Fail Desc","value":"Sbuccia tutto in 5 tentativi.","default":"Sbuccia tutto in 5 tentativi.","max_length":60},{"id":"TXT_CLEAR_TITLE","label":"Clear Title","value":"SFIDA COMPLETATA!","default":"SFIDA COMPLETATA!","max_length":30},{"id":"TXT_CLEAR_DESC","label":"Clear Desc","value":"Hai sbucciato la patata alla perfezione!","default":"Hai sbucciato la patata alla perfezione!","max_length":60},{"id":"TXT_POST","label":"Post Button Text","value":"Condividi","default":"Condividi","max_length":20}],"images":[{"id":"PEELER_IMG","label":"Peeler Sprite","path":"./assets/peeler.webp","replaceable":true},{"id":"POTATO_UNPEELED","label":"Unpeeled Potato","path":"./assets/potato_unpeeled_v2.webp","replaceable":true},{"id":"POTATO_PEELED","label":"Peeled Potato","path":"./assets/potato_peeled_v2.webp","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"it","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    (() => {
+      if (window.location.protocol !== "file:" || !window.fetch) return;
+      const configNode = document.getElementById("playable-inline-config");
+      if (!configNode) return;
+      let inlineConfig;
+      try { inlineConfig = JSON.parse(configNode.textContent); } catch (_) { return; }
+      const nativeFetch = window.fetch.bind(window);
+      window.fetch = (input, init) => {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url === "./game.config.it.json?l10n=8bd7ec4fbfb8" || url === "game.config.it.json?l10n=8bd7ec4fbfb8") {
+          return Promise.resolve(new Response(JSON.stringify(inlineConfig), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return nativeFetch(input, init);
+      };
+    })();
+  </script>
+  <script src="./bundle.it.js?l10n=8bd7ec4fbfb8&v=meeting-fyp-early-20261021-5"></script>
+<script defer src="./feed-entry-motion.it.js?l10n=8bd7ec4fbfb8&v=feed-first-20261008-1" data-subject="#root img"></script>
+<script defer src="./fyp-meeting.it.js?l10n=8bd7ec4fbfb8&v=meeting-fyp-early-20261021-5" data-game="32"></script>
+</body>
+</html>

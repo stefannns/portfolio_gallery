@@ -1,0 +1,8 @@
+/* Requested game UI only. Native feed chrome, game coordinates and input are unchanged. */
+html[data-meeting-game="16"] .meeting-sand-ball-count{
+  flex-direction:row!important;
+  align-items:baseline!important;
+  gap:8px!important;
+}
+html[data-meeting-game="16"] .meeting-sand-ball-count>small{order:1}
+

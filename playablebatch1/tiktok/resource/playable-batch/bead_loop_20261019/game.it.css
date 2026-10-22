@@ -1,0 +1,40 @@
+@font-face{font-family:"DM Sans";src:url("./assets/fonts/DMSans.woff") format("woff");font-weight:100 1000;font-style:normal;font-display:swap}
+:root{font-family:"DM Sans",system-ui,sans-serif;color:#293c34;background:#edf2ee;font-synthesis:none;font-optical-sizing:auto;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;user-select:none}
+button{font:inherit;color:inherit;cursor:pointer}button:focus-visible,#stage:focus-visible{outline:2px solid #426a58;outline-offset:5px}
+#stage[data-input="pointer"]:focus-visible{outline:none}
+#game{position:relative;isolation:isolate;display:flex;flex-direction:column;gap:12px;width:100%;height:100%;padding:30px 30px 50px;background:radial-gradient(ellipse at 63% 28%,#fff 0%,#f4f7f3 43%,#e7eeea 100%)}
+#counter{position:relative;z-index:1;display:block;flex:0 0 36px;height:36px;margin:0;text-align:center;font-size:28px;font-weight:600;line-height:36px;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+#stage{position:relative;flex:1;min-height:0;width:calc(100% + 60px);margin-left:-30px;touch-action:none;cursor:grab;outline-offset:0}
+#stage[data-dragging="true"]{cursor:grabbing}#stage canvas{display:block;position:absolute;inset:0;width:100%;height:100%}
+#guide{flex:0 0 auto;min-height:27px;margin:0;text-align:center;font-size:18px;line-height:27px;font-weight:500;color:#425c50;transition:opacity .18s ease-out;pointer-events:none}
+#guide[data-dismissed="true"]{opacity:0;visibility:hidden}
+#materials{display:flex;flex:none;flex-direction:column;align-items:stretch;gap:4px;min-height:84px}
+#material-name{display:block;min-height:24px;text-align:center;font-size:14px;font-weight:500;line-height:24px}
+#material-grid{display:flex;gap:12px;padding:6px;overflow-x:auto;overscroll-behavior-x:contain;touch-action:pan-x;scrollbar-width:none;scroll-snap-type:x proximity}
+.material{position:relative;flex:0 0 48px;min-width:48px;min-height:48px;padding:3px;border:0;background:transparent;display:grid;place-items:center;border-radius:12px;transition:opacity .15s ease-out;scroll-snap-align:center}
+.material>span:not(.swatch){position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.material:active{opacity:.65}.swatch{position:relative;width:42px;height:42px;border-radius:50%;box-shadow:inset -5px -6px 9px #0002,inset 5px 5px 9px #fff5,0 3px 5px #31403515}
+.material:disabled{cursor:wait;opacity:.65}
+.swatch::before{content:"";position:absolute;inset:-5px;border:1.5px solid transparent;border-radius:50%;transition:border-color .18s ease-out}
+.material[aria-pressed="true"] .swatch::before{border-color:#426a58}
+.swatch::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse at 29% 23%,#fff9 0%,#fff0 26%)}
+.jade{background:radial-gradient(ellipse at 30% 30%,#b7caa0 0%,#4d8a6b 46%,#2b614d 100%)}
+.wood{background:repeating-linear-gradient(104deg,#89512e 0px,#a66c42 2px,#6e3d25 3px,#9d6438 5px)}
+.stone{background:repeating-linear-gradient(130deg,#858f87 0px,#a5aea0 12px,#4a5750 13px,#849084 15px,#9ca997 25px)}
+.cat{background:#c5ad94 url("./assets/textures/tabby-face.jpg") center/cover}
+.pearl{background:radial-gradient(ellipse at 28% 26%,#fffdfa,#f2e4e8 35%,#dfdfed 65%,#d3d9d8)}
+.amber{background:repeating-radial-gradient(ellipse at 30% 10%,#d68a20 0px,#f6b83b 6px,#a95714 8px,#e99d26 14px)}
+.porcelain{background:radial-gradient(circle at 33% 36%,#fff 0 6%,#345998 7% 11%,#fff0 12%),radial-gradient(circle at 70% 75%,#fff 0 9%,#345998 10% 14%,#fff0 15%),#f7f4eb}
+.amethyst{background:repeating-linear-gradient(130deg,#623b91 0px,#b88bd6 9px,#e6cff4 10px,#7349a0 13px,#9762c1 20px)}
+.gold{background:linear-gradient(115deg,#9b6117,#f1c956 28%,#ffe6a0 39%,#b87f27 64%,#e7b54a 90%)}
+.obsidian{background:repeating-linear-gradient(120deg,#111a23 0px,#25323d 15px,#61747b 16px,#19242e 17px,#111a23 32px)}
+#material-feedback{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+#error{position:absolute;z-index:5;inset:28% 30px auto;text-align:center;color:#293c34;padding:20px;background:#f3f6f1f5;border-radius:18px}
+#error[hidden]{display:none}#error p{font-size:18px;line-height:1.4;margin:0 0 16px}#retry{min-height:44px;padding:10px 20px;border:1px solid #577261;border-radius:22px;background:transparent;font-size:16px}
+#game[data-feed-preview="true"] #counter,#game[data-feed-preview="true"] #materials{visibility:hidden;pointer-events:none}
+#game[data-feed-preview="true"] #materials{display:none}
+#game[data-feed-preview="true"] #stage{position:absolute;top:18%;bottom:17%;left:0;width:100%;margin:0}
+#game[data-feed-preview="true"] #guide{position:absolute;top:14%;left:30px;right:30px}
+@media(max-height:540px){#game{gap:8px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important}}

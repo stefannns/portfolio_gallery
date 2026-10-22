@@ -1,0 +1,75 @@
+{
+  "tweaks": [
+    {
+      "id": "ENABLE_SOUND",
+      "kind": "boolean",
+      "label": "Enable Sound",
+      "value": true,
+      "default": true
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "Colora con i numeri",
+      "default": "Colora con i numeri",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_WIN",
+      "label": "Win Message",
+      "value": "Bellissimo!",
+      "default": "Bellissimo!",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_PLAY_AGAIN",
+      "label": "Play Again Button",
+      "value": "Rigioca",
+      "default": "Rigioca",
+      "max_length": 15
+    }
+  ],
+  "images": [
+    {
+      "id": "SOURCE_ORIGINAL",
+      "label": "Original Input Image",
+      "path": "./assets/source_original.png",
+      "replaceable": true
+    },
+    {
+      "id": "BG_CARTOON",
+      "label": "Generated Color-by-Number Artwork",
+      "path": "./assets/bg_cartoon_canonical_v5.png",
+      "replaceable": false
+    }
+  ],
+  "image_pipeline": {
+    "source_slot": "SOURCE_ORIGINAL",
+    "output_slot": "BG_CARTOON",
+    "execution_stage": "authoring_preprocess",
+    "accepted_source": "person_animal_or_scene_image",
+    "preprocess": [
+      "preserve_main_subject_and_scene",
+      "redraw_as_flat_color_by_number_illustration",
+      "simplify_into_large_closed_regions",
+      "limit_to_10_to_12_distinct_colors",
+      "validate_mobile_tappable_regions"
+    ],
+    "output_contract": "One fully colored 4:5 portrait illustration with a large centered subject, 10-12 flat colors, and clean closed organic regions suitable for color-by-number segmentation.",
+    "runtime_behavior": "The browser converts the preprocessed colored illustration into a numbered grayscale board and restores each region color when correctly tapped.",
+    "region_contract": "The generated color artwork is the canonical source for both the preview/result and the playable segmentation. Every visible semantic shape in that artwork must survive as one or more spatially connected regions, and every visible pixel must belong to a region. Disconnected areas that share a palette color remain separate completion steps. Merge gradients, shadows, decorative shading, narrow contour ribbons and outline-like slivers into a directly touching semantic region; never expose those effects as standalone color numbers. Preserve compact enclosed identity-bearing accents such as eyes, irises, pupils, noses, lips, buttons, signs, windows, petals and flower centers as playable regions. Preserve extremely small enclosed highlights as always-visible decorative details rather than assigning unreadable numbers to them. The numbered board must assign contrasting gray values to adjacent palette regions so separate shapes remain visibly distinct without drawing outlines.",
+    "preserve_source_asset": true,
+    "completion_before_source": "SOURCE_ORIGINAL",
+    "transform_prompt": "Redraw any supplied person, pet, animal, object, street, interior, landscape, or building photo as a highly simplified premium children's color-by-number illustration. Preserve the recognizable main subject, pose, composition, and identity-defining structures. Simplification is semantic, not destructive: remove photographic texture and secondary clutter, while retaining logical facial features and object parts. For faces and animals keep eyes as readable nested closed shapes including sclera or eye base when visible, iris, pupil and one simple highlight; also keep nose, mouth and inner ears. For plants and scenes keep meaningful separations such as petals versus flower centers, trunk versus canopy, doors versus walls, windows versus buildings, road versus ground, and signs versus their supports. Normalize every source to a fixed 4:5 portrait composition, intelligently recomposing or extending a simplified background without stretching. Make the subject large, centered, and fully visible. Use approximately 28-38 broad, smooth, rounded, organic closed regions and only 9-12 harmonious solid colors. Every visible shape must be a flat, closed, contiguous color area large enough for mobile tapping and one clear uniform-sized number. Neighboring semantic parts must never be fused merely because their colors are similar. Use perfectly smooth silhouettes with no fur spikes, sawtooth edges, individual grass blades, leaf clusters, bark texture, layered foliage detail, thin slivers, narrow gaps, gradients, shading, texture, blur, shadows, glow, line art, borders, outlines, or decorative highlights. Output only the fully colored canonical illustration with no numbers, UI, palette, text, watermark, transparency, or unfilled gaps."
+  },
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "image_expression",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

@@ -65,11 +65,12 @@ window.GAME_SPEC={
     "width": 0.48,
     "height": 0.36
   },
+  "photoFraming": {"x":0.40,"y":0.34,"screenY":0.50,"zoom":1.25,"topLandmark":0.14,"minTop":0.18},
   "photoRegions": [
     {
-      "x": 0.1,
+      "x": 0.19,
       "y": 0.14,
-      "w": 0.56,
+      "w": 0.47,
       "h": 0.25
     },
     {

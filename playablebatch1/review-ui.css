@@ -48,6 +48,13 @@ h1 { font-size:clamp(26px,3vw,38px);letter-spacing:-.045em;margin:7px 0 8px; }
 .player-mode-switch button { min-width:52px;min-height:44px;padding:8px 10px;border:0;border-radius:7px;background:transparent;color:#56705c;font:inherit;font-size:13px;font-weight:650;cursor:pointer; }
 .player-mode-switch button[aria-pressed="true"] { background:#294f3d;color:#fff;box-shadow:0 1px 3px #1735211a; }
 .player-mode-switch button:not([aria-pressed="true"]):hover { background:#dce7d7; }
+.player-controls { max-width:600px; }
+.player-mode-and-language { display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-left:auto;min-width:0; }
+.player-language { display:flex;align-items:center; }
+.player-language select { min-height:44px;max-width:122px;padding:8px 26px 8px 10px;border:1px solid var(--review-line);border-radius:8px;background:var(--review-surface);color:var(--review-ink);font:inherit;font-size:13px;font-weight:600;cursor:pointer; }
+.language-note { flex-basis:100%;text-align:right;font-size:11px;color:#657269; }
+.language-note[hidden] { display:none; }
+@media(max-width:570px) { .player-controls { flex-wrap:wrap!important; } .player-mode-and-language { gap:6px; } .player-language select { max-width:110px;font-size:12px; } }
 .visually-hidden { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
 .actions { padding-top:2px;border-top:1px solid #edf1e9; }
 .actions .action { min-height:44px;background:transparent;border:0;color:#546853;font-weight:550; }

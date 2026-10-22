@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<script data-playable-feed-gate="v1">
+// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
+(() => {
+  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
+  let active=false,alive=true;
+  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
+  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
+  if(navigator.mediaDevices?.getUserMedia){
+    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia=async constraints=>{
+      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
+      const stream=await native(constraints);
+      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
+      streams.add(stream);return stream;
+    };
+  }
+  for(const key of ['AudioContext','webkitAudioContext']){
+    const Native=window[key];if(!Native)continue;
+    window[key]=class FeedAudioContext extends Native {
+      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
+      async resume(){if(!active)await wait();if(alive)return super.resume();}
+    };
+  }
+  const nativePlay=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
+  addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    active=alive&&event.data.active===true;
+    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
+    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
+  });
+  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
+})();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ricarica il telefono</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #e5f1ed; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    #root { isolation: isolate; }
+    canvas { touch-action: none; }
+    button, input, select, textarea { touch-action: manipulation; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=a7dff6d39e51&v=53e95e606048">
+<link data-italian-layout rel="stylesheet" href="./locale.it.css?v=20261021-1">
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"BATTERY_START","kind":"number","label":"Start Battery (%)","value":25,"default":25,"min":5,"max":90,"step":1},{"id":"DRAIN_BASE","kind":"number","label":"Drain Speed Base","value":1.5,"default":1.5,"min":0.5,"max":5,"step":0.1},{"id":"DRAIN_PENALTY","kind":"number","label":"Drain Penalty Multiplier","value":3,"default":3,"min":1,"max":8,"step":1},{"id":"CHARGE_AMOUNT","kind":"number","label":"Charge Amount Per Hit","value":15,"default":15,"min":5,"max":40,"step":1},{"id":"SWING_SPEED","kind":"number","label":"Cable Swing Speed","value":0.003,"default":0.003,"min":0.001,"max":0.01,"step":0.001},{"id":"MAX_ANGLE","kind":"number","label":"Cable Swing Max Angle","value":50,"default":50,"min":20,"max":80,"step":1},{"id":"TOLERANCE_ANGLE","kind":"number","label":"Hit Tolerance Angle","value":6,"default":6,"min":2,"max":15,"step":1}],"texts":[{"id":"TITLE","label":"Game Title","value":"Ricarica al momento giusto","default":"Ricarica al momento giusto","max_length":40},{"id":"TXT_CHARGING","label":"Charging State Text","value":"IN CARICA","default":"IN CARICA","max_length":20},{"id":"TXT_TIMEOUT","label":"Timeout State Text","value":"TEMPO SCADUTO","default":"TEMPO SCADUTO","max_length":25},{"id":"TXT_LOW","label":"Low Battery Text","value":"BATTERIA SCARICA","default":"BATTERIA SCARICA","max_length":20},{"id":"TXT_RECHARGE","label":"Recharge Text","value":"RICARICA","default":"RICARICA","max_length":20},{"id":"TXT_FULL","label":"Fully Charged Text","value":"CARICA COMPLETA","default":"CARICA COMPLETA","max_length":20},{"id":"TXT_DIED","label":"Phone Died Text","value":"BATTERIA ESAURITA","default":"BATTERIA ESAURITA","max_length":20},{"id":"BTN_PLAY_AGAIN","label":"Play Again Button","value":"Rigioca","default":"Rigioca","max_length":20}],"images":[{"id":"CABLE_HEAD","label":"Cable Head Img","path":"./assets/cable_connector.svg","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"it","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    (() => {
+      if (window.location.protocol !== "file:" || !window.fetch) return;
+      const configNode = document.getElementById("playable-inline-config");
+      if (!configNode) return;
+      let inlineConfig;
+      try { inlineConfig = JSON.parse(configNode.textContent); } catch (_) { return; }
+      const nativeFetch = window.fetch.bind(window);
+      window.fetch = (input, init) => {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url === "./game.config.it.json?l10n=a7dff6d39e51" || url === "game.config.it.json?l10n=a7dff6d39e51") {
+          return Promise.resolve(new Response(JSON.stringify(inlineConfig), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return nativeFetch(input, init);
+      };
+    })();
+  </script>
+  <script src="./bundle.it.js?l10n=a7dff6d39e51&ui=24-31-dc5980fc670e"></script>
+  <script src="./phone-cable-repair.it.js?l10n=a7dff6d39e51&ui=light-phone-20261019-1"></script>
+<script defer src="./feed-entry-motion.it.js?l10n=a7dff6d39e51&v=feed-first-20261008-1" data-subject="#root img[alt=&quot;cable&quot;]"></script>
+</body>
+</html>

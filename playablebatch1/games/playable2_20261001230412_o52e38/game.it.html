@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<script data-playable-feed-gate="v1">
+// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
+(() => {
+  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
+  let active=false,alive=true;
+  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
+  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
+  if(navigator.mediaDevices?.getUserMedia){
+    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia=async constraints=>{
+      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
+      const stream=await native(constraints);
+      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
+      streams.add(stream);return stream;
+    };
+  }
+  for(const key of ['AudioContext','webkitAudioContext']){
+    const Native=window[key];if(!Native)continue;
+    window[key]=class FeedAudioContext extends Native {
+      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
+      async resume(){if(!active)await wait();if(alive)return super.resume();}
+    };
+  }
+  const nativePlay=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
+  addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    active=alive&&event.data.active===true;
+    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
+    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
+  });
+  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
+})();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Torre</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+
+    /* Keep the score centered as plain text across portrait mobile widths. */
+    .stack-score {
+      left: 25px !important;
+      right: 25px !important;
+      transform: none !important;
+      max-width: none !important;
+      min-height: 0 !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      text-align: center !important;
+      line-height: 1.1 !important;
+      text-shadow: 0 3px 10px rgba(36, 27, 23, 0.58);
+      font-variant-numeric: tabular-nums;
+    }
+    /* Preview CTA stays above the host entry button. Gameplay canvas is unchanged. */
+    .stack-hint{top:18%!important;bottom:auto!important;line-height:1.4!important;font-weight:500!important}
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=40b7c08f9f67&v=9fce4ae5b28f">
+<link data-italian-layout rel="stylesheet" href="./locale.it.css?v=20261021-1">
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-config-inline" type="application/json">{"tweaks":[{"id":"SPEED_INIT","kind":"number","label":"Initial Speed","value":0.5,"default":0.5,"min":0.1,"max":0.8,"step":0.05},{"id":"SPEED_INC","kind":"number","label":"Speed Increment","value":0.015,"default":0.015,"min":0.005,"max":0.05,"step":0.005},{"id":"PERFECT_TOL","kind":"number","label":"Perfect Tolerance","value":5,"default":5,"min":5,"max":30,"step":1}],"texts":[{"id":"TITLE","label":"Game Title","value":"Torre","default":"Torre","max_length":20},{"id":"SCORE_TXT","label":"Score Label","value":"PUNTI","default":"PUNTI","max_length":15},{"id":"PERFECT_TXT","label":"Perfect Text","value":"PERFETTO!","default":"PERFETTO!","max_length":20},{"id":"GAMEOVER","label":"Game Over Title","value":"PARTITA FINITA","default":"PARTITA FINITA","max_length":20},{"id":"BTN_RETRY","label":"Retry Button","value":"RIPROVA","default":"RIPROVA","max_length":15},{"id":"BTN_POST","label":"Post Button","value":"CONDIVIDI","default":"CONDIVIDI","max_length":25}],"images":[{"id":"BLOCK_IMG","label":"Block Surface Texture","path":"./assets/block_surface.svg","replaceable":true}],"config_version":"2.0","playable":{"post_id":"99280234071180629","version_id":"99280234071098749","runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"it","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    // Support direct local preview without changing the normal HTTP/platform path.
+    if (location.protocol === "file:") {
+      const config = document.getElementById("playable-config-inline").textContent;
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = function(input, options) {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url && /(?:^|\/)game\.config\.it\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve(new Response(config, {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return originalFetch(input, options);
+      };
+    }
+  </script>
+  <script src="./bundle.it.js?l10n=40b7c08f9f67&ui=1bcaef1b9c6e"></script>
+<script defer src="./feed-entry-motion.it.js?l10n=40b7c08f9f67&v=feed-first-20261008-1" data-subject="#root canvas"></script>
+</body>
+</html>

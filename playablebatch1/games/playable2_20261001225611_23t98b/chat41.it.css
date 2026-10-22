@@ -1,0 +1,12 @@
+/* Game-owned chat layout. Native FYP chrome, gradients and launch control stay unchanged. */
+html[data-meeting-game="41"] .meeting-chat-shell{padding-top:24px!important;padding-bottom:0!important;background:#fff!important;min-height:0}
+html[data-meeting-game="41"] header{grid-template-columns:1fr!important;min-height:64px!important;padding:8px 30px!important;background:#fff!important;backdrop-filter:none!important;border-bottom:1px solid #ececf0!important}
+/* The fake navigation/contact pictograms are decorative, not game controls. */
+html[data-meeting-game="41"] header>div:first-child,
+html[data-meeting-game="41"] header>div:last-child{display:none!important}
+html[data-meeting-game="41"] header>div:nth-child(2)>div:first-child{width:32px!important;height:32px!important}
+html[data-meeting-game="41"] main{min-height:0!important}
+html[data-meeting-game="41"] section{padding-bottom:30px!important}
+/* Put reserved launch space INSIDE the reply surface, not in a white tail below it. */
+html[data-meeting-game="41"][data-meeting-fyp="preview"] .meeting-chat-shell{padding-top:56px!important;padding-bottom:0!important}
+html[data-meeting-game="41"][data-meeting-fyp="preview"] section{padding-bottom:134px!important}

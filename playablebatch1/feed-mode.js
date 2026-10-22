@@ -10,9 +10,11 @@
   const withoutIds=html=>html.replace(/\s+id="[^"]*"/g,'');
   const navigation=withoutIds(inlineControls.querySelector('.player-navigation').innerHTML);
   const modes=withoutIds(inlineControls.querySelector('.player-mode-switch').innerHTML);
+  const language=withoutIds(inlineControls.querySelector('.player-language')?.outerHTML||'');
   const dialog=document.createElement('dialog');dialog.className='batch-view-dialog';dialog.setAttribute('aria-labelledby','batch-view-heading');
   dialog.innerHTML='<header class="batch-view-toolbar"><div class="batch-view-summary"><h2 id="batch-view-heading">Game review</h2><p class="batch-view-status" role="status"></p></div><label class="batch-view-picker">Choose game<select aria-label="Choose game"></select></label><nav class="batch-view-controls"><button type="button" class="batch-view-close">Back to review</button></nav></header><p class="batch-view-error" hidden>Couldn’t load the feed. <button type="button" class="batch-view-retry">Try again</button></p><div class="batch-player-body"><div class="player-controls batch-player-controls" role="group" aria-label="Full-screen player controls"><nav class="player-navigation" aria-label="Game navigation">'+navigation+'</nav><div class="player-mode-switch" role="group" aria-label="Preview mode">'+modes+'</div></div><div class="batch-player-content"><div class="batch-fyp-fit" hidden><div class="batch-fyp-phone"><iframe class="batch-view-frame" title="Full-screen FYP review" allow="camera; microphone; autoplay; fullscreen"></iframe></div></div><div class="batch-direct-fit" hidden><div class="batch-direct-phone"><iframe class="batch-direct-frame" title="Full-screen direct game" sandbox="allow-scripts allow-same-origin allow-pointer-lock" allow="camera; microphone; autoplay; fullscreen"></iframe></div></div></div></div>';
   document.body.append(dialog);
+  if(language){const mode=dialog.querySelector('.player-mode-switch'),group=document.createElement('div');group.className='player-mode-and-language';mode.replaceWith(group);group.append(mode);group.insertAdjacentHTML('beforeend',language+'<span class="language-note" data-language-note hidden role="status"></span>');}
   const inline=viewport.querySelector('iframe'), full=dialog.querySelector('.batch-view-frame'), direct=dialog.querySelector('.batch-direct-frame');
   const directFit=dialog.querySelector('.batch-direct-fit'), directPhone=dialog.querySelector('.batch-direct-phone'), content=dialog.querySelector('.batch-player-content');
   const fullFit=dialog.querySelector('.batch-fyp-fit'), fullPhone=dialog.querySelector('.batch-fyp-phone');
@@ -20,18 +22,26 @@
   const error=dialog.querySelector('.batch-view-error'), inlineError=viewport.querySelector('.fyp-error');
   const controlSets=[inlineControls,dialog.querySelector('.batch-player-controls')];
   const buttons=selector=>controlSets.flatMap(controls=>[...controls.querySelectorAll(selector)]);
-  for(const game of api.games){const option=document.createElement('option');option.value=game.taskId;option.textContent=game.number+'. '+game.name;picker.append(option);}
-  let view='direct',expanded=false,selected=api.getCurrent(),ready=false,timer=null,pending=null;
+  const visibleGames=()=>api.getPoolGames?.()||api.games;
+  const poolKey=()=>visibleGames().map(game=>game.taskId).join(',');
+  function refreshPicker(){
+    const games=visibleGames();picker.replaceChildren();picker.disabled=!games.length;
+    if(!games.length){const option=document.createElement('option');option.value='';option.textContent='No matching games';picker.append(option);}
+    for(const game of games){const option=document.createElement('option');option.value=game.taskId;option.textContent=game.number+'. '+game.name;picker.append(option);}
+  }
+  refreshPicker();
+  let view='direct',expanded=false,selected=api.getCurrent(),ready=false,timer=null,pending=null,loadedPool='',loadedLocale='en';
   const nativeFrame=()=>view==='fyp'?(expanded?full:inline):null;
   const managed=()=>expanded||view==='fyp';
   const send=data=>nativeFrame()?.contentWindow?.postMessage(data,origin);
   function controls(){
-    const index=api.games.findIndex(game=>game.taskId===selected?.taskId);
-    for(const button of buttons('[data-step]'))button.disabled=(view==='fyp'&&!ready)||(button.dataset.step==='previous'?index<=0:index>=api.games.length-1);
+    const games=visibleGames(),index=games.findIndex(game=>game.taskId===selected?.taskId);
+    for(const button of buttons('[data-step]'))button.disabled=index<0||(view==='fyp'&&!ready)||(button.dataset.step==='previous'?index<=0:index>=games.length-1);
     for(const button of buttons('[data-mode]'))button.setAttribute('aria-pressed',String(button.dataset.mode===view));
-    picker.disabled=false;
+    picker.disabled=!games.length;
     if(selected){picker.value=selected.taskId;status.textContent=selected.number+'. '+selected.name;}
     heading.textContent=view==='fyp'?'FYP review':'Game review';
+    window.PlayableReviewLocale?.reflect(selected);
   }
   function fitExpanded(){
     if(!expanded)return;
@@ -61,7 +71,10 @@
       controls();return;
     }
     ready=false;controls();announcement.textContent='Loading FYP view';
-    const url=new URL(runtime);url.searchParams.set('review','batch');url.searchParams.set('feed','playable-batch-'+selected.taskId);url.searchParams.set('reviewHost',location.origin);url.searchParams.set('v','iphone-ratio-swipe-20261013-1');
+    loadedPool=poolKey();
+    loadedLocale=window.PlayableReviewLocale?.language||'en';
+    const url=new URL(runtime);url.searchParams.set('review','batch');url.searchParams.set('feed','playable-batch-'+selected.taskId);url.searchParams.set('reviewHost',location.origin);url.searchParams.set('reviewPool',loadedPool);url.searchParams.set('v','batch-pools-20261021-2');
+    url.searchParams.set('lang',loadedLocale);
     nativeFrame().src=url.href;clearTimeout(timer);
     timer=setTimeout(()=>{error.hidden=false;inlineError.hidden=false;announcement.textContent='FYP view unavailable. Use Try again to reload.';},15000);
   }
@@ -71,17 +84,18 @@
   }
   function reflect(game){selected=game;controls();}
   function select(game){
-    if(!game)return;selected=game;controls();
+    if(!game||!visibleGames().some(item=>item.taskId===game.taskId))return;selected=game;controls();
     if(view==='direct'){if(expanded)direct.src=new URL(api.previewSource(game),location.href).href;return;}
+    if(loadedPool!==poolKey()){stop();paint();load();return;}
     pending=game;
     if(ready)send({type:'playable-batch-select',taskId:game.taskId});
   }
   function step(direction){
-    const index=api.games.findIndex(game=>game.taskId===api.getCurrent()?.taskId);
-    const game=api.games[index+(direction==='next'?1:-1)];
+    const games=visibleGames(),index=games.findIndex(game=>game.taskId===api.getCurrent()?.taskId);
+    const game=index<0?null:games[index+(direction==='next'?1:-1)];
     if(!game||(view==='fyp'&&!ready))return;
-    if(view==='fyp')send({type:'playable-batch-step',direction});
-    else api.select(game,{reveal:true});
+    // Select the adjacent filtered ID. Native step would use the full host feed.
+    api.select(game,{reveal:true});
   }
   function restart(){selected=api.getCurrent();stop();paint();load();}
   for(const button of buttons('[data-mode]'))button.addEventListener('click',()=>setView(button.dataset.mode));
@@ -98,10 +112,19 @@
   });
   inlineError.querySelector('button').addEventListener('click',restart);dialog.querySelector('.batch-view-retry').addEventListener('click',restart);
   picker.addEventListener('change',()=>{const game=api.games.find(game=>game.taskId===picker.value);if(game)api.select(game,{reveal:true});});
+  window.addEventListener('playable-review-filter-change',()=>{
+    refreshPicker();
+    if(view==='fyp'&&loadedPool!==poolKey()){selected=api.getCurrent();stop();paint();load();}
+    else controls();
+  });
+  window.addEventListener('playable-review-language-change',restart);
   window.addEventListener('message',event=>{
     const frame=nativeFrame();
     if(!frame||event.source!==frame.contentWindow||event.origin!==origin||event.data?.type!=='playable-batch-selection')return;
-    const game=api.games.find(game=>game.taskId===event.data.taskId);if(!game)return;
+    const game=visibleGames().find(game=>game.taskId===event.data.taskId);
+    // A previous iframe document may still report after changing categories.
+    // Neither an old pool nor an out-of-pool game can escape the chosen Batch.
+    if(!game||event.data.reviewPool!==loadedPool||(window.PlayableReviewLocale&&event.data.reviewLocale!==loadedLocale))return;
     clearTimeout(timer);error.hidden=true;inlineError.hidden=true;ready=true;announcement.textContent='';
     if(pending&&pending.taskId!==game.taskId){send({type:'playable-batch-select',taskId:pending.taskId});return;}pending=null;
     selected=game;controls();

@@ -1,0 +1,34 @@
+/* Current implementations from the user-authorized meeting round. History stays in the tracker. */
+(() => {
+  const map=window.PLAYABLE_IMPLEMENTED_FIXES;
+  if(!map)return;
+  const rows=[
+    [14,'playable2_20260927020825_hjn7q5',['FYP opening controls are separated from the host entry; the busy wood backdrop is simplified. Guide background panel removed.','Shiny, shadow-free strokes and simultaneous slower replay remain.']],
+    [15,'playable2_20260927020825_n4r34c',['Full-bleed light palette without a nested card. Clear centered opening guide; original game flow retained.']],
+    [16,'playable2_20260927020825_lnwh1h',['Reset is now at bottom-right. Level and ball count are distinct and share one font. The Balls label sits to the right of its number on one line.','Lowered the real cup and its matching goal sensor together; the preview cup remains clear of FYP Tap to play.']],
+    [17,'playable2_20260927020825_ufhwuj',['Light palette and a raised FYP opening stack clear of the host button.','Locally bundled Exo 2 unifies the guide, score and result controls with a cleaner tech-style font.','Untimed stacking, original gameplay position and reset remain.']],
+    [19,'playable2_20260927021136_x3i163',['Opening cube occupies the core area with centered guidance; reset is a lightweight outline.','One initial cube; fixed-size spawns and same-size colors retained. Preview does not run gameplay physics.']],
+    [32,'playable2_20260928030642_uthymy',['FYP opening hides HUD, enlarges the potato and keeps guidance clear of the feed overlay.','The five-peel, single-potato challenge and real input remain.']],
+    [35,'playable2_20260928031559_rckaf4',['Added a short, visible gameplay guide in the FYP opening without changing rhythm mechanics.']],
+    [36,'playable2_20260928031734_t68did',['Pixel-art ocean and diver replace the prior submarine visual. Holding moves the diver downward; releasing ends the dive.','The background now follows the descent: surface and layered reefs scroll upward, water darkens with depth, and replay resets the world.','Live time and simulated depth, a scrolling vertical ruler, and duration-plus-depth results. Try Again resets both.']],
+    [40,'playable2_20261001225611_zgfls0',['Replaced the triangular CSS preview with real falling/stacking sand using the gameplay material, physics and vertex renderer.','Decorative sand stays in an independent world; entering play starts with an empty canvas.']],
+    [41,'playable2_20261001225611_23t98b',['Smaller composer, compact two-row scrollable choices, less top/bottom whitespace and more chat space.','Removed decorative header circles and fake back ornament. Header clears the top fade; reply surface reaches the bottom without a separate white strip.','Reply targets remain at least44px; ending and replay fit without clipping.']],
+    [45,'playable2_20261001225821_af5uee',['FYP opening hides HUD, raises guidance and shows a decorative gameplay demonstration.','The demo does not change progress, timer or other live gameplay state.']],
+    [53,'playable2_20261001230122_0sowkn',['New yellow rounded handheld artwork and green background inspired by the supplied reference; screen and button targets match the art.','Handheld moved24px lower; guide is above the device, clear of its screen and buttons in preview and play.','FYP preview clears the real host entry, including after Back. Snake, pause, collision, restart and button feedback are preserved.']],
+    [57,'playable2_20261001230352_h4uxll',['FYP opening controls no longer crowd the host entry. One introductory lightning strike does not increase the real strike count.','Color, strike counter and optional rock music remain.']],
+    [58,'playable2_20261001230412_o52e38',['Centered Tap to stack guidance is raised clear of the FYP host button. Original stacking and faded grid remain.']],
+    [61,'playable2_20261013020955_2hyyml',['Latest selectable year is2026. Five realistic devices change with the era: antique, film, CCD, early camera phone and smartphone.','Existing era effects, circular camera entry, DM Sans and two-stage guidance remain. Manual year confirmation and bounds are hardened.']],
+    [62,'playable2_20261013021144_kzqdfu',['Larger fish area; opening guide and scene avoid the feed entry.','Bottom tray moved28px lower by reducing unused bottom padding, giving that space back to the pond.','Larger props now use a single horizontally scrolling row. Existing ten effects remain.']],
+    [63,'01_petme_9gw00a_game',['All fur contact counts positively; five seconds of actual moving grooming completes the activity. Hovering and holding still do not add progress.','Original photo transitions, fur effects, brushing audio and replay remain.']],
+    [64,'playable_20260727203355_w1cgvm',['Floating accessories sit in corners instead of covering the person; guidance avoids the host entry.','Both-on, either-on and neither-on photo states remain.']],
+    [65,'05c_timemachine_male_black_wall',['Opening photo/age demonstration is separate from the real selected age. Entering play restores the starting state.','FYP preview hides the obstructed footer while preserving its space and real slider interaction.']],
+    [66,'mianbao',['FYP opening shows the toaster, clear guide and a non-burning demonstration instead of obstructed HUD.','In-game handle layering, already-burnt pop-out, result and Again remain.']],
+    [71,'bead_loop_20261019',['Full-width, larger bead stage without the constraining frame; guide is clear of the feed entry.','Ten materials use one horizontally scrolling row. Spin inertia, camera-facing cat texture and counts remain.']],
+    [76,'eh_hair_shave_20261020',['Existing face is enlarged and centered. Shaver working edge and horizontal direction match the stroke; result crop follows the face.','Three tap-triggered shaves and original direction control remain, as the user confirmed.']],
+    [78,'eh_makeover_20261020',['Face and working area are centered; tools contact the mouth or cheek by their working tips.','User-confirmed press-and-drag interaction replaces tap progression in this template only; other EH templates keep tap.']]
+  ];
+  for(const [number,id,items] of rows){
+    const previous=map[id]||{};
+    map[id]={...previous,number,items,status:'Meeting changes implemented locally; targeted FYP review recorded; awaiting user approval.',evidence:[...(previous.evidence||[]),'Meeting FYP round 20261021']};
+  }
+})();

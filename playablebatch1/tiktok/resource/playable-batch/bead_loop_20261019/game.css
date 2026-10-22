@@ -2,16 +2,17 @@
 :root{font-family:"DM Sans",system-ui,sans-serif;color:#293c34;background:#edf2ee;font-synthesis:none;font-optical-sizing:auto;-webkit-font-smoothing:antialiased}
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;user-select:none}
 button{font:inherit;color:inherit;cursor:pointer}button:focus-visible,#stage:focus-visible{outline:2px solid #426a58;outline-offset:5px}
+#stage[data-input="pointer"]:focus-visible{outline:none}
 #game{position:relative;isolation:isolate;display:flex;flex-direction:column;gap:12px;width:100%;height:100%;padding:30px 30px 50px;background:radial-gradient(ellipse at 63% 28%,#fff 0%,#f4f7f3 43%,#e7eeea 100%)}
 #counter{position:relative;z-index:1;display:block;flex:0 0 36px;height:36px;margin:0;text-align:center;font-size:28px;font-weight:600;line-height:36px;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-#stage{position:relative;flex:1;min-height:0;width:100%;touch-action:none;cursor:grab;border-radius:24px;outline-offset:0}
+#stage{position:relative;flex:1;min-height:0;width:calc(100% + 60px);margin-left:-30px;touch-action:none;cursor:grab;outline-offset:0}
 #stage[data-dragging="true"]{cursor:grabbing}#stage canvas{display:block;position:absolute;inset:0;width:100%;height:100%}
 #guide{flex:0 0 auto;min-height:27px;margin:0;text-align:center;font-size:18px;line-height:27px;font-weight:500;color:#425c50;transition:opacity .18s ease-out;pointer-events:none}
 #guide[data-dismissed="true"]{opacity:0;visibility:hidden}
-#materials{display:flex;flex:none;flex-direction:column;align-items:stretch;gap:4px;min-height:140px}
+#materials{display:flex;flex:none;flex-direction:column;align-items:stretch;gap:4px;min-height:84px}
 #material-name{display:block;min-height:24px;text-align:center;font-size:14px;font-weight:500;line-height:24px}
-#material-grid{display:grid;grid-template-columns:repeat(5,minmax(44px,1fr));gap:8px;padding:4px}
-.material{position:relative;width:100%;min-width:44px;min-height:48px;padding:3px;border:0;background:transparent;display:grid;place-items:center;border-radius:12px;transition:opacity .15s ease-out}
+#material-grid{display:flex;gap:12px;padding:6px;overflow-x:auto;overscroll-behavior-x:contain;touch-action:pan-x;scrollbar-width:none;scroll-snap-type:x proximity}
+.material{position:relative;flex:0 0 48px;min-width:48px;min-height:48px;padding:3px;border:0;background:transparent;display:grid;place-items:center;border-radius:12px;transition:opacity .15s ease-out;scroll-snap-align:center}
 .material>span:not(.swatch){position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .material:active{opacity:.65}.swatch{position:relative;width:42px;height:42px;border-radius:50%;box-shadow:inset -5px -6px 9px #0002,inset 5px 5px 9px #fff5,0 3px 5px #31403515}
 .material:disabled{cursor:wait;opacity:.65}
@@ -33,6 +34,7 @@ button{font:inherit;color:inherit;cursor:pointer}button:focus-visible,#stage:foc
 #error[hidden]{display:none}#error p{font-size:18px;line-height:1.4;margin:0 0 16px}#retry{min-height:44px;padding:10px 20px;border:1px solid #577261;border-radius:22px;background:transparent;font-size:16px}
 #game[data-feed-preview="true"] #counter,#game[data-feed-preview="true"] #materials{visibility:hidden;pointer-events:none}
 #game[data-feed-preview="true"] #materials{display:none}
-#game[data-feed-preview="true"] #guide{position:absolute;top:75%;left:30px;right:30px}
+#game[data-feed-preview="true"] #stage{position:absolute;top:18%;bottom:17%;left:0;width:100%;margin:0}
+#game[data-feed-preview="true"] #guide{position:absolute;top:14%;left:30px;right:30px}
 @media(max-height:540px){#game{gap:8px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important}}

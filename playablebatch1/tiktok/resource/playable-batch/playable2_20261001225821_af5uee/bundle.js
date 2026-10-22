@@ -593,7 +593,9 @@ function DT() {
               _.restore(),
               k.mode === "ready" || k.mode === "playing" || k.mode === "won" || k.mode === "over")
             ) {
-              let Q = z(k);
+              const preview=document.documentElement.dataset.meetingFyp==="preview";
+              const previewProgress=matchMedia("(prefers-reduced-motion: reduce)").matches ? .65 : Math.min(1.4,(C%6000)/3300*1.4);
+              let Q = z(preview?{...k,progress:previewProgress}:k);
               j(Q);
             }
           }

@@ -49,10 +49,10 @@ function App(){
       .look-plane>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .25s ease;pointer-events:none}
       .look-remove{position:absolute;border:0;background:transparent;padding:0;pointer-events:auto;cursor:pointer}
       .look-remove:focus-visible{background:#ffffff24;border-radius:18px}
-      .outfit-item{position:absolute;width:35%;aspect-ratio:1;border:0;padding:0;background:transparent;cursor:pointer;z-index:10}
+      .outfit-item{position:absolute;width:25%;aspect-ratio:1;border:0;padding:0;background:transparent;cursor:pointer;z-index:10}
       .outfit-item img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 6px 7px #0004)}
       .outfit-item:active img{filter:drop-shadow(0 3px 4px #0006) brightness(.94)}
-      .look-guide{top:auto;bottom:var(--ui-bottom);left:50%;right:auto;transform:translateX(-50%);width:max-content;max-width:calc(100% - 2 * var(--ui-side));padding:8px 16px;color:#202322;background:#fffffff0;border:1px solid #ffffff90;border-radius:999px;text-shadow:none;box-shadow:0 3px 14px #10181218}
+      .look-guide{top:12%;bottom:auto;left:50%;right:auto;transform:translateX(-50%);width:max-content;max-width:calc(100% - 2 * var(--ui-side));padding:8px 16px;color:#202322;background:#fffffff0;border:1px solid #ffffff90;border-radius:999px;text-shadow:none;box-shadow:0 3px 14px #10181218}
     `}</style>
     <style>{themeCss}</style>
     <div className="look-plane" style={{...plane,zIndex:1}}>
@@ -60,10 +60,10 @@ function App(){
       {wearA&&<button ref={removeA} className="look-remove" type="button" aria-label="Remove scarf" onClick={e=>toggle('A',false,e.detail===0)} style={{top:'48%',left:'44%',width:'28%',height:'14%',zIndex:12}}/>}
       {wearB&&<button ref={removeB} className="look-remove" type="button" aria-label="Remove top" onClick={e=>toggle('B',false,e.detail===0)} style={{top:'60%',left:'20%',width:'60%',height:'9%',zIndex:11}}/>}
     </div>
-    {!wearA&&<button ref={itemA} type="button" className="outfit-item" aria-label="Try on scarf" onClick={e=>toggle('A',true,e.detail===0)} style={{left:'var(--ui-side)',top:'24%'}}>
+    {!wearA&&<button ref={itemA} type="button" className="outfit-item" aria-label="Try on scarf" onClick={e=>toggle('A',true,e.detail===0)} style={{left:'var(--ui-side)',top:'25%'}}>
       <img className="ui-float" style={{animationDuration:`${cfg.FLOAT_SPEED||2.5}s`}} src={outfitSrc(cfg.ITEM_A)} alt="" draggable={false}/>
     </button>}
-    {!wearB&&<button ref={itemB} type="button" className="outfit-item" aria-label="Try on top" onClick={e=>toggle('B',true,e.detail===0)} style={{right:'max(var(--ui-side), 16%)',bottom:'22%',width:'38%'}}>
+    {!wearB&&<button ref={itemB} type="button" className="outfit-item" aria-label="Try on top" onClick={e=>toggle('B',true,e.detail===0)} style={{left:'var(--ui-side)',bottom:'29%'}}>
       <img className="ui-float" style={{animationDuration:`${(cfg.FLOAT_SPEED||2.5)*1.1}s`}} src={outfitSrc(cfg.ITEM_B)} alt="" draggable={false}/>
     </button>}
     {!started&&<p className="ui-guide look-guide">Tap a piece to try it on</p>}

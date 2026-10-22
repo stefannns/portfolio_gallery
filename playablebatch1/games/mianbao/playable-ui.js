@@ -1,4 +1,14 @@
 import {useEffect, useRef, useState} from 'react';
+export function useFeedVisibility(ref,ready){
+  const[visible,setVisible]=useState(false);
+  useEffect(()=>{if(!ready||!ref.current)return;const observer=new IntersectionObserver(entries=>setVisible(entries.some(entry=>entry.isIntersecting&&entry.intersectionRatio>.1)),{threshold:[0,.1]});observer.observe(ref.current);return()=>observer.disconnect();},[ref,ready]);
+  return visible;
+}
+export function useFeedPreview(){
+  const[preview,setPreview]=useState(()=>new URLSearchParams(location.search).has('review')||new URLSearchParams(location.search).get('feedReview')==='1');
+  useEffect(()=>{const receive=e=>{if(e.source===parent&&e.origin===location.origin&&e.data?.type==='playable-active')setPreview(e.data.active!==true);};addEventListener('message',receive);return()=>removeEventListener('message',receive);},[]);
+  return preview;
+}
 
 export async function loadConfig() {
   let fallback={tweaks:[],texts:[],images:[]};

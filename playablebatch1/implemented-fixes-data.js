@@ -6,15 +6,15 @@
 window.PLAYABLE_IMPLEMENTED_FIXES = {
   "one_life_20261020": {
     "number": 73,
-    "items": ["Approved horizontal birth-probability chart with One Life and Be born. Both source-caption lines removed from the opening.", "Birth draws follow the reference’s nine leading shares plus Other 163; all 172 countries/regions can be selected. Life events remain fictional and automatically generated, with Continue and no choices.", "Four changing qualities, education/work/relationships, savings-sensitive events, journal and replay. Local typography/audio, portrait layout and synced Direct/FYP versions."],
+    "items": ["Four distinct choices per stage from age 4 to 82. Choices affect stats, studies, work and relationships.", "More detailed short stories and outcomes; compact labels in a two-by-two grid. Centered text-only layout, progress below the actions.", "Soft fades and rolling ages. Fixed controls, reduced motion, pause/resume and duplicate-tap protection.", "Weighted birth odds for 172 places, a bar chart and country-name roll.", "Journal, life summary and replay. Local assets; synced Direct/FYP versions."],
     "status": "Prototype implemented; awaiting review.",
-    "evidence": ["One Life 20261020"]
+    "evidence": ["One Life 20261020", "Four choices and richer stories 20261021"]
   },
   "height_together_20261019": {
     "number": 72,
-    "items": ["New 3D height simulator with editable names/heights and proportional geometric people.", "Eight shared scenes, drag/pinch camera controls and both eye-level perspectives. Floating plus/minus/reset buttons removed; keyboard shortcuts retained.", "Local photo export, responsive portrait layout, initial breathing animation and local licensed typography. Names/heights are not uploaded or stored externally."],
+    "items": ["New 3D height simulator with editable names/heights and proportional geometric people.", "Shared red scarf wraps around both necks, with a cloth bridge, hanging ends and matching red fringe. Umbrella canopy matches the scarf red, with darker red ribs and an unchanged pole/handle. Hug, piggyback, cradle, umbrella grip, seating/table contact and shelf reach use actual body/prop anchors with fixed limb lengths. Coffee Date has wider chair spacing and tucked elbows to prevent neighbouring arms intersecting, while preserving tabletop hand contact.", "Eight scenes, drag/pinch and both eye views; no floating zoom/reset buttons. Shared opening motion keeps contacts connected, and unrelated taps no longer trigger the camera-view handler.", "Local photo export, portrait layout and licensed typography. Names/heights stay on-device. Extremely mismatched heights retain real proportions rather than stretching limbs to force unreachable embrace contacts."],
     "status": "Prototype implemented; awaiting review.",
-    "evidence": ["Height Together 20261019"]
+    "evidence": ["Height Together 20261019", "Height poses 20261020"]
   },
   "bead_loop_20261019": {
     "number": 71,

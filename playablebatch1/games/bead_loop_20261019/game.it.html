@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#edf2ee">
+  <title>Giro di perline</title>
+  <link rel="stylesheet" href="./game.it.css?l10n=d1c95c67c335&v=5ff81deb6b86">
+<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=d1c95c67c335&v=67ccecd0e198">
+<link data-italian-layout rel="stylesheet" href="./locale.it.css?v=20261021-1">
+</head>
+<body>
+  <main id="game" data-material="jade">
+    <output id="counter" aria-label="0 perline ruotate" aria-live="off">0</output>
+    <div id="stage" tabindex="0" role="button" aria-label="Fai girare le perline" aria-description="Scorri sulle perline. Puoi usare anche frecce, Spazio o Invio." data-material="jade" data-ready="false" data-started="false" data-turns="0"></div>
+    <p id="guide">Scorri sulle perline per girarle</p>
+    <div id="materials" role="group" aria-label="Materiali delle perline">
+      <output id="material-name" aria-live="off">Giada</output>
+      <div id="material-grid">
+      <button class="material" data-material="jade" aria-label="Materiale giada" aria-pressed="true"><span class="swatch jade" aria-hidden="true"></span><span>Giada</span></button>
+      <button class="material" data-material="wood" aria-label="Materiale legno" aria-pressed="false"><span class="swatch wood" aria-hidden="true"></span><span>Legno</span></button>
+      <button class="material" data-material="stone" aria-label="Materiale pietra" aria-pressed="false"><span class="swatch stone" aria-hidden="true"></span><span>Pietra</span></button>
+      <button class="material" data-material="cat" aria-label="Materiale gatto" aria-pressed="false"><span class="swatch cat" aria-hidden="true"></span><span>Gatto</span></button>
+      <button class="material" data-material="pearl" aria-label="Materiale perla" aria-pressed="false"><span class="swatch pearl" aria-hidden="true"></span><span>Perla</span></button>
+      <button class="material" data-material="amber" aria-label="Materiale ambra" aria-pressed="false"><span class="swatch amber" aria-hidden="true"></span><span>Ambra</span></button>
+      <button class="material" data-material="porcelain" aria-label="Materiale porcellana bianca e blu" aria-pressed="false"><span class="swatch porcelain" aria-hidden="true"></span><span>Porcellana</span></button>
+      <button class="material" data-material="amethyst" aria-label="Materiale ametista" aria-pressed="false"><span class="swatch amethyst" aria-hidden="true"></span><span>Ametista</span></button>
+      <button class="material" data-material="gold" aria-label="Materiale oro" aria-pressed="false"><span class="swatch gold" aria-hidden="true"></span><span>Oro</span></button>
+      <button class="material" data-material="obsidian" aria-label="Materiale ossidiana" aria-pressed="false"><span class="swatch obsidian" aria-hidden="true"></span><span>Ossidiana</span></button>
+      </div>
+    </div>
+    <span id="material-feedback" aria-live="polite"></span>
+    <section id="error" role="alert" hidden><p>Il 3D si è interrotto. Riprova.</p><button id="retry">Riprova</button></section>
+  </main>
+  <script id="playable-inline-config" type="application/json">{"config_version":"2.0","tweaks":[],"texts":[{"id":"HINT_TEXT","label":"Spin instruction","value":"Scorri sulle perline per girarle","default":"Scorri sulle perline per girarle","max_length":40}],"images":[{"id":"CAT_TEXTURE","label":"Cat bead texture","path":"assets/textures/tabby-face.jpg"}]}</script>
+  <script src="./bundle.it.js?l10n=d1c95c67c335&v=5ff81deb6b86"></script>
+</body>
+</html>

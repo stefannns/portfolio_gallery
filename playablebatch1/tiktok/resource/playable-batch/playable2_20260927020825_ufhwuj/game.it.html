@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<script src="/resource/playable-batch/review-host.js"></script><script src="/resource/playable-feed/pocket-host.js" data-seed-random="off"></script>
+<script data-playable-feed-gate="v1">
+// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
+(() => {
+  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
+  let active=false,alive=true;
+  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
+  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
+  if(navigator.mediaDevices?.getUserMedia){
+    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia=async constraints=>{
+      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
+      const stream=await native(constraints);
+      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
+      streams.add(stream);return stream;
+    };
+  }
+  for(const key of ['AudioContext','webkitAudioContext']){
+    const Native=window[key];if(!Native)continue;
+    window[key]=class FeedAudioContext extends Native {
+      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
+      async resume(){if(!active)await wait();if(alive)return super.resume();}
+    };
+  }
+  const nativePlay=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
+  addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    active=alive&&event.data.active===true;
+    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
+    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
+  });
+  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
+})();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Torre synthwave</title>
+  <link rel="preload" href="./assets/fonts/exo2/Exo2-Latin.woff" as="font" type="font/woff" crossorigin />
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    :root { --synth-safe-bottom: env(safe-area-inset-bottom, 0px); }
+
+    /* Keep the horizon subdued so the moving block remains the focal point. */
+    .synth-grid {
+      height: 52% !important;
+      opacity: .55;
+      transform: perspective(500px) rotateX(58deg) !important;
+      animation: synthHorizon 6s linear infinite !important;
+      mask-image: linear-gradient(to bottom, transparent, #000 48%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent, #000 48%);
+    }
+    @keyframes synthHorizon {
+      from { background-position: 0 0; }
+      to { background-position: 0 8cqi; }
+    }
+    .synth-score {
+      position: absolute;
+      top: calc(30px + env(safe-area-inset-top, 0px));
+      left: calc(30px + env(safe-area-inset-left, 0px));
+      right: calc(30px + env(safe-area-inset-right, 0px));
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 400;
+      font-synthesis: none;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.25;
+      color: var(--neon-magenta);
+      text-shadow: 0 0 4px var(--neon-magenta);
+      overflow-wrap: anywhere;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .synth-score-digit {
+      display: inline-block;
+      width: 1ch;
+      text-align: center;
+    }
+    #root h1, #root h2 {
+      max-width: calc(100% - 50px);
+      overflow-wrap: anywhere;
+      text-align: center;
+    }
+    .btn-neon {
+      font-weight: 400;
+      font-synthesis: none;
+      letter-spacing: .02em;
+      max-width: calc(100% - 50px);
+      min-height: 48px;
+      white-space: normal;
+      line-height: 1.4;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .synth-grid { animation: none !important; }
+    }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<link rel="stylesheet" href="./fyp-meeting.it.css?l10n=8ad8483e61b8&v=meeting-fyp-early-20261021-5">
+<link data-ui-polish="20261021" rel="stylesheet" href="./ui-polish.it.css?l10n=8ad8483e61b8&v=b6a5ae45c5c5">
+<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=8ad8483e61b8&v=c11cdb983696">
+<link data-italian-layout rel="stylesheet" href="./locale.it.css?v=20261021-1">
+</head>
+<body>
+  <div id="root"></div>
+  <!-- playable-inline-config:start -->
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"BASE_SPEED","kind":"number","label":"Initial Block Speed","value":0.4,"default":0.4,"min":0.1,"max":1,"step":0.05},{"id":"HARD_MODE","kind":"boolean","label":"Hard Mode (Faster Acceleration)","value":false,"default":false}],"texts":[{"id":"GAME_TITLE","label":"Game Title","value":"TORRE SYNTHWAVE","default":"TORRE SYNTHWAVE","max_length":30},{"id":"DESC","label":"Description","value":"Impila i blocchi al neon senza mancarli.","default":"Impila i blocchi al neon senza mancarli.","max_length":150},{"id":"BTN_START","label":"Start Button","value":"INIZIA","default":"INIZIA","max_length":20},{"id":"TXT_GAMEOVER","label":"Game Over Text","value":"PARTITA FINITA","default":"PARTITA FINITA","max_length":20},{"id":"BTN_RESTART","label":"Restart Button","value":"RIGIOCA","default":"RIGIOCA","max_length":20},{"id":"BTN_POST","label":"Post Button (Not in form, fallback)","value":"CONDIVIDI","default":"CONDIVIDI","max_length":20}],"images":[{"id":"BG_MAIN","label":"Main Background Fallback","path":"./assets/bg_main.png","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"it","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    (function () {
+      if (window.location.protocol !== 'file:') return;
+      var configText = document.getElementById('playable-inline-config').textContent;
+      var nativeFetch = window.fetch;
+      window.fetch = function (input) {
+        var url = typeof input === 'string' ? input : (input && input.url) || '';
+        if (/(^|\/)game\.config\.it\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: function () { return Promise.resolve(JSON.parse(configText)); },
+            text: function () { return Promise.resolve(configText); }
+          });
+        }
+        return nativeFetch.apply(window, arguments);
+      };
+    }());
+  </script>
+  <!-- playable-inline-config:end -->
+  <script src="./bundle.it.js?l10n=8ad8483e61b8&v=meeting-fyp-early-20261021-5"></script>
+<script defer src="./feed-entry-motion.it.js?l10n=8ad8483e61b8&v=feed-first-20261008-1" data-subject="#root canvas"></script>
+<script defer src="./fyp-meeting.it.js?l10n=8ad8483e61b8&v=meeting-fyp-early-20261021-5" data-game="17"></script>
+</body>
+</html>

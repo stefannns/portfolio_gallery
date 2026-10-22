@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<script data-playable-feed-gate="v1">
+// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
+(() => {
+  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
+  let active=false,alive=true;
+  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
+  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
+  if(navigator.mediaDevices?.getUserMedia){
+    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia=async constraints=>{
+      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
+      const stream=await native(constraints);
+      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
+      streams.add(stream);return stream;
+    };
+  }
+  for(const key of ['AudioContext','webkitAudioContext']){
+    const Native=window[key];if(!Native)continue;
+    window[key]=class FeedAudioContext extends Native {
+      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
+      async resume(){if(!active)await wait();if(alive)return super.resume();}
+    };
+  }
+  const nativePlay=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
+  addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    active=alive&&event.data.active===true;
+    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
+    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
+  });
+  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
+})();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Laboratorio di pixel</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<link rel="stylesheet" href="./fyp-meeting.it.css?l10n=bef098427a91&v=meeting-fyp-early-20261021-5">
+<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=bef098427a91&v=8028b4e31543">
+<link data-italian-layout rel="stylesheet" href="./locale.it.css?v=20261021-1">
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-config-inline" type="application/json">{"tweaks":[{"id":"GRAVITY_Y","kind":"number","label":"Gravity","value":1.2,"default":1.2,"min":0.1,"max":2.5,"step":0.1},{"id":"BRUSH_SIZE","kind":"number","label":"Brush Size (Particles)","value":2,"default":2,"min":1,"max":5,"step":1},{"id":"MAX_PARTICLES","kind":"number","label":"Max Particles Limit","value":2000,"default":2000,"min":200,"max":3000,"step":100}],"texts":[{"id":"GAME_TITLE","label":"Game Title","value":"Laboratorio di pixel","default":"Laboratorio di pixel","max_length":20},{"id":"BTN_CLEAR","label":"Clear Button Text","value":"Cancella","default":"Cancella","max_length":15}],"images":[],"config_version":"2.0","playable":{"post_id":"99278216761911513","version_id":"99278216761859467","runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"it","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    // file:// pages cannot fetch their adjacent JSON in Chrome. Keep the normal
+    // package fetch path on HTTP, and serve only the local config from this copy.
+    if (location.protocol === "file:") {
+      const config = document.getElementById("playable-config-inline").textContent;
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = function(input, options) {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url && /(?:^|\/)game\.config\.it\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve(new Response(config, {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return originalFetch(input, options);
+      };
+    }
+  </script>
+  <script src="./bundle.it.js?l10n=bef098427a91&v=meeting-fyp-early-20261021-5"></script>
+<script defer src="./feed-entry-motion.it.js?l10n=bef098427a91&v=feed-first-20261008-1" data-subject="#root canvas"></script>
+<script defer src="./fyp-meeting.it.js?l10n=bef098427a91&v=meeting-fyp-early-20261021-5" data-game="40"></script>
+</body>
+</html>

@@ -5,10 +5,10 @@ document.documentElement.dataset.feedPreview=String(hosted&&!hostActive);
 const soundNodes=new Set(),voices=new Set();let ac;
 const R=window.Playable={spec,images,ctx,canvas,w:390,h:598,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches,config,
  clamp:(v,a,b)=>Math.max(a,Math.min(b,v)),mix:(a,b,p)=>a+(b-a)*p,ease:p=>1-Math.pow(1-p,3),
- cover(id){const im=images[id],s=Math.max(R.w/im.width,R.h/im.height);return{x:(R.w-im.width*s)/2,y:(R.h-im.height*s)/2,w:im.width*s,h:im.height*s};},
+ cover(id){const im=images[id],f=spec.photoFraming,s=Math.max(R.w/im.width,R.h/im.height)*(f?.zoom||1),w=im.width*s,h=im.height*s;let y=f?R.h*f.screenY-h*f.y:(R.h-h)/2;if(f?.topLandmark!==undefined)y=Math.max(y,R.h*f.minTop-h*f.topLandmark);return{x:f?R.clamp(R.w*.5-w*f.x,R.w-w,0):(R.w-w)/2,y:R.clamp(y,R.h-h,0),w,h};},
  photo(id,alpha=1){const p=R.cover(id);ctx.save();ctx.globalAlpha=alpha;ctx.drawImage(images[id],p.x,p.y,p.w,p.h);ctx.restore();return p;},
  point(id,p){const b=R.cover(id);return{x:b.x+b.w*p.x,y:b.y+b.h*p.y};},
- sprite(id,x,y,w,h,rotation=0,alpha=1){const im=images[id];if(!im||!Number.isFinite(x+y+w))return;h=h??w*im.height/im.width;ctx.save();ctx.translate(x,y);ctx.rotate(rotation);ctx.globalAlpha=alpha;ctx.drawImage(im,-w/2,-h/2,w,h);ctx.restore();},
+ sprite(id,x,y,w,h,rotation=0,alpha=1,anchor={x:.5,y:.5}){const im=images[id];if(!im||!Number.isFinite(x+y+w))return;h=h??w*im.height/im.width;ctx.save();ctx.translate(x,y);ctx.rotate(rotation);ctx.globalAlpha=alpha;ctx.drawImage(im,-w*anchor.x,-h*anchor.y,w,h);ctx.restore();},
  frame(ids,t,duration,x,y,w,h,loop=false){if(t<0||(!loop&&t>=duration))return;if(loop&&R.reduced)t=duration*.5;const n=Math.min(ids.length-1,Math.floor((loop?t%duration:t)/duration*ids.length));R.sprite(ids[n],x,y,w,h);},
  hud(left='',right='',center=false){el('left').textContent=left;el('right').textContent=right;el('hud').classList.toggle('center',center);},
  guide(text,show=true){el('guide').textContent=text;el('guide').hidden=!show;},
@@ -20,18 +20,25 @@ const R=window.Playable={spec,images,ctx,canvas,w:390,h:598,reduced:matchMedia('
  stop(a){if(a){a.pause();a.currentTime=0;soundNodes.delete(a);}},
  silence(){for(const a of soundNodes)R.stop(a);for(const o of voices){try{o.stop();}catch{}}voices.clear();},
  setAction(label){el('play').setAttribute('aria-label',label);},
+ releaseInput(){endPointer();},
  setDirection(show,fn){el('direction').hidden=!show;el('direction').onclick=()=>{if(paused||!hostActive)return;R.unlock();fn();};},
  debug:()=>({state:app?.state?.(),paused,hostActive,hidden,loaded:Object.keys(images).length,sounds:soundNodes.size})};
 function size(){const b=canvas.getBoundingClientRect();R.w=b.width;R.h=b.height;const d=Math.min(2,devicePixelRatio||1);canvas.width=Math.round(b.width*d);canvas.height=Math.round(b.height*d);ctx.setTransform(d,0,0,d,0,0);document.documentElement.style.setProperty('--ui',Math.min(b.width/390,b.height/598));app?.resize?.();}
-function reset(){R.silence();paused=false;el('pause').hidden=true;R.result('');el('direction').hidden=true;app.reset();R.announce('Ready');if(running)app.draw(0);last=0;}
-function action(e){if(!running||paused||!hostActive||hidden)return;R.unlock();const b=canvas.getBoundingClientRect();const p=e?{x:e.clientX-b.left,y:e.clientY-b.top}:{x:R.w/2,y:R.h*.70};app.action(p);}
+function reset(){endPointer();R.silence();paused=false;el('pause').hidden=true;R.result('');el('direction').hidden=true;app.reset();R.announce('Ready');if(running)app.draw(0);last=0;}
+function point(e){const b=canvas.getBoundingClientRect();return{x:e.clientX-b.left,y:e.clientY-b.top};}
+function canInput(){return running&&!paused&&hostActive&&!hidden;}
+function action(e){if(!canInput()||app.inputMode==='drag')return;R.unlock();const p=e?point(e):{x:R.w/2,y:R.h*.70};app.action(p);}
 let down=null;
-el('play').addEventListener('pointerdown',e=>{if(e.isPrimary===false||e.button!==0)return;down={id:e.pointerId,x:e.clientX,y:e.clientY};});
-el('play').addEventListener('pointercancel',()=>down=null);
-el('play').addEventListener('pointerup',e=>{if(!down||e.pointerId!==down.id)return;const d=down;down=null;if(Math.hypot(e.clientX-d.x,e.clientY-d.y)>18)return;action(e);});
+function endPointer(){const d=down;down=null;app?.pointerEnd?.();if(d&&el('play').hasPointerCapture?.(d.id))el('play').releasePointerCapture(d.id);}
+el('play').addEventListener('pointerdown',e=>{if(e.isPrimary===false||e.button!==0||!canInput())return;if(app.inputMode==='drag'){R.unlock();if(!app.pointerStart(point(e)))return;e.preventDefault();down={id:e.pointerId};el('play').setPointerCapture(e.pointerId);return;}down={id:e.pointerId,x:e.clientX,y:e.clientY};});
+el('play').addEventListener('pointermove',e=>{if(app?.inputMode!=='drag'||!down||e.pointerId!==down.id)return;if(!canInput()||e.buttons===0){endPointer();return;}e.preventDefault();app.pointerMove(point(e));});
+el('play').addEventListener('pointercancel',e=>{if(down&&e.pointerId===down.id)endPointer();});
+el('play').addEventListener('lostpointercapture',e=>{if(down&&e.pointerId===down.id)endPointer();});
+el('play').addEventListener('pointerup',e=>{if(!down||e.pointerId!==down.id)return;const d=down;if(app.inputMode==='drag'){endPointer();return;}down=null;if(Math.hypot(e.clientX-d.x,e.clientY-d.y)>18)return;action(e);});
 el('play').addEventListener('click',e=>{if(e.detail===0)action();});
+el('play').addEventListener('keydown',e=>{if(!canInput()||!app.keyStroke||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();R.unlock();app.keyStroke(e.key);});
 el('retry').onclick=()=>{R.unlock();reset();};el('resume').onclick=()=>{R.unlock();paused=false;el('pause').hidden=true;app.resume?.();last=0;};
-function pause(){R.silence();app?.pause?.();down=null;if(running&&app?.isPlaying?.()){paused=true;el('pause').hidden=false;}}
+function pause(){endPointer();R.silence();app?.pause?.();if(running&&app?.isPlaying?.()){paused=true;el('pause').hidden=false;}}
 document.addEventListener('visibilitychange',()=>{hidden=document.hidden;if(hidden)pause();last=0;});
 window.addEventListener('blur',pause);window.addEventListener('resize',size);
 // Only the parent frame can control activity; never accept commands from sibling windows.
