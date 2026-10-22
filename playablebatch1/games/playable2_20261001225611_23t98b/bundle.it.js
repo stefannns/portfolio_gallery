@@ -333,7 +333,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   };
   (0, ot.useEffect)(() => {
     let active = true;
-    fetch("./game.config.it.json?l10n=683f97d6fe2d", { cache: "no-store" })
+    fetch("./game.config.it.json?l10n=1ae1d5890529", { cache: "no-store" })
       .then((response) => (response.ok ? response.json() : null))
       .then((value) => {
         if (active && value) setConfig(_V(value));

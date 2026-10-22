@@ -22,7 +22,7 @@ window.PlayableItalianGames={
     "number": 6,
     "name": "Disegna con il filo",
     "entry": "/playablebatch1/games/playable2_20260927020828_oumj12/game.it.html",
-    "revision": "cde076cb9774"
+    "revision": "630767236f48"
   },
   "playable2_20260927020828_y5a1vt": {
     "number": 10,
@@ -34,31 +34,31 @@ window.PlayableItalianGames={
     "number": 14,
     "name": "Tela musicale",
     "entry": "/playablebatch1/games/playable2_20260927020825_hjn7q5/game.it.html",
-    "revision": "2df598154a58"
+    "revision": "ef25617780a6"
   },
   "playable2_20260927020825_n4r34c": {
     "number": 15,
     "name": "Cerchio orbitale",
     "entry": "/playablebatch1/games/playable2_20260927020825_n4r34c/game.it.html",
-    "revision": "7e4c5ad5961d"
+    "revision": "b364276418ab"
   },
   "playable2_20260927020825_lnwh1h": {
     "number": 16,
     "name": "Scava nella sabbia",
     "entry": "/playablebatch1/games/playable2_20260927020825_lnwh1h/game.it.html",
-    "revision": "b79f8bdc2920"
+    "revision": "9b91ac5bb2c5"
   },
   "playable2_20260927020825_ufhwuj": {
     "number": 17,
     "name": "Torre synthwave",
     "entry": "/playablebatch1/games/playable2_20260927020825_ufhwuj/game.it.html",
-    "revision": "b31813720670"
+    "revision": "a68e9c18bab5"
   },
   "playable2_20260927021136_x3i163": {
     "number": 19,
     "name": "Cubi in movimento",
     "entry": "/playablebatch1/games/playable2_20260927021136_x3i163/game.it.html",
-    "revision": "2cda39654c70"
+    "revision": "08264e069a92"
   },
   "playable2_20260928024549_3bsc4d": {
     "number": 24,
@@ -76,37 +76,37 @@ window.PlayableItalianGames={
     "number": 32,
     "name": "Sfida del pelapatate",
     "entry": "/playablebatch1/games/playable2_20260928030642_uthymy/game.it.html",
-    "revision": "dcaecb18dc42"
+    "revision": "eb2eaff9e7e3"
   },
   "playable2_20260928031559_rckaf4": {
     "number": 35,
     "name": "Tasti a ritmo",
     "entry": "/playablebatch1/games/playable2_20260928031559_rckaf4/game.it.html",
-    "revision": "cd1af8d6c7e0"
+    "revision": "c190b91d12d5"
   },
   "playable2_20260928031734_t68did": {
     "number": 36,
     "name": "Immersione",
     "entry": "/playablebatch1/games/playable2_20260928031734_t68did/game.it.html",
-    "revision": "47b6a105cb3f"
+    "revision": "fbdd34dadd9b"
   },
   "playable2_20261001225611_zgfls0": {
     "number": 40,
     "name": "Laboratorio di pixel",
     "entry": "/playablebatch1/games/playable2_20261001225611_zgfls0/game.it.html",
-    "revision": "e6b0ebe6eec7"
+    "revision": "37c5a3d534d3"
   },
   "playable2_20261001225611_23t98b": {
     "number": 41,
     "name": "Scrivi all’ex",
     "entry": "/playablebatch1/games/playable2_20261001225611_23t98b/game.it.html",
-    "revision": "683f97d6fe2d"
+    "revision": "1ae1d5890529"
   },
   "playable2_20261001225821_af5uee": {
     "number": 45,
     "name": "Incidi una stella",
     "entry": "/playablebatch1/games/playable2_20261001225821_af5uee/game.it.html",
-    "revision": "6d57708982f8"
+    "revision": "25397fb4742a"
   },
   "playable2_20261001230052_xrken6b": {
     "number": 51,

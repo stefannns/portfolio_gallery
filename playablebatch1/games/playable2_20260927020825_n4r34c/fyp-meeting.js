@@ -18,7 +18,7 @@
     if(game===16){
       const counter=app.querySelector('[aria-label^="Level "]');
       if(counter){mark(counter.parentElement,'meeting-sand-hud');
-        const balls=counter.nextElementSibling;if(balls){mark(balls,'meeting-sand-ball-count');let label=balls.querySelector('small');if(!label){label=document.createElement('small');label.textContent='Balls';balls.prepend(label);}}}
+        const balls=counter.nextElementSibling;if(balls){mark(balls,'meeting-sand-ball-count');balls.querySelector('small')?.remove();}}
       const reset=[...app.querySelectorAll('button')].find(b=>b.textContent.trim()==='RESET'||b.classList.contains('meeting-sand-reset'));
       if(reset&&!reset.classList.contains('meeting-sand-reset')){reset.setAttribute('aria-label','Reset level');reset.title='Reset level';mark(reset,'meeting-sand-reset');mark(reset.parentElement,'meeting-sand-reset-wrap');reset.innerHTML=resetIcon;}
     }

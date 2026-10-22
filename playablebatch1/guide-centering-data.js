@@ -15,7 +15,7 @@
   [
     6,
     "playable2_20260927020828_oumj12",
-    "Inside the open string loop, above its drawing handle"
+    "User follow-up: centered on the live SVG circle in every round;16px copy stays inside80% of its diameter"
   ],
   [
     8,
