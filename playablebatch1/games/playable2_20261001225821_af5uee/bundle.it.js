@@ -317,7 +317,7 @@ function DT() {
       (async () => {
         let b = { tweaks: [], texts: [], images: [] };
         try {
-          let z = await fetch("./game.config.it.json?l10n=fa90b386668a", { cache: "no-store" });
+          let z = await fetch("./game.config.it.json?l10n=897e89f468a0", { cache: "no-store" });
           z.ok && (b = await z.json());
         } catch {}
         let O = bT(b),

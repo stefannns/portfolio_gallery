@@ -106,7 +106,7 @@ window.PlayableItalianGames={
     "number": 45,
     "name": "Incidi una stella",
     "entry": "/playablebatch1/games/playable2_20261001225821_af5uee/game.it.html",
-    "revision": "fa90b386668a"
+    "revision": "897e89f468a0"
   },
   "playable2_20261001230052_xrken6b": {
     "number": 51,
