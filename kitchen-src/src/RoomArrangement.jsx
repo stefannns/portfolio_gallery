@@ -7,6 +7,7 @@ import {RestaurantModel} from './TripoRestaurant.jsx';
 import {getRoomPlacement} from './room-placement.js';
 import {getSceneUiScale} from './scene-ui-scale.js';
 import {createRoomNavigator} from './room-navigation.js';
+import {useTaskOutlineIgnore} from './TaskOutline.jsx';
 
 const up = new THREE.Vector3(0, 1, 0);
 const INSPECT_RANGE = 1.7;
@@ -44,6 +45,7 @@ function persistLayout(storageKey, items) {
 }
 
 function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus, onActivate, onError, editable, objective, highlighted, reducedMotion}) {
+  const ignorePointerTarget = useTaskOutlineIgnore();
   const markerBounds = useRef(new THREE.Box3()), markerPoint = useRef(new THREE.Vector3());
   const markerPosition = useCallback((anchor, camera, size) => {
     const rightInset = item.id === 'seed-squad' ? 20 : 2;
@@ -75,7 +77,7 @@ function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus,
     onPointerOut={() => onHover(null)}>
     <group name={`room-item-model-${item.id}`} position={item.modelOffset || [0, 0, 0]}><RestaurantModel entry={entry} dimensions={[item.width, item.width, item.width]} rotationY={0} uniform objective={objective} highlighted={highlighted} reducedMotion={reducedMotion} onError={onError}/></group>
     {/* Invisible pointer targets make small items easy to grab without changing their art. */}
-    <mesh position={[0, item.width * .3, 0]}>
+    <mesh ref={ignorePointerTarget} position={[0, item.width * .3, 0]}>
       <boxGeometry args={[Math.max(.62, item.width), Math.max(.45, item.width * .65), Math.max(.62, item.width)]}/>
       <meshBasicMaterial transparent opacity={0} depthWrite={false} colorWrite={false}/>
     </mesh>
@@ -91,6 +93,7 @@ function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus,
 }
 
 export default function RoomArrangement({roomVersion = 10, controls, rootRef, titlePhysics, resetToken, onStatus, onHover, onReady, onError, onOpenComputer, onOpenProject, onSelection, actionsRef, objectiveId = '', onFirstMove, onWelcomeMove, onInspectTarget, onWelcomeAnchor, welcomeActive = false, reducedMotion = false, paused = false, editable = false, fixedCamera = true}) {
+  const ignoreWalkFloor = useTaskOutlineIgnore();
   const {
     CAPYBARA_HEIGHT, PLAYER_START, PLAYER_SPEED, ROOM_FLOOR_Y, ROOM_BOUNDS, ROOM_ITEMS,
     pickRoomSurface, sanitizeRoomPlacements, snapPropPosition, stepRoomPlayer, canWalk,
@@ -446,7 +449,7 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
 
   if (!assets) return null;
   return <>
-    <mesh name="room-walk-floor" position={[(ROOM_BOUNDS.minX + ROOM_BOUNDS.maxX) / 2, ROOM_FLOOR_Y + .003, (ROOM_BOUNDS.minZ + ROOM_BOUNDS.maxZ) / 2]} rotation={[-Math.PI / 2, 0, 0]} onPointerDown={startFloorWalk}>
+    <mesh ref={ignoreWalkFloor} name="room-walk-floor" position={[(ROOM_BOUNDS.minX + ROOM_BOUNDS.maxX) / 2, ROOM_FLOOR_Y + .003, (ROOM_BOUNDS.minZ + ROOM_BOUNDS.maxZ) / 2]} rotation={[-Math.PI / 2, 0, 0]} onPointerDown={startFloorWalk}>
       <planeGeometry args={[ROOM_BOUNDS.maxX - ROOM_BOUNDS.minX, ROOM_BOUNDS.maxZ - ROOM_BOUNDS.minZ]}/>
       <meshBasicMaterial transparent opacity={0} colorWrite={false} depthWrite={false}/>
     </mesh>

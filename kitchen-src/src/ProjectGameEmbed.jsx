@@ -13,7 +13,7 @@ export default function ProjectGameEmbed({project}) {
   return <div className="computer-projects__game" data-game-playing={playing}>
     <div className="computer-projects__game-toolbar">
       {playing ? <button type="button" onClick={closeGame}>Close game</button> : <span className="computer-projects__game-label">Game preview</span>}
-      <a href={project.url} target="_blank" rel="noopener noreferrer">Open in a new tab ↗</a>
+      <a href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`Open ${project.title} in a new tab`}>Open game ↗</a>
     </div>
     <div className="computer-projects__media computer-projects__media--game">
       {playing ? <iframe src={project.embedUrl} title={`Play ${project.title}`}

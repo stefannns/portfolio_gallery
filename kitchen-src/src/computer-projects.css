@@ -30,8 +30,6 @@
 .computer-projects__media{position:relative;width:100%;aspect-ratio:16/9;max-height:340px;overflow:hidden;border:8px solid #fffdf6;border-bottom-width:14px;border-radius:2px;background:#ece9df;box-shadow:0 2px 2px #745c3012,1px 6px 12px #745c3012}
 .computer-projects__media>img,.computer-projects__media>video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain}
 .computer-projects__media>video{background:#24251f}
-.computer-projects__linked-preview{position:absolute;inset:0;display:block;color:#5b6741}
-.computer-projects__linked-preview img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .computer-projects__workflow-summary{margin:15px 0 0;text-align:center;font-size:12px;font-weight:700;line-height:1.6;color:#7c7155}
 .computer-projects__game{width:min(100%,360px);margin-inline:auto;overflow-anchor:none}
 .computer-projects__game-launch{position:absolute;left:50%;top:50%;display:flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:11px 22px;transform:translate(-50%,-50%);border:1px solid #bba672;border-radius:8px;background:#fff4c8f5;box-shadow:0 3px 0 #bba672,0 5px 20px #3b332b28;font-family:var(--hand)!important;font-size:19px!important;white-space:nowrap}
@@ -81,9 +79,8 @@
 }
 
 /* Screenshots retain their complete capture, with the tour link below the image. */
-.computer-projects__media--capture{aspect-ratio:auto;max-height:none}
-.computer-projects__media--capture .computer-projects__linked-preview{position:relative;inset:auto}
-.computer-projects__media--capture .computer-projects__linked-preview img{position:relative;inset:auto;display:block;width:100%;height:auto;aspect-ratio:var(--project-image-ratio);object-fit:contain}
+.computer-projects__media--capture{aspect-ratio:auto;max-width:none;max-height:none}
+.computer-projects__media--capture>img{position:relative;inset:auto;display:block;width:100%;height:auto;aspect-ratio:var(--project-image-ratio);object-fit:contain}
 .computer-projects__preview-link{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;width:max-content;max-width:100%;margin:14px auto 0;padding:8px 15px;border:1px solid #cdbb91;border-radius:4px;background:#fff4c8;box-shadow:0 2px 0 #c9b78b;color:#5b6741;font-size:13px;font-weight:800;text-decoration:none}
 .computer-projects__preview-link:hover{background:#ffedac}
 .computer-projects__copy h2.computer-projects__branded-title{display:flex;align-items:center;gap:12px}
@@ -105,30 +102,10 @@
 .computer-projects__detail--video .computer-projects__notes{margin-top:20px}
 
 
-/* Dense product screenshots can be explored without shrinking their interface. */
-.computer-projects .computer-projects__detail--scrollable{grid-template-columns:minmax(0,1fr)}
-.computer-projects__detail--scrollable>.computer-projects__media-column,.computer-projects__detail--scrollable>.computer-projects__copy{grid-column:1 / -1;width:100%}
-.computer-projects__image-viewer{width:100%;min-width:0;overflow:hidden;border:8px solid #fffdf6;border-bottom-width:12px;border-radius:2px;background:#fffdf6;box-shadow:0 2px 2px #745c3012,1px 6px 12px #745c3012}
-.computer-projects__image-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:0 0 6px;color:#7c7155;font-size:12px;font-weight:700}
-.computer-projects__image-toolbar button{flex-shrink:0;min-width:80px;min-height:44px;padding:7px 12px;border:1px solid #cdbb91;border-radius:3px;background:#f8edcb;font-size:12px;font-weight:800}
-.computer-projects__image-toolbar button:hover{background:#ffedac}
-.computer-projects__image-viewport{width:100%;height:clamp(240px,55svh,560px);overflow:scroll;scrollbar-width:thin;scrollbar-color:#b6a178 #f2ecd9;scrollbar-gutter:stable;overscroll-behavior:contain;background:#e8eeec;scroll-behavior:auto;touch-action:pan-x pan-y}
-.computer-projects__image-viewport::-webkit-scrollbar{width:9px;height:9px}
-.computer-projects__image-viewport::-webkit-scrollbar-track,.computer-projects__image-viewport::-webkit-scrollbar-corner{background:#f2ecd9}
-.computer-projects__image-viewport::-webkit-scrollbar-thumb{border:2px solid #f2ecd9;border-radius:8px;background:#b6a178}
-.computer-projects__image-viewport:focus-visible{position:relative;outline:3px solid #87683b;outline-offset:-3px}
-.computer-projects__image-viewport>img{display:block;width:1856px;max-width:none;height:auto;aspect-ratio:1856/1606;user-select:none;-webkit-user-drag:none}
-.computer-projects__image-viewport--fit>img{width:100%;max-width:100%}
-.computer-projects__detail--scrollable .computer-projects__description{max-width:78ch}
-@media(orientation:landscape) and (max-height:520px) and (min-width:650px){
- .computer-projects .computer-projects__detail--scrollable{padding:12px 20px 24px;gap:24px}
- .computer-projects__image-viewport{height:210px}
-}
-@media(orientation:landscape) and (max-height:520px) and (min-width:650px) and (max-width:760px){
- .computer-projects .computer-projects__detail--scrollable{padding:10px 14px 22px}
- .computer-projects__image-viewport{height:110px}
- .computer-projects--single .computer-projects__image-viewport{height:190px}
-}
+/* Product captures remain a single complete image, with notes underneath. */
+.computer-projects .computer-projects__detail--capture{grid-template-columns:minmax(0,1fr)}
+.computer-projects__detail--capture>.computer-projects__media-column,.computer-projects__detail--capture>.computer-projects__copy{grid-column:1 / -1;width:100%}
+.computer-projects__detail--capture .computer-projects__description{max-width:78ch}
 
 /* Keep video and opening context in view on short landscape screens. */
 @media(orientation:landscape) and (max-height:520px) and (min-width:650px){
@@ -155,14 +132,27 @@
  .computer-projects .computer-projects__detail--video{gap:10px;padding:10px 14px 20px}
  .computer-projects__video-heading h2{font-size:20px}
  .computer-projects__detail--video .computer-projects__media--video>video{max-height:30svh}
- .computer-projects__image-viewport{height:190px}
 }
 
-/* Keep the portrait game beside its opening note on landscape phones. */
+/* The portrait preview and its notes share a deliberate, compact two-column layout. */
+.computer-projects .computer-projects__detail--embed{grid-template-columns:minmax(0,min(360px,42%)) minmax(0,1fr);gap:24px;padding:24px}
+.computer-projects__detail--embed .computer-projects__media-column{padding-top:0}
+.computer-projects__detail--embed .computer-projects__game{width:100%;max-width:360px;margin:0}
+.computer-projects__detail--embed .computer-projects__game-toolbar{min-height:44px;gap:8px;flex-wrap:nowrap;margin-bottom:12px}
+.computer-projects__detail--embed .computer-projects__game-toolbar button,.computer-projects__detail--embed .computer-projects__game-label{min-width:88px;min-height:44px}
+.computer-projects__detail--embed .computer-projects__game-toolbar a{min-height:44px;white-space:nowrap}
+.computer-projects__detail--embed .computer-projects__story-note{padding:24px;transform:none}
+.computer-projects__detail--embed .computer-projects__description{max-width:72ch}
+.computer-projects__detail--embed .computer-projects__notes{margin-top:22px}
+@media(max-width:760px){
+ .computer-projects .computer-projects__detail--embed{grid-template-columns:minmax(0,1fr);padding:24px 20px;gap:24px}
+ .computer-projects__detail--embed .computer-projects__game{margin-inline:auto}
+}
 @media(orientation:landscape) and (max-height:520px) and (min-width:650px){
- .computer-projects .computer-projects__detail:has(> .computer-projects__media-column--embed){grid-template-columns:minmax(140px,.8fr) minmax(210px,1fr);gap:18px;padding:18px}
- .computer-projects__detail:has(> .computer-projects__media-column--embed) .computer-projects__story-note{padding:18px 16px}
- .computer-projects__detail:has(> .computer-projects__media-column--embed) .computer-projects__copy h2{font-size:26px;margin-bottom:12px}
- .computer-projects__detail:has(> .computer-projects__media-column--embed) .computer-projects__description{font-size:13px;line-height:1.5}
- .computer-projects__detail:has(> .computer-projects__media-column--embed) .computer-projects__links{margin-top:8px}
+ .computer-projects .computer-projects__detail--embed{grid-template-columns:minmax(160px,.85fr) minmax(210px,1fr);gap:18px;padding:18px}
+ .computer-projects__detail--embed .computer-projects__game{margin:0}
+ .computer-projects__detail--embed .computer-projects__story-note{padding:18px 16px}
+ .computer-projects__detail--embed .computer-projects__copy h2{font-size:26px;margin-bottom:12px}
+ .computer-projects__detail--embed .computer-projects__description{font-size:13px;line-height:1.5}
+ .computer-projects__detail--embed .computer-projects__links{margin-top:8px}
 }

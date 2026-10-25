@@ -2,6 +2,7 @@ import React, {Suspense, useEffect, useMemo, useRef} from 'react';
 import {useFrame} from '@react-three/fiber';
 import {useGLTF} from '@react-three/drei';
 import * as THREE from 'three';
+import {useTaskOutline} from './TaskOutline.jsx';
 
 const objectiveGlow = new THREE.Color('#ffe066');
 
@@ -15,10 +16,10 @@ class ModelBoundary extends React.Component {
 function LoadedRestaurantModel({url, dimensions = [], position, rotationY, uniform, objective, highlighted, reducedMotion, required = false}) {
   const {scene} = useGLTF(url, '/draco/');
   const glowAmount = useRef(0);
-  const {object, size, materials, outlines, outlineMaterial} = useMemo(() => {
+  const {object, size, materials} = useMemo(() => {
     const object = new THREE.Group();
     const clone = scene.clone(true);
-    const owned = new Map(), staticMeshes = [];
+    const owned = new Map();
     const ownMaterial = source => {
       if (!source) return source;
       if (!owned.has(source)) {
@@ -32,7 +33,6 @@ function LoadedRestaurantModel({url, dimensions = [], position, rotationY, unifo
         node.castShadow = true;
         node.receiveShadow = true;
         node.material = Array.isArray(node.material) ? node.material.map(ownMaterial) : ownMaterial(node.material);
-        if (!node.isSkinnedMesh && node.geometry.attributes.normal) staticMeshes.push(node);
       }
     });
     object.add(clone);
@@ -45,40 +45,11 @@ function LoadedRestaurantModel({url, dimensions = [], position, rotationY, unifo
       throw new Error(`The object model contains no visible geometry: ${url}`);
     }
     if (!box.isEmpty()) object.position.set(-center.x, -box.min.y, -center.z);
-    const outlineMaterial = new THREE.ShaderMaterial({
-      uniforms: {outlineWidth: {value: .016}, outlineColor: {value: new THREE.Color('#ffd54a')}, outlineOpacity: {value: 1}},
-      vertexShader: `
-        uniform float outlineWidth;
-        void main() {
-          vec4 viewPosition = modelViewMatrix * vec4(position, 1.0);
-          viewPosition.xyz += normalize(normalMatrix * normal) * outlineWidth;
-          gl_Position = projectionMatrix * viewPosition;
-        }
-      `,
-      fragmentShader: `
-        uniform vec3 outlineColor;
-        uniform float outlineOpacity;
-        void main() {
-          gl_FragColor = vec4(outlineColor, outlineOpacity);
-          #include <colorspace_fragment>
-        }
-      `,
-      side: THREE.BackSide, depthTest: true, depthWrite: false, toneMapped: false, transparent: true,
-    });
-    // Collect original meshes before adding shells so traversal cannot recurse
-    // into newly created outlines. Geometry remains shared with the source.
-    const outlines = staticMeshes.map(mesh => {
-      const shell = new THREE.Mesh(mesh.geometry, outlineMaterial);
-      shell.name = 'inspection-outline';shell.visible = false;
-      shell.castShadow = false;shell.receiveShadow = false;shell.frustumCulled = false;
-      shell.renderOrder = 1;
-      mesh.add(shell);
-      return shell;
-    });
-    return {object, size, materials: [...owned.values()], outlines, outlineMaterial};
+    return {object, size, materials: [...owned.values()]};
   }, [scene, rotationY, required, url]);
 
-  useEffect(() => () => {materials.forEach(({material}) => material.dispose());outlineMaterial.dispose();}, [materials, outlineMaterial]);
+  useTaskOutline(object, objective, highlighted);
+  useEffect(() => () => {materials.forEach(({material}) => material.dispose());}, [materials]);
   useEffect(() => {
     for (const {material, emissive, emissiveMap} of materials) {
       if (!emissive) continue;
@@ -91,11 +62,8 @@ function LoadedRestaurantModel({url, dimensions = [], position, rotationY, unifo
   }, [highlighted, objective, materials]);
   useFrame(({clock}, delta) => {
     const breath = reducedMotion ? .5 : .5 + Math.sin(clock.elapsedTime * 2.6) * .5;
-    // A marked task softly breathes from across the room; a nearby E target
-    // keeps its stronger, crisp outline so readiness remains easy to see.
-    for (const outline of outlines) outline.visible = highlighted || objective;
-    outlineMaterial.uniforms.outlineWidth.value = highlighted ? .016 : .038 + breath * .016;
-    outlineMaterial.uniforms.outlineOpacity.value = highlighted ? 1 : .28 + breath * .26;
+    // Preserve the textured body shine; TaskOutline draws only the combined
+    // visible silhouette, without per-mesh shells or internal normal seams.
     const target = highlighted ? .34 + breath * .14 : objective ? .22 + breath * .24 : 0;
     glowAmount.current = reducedMotion ? target : THREE.MathUtils.damp(glowAmount.current, target, 9, Math.min(delta, .05));
     if (glowAmount.current < .001) glowAmount.current = 0;

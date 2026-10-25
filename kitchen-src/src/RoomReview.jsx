@@ -11,6 +11,7 @@ import KitchenTitle from './KitchenTitle.jsx';
 import RoomJoystick from './RoomJoystick.jsx';
 import RoomInteract from './RoomInteract.jsx';
 import RoomLoading from './RoomLoading.jsx';
+import TaskOutline from './TaskOutline.jsx';
 import {kitchenTracks} from './music-tracks.js';
 import {projects, computerProjectIds} from './projects.js';
 import './room-fonts.css';
@@ -330,6 +331,7 @@ export default function RoomReview() {
           onCreated={({gl}) => {gl.toneMapping = THREE.ACESFilmicToneMapping;gl.toneMappingExposure = view.exposure;gl.shadowMap.type = THREE.PCFShadowMap;}}
           aria-hidden={INTERACTIVE_ROOM ? undefined : true}
         >
+          <TaskOutline reducedMotion={reducedMotion}>
           <color attach="background" args={['#f2f3ed']}/>
           <ambientLight intensity={.7}/>
           <hemisphereLight args={['#fff5e4', '#aab6ac', 1.5]}/>
@@ -340,6 +342,7 @@ export default function RoomReview() {
           {INTERACTIVE_ROOM && info && <RoomArrangement key={ROOM_VERSION} roomVersion={ROOM_VERSION} controls={controls} rootRef={rootRef} titlePhysics={titlePhysics} resetToken={resetLayoutToken} onStatus={setArrangementStatus} onHover={setHoveredItem} onReady={objectsLoaded} onError={failed} onFirstMove={firstMove} onWelcomeMove={dismissWelcome} onWelcomeAnchor={welcomePositioned} welcomeActive={introducing || welcomeExiting} onInspectTarget={inspectionChanged} objectiveId={objectiveId} reducedMotion={reducedMotion} onOpenComputer={openComputer} onOpenProject={openProject} onSelection={setSelectedItem} actionsRef={arrangementActions} paused={interactionPaused} editable={arranging} fixedCamera/>}
           <OrbitControls ref={controls} enabled={!INTERACTIVE_ROOM && !modalOpen} makeDefault enableRotate={!INTERACTIVE_ROOM} enableZoom={!INTERACTIVE_ROOM} enableDamping={!INTERACTIVE_ROOM && !reducedMotion} dampingFactor={.08} enablePan={false} minPolarAngle={.05} maxPolarAngle={Math.PI / 2 - .02}/>
           <FitRoomCamera controls={controls} info={info} view={view}/>
+          </TaskOutline>
         </Canvas>
       </RoomBoundary>}
     </div>

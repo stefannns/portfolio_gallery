@@ -28,7 +28,7 @@ export const projects = [
     url: 'https://smarttester.vercel.app/',
     previewUrl: 'https://smarttester.vercel.app/how-it-works#workflow',
     previewImage: '/images/projects/smarttester-playtest.png',
-    previewAspectRatio: '1856 / 1606', previewScrollable: true,
+    previewAspectRatio: '1856 / 1606',
     logo: '/images/brands/smarttester-mark.png',
     previewLabel: 'Explore the workflow',
     previewAlt: 'Smarttester playtest review with gameplay, timeline markers, transcript and an evidence-linked analysis report',

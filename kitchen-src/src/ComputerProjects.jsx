@@ -1,4 +1,4 @@
-import React, {useEffect, useId, useLayoutEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useId, useMemo, useRef, useState} from 'react';
 import {projects, computerProjectIds} from './projects.js';
 import ProjectGameEmbed from './ProjectGameEmbed.jsx';
 import './computer-projects.css';
@@ -23,30 +23,6 @@ function ProjectVideo({src, poster, label, onPlaybackChange, aspectRatio = '16 /
     onSeeked={event => onPlaybackChange?.(!event.currentTarget.paused && !event.currentTarget.ended && !event.currentTarget.error)}
     onEnded={() => onPlaybackChange?.(false)}
     onError={() => onPlaybackChange?.(false)}/></div>;
-}
-
-/** Keep dense product UI readable, with native scrolling at its original size. */
-function ScrollableProjectImage({src, alt, label}) {
-  const viewport = useRef(null);
-  const [fitWidth, setFitWidth] = useState(false);
-  const hintId = useId();
-  const alignImage = () => {
-    const element = viewport.current;
-    if (!element) return;
-    element.scrollLeft = fitWidth ? 0 : element.scrollWidth - element.clientWidth;
-    element.scrollTop = 0;
-  };
-  useLayoutEffect(alignImage, [fitWidth, src]);
-  return <div className="computer-projects__image-viewer">
-    <div className="computer-projects__image-toolbar">
-      <span id={hintId}>Scroll to explore</span>
-      <button type="button" onClick={() => setFitWidth(current => !current)}>{fitWidth ? 'Full size' : 'Fit width'}</button>
-    </div>
-    <div ref={viewport} className={`computer-projects__image-viewport${fitWidth ? ' computer-projects__image-viewport--fit' : ''}`}
-      role="region" tabIndex={0} aria-label={`${label} screenshot`} aria-describedby={hintId}>
-      <img src={src} alt={alt} width="1856" height="1606" draggable={false} onLoad={alignImage}/>
-    </div>
-  </div>;
 }
 
 export default function ComputerProjects({onClose, projectId, projectIds, title, onVideoPlaybackChange}) {
@@ -157,7 +133,7 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
           </button>)}
         </nav>}
 
-        <article className={`computer-projects__detail${videoProject ? ' computer-projects__detail--video' : ''}${selected.previewScrollable ? ' computer-projects__detail--scrollable' : ''}`} ref={detail} id={detailId} aria-labelledby={videoProject && single ? titleId : projectTitleId}>
+        <article className={`computer-projects__detail${videoProject ? ' computer-projects__detail--video' : ''}${selected.previewAspectRatio ? ' computer-projects__detail--capture' : ''}${selected.embedUrl ? ' computer-projects__detail--embed' : ''}`} ref={detail} id={detailId} aria-labelledby={videoProject && single ? titleId : projectTitleId}>
           {videoProject && !single && <div className="computer-projects__video-heading">
             <p className="computer-projects__type">{selected.type}</p>
             <h2 id={projectTitleId}>{selected.title}</h2>
@@ -165,11 +141,8 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
           <div className={`computer-projects__media-column${selected.embedUrl ? ' computer-projects__media-column--embed' : ''}`}>
             {selected.embedUrl ? <ProjectGameEmbed key={selected.id} project={selected}/>
               : videoProject ? <ProjectVideo key={`${selected.id}-${video}`} src={video} poster={selected.image} label={`${selected.title} gameplay`} aspectRatio={selected.videoAspectRatio} onPlaybackChange={onVideoPlaybackChange}/>
-              : selected.previewScrollable ? <ScrollableProjectImage key={selected.id} src={selected.previewImage || selected.image} alt={selected.previewAlt || `${selected.title} preview`} label={selected.title}/>
               : <div className={`computer-projects__media${selected.previewAspectRatio ? ' computer-projects__media--capture' : ''}`} style={selected.previewAspectRatio ? {'--project-image-ratio': selected.previewAspectRatio} : undefined}>
-                {selected.previewUrl ? <a className="computer-projects__linked-preview" href={selected.previewUrl} target="_blank" rel="noopener noreferrer" aria-label={`${selected.previewLabel || 'Explore'} — ${selected.title}`}>
-                  <img src={selected.previewImage || selected.image} alt={selected.previewAlt || `${selected.title} preview`}/>
-                </a> : <img src={selected.image} alt={`${selected.title} project cover`} style={{objectPosition: selected.imagePosition || 'center'}}/>}
+                <img src={selected.previewImage || selected.image} alt={selected.previewAlt || `${selected.title} project cover`} style={{objectPosition: selected.imagePosition || 'center'}}/>
               </div>}
             {selected.previewUrl && <a className="computer-projects__preview-link" href={selected.previewUrl} target="_blank" rel="noopener noreferrer">{selected.previewLabel || 'Explore'} ↗</a>}
             {selected.workflow && <p className="computer-projects__workflow-summary">{selected.workflow}</p>}
