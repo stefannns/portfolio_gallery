@@ -7,7 +7,22 @@ const computerIds = computerProjectIds;
 const projectsById = new Map(projects.map(project => [project.id, project]));
 const focusable = 'button:not(:disabled),a[href],video[controls],iframe[title],input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex]:not([tabindex="-1"])';
 
-export default function ComputerProjects({onClose, projectId, projectIds, title}) {
+/** Keep background music tied to playback, rather than opening a project note. */
+function ProjectVideo({src, poster, label, onPlaybackChange}) {
+  const media = useRef(null);
+  useEffect(() => {
+    const element = media.current;
+    return () => {element?.pause();onPlaybackChange?.(false);};
+  }, [onPlaybackChange]);
+  return <video ref={media} controls playsInline preload="metadata" src={src} poster={poster} aria-label={label}
+    onPlay={() => onPlaybackChange?.(true)}
+    onPause={event => {if (!event.currentTarget.seeking) onPlaybackChange?.(false);}}
+    onSeeked={event => onPlaybackChange?.(!event.currentTarget.paused && !event.currentTarget.ended && !event.currentTarget.error)}
+    onEnded={() => onPlaybackChange?.(false)}
+    onError={() => onPlaybackChange?.(false)}/>;
+}
+
+export default function ComputerProjects({onClose, projectId, projectIds, title, onVideoPlaybackChange}) {
   const requestedIds = Array.isArray(projectIds) ? [...new Set(projectIds.filter(id => projectsById.has(id)))] : [];
   const libraryKey = (requestedIds.length ? requestedIds : computerIds).join('|');
   const library = useMemo(() => libraryKey.split('|').map(id => projectsById.get(id)), [libraryKey]);
@@ -120,7 +135,7 @@ export default function ComputerProjects({onClose, projectId, projectIds, title}
               {selected.previewUrl ? <a className="computer-projects__linked-preview" href={selected.previewUrl} target="_blank" rel="noopener noreferrer" aria-label={`${selected.previewLabel || 'Explore'} — ${selected.title}`}>
                 <img src={selected.previewImage || selected.image} alt={selected.previewAlt || `${selected.title} preview`}/>
                 <span>{selected.previewLabel || 'Explore'} ↗</span>
-              </a> : video ? <video key={`${selected.id}-${video}`} controls playsInline preload="metadata" src={video} poster={selected.image} aria-label={`${selected.title} gameplay`}/>
+              </a> : video ? <ProjectVideo key={`${selected.id}-${video}`} src={video} poster={selected.image} label={`${selected.title} gameplay`} onPlaybackChange={onVideoPlaybackChange}/>
                 : <img src={selected.image} alt={`${selected.title} project cover`} style={{objectPosition: selected.imagePosition || 'center'}}/>}
             </div>}
             {selected.workflow && <p className="computer-projects__workflow-summary">{selected.workflow}</p>}

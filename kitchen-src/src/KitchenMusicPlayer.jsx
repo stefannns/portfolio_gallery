@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {createMusicVolumeFade} from './music-volume-fade.js';
 import './kitchen-music-player.css';
 
 const discPalettes = [
@@ -24,30 +25,41 @@ function Icon({name}) {
 }
 
 /** Compact audio-only player. Tracks must have a direct audio-file src. */
-export default function KitchenMusicPlayer({tracks = [], paused = false}) {
+export default function KitchenMusicPlayer({tracks = [], paused = false, ducked = false}) {
   const library = useMemo(() => tracks.filter(track => track && track.provider !== 'youtube' && typeof track.src === 'string' && track.src.trim()), [tracks]);
   const [selected, setSelected] = useState(0), [playing, setPlaying] = useState(false), [error, setError] = useState('');
   const [discChange, setDiscChange] = useState({id: 0, direction: 1, previousIndex: 0, active: false});
   const audioRef = useRef(null), wantsPlayback = useRef(true), playRequest = useRef(0);
   const autoplayPending = useRef(true), startOnGesture = useRef(null);
+  const playbackFlags = useRef({paused, ducked}), previousDuck = useRef(ducked), volumeFade = useRef(null);
+  playbackFlags.current = {paused, ducked};
+  if (!volumeFade.current) volumeFade.current = createMusicVolumeFade();
   const track = library[selected] || library[0];
   const currentIndex = track ? library.indexOf(track) : -1;
   const title = track?.title || 'music';
 
   const pausePlayback = useCallback(() => {
+    volumeFade.current.cancel();
     autoplayPending.current = false;
     wantsPlayback.current = false;
     ++playRequest.current;
     audioRef.current?.pause();
+    if (audioRef.current) audioRef.current.volume = .35;
     setPlaying(false);
   }, []);
 
-  const playAudio = audio => {
-    if (!audio || !track || paused) return;
+  const playAudio = (audio, {fadeIn = false} = {}) => {
+    if (!audio || !track || playbackFlags.current.paused || playbackFlags.current.ducked || document.hidden) return;
     const request = ++playRequest.current;
+    volumeFade.current.cancel();
     setError('');
-    audio.volume = .35;
-    audio.play()?.catch(cause => {
+    if (!fadeIn) audio.volume = .35;
+    else if (audio.paused) audio.volume = 0;
+    Promise.resolve(audio.play()).then(() => {
+      if (request !== playRequest.current) return;
+      if (playbackFlags.current.paused || playbackFlags.current.ducked || document.hidden || !wantsPlayback.current) {audio.pause();return;}
+      if (fadeIn) volumeFade.current.fade(audio, .35);
+    }).catch(cause => {
       if (request !== playRequest.current || cause.name === 'AbortError') return;
       wantsPlayback.current = false;
       setPlaying(false);
@@ -59,14 +71,14 @@ export default function KitchenMusicPlayer({tracks = [], paused = false}) {
   };
 
   const togglePlayback = () => {
-    if (!track || paused) return;
+    if (!track || paused || ducked) return;
     autoplayPending.current = false;
     if (wantsPlayback.current || playing) pausePlayback();
     else {wantsPlayback.current = true;playAudio(audioRef.current);}
   };
 
-  const skip = direction => {
-    if (!library.length || paused) return;
+  const skip = (direction, {automatic = false} = {}) => {
+    if (!library.length || paused || ducked && !automatic) return;
     if (autoplayPending.current) wantsPlayback.current = true;
     const next = (currentIndex + direction + library.length) % library.length;
     setError('');
@@ -84,10 +96,12 @@ export default function KitchenMusicPlayer({tracks = [], paused = false}) {
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
+    volumeFade.current.cancel();
     ++playRequest.current;
     audio.pause();setPlaying(false);
+    audio.volume = ducked ? 0 : .35;
     if (!track?.src) wantsPlayback.current = false;
-    if (track?.src && (wantsPlayback.current || autoplayPending.current) && !paused && !document.hidden) {
+    if (track?.src && (wantsPlayback.current || autoplayPending.current) && !paused && !ducked && !document.hidden) {
       wantsPlayback.current = true;playAudio(audio);
     }
     // Preserve play/pause intention across a track change.
@@ -95,8 +109,28 @@ export default function KitchenMusicPlayer({tracks = [], paused = false}) {
   }, [track?.src]);
   useEffect(() => {if (paused) pausePlayback();}, [paused, pausePlayback]);
 
+  useEffect(() => {
+    const wasDucked = previousDuck.current;
+    previousDuck.current = ducked;
+    if (!ducked && !wasDucked) return;
+    const audio = audioRef.current;
+    ++playRequest.current;volumeFade.current.cancel();
+    if (!audio) return;
+    if (ducked) {
+      // A video's temporary silence does not change the visitor's play/pause choice.
+      if (audio.paused) {audio.volume = 0;setPlaying(false);}
+      else volumeFade.current.fade(audio, 0, {onComplete: () => {
+        if (playbackFlags.current.ducked) {audio.pause();setPlaying(false);}
+      }});
+    } else if (!paused && !document.hidden && (wantsPlayback.current || autoplayPending.current)) {
+      wantsPlayback.current = true;playAudio(audio, {fadeIn: true});
+    } else if (audio.paused) audio.volume = .35;
+    // Track changes have their own effect; the refs always contain current intent.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ducked]);
+
   startOnGesture.current = () => {
-    if (!autoplayPending.current || !track || paused || document.hidden) return;
+    if (!autoplayPending.current || !track || paused || ducked || document.hidden) return;
     wantsPlayback.current = true;playAudio(audioRef.current);
   };
   useEffect(() => {
@@ -118,22 +152,27 @@ export default function KitchenMusicPlayer({tracks = [], paused = false}) {
     document.addEventListener('visibilitychange', hidden);
     return () => {
       document.removeEventListener('visibilitychange', hidden);
+      volumeFade.current.cancel();
       ++playRequest.current;audio?.pause();
     };
   }, [pausePlayback]);
 
   return <aside className={`kitchen-music${playing ? ' kitchen-music--playing' : ''}${!track ? ' kitchen-music--empty' : ''}`}
     aria-label="Kitchen music player" data-current-track={track?.id || track?.title || ''} data-music-playing={playing}
-    data-music-provider="audio" data-music-autoplay="true" data-music-error={error} data-disc-switching={discChange.active} data-disc-change={discChange.id}>
+    data-music-provider="audio" data-music-autoplay="true" data-music-ducked={ducked} data-music-error={error} data-disc-switching={discChange.active} data-disc-change={discChange.id}>
     <audio ref={audioRef} src={track?.src || undefined} preload="auto" data-kitchen-music="true"
-      onPlay={() => {autoplayPending.current = false;setPlaying(true);}} onPause={() => setPlaying(false)} onEnded={() => skip(1)}
+      onPlay={event => {
+        if (playbackFlags.current.paused || playbackFlags.current.ducked || document.hidden || !wantsPlayback.current) {event.currentTarget.pause();setPlaying(false);return;}
+        autoplayPending.current = false;setPlaying(true);
+      }} onPause={() => setPlaying(false)} onEnded={() => skip(1, {automatic: true})}
       onError={() => {
         if (!track) return;
+        volumeFade.current.cancel();++playRequest.current;
         autoplayPending.current = false;wantsPlayback.current = false;setPlaying(false);setError('This audio file could not play.');
       }}/>
     <div className="kitchen-music__shell">
-      <button type="button" className="kitchen-music__skip" aria-label="Previous song" disabled={library.length < 2 || paused} onClick={() => skip(-1)}><Icon name="previous"/></button>
-      <button type="button" className="kitchen-music__disc-button" onClick={togglePlayback} disabled={!track || paused}
+      <button type="button" className="kitchen-music__skip" aria-label="Previous song" disabled={library.length < 2 || paused || ducked} onClick={() => skip(-1)}><Icon name="previous"/></button>
+      <button type="button" className="kitchen-music__disc-button" onClick={togglePlayback} disabled={!track || paused || ducked}
         style={discStyle(track, currentIndex)}
         aria-label={track ? `${playing ? 'Pause' : 'Play'} ${title}` : 'Music is waiting for an audio track'}>
         <span className="kitchen-music__disc-slot" aria-hidden="true">
@@ -152,7 +191,7 @@ export default function KitchenMusicPlayer({tracks = [], paused = false}) {
         </span>
         <span className="kitchen-music__disc-control"><Icon name={playing ? 'pause' : 'play'}/></span>
       </button>
-      <button type="button" className="kitchen-music__skip" aria-label="Next song" disabled={library.length < 2 || paused} onClick={() => skip(1)}><Icon name="next"/></button>
+      <button type="button" className="kitchen-music__skip" aria-label="Next song" disabled={library.length < 2 || paused || ducked} onClick={() => skip(1)}><Icon name="next"/></button>
     </div>
     <span className="kitchen-music__status" role="status" aria-live="polite">{error}</span>
   </aside>;

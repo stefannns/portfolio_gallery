@@ -183,6 +183,7 @@ export default function RoomReview() {
   const [touchMode, setTouchMode] = useState(() => TOUCH_PREVIEW || window.matchMedia('(any-pointer: coarse)').matches);
   const [compactViewport, setCompactViewport] = useState(() => window.matchMedia('(max-width: 900px)').matches);
   const [computerOpen, setComputerOpen] = useState(false), [activeProject, setActiveProject] = useState(null), [selectedItem, setSelectedItem] = useState(null);
+  const [videoPlaying, setVideoPlaying] = useState(false);
   const [arranging, setArranging] = useState(EDITOR_MODE);
   const [introduced, setIntroduced] = useState(!INTERACTIVE_ROOM || EDITOR_MODE);
   const [welcomeExiting, setWelcomeExiting] = useState(false);
@@ -214,9 +215,9 @@ export default function RoomReview() {
     welcomeDismissed.current = true;
     return true;
   }, []);
-  const openComputer = useCallback(() => {if (!dismissWelcome()) return;setHoveredItem('');setActiveProject(null);setComputerOpen(true);setComputerViewed(true);}, [dismissWelcome]);
-  const openProject = useCallback(id => {if (projects.some(project => project.id === id)) {if (!dismissWelcome()) return;setHoveredItem('');setComputerOpen(false);setActiveProject(id);if (id === 'seed-squad') setVegetablesViewed(true);if (id === 'smarttester') setRecorderViewed(true);}}, [dismissWelcome]);
-  const closeProject = useCallback(() => {setComputerOpen(false);setActiveProject(null);}, []);
+  const openComputer = useCallback(() => {if (!dismissWelcome()) return;setHoveredItem('');setVideoPlaying(false);setActiveProject(null);setComputerOpen(true);setComputerViewed(true);}, [dismissWelcome]);
+  const openProject = useCallback(id => {if (projects.some(project => project.id === id)) {if (!dismissWelcome()) return;setHoveredItem('');setVideoPlaying(false);setComputerOpen(false);setActiveProject(id);if (id === 'seed-squad') setVegetablesViewed(true);if (id === 'smarttester') setRecorderViewed(true);}}, [dismissWelcome]);
+  const closeProject = useCallback(() => {setVideoPlaying(false);setComputerOpen(false);setActiveProject(null);}, []);
   const entry = manifest?.assets?.[ROOM_ID] || manifest?.[ROOM_ID];
   const view = useMemo(() => {
     const requested = manifest?.review || {};
@@ -298,10 +299,10 @@ export default function RoomReview() {
   };
 
   return <div className={`room-review-viewport${INTERACTIVE_ROOM ? ' room-review-viewport--game' : ''}`}>
-  <main inert={landscapeBlocked ? true : undefined} ref={rootRef} onClickCapture={introducing ? dismissWelcome : undefined} className={`room-review ${INTERACTIVE_ROOM ? 'room-review--interactive room-review--game' : ''} ${arranging ? 'room-review--arrange' : ''} ${touchMode ? 'room-review--touch' : ''}`} data-room-version={ROOM_VERSION} data-room-status={phase} data-game-phase={introducing ? 'welcome' : 'explore'} data-has-moved={hasMoved} data-room-url={entry?.url || ''} data-room-scale={info?.scalar || ''} data-selected-item={selectedItem?.id || ''} data-selected-rotation-y={selectedItem?.rotationY ?? ''} data-active-project={activeProject || ''} data-computer-open={computerOpen} data-arranging={arranging} data-camera-locked={INTERACTIVE_ROOM} data-landscape-only={INTERACTIVE_ROOM}>
+  <main inert={landscapeBlocked ? true : undefined} ref={rootRef} onClickCapture={introducing ? dismissWelcome : undefined} className={`room-review ${INTERACTIVE_ROOM ? 'room-review--interactive room-review--game' : ''} ${arranging ? 'room-review--arrange' : ''} ${touchMode ? 'room-review--touch' : ''}`} data-room-version={ROOM_VERSION} data-room-status={phase} data-game-phase={introducing ? 'welcome' : 'explore'} data-has-moved={hasMoved} data-room-url={entry?.url || ''} data-room-scale={info?.scalar || ''} data-selected-item={selectedItem?.id || ''} data-selected-rotation-y={selectedItem?.rotationY ?? ''} data-active-project={activeProject || ''} data-computer-open={computerOpen} data-project-video-playing={videoPlaying} data-arranging={arranging} data-camera-locked={INTERACTIVE_ROOM} data-landscape-only={INTERACTIVE_ROOM}>
     {!INTERACTIVE_ROOM && <header className="room-review__header"><h1>Sushi bar — room study</h1><a href="/">Back to kitchen</a></header>}
     {INTERACTIVE_ROOM && <div className="room-hud-layer">
-      {!arranging && !landscapeBlocked && !touchMode && !compactViewport && <KitchenMusicPlayer tracks={kitchenTracks} paused={modalOpen || landscapeBlocked}/>}
+      {!arranging && !landscapeBlocked && !touchMode && !compactViewport && <KitchenMusicPlayer tracks={kitchenTracks} ducked={videoPlaying}/>}
       {gameReady && !arranging && !modalOpen && <RoomTasks vegetablesViewed={vegetablesViewed} recorderViewed={recorderViewed} computerViewed={computerViewed}/>}
       {gameReady && <>
       {!hasMoved && !welcomeVisible && !arranging && !modalOpen && <p className="room-move-hint" role="status"><span className="room-controls--keyboard">WASD or click the floor to move</span><span className="room-controls--touch">Drag the joystick or tap the floor</span></p>}
@@ -350,7 +351,7 @@ export default function RoomReview() {
         {INTERACTIVE_ROOM && <button type="button" disabled={!objectsReady} aria-pressed={arranging} onClick={() => {setArranging(value => !value);setHoveredItem('');setArrangementStatus('');}}>{arranging ? 'Done arranging' : 'Arrange'}</button>}
       </div>
     </footer>}
-    {modalOpen && <ComputerProjects key={activeProject || 'games-computer'} onClose={closeProject} projectIds={activeProject ? [activeProject] : computerProjectIds} projectId={activeProject || undefined} title={activeProject ? projects.find(project => project.id === activeProject)?.title : undefined}/>}
+    {modalOpen && <ComputerProjects key={activeProject || 'games-computer'} onClose={closeProject} onVideoPlaybackChange={setVideoPlaying} projectIds={activeProject ? [activeProject] : computerProjectIds} projectId={activeProject || undefined} title={activeProject ? projects.find(project => project.id === activeProject)?.title : undefined}/>}
   </main>
     {landscapeBlocked && <section className="room-rotate" role="status" aria-live="polite">
       <svg viewBox="0 0 80 80" aria-hidden="true"><rect x="22" y="10" width="36" height="59" rx="7"/><path d="M35 60h10M9 37a31 31 0 0 1 10-22m-10 9 1 13 12-3M71 43a31 31 0 0 1-10 22m10-9-1-13-12 3"/></svg>
