@@ -1,9 +1,9 @@
 import React, {useEffect, useId, useMemo, useRef, useState} from 'react';
-import {projects} from './projects.js';
+import {projects, computerProjectIds} from './projects.js';
 import ProjectGameEmbed from './ProjectGameEmbed.jsx';
 import './computer-projects.css';
 
-const computerIds = projects.map(project => project.id);
+const computerIds = computerProjectIds;
 const projectsById = new Map(projects.map(project => [project.id, project]));
 const focusable = 'button:not(:disabled),a[href],video[controls],iframe[title],input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex]:not([tabindex="-1"])';
 

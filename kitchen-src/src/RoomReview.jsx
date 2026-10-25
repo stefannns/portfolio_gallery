@@ -10,7 +10,7 @@ import KitchenMusicPlayer from './KitchenMusicPlayer.jsx';
 import KitchenTitle from './KitchenTitle.jsx';
 import RoomJoystick from './RoomJoystick.jsx';
 import {kitchenTracks} from './music-tracks.js';
-import {projects} from './projects.js';
+import {projects, computerProjectIds} from './projects.js';
 import './room-fonts.css';
 import './room-review.css';
 
@@ -345,7 +345,7 @@ export default function RoomReview() {
         {INTERACTIVE_ROOM && <button type="button" disabled={!objectsReady} aria-pressed={arranging} onClick={() => {setArranging(value => !value);setHoveredItem('');setArrangementStatus('');}}>{arranging ? 'Done arranging' : 'Arrange'}</button>}
       </div>
     </footer>}
-    {modalOpen && <ComputerProjects key={activeProject || 'games-computer'} onClose={closeProject} projectIds={activeProject ? [activeProject] : projects.map(project => project.id)} projectId={activeProject || undefined} title={activeProject ? projects.find(project => project.id === activeProject)?.title : undefined}/>}
+    {modalOpen && <ComputerProjects key={activeProject || 'games-computer'} onClose={closeProject} projectIds={activeProject ? [activeProject] : computerProjectIds} projectId={activeProject || undefined} title={activeProject ? projects.find(project => project.id === activeProject)?.title : undefined}/>}
   </main>
     {landscapeBlocked && <section className="room-rotate" role="status" aria-live="polite">
       <svg viewBox="0 0 80 80" aria-hidden="true"><rect x="22" y="10" width="36" height="59" rx="7"/><path d="M35 60h10M9 37a31 31 0 0 1 10-22m-10 9 1 13 12-3M71 43a31 31 0 0 1-10 22m10-9-1-13-12 3"/></svg>

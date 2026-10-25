@@ -16,9 +16,10 @@ export const projects = [
     image: '/images/covers/h3-otome-v2.webp', color: '#d9b1c3', recent: true,
     riftFocus: [.47,.73], riftZoom: 1.12,
     github: 'https://github.com/stefannns/lian-yu-h3',
-    description: 'A first-person otome experiment. Choose a visual style, describe a wish, and help shape a story made of generated scenes.',
+    description: 'A first-person otome game where your choices shape the story. MiniMax H3 (FastH3), accessed through Reactor AI’s API, generates and streams new story scenes at real-time speed.',
     design: 'The design centers on meaningful choices, narrative pacing, and keeping a character recognizable from scene to scene.',
-    process: 'Scene generation is woven around the player’s activity, with character references and visual feedback guiding continuity.',
+    processTitle: 'Real-time story scenes',
+    process: 'I integrated Reactor AI’s FastH3 API with a scene queue: while one clip plays, the next prepares in the background. Character references and the previous clip’s final frame help maintain continuity.',
   },
   {
     id: 'smarttester', title: 'Smarttester', type: 'AI playtest workspace', collection: 'other',
@@ -70,6 +71,12 @@ export const projects = [
     design: 'A short drawing challenge sets up the anticipation and surprise of the bot’s response.',
     process: 'Gemini interprets the drawing and generates the roast. The player’s own work becomes the material for the joke.',
   },
+];
+
+// The computer has an editorial order independent of the room and older galleries.
+export const computerProjectIds = [
+  'seed-squad', 'smarttester', 'h3-otome', 'a-bot-can-do-better', 'toad-defense',
+  'recurve', 'assassin', 'niflheim',
 ];
 
 // Display order is also the keyboard/swipe order. Recent work opens nearest.
