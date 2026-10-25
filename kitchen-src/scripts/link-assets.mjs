@@ -6,7 +6,7 @@ const source = fileURLToPath(new URL('../', import.meta.url));
 const publicDirectory = join(source, 'public');
 const repository = dirname(source.replace(/\/$/, ''));
 await mkdir(publicDirectory, {recursive: true});
-for (const name of ['audio', 'character', 'draco', 'fonts', 'gallery', 'images', 'models', 'sushi']) {
+for (const name of ['audio', 'character', 'draco', 'fonts', 'gallery', 'images', 'models', 'sushi', 'videos']) {
   const target = join(repository, name), link = join(publicDirectory, name);
   await access(target);
   try {await lstat(link);}

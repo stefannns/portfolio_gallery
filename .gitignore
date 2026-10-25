@@ -2,7 +2,7 @@
 .DS_Store
 **/.DS_Store
 
-# Video reels are hosted on Supabase Storage — never commit them to the repo.
+# Most video reels are hosted on Supabase Storage; scoped runtime exceptions are listed below.
 *.mp4
 *.mov
 *.webm
@@ -35,3 +35,6 @@ dist/
 .env.*
 !.env.example
 kitchen-src/public/
+
+# Supplied H3 Otome portfolio demo, served with the website.
+!/videos/h3-otome-demo.mp4
