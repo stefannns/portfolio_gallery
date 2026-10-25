@@ -181,6 +181,7 @@ export default function RoomReview() {
   const [hoveredItem, setHoveredItem] = useState(''), [objectsReady, setObjectsReady] = useState(false);
   const [portraitPhone, setPortraitPhone] = useState(isPortraitTouch);
   const [touchMode, setTouchMode] = useState(() => TOUCH_PREVIEW || window.matchMedia('(any-pointer: coarse)').matches);
+  const [compactViewport, setCompactViewport] = useState(() => window.matchMedia('(max-width: 900px)').matches);
   const [computerOpen, setComputerOpen] = useState(false), [activeProject, setActiveProject] = useState(null), [selectedItem, setSelectedItem] = useState(null);
   const [arranging, setArranging] = useState(EDITOR_MODE);
   const [introduced, setIntroduced] = useState(!INTERACTIVE_ROOM || EDITOR_MODE);
@@ -242,10 +243,10 @@ export default function RoomReview() {
   }, []);
 
   useEffect(() => {
-    const orientation = window.matchMedia('(orientation: portrait)'), touch = window.matchMedia('(any-pointer: coarse)');
-    const changed = () => {setPortraitPhone(isPortraitTouch());setTouchMode(TOUCH_PREVIEW || touch.matches);};
-    orientation.addEventListener('change', changed);touch.addEventListener('change', changed);
-    return () => {orientation.removeEventListener('change', changed);touch.removeEventListener('change', changed);};
+    const orientation = window.matchMedia('(orientation: portrait)'), touch = window.matchMedia('(any-pointer: coarse)'), compact = window.matchMedia('(max-width: 900px)');
+    const changed = () => {setPortraitPhone(isPortraitTouch());setTouchMode(TOUCH_PREVIEW || touch.matches);setCompactViewport(compact.matches);};
+    orientation.addEventListener('change', changed);touch.addEventListener('change', changed);compact.addEventListener('change', changed);
+    return () => {orientation.removeEventListener('change', changed);touch.removeEventListener('change', changed);compact.removeEventListener('change', changed);};
   }, []);
 
   useEffect(() => {
@@ -299,8 +300,16 @@ export default function RoomReview() {
   return <div className={`room-review-viewport${INTERACTIVE_ROOM ? ' room-review-viewport--game' : ''}`}>
   <main inert={landscapeBlocked ? true : undefined} ref={rootRef} onClickCapture={introducing ? dismissWelcome : undefined} className={`room-review ${INTERACTIVE_ROOM ? 'room-review--interactive room-review--game' : ''} ${arranging ? 'room-review--arrange' : ''} ${touchMode ? 'room-review--touch' : ''}`} data-room-version={ROOM_VERSION} data-room-status={phase} data-game-phase={introducing ? 'welcome' : 'explore'} data-has-moved={hasMoved} data-room-url={entry?.url || ''} data-room-scale={info?.scalar || ''} data-selected-item={selectedItem?.id || ''} data-selected-rotation-y={selectedItem?.rotationY ?? ''} data-active-project={activeProject || ''} data-computer-open={computerOpen} data-arranging={arranging} data-camera-locked={INTERACTIVE_ROOM} data-landscape-only={INTERACTIVE_ROOM}>
     {!INTERACTIVE_ROOM && <header className="room-review__header"><h1>Sushi bar — room study</h1><a href="/">Back to kitchen</a></header>}
-    {INTERACTIVE_ROOM && !arranging && !landscapeBlocked && <KitchenMusicPlayer tracks={kitchenTracks} paused={modalOpen || landscapeBlocked}/>}
-    {INTERACTIVE_ROOM && gameReady && !arranging && !modalOpen && <RoomTasks vegetablesViewed={vegetablesViewed} recorderViewed={recorderViewed} computerViewed={computerViewed}/>}
+    {INTERACTIVE_ROOM && <div className="room-hud-layer">
+      {!arranging && !landscapeBlocked && !touchMode && !compactViewport && <KitchenMusicPlayer tracks={kitchenTracks} paused={modalOpen || landscapeBlocked}/>}
+      {gameReady && !arranging && !modalOpen && <RoomTasks vegetablesViewed={vegetablesViewed} recorderViewed={recorderViewed} computerViewed={computerViewed}/>}
+      {gameReady && <>
+      {!hasMoved && !welcomeVisible && !arranging && !modalOpen && <p className="room-move-hint" role="status"><span className="room-controls--keyboard">WASD or click the floor to move</span><span className="room-controls--touch">Drag the joystick or tap the floor</span></p>}
+      {hasMoved && !welcomeVisible && !arranging && !modalOpen && <p className={`room-inspect-hint${inspectTarget ? ' room-inspect-hint--ready' : ''}`} role="status" aria-live="polite">
+        {inspectTarget ? <><span>Inspect {inspectTarget.label}</span><span className="room-inspect-hint__action"><kbd>E</kbd><span>or click</span></span></> : <><span className="room-controls--keyboard">Click an object to inspect</span><span className="room-controls--touch">Tap an object to inspect</span></>}
+      </p>}
+      </>}
+    </div>}
     <div className="room-review__stage" inert={interactionPaused ? true : undefined} role="group" aria-label="Stefan's kitchen" aria-describedby={arranging || !INTERACTIVE_ROOM ? 'room-review-hint' : undefined} tabIndex={gameReady ? 0 : -1} onKeyDown={orbitWithKeys}>
       {entry?.url && <RoomBoundary key={`${entry.url}-${attempt}`} onError={failed}>
         <Canvas
@@ -329,13 +338,9 @@ export default function RoomReview() {
       {phase === 'loading' && <p className="room-review__status" role="status">Loading the room…</p>}
       {phase === 'error' && <div className="room-review__status room-review__status--error" role="alert"><p>The room preview couldn’t load.</p><button type="button" onClick={retry}>Try again</button></div>}
     </div>
-    {welcomeVisible && <RoomWelcome anchor={touchMode ? {...welcomeAnchor, sceneScale: Math.max(.75, welcomeAnchor.sceneScale)} : welcomeAnchor} reducedMotion={reducedMotion} closing={welcomeExiting} onExited={welcomeExited}/>}
+    {welcomeVisible && <RoomWelcome anchor={welcomeAnchor} reducedMotion={reducedMotion} closing={welcomeExiting} onExited={welcomeExited}/>}
     {INTERACTIVE_ROOM && gameReady && <>
       {EDITOR_MODE && <p className="room-arrangement-status" role="status" inert={modalOpen ? true : undefined}>{hoveredItem || (arranging && selectedItem ? `${selectedItem.label} selected${arrangementStatus ? `. ${arrangementStatus}` : ''}` : arrangementStatus)}</p>}
-      {!hasMoved && !welcomeVisible && !arranging && !modalOpen && <p className="room-move-hint" role="status"><span className="room-controls--keyboard">WASD or click the floor to move</span><span className="room-controls--touch">Drag the joystick or tap the floor</span></p>}
-      {hasMoved && !welcomeVisible && !arranging && !modalOpen && <p className={`room-inspect-hint${inspectTarget ? ' room-inspect-hint--ready' : ''}`} role="status" aria-live="polite">
-        {inspectTarget ? <><span>Inspect {inspectTarget.label}</span><span className="room-inspect-hint__action"><kbd>E</kbd><span>or click</span></span></> : <><span className="room-controls--keyboard">Click an object to inspect</span><span className="room-controls--touch">Tap an object to inspect</span></>}
-      </p>}
       {!arranging && !modalOpen && <RoomJoystick disabled={interactionPaused}/>}
     </>}
     {(!INTERACTIVE_ROOM || EDITOR_MODE) && <footer className="room-review__footer" inert={modalOpen ? true : undefined}><p id="room-review-hint">{INTERACTIVE_ROOM ? arranging ? 'Drag items to place · Select an item to rotate' : 'WASD to walk · Click items to explore' : 'Drag to orbit. Scroll or pinch to zoom.'}<span className="room-review__keyboard-hint">{INTERACTIVE_ROOM ? arranging ? 'Focus an item and use arrow keys to place it. R rotates the selected item.' : 'Tab to focus an item. Enter opens its project.' : 'Drag empty space or use arrow keys to orbit. + and − zoom. Home resets.'}</span></p>

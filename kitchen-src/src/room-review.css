@@ -2,7 +2,7 @@
 .room-review *{box-sizing:border-box}
 .room-review-viewport{width:100%;min-height:100svh;background:#f2f3ed}
 .room-review-viewport--game{height:100svh;min-height:0;display:grid;place-items:center;overflow:hidden}
-.room-review-viewport--game>.room-review{width:min(100vw,177.777778svh);height:min(100svh,56.25vw);min-height:0;aspect-ratio:16/9;container-type:size}
+.room-review-viewport--game>.room-review{width:min(100vw,177.777778svh);height:min(100svh,56.25vw);min-height:0;aspect-ratio:16/9}
 .room-controls--touch{display:none!important}
 .room-rotate{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:32px;text-align:center;background:#f2f3ed;color:#775c42;font-family:'Nunito',sans-serif}
 .room-rotate svg{width:86px;height:86px;fill:none;stroke:#a58463;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
@@ -31,7 +31,7 @@
 .room-review__joystick .room-joystick__track{width:68%;height:68%;border:1px dashed #b29a7e77;background:transparent}
 .room-review__joystick .room-joystick__thumb{position:absolute;width:44px;height:44px;border:2px solid #a68761;background:#d3b18a;box-shadow:inset 0 3px 0 #f5dbc0,0 3px 5px #73583a26;will-change:transform}
 .room-joystick__label{color:#927758;font:600 11px/1 'Nunito',sans-serif;letter-spacing:.04em}
-@media(any-pointer:coarse){.room-joystick-wrap{display:flex}.room-controls--keyboard{display:none!important}.room-controls--touch{display:inline-flex!important}.room-inspect-hint__action{display:none}.room-review--game:not(.room-review--arrange) .room-review__stage{inset:0}.room-move-hint,.room-inspect-hint{bottom:max(17px,env(safe-area-inset-bottom));font-size:12px}}
+@media(any-pointer:coarse){.room-joystick-wrap{display:flex}.room-controls--keyboard{display:none!important}.room-controls--touch{display:inline-flex!important}.room-inspect-hint__action{display:none}.room-review--game:not(.room-review--arrange) .room-review__stage{inset:0}}
 @media(max-width:600px){.room-review--interactive .room-review__stage{bottom:130px}.room-review--interactive .room-arrangement-status{bottom:111px}.room-review--interactive .room-review__footer p{max-width:330px;line-height:1.5}.room-review__actions{gap:22px}}
 .room-review button:disabled{opacity:.4;cursor:default}
 .room-review button:focus-visible,.room-review a:focus-visible{outline:2px solid #61784f;outline-offset:5px}
@@ -52,29 +52,27 @@
 .room-objective-marker{display:grid;place-items:center;width:24px;height:28px;border:1px solid #b18a34;border-radius:9px 9px 9px 2px;background:#fff0af;color:#655019;box-shadow:0 3px 9px #78612220;font:700 17px/1 'Avenir Next',Avenir,sans-serif;transform:rotate(-8deg);animation:kitchen-objective-breathe 2.4s ease-in-out infinite}
 @keyframes kitchen-move-breathe{0%,100%{opacity:.42}50%{opacity:1}}
 @keyframes kitchen-objective-breathe{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-3px) rotate(-8deg)}}
-@media(max-width:600px){.room-review--game:not(.room-review--arrange) .room-review__stage{inset:18px 0}.room-move-hint{font-size:14px;bottom:max(35px,env(safe-area-inset-bottom))}}
+@media(max-width:600px){.room-review--game:not(.room-review--arrange) .room-review__stage{inset:18px 0}}
 @media(prefers-reduced-motion:reduce){.room-move-hint,.room-objective-marker{animation:none;opacity:1}}
 .room-inspect-hint{position:absolute;z-index:13;bottom:max(30px,env(safe-area-inset-bottom));left:50%;display:flex;align-items:center;gap:16px;margin:0;transform:translateX(-50%);color:#61715a;font-size:13px;line-height:1.5;white-space:nowrap;pointer-events:none}
 .room-inspect-hint--ready{padding:10px 16px;border:1px solid #d8c47e;border-radius:12px;background:#fff8dbea;box-shadow:0 3px 12px #6557210d;color:#4d563b}
 .room-inspect-hint__action{display:flex;align-items:center;gap:7px;font-size:11px;color:#7a795e}
 .room-inspect-hint kbd{display:grid;place-items:center;width:25px;height:26px;border:1px solid #bbae76;border-bottom-width:3px;border-radius:5px;background:#fffdf0;color:#5b5e3c;font:600 12px/1 'Avenir Next',Avenir,sans-serif}
-@media(max-width:600px){.room-inspect-hint{bottom:max(35px,env(safe-area-inset-bottom));max-width:calc(100% - 36px);gap:12px;font-size:12px}.room-inspect-hint--ready{padding:9px 12px}.room-inspect-hint__action{font-size:10px}}
-@media(any-pointer:coarse) and (max-height:500px){.room-joystick-wrap{left:max(16px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom))}.room-review__joystick{width:78px;height:78px}.room-review__joystick .room-joystick__thumb{width:38px;height:38px}.room-move-hint,.room-inspect-hint{bottom:max(15px,env(safe-area-inset-bottom))}.room-review--game:not(.room-review--arrange) .room-review__stage{inset:0}}
+
+@media(any-pointer:coarse) and (max-height:500px){.room-joystick-wrap{left:max(16px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom))}.room-review__joystick{width:78px;height:78px}.room-review__joystick .room-joystick__thumb{width:38px;height:38px}.room-review--game:not(.room-review--arrange) .room-review__stage{inset:0}}
 
 .room-review--touch .room-joystick-wrap{display:flex}
 .room-review--touch .room-controls--keyboard{display:none!important}
 .room-review--touch .room-controls--touch{display:inline-flex!important}
 .room-review--touch .room-inspect-hint__action{display:none}
 @media(max-height:500px){.room-review--touch .room-joystick-wrap{left:max(16px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom))}.room-review--touch .room-review__joystick{width:78px;height:78px}.room-review--touch .room-review__joystick .room-joystick__thumb{width:38px;height:38px}}
-@media(any-pointer:coarse){.room-inspect-hint__action{display:none}.room-review--game:not(.room-review--arrange) .room-review__stage{inset:0}.room-move-hint,.room-inspect-hint{bottom:max(17px,env(safe-area-inset-bottom));font-size:12px}}
-@container (max-height:500px){
-  .room-tasks{top:12px;right:14px;width:145px}
-  .room-tasks__header{margin-bottom:9px}.room-tasks__header h2{font-size:15px}.room-tasks__progress{font-size:10px}
-  .room-tasks__list{gap:8px}.room-tasks__task{min-height:57px;padding:15px 11px 11px;grid-template-columns:14px minmax(0,1fr);gap:8px;font-size:12px;line-height:1.3}
-  .room-tasks__mark{width:14px;height:14px}.room-tasks__mark svg{width:21px;height:21px;top:-6px}
-  .room-tasks__task::before{height:12px;width:44px;top:-6px;left:calc(50% - 22px)}.room-tasks__task:nth-child(2)::before{left:calc(50% - 22px)}
-  .room-tasks__ready{margin:10px 0 0;font-size:11px}
-  .kitchen-music{left:14px;top:12px;width:148px}.kitchen-music__shell{grid-template-columns:44px 52px 44px;min-height:66px;padding:6px 3px}
-  .kitchen-music .kitchen-music__disc-button{width:52px;height:52px;min-height:52px}.kitchen-music__disc-ring{inset:15px}.kitchen-music__disc::before{inset:6px}.kitchen-music__disc-control{width:22px;height:22px}
-  .room-move-hint,.room-inspect-hint{bottom:14px;max-width:calc(100% - 220px);white-space:normal;text-align:center;font-size:12px}
-}
+@media(any-pointer:coarse){.room-inspect-hint__action{display:none}.room-review--game:not(.room-review--arrange) .room-review__stage{inset:0}}
+
+/* The HUD follows the projected room, so browser zoom and phone fitting stay in step. */
+.room-review--game{--hud-scale:min(1,calc(var(--scene-ui-scale,.8) / .8))}
+.room-hud-layer{position:absolute;z-index:24;inset:0 auto auto 0;width:calc(100% / var(--hud-scale));height:calc(100% / var(--hud-scale));transform:scale(var(--hud-scale));transform-origin:0 0;pointer-events:none;visibility:hidden}
+.room-review[data-scene-ui-scale]>.room-hud-layer{visibility:visible}
+.room-review--touch:not(.room-review--arrange) .room-review__stage{inset:0}
+.room-hud-layer .room-move-hint,.room-hud-layer .room-inspect-hint{bottom:28px;max-width:calc(100% - 260px);white-space:normal;text-align:center}
+.room-hud-layer .room-tasks{top:max(25px,calc(env(safe-area-inset-top) / var(--hud-scale)));right:max(28px,calc(env(safe-area-inset-right) / var(--hud-scale)))}
+.room-hud-layer .kitchen-music{top:max(25px,calc(env(safe-area-inset-top) / var(--hud-scale)));left:max(28px,calc(env(safe-area-inset-left) / var(--hud-scale)))}

@@ -7,7 +7,7 @@ The homepage is now a playable capybara kitchen portfolio. Explore the room, ins
 - WASD or click the floor to walk. On phones, turn sideways and use the joystick or tap the floor.
 - Click or tap project objects to open them; E inspects a nearby highlighted object.
 - Sticky notes guide the vegetables bag → recorder → computer tour. All project objects stay available.
-- The CD player includes two switchable audio tracks. A browser may require the first interaction before music starts.
+- On desktop, the compact CD player includes two switchable audio tracks. Music and its player are omitted on touch/mobile and compact screens. A browser may require the first interaction before music starts.
 - The game scene keeps a 16:9 landscape frame. Portrait phones show a rotation prompt.
 
 Seed Squad has an embedded game preview. Smarttester links to its workflow tour. H3 Otome uses an original generated sci-fi romance cover. Existing game covers and reels are retained.
