@@ -9,6 +9,8 @@ import RoomWelcome from './RoomWelcome.jsx';
 import KitchenMusicPlayer from './KitchenMusicPlayer.jsx';
 import KitchenTitle from './KitchenTitle.jsx';
 import RoomJoystick from './RoomJoystick.jsx';
+import RoomInteract from './RoomInteract.jsx';
+import RoomLoading from './RoomLoading.jsx';
 import {kitchenTracks} from './music-tracks.js';
 import {projects, computerProjectIds} from './projects.js';
 import './room-fonts.css';
@@ -36,7 +38,7 @@ const TITLE_STYLE = ['counter', 'board', 'none'].includes(query.get('sign')) ? q
 class RoomBoundary extends React.Component {
   state = {failed: false};
   static getDerivedStateFromError() {return {failed: true};}
-  componentDidCatch() {this.props.onError();}
+  componentDidCatch(error) {this.props.onError(error);}
   render() {return this.state.failed ? null : this.props.children;}
 }
 
@@ -168,14 +170,9 @@ function FitRoomCamera({controls, info, view}) {
   return null;
 }
 
-function WebGLUnavailable({onError}) {
-  useEffect(() => {onError();}, [onError]);
-  return null;
-}
-
 export default function RoomReview() {
   const [manifest, setManifest] = useState(null), [info, setInfo] = useState(null);
-  const [phase, setPhase] = useState('loading'), [attempt, setAttempt] = useState(0);
+  const [phase, setPhase] = useState('loading');
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [resetLayoutToken, setResetLayoutToken] = useState(0), [arrangementStatus, setArrangementStatus] = useState('Loading items…');
   const [hoveredItem, setHoveredItem] = useState(''), [objectsReady, setObjectsReady] = useState(false);
@@ -197,7 +194,8 @@ export default function RoomReview() {
   const modalOpen = computerOpen || Boolean(activeProject);
   const introducing = INTERACTIVE_ROOM && !introduced;
   const landscapeBlocked = INTERACTIVE_ROOM && portraitPhone;
-  const gameReady = phase === 'ready' && (!INTERACTIVE_ROOM || objectsReady) && !landscapeBlocked;
+  const sceneReady = phase === 'ready' && (!INTERACTIVE_ROOM || objectsReady);
+  const gameReady = sceneReady && !landscapeBlocked;
   const welcomeVisible = (introducing || welcomeExiting) && gameReady && Boolean(welcomeAnchor);
   const interactionPaused = modalOpen || !gameReady;
   const objectiveId = !arranging && !modalOpen
@@ -232,8 +230,9 @@ export default function RoomReview() {
     };
   }, [manifest, entry]);
   const loaded = useCallback(details => {setInfo(details);setPhase('ready');}, []);
-  const failed = useCallback(() => setPhase('error'), []);
-  const retry = () => {if (entry?.url) useGLTF.clear(entry.url);setAttempt(value => value + 1);};
+  const failed = useCallback(error => {console.error('Kitchen scene loading failed.', error);setPhase('error');}, []);
+  // Reload also clears rejected model/chunk promises, not just the room cache.
+  const retry = () => window.location.reload();
 
   useEffect(() => {
     document.title = INTERACTIVE_ROOM ? 'Stefan’s Kitchen — Portfolio' : 'Sushi bar — room study';
@@ -273,9 +272,9 @@ export default function RoomReview() {
         if (!room?.url) throw new Error('Room asset unavailable.');
         if (!controller.signal.aborted) setManifest(data);
       })
-      .catch(error => {if (error.name !== 'AbortError') failed();});
+      .catch(error => {if (error.name !== 'AbortError') failed(error);});
     return () => controller.abort();
-  }, [attempt, failed]);
+  }, [failed]);
 
   const orbitWithKeys = event => {
     if (interactionPaused || phase !== 'ready') return;
@@ -302,47 +301,45 @@ export default function RoomReview() {
   <main inert={landscapeBlocked ? true : undefined} ref={rootRef} onClickCapture={introducing ? dismissWelcome : undefined} className={`room-review ${INTERACTIVE_ROOM ? 'room-review--interactive room-review--game' : ''} ${arranging ? 'room-review--arrange' : ''} ${touchMode ? 'room-review--touch' : ''}`} data-room-version={ROOM_VERSION} data-room-status={phase} data-game-phase={introducing ? 'welcome' : 'explore'} data-has-moved={hasMoved} data-room-url={entry?.url || ''} data-room-scale={info?.scalar || ''} data-selected-item={selectedItem?.id || ''} data-selected-rotation-y={selectedItem?.rotationY ?? ''} data-active-project={activeProject || ''} data-computer-open={computerOpen} data-project-video-playing={videoPlaying} data-arranging={arranging} data-camera-locked={INTERACTIVE_ROOM} data-landscape-only={INTERACTIVE_ROOM}>
     {!INTERACTIVE_ROOM && <header className="room-review__header"><h1>Sushi bar — room study</h1><a href="/">Back to kitchen</a></header>}
     {INTERACTIVE_ROOM && <div className="room-hud-layer">
-      {!arranging && !landscapeBlocked && !touchMode && !compactViewport && <KitchenMusicPlayer tracks={kitchenTracks} ducked={videoPlaying}/>}
+      {gameReady && !arranging && !touchMode && !compactViewport && <KitchenMusicPlayer tracks={kitchenTracks} ducked={videoPlaying}/>}
       {gameReady && !arranging && !modalOpen && <RoomTasks vegetablesViewed={vegetablesViewed} recorderViewed={recorderViewed} computerViewed={computerViewed}/>}
       {gameReady && <>
       {!hasMoved && !welcomeVisible && !arranging && !modalOpen && <p className="room-move-hint" role="status"><span className="room-controls--keyboard">WASD or click the floor to move</span><span className="room-controls--touch">Drag the joystick or tap the floor</span></p>}
       {hasMoved && !welcomeVisible && !arranging && !modalOpen && <p className={`room-inspect-hint${inspectTarget ? ' room-inspect-hint--ready' : ''}`} role="status" aria-live="polite">
-        {inspectTarget ? <><span>Inspect {inspectTarget.label}</span><span className="room-inspect-hint__action"><kbd>E</kbd><span>or click</span></span></> : <><span className="room-controls--keyboard">Click an object to inspect</span><span className="room-controls--touch">Tap an object to inspect</span></>}
+        {inspectTarget ? <><span>Inspect {inspectTarget.label}</span><span className="room-inspect-hint__action room-controls--keyboard"><kbd>E</kbd><span>or click</span></span><span className="room-controls--touch">Tap Inspect</span></> : <><span className="room-controls--keyboard">Click an object to inspect</span><span className="room-controls--touch">Tap an object to inspect</span></>}
       </p>}
       </>}
     </div>}
     <div className="room-review__stage" inert={interactionPaused ? true : undefined} role="group" aria-label="Stefan's kitchen" aria-describedby={arranging || !INTERACTIVE_ROOM ? 'room-review-hint' : undefined} tabIndex={gameReady ? 0 : -1} onKeyDown={orbitWithKeys}>
-      {entry?.url && <RoomBoundary key={`${entry.url}-${attempt}`} onError={failed}>
+      {entry?.url && <RoomBoundary key={entry.url} onError={failed}>
         <Canvas
           orthographic={view.projection === 'orthographic'}
           frameloop={INTERACTIVE_ROOM ? 'always' : 'demand'}
           shadows
-          dpr={[1, 1.7]}
+          dpr={[1, touchMode || compactViewport ? 1.25 : 1.7]}
           camera={{position: [12, 14, 18], fov: view.fieldOfView, near: .1, far: 200}}
           gl={{antialias: true, powerPreference: 'high-performance'}}
           onCreated={({gl}) => {gl.toneMapping = THREE.ACESFilmicToneMapping;gl.toneMappingExposure = view.exposure;gl.shadowMap.type = THREE.PCFShadowMap;}}
-          fallback={<WebGLUnavailable onError={failed}/>}
           aria-hidden={INTERACTIVE_ROOM ? undefined : true}
         >
           <color attach="background" args={['#f2f3ed']}/>
           <ambientLight intensity={.7}/>
           <hemisphereLight args={['#fff5e4', '#aab6ac', 1.5]}/>
-          <directionalLight castShadow position={[-7, 16, 10]} intensity={2.5} color="#fff3dc" shadow-mapSize={[2048, 2048]} shadow-camera-left={-14} shadow-camera-right={14} shadow-camera-top={14} shadow-camera-bottom={-14} shadow-camera-far={60} shadow-normalBias={.025} shadow-bias={-.0001}/>
+          <directionalLight castShadow position={[-7, 16, 10]} intensity={2.5} color="#fff3dc" shadow-mapSize={touchMode || compactViewport ? [1024, 1024] : [2048, 2048]} shadow-camera-left={-14} shadow-camera-right={14} shadow-camera-top={14} shadow-camera-bottom={-14} shadow-camera-far={60} shadow-normalBias={.025} shadow-bias={-.0001}/>
           <directionalLight position={[8, 8, -6]} intensity={1} color="#e8f1f3"/>
           <Suspense fallback={null}><FurnishedRoom entry={entry} rotation={view.modelRotation} onLoaded={loaded}/></Suspense>
           {ROOM_VERSION === 10 && TITLE_STYLE !== 'none' && <Suspense fallback={null}><KitchenTitle variant={TITLE_STYLE} physicsRef={titlePhysics} rootRef={rootRef}/></Suspense>}
-          {INTERACTIVE_ROOM && info && <RoomArrangement key={ROOM_VERSION} roomVersion={ROOM_VERSION} controls={controls} rootRef={rootRef} titlePhysics={titlePhysics} resetToken={resetLayoutToken} onStatus={setArrangementStatus} onHover={setHoveredItem} onReady={objectsLoaded} onFirstMove={firstMove} onWelcomeMove={dismissWelcome} onWelcomeAnchor={welcomePositioned} welcomeActive={introducing || welcomeExiting} onInspectTarget={inspectionChanged} objectiveId={objectiveId} reducedMotion={reducedMotion} onOpenComputer={openComputer} onOpenProject={openProject} onSelection={setSelectedItem} actionsRef={arrangementActions} paused={interactionPaused} editable={arranging} fixedCamera/>}
+          {INTERACTIVE_ROOM && info && <RoomArrangement key={ROOM_VERSION} roomVersion={ROOM_VERSION} controls={controls} rootRef={rootRef} titlePhysics={titlePhysics} resetToken={resetLayoutToken} onStatus={setArrangementStatus} onHover={setHoveredItem} onReady={objectsLoaded} onError={failed} onFirstMove={firstMove} onWelcomeMove={dismissWelcome} onWelcomeAnchor={welcomePositioned} welcomeActive={introducing || welcomeExiting} onInspectTarget={inspectionChanged} objectiveId={objectiveId} reducedMotion={reducedMotion} onOpenComputer={openComputer} onOpenProject={openProject} onSelection={setSelectedItem} actionsRef={arrangementActions} paused={interactionPaused} editable={arranging} fixedCamera/>}
           <OrbitControls ref={controls} enabled={!INTERACTIVE_ROOM && !modalOpen} makeDefault enableRotate={!INTERACTIVE_ROOM} enableZoom={!INTERACTIVE_ROOM} enableDamping={!INTERACTIVE_ROOM && !reducedMotion} dampingFactor={.08} enablePan={false} minPolarAngle={.05} maxPolarAngle={Math.PI / 2 - .02}/>
           <FitRoomCamera controls={controls} info={info} view={view}/>
         </Canvas>
       </RoomBoundary>}
-      {phase === 'loading' && <p className="room-review__status" role="status">Loading the room…</p>}
-      {phase === 'error' && <div className="room-review__status room-review__status--error" role="alert"><p>The room preview couldn’t load.</p><button type="button" onClick={retry}>Try again</button></div>}
     </div>
     {welcomeVisible && <RoomWelcome anchor={welcomeAnchor} reducedMotion={reducedMotion} closing={welcomeExiting} onExited={welcomeExited}/>}
     {INTERACTIVE_ROOM && gameReady && <>
       {EDITOR_MODE && <p className="room-arrangement-status" role="status" inert={modalOpen ? true : undefined}>{hoveredItem || (arranging && selectedItem ? `${selectedItem.label} selected${arrangementStatus ? `. ${arrangementStatus}` : ''}` : arrangementStatus)}</p>}
       {!arranging && !modalOpen && <RoomJoystick disabled={interactionPaused}/>}
+      {(touchMode || compactViewport) && !arranging && !modalOpen && !welcomeVisible && inspectTarget && <RoomInteract target={inspectTarget} onInspect={() => arrangementActions.current?.inspectNearby()}/>}
     </>}
     {(!INTERACTIVE_ROOM || EDITOR_MODE) && <footer className="room-review__footer" inert={modalOpen ? true : undefined}><p id="room-review-hint">{INTERACTIVE_ROOM ? arranging ? 'Drag items to place · Select an item to rotate' : 'WASD to walk · Click items to explore' : 'Drag to orbit. Scroll or pinch to zoom.'}<span className="room-review__keyboard-hint">{INTERACTIVE_ROOM ? arranging ? 'Focus an item and use arrow keys to place it. R rotates the selected item.' : 'Tab to focus an item. Enter opens its project.' : 'Drag empty space or use arrow keys to orbit. + and − zoom. Home resets.'}</span></p>
       <div className="room-review__actions">
@@ -353,6 +350,7 @@ export default function RoomReview() {
     </footer>}
     {modalOpen && <ComputerProjects key={activeProject || 'games-computer'} onClose={closeProject} onVideoPlaybackChange={setVideoPlaying} projectIds={activeProject ? [activeProject] : computerProjectIds} projectId={activeProject || undefined} title={activeProject ? projects.find(project => project.id === activeProject)?.title : undefined}/>}
   </main>
+    {!sceneReady && <RoomLoading error={phase === 'error'} status={phase === 'ready' ? 'Setting out the projects…' : 'Getting everything ready for you.'} onRetry={retry}/>}
     {landscapeBlocked && <section className="room-rotate" role="status" aria-live="polite">
       <svg viewBox="0 0 80 80" aria-hidden="true"><rect x="22" y="10" width="36" height="59" rx="7"/><path d="M35 60h10M9 37a31 31 0 0 1 10-22m-10 9 1 13 12-3M71 43a31 31 0 0 1-10 22m10-9-1-13-12 3"/></svg>
       <h1>A little more room to play</h1>

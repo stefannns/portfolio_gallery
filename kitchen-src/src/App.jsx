@@ -1,10 +1,18 @@
 import React, {useCallback,useEffect,useRef,useState} from 'react';
 import gsap from 'gsap';
 import PlateGallery from './PlateGallery.jsx';
+import RoomLoading from './RoomLoading.jsx';
 const Conveyor3D = React.lazy(()=>import('./Conveyor3D.jsx'));
 const SushiBar = React.lazy(()=>import('./SushiBar.jsx'));
 const RoomReview = React.lazy(()=>import('./RoomReview.jsx'));
 import {projects} from './projects.js';
+
+class KitchenEntryBoundary extends React.Component {
+  state = {failed: false};
+  static getDerivedStateFromError() {return {failed: true};}
+  componentDidCatch(error) {console.error('Kitchen entry failed.', error);}
+  render() {return this.state.failed ? <RoomLoading error onRetry={() => window.location.reload()}/> : this.props.children;}
+}
 
 function useMedia(query) {
   const [matches,setMatches]=useState(()=>window.matchMedia(query).matches);
@@ -29,7 +37,7 @@ function initialProject(){return projects.find(p=>window.location.hash===`#proje
 
 export default function App(){
   const query=new URLSearchParams(window.location.search),scene=query.get('scene');
-  if(scene==='roomreview'||(!scene&&!query.has('surface')))return <React.Suspense fallback={<div role="status">Opening the room…</div>}><RoomReview/></React.Suspense>;
+  if(scene==='roomreview'||(!scene&&!query.has('surface')))return <KitchenEntryBoundary><React.Suspense fallback={<RoomLoading/>}><RoomReview/></React.Suspense></KitchenEntryBoundary>;
   return <PortfolioApp/>;
 }
 

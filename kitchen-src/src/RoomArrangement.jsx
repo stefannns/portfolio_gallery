@@ -43,7 +43,7 @@ function persistLayout(storageKey, items) {
   } catch {return false;}
 }
 
-function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus, onActivate, editable, objective, highlighted, reducedMotion}) {
+function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus, onActivate, onError, editable, objective, highlighted, reducedMotion}) {
   const markerBounds = useRef(new THREE.Box3()), markerPoint = useRef(new THREE.Vector3());
   const markerPosition = useCallback((anchor, camera, size) => {
     const model = anchor.parent?.getObjectByName(`room-item-model-${item.id}`);
@@ -72,7 +72,7 @@ function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus,
     onPointerDown={event => onStart(event, item.id)}
     onPointerOver={event => {event.stopPropagation();onHover(item.id);}}
     onPointerOut={() => onHover(null)}>
-    <group name={`room-item-model-${item.id}`} position={item.modelOffset || [0, 0, 0]}><RestaurantModel entry={entry} dimensions={[item.width, item.width, item.width]} rotationY={0} uniform highlighted={highlighted} reducedMotion={reducedMotion}/></group>
+    <group name={`room-item-model-${item.id}`} position={item.modelOffset || [0, 0, 0]}><RestaurantModel entry={entry} dimensions={[item.width, item.width, item.width]} rotationY={0} uniform highlighted={highlighted} reducedMotion={reducedMotion} onError={onError}/></group>
     {/* Invisible pointer targets make small items easy to grab without changing their art. */}
     <mesh position={[0, item.width * .3, 0]}>
       <boxGeometry args={[Math.max(.62, item.width), Math.max(.45, item.width * .65), Math.max(.62, item.width)]}/>
@@ -89,7 +89,7 @@ function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus,
   </group>;
 }
 
-export default function RoomArrangement({roomVersion = 10, controls, rootRef, titlePhysics, resetToken, onStatus, onHover, onReady, onOpenComputer, onOpenProject, onSelection, actionsRef, objectiveId = '', onFirstMove, onWelcomeMove, onInspectTarget, onWelcomeAnchor, welcomeActive = false, reducedMotion = false, paused = false, editable = false, fixedCamera = true}) {
+export default function RoomArrangement({roomVersion = 10, controls, rootRef, titlePhysics, resetToken, onStatus, onHover, onReady, onError, onOpenComputer, onOpenProject, onSelection, actionsRef, objectiveId = '', onFirstMove, onWelcomeMove, onInspectTarget, onWelcomeAnchor, welcomeActive = false, reducedMotion = false, paused = false, editable = false, fixedCamera = true}) {
   const {
     CAPYBARA_HEIGHT, PLAYER_START, PLAYER_SPEED, ROOM_FLOOR_Y, ROOM_BOUNDS, ROOM_ITEMS,
     pickRoomSurface, sanitizeRoomPlacements, snapPropPosition, stepRoomPlayer, canWalk,
@@ -134,6 +134,14 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
 
   const currentInspectTarget = useCallback(() => paused || editable ? null : chooseInspectTarget(engine.player, latest.current, hover.current, objectiveId), [editable, engine, objectiveId, paused]);
 
+  const inspectNearby = useCallback(() => {
+    if (paused || editable || engine.paused || drag.current) return false;
+    const target = currentInspectTarget();
+    if (!target) return false;
+    activateItem(target.id);
+    return true;
+  }, [activateItem, currentInspectTarget, editable, engine, paused]);
+
   const rotateSelected = useCallback(() => {
     if (!editable || paused || drag.current || !selected.current) return false;
     const item = latest.current.find(value => value.id === selected.current);
@@ -150,9 +158,9 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
 
   useEffect(() => {
     if (!actionsRef) return;
-    actionsRef.current = {rotateSelected};
+    actionsRef.current = {rotateSelected, inspectNearby};
     return () => {actionsRef.current = null;};
-  }, [actionsRef, rotateSelected]);
+  }, [actionsRef, rotateSelected, inspectNearby]);
 
   const commit = useCallback((id, position) => {
     const next = latest.current.map(item => item.id === id ? {...item, position: [...position]} : item);
@@ -282,12 +290,23 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
 
   useEffect(() => {
     const controller = new AbortController();
-    const load = url => fetch(url, {signal: controller.signal}).then(response => {if (!response.ok) throw new Error('Objects unavailable.');return response.json();});
+    const load = url => fetch(url, {signal: controller.signal}).then(response => {if (!response.ok) throw new Error(`Room objects unavailable (${response.status}): ${url}`);return response.json();});
     Promise.all([load('/models/tripo/manifest.json'), load('/models/tripo/discovery-v2.json'), load('/models/tripo/room-items-v1.json')])
-      .then(([character, props, computer]) => {setAssets({character, props: {...props, assets: {...props.assets, ...computer.assets}}});onStatus('');})
-      .catch(error => {if (error.name !== 'AbortError') onStatus('Some objects could not load. Refresh to retry.');});
+      .then(([character, props, computer]) => {
+        if (controller.signal.aborted) return;
+        const hasUrl = value => typeof value === 'string' && value.trim().length > 0;
+        for (const animation of ['idle', 'walk']) {
+          if (!hasUrl(character?.animations?.[animation])) throw new Error(`The capybara ${animation} animation is missing from its manifest.`);
+        }
+        const propAssets = {...props?.assets, ...computer?.assets};
+        for (const item of ROOM_ITEMS) {
+          if (!hasUrl(propAssets[item.asset]?.url)) throw new Error(`The model for ${item.label} (${item.asset}) is missing from the room objects manifest.`);
+        }
+        setAssets({character, props: {...props, assets: propAssets}});onStatus('');
+      })
+      .catch(error => {if (!controller.signal.aborted && error.name !== 'AbortError') {onStatus('Some objects could not load. Refresh to retry.');onError?.(error);}});
     return () => controller.abort();
-  }, [onStatus]);
+  }, [onStatus, onError, ROOM_ITEMS]);
 
   useEffect(() => {
     if (!rootRef.current) return;
@@ -431,7 +450,7 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
     </mesh>
     {placements.map(item => <MovableItem key={item.id} item={item} entry={assets.props.assets?.[item.asset]} editable={editable} objective={item.id === objectiveId && !editable && !paused} highlighted={item.id === highlightId && !editable && !paused} reducedMotion={reducedMotion}
       register={(id, node) => {if (node) groups.current.set(id, node);else groups.current.delete(id);}}
-      onStart={startDrag} onHover={hoverItem} onNudge={nudge} onFocus={id => {selectItem(id);hoverItem(id);}} onActivate={activateItem}/>)}
+      onStart={startDrag} onHover={hoverItem} onNudge={nudge} onFocus={id => {selectItem(id);hoverItem(id);}} onActivate={activateItem} onError={onError}/>)}
     <group ref={player} position={[PLAYER_START.x, PLAYER_START.y, PLAYER_START.z]} rotation={[0, Math.PI / 2, 0]}>
       <Suspense fallback={null}><CapybaraActor engine={engine} height={CAPYBARA_HEIGHT}
         idleUrl={assets.character.animations?.idle} walkUrl={assets.character.animations?.walk} onReady={characterLoaded}/></Suspense>

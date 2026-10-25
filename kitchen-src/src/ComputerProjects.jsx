@@ -8,18 +8,21 @@ const projectsById = new Map(projects.map(project => [project.id, project]));
 const focusable = 'button:not(:disabled),a[href],video[controls],iframe[title],input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex]:not([tabindex="-1"])';
 
 /** Keep background music tied to playback, rather than opening a project note. */
-function ProjectVideo({src, poster, label, onPlaybackChange}) {
+function ProjectVideo({src, poster, label, onPlaybackChange, aspectRatio = '16 / 9'}) {
   const media = useRef(null);
+  const [ratio, setRatio] = useState(aspectRatio);
   useEffect(() => {
     const element = media.current;
     return () => {element?.pause();onPlaybackChange?.(false);};
   }, [onPlaybackChange]);
-  return <video ref={media} controls playsInline preload="metadata" src={src} poster={poster} aria-label={label}
+  return <div className="computer-projects__media computer-projects__media--video"><video ref={media} controls playsInline preload="metadata" src={src} poster={poster} aria-label={label}
+    style={{aspectRatio: ratio}}
+    onLoadedMetadata={event => {const {videoWidth, videoHeight} = event.currentTarget;if (videoWidth > 0 && videoHeight > 0) setRatio(`${videoWidth} / ${videoHeight}`);}}
     onPlay={() => onPlaybackChange?.(true)}
     onPause={event => {if (!event.currentTarget.seeking) onPlaybackChange?.(false);}}
     onSeeked={event => onPlaybackChange?.(!event.currentTarget.paused && !event.currentTarget.ended && !event.currentTarget.error)}
     onEnded={() => onPlaybackChange?.(false)}
-    onError={() => onPlaybackChange?.(false)}/>;
+    onError={() => onPlaybackChange?.(false)}/></div>;
 }
 
 export default function ComputerProjects({onClose, projectId, projectIds, title, onVideoPlaybackChange}) {
@@ -36,6 +39,7 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
   const single = library.length === 1;
   const heading = typeof title === 'string' && title.trim() ? title.trim() : single ? selected.title : 'Capybara’s computer';
   const video = selected.moreVideos?.some(clip => clip.url === reel) ? reel : selected.video || selected.moreVideos?.[0]?.url;
+  const videoProject = Boolean(video && !selected.embedUrl && !selected.previewUrl);
 
   useEffect(() => {
     setSelectedId(current => library.some(project => project.id === projectId) ? projectId
@@ -129,15 +133,16 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
           </button>)}
         </nav>}
 
-        <article className="computer-projects__detail" ref={detail} id={detailId} aria-labelledby={projectTitleId}>
+        <article className={`computer-projects__detail${videoProject ? ' computer-projects__detail--video' : ''}`} ref={detail} id={detailId} aria-labelledby={projectTitleId}>
           <div className={`computer-projects__media-column${selected.embedUrl ? ' computer-projects__media-column--embed' : ''}`}>
-            {selected.embedUrl ? <ProjectGameEmbed key={selected.id} project={selected}/> : <div className="computer-projects__media">
-              {selected.previewUrl ? <a className="computer-projects__linked-preview" href={selected.previewUrl} target="_blank" rel="noopener noreferrer" aria-label={`${selected.previewLabel || 'Explore'} — ${selected.title}`}>
-                <img src={selected.previewImage || selected.image} alt={selected.previewAlt || `${selected.title} preview`}/>
-                <span>{selected.previewLabel || 'Explore'} ↗</span>
-              </a> : video ? <ProjectVideo key={`${selected.id}-${video}`} src={video} poster={selected.image} label={`${selected.title} gameplay`} onPlaybackChange={onVideoPlaybackChange}/>
-                : <img src={selected.image} alt={`${selected.title} project cover`} style={{objectPosition: selected.imagePosition || 'center'}}/>}
-            </div>}
+            {selected.embedUrl ? <ProjectGameEmbed key={selected.id} project={selected}/>
+              : videoProject ? <ProjectVideo key={`${selected.id}-${video}`} src={video} poster={selected.image} label={`${selected.title} gameplay`} aspectRatio={selected.videoAspectRatio} onPlaybackChange={onVideoPlaybackChange}/>
+              : <div className={`computer-projects__media${selected.previewAspectRatio ? ' computer-projects__media--capture' : ''}`} style={selected.previewAspectRatio ? {'--project-image-ratio': selected.previewAspectRatio} : undefined}>
+                {selected.previewUrl ? <a className="computer-projects__linked-preview" href={selected.previewUrl} target="_blank" rel="noopener noreferrer" aria-label={`${selected.previewLabel || 'Explore'} — ${selected.title}`}>
+                  <img src={selected.previewImage || selected.image} alt={selected.previewAlt || `${selected.title} preview`}/>
+                </a> : <img src={selected.image} alt={`${selected.title} project cover`} style={{objectPosition: selected.imagePosition || 'center'}}/>}
+              </div>}
+            {selected.previewUrl && <a className="computer-projects__preview-link" href={selected.previewUrl} target="_blank" rel="noopener noreferrer">{selected.previewLabel || 'Explore'} ↗</a>}
             {selected.workflow && <p className="computer-projects__workflow-summary">{selected.workflow}</p>}
             {selected.moreVideos?.length > 1 && <nav className="computer-projects__reels" aria-label="Choose a gameplay clip">
               {selected.moreVideos.map(clip => <button key={clip.url} type="button" aria-pressed={video === clip.url} onClick={() => setReel(clip.url)}>{clip.label}</button>)}
@@ -147,7 +152,7 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
           <div className="computer-projects__copy">
             <section className="computer-projects__story-note">
               <p className="computer-projects__type">{selected.type}</p>
-              <h2 id={projectTitleId}>{selected.title}</h2>
+              <h2 id={projectTitleId} className={selected.logo ? 'computer-projects__branded-title' : undefined}>{selected.logo && <img className="computer-projects__brand-mark" src={selected.logo} alt="" aria-hidden="true" width="40" height="40"/>}{selected.title}</h2>
               <p className="computer-projects__description">{selected.description}</p>
               {(selected.url || selected.github) && <div className="computer-projects__links">
                 {selected.url && <a href={selected.url} target="_blank" rel="noopener noreferrer">{selected.embedUrl ? 'Open game in a new tab ↗' : selected.collection === 'games' ? 'Play the game' : selected.id === 'smarttester' ? 'Open Smarttester' : 'Open project'}</a>}

@@ -8,10 +8,11 @@ const objectiveGlow = new THREE.Color('#ffe066');
 class ModelBoundary extends React.Component {
   state = {failed: false};
   static getDerivedStateFromError() { return {failed: true}; }
+  componentDidCatch(error) { this.props.onError?.(error); }
   render() { return this.state.failed ? null : this.props.children; }
 }
 
-function LoadedRestaurantModel({url, dimensions = [], position, rotationY, uniform, highlighted, reducedMotion}) {
+function LoadedRestaurantModel({url, dimensions = [], position, rotationY, uniform, highlighted, reducedMotion, required = false}) {
   const {scene} = useGLTF(url, '/draco/');
   const glowAmount = useRef(0);
   const {object, size, materials, outlines, outlineMaterial} = useMemo(() => {
@@ -40,6 +41,9 @@ function LoadedRestaurantModel({url, dimensions = [], position, rotationY, unifo
     const box = new THREE.Box3().setFromObject(object);
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
+    if (required && (box.isEmpty() || !Number.isFinite(size.x + size.y + size.z) || Math.max(size.x, size.y, size.z) <= 0)) {
+      throw new Error(`The object model contains no visible geometry: ${url}`);
+    }
     if (!box.isEmpty()) object.position.set(-center.x, -box.min.y, -center.z);
     const outlineMaterial = new THREE.ShaderMaterial({
       uniforms: {outlineWidth: {value: .016}, outlineColor: {value: new THREE.Color('#ffd54a')}},
@@ -71,7 +75,7 @@ function LoadedRestaurantModel({url, dimensions = [], position, rotationY, unifo
       return shell;
     });
     return {object, size, materials: [...owned.values()], outlines, outlineMaterial};
-  }, [scene, rotationY]);
+  }, [scene, rotationY, required, url]);
 
   useEffect(() => () => {materials.forEach(({material}) => material.dispose());outlineMaterial.dispose();}, [materials, outlineMaterial]);
   useEffect(() => {
@@ -111,11 +115,11 @@ function LoadedRestaurantModel({url, dimensions = [], position, rotationY, unifo
   </group>;
 }
 
-export function RestaurantModel({entry, dimensions, position = [0, 0, 0], rotationY = -Math.PI / 2, uniform = true, highlighted = false, reducedMotion = false}) {
+export function RestaurantModel({entry, dimensions, position = [0, 0, 0], rotationY = -Math.PI / 2, uniform = true, highlighted = false, reducedMotion = false, onError}) {
   if (!entry?.url) return null;
-  return <ModelBoundary key={entry.url}>
+  return <ModelBoundary key={entry.url} onError={onError}>
     <Suspense fallback={null}>
-      <LoadedRestaurantModel url={entry.url} dimensions={dimensions} position={position} rotationY={rotationY} uniform={uniform} highlighted={highlighted} reducedMotion={reducedMotion}/>
+      <LoadedRestaurantModel url={entry.url} dimensions={dimensions} position={position} rotationY={rotationY} uniform={uniform} highlighted={highlighted} reducedMotion={reducedMotion} required={Boolean(onError)}/>
     </Suspense>
   </ModelBoundary>;
 }
