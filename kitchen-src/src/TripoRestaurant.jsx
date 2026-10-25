@@ -94,9 +94,9 @@ function LoadedRestaurantModel({url, dimensions = [], position, rotationY, unifo
     // A marked task softly breathes from across the room; a nearby E target
     // keeps its stronger, crisp outline so readiness remains easy to see.
     for (const outline of outlines) outline.visible = highlighted || objective;
-    outlineMaterial.uniforms.outlineWidth.value = highlighted ? .016 : .026 + breath * .012;
-    outlineMaterial.uniforms.outlineOpacity.value = highlighted ? 1 : .12 + breath * .16;
-    const target = highlighted ? .24 + breath * .12 : objective ? .11 + breath * .14 : 0;
+    outlineMaterial.uniforms.outlineWidth.value = highlighted ? .016 : .038 + breath * .016;
+    outlineMaterial.uniforms.outlineOpacity.value = highlighted ? 1 : .28 + breath * .26;
+    const target = highlighted ? .34 + breath * .14 : objective ? .22 + breath * .24 : 0;
     glowAmount.current = reducedMotion ? target : THREE.MathUtils.damp(glowAmount.current, target, 9, Math.min(delta, .05));
     if (glowAmount.current < .001) glowAmount.current = 0;
     for (const {material, emissive, intensity} of materials) {
