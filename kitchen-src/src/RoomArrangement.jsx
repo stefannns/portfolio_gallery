@@ -73,7 +73,7 @@ function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus,
     onPointerDown={event => onStart(event, item.id)}
     onPointerOver={event => {event.stopPropagation();onHover(item.id);}}
     onPointerOut={() => onHover(null)}>
-    <group name={`room-item-model-${item.id}`} position={item.modelOffset || [0, 0, 0]}><RestaurantModel entry={entry} dimensions={[item.width, item.width, item.width]} rotationY={0} uniform highlighted={highlighted} reducedMotion={reducedMotion} onError={onError}/></group>
+    <group name={`room-item-model-${item.id}`} position={item.modelOffset || [0, 0, 0]}><RestaurantModel entry={entry} dimensions={[item.width, item.width, item.width]} rotationY={0} uniform objective={objective} highlighted={highlighted} reducedMotion={reducedMotion} onError={onError}/></group>
     {/* Invisible pointer targets make small items easy to grab without changing their art. */}
     <mesh position={[0, item.width * .3, 0]}>
       <boxGeometry args={[Math.max(.62, item.width), Math.max(.45, item.width * .65), Math.max(.62, item.width)]}/>
@@ -418,7 +418,8 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
       rootRef.current.dataset.walkWaypoints = String(walkRoute.current.length);
       rootRef.current.dataset.nearbyItem = target?.id || '';
       rootRef.current.dataset.inspectable = String(Boolean(target));
-      rootRef.current.dataset.objectiveGlow = target?.id || '';
+      rootRef.current.dataset.objectiveGlow = !editable && !paused ? objectiveId : '';
+      rootRef.current.dataset.nearbyGlow = target?.id || '';
     }
   }, -1);
 

@@ -12,7 +12,7 @@ class ModelBoundary extends React.Component {
   render() { return this.state.failed ? null : this.props.children; }
 }
 
-function LoadedRestaurantModel({url, dimensions = [], position, rotationY, uniform, highlighted, reducedMotion, required = false}) {
+function LoadedRestaurantModel({url, dimensions = [], position, rotationY, uniform, objective, highlighted, reducedMotion, required = false}) {
   const {scene} = useGLTF(url, '/draco/');
   const glowAmount = useRef(0);
   const {object, size, materials, outlines, outlineMaterial} = useMemo(() => {
@@ -46,7 +46,7 @@ function LoadedRestaurantModel({url, dimensions = [], position, rotationY, unifo
     }
     if (!box.isEmpty()) object.position.set(-center.x, -box.min.y, -center.z);
     const outlineMaterial = new THREE.ShaderMaterial({
-      uniforms: {outlineWidth: {value: .016}, outlineColor: {value: new THREE.Color('#ffd54a')}},
+      uniforms: {outlineWidth: {value: .016}, outlineColor: {value: new THREE.Color('#ffd54a')}, outlineOpacity: {value: 1}},
       vertexShader: `
         uniform float outlineWidth;
         void main() {
@@ -57,12 +57,13 @@ function LoadedRestaurantModel({url, dimensions = [], position, rotationY, unifo
       `,
       fragmentShader: `
         uniform vec3 outlineColor;
+        uniform float outlineOpacity;
         void main() {
-          gl_FragColor = vec4(outlineColor, 1.0);
+          gl_FragColor = vec4(outlineColor, outlineOpacity);
           #include <colorspace_fragment>
         }
       `,
-      side: THREE.BackSide, depthTest: true, depthWrite: false, toneMapped: false,
+      side: THREE.BackSide, depthTest: true, depthWrite: false, toneMapped: false, transparent: true,
     });
     // Collect original meshes before adding shells so traversal cannot recurse
     // into newly created outlines. Geometry remains shared with the source.
@@ -81,17 +82,21 @@ function LoadedRestaurantModel({url, dimensions = [], position, rotationY, unifo
   useEffect(() => {
     for (const {material, emissive, emissiveMap} of materials) {
       if (!emissive) continue;
-      const map = highlighted ? emissiveMap || material.map : emissiveMap;
+      const map = highlighted || objective ? emissiveMap || material.map : emissiveMap;
       if (material.emissiveMap !== map) {
         material.emissiveMap = map;
         material.needsUpdate = true;
       }
     }
-  }, [highlighted, materials]);
+  }, [highlighted, objective, materials]);
   useFrame(({clock}, delta) => {
-    for (const outline of outlines) outline.visible = highlighted;
-    const pulse = reducedMotion ? .32 : .30 + Math.sin(clock.elapsedTime * 2.6) * .06;
-    const target = highlighted ? pulse : 0;
+    const breath = reducedMotion ? .5 : .5 + Math.sin(clock.elapsedTime * 2.6) * .5;
+    // A marked task softly breathes from across the room; a nearby E target
+    // keeps its stronger, crisp outline so readiness remains easy to see.
+    for (const outline of outlines) outline.visible = highlighted || objective;
+    outlineMaterial.uniforms.outlineWidth.value = highlighted ? .016 : .026 + breath * .012;
+    outlineMaterial.uniforms.outlineOpacity.value = highlighted ? 1 : .12 + breath * .16;
+    const target = highlighted ? .24 + breath * .12 : objective ? .11 + breath * .14 : 0;
     glowAmount.current = reducedMotion ? target : THREE.MathUtils.damp(glowAmount.current, target, 9, Math.min(delta, .05));
     if (glowAmount.current < .001) glowAmount.current = 0;
     for (const {material, emissive, intensity} of materials) {
@@ -115,11 +120,11 @@ function LoadedRestaurantModel({url, dimensions = [], position, rotationY, unifo
   </group>;
 }
 
-export function RestaurantModel({entry, dimensions, position = [0, 0, 0], rotationY = -Math.PI / 2, uniform = true, highlighted = false, reducedMotion = false, onError}) {
+export function RestaurantModel({entry, dimensions, position = [0, 0, 0], rotationY = -Math.PI / 2, uniform = true, objective = false, highlighted = false, reducedMotion = false, onError}) {
   if (!entry?.url) return null;
   return <ModelBoundary key={entry.url} onError={onError}>
     <Suspense fallback={null}>
-      <LoadedRestaurantModel url={entry.url} dimensions={dimensions} position={position} rotationY={rotationY} uniform={uniform} highlighted={highlighted} reducedMotion={reducedMotion} required={Boolean(onError)}/>
+      <LoadedRestaurantModel url={entry.url} dimensions={dimensions} position={position} rotationY={rotationY} uniform={uniform} objective={objective} highlighted={highlighted} reducedMotion={reducedMotion} required={Boolean(onError)}/>
     </Suspense>
   </ModelBoundary>;
 }

@@ -1,10 +1,10 @@
-.computer-projects{--paper:#faf7e9;--ink:#554832;--muted:#83745a;--hand:'Chalkboard SE','Segoe Print','Comic Sans MS',cursive;--yellow:repeating-linear-gradient(0deg,#78673903 0 1px,transparent 1px 4px),linear-gradient(115deg,#fff2ae,#ffed9b 80%);position:fixed;inset:0;z-index:180;display:grid;place-items:center;padding:24px;background:#473e2b38;backdrop-filter:blur(7px);color:var(--ink);font-family:'Nunito','Avenir Next',sans-serif;isolation:isolate;overscroll-behavior:contain}
+.computer-projects{--paper:#faf7e9;--ink:#554832;--muted:#83745a;--hand:'Chalkboard SE','Segoe Print','Comic Sans MS',cursive;--yellow:repeating-linear-gradient(0deg,#78673903 0 1px,transparent 1px 4px),linear-gradient(115deg,#fff2ae,#ffed9b 80%);position:fixed;inset:0;z-index:180;display:grid;place-items:center;padding:12px;background:#473e2b38;backdrop-filter:blur(7px);color:var(--ink);font-family:'Nunito','Avenir Next',sans-serif;isolation:isolate;overscroll-behavior:contain}
 .computer-projects *{box-sizing:border-box}
 .computer-projects button,.computer-projects a{-webkit-tap-highlight-color:transparent}
 .computer-projects button{font:inherit;color:inherit;cursor:pointer}
 .computer-projects button:focus-visible,.computer-projects a:focus-visible,.computer-projects video:focus-visible{outline:2px solid #87683b;outline-offset:4px}
-.computer-projects__window{width:min(1180px,100%);height:min(880px,calc(100svh - 48px));min-height:0;display:flex;flex-direction:column;overflow:hidden;border:1px solid #d6ccb0;border-radius:16px;background:repeating-linear-gradient(90deg,#aa8b3f02 0 1px,transparent 1px 5px),var(--paper);box-shadow:0 4px 0 #d8c9a9,0 24px 80px #3b332b30;outline:none;animation:project-paper-open .2s ease-out both}
-.computer-projects__header{display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:20px;padding:24px 27px 20px;border-bottom:1px solid #e2d8bf}
+.computer-projects__window{width:min(1440px,100%);height:calc(100svh - 24px);min-height:0;display:flex;flex-direction:column;overflow:hidden;border:1px solid #d6ccb0;border-radius:16px;background:repeating-linear-gradient(90deg,#aa8b3f02 0 1px,transparent 1px 5px),var(--paper);box-shadow:0 4px 0 #d8c9a9,0 24px 80px #3b332b30;outline:none;animation:project-paper-open .2s ease-out both}
+.computer-projects__header{display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:20px;padding:14px 24px;border-bottom:1px solid #e2d8bf}
 .computer-projects__identity{position:relative;min-width:0;padding:6px 18px 8px;background:#fff2b4;box-shadow:1px 3px 5px #77622e13;transform:rotate(-.7deg)}
 .computer-projects__identity::before{content:'';position:absolute;top:-8px;left:calc(50% - 26px);width:52px;height:15px;background:repeating-linear-gradient(90deg,#e7ddbf88 0 2px,#f7efd988 2px 4px);transform:rotate(4deg);pointer-events:none}
 .computer-projects__identity h1{margin:0;font-family:var(--hand);font-size:23px;font-weight:400;line-height:1.3;letter-spacing:-.025em;overflow-wrap:break-word}
@@ -23,7 +23,7 @@
 .computer-projects__card-copy{display:block;min-width:0;overflow-wrap:break-word}
 .computer-projects__card-copy>span{display:block;font-family:var(--hand);font-size:14px;font-weight:400;line-height:1.3;letter-spacing:-.02em}
 .computer-projects__card-copy small{display:block;margin-top:5px;font-size:10.5px;font-weight:600;line-height:1.35;color:var(--muted)}
-.computer-projects__detail{display:grid;grid-template-columns:minmax(0,.95fr) minmax(300px,1fr);align-content:start;align-items:start;gap:28px;min-width:0;min-height:0;overflow:auto;padding:32px 28px 34px;scrollbar-width:thin;scrollbar-color:#caba95 transparent;overscroll-behavior:contain}
+.computer-projects__detail{display:grid;grid-template-columns:minmax(0,.95fr) minmax(300px,1fr);align-content:start;align-items:start;gap:28px;min-width:0;min-height:0;overflow:auto;padding:24px 28px 28px;scrollbar-width:thin;scrollbar-color:#caba95 transparent;overscroll-behavior:contain}
 .computer-projects__media-column{position:relative;min-width:0;align-self:start;padding-top:3px}
 .computer-projects__media-column::before{content:'';position:absolute;z-index:2;top:-6px;left:calc(50% - 36px);width:72px;height:21px;transform:rotate(-4deg);background:repeating-linear-gradient(90deg,#d9d2b999 0 2px,#ebe5cd99 2px 4px);pointer-events:none}
 .computer-projects__media-column--embed::before{top:46px}
@@ -94,4 +94,66 @@
 .computer-projects__detail--video>.computer-projects__media-column,.computer-projects__detail--video>.computer-projects__copy{grid-column:1 / -1;width:100%}
 .computer-projects__detail--video .computer-projects__media--video{aspect-ratio:auto;max-width:none;max-height:none}
 .computer-projects__media--video>video{position:relative;inset:auto;display:block;width:100%;height:auto;object-fit:contain}
-.computer-projects__detail--video .computer-projects__description{max-width:78ch}
+.computer-projects__detail--video .computer-projects__description{max-width:96ch}
+.computer-projects .computer-projects__detail--video{gap:18px;padding-block:20px 26px}
+.computer-projects__video-heading{grid-column:1 / -1;min-width:0;padding:0 3px}
+.computer-projects__video-heading h2{margin:0;font-family:var(--hand);font-size:clamp(25px,2.15vw,32px);font-weight:400;line-height:1.15;letter-spacing:-.035em;overflow-wrap:break-word;color:#4f4b31}
+.computer-projects__video-heading .computer-projects__type{margin-bottom:4px;font-size:14px}
+.computer-projects__detail--video .computer-projects__media--video>video{max-height:min(43svh,480px)}
+.computer-projects__detail--video .computer-projects__story-note{padding:18px 24px 15px}
+.computer-projects__detail--video .computer-projects__links{margin-top:8px}
+.computer-projects__detail--video .computer-projects__notes{margin-top:20px}
+
+
+/* Dense product screenshots can be explored without shrinking their interface. */
+.computer-projects .computer-projects__detail--scrollable{grid-template-columns:minmax(0,1fr)}
+.computer-projects__detail--scrollable>.computer-projects__media-column,.computer-projects__detail--scrollable>.computer-projects__copy{grid-column:1 / -1;width:100%}
+.computer-projects__image-viewer{width:100%;min-width:0;overflow:hidden;border:8px solid #fffdf6;border-bottom-width:12px;border-radius:2px;background:#fffdf6;box-shadow:0 2px 2px #745c3012,1px 6px 12px #745c3012}
+.computer-projects__image-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:0 0 6px;color:#7c7155;font-size:12px;font-weight:700}
+.computer-projects__image-toolbar button{flex-shrink:0;min-width:80px;min-height:44px;padding:7px 12px;border:1px solid #cdbb91;border-radius:3px;background:#f8edcb;font-size:12px;font-weight:800}
+.computer-projects__image-toolbar button:hover{background:#ffedac}
+.computer-projects__image-viewport{width:100%;height:clamp(240px,55svh,560px);overflow:scroll;scrollbar-width:thin;scrollbar-color:#b6a178 #f2ecd9;scrollbar-gutter:stable;overscroll-behavior:contain;background:#e8eeec;scroll-behavior:auto;touch-action:pan-x pan-y}
+.computer-projects__image-viewport::-webkit-scrollbar{width:9px;height:9px}
+.computer-projects__image-viewport::-webkit-scrollbar-track,.computer-projects__image-viewport::-webkit-scrollbar-corner{background:#f2ecd9}
+.computer-projects__image-viewport::-webkit-scrollbar-thumb{border:2px solid #f2ecd9;border-radius:8px;background:#b6a178}
+.computer-projects__image-viewport:focus-visible{position:relative;outline:3px solid #87683b;outline-offset:-3px}
+.computer-projects__image-viewport>img{display:block;width:1856px;max-width:none;height:auto;aspect-ratio:1856/1606;user-select:none;-webkit-user-drag:none}
+.computer-projects__image-viewport--fit>img{width:100%;max-width:100%}
+.computer-projects__detail--scrollable .computer-projects__description{max-width:78ch}
+@media(orientation:landscape) and (max-height:520px) and (min-width:650px){
+ .computer-projects .computer-projects__detail--scrollable{padding:12px 20px 24px;gap:24px}
+ .computer-projects__image-viewport{height:210px}
+}
+@media(orientation:landscape) and (max-height:520px) and (min-width:650px) and (max-width:760px){
+ .computer-projects .computer-projects__detail--scrollable{padding:10px 14px 22px}
+ .computer-projects__image-viewport{height:110px}
+ .computer-projects--single .computer-projects__image-viewport{height:190px}
+}
+
+/* Keep video and opening context in view on short landscape screens. */
+@media(orientation:landscape) and (max-height:520px) and (min-width:650px){
+ .computer-projects__header{padding-block:8px}
+ .computer-projects .computer-projects__detail--video{gap:12px;padding:12px 18px 22px}
+ .computer-projects__video-heading h2{font-size:22px;line-height:1.1}
+ .computer-projects__video-heading .computer-projects__type{font-size:12px;margin-bottom:2px}
+ .computer-projects__detail--video .computer-projects__media--video{border-width:5px;border-bottom-width:8px}
+ .computer-projects__detail--video .computer-projects__media--video>video{max-height:36svh}
+ .computer-projects__detail--video .computer-projects__story-note{padding:13px 17px 10px}
+ .computer-projects__detail--video .computer-projects__description{font-size:13px;line-height:1.5}
+ .computer-projects__detail--video .computer-projects__links{margin-top:3px}
+}
+
+/* A left project rail preserves reading space on smaller landscape phones. */
+@media(orientation:landscape) and (max-height:520px) and (min-width:650px) and (max-width:760px){
+ .computer-projects__browser{display:grid;grid-template-columns:148px minmax(0,1fr)}
+ .computer-projects__library{flex-direction:column;gap:10px;padding:14px 8px 20px;overflow:auto;border-right:1px solid #e2d8bf;border-bottom:0}
+ .computer-projects__library-label{display:flex;font-size:16px}
+ .computer-projects__card{grid-template-columns:36px minmax(0,1fr);gap:6px;width:100%;min-height:76px;padding:6px}
+ .computer-projects__card img{width:36px;height:40px}
+ .computer-projects__card-copy>span{font-size:13px}
+ .computer-projects__card-copy small{font-size:10px;margin-top:4px}
+ .computer-projects .computer-projects__detail--video{gap:10px;padding:10px 14px 20px}
+ .computer-projects__video-heading h2{font-size:20px}
+ .computer-projects__detail--video .computer-projects__media--video>video{max-height:30svh}
+ .computer-projects__image-viewport{height:190px}
+}

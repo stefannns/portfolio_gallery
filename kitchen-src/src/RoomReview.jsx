@@ -213,15 +213,16 @@ export default function RoomReview() {
   const welcomePositioned = useCallback(anchor => setWelcomeAnchor(anchor), []);
   const welcomeExited = useCallback(() => setWelcomeExiting(false), []);
   const inspectionChanged = useCallback(target => setInspectTarget(target), []);
-  const dismissWelcome = useCallback(() => {
+  const dismissWelcome = useCallback(({inspection = false} = {}) => {
     if (welcomeDismissed.current) return true;
-    if (welcomeShownAt.current === null || performance.now() - welcomeShownAt.current < 5000) return false;
+    // Keep the greeting readable during movement, but never delay an explicit inspection.
+    if (!inspection && (welcomeShownAt.current === null || performance.now() - welcomeShownAt.current < 5000)) return false;
     setWelcomeExiting(true);setIntroduced(true);
     welcomeDismissed.current = true;
     return true;
   }, []);
-  const openComputer = useCallback(() => {if (!dismissWelcome()) return;setHoveredItem('');setVideoPlaying(false);setActiveProject(null);setComputerOpen(true);setComputerViewed(true);}, [dismissWelcome]);
-  const openProject = useCallback(id => {if (projects.some(project => project.id === id)) {if (!dismissWelcome()) return;setHoveredItem('');setVideoPlaying(false);setComputerOpen(false);setActiveProject(id);if (id === 'seed-squad') setVegetablesViewed(true);if (id === 'smarttester') setRecorderViewed(true);}}, [dismissWelcome]);
+  const openComputer = useCallback(() => {dismissWelcome({inspection: true});setHoveredItem('');setVideoPlaying(false);setActiveProject(null);setComputerOpen(true);setComputerViewed(true);}, [dismissWelcome]);
+  const openProject = useCallback(id => {if (projects.some(project => project.id === id)) {dismissWelcome({inspection: true});setHoveredItem('');setVideoPlaying(false);setComputerOpen(false);setActiveProject(id);if (id === 'seed-squad') setVegetablesViewed(true);if (id === 'smarttester') setRecorderViewed(true);}}, [dismissWelcome]);
   const closeProject = useCallback(() => {setVideoPlaying(false);setComputerOpen(false);setActiveProject(null);}, []);
   const entry = manifest?.assets?.[ROOM_ID] || manifest?.[ROOM_ID];
   const view = useMemo(() => {
