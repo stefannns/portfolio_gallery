@@ -30,12 +30,25 @@ assert(aroundProp.length > 1, 'Floor props are routed around');
 
 // Use the production placement implementation and actual V10 geometry mask.
 let placementSource = await readFile(new URL('../src/room-placement.js', import.meta.url), 'utf8');
-for (const [name, file] of [['surfaceV7', 'room-v7-surfaces.json'], ['surfaceV10', 'room-v10-surfaces.json']]) {
+for (const [name, file] of [['surfaceV7', 'room-v7-surfaces.json'], ['surfaceV10', 'room-v10-surfaces.json'], ['layoutV10', 'room-v10-layout.json']]) {
   const json = await readFile(new URL(`../src/${file}`, import.meta.url), 'utf8');
   placementSource = placementSource.replace(new RegExp(`import ${name} from '[^']+';`), `const ${name} = ${json};`);
 }
 const {getRoomPlacement} = await import(`data:text/javascript;base64,${Buffer.from(placementSource).toString('base64')}`);
 const room = getRoomPlacement(10);
+const publishedLayout = JSON.parse(await readFile(new URL('../src/room-v10-layout.json', import.meta.url), 'utf8'));
+const expectedIds = ['seed-squad', 'smarttester', 'h3-otome', 'toad-defense', 'games-computer', 'a-bot-can-do-better'];
+assert.deepEqual(room.ROOM_ITEMS.map(item => item.id), expectedIds, 'Publishing a layout retains all six project objects');
+assert.equal(publishedLayout.version, 1, 'Published layout uses the supported data version');
+assert.deepEqual(publishedLayout.items.map(item => item.id), expectedIds, 'Published positions cover every project object');
+for (const expected of publishedLayout.items) {
+  const actual = room.ROOM_ITEMS.find(item => item.id === expected.id);
+  for (let axis = 0; axis < 3; axis++) {
+    assert(Math.abs(actual.position[axis] - expected.position[axis]) < .000001, `${expected.id} keeps its published coordinate on axis ${axis}, including its snapped support height`);
+  }
+  assert(Number.isFinite(actual.rotationY), `${expected.id} has a finite published rotation`);
+}
+assert(Math.abs(room.ROOM_ITEMS.find(item => item.id === 'seed-squad').rotationY - Math.PI / 4) < .000001, 'The vegetables bag retains its authored 45-degree turn');
 const roomNavigator = createRoomNavigator({bounds: room.ROOM_BOUNDS, canWalk: room.canWalk});
 const placements = room.sanitizeRoomPlacements(null);
 const roomStart = room.getPlayerStart(placements);
@@ -58,4 +71,4 @@ for (const target of targets) {
   assert(Math.hypot(player.x - target.x, player.z - target.z) < .05);
   reached++;
 }
-console.log(`Room navigation passed: direct route, wall detour, props, unreachable destination, ${reached} real V10 routes with simulated walking.`);
+console.log(`Published V10 layout and room navigation passed: direct route, wall detour, props, unreachable destination, ${reached} real V10 routes with simulated walking.`);

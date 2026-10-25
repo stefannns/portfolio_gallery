@@ -1,5 +1,6 @@
 import surfaceV7 from './room-v7-surfaces.json';
 import surfaceV10 from './room-v10-surfaces.json';
+import layoutV10 from './room-v10-layout.json';
 
 /** Each room keeps geometry-derived support and collision data in its own coordinate system. */
 function createRoomPlacement(surfaceData, version) {
@@ -176,9 +177,20 @@ function createRoomPlacement(surfaceData, version) {
     {id: 'a-bot-can-do-better', asset: 'discovery-bot-v3', label: 'Specials chalkboard', width: 1.1, position: [3.25, ROOM_FLOOR_Y, -3.7], rotationY: 0, modelOffset: [-.1200942993, 0, 0]},
   ];
 
+  // Published positions are separate from asset definitions. Missing or malformed
+  // entries fall back to the original room layout; browser-saved edits still win.
+  const publishedLayout = new Map((version === 10 && layoutV10?.version === 1 && Array.isArray(layoutV10.items) ? layoutV10.items : [])
+    .filter(item => item && typeof item.id === 'string')
+    .map(item => [item.id, item]));
   const ROOM_ITEMS = Object.freeze(definitions.map(item => {
-    const position = snapRoomPoint(item.position[0], item.position[2], {radius: item.width * .3});
-    return Object.freeze({...item, position: Object.freeze(position || [...item.position])});
+    const published = publishedLayout.get(item.id);
+    const validPosition = Array.isArray(published?.position) && published.position.length === 3 && published.position.every(finite);
+    const options = {radius: item.width * .3};
+    const publishedPosition = validPosition ? snapRoomPoint(published.position[0], published.position[2], options) : null;
+    const position = publishedPosition || snapRoomPoint(item.position[0], item.position[2], options) || [...item.position];
+    const rotationY = finite(published?.rotationY)
+      ? ((published.rotationY % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) : item.rotationY;
+    return Object.freeze({...item, rotationY, position: Object.freeze(position)});
   }));
   const DEFAULT_PROP_PLACEMENTS = ROOM_ITEMS;
 

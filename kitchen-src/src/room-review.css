@@ -44,6 +44,9 @@
 @media(max-height:480px) and (min-width:601px){.room-review__header{top:10px;left:22px;right:22px}.room-review__header h1{font-size:14px}.room-review__stage{inset:52px 0 63px}.room-review__footer{bottom:8px}}
 
 .room-review--game:not(.room-review--arrange) .room-review__stage{inset:24px 0}
+.room-review--game.room-review--arrange .room-review__stage{inset:8px 0 56px}
+.room-review--arrange .room-review__footer{bottom:10px}
+.room-review--arrange .room-arrangement-status{bottom:60px}
 .room-move-hint{position:absolute;z-index:13;bottom:max(30px,env(safe-area-inset-bottom));left:50%;margin:0;transform:translateX(-50%);color:#53664b;font-size:15px;font-weight:500;line-height:1.5;letter-spacing:.025em;white-space:nowrap;pointer-events:none;animation:kitchen-move-breathe 1.8s ease-in-out infinite}
 .room-objective-marker-scale{display:block;width:24px;height:28px;transform:scale(var(--scene-ui-scale,1));transform-origin:center}
 .room-objective-marker{display:grid;place-items:center;width:24px;height:28px;border:1px solid #b18a34;border-radius:9px 9px 9px 2px;background:#fff0af;color:#655019;box-shadow:0 3px 9px #78612220;font:700 17px/1 'Avenir Next',Avenir,sans-serif;transform:rotate(-8deg);animation:kitchen-objective-breathe 2.4s ease-in-out infinite}
