@@ -1,4 +1,12 @@
 @font-face {
+  font-family: 'Cherry Bomb One';
+  src: url('/fonts/kitchen/cherry-bomb-one-regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'Fredoka';
   src: url('/fonts/kitchen/fredoka-latin-variable.ttf') format('truetype');
   font-style: normal;
@@ -12,5 +20,13 @@
   src: url('/fonts/kitchen/nunito-latin-variable.ttf') format('truetype');
   font-style: normal;
   font-weight: 200 1000;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Chewy';
+  src: url('/fonts/kitchen/chewy-regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
   font-display: swap;
 }
