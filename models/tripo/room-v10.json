@@ -3,7 +3,7 @@
   "model_version": "v3.1-20260211",
   "assets": {
     "sushi-room-v10": {
-      "url": "/models/tripo/sushi-room-v10-stove-v3.glb",
+      "url": "/models/tripo/sushi-room-v12-clean.glb",
       "rotation": [
         0,
         0,
@@ -20,8 +20,32 @@
           "Cleaned stove material boundaries: matte cooktop, distinct burners and controls, clean wood frame, and a dark oven window with metal strip."
         ],
         "reusedPartSource": "/models/tripo/sushi-room-v7.glb",
-        "stoveCleanupSource": "/models/tripo/sushi-room-v10-fixtures-v3b.glb"
-      }
+        "stoveCleanupSource": "/models/tripo/sushi-room-v10-fixtures-v3b.glb",
+        "architectureRebuild": {
+          "version": 12,
+          "source": "sushi-room-v10-stove-v3.glb",
+          "changes": [
+            "Rebuilt continuous rounded wall panels, top and base rails, and front wall terminations.",
+            "Rebuilt L-shaped central counter with consistent bevels and recessed base.",
+            "Rebuilt cashier worktop at original computer support height.",
+            "Straightened and rounded floor slab rim while retaining original checker artwork."
+          ],
+          "preservation": "Original cabinet details, stove, sink, plant and stools retained; original coordinate normalization retained for saved project placements."
+        }
+      },
+      "normalizationBounds": {
+        "min": [
+          -2.998586476463547,
+          -0.5006683500927676,
+          -3.6241111840654083
+        ],
+        "max": [
+          2.998360496384243,
+          0.49934069250504787,
+          3.6250151265977903
+        ]
+      },
+      "editedWith": "Blender 5.2.3 LTS"
     }
   },
   "reference_sha256": "cf06cde816a1ba49ec04bda28b8837fcc6d358b5de70f69ccd3739bb9a8729f5",

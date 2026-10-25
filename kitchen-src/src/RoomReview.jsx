@@ -52,7 +52,14 @@ function FurnishedRoom({entry, rotation, onLoaded}) {
     clone.traverse(node => {if (node.isMesh) {node.castShadow = true;node.receiveShadow = true;}});
     rotated.add(clone);
     rotated.updateMatrixWorld(true);
-    const bounds = new THREE.Box3().setFromObject(rotated);
+    const actualBounds = new THREE.Box3().setFromObject(rotated);
+    if (actualBounds.isEmpty()) throw new Error('The room contains no visible geometry.');
+    // Edited rooms can retain the original coordinate frame for saved props
+    // while their outer trim changes shape.
+    const reference = entry.normalizationBounds;
+    const validReference = ['min', 'max'].every(key => Array.isArray(reference?.[key]) && reference[key].length === 3 && reference[key].every(Number.isFinite))
+      && reference.max.every((value, axis) => value > reference.min[axis]);
+    const bounds = validReference ? new THREE.Box3(new THREE.Vector3(...reference.min), new THREE.Vector3(...reference.max)) : actualBounds;
     const size = bounds.getSize(new THREE.Vector3());
     const center = bounds.getCenter(new THREE.Vector3());
     const largest = Math.max(size.x, size.y, size.z);
@@ -76,7 +83,7 @@ function FurnishedRoom({entry, rotation, onLoaded}) {
     centered.add(rotated);
     rotated.position.set(-center.x, -bounds.min.y, -center.z);
     return {object: centered, scalar, dimensions: size.multiplyScalar(scalar).toArray(), framingPoints};
-  }, [scene, rx, ry, rz]);
+  }, [scene, rx, ry, rz, entry.normalizationBounds]);
   useEffect(() => {onLoaded({dimensions, scalar, framingPoints});}, [dimensions, scalar, framingPoints, onLoaded]);
   return <group name="furnished-room-review" scale={scalar}><primitive object={object} dispose={null}/></group>;
 }

@@ -46,6 +46,7 @@ function persistLayout(storageKey, items) {
 function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus, onActivate, onError, editable, objective, highlighted, reducedMotion}) {
   const markerBounds = useRef(new THREE.Box3()), markerPoint = useRef(new THREE.Vector3());
   const markerPosition = useCallback((anchor, camera, size) => {
+    const rightInset = item.id === 'seed-squad' ? 20 : 2;
     const model = anchor.parent?.getObjectByName(`room-item-model-${item.id}`);
     if (model) {
       model.updateWorldMatrix(true, true);
@@ -61,11 +62,11 @@ function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus,
         }
         // Tuck the badge against the upper-right corner, clear of the object's center.
         const scale = getSceneUiScale(camera, size);
-        return [right - 2 * scale, top + 6 * scale];
+        return [right - rightInset * scale, top + 6 * scale];
       }
     }
     markerPoint.current.setFromMatrixPosition(anchor.matrixWorld).project(camera);
-    return [(markerPoint.current.x + 1) * size.width / 2 - 2 * getSceneUiScale(camera, size), (1 - markerPoint.current.y) * size.height / 2];
+    return [(markerPoint.current.x + 1) * size.width / 2 - rightInset * getSceneUiScale(camera, size), (1 - markerPoint.current.y) * size.height / 2];
   }, [item.id]);
 
   return <group ref={node => register(item.id, node)} position={item.position} rotation={[0, item.rotationY, 0]}
