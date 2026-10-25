@@ -1,0 +1,25 @@
+{
+  "provider": "Tripo",
+  "assets": {
+    "discovery-computer-v2": {
+      "url": "/models/tripo/discovery-computer-v2.glb",
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-bot-v3": {
+      "url": "/models/tripo/discovery-bot-v3.glb",
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "status": "success",
+      "source": "discovery-bot-v2.glb",
+      "edit": "Service bell removed; chalkboard and chalk preserved."
+    }
+  }
+}

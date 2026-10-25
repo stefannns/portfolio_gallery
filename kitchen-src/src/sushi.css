@@ -1,0 +1,39 @@
+:root{font-family:'Avenir Next',Avenir,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#f2e4cd;background:#21180f;--silver:#f2e4cd;--muted:#cab89d;--line:#f4e1bd25}
+.portfolio{background:#21180f;min-height:480px;--belt-front:87%;--belt-depth:18%;--plate-base:84%}
+.kitchen-background{position:absolute;inset:0;z-index:0;pointer-events:none}.kitchen-background img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 42%}
+.kitchen-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(#0a110d12,transparent 30%,transparent 70%,#170c0850)}
+.world-vignette{z-index:6;box-shadow:inset 0 0 100px #160b073d}
+.character-layer{z-index:2;width:min(55vw,710px);height:83%;bottom:14%;left:50%;filter:drop-shadow(0 20px 25px #140b0733)}
+.character-poster{filter:none;animation:none}.character-reflection,.character-glow{display:none}.gesture-left .character-poster,.gesture-right .character-poster,.gesture-enter .character-poster{animation:none}
+.sushi-conveyor{position:absolute;inset:0;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.conveyor-deck{position:absolute;left:0;right:0;top:calc(var(--belt-front) - var(--belt-depth));height:var(--belt-depth);z-index:3;overflow:hidden}
+.conveyor-deck>img,.conveyor-front>img{display:block;width:100%;height:100%;object-fit:fill;pointer-events:none}
+.conveyor-seams{position:absolute;left:-160px;right:-160px;top:34%;bottom:0;opacity:.42;background:repeating-linear-gradient(90deg,transparent 0,transparent 118px,#20150eb3 119px,#f1c78640 121px,transparent 123px,transparent 160px);transform:skewX(-8deg);animation:belt-seams 16s linear infinite;pointer-events:none}
+.conveyor-front{position:absolute;left:0;right:0;top:var(--belt-front);bottom:-10%;z-index:5;pointer-events:none;background:linear-gradient(#562e19,#2e1b11)}
+.conveyor-front>img{height:100%;max-height:240px;object-position:top}
+.dish-viewport{position:absolute;inset:0;z-index:4;pointer-events:none}
+.project-dish{position:absolute;left:50%;top:calc(var(--plate-base) - var(--dish-size)*.9375);width:var(--dish-size);height:var(--dish-size);margin-left:calc(var(--dish-size)*-.5);padding:0;border:0;background:none;pointer-events:auto;touch-action:pan-y;will-change:transform;isolation:isolate}
+.world-sprite{display:block;width:100%;height:100%;object-fit:contain;position:relative;z-index:1;transition:filter .25s;pointer-events:none}
+.dish-shadow{position:absolute;left:8%;width:84%;height:12%;top:87%;border-radius:50%;background:#120b0799;filter:blur(9px);z-index:0;transform:scaleY(.55);pointer-events:none}
+.project-dish:hover .world-sprite,.project-dish:focus-visible .world-sprite{filter:brightness(1.07) drop-shadow(0 0 9px #ffe3b112)}
+.project-dish:focus-visible{outline:1px solid #f3d5a7;outline-offset:-12px;border-radius:32%}
+.sushi-conveyor.is-dragging,.sushi-conveyor.is-dragging button{cursor:grabbing}.sushi-conveyor.is-paused .conveyor-seams,.sushi-conveyor:has(.project-dish:hover) .conveyor-seams,.sushi-conveyor:has(.project-dish:focus-visible) .conveyor-seams,.sushi-conveyor.is-dragging .conveyor-seams{animation-play-state:paused}
+.site-header{top:17px;left:30px;right:30px}.signature{font-family:inherit;font-size:16px;font-weight:500;color:#f5e7cf;text-shadow:0 1px 8px #1a0d08}.index-link{color:#e5d0ac;font-size:12px;text-shadow:0 1px 8px #1a0d08}
+.site-footer{left:30px;right:30px;bottom:24px;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center}
+.project-title{font-family:inherit;font-size:23px;font-weight:500;letter-spacing:-.025em;line-height:1.25;text-shadow:0 2px 12px #130907}.project-type{color:#ddc9a8;font-size:11px}.navigation-hint{font-size:11px;color:#dcc4a0;margin:0;align-self:center}.belt-pause{justify-self:start;font-size:11px;color:#dcc4a0;text-align:left}
+.detail-backdrop{background:#130c0799}.detail-panel{background:#182b29;border-color:#ead5b433;color:#f2e4cd}.detail-top,.detail-type,.detail-copy p,.project-notes p,.about-copy>p,.index-intro,.index-project>small,.experience-list small{color:#d4d1bf}.project-links a,.about-copy>a{color:#e8cf9f}.detail-media{background:#10211f}.detail-panel h1{font-family:inherit;font-weight:500;font-size:clamp(34px,4vw,52px);letter-spacing:-.04em}.project-notes h2,.index-project>span{font-family:inherit;font-weight:500}.project-index .index-project>span{font-size:22px}
+.detail-open .world{opacity:.32;filter:blur(10px)}
+@keyframes belt-seams{to{background-position:-160px 0}}
+@media(min-width:1600px){.character-layer{width:min(53vw,810px);height:84%;bottom:13%}.site-footer{bottom:30px}}
+@media(max-width:900px) and (min-width:701px){.character-layer{width:66vw;height:79%;bottom:16%}.site-footer{left:22px;right:22px}.project-title{font-size:21px}}
+@media(max-width:700px){
+ .portfolio{min-height:560px;--belt-front:86%;--belt-depth:18%;--plate-base:83%}
+ .kitchen-background img{object-position:center 44%}.character-layer{width:min(142vw,660px);max-width:none;height:76%;bottom:25%;left:50%}
+ .site-header{top:12px;left:19px;right:19px}.signature{font-size:15px}.index-link{font-size:11px}
+ .site-footer{left:20px;right:20px;bottom:15px;grid-template-columns:1fr 1fr;gap:2px 12px}.project-caption{grid-row:1;grid-column:1/-1;justify-self:center;max-width:calc(100vw - 38px);gap:0}.project-title{font-size:21px;min-height:32px}.project-type{font-size:10px}.belt-pause{grid-row:2;font-size:10px}.navigation-hint{grid-row:2;justify-self:end;font-size:10px;margin:0}
+ .conveyor-front{bottom:-5%}.world-vignette{box-shadow:inset 0 0 50px #160b0729}.detail-panel h1{font-size:35px}.project-index .index-project>span{font-size:19px}.dish-shadow{filter:blur(7px)}
+}
+@media(max-height:620px) and (min-width:701px){.character-layer{height:89%;bottom:11%;width:min(48vw,540px)}.portfolio{--belt-front:87%;--plate-base:83%}.site-footer{bottom:12px}.project-title{font-size:19px}.project-type{font-size:10px}}
+@media(min-width:701px) and (max-aspect-ratio:6/5){.character-layer{width:min(86vw,74svh);height:84%;bottom:16%}}
+@media(prefers-reduced-motion:reduce){.conveyor-seams{animation:none}.world-sprite{transition:none}}
+.reduced-motion *,.reduced-motion *::before,.reduced-motion *::after{animation:none!important;transition:none!important}

@@ -1,0 +1,91 @@
+{
+  "provider": "Tripo",
+  "model_version": "v3.1-20260211",
+  "assets": {
+    "chef": {
+      "url": "/models/tripo/chef.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "seed-squad": {
+      "url": "/models/tripo/seed-squad.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "h3-otome": {
+      "url": "/models/tripo/h3-otome.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "smarttester": {
+      "url": "/models/tripo/smarttester.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "recurve": {
+      "url": "/models/tripo/recurve.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "assassin": {
+      "url": "/models/tripo/assassin.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "niflheim": {
+      "url": "/models/tripo/niflheim.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "toad-defense": {
+      "url": "/models/tripo/toad-defense.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "a-bot-can-do-better": {
+      "url": "/models/tripo/a-bot-can-do-better.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    }
+  },
+  "animations": {
+    "idle": "/models/tripo/chef-idle.glb",
+    "walk": "/models/tripo/chef-walk.glb"
+  }
+}

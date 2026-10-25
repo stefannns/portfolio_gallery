@@ -1,0 +1,16 @@
+.portfolio.is-conveyor-3d{background:#fafbf8;min-height:520px}
+.is-conveyor-3d .world{background:#fafbf8}
+.conveyor-3d{position:absolute;inset:0;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
+.conveyor-3d.is-dragging{cursor:grabbing}
+.conveyor-3d canvas{display:block;touch-action:pan-y}
+.is-conveyor-3d .site-footer{top:var(--conveyor-caption-y,75%);bottom:auto;left:32px;right:32px;align-items:center}
+.is-conveyor-3d .project-caption{max-width:min(620px,70vw);gap:6px}
+.is-conveyor-3d .project-title{font-size:29px;line-height:1.15}
+.is-conveyor-3d .project-type{font-size:13px;color:#627060}
+.is-conveyor-3d .navigation-hint{color:#627060}
+@media(max-width:700px){
+ .is-conveyor-3d .site-footer{top:var(--conveyor-caption-y,75%);bottom:auto;left:20px;right:20px;gap:14px}
+ .is-conveyor-3d .project-caption{max-width:90vw}
+ .is-conveyor-3d .project-title{font-size:25px}
+ .is-conveyor-3d .project-type{font-size:12px;max-width:32ch}
+}

@@ -1,0 +1,30 @@
+{
+  "provider": "Tripo",
+  "model_version": "v3.1-20260211",
+  "assets": {
+    "sushi-room-v7": {
+      "url": "/models/tripo/sushi-room-v7-clean-v3.glb",
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "status": "success"
+    }
+  },
+  "reference_sha256": "0380feef9226b4379c8d816f46bab344de76d03179f4f855d4ab55ae3af7df06",
+  "prompt_metadata": "",
+  "review": {
+    "projection": "perspective",
+    "fieldOfView": 38,
+    "cameraDirection": [
+      1,
+      0.8,
+      0
+    ],
+    "framePadding": 1.16,
+    "exposure": 0.85
+  },
+  "source_url": "/models/tripo/sushi-room-v7.glb",
+  "local_edit": "Sushi tray and remaining wooden rim texture removed; level countertop repaired. Original room preserved."
+}

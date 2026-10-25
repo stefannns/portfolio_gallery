@@ -1,0 +1,53 @@
+{
+  "source": "/models/tripo/discovery-bot-v3.glb",
+  "output": "/models/tripo/kitchen-title-board.glb",
+  "provider": "Tripo reuse",
+  "sourceSha256": "d20ec23b74622ba2ca58a92d02b01166c8fdcdaab39ef05a09c6fa3113e94f1f",
+  "outputSha256": "3e769fdb35ef062ad5be01beaf7ecd5a6b0188780bae0dff11d5a2f7f50d5c18",
+  "sourceTriangles": 21508,
+  "outputTriangles": 10051,
+  "nativeBounds": {
+    "min": [
+      -0.07283218383789064,
+      -0.25,
+      -0.8
+    ],
+    "max": [
+      0.07283218383789064,
+      0.25,
+      0.8
+    ],
+    "size": [
+      0.14566436767578128,
+      0.5,
+      1.6
+    ]
+  },
+  "frontNormal": [
+    1,
+    0,
+    0
+  ],
+  "horizontalAxis": "Z",
+  "verticalAxis": "Y",
+  "mounting": "Mounted against counter; cropped rear is open. Not a freestanding prop.",
+  "recommendedScale": 1.75,
+  "recommendedWorldSize": [
+    0.2549126434326172,
+    0.875,
+    2.8000000000000003
+  ],
+  "chalkSurfaceX": -0.0151,
+  "textBackX": -0.006,
+  "textInFrontOfFrameX": 0.08483218383789064,
+  "safeTextArea": {
+    "minY": -0.13,
+    "maxY": 0.18,
+    "minZ": -0.66,
+    "maxZ": 0.66
+  },
+  "texturesByteIdentical": true,
+  "materialsExact": true,
+  "uvs": "Original UVs; cut-edge UVs interpolated along original triangles.",
+  "reshape": "Original edge widths retained; blank interior stretched to landscape."
+}

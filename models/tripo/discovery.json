@@ -1,0 +1,96 @@
+{
+  "provider": "Tripo",
+  "model_version": "v3.1-20260211",
+  "assets": {
+    "sushi-room-v2": {
+      "url": "/models/tripo/sushi-room-v2.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "sushi-prep-bar-v2": {
+      "url": "/models/tripo/sushi-prep-bar-v2.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-groceries": {
+      "url": "/models/tripo/discovery-groceries.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-recurve": {
+      "url": "/models/tripo/discovery-recurve.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-assassin": {
+      "url": "/models/tripo/discovery-assassin.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-niflheim": {
+      "url": "/models/tripo/discovery-niflheim.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-toad": {
+      "url": "/models/tripo/discovery-toad.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-h3": {
+      "url": "/models/tripo/discovery-h3.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-smarttester": {
+      "url": "/models/tripo/discovery-smarttester.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-bot": {
+      "url": "/models/tripo/discovery-bot.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    }
+  }
+}

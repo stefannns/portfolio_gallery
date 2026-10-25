@@ -1,0 +1,44 @@
+{
+  "status": "generated; derived transparent idle integrated in the local portfolio",
+  "service": "Crate",
+  "model": "Seedance 2.0",
+  "project_url": "https://crate.tiktok-row.net/project/7699379825295065362",
+  "submitted_date": "2026-10-22",
+  "reference": "/Users/bytedance/Desktop/website/public/character/options/A-mochi.png",
+  "requested_settings": {
+    "duration_seconds": 6,
+    "resolution": "1080p",
+    "aspect": "1:1",
+    "frame_mode": "First & Last Frame (Same)"
+  },
+  "actual_output": {
+    "file": "mochi-chef-idle-seedance2-original.mp4",
+    "duration_seconds": 6.05,
+    "width": 1440,
+    "height": 1440,
+    "fps": 24,
+    "video_codec": "h264",
+    "pixel_format": "yuv420p",
+    "audio_codec": "aac",
+    "has_alpha": false,
+    "background": "white"
+  },
+  "review": {
+    "identity": "Mochi design retained",
+    "motion": "Gentle breathing and small paw motion; eyes remain closed for most of the clip",
+    "loop": "First and last poses visually close; reviewed endpoint comparison, not a claim of pixel-identical endpoints",
+    "integration": "Original opaque MP4 preserved. Local subject matting and retiming produce the transparent animated WebP now used by the website."
+  },
+  "prompt": "Create a six-second seamless idle animation using the supplied Mochi capybara chef as BOTH the first and last frame. Locked near-orthographic camera. Preserve the exact cute Q-version collectible-vinyl identity: huge rounded caramel head, broad capybara muzzle, tiny dark bead eyes, rosy circular cheeks, round belly, tiny paws and stubby planted feet, low plump white chef toque, cream jacket with four cocoa buttons, terracotta scarf and beige apron. Keep the full silhouette and its scale and screen position unchanged. Very gentle breathing, one slow natural blink, and a tiny relaxed welcoming movement of the raised paws, as if quietly holding floating worlds in place. Return precisely to the starting pose by the end, with no pause or jump at the loop boundary. Smooth restrained animation, calm charming expression, stable warm key and cool rim light. The character alone against a perfectly uniform solid black background; no floor, cast shadow, scenery, objects, sparkles, portals, steam, text, or camera movement. No walking, turning, hopping, body stretching, costume changes, extra fingers, or talking. Silent clip.",
+  "derived_output": {
+    "runtime": "mochi-idle.webp",
+    "poster": "mochi-idle-poster.webp",
+    "alpha_video": "mochi-idle-alpha.webm",
+    "duration_ms": 6000,
+    "size": [
+      576,
+      576
+    ],
+    "processing_record": "processing.json"
+  }
+}

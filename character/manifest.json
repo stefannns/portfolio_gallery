@@ -1,0 +1,9 @@
+{
+  "poster": "/character/seedance/mochi-idle-poster.webp",
+  "idle": {
+    "animated": "/character/seedance/mochi-idle.webp"
+  },
+  "left": null,
+  "right": null,
+  "enter": null
+}

@@ -1,0 +1,4 @@
+Footstep samples adapted from footstep_carpet_000–003, Impact Sounds by Kenney.
+Source: https://kenney.nl/assets/impact-sounds
+License: Creative Commons CC0 1.0.
+Edits: gentle filtering, short fade, mono 24 kHz WAV.

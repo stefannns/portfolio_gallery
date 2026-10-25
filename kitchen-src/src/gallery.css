@@ -1,0 +1,38 @@
+:root{font-family:'Avenir Next',Avenir,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;color:#262625;--silver:#262625;--muted:#6e6e68;--line:#2626251a}
+.portfolio{background:#fff;min-height:480px;--dish-size:70vw;--plate-base:75vh}
+.world{background:#fff;touch-action:pan-y}
+.plate-gallery{position:absolute;inset:0;touch-action:pan-y;user-select:none;-webkit-user-select:none;isolation:isolate}
+.plate-track{position:absolute;inset:0;z-index:3;pointer-events:none}
+.project-dish{position:absolute;left:50%;top:calc(var(--plate-base) - var(--dish-size)*.9375);width:var(--dish-size);height:var(--dish-size);margin-left:calc(var(--dish-size)*-.5);padding:0;border:0;background:none;pointer-events:auto;touch-action:pan-y;transform-origin:50% 93.75%;will-change:transform}
+.world-sprite{display:block;position:relative;width:100%;height:100%;object-fit:contain;pointer-events:none;transition:filter .22s}
+.dish-shadow{position:absolute;left:10%;top:91%;width:80%;height:6%;background:radial-gradient(ellipse,#30271c30,transparent 70%);border-radius:50%;filter:blur(12px);pointer-events:none}
+.project-dish:not(.is-active) .world-sprite{filter:saturate(.86);opacity:.84}
+.project-dish.is-active:hover .world-sprite{filter:brightness(1.025)}
+.project-dish:not(.is-active):hover .world-sprite{filter:none;opacity:1}
+.project-dish:focus-visible{outline:none}.project-dish:focus-visible .world-sprite{filter:drop-shadow(0 0 5px #7f5e3299) brightness(1.04)}
+.plate-gallery.is-dragging,.plate-gallery.is-dragging button{cursor:grabbing}
+.gallery-host{position:absolute;z-index:2;left:calc(50% + var(--dish-size)*var(--host-x));top:calc(var(--plate-base) - var(--dish-size)*var(--host-y));width:calc(var(--dish-size)*.34);height:calc(var(--dish-size)*.245);overflow:hidden;pointer-events:none;mask-image:linear-gradient(#000 84%,transparent 100%);-webkit-mask-image:linear-gradient(#000 84%,transparent 100%);transition:left .55s,top .55s,opacity .2s}
+.gallery-host .character-layer{position:absolute;left:0;top:0;bottom:auto;width:100%;max-width:none;height:calc(var(--dish-size)*.34);transform:none;filter:none;transition:none}
+.gallery-host .character-poster{filter:none;animation:none}.gallery-host .character-glow,.gallery-host .character-reflection{display:none}
+.gallery-host .gesture-left .character-poster,.gallery-host .gesture-right .character-poster,.gallery-host .gesture-enter .character-poster{animation:none}
+.plate-gallery.is-dragging .gallery-host{opacity:.25}
+.site-header{top:19px;left:32px;right:32px;grid-template-columns:1fr 1fr}.header-space{display:none}.signature{font-family:inherit;font-size:16px;font-weight:500;color:#262625;letter-spacing:-.02em}.index-link{font-size:13px;color:#61615c}button.quiet-button:hover{color:#6b583a}button:focus-visible,a:focus-visible{outline-color:#7f5e32}
+.site-footer{top:calc(var(--plate-base) + 24px);bottom:auto;left:32px;right:32px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px}
+.project-caption{gap:3px;max-width:min(640px,64vw)}.project-title{font-family:inherit;font-size:clamp(24px,2.1vw,32px);font-weight:500;line-height:1.18;letter-spacing:-.035em;color:#262625;text-shadow:none}.project-type{font-size:13px;line-height:1.5;letter-spacing:0;color:#696963;text-align:center}.navigation-hint{font-size:11px;color:#6e6e68;margin:0;justify-self:end;align-self:center}.navigation-hint.is-settled{opacity:0;pointer-events:none}
+.detail-open .world{filter:blur(10px);opacity:.2}.detail-backdrop{background:#ffffffb8;backdrop-filter:blur(4px)}.detail-panel{background:#fff;border-color:#26262518;color:#262625;box-shadow:0 24px 100px #25221e17;scrollbar-color:#d6d4cc transparent}.detail-top,.detail-type,.project-description,.project-notes p,.about-copy>p,.index-intro,.index-project>small,.experience-list>div>span,.experience-list small{color:#65655e}.detail-copy h1,.about-copy h1,.index-copy h1{font-family:inherit;font-weight:500;font-size:clamp(34px,4vw,52px);letter-spacing:-.04em}.project-notes h2,.index-project>span{font-family:inherit;font-weight:500}.project-links a,.about-copy>a{color:#335f4f}.detail-media{background:#f5f5f1}.project-index .index-project>span{font-size:22px}.art-caption{background:#ffffffdf;color:#696963}
+@media(max-width:700px){
+ .portfolio{min-height:520px}.site-header{top:14px;left:20px;right:20px}.signature{font-size:15px}.index-link{font-size:12px}
+ .gallery-host{left:calc(50% + var(--dish-size)*.04);top:calc(var(--plate-base) - var(--dish-size)*.88);width:calc(var(--dish-size)*.40);height:calc(var(--dish-size)*.29)}
+ .gallery-host .character-layer{height:calc(var(--dish-size)*.40)}
+ .site-footer{top:calc(var(--plate-base) + 24px);left:20px;right:20px;grid-template-columns:1fr;gap:16px}.site-footer>span:first-child{display:none}.project-caption{grid-row:1;grid-column:1;max-width:100%;justify-self:center;gap:5px}.project-title{font-size:25px;min-height:34px;line-height:1.2}.project-type{font-size:13px;max-width:33ch}.navigation-hint{grid-row:2;justify-self:center;font-size:11px;margin:0}.dish-shadow{filter:blur(8px)}
+ .detail-copy h1,.about-copy h1,.index-copy h1{font-size:35px}.project-index .index-project>span{font-size:19px}
+}
+@media(max-height:620px) and (min-width:701px){.site-header{top:9px}.site-footer{top:calc(var(--plate-base) + 15px)}.project-title{font-size:23px}.project-type{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.gallery-host,.world-sprite{transition:none}}
+.reduced-motion *,.reduced-motion *::before,.reduced-motion *::after{animation:none!important;transition:none!important}
+.gallery-table{position:absolute;z-index:2;left:0;right:0;top:var(--table-back);bottom:0;pointer-events:none;background:#d9af7c;box-shadow:0 -2px 8px #47311a0a}
+.gallery-table>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center top}
+.with-tabletop .gallery-host{z-index:1;left:calc(50% + var(--dish-size)*.32);top:calc(var(--table-back) - var(--chef-size)*.64);width:var(--chef-size);height:calc(var(--chef-size)*.64);mask-image:none;-webkit-mask-image:none;transition:opacity .2s}
+.with-tabletop .gallery-host .character-layer{height:var(--chef-size)}
+.with-tabletop .project-type,.with-tabletop .navigation-hint{color:#40362c}
+@media(max-width:1000px){.with-tabletop .gallery-host{left:calc(50% + var(--dish-size)*.04)}}

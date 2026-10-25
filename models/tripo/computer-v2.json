@@ -1,0 +1,16 @@
+{
+  "provider": "Tripo",
+  "source": "discovery-computer-v1.glb",
+  "edit": "Wooden platform removed; monitor, keyboard and mouse preserved.",
+  "assets": {
+    "discovery-computer-v2": {
+      "url": "/models/tripo/discovery-computer-v2.glb",
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "status": "success"
+    }
+  }
+}

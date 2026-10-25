@@ -1,0 +1,96 @@
+{
+  "provider": "Tripo",
+  "model_version": "v3.1-20260211",
+  "assets": {
+    "sushi-room-v3": {
+      "url": "/models/tripo/sushi-room-v3.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "sushi-prep-bar-v3": {
+      "url": "/models/tripo/sushi-prep-bar-v3.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-groceries-v2": {
+      "url": "/models/tripo/discovery-groceries-v2.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-recurve-v2": {
+      "url": "/models/tripo/discovery-recurve-v2.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-assassin-v2": {
+      "url": "/models/tripo/discovery-assassin-v2.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-niflheim-v2": {
+      "url": "/models/tripo/discovery-niflheim-v2.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-toad-v2": {
+      "url": "/models/tripo/discovery-toad-v2.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-h3-v2": {
+      "url": "/models/tripo/discovery-h3-v2.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-smarttester-v2": {
+      "url": "/models/tripo/discovery-smarttester-v2.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    },
+    "discovery-bot-v2": {
+      "url": "/models/tripo/discovery-bot-v2.glb",
+      "rotation": [
+        0,
+        -1.5707963267948966,
+        0
+      ],
+      "status": "success"
+    }
+  }
+}

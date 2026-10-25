@@ -1,0 +1,26 @@
+{
+  "provider": "Tripo",
+  "model_version": "v3.1-20260211",
+  "assets": {
+    "sushi-room-v5": {
+      "url": "/models/tripo/sushi-room-v5.glb",
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "status": "success"
+    }
+  },
+  "reference_sha256": "1956bffe975b5d0936429009b41312a2c9d1099102f469abbcd6697609ae9fd5",
+  "prompt_metadata": "",
+  "review": {
+    "cameraDirection": [
+      1.6,
+      1.55,
+      -0.6
+    ],
+    "fieldOfView": 38,
+    "framePadding": 1.18
+  }
+}

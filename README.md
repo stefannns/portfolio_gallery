@@ -1,79 +1,19 @@
-# Portfolio
+# Stefan’s Kitchen — Portfolio
 
-Stefan's game-design portfolio. Static site — no build step at the root, no dependencies.
+The homepage is now a playable capybara kitchen portfolio. Explore the room, inspect projects, and push the toy title letters. Published at https://stefansun.vercel.app/ through the existing Vercel integration.
 
-## The site
+## Explore
 
-`index.html` is the whole page, in two sections:
+- WASD or click the floor to walk. On phones, turn sideways and use the joystick or tap the floor.
+- Click or tap project objects to open them; E inspects a nearby highlighted object.
+- Sticky notes guide the vegetables bag → recorder → computer tour. All project objects stay available.
+- The CD player includes two switchable audio tracks. A browser may require the first interaction before music starts.
+- The game scene keeps a 16:9 landscape frame. Portrait phones show a rotation prompt.
 
-1. **About** — a draggable 3D lanyard badge beside the intro copy. This is a React/three.js
-   bundle; its source is `about-src/` and it is mounted into `#root`. See
-   [about-src/NOTES.md](about-src/NOTES.md).
-2. **Gallery** — a dark horizontal film-strip of the work. Drag / wheel / trackpad-swipe
-   sideways; it loops endlessly. Click a card and the cover **glitches away** to reveal the
-   video reel, with a description drawer below the frame.
+Seed Squad has an embedded game preview. Smarttester links to its workflow tour. H3 Otome uses an original generated sci-fi romance cover. Existing game covers and reels are retained.
 
-`/about` also stays live as a standalone page serving the same bundle — it's embedded on its
-own in a Lark doc.
+## Edit and publish
 
-## Pages
+The editable website lives in `kitchen-src/`; see its README for local development, navigation checks and rebuilding. The generated homepage and its runtime assets are served directly from the repository root, retaining the existing static-hosting configuration.
 
-| Path | What |
-|---|---|
-| `/` | the combined site (about + gallery) |
-| `/about` | the badge on its own |
-| `/doggystack`, `/sheepjump`, `/voiceescape`, `/zoostacker` | playable Phaser builds |
-| `/stattest` | mini-game test harness |
-| `/playablebatch1` | 61-game playable review library with a fixed portrait preview |
-
-## Editing the gallery
-
-The `PIECES` array near the top of the `<script>` in `index.html`:
-
-```js
-const PIECES = [
-  { title:"Assassin's Weakness is Love", cn:"心动刺客", cat:"Rhythm Game", date:"May 2025",
-    accent:"#b98cff", cover:"assassin/awil_cover.png", video:REELS+"/assassin-l1.mp4",
-    desc:"…", levels:[ … ] },
-  …
-];
-```
-
-Per piece: `cn` adds the Chinese name beside the title, `accent` drives that card's glow and
-highlights, `desc`/`desc2` fill the drawer, `levels` adds tabs (Assassin has two), and `hover`
-is a clip that plays on hover (Niflheim).
-
-## Videos
-
-Reels are **not** in the repo — they're too large. They live in a public Supabase Storage
-bucket, referenced through the `REELS` base constant in `index.html`. Covers are committed.
-
-Compression used for the hosted reels (keeps them under Supabase's 50 MB/file cap, with audio):
-
-```bash
-ffmpeg -i in.mov -vf scale=-2:720 -c:v libx264 -crf 23 -maxrate 2.3M -bufsize 4.6M -c:a aac -b:a 128k -movflags +faststart out.mp4
-```
-
-## Run locally
-
-Serve from the repo root — the about bundle is referenced by absolute path (`/about/assets/…`),
-so opening `index.html` as a `file://` URL will not load it.
-
-```bash
-python3 -m http.server 8000
-```
-
-## Deploy
-
-Static, no build command, framework preset **Other**. Vercel auto-deploys on push to `main`.
-After changing anything in `about-src/`, rebuild and commit the output:
-
-```bash
-cd about-src && npm run build
-```
-
-## Controls
-
-- **Drag / wheel / two-finger swipe** — move sideways (loops both ways)
-- **Click** a centered card — reveal the reel; **✕** to close
-- **Arrow keys** — previous / next
+Push `main` to publish through Vercel. The old project and temporary work URLs, `about/`, `gallery/`, and `vercel.json` rewrites remain available. The previous gallery documentation is preserved in `docs/portfolio-gallery-legacy.md`, and previous homepage versions remain in Git history.

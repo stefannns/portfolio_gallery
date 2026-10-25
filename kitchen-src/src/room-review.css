@@ -1,0 +1,77 @@
+.room-review{position:relative;width:100%;height:100svh;min-height:360px;overflow:hidden;background:#f2f3ed;color:#344236;font-family:'Avenir Next',Avenir,'Segoe UI',sans-serif}
+.room-review *{box-sizing:border-box}
+.room-review-viewport{width:100%;min-height:100svh;background:#f2f3ed}
+.room-review-viewport--game{height:100svh;min-height:0;display:grid;place-items:center;overflow:hidden}
+.room-review-viewport--game>.room-review{width:min(100vw,177.777778svh);height:min(100svh,56.25vw);min-height:0;aspect-ratio:16/9;container-type:size}
+.room-controls--touch{display:none!important}
+.room-rotate{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:32px;text-align:center;background:#f2f3ed;color:#775c42;font-family:'Nunito',sans-serif}
+.room-rotate svg{width:86px;height:86px;fill:none;stroke:#a58463;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.room-rotate h1{max-width:290px;margin:6px 0 0;font:500 28px/1.2 'Fredoka',sans-serif}
+.room-rotate p{max-width:260px;margin:0;font-size:16px;line-height:1.6}
+.room-review__header{position:absolute;z-index:2;left:28px;right:28px;top:max(22px,env(safe-area-inset-top));display:flex;align-items:center;justify-content:space-between;gap:24px;pointer-events:none}
+.room-review__header h1{margin:0;font-size:16px;font-weight:500;letter-spacing:-.02em;line-height:1.4}
+.room-review__header a{pointer-events:auto;flex-shrink:0;min-height:44px;display:flex;align-items:center;padding:8px 0;color:#64705f;text-decoration:none;font-size:12px}
+.room-review__header a:hover{text-decoration:underline;text-underline-offset:4px}
+.room-review__stage{position:absolute;inset:75px 0 90px;outline:none;touch-action:none}
+.room-review__stage canvas{display:block;touch-action:none}
+.room-review__stage:focus-visible{outline:1px solid #8c9f81;outline-offset:-10px;border-radius:20px}
+.room-review__footer{position:absolute;z-index:2;left:24px;right:24px;bottom:max(22px,env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;gap:27px;pointer-events:none}
+.room-review__footer p{margin:0;font-size:11px;line-height:1.6;color:#6b7764}
+.room-review__footer button,.room-review__joystick,.room-review__status button,.room-item-keyboard{font:inherit;cursor:pointer;color:#4b5e42;background:none;border:0;border-radius:4px}
+.room-review__footer button{pointer-events:auto;min-height:44px;padding:8px 0;font-size:12px;text-decoration:underline;text-underline-offset:4px}
+.room-review__actions{display:flex;align-items:center;gap:20px;pointer-events:auto;flex-shrink:0}
+.room-review__actions .room-review__rotate:not(:disabled){color:#344d2a;font-weight:500}
+.room-arrangement-status{position:absolute;z-index:2;left:20px;right:20px;bottom:76px;margin:0;text-align:center;font-size:11px;line-height:1.5;color:#65715d;pointer-events:none}
+.room-item-keyboard{opacity:0;white-space:nowrap;pointer-events:none;font-size:11px!important;line-height:1.4;background:#fffffff2!important;padding:8px 12px!important;box-shadow:0 3px 20px #27342016;transform:translateY(-16px)}
+.room-item-keyboard:focus-visible{opacity:1;outline:2px solid #61784f;outline-offset:3px}
+.room-item-keyboard span{display:block;font-size:9px;color:#6b7764;margin-top:3px}
+.room-joystick-wrap{display:none;position:absolute;z-index:24;left:max(22px,env(safe-area-inset-left));bottom:max(18px,env(safe-area-inset-bottom));flex-direction:column;align-items:center;gap:5px;user-select:none;-webkit-user-select:none}
+.room-review__joystick{position:relative;display:grid;place-items:center;width:96px;height:96px;padding:0;border:2px solid #b29a7e!important;border-radius:50%!important;background:#eee4d5bb!important;box-shadow:inset 0 2px 8px #7f654114,0 3px 12px #60492c0d;touch-action:none;overscroll-behavior:contain;-webkit-tap-highlight-color:transparent}
+.room-review__joystick span{display:block;border-radius:50%;pointer-events:none}
+.room-review__joystick .room-joystick__track{width:68%;height:68%;border:1px dashed #b29a7e77;background:transparent}
+.room-review__joystick .room-joystick__thumb{position:absolute;width:44px;height:44px;border:2px solid #a68761;background:#d3b18a;box-shadow:inset 0 3px 0 #f5dbc0,0 3px 5px #73583a26;will-change:transform}
+.room-joystick__label{color:#927758;font:600 11px/1 'Nunito',sans-serif;letter-spacing:.04em}
+@media(any-pointer:coarse){.room-joystick-wrap{display:flex}.room-controls--keyboard{display:none!important}.room-controls--touch{display:inline-flex!important}.room-inspect-hint__action{display:none}.room-review--game:not(.room-review--arrange) .room-review__stage{inset:0}.room-move-hint,.room-inspect-hint{bottom:max(17px,env(safe-area-inset-bottom));font-size:12px}}
+@media(max-width:600px){.room-review--interactive .room-review__stage{bottom:130px}.room-review--interactive .room-arrangement-status{bottom:111px}.room-review--interactive .room-review__footer p{max-width:330px;line-height:1.5}.room-review__actions{gap:22px}}
+.room-review button:disabled{opacity:.4;cursor:default}
+.room-review button:focus-visible,.room-review a:focus-visible{outline:2px solid #61784f;outline-offset:5px}
+.room-review__keyboard-hint{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap}
+.room-review:has(.room-review__stage:focus-visible) .room-review__keyboard-hint{position:static;display:block;width:auto;height:auto;overflow:visible;clip:auto;clip-path:none;white-space:normal}
+.room-review__status{position:absolute;z-index:3;left:24px;right:24px;top:50%;margin:0;transform:translateY(-50%);text-align:center;font-size:13px;line-height:1.6;color:#6d7965}
+.room-review__status p{margin:0 0 12px}
+.room-review__status button{font-size:13px;min-height:44px;padding:10px 20px;background:#e1e8d9;border:1px solid #cbd8c1;border-radius:24px}
+@media(max-width:600px){.room-review__header{left:20px;right:20px;top:max(16px,env(safe-area-inset-top));gap:20px}.room-review__header h1{max-width:155px;font-size:15px}.room-review__header a{font-size:11px}.room-review__stage{inset:90px 0 110px}.room-review__footer{left:18px;right:18px;bottom:max(20px,env(safe-area-inset-bottom));flex-direction:column;gap:4px}.room-review__footer p{font-size:10px;text-align:center}.room-review__footer button{font-size:11px}}
+@media(max-height:480px) and (min-width:601px){.room-review__header{top:10px;left:22px;right:22px}.room-review__header h1{font-size:14px}.room-review__stage{inset:52px 0 63px}.room-review__footer{bottom:8px}}
+
+.room-review--game:not(.room-review--arrange) .room-review__stage{inset:24px 0}
+.room-move-hint{position:absolute;z-index:13;bottom:max(30px,env(safe-area-inset-bottom));left:50%;margin:0;transform:translateX(-50%);color:#53664b;font-size:15px;font-weight:500;line-height:1.5;letter-spacing:.025em;white-space:nowrap;pointer-events:none;animation:kitchen-move-breathe 1.8s ease-in-out infinite}
+.room-objective-marker-scale{display:block;width:24px;height:28px;transform:scale(var(--scene-ui-scale,1));transform-origin:center}
+.room-objective-marker{display:grid;place-items:center;width:24px;height:28px;border:1px solid #b18a34;border-radius:9px 9px 9px 2px;background:#fff0af;color:#655019;box-shadow:0 3px 9px #78612220;font:700 17px/1 'Avenir Next',Avenir,sans-serif;transform:rotate(-8deg);animation:kitchen-objective-breathe 2.4s ease-in-out infinite}
+@keyframes kitchen-move-breathe{0%,100%{opacity:.42}50%{opacity:1}}
+@keyframes kitchen-objective-breathe{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-3px) rotate(-8deg)}}
+@media(max-width:600px){.room-review--game:not(.room-review--arrange) .room-review__stage{inset:18px 0}.room-move-hint{font-size:14px;bottom:max(35px,env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:reduce){.room-move-hint,.room-objective-marker{animation:none;opacity:1}}
+.room-inspect-hint{position:absolute;z-index:13;bottom:max(30px,env(safe-area-inset-bottom));left:50%;display:flex;align-items:center;gap:16px;margin:0;transform:translateX(-50%);color:#61715a;font-size:13px;line-height:1.5;white-space:nowrap;pointer-events:none}
+.room-inspect-hint--ready{padding:10px 16px;border:1px solid #d8c47e;border-radius:12px;background:#fff8dbea;box-shadow:0 3px 12px #6557210d;color:#4d563b}
+.room-inspect-hint__action{display:flex;align-items:center;gap:7px;font-size:11px;color:#7a795e}
+.room-inspect-hint kbd{display:grid;place-items:center;width:25px;height:26px;border:1px solid #bbae76;border-bottom-width:3px;border-radius:5px;background:#fffdf0;color:#5b5e3c;font:600 12px/1 'Avenir Next',Avenir,sans-serif}
+@media(max-width:600px){.room-inspect-hint{bottom:max(35px,env(safe-area-inset-bottom));max-width:calc(100% - 36px);gap:12px;font-size:12px}.room-inspect-hint--ready{padding:9px 12px}.room-inspect-hint__action{font-size:10px}}
+@media(any-pointer:coarse) and (max-height:500px){.room-joystick-wrap{left:max(16px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom))}.room-review__joystick{width:78px;height:78px}.room-review__joystick .room-joystick__thumb{width:38px;height:38px}.room-move-hint,.room-inspect-hint{bottom:max(15px,env(safe-area-inset-bottom))}.room-review--game:not(.room-review--arrange) .room-review__stage{inset:0}}
+
+.room-review--touch .room-joystick-wrap{display:flex}
+.room-review--touch .room-controls--keyboard{display:none!important}
+.room-review--touch .room-controls--touch{display:inline-flex!important}
+.room-review--touch .room-inspect-hint__action{display:none}
+@media(max-height:500px){.room-review--touch .room-joystick-wrap{left:max(16px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom))}.room-review--touch .room-review__joystick{width:78px;height:78px}.room-review--touch .room-review__joystick .room-joystick__thumb{width:38px;height:38px}}
+@media(any-pointer:coarse){.room-inspect-hint__action{display:none}.room-review--game:not(.room-review--arrange) .room-review__stage{inset:0}.room-move-hint,.room-inspect-hint{bottom:max(17px,env(safe-area-inset-bottom));font-size:12px}}
+@container (max-height:500px){
+  .room-tasks{top:12px;right:14px;width:145px}
+  .room-tasks__header{margin-bottom:9px}.room-tasks__header h2{font-size:15px}.room-tasks__progress{font-size:10px}
+  .room-tasks__list{gap:8px}.room-tasks__task{min-height:57px;padding:15px 11px 11px;grid-template-columns:14px minmax(0,1fr);gap:8px;font-size:12px;line-height:1.3}
+  .room-tasks__mark{width:14px;height:14px}.room-tasks__mark svg{width:21px;height:21px;top:-6px}
+  .room-tasks__task::before{height:12px;width:44px;top:-6px;left:calc(50% - 22px)}.room-tasks__task:nth-child(2)::before{left:calc(50% - 22px)}
+  .room-tasks__ready{margin:10px 0 0;font-size:11px}
+  .kitchen-music{left:14px;top:12px;width:148px}.kitchen-music__shell{grid-template-columns:44px 52px 44px;min-height:66px;padding:6px 3px}
+  .kitchen-music .kitchen-music__disc-button{width:52px;height:52px;min-height:52px}.kitchen-music__disc-ring{inset:15px}.kitchen-music__disc::before{inset:6px}.kitchen-music__disc-control{width:22px;height:22px}
+  .room-move-hint,.room-inspect-hint{bottom:14px;max-width:calc(100% - 220px);white-space:normal;text-align:center;font-size:12px}
+}

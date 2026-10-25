@@ -1,0 +1,9 @@
+{
+  "poster": "/sushi/chef-poster.webp",
+  "idle": {
+    "animated": "/sushi/chef-idle.webp"
+  },
+  "left": null,
+  "right": null,
+  "enter": null
+}

@@ -22,3 +22,16 @@ dist/
 
 # Small transparent animations required by the Farm TD game build.
 !farm_td/assets/ui/fruit-quest/*.webm
+
+# Runtime character animation clips are part of the kitchen portfolio.
+!/character/**/*.mp4
+!/character/**/*.webm
+!/sushi/**/*.mp4
+!/sushi/**/*.webm
+
+# Local credentials and generated asset links.
+.secrets/
+.env
+.env.*
+!.env.example
+kitchen-src/public/

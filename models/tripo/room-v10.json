@@ -1,0 +1,40 @@
+{
+  "provider": "Tripo",
+  "model_version": "v3.1-20260211",
+  "assets": {
+    "sushi-room-v10": {
+      "url": "/models/tripo/sushi-room-v10-stove-v3.glb",
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "status": "success",
+      "localRepair": {
+        "source": "/models/tripo/sushi-room-v10.glb",
+        "additionalTripoCredits": 0,
+        "changes": [
+          "Removed duplicated front knife block and repaired countertop footprint.",
+          "Remapped the remaining block face to clean original wood texture.",
+          "Reused and reshaped the earlier Tripo faucet into a downturned gooseneck.",
+          "Cleaned stove material boundaries: matte cooktop, distinct burners and controls, clean wood frame, and a dark oven window with metal strip."
+        ],
+        "reusedPartSource": "/models/tripo/sushi-room-v7.glb",
+        "stoveCleanupSource": "/models/tripo/sushi-room-v10-fixtures-v3b.glb"
+      }
+    }
+  },
+  "reference_sha256": "cf06cde816a1ba49ec04bda28b8837fcc6d358b5de70f69ccd3739bb9a8729f5",
+  "prompt_metadata": "",
+  "review": {
+    "projection": "perspective",
+    "cameraDirection": [
+      1,
+      0.8,
+      0
+    ],
+    "fieldOfView": 38,
+    "framePadding": 1.16,
+    "exposure": 0.85
+  }
+}

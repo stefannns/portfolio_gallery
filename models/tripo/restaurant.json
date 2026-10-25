@@ -1,0 +1,51 @@
+{
+  "provider": "Tripo",
+  "model_version": "v3.1-20260211",
+  "assets": {
+    "restaurant-counter": {
+      "url": "/models/tripo/restaurant-counter.glb",
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "status": "success"
+    },
+    "restaurant-backdrop": {
+      "url": "/models/tripo/restaurant-backdrop.glb",
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "status": "success"
+    },
+    "restaurant-stool": {
+      "url": "/models/tripo/restaurant-stool.glb",
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "status": "success"
+    },
+    "restaurant-plant": {
+      "url": "/models/tripo/restaurant-plant.glb",
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "status": "success"
+    },
+    "restaurant-floor": {
+      "url": "/models/tripo/restaurant-floor.glb",
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "status": "success"
+    }
+  }
+}

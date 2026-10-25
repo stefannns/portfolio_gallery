@@ -1,0 +1,14 @@
+{
+  "provider": "Tripo",
+  "assets": {
+    "discovery-computer-v1": {
+      "url": "/models/tripo/discovery-computer-v1.glb",
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "status": "success"
+    }
+  }
+}

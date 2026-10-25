@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "projection": false,
+  "worlds": {
+    "seed-squad": {
+      "src": "/sushi/worlds/seed-squad.webp",
+      "width": 1024,
+      "height": 1024,
+      "baseline": 0.9375,
+      "original": "artwork/sushi/source/sushi-world-seed-squad.png",
+      "sourceBounds": [
+        25,
+        194,
+        1232,
+        1084
+      ],
+      "bytes": 202026
+    },
+    "h3-otome": {
+      "src": "/sushi/worlds/h3-otome.webp",
+      "width": 1024,
+      "height": 1024,
+      "baseline": 0.9375,
+      "original": "artwork/sushi/source/sushi-world-h3-otome.png",
+      "sourceBounds": [
+        22,
+        166,
+        1233,
+        1138
+      ],
+      "bytes": 223992
+    },
+    "smarttester": {
+      "src": "/sushi/worlds/smarttester.webp",
+      "width": 1024,
+      "height": 1024,
+      "baseline": 0.9375,
+      "original": "artwork/sushi/source/sushi-world-smarttester.png",
+      "sourceBounds": [
+        29,
+        259,
+        1227,
+        1124
+      ],
+      "bytes": 179440
+    },
+    "recurve": {
+      "src": "/sushi/worlds/recurve.webp",
+      "width": 1024,
+      "height": 1024,
+      "baseline": 0.9375,
+      "original": "artwork/sushi/source/sushi-world-recurve.png",
+      "sourceBounds": [
+        35,
+        196,
+        1222,
+        1123
+      ],
+      "bytes": 279226
+    },
+    "assassin": {
+      "src": "/sushi/worlds/assassin.webp",
+      "width": 1024,
+      "height": 1024,
+      "baseline": 0.9375,
+      "original": "artwork/sushi/source/sushi-world-assassin.png",
+      "sourceBounds": [
+        24,
+        184,
+        1237,
+        1136
+      ],
+      "bytes": 204558
+    },
+    "niflheim": {
+      "src": "/sushi/worlds/niflheim.webp",
+      "width": 1024,
+      "height": 1024,
+      "baseline": 0.9375,
+      "original": "artwork/sushi/source/sushi-world-niflheim.png",
+      "sourceBounds": [
+        18,
+        175,
+        1237,
+        1119
+      ],
+      "bytes": 244446
+    },
+    "toad-defense": {
+      "src": "/sushi/worlds/toad-defense.webp",
+      "width": 1024,
+      "height": 1024,
+      "baseline": 0.9375,
+      "original": "artwork/sushi/source/sushi-world-toad-defense.png",
+      "sourceBounds": [
+        22,
+        241,
+        1237,
+        1088
+      ],
+      "bytes": 204964
+    },
+    "a-bot-can-do-better": {
+      "src": "/sushi/worlds/a-bot-can-do-better.webp",
+      "width": 1024,
+      "height": 1024,
+      "baseline": 0.9375,
+      "original": "artwork/sushi/source/sushi-world-a-bot-can-do-better.png",
+      "sourceBounds": [
+        22,
+        164,
+        1236,
+        1126
+      ],
+      "bytes": 164060
+    }
+  },
+  "kitchen": "/sushi/kitchen.webp",
+  "conveyor": {
+    "deck": "/sushi/conveyor-deck.webp",
+    "front": "/sushi/conveyor-front.webp"
+  },
+  "kitchenMobile": "/sushi/kitchen-mobile.webp",
+  "chef": {
+    "poster": "/sushi/chef-poster.webp",
+    "idle": "/sushi/chef-idle.webp",
+    "source": "/character/seedance/mochi-chef-idle-seedance2-original.mp4",
+    "note": "Reuse the approved Seedance 2.0 Mochi loop; no additional video generation.",
+    "size": [
+      960,
+      960
+    ]
+  }
+}

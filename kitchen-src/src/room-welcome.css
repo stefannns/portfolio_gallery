@@ -1,0 +1,19 @@
+.room-welcome{position:absolute;inset:0;z-index:30;color:#6e4e37;pointer-events:none;animation:kitchen-speech-arrive .28s ease-out both}
+.room-welcome__plane{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none}
+.room-welcome__shape{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;overflow:visible;pointer-events:none;filter:drop-shadow(0 7px 13px #69472e16)}
+.room-welcome__outline{fill:#fffdf4;stroke:#9b7453;stroke-width:4px;stroke-linecap:round;stroke-linejoin:round}
+.room-welcome__bubble{position:absolute;z-index:1;padding:0;font-family:'Nunito','Avenir Next',Avenir,'Segoe UI',sans-serif;pointer-events:none}
+.room-welcome__content{max-height:calc(var(--welcome-viewport-height,100svh) - 36px);overflow:hidden;padding:31px 32px 29px;text-align:center}
+.room-welcome__content h1{margin:0;color:#65452f;font-family:'Fredoka','Arial Rounded MT Bold','Avenir Next',sans-serif;font-size:36px;font-weight:500;line-height:1.2;letter-spacing:-.015em;text-align:center}
+.room-welcome__content>p{margin:14px 0 0;font-size:20px;font-weight:500;line-height:1.5;color:#85674d;text-align:center}
+.room-welcome__controls{position:absolute;left:50%;z-index:1;display:flex;align-items:center;justify-content:center;gap:24px;width:max-content;max-width:calc(100% - 32px);transform:translateX(-50%);color:#927256;font:600 16px/1.45 'Nunito','Avenir Next',Avenir,'Segoe UI',sans-serif;text-align:center;pointer-events:none}
+.room-welcome__controls>span{display:inline-flex;align-items:center;justify-content:center;gap:9px;white-space:nowrap}
+.room-welcome__controls>span:first-child{animation:kitchen-move-breathe 1.8s ease-in-out infinite}
+.room-welcome__controls kbd{display:inline-block;min-width:26px;padding:5px 8px;border-radius:6px;background:#fffaf0e8;box-shadow:inset 0 0 0 1px #9b74533b,0 2px 0 #9b745326;color:#805a3b;font:700 14px/1.25 'Nunito','Avenir Next',Avenir,'Segoe UI',sans-serif}
+.room-welcome__bubble[data-compact=true] .room-welcome__content{padding:25px 24px 23px}
+.room-welcome__bubble[data-compact=true] h1{font-size:28px}
+.room-welcome--still{animation:none}
+.room-welcome.room-welcome--leaving{animation:kitchen-speech-depart var(--welcome-fade-duration,1000ms) ease-out both}
+@keyframes kitchen-speech-arrive{from{opacity:0}to{opacity:1}}
+@keyframes kitchen-speech-depart{from{opacity:1}to{opacity:0}}
+@media(prefers-reduced-motion:reduce){.room-welcome,.room-welcome__controls>span:first-child{animation:none}}
