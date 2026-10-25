@@ -157,3 +157,12 @@
  .computer-projects__detail--video .computer-projects__media--video>video{max-height:30svh}
  .computer-projects__image-viewport{height:190px}
 }
+
+/* Keep the portrait game beside its opening note on landscape phones. */
+@media(orientation:landscape) and (max-height:520px) and (min-width:650px){
+ .computer-projects .computer-projects__detail:has(> .computer-projects__media-column--embed){grid-template-columns:minmax(140px,.8fr) minmax(210px,1fr);gap:18px;padding:18px}
+ .computer-projects__detail:has(> .computer-projects__media-column--embed) .computer-projects__story-note{padding:18px 16px}
+ .computer-projects__detail:has(> .computer-projects__media-column--embed) .computer-projects__copy h2{font-size:26px;margin-bottom:12px}
+ .computer-projects__detail:has(> .computer-projects__media-column--embed) .computer-projects__description{font-size:13px;line-height:1.5}
+ .computer-projects__detail:has(> .computer-projects__media-column--embed) .computer-projects__links{margin-top:8px}
+}
