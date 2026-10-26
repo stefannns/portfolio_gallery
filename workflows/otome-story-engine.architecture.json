@@ -1,0 +1,349 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Otome Story Engine — AI workflow",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1120,
+      700
+    ],
+    "views": [
+      {
+        "id": "beat",
+        "label": "From choice to scene",
+        "focus": [
+          "player",
+          "moderate",
+          "story",
+          "dress",
+          "h3",
+          "stage"
+        ],
+        "note": "Gemini turns a player choice into a short story prompt. Reactor FastH3 streams the next scene: about 5 seconds for a choice beat and 12 seconds for an automatic beat."
+      },
+      {
+        "id": "identity",
+        "label": "Keeping the same character",
+        "focus": [
+          "cast",
+          "imagegen",
+          "portrait",
+          "h3"
+        ],
+        "note": "For a new scene, Nano Banana uses a cached character portrait to paint a purpose-built 16:9 starting frame. H3 then begins from that image."
+      },
+      {
+        "id": "loop",
+        "label": "The visual feedback loop",
+        "focus": [
+          "h3",
+          "stage",
+          "frames",
+          "story"
+        ],
+        "note": "The browser samples first, middle and last frames from the actual stream. Gemini reads those images before writing the next story beat."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "gemini",
+      "type": "cloud",
+      "label": "Gemini",
+      "sublabel": "story / choices",
+      "pos": [
+        402,
+        40
+      ],
+      "size": [
+        138,
+        68
+      ]
+    },
+    {
+      "id": "player",
+      "type": "external",
+      "label": "Player",
+      "sublabel": "wish / choice",
+      "pos": [
+        38,
+        240
+      ],
+      "size": [
+        138,
+        68
+      ]
+    },
+    {
+      "id": "moderate",
+      "type": "security",
+      "label": "Input check",
+      "sublabel": "ALLOW / BLOCK",
+      "pos": [
+        220,
+        240
+      ],
+      "size": [
+        138,
+        68
+      ]
+    },
+    {
+      "id": "story",
+      "type": "backend",
+      "label": "Narrator",
+      "sublabel": "story / choices",
+      "pos": [
+        402,
+        240
+      ],
+      "size": [
+        138,
+        68
+      ]
+    },
+    {
+      "id": "dress",
+      "type": "backend",
+      "label": "Prompt builder",
+      "sublabel": "4,000-char max",
+      "pos": [
+        584,
+        240
+      ],
+      "size": [
+        138,
+        68
+      ]
+    },
+    {
+      "id": "h3",
+      "type": "cloud",
+      "label": "Minimax H3",
+      "sublabel": "Reactor · live",
+      "pos": [
+        766,
+        240
+      ],
+      "size": [
+        138,
+        68
+      ]
+    },
+    {
+      "id": "stage",
+      "type": "frontend",
+      "label": "Player view",
+      "sublabel": "16:9 · POV",
+      "pos": [
+        948,
+        240
+      ],
+      "size": [
+        138,
+        68
+      ]
+    },
+    {
+      "id": "cast",
+      "type": "backend",
+      "label": "Character setup",
+      "sublabel": "describe / upload",
+      "pos": [
+        402,
+        440
+      ],
+      "size": [
+        138,
+        68
+      ]
+    },
+    {
+      "id": "imagegen",
+      "type": "cloud",
+      "label": "Nano Banana",
+      "sublabel": "portraits / frames",
+      "pos": [
+        584,
+        440
+      ],
+      "size": [
+        138,
+        68
+      ]
+    },
+    {
+      "id": "portrait",
+      "type": "database",
+      "label": "Visual assets",
+      "sublabel": "portrait + frame",
+      "pos": [
+        766,
+        440
+      ],
+      "size": [
+        138,
+        68
+      ]
+    },
+    {
+      "id": "frames",
+      "type": "backend",
+      "label": "Frame sampler",
+      "sublabel": "first / mid / last",
+      "pos": [
+        948,
+        440
+      ],
+      "size": [
+        138,
+        68
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "player-moderate",
+      "from": "player",
+      "to": "moderate",
+      "label": "input",
+      "variant": "emphasis",
+      "labelDy": -46
+    },
+    {
+      "id": "moderate-story",
+      "from": "moderate",
+      "to": "story",
+      "label": "allow",
+      "labelDy": -46
+    },
+    {
+      "id": "story-dress",
+      "from": "story",
+      "to": "dress",
+      "label": "action",
+      "labelDy": -46
+    },
+    {
+      "id": "dress-h3",
+      "from": "dress",
+      "to": "h3",
+      "label": "prompt",
+      "variant": "emphasis",
+      "labelDy": -46
+    },
+    {
+      "id": "h3-stage",
+      "from": "h3",
+      "to": "stage",
+      "label": "live",
+      "variant": "emphasis",
+      "labelDy": -46
+    },
+    {
+      "id": "gemini-story",
+      "from": "gemini",
+      "to": "story",
+      "label": "story text",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        530,
+        176
+      ]
+    },
+    {
+      "id": "stage-frames",
+      "from": "stage",
+      "to": "frames",
+      "label": "sample",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [
+        1046,
+        376
+      ]
+    },
+    {
+      "id": "frames-story",
+      "from": "frames",
+      "to": "story",
+      "label": "3 frames · feedback",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "via": [
+        [
+          1017,
+          600
+        ],
+        [
+          380,
+          600
+        ],
+        [
+          380,
+          274
+        ]
+      ],
+      "labelAt": [
+        700,
+        590
+      ]
+    },
+    {
+      "id": "cast-imagegen",
+      "from": "cast",
+      "to": "imagegen",
+      "label": "identity",
+      "labelDy": -46
+    },
+    {
+      "id": "imagegen-portrait",
+      "from": "imagegen",
+      "to": "portrait",
+      "label": "prepare",
+      "labelDy": -46
+    },
+    {
+      "id": "portrait-h3",
+      "from": "portrait",
+      "to": "h3",
+      "label": "16:9 start frame",
+      "variant": "emphasis",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelDx": 62
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Reactor streams the scene",
+      "items": [
+        "FastH3 queues live video over WebRTC.",
+        "Choice beats ≈5s; automatic beats ≈12s."
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Keeping the same character",
+      "items": [
+        "The app caches a portrait for each style.",
+        "For a scene cut, it paints a new 16:9 start frame using that portrait.",
+        "That frame is uploaded to H3 to begin the new scene."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Continue a clip, or cut",
+      "items": [
+        "Continue: H3 uses native continue_from_clip_id.",
+        "Cut: Nano Banana prepares a new scene frame.",
+        "Sampled stream frames ground Gemini’s next beat."
+      ]
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import React, {useEffect, useId, useMemo, useRef, useState} from 'react';
 import {projects, computerProjectIds} from './projects.js';
 import ProjectGameEmbed from './ProjectGameEmbed.jsx';
+import ProjectWorkflow from './ProjectWorkflow.jsx';
 import './computer-projects.css';
 
 const computerIds = computerProjectIds;
@@ -171,6 +172,7 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
           </div>
 
           {!selected.previewAspectRatio && projectCopy}
+          {selected.workflowEmbedUrl && <ProjectWorkflow key={selected.id} project={selected} onEscape={() => close.current?.()}/>}
         </article>
       </div>
       <span className="computer-projects__announcement" role="status" aria-live="polite">{selected.title} selected.</span>

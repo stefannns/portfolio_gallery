@@ -15,6 +15,7 @@ export const projects = [
     id: 'h3-otome', title: 'Otome Story Engine (powered by Minimax H3)', type: 'Generative narrative', collection: 'games',
     image: '/images/covers/otome-story-engine-v3.png', color: '#d9b1c3', recent: true,
     video: '/videos/h3-otome-demo.mp4', videoAspectRatio: '1920 / 920',
+    workflowEmbedUrl: '/workflows/otome-story-engine.html',
     riftFocus: [.47,.73], riftZoom: 1.12,
     github: 'https://github.com/stefannns/lian-yu-h3',
     description: 'A first-person otome game where your choices shape the story. MiniMax H3 (FastH3), accessed through Reactor AI’s API, generates and streams new story scenes at real-time speed.',

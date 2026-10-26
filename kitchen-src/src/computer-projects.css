@@ -159,3 +159,18 @@
  .computer-projects__detail--embed .computer-projects__description{font-size:13px;line-height:1.5}
  .computer-projects__detail--embed .computer-projects__links{margin-top:8px}
 }
+
+/* A paper frame keeps the interactive workflow part of the project notebook. */
+.computer-projects__workflow{container-type:inline-size;container-name:project-workflow;position:relative;grid-column:1 / -1;width:100%;min-width:0;padding:20px 22px 22px;background:repeating-linear-gradient(0deg,#78673903 0 1px,transparent 1px 4px),#f8edc8;box-shadow:1px 4px 7px #78653713}
+.computer-projects__workflow::before{content:'';position:absolute;top:-7px;left:calc(50% - 29px);width:58px;height:15px;background:#ded6ba88;transform:rotate(-3deg);pointer-events:none}
+.computer-projects__workflow-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.computer-projects__workflow-header h3{margin:0;font-family:var(--hand);font-size:24px;line-height:1.3;font-weight:400;color:#5d593c}
+.computer-projects__workflow-header a{display:inline-flex;align-items:center;min-height:44px;color:#5b6741;font-size:13px;font-weight:800;line-height:1.4;text-underline-offset:4px}
+.computer-projects__workflow>iframe{display:block;width:100%;min-width:0;height:600px;border:1px solid #d6c8a3;border-radius:3px;background:#fffdf5}
+@media(max-width:760px){.computer-projects__workflow{padding:16px}}
+@media(orientation:landscape) and (max-height:520px) and (min-width:650px){.computer-projects__workflow{padding:14px 15px 15px}.computer-projects__workflow-header{margin-bottom:8px}.computer-projects__workflow-header h3{font-size:21px}.computer-projects__workflow>iframe{height:520px}}
+
+/* The original narrow workflow layout needs room for its controls and diagram. */
+@container project-workflow (max-width:760px){
+ .computer-projects__workflow>iframe{height:860px}
+}
