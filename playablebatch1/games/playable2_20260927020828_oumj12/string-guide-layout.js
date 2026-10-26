@@ -11,7 +11,7 @@
     board.style.setProperty('--string-circle-y',(target.top+target.height/2-container.top)+'px');
     board.style.setProperty('--string-circle-copy-width',target.width*.8+'px');
     const guideHeight=guide?.getBoundingClientRect().height||22.4;
-    board.style.setProperty('--string-guide-y',(target.top-container.top-12-guideHeight/2)+'px');
+    board.style.setProperty('--string-guide-y',(target.top-container.top-28-guideHeight/2)+'px');
     board.setAttribute('data-string-guide-aligned','true');
   };
   const schedule=()=>{if(!closed&&!frame)frame=requestAnimationFrame(measure);};

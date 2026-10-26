@@ -22,7 +22,7 @@ window.PlayableItalianGames={
     "number": 6,
     "name": "Disegna con il filo",
     "entry": "/playablebatch1/games/playable2_20260927020828_oumj12/game.it.html",
-    "revision": "36606e3b8266"
+    "revision": "1f37b80f9ae1"
   },
   "playable2_20260927020828_y5a1vt": {
     "number": 10,

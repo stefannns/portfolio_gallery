@@ -15,7 +15,7 @@
   [
     6,
     "playable2_20260927020828_oumj12",
-    "User follow-up: above the live SVG circle in every round, preserving the16px font and measured clearance for wrapped copy"
+    "User follow-up: raised another16px above the live SVG circle, with28px clearance and the same16px font"
   ],
   [
     8,
