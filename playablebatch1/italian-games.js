@@ -22,7 +22,7 @@ window.PlayableItalianGames={
     "number": 6,
     "name": "Disegna con il filo",
     "entry": "/playablebatch1/games/playable2_20260927020828_oumj12/game.it.html",
-    "revision": "630767236f48"
+    "revision": "36606e3b8266"
   },
   "playable2_20260927020828_y5a1vt": {
     "number": 10,
@@ -58,7 +58,7 @@ window.PlayableItalianGames={
     "number": 19,
     "name": "Cubi in movimento",
     "entry": "/playablebatch1/games/playable2_20260927021136_x3i163/game.it.html",
-    "revision": "08264e069a92"
+    "revision": "a65a2ad32c25"
   },
   "playable2_20260928024549_3bsc4d": {
     "number": 24,
@@ -82,7 +82,7 @@ window.PlayableItalianGames={
     "number": 35,
     "name": "Tasti a ritmo",
     "entry": "/playablebatch1/games/playable2_20260928031559_rckaf4/game.it.html",
-    "revision": "c190b91d12d5"
+    "revision": "f60f91bc1803"
   },
   "playable2_20260928031734_t68did": {
     "number": 36,
@@ -124,7 +124,7 @@ window.PlayableItalianGames={
     "number": 57,
     "name": "Fulmini al crepuscolo",
     "entry": "/playablebatch1/games/playable2_20261001230352_h4uxll/game.it.html",
-    "revision": "55d27bb900b0"
+    "revision": "5fbc6d812f37"
   },
   "playable2_20261001230412_o52e38": {
     "number": 58,
@@ -154,7 +154,7 @@ window.PlayableItalianGames={
     "number": 64,
     "name": "Scegli il look",
     "entry": "/playablebatch1/games/playable_20260727203355_w1cgvm_game/game.it.html",
-    "revision": "0fd404bf794a"
+    "revision": "e88f58ad0e69"
   },
   "05c_timemachine_male_black_wall": {
     "number": 65,
@@ -172,7 +172,7 @@ window.PlayableItalianGames={
     "number": 67,
     "name": "Oggetti nascosti",
     "entry": "/playablebatch1/games/playable_20260807211217_q9i9d6/game.it.html",
-    "revision": "a781beda1399"
+    "revision": "e3906f19da4a"
   },
   "06a_coloring_game_final": {
     "number": 68,
@@ -184,19 +184,19 @@ window.PlayableItalianGames={
     "number": 69,
     "name": "Gratta e scopri",
     "entry": "/playablebatch1/games/02e_pickalook_p8xys3_game/game.it.html",
-    "revision": "401a4b4bbc01"
+    "revision": "7a1d83f5a1f3"
   },
   "playable_20261015220925_0pn002": {
     "number": 70,
     "name": "Perline da stirare",
     "entry": "/playablebatch1/games/playable_20261015220925_0pn002_game/game.it.html",
-    "revision": "7b4a71697e9a"
+    "revision": "f553ad746b2e"
   },
   "bead_loop_20261019": {
     "number": 71,
     "name": "Giro di perline",
     "entry": "/playablebatch1/games/bead_loop_20261019/game.it.html",
-    "revision": "111b7b27b63e"
+    "revision": "8f371a2e5277"
   },
   "height_together_20261019": {
     "number": 72,

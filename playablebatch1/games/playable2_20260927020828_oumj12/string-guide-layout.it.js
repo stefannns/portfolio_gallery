@@ -2,7 +2,7 @@
 (() => {
   const root=document.getElementById('root');
   if(!root)return;
-  let board=null,circle=null,frame=0,closed=false;
+  let board=null,circle=null,guide=null,frame=0,closed=false;
   const measure=()=>{
     frame=0;
     if(closed||!board?.isConnected||!circle?.isConnected)return;
@@ -10,16 +10,19 @@
     if(target.width<=0||target.height<=0)return;
     board.style.setProperty('--string-circle-y',(target.top+target.height/2-container.top)+'px');
     board.style.setProperty('--string-circle-copy-width',target.width*.8+'px');
+    const guideHeight=guide?.getBoundingClientRect().height||22.4;
+    board.style.setProperty('--string-guide-y',(target.top-container.top-12-guideHeight/2)+'px');
     board.setAttribute('data-string-guide-aligned','true');
   };
   const schedule=()=>{if(!closed&&!frame)frame=requestAnimationFrame(measure);};
   const resize=typeof ResizeObserver==='function'?new ResizeObserver(schedule):null;
   const radius=new MutationObserver(schedule);
   const attach=()=>{
-    const nextBoard=root.querySelector('.string-board'),nextCircle=nextBoard?.querySelector('svg>circle');
-    if(nextBoard!==board||nextCircle!==circle){
-      resize?.disconnect();radius.disconnect();board=nextBoard;circle=nextCircle;
+    const nextBoard=root.querySelector('.string-board'),nextCircle=nextBoard?.querySelector('svg>circle'),nextGuide=nextBoard?.querySelector('.string-guide');
+    if(nextBoard!==board||nextCircle!==circle||nextGuide!==guide){
+      resize?.disconnect();radius.disconnect();board=nextBoard;circle=nextCircle;guide=nextGuide;
       if(board)resize?.observe(board);
+      if(guide)resize?.observe(guide);
       if(circle){resize?.observe(circle);radius.observe(circle,{attributes:true,attributeFilter:['r','cx','cy']});}
     }
     schedule();

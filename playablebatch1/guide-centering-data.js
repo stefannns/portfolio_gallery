@@ -15,7 +15,7 @@
   [
     6,
     "playable2_20260927020828_oumj12",
-    "User follow-up: centered on the live SVG circle in every round;16px copy stays inside80% of its diameter"
+    "User follow-up: above the live SVG circle in every round, preserving the16px font and measured clearance for wrapped copy"
   ],
   [
     8,
@@ -45,7 +45,7 @@
   [
     19,
     "playable2_20260927021136_x3i163",
-    "Below the central cube"
+    "User follow-up: above the central cube; lowered the canvas and matching hit area together to keep clear space below the words"
   ],
   [
     21,
@@ -95,7 +95,7 @@
   [
     35,
     "playable2_20260928031559_rckaf4",
-    null
+    "User follow-up: upper-middle CTA, clear of the lowest playable piano tile"
   ],
   [
     36,
@@ -160,7 +160,7 @@
   [
     57,
     "playable2_20261001230352_h4uxll",
-    null
+    "User follow-up: raised above center, clear of the strikes counter and host entry"
   ],
   [
     58,
@@ -185,7 +185,7 @@
   [
     64,
     "playable_20260727203355_w1cgvm",
-    "Below the portrait face"
+    "User follow-up: above the portrait face, with extra clearance instead of covering the forehead or eyes"
   ],
   [
     65,
@@ -200,7 +200,7 @@
   [
     67,
     "playable_20260807211217_q9i9d6",
-    null
+    "User follow-up: upper-middle CTA, raised adaptively above the coconut and other collectible hit areas"
   ],
   [
     68,
@@ -210,17 +210,17 @@
   [
     69,
     "02e_pickalook_p8xys3_game",
-    "Center the animated wrapper, not its transformed child"
+    "User follow-up: raised above the portrait; position the animated wrapper, not its transformed child"
   ],
   [
     70,
     "playable_20261015220925_0pn002",
-    null
+    "User follow-up: CTA raised a little farther above the lowered bead board; keep canvas and artwork registered"
   ],
   [
     71,
     "bead_loop_20261019",
-    "Keep the stage and picker flow geometry unchanged"
+    "User follow-up: CTA raised a little farther above the bead loop; stage and material picker remain unchanged"
   ],
   [
     72,
