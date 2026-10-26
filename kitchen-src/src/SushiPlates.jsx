@@ -4,7 +4,7 @@ import {Box3, Group, Vector3} from 'three';
 
 const SERVINGS = Object.freeze([
   {id: 'salmon', url: '/models/tripo/kitchen-sushi-salmon-v1.glb', position: [.43, 1.11567, 1.089]},
-  {id: 'maki', url: '/models/tripo/kitchen-sushi-maki-v1.glb', position: [.43, 1.11567, -.320]},
+  {id: 'maki', url: '/models/tripo/kitchen-sushi-maki-v2.glb', position: [.43, 1.11567, -.320]},
   {id: 'tamago', url: '/models/tripo/kitchen-sushi-tamago-v1.glb', position: [.43, 1.11567, -1.679]},
 ]);
 const MODEL_URLS = SERVINGS.map(serving => serving.url);
