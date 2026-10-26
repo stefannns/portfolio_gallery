@@ -3,7 +3,7 @@
   "model_version": "v3.1-20260211",
   "assets": {
     "sushi-room-v10": {
-      "url": "/models/tripo/sushi-room-v13-clean.glb",
+      "url": "/models/tripo/sushi-room-v14-clean.glb",
       "rotation": [
         0,
         0,
@@ -41,6 +41,14 @@
             "Cleaned side-counter and cabinet texture bleed while preserving wall paint and wooden trim."
           ],
           "preservation": "Room bounds, normalization, worktop support heights, sink, faucet, stove, knife block, plant and stools retained."
+        },
+        "junctionCleanup": {
+          "version": 14,
+          "source": "sushi-room-v13-clean.glb",
+          "changes": [
+            "Removed the remaining irregular countertop back edge at the left wall and fitted a clean ivory joint."
+          ],
+          "preservation": "Aligned floor, cabinet materials, fixtures, room bounds and original placement coordinates retained."
         }
       },
       "normalizationBounds": {
