@@ -35,7 +35,7 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
   const [selectedId, setSelectedId] = useState(() => library.some(project => project.id === projectId) ? projectId : library[0].id);
   const [reel, setReel] = useState(null);
   const dialog = useRef(null), closeButton = useRef(null), detail = useRef(null);
-  const nextNote = useRef(null), advanceFocus = useRef(false), endGesture = useRef(null);
+  const advanceFocus = useRef(false), endGesture = useRef(null);
   const close = useRef(onClose);
   close.current = onClose;
   const titleId = useId(), detailId = useId(), projectTitleId = useId();
@@ -57,7 +57,6 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
     element: detail.current,
     readState: () => endGesture.current,
     onAdvance: () => advance.current?.(),
-    onProgress: progress => nextNote.current?.style.setProperty('--next-pull', String(progress)),
   }), []);
 
   useEffect(() => {
@@ -104,7 +103,6 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
 
   useEffect(() => {
     if (detail.current) detail.current.scrollTop = 0;
-    nextNote.current?.style.setProperty('--next-pull', '0');
     dialog.current?.querySelector('.computer-projects__card[aria-pressed="true"]')
       ?.scrollIntoView({block: 'nearest', inline: 'nearest'});
     if (advanceFocus.current && detail.current) {
@@ -212,10 +210,6 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
           {!selected.previewAspectRatio && projectCopy}
           {selected.workflowEmbedUrl && <ProjectWorkflow key={selected.id} project={selected} onEscape={() => close.current?.()}/>}
           {selected.gallery?.length > 0 && <ProjectGallery key={selected.id} items={selected.gallery} intro={selected.galleryIntro}/>}
-          {nextProject && <button ref={nextNote} className="computer-projects__next" data-project-next type="button" onClick={() => advance.current?.()} aria-label={`Open next project: ${nextProject.title}`}>
-            <span className="computer-projects__next-copy"><small>Next up</small><strong>{nextProject.title}</strong><span>Scroll or swipe down again to continue</span></span>
-            <span className="computer-projects__next-arrow" aria-hidden="true">↓</span>
-          </button>}
         </article>
       </div>
       <span className="computer-projects__announcement" role="status" aria-live="polite">{selected.title} selected.</span>

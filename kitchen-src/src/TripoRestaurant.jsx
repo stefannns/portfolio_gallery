@@ -3,6 +3,7 @@ import {useFrame} from '@react-three/fiber';
 import {useGLTF} from '@react-three/drei';
 import * as THREE from 'three';
 import {useTaskOutline} from './TaskOutline.jsx';
+import {addChalkCutlery, addComputerScreenGlow} from './KitchenPropDetails.js';
 
 const objectiveGlow = new THREE.Color('#ffe066');
 
@@ -13,28 +14,33 @@ class ModelBoundary extends React.Component {
   render() { return this.state.failed ? null : this.props.children; }
 }
 
-function LoadedRestaurantModel({url, dimensions = [], position, rotationY, uniform, objective, highlighted, reducedMotion, required = false}) {
+function LoadedRestaurantModel({url, dimensions = [], position, rotationY, uniform, objective, highlighted, interacting, reducedMotion, required = false}) {
   const {scene} = useGLTF(url, '/draco/');
   const glowAmount = useRef(0);
-  const {object, size, materials} = useMemo(() => {
+  const screenAmount = useRef({value: 0}).current;
+  const {object, size, materials, disposeDetails} = useMemo(() => {
     const object = new THREE.Group();
     const clone = scene.clone(true);
     const owned = new Map();
-    const ownMaterial = source => {
+    const ownMaterial = (source, screen = false) => {
       if (!source) return source;
-      if (!owned.has(source)) {
+      const key = screen ? `${source.uuid}:screen` : source;
+      if (!owned.has(key)) {
         const material = source.clone();
-        owned.set(source, {material, emissive: material.emissive?.clone(), emissiveMap: material.emissiveMap, intensity: material.emissiveIntensity ?? 1});
+        if (screen) addComputerScreenGlow(material, screenAmount);
+        owned.set(key, {material, emissive: material.emissive?.clone(), emissiveMap: material.emissiveMap, intensity: material.emissiveIntensity ?? 1});
       }
-      return owned.get(source).material;
+      return owned.get(key).material;
     };
     clone.traverse(node => {
       if (node.isMesh) {
         node.castShadow = true;
         node.receiveShadow = true;
-        node.material = Array.isArray(node.material) ? node.material.map(ownMaterial) : ownMaterial(node.material);
+        const screen = url.endsWith('/discovery-computer-v2.glb') && /^Monitor[_ ]and[_ ]stand(?:_\d+)?$/.test(node.name);
+        node.material = Array.isArray(node.material) ? node.material.map(material => ownMaterial(material, screen)) : ownMaterial(node.material, screen);
       }
     });
+    const disposeDetails = url.endsWith('/discovery-bot-v3.glb') ? addChalkCutlery(clone) : () => {};
     object.add(clone);
     object.rotation.y = rotationY;
     object.updateMatrixWorld(true);
@@ -45,11 +51,11 @@ function LoadedRestaurantModel({url, dimensions = [], position, rotationY, unifo
       throw new Error(`The object model contains no visible geometry: ${url}`);
     }
     if (!box.isEmpty()) object.position.set(-center.x, -box.min.y, -center.z);
-    return {object, size, materials: [...owned.values()]};
-  }, [scene, rotationY, required, url]);
+    return {object, size, materials: [...owned.values()], disposeDetails};
+  }, [scene, rotationY, required, url, screenAmount]);
 
   useTaskOutline(object, objective, highlighted);
-  useEffect(() => () => {materials.forEach(({material}) => material.dispose());}, [materials]);
+  useEffect(() => () => {materials.forEach(({material}) => material.dispose());disposeDetails();}, [materials, disposeDetails]);
   useEffect(() => {
     for (const {material, emissive, emissiveMap} of materials) {
       if (!emissive) continue;
@@ -61,6 +67,8 @@ function LoadedRestaurantModel({url, dimensions = [], position, rotationY, unifo
     }
   }, [highlighted, objective, materials]);
   useFrame(({clock}, delta) => {
+    screenAmount.value = THREE.MathUtils.damp(screenAmount.value, highlighted || interacting ? 1 : 0, 12, Math.min(delta, .05));
+    if (screenAmount.value < .001) screenAmount.value = 0;
     const breath = reducedMotion ? .5 : .5 + Math.sin(clock.elapsedTime * 2.6) * .5;
     // Preserve the textured body shine; TaskOutline draws only the combined
     // visible silhouette, without per-mesh shells or internal normal seams.
@@ -88,11 +96,11 @@ function LoadedRestaurantModel({url, dimensions = [], position, rotationY, unifo
   </group>;
 }
 
-export function RestaurantModel({entry, dimensions, position = [0, 0, 0], rotationY = -Math.PI / 2, uniform = true, objective = false, highlighted = false, reducedMotion = false, onError}) {
+export function RestaurantModel({entry, dimensions, position = [0, 0, 0], rotationY = -Math.PI / 2, uniform = true, objective = false, highlighted = false, interacting = false, reducedMotion = false, onError}) {
   if (!entry?.url) return null;
   return <ModelBoundary key={entry.url} onError={onError}>
     <Suspense fallback={null}>
-      <LoadedRestaurantModel url={entry.url} dimensions={dimensions} position={position} rotationY={rotationY} uniform={uniform} objective={objective} highlighted={highlighted} reducedMotion={reducedMotion} required={Boolean(onError)}/>
+      <LoadedRestaurantModel url={entry.url} dimensions={dimensions} position={position} rotationY={rotationY} uniform={uniform} objective={objective} highlighted={highlighted} interacting={interacting} reducedMotion={reducedMotion} required={Boolean(onError)}/>
     </Suspense>
   </ModelBoundary>;
 }

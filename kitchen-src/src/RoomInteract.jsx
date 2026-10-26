@@ -5,18 +5,18 @@ import './room-interact.css';
 export default function RoomInteract({target, onInspect}) {
   if (!target?.id) return null;
 
+  const toy = target.kind === 'toy';
   return <div key={target.id} className="room-interact" data-inspect-target={target.id}>
     <button type="button" className="room-interact__button"
-      aria-label={`Inspect ${target.label || 'nearby object'}`}
+      aria-label={toy ? target.actionLabel : `Inspect ${target.label || 'nearby object'}`}
       onPointerDown={event => event.stopPropagation()}
       onClick={event => {event.stopPropagation();onInspect?.();}}>
       <span className="room-interact__surface" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" focusable="false">
-          <circle cx="10.5" cy="10.5" r="6.25"/>
-          <path d="m15.2 15.2 5 5"/>
+          {toy ? <path d="m9 5 10 7-10 7Z"/> : <><circle cx="10.5" cy="10.5" r="6.25"/><path d="m15.2 15.2 5 5"/></>}
         </svg>
       </span>
-      <span className="room-interact__label" aria-hidden="true">Inspect</span>
+      <span className="room-interact__label" aria-hidden="true">{toy ? 'Use' : 'Inspect'}</span>
     </button>
   </div>;
 }

@@ -7,10 +7,11 @@ The homepage is now a playable capybara kitchen portfolio. Explore the room, ins
 - WASD or click the floor to walk. On phones, turn sideways and use the joystick or tap the floor.
 - Click or tap project objects to open them; E inspects a nearby highlighted object.
 - Sticky notes guide the vegetables bag → recorder → computer tour. All project objects stay available.
-- On desktop, the compact CD player includes two switchable audio tracks. Music and its player are omitted on touch/mobile and compact screens. A browser may require the first interaction before music starts.
+- Desktop plays quiet background music after the browser allows audio. Mobile keeps footsteps and interaction sounds; the music player is hidden on all screens.
+- Try the sink bubbles, launch the frying pan, or throw the four tomatoes at the camera. Tomatoes do not refill during a visit. E uses the closest object in reach.
 - The game scene keeps a 16:9 landscape frame. Portrait phones show a rotation prompt.
 
-Seed Squad has an embedded game preview. Smarttester links to its workflow tour. H3 Otome uses an original generated sci-fi romance cover. Existing game covers and reels are retained.
+Seed Squad has an embedded game preview and a design content library. Smarttester links to its workflow tour. Otome Story Engine (Minimax H3) includes a demo video and an English AI workflow diagram. Existing game covers and reels are retained.
 
 ## Edit and publish
 

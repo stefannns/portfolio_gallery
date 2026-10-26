@@ -3,6 +3,10 @@ import {useFrame, useThree} from '@react-three/fiber';
 import {Html} from '@react-three/drei';
 import * as THREE from 'three';
 import CapybaraActor from './CapybaraActor.jsx';
+import FootprintTrail from './FootprintTrail.jsx';
+import KitchenToys from './KitchenToys.jsx';
+import SushiPlates from './SushiPlates.jsx';
+import {KITCHEN_TOYS, isNearRoomTarget, chooseRoomTarget} from './kitchen-toy-state.js';
 import {RestaurantModel} from './TripoRestaurant.jsx';
 import {getRoomPlacement} from './room-placement.js';
 import {getSceneUiScale} from './scene-ui-scale.js';
@@ -11,23 +15,8 @@ import {attachRoomMovementInput} from './room-movement-input.js';
 import {useTaskOutlineIgnore} from './TaskOutline.jsx';
 
 const up = new THREE.Vector3(0, 1, 0);
-const INSPECT_RANGE = 1.7;
-
-function canInspectItem(player, item) {
-  return !!item && Math.hypot(player.x - item.position[0], player.z - item.position[2]) <= INSPECT_RANGE;
-}
-
-function chooseInspectTarget(player, items, hoveredId, objectiveId) {
-  let objective = null, nearest = null, nearestDistance = Infinity;
-  for (const item of items) {
-    const distance = Math.hypot(player.x - item.position[0], player.z - item.position[2]);
-    if (!Number.isFinite(distance) || distance > INSPECT_RANGE) continue;
-    if (item.id === hoveredId) return item;
-    if (item.id === objectiveId) objective = item;
-    if (distance < nearestDistance) {nearestDistance = distance;nearest = item;}
-  }
-  return objective || nearest;
-}
+const NO_TOYS = Object.freeze([]);
+const canInspectItem = isNearRoomTarget;
 
 function loadLayout(storageKey, sanitizeRoomPlacements) {
   try {
@@ -45,7 +34,7 @@ function persistLayout(storageKey, items) {
   } catch {return false;}
 }
 
-function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus, onActivate, onError, editable, objective, highlighted, hovered, reducedMotion}) {
+function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus, onActivate, onError, editable, objective, highlighted, hovered, interacting, reducedMotion}) {
   const ignorePointerTarget = useTaskOutlineIgnore();
   const markerBounds = useRef(new THREE.Box3()), markerPoint = useRef(new THREE.Vector3());
   const markerPosition = useCallback((anchor, camera, size) => {
@@ -76,7 +65,7 @@ function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus,
     onPointerDown={event => onStart(event, item.id)}
     onPointerOver={event => {event.stopPropagation();if (event.pointerType !== 'touch') onHover(item.id);}}
     onPointerOut={() => onHover(null, item.id)}>
-    <group name={`room-item-model-${item.id}`} position={item.modelOffset || [0, 0, 0]}><RestaurantModel entry={entry} dimensions={[item.width, item.width, item.width]} rotationY={0} uniform objective={objective} highlighted={highlighted || hovered} reducedMotion={reducedMotion} onError={onError}/></group>
+    <group name={`room-item-model-${item.id}`} position={item.modelOffset || [0, 0, 0]}><RestaurantModel entry={entry} dimensions={[item.width, item.width, item.width]} rotationY={0} uniform objective={objective} highlighted={highlighted || hovered} interacting={interacting} reducedMotion={reducedMotion} onError={onError}/></group>
     {/* Invisible pointer targets make small items easy to grab without changing their art. */}
     <mesh ref={ignorePointerTarget} position={[0, item.width * .3, 0]}>
       <boxGeometry args={[Math.max(.62, item.width), Math.max(.45, item.width * .65), Math.max(.62, item.width)]}/>
@@ -93,12 +82,18 @@ function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus,
   </group>;
 }
 
-export default function RoomArrangement({roomVersion = 10, controls, rootRef, titlePhysics, resetToken, onStatus, onHover, onReady, onError, onOpenComputer, onOpenProject, onSelection, actionsRef, objectiveId = '', onFirstMove, onWelcomeMove, onInspectTarget, onWelcomeAnchor, welcomeActive = false, reducedMotion = false, paused = false, editable = false, fixedCamera = true}) {
+export default function RoomArrangement({roomVersion = 10, controls, rootRef, titlePhysics, resetToken, onStatus, onHover, onReady, onError, onOpenComputer, onOpenProject, onSelection, actionsRef, objectiveId = '', activeItemId = '', onToyUse, onTomatoSplat, onFirstMove, onWelcomeMove, onInspectTarget, onWelcomeAnchor, welcomeActive = false, reducedMotion = false, paused = false, editable = false, fixedCamera = true}) {
   const ignoreWalkFloor = useTaskOutlineIgnore();
   const {
     CAPYBARA_HEIGHT, PLAYER_START, PLAYER_SPEED, ROOM_FLOOR_Y, ROOM_BOUNDS, ROOM_ITEMS,
     pickRoomSurface, sanitizeRoomPlacements, snapPropPosition, stepRoomPlayer, canWalk,
   } = getRoomPlacement(roomVersion);
+  const toyItems = roomVersion === 10 ? KITCHEN_TOYS : NO_TOYS;
+  const toyActions = useRef(null);
+  const [toysReady, setToysReady] = useState(roomVersion !== 10);
+  const toysLoaded = useCallback(() => setToysReady(true), []);
+  const [sushiReady, setSushiReady] = useState(roomVersion !== 10);
+  const sushiLoaded = useCallback(() => setSushiReady(true), []);
   const navigator = useMemo(() => createRoomNavigator({bounds: ROOM_BOUNDS, canWalk}), [ROOM_BOUNDS, canWalk]);
   const storageKey = `stefan-sushi-room-v${roomVersion}-layout`;
   const saveLayout = useCallback(items => persistLayout(storageKey, items), [storageKey]);
@@ -132,8 +127,15 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
   }, [onSelection]);
 
   const activateItem = useCallback((id, {direct = false} = {}) => {
-    if (paused) return;
+    if (paused) return false;
     walkRoute.current = [];walkPress.current = null;
+    const toy = toyItems.find(value => value.id === id);
+    if (toy) {
+      // Fixture toys always require proximity, including mouse/keyboard clicks.
+      if (editable || !isNearRoomTarget(engine.player, toy)) {onStatus(`Move closer to use the ${toy.label.toLowerCase()}.`);return false;}
+      if (toyActions.current?.trigger(id)) {if (id === 'tomato-throw') resetMovement();onStatus('');onToyUse?.();}
+      return true;
+    }
     const item = latest.current.find(value => value.id === id);
     if (!item) return;
     if (!editable && !direct && !canInspectItem(engine.player, item)) {onStatus('Move closer to inspect.');return;}
@@ -143,16 +145,22 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
     resetMovement();engine.paused = true;
     if (id === 'games-computer') onOpenComputer?.();
     else onOpenProject?.(id);
-  }, [editable, engine, onOpenComputer, onOpenProject, onStatus, paused, resetMovement, selectItem]);
+    return true;
+  }, [editable, engine, onOpenComputer, onOpenProject, onStatus, onToyUse, paused, resetMovement, selectItem, toyItems]);
 
-  const currentInspectTarget = useCallback(() => paused || editable ? null : chooseInspectTarget(engine.player, latest.current, hover.current, objectiveId), [editable, engine, objectiveId, paused]);
+  const currentInspectTarget = useCallback(() => {
+    if (paused || editable || engine.tomatoAction?.active) return null;
+    const availableToys = toyItems.filter(item => item.id !== 'tomato-throw' || engine.tomatoRemaining !== 0);
+    return chooseRoomTarget(engine.player, [...latest.current, ...availableToys]);
+  }, [editable, engine, paused, toyItems]);
 
   const inspectNearby = useCallback(() => {
     if (paused || editable || engine.paused || drag.current) return false;
+    // Consume repeated E/Use presses until the current toss has finished.
+    if (engine.tomatoAction?.active) return true;
     const target = currentInspectTarget();
     if (!target) return false;
-    activateItem(target.id);
-    return true;
+    return activateItem(target.id) !== false;
   }, [activateItem, currentInspectTarget, editable, engine, paused]);
 
   const rotateSelected = useCallback(() => {
@@ -349,7 +357,7 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
     }
     // Each prop loads inside its own Suspense boundary. Wait for the actual
     // rendered meshes, rather than just their manifest, before opening play.
-    if (!readySent.current && assets && characterReady && placements.every(item => {
+    if (!readySent.current && assets && characterReady && toysReady && sushiReady && placements.every(item => {
       let loaded = false;
       groups.current.get(item.id)?.getObjectByName(`room-item-model-${item.id}`)?.traverse(node => {if (node.isMesh) loaded = true;});
       return loaded;
@@ -374,8 +382,10 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
         input = {x: dx / distance * amount, z: dz / distance * amount};
       }
     }
-    const proposed = engine.paused ? {...engine.player, moving: false} : stepRoomPlayer(engine.player, input, delta, latest.current);
-    let next = titlePhysics?.current?.step(engine.player, proposed, delta, {paused: engine.paused}) || proposed;
+    const tomatoBusy = Boolean(engine.tomatoAction?.active);
+    if (tomatoBusy) walkRoute.current = [];
+    const proposed = engine.paused || tomatoBusy ? {...engine.player, moving: false} : stepRoomPlayer(engine.player, input, delta, latest.current);
+    let next = titlePhysics?.current?.step(engine.player, proposed, delta, {paused: engine.paused || tomatoBusy}) || proposed;
     if (!canWalk(next.x, next.z, latest.current)) {
       const x = canWalk(next.x, engine.player.z, latest.current) ? next.x : engine.player.x;
       const z = canWalk(x, next.z, latest.current) ? next.z : engine.player.z;
@@ -390,19 +400,24 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
     engine.player.x = next.x;engine.player.z = next.z;engine.moving = next.moving;
     if (player.current) {
       player.current.position.set(next.x, PLAYER_START.y, next.z);
-      if (next.moving) {
+      if (tomatoBusy) {
+        const target = engine.tomatoAction.phase === 'grab' ? engine.tomatoAction.target : camera.position.toArray();
+        const angle = Math.atan2(target[0] - next.x, target[2] - next.z);
+        const difference = Math.atan2(Math.sin(angle - player.current.rotation.y), Math.cos(angle - player.current.rotation.y));
+        player.current.rotation.y += difference * (1 - Math.exp(-16 * delta));
+      } else if (next.moving) {
         const angle = Math.atan2(input.x, input.z), difference = Math.atan2(Math.sin(angle - player.current.rotation.y), Math.cos(angle - player.current.rotation.y));
         player.current.rotation.y += difference * (1 - Math.exp(-17 * delta));
       }
     }
     const target = currentInspectTarget();
     if ((target?.id || '') !== (inspectTarget.current?.id || '')) {
-      inspectTarget.current = target ? {id: target.id, label: target.label} : null;
+      inspectTarget.current = target ? {id: target.id, label: target.label, kind: target.kind, actionLabel: target.actionLabel} : null;
       setHighlightId(target?.id || '');
       onInspectTarget?.(inspectTarget.current);
     }
     if (!drag.current) {
-      const hovered = latest.current.find(item => item.id === hover.current);
+      const hovered = [...latest.current, ...toyItems].find(item => item.id === hover.current);
       document.body.style.cursor = paused ? '' : hovered ? editable ? 'grab' : 'pointer' : '';
     }
     if (welcomeActive && player.current && rootRef.current && onWelcomeAnchor) {
@@ -450,9 +465,9 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
     if (drag.current?.editable || (paused && id) || (!id && leavingId && hover.current !== leavingId)) return;
     hover.current = id;
     setHoverId(id || '');
-    const item = latest.current.find(value => value.id === id);
+    const item = [...latest.current, ...toyItems].find(value => value.id === id);
     document.body.style.cursor = !paused && item ? editable ? 'grab' : 'pointer' : '';
-    onHover(ROOM_ITEMS.find(item => item.id === id)?.label || '');
+    onHover([...ROOM_ITEMS, ...toyItems].find(item => item.id === id)?.label || '');
   };
 
   if (!assets) return null;
@@ -461,9 +476,15 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
       <planeGeometry args={[ROOM_BOUNDS.maxX - ROOM_BOUNDS.minX, ROOM_BOUNDS.maxZ - ROOM_BOUNDS.minZ]}/>
       <meshBasicMaterial transparent opacity={0} colorWrite={false} depthWrite={false}/>
     </mesh>
-    {placements.map(item => <MovableItem key={item.id} item={item} entry={assets.props.assets?.[item.asset]} editable={editable} objective={item.id === objectiveId && !editable && !paused} highlighted={item.id === highlightId && !editable && !paused} hovered={item.id === hoverId && !editable && !paused} reducedMotion={reducedMotion}
+    {placements.map(item => <MovableItem key={item.id} item={item} entry={assets.props.assets?.[item.asset]} editable={editable} objective={item.id === objectiveId && !editable && !paused} highlighted={item.id === highlightId && !editable && !paused} hovered={item.id === hoverId && !editable && !paused} interacting={item.id === activeItemId} reducedMotion={reducedMotion}
       register={(id, node) => {if (node) groups.current.set(id, node);else groups.current.delete(id);}}
       onStart={startDrag} onHover={hoverItem} onNudge={nudge} onFocus={id => {selectItem(id);hoverItem(id);}} onActivate={activateItem} onError={onError}/>)}
+    {roomVersion === 10 && <Suspense fallback={null}><SushiPlates onReady={sushiLoaded} rootRef={rootRef}/></Suspense>}
+    {roomVersion === 10 && <KitchenToys engine={engine} actionsRef={toyActions} onUse={activateItem} onHover={hoverItem}
+      hoveredId={hoverId} nearbyId={highlightId} paused={paused} editable={editable} reducedMotion={reducedMotion}
+      rootRef={rootRef} onReady={toysLoaded} resetToken={resetToken} onTomatoSplat={onTomatoSplat}/>}
+    {/* The cleaned V10 tiles sit at .220, above the original collision floor. */}
+    <FootprintTrail engine={engine} floorY={roomVersion === 10 ? .224 : ROOM_FLOOR_Y + .008} enabled={!editable} resetToken={resetToken}/>
     <group ref={player} position={[PLAYER_START.x, PLAYER_START.y, PLAYER_START.z]} rotation={[0, Math.PI / 2, 0]}>
       <Suspense fallback={null}><CapybaraActor engine={engine} height={CAPYBARA_HEIGHT}
         idleUrl={assets.character.animations?.idle} walkUrl={assets.character.animations?.walk} onReady={characterLoaded}/></Suspense>

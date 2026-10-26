@@ -10,6 +10,7 @@ import KitchenMusicPlayer from './KitchenMusicPlayer.jsx';
 import KitchenTitle from './KitchenTitle.jsx';
 import RoomJoystick from './RoomJoystick.jsx';
 import RoomInteract from './RoomInteract.jsx';
+import RoomTomatoSplat, {TOMATO_SPLAT_IMAGE} from './RoomTomatoSplat.jsx';
 import RoomLoading from './RoomLoading.jsx';
 import TaskOutline from './TaskOutline.jsx';
 import RoomLighting from './RoomLighting.jsx';
@@ -194,6 +195,8 @@ export default function RoomReview() {
   const [compactViewport, setCompactViewport] = useState(() => window.matchMedia('(max-width: 900px)').matches);
   const [computerOpen, setComputerOpen] = useState(false), [activeProject, setActiveProject] = useState(null), [selectedItem, setSelectedItem] = useState(null);
   const [videoPlaying, setVideoPlaying] = useState(false);
+  const [tomatoSplat, setTomatoSplat] = useState(0);
+  useEffect(() => {const image = new Image();image.src = TOMATO_SPLAT_IMAGE;}, []);
   const [arranging, setArranging] = useState(EDITOR_MODE);
   const [introduced, setIntroduced] = useState(!INTERACTIVE_ROOM || EDITOR_MODE || LIGHTING_PREVIEW);
   const [lightingSettings, setLightingSettings] = useState(() => LIGHTING_PREVIEW ? loadRoomLightingSettings() : ROOM_LIGHTING_DEFAULTS);
@@ -228,6 +231,10 @@ export default function RoomReview() {
     welcomeDismissed.current = true;
     return true;
   }, []);
+  const splatTomato = useCallback(() => setTomatoSplat(value => value + 1), []);
+  const clearTomatoSplat = useCallback(() => setTomatoSplat(0), []);
+  useEffect(() => {if (modalOpen) setTomatoSplat(0);}, [modalOpen]);
+  const usedToy = useCallback(() => dismissWelcome({inspection: true}), [dismissWelcome]);
   const openComputer = useCallback(() => {dismissWelcome({inspection: true});setHoveredItem('');setVideoPlaying(false);setActiveProject(null);setComputerOpen(true);setComputerViewed(true);}, [dismissWelcome]);
   const openProject = useCallback(id => {if (projects.some(project => project.id === id)) {dismissWelcome({inspection: true});setHoveredItem('');setVideoPlaying(false);setComputerOpen(false);setActiveProject(id);if (id === 'seed-squad') setVegetablesViewed(true);if (id === 'smarttester') setRecorderViewed(true);}}, [dismissWelcome]);
   const closeProject = useCallback(() => {setVideoPlaying(false);setComputerOpen(false);setActiveProject(null);}, []);
@@ -327,7 +334,7 @@ export default function RoomReview() {
       {gameReady && <>
       {!hasMoved && !welcomeVisible && !arranging && !modalOpen && <p className="room-move-hint" role="status"><span className="room-controls--keyboard">WASD or click the floor to move</span><span className="room-controls--touch">Drag the joystick or tap the floor</span></p>}
       {hasMoved && !welcomeVisible && !arranging && !modalOpen && <p className={`room-inspect-hint${inspectTarget ? ' room-inspect-hint--ready' : ''}`} role="status" aria-live="polite">
-        {inspectTarget ? <><span>Inspect {inspectTarget.label}</span><span className="room-inspect-hint__action room-controls--keyboard"><kbd>E</kbd><span>or click</span></span><span className="room-controls--touch">Tap Inspect</span></> : <><span className="room-controls--keyboard">Click an object to inspect</span><span className="room-controls--touch">Tap an object to inspect</span></>}
+        {inspectTarget ? <><span>{inspectTarget.actionLabel || `Inspect ${inspectTarget.label}`}</span><span className="room-inspect-hint__action room-controls--keyboard"><kbd>E</kbd><span>or click</span></span><span className="room-controls--touch">Tap {inspectTarget.kind === 'toy' ? 'Use' : 'Inspect'}</span></> : <><span className="room-controls--keyboard">Click an object to inspect</span><span className="room-controls--touch">Tap an object to inspect</span></>}
       </p>}
       </>}
     </div>}
@@ -347,13 +354,14 @@ export default function RoomReview() {
           <RoomLighting settings={lighting} compact={touchMode || compactViewport}/>
           <Suspense fallback={null}><FurnishedRoom entry={entry} rotation={view.modelRotation} onLoaded={loaded}/></Suspense>
           {ROOM_VERSION === 10 && TITLE_STYLE !== 'none' && <Suspense fallback={null}><KitchenTitle variant={TITLE_STYLE} physicsRef={titlePhysics} rootRef={rootRef}/></Suspense>}
-          {INTERACTIVE_ROOM && info && <RoomArrangement key={ROOM_VERSION} roomVersion={ROOM_VERSION} controls={controls} rootRef={rootRef} titlePhysics={titlePhysics} resetToken={resetLayoutToken} onStatus={setArrangementStatus} onHover={setHoveredItem} onReady={objectsLoaded} onError={failed} onFirstMove={firstMove} onWelcomeMove={dismissWelcome} onWelcomeAnchor={welcomePositioned} welcomeActive={introducing || welcomeExiting} onInspectTarget={inspectionChanged} objectiveId={objectiveId} reducedMotion={reducedMotion} onOpenComputer={openComputer} onOpenProject={openProject} onSelection={setSelectedItem} actionsRef={arrangementActions} paused={interactionPaused} editable={arranging} fixedCamera/>}
+          {INTERACTIVE_ROOM && info && <RoomArrangement key={ROOM_VERSION} roomVersion={ROOM_VERSION} controls={controls} rootRef={rootRef} titlePhysics={titlePhysics} resetToken={resetLayoutToken} onStatus={setArrangementStatus} onHover={setHoveredItem} onReady={objectsLoaded} onError={failed} onFirstMove={firstMove} onWelcomeMove={dismissWelcome} onWelcomeAnchor={welcomePositioned} welcomeActive={introducing || welcomeExiting} onInspectTarget={inspectionChanged} objectiveId={objectiveId} activeItemId={computerOpen ? 'games-computer' : activeProject || ''} onToyUse={usedToy} onTomatoSplat={splatTomato} reducedMotion={reducedMotion} onOpenComputer={openComputer} onOpenProject={openProject} onSelection={setSelectedItem} actionsRef={arrangementActions} paused={interactionPaused} editable={arranging} fixedCamera/>}
           <OrbitControls ref={controls} enabled={!INTERACTIVE_ROOM && !modalOpen} makeDefault enableRotate={!INTERACTIVE_ROOM} enableZoom={!INTERACTIVE_ROOM} enableDamping={!INTERACTIVE_ROOM && !reducedMotion} dampingFactor={.08} enablePan={false} minPolarAngle={.05} maxPolarAngle={Math.PI / 2 - .02}/>
           <FitRoomCamera controls={controls} info={info} view={view}/>
           </TaskOutline>
         </Canvas>
       </RoomBoundary>}
     </div>
+    {tomatoSplat > 0 && !modalOpen && <RoomTomatoSplat key={tomatoSplat} reducedMotion={reducedMotion} onDone={clearTomatoSplat}/>}
     {welcomeVisible && <RoomWelcome anchor={welcomeAnchor} reducedMotion={reducedMotion} closing={welcomeExiting} onExited={welcomeExited}/>}
     {INTERACTIVE_ROOM && gameReady && <>
       {EDITOR_MODE && <p className="room-arrangement-status" role="status" inert={modalOpen ? true : undefined}>{hoveredItem || (arranging && selectedItem ? `${selectedItem.label} selected${arrangementStatus ? `. ${arrangementStatus}` : ''}` : arrangementStatus)}</p>}
