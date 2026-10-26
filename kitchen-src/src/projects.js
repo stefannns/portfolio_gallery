@@ -9,6 +9,39 @@ export const projects = [
     design: 'Garden space is limited, so every seed is a trade-off. Mix fighters, tanks, ranged attackers and support, then shape your defense with growth timing, branching upgrades and wave augments.',
     processTitle: 'Character pipeline',
     process: 'I built a character-generation pipeline that produces a new character in under 4 minutes. It connects AI-generated artwork and animation with transparent sprite sheets and consistent sizing for Phaser, helping me expand the cast while keeping its visual style consistent.',
+    galleryIntro: 'A look at how I build levels, develop the cast, and shape the game’s strategic choices.',
+    gallery: [
+      {
+        id: 'level-editor', title: 'Level editor',
+        src: '/images/projects/seed-squad/level-editor.jpg', width: 1707, height: 960,
+        alt: 'Seed Squad level editor showing a garden map, terrain placement tools, and a selected two-by-two rock with position and size controls.',
+        caption: 'I built a map editor to arrange clearable grass, permanent rocks and special soil, then check how players can open space for their garden.',
+      },
+      {
+        id: 'characters', title: 'Character sets',
+        src: '/images/projects/seed-squad/character-library.jpg', width: 1707, height: 960,
+        alt: 'The 14-seed character roster beside Orange’s attack animation preview, frame controls, and gameplay stats in the content library.',
+        caption: 'Portraits, planted forms and combat animations share one character library, with playback and frame-by-frame checks to keep each kit consistent.',
+      },
+      {
+        id: 'world-layouts', title: 'World layouts',
+        src: '/images/projects/seed-squad/world-layouts.jpg', width: 1707, height: 960,
+        alt: 'Five Coral Cove level layouts side by side, showing two lawns, winding enemy routes, rocks, grass and special soil.',
+        caption: 'Coral Cove’s five maps use two lawns, permanent obstacles and special soil to vary expansion choices around a winding enemy route.',
+      },
+      {
+        id: 'waves', title: 'Wave planning',
+        src: '/images/projects/seed-squad/wave-planning.jpg', width: 1707, height: 960,
+        alt: 'Sunny Orchard level six planning view with its terrain diagram, starting resources, and all nine authored enemy waves.',
+        caption: 'I pair each layout with authored enemy waves, starting resources and terrain bonuses, so the challenge develops through both space and pacing.',
+      },
+      {
+        id: 'upgrades', title: 'Upgrade branches',
+        src: '/images/projects/seed-squad/upgrade-branches.jpg', width: 1707, height: 960,
+        alt: 'Seed upgrade branches comparing tier-three and tier-four choices for Orange, Durian, Corn, Chili and other characters.',
+        caption: 'Two upgrade branches for each seed support different builds, from faster attacks and longer range to team protection and healing.',
+      },
+    ],
     imagePosition: 'center',
   },
   {

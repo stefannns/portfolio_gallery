@@ -2,6 +2,7 @@ import React, {useEffect, useId, useMemo, useRef, useState} from 'react';
 import {projects, computerProjectIds} from './projects.js';
 import ProjectGameEmbed from './ProjectGameEmbed.jsx';
 import ProjectWorkflow from './ProjectWorkflow.jsx';
+import ProjectGallery from './ProjectGallery.jsx';
 import {attachProjectEndGesture} from './project-end-gesture.js';
 import './computer-projects.css';
 
@@ -120,6 +121,18 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
     setReel(null);
   }
 
+  useEffect(() => {
+    const element = detail.current;
+    const preview = element?.querySelector('.computer-projects__media-column--embed');
+    if (!preview || !selected.gallery?.length) return;
+    // Tall portrait previews scroll naturally until their bottom fits the
+    // viewport, then stay beside the design notes instead of leaving a gap.
+    const fitPreview = () => element.style.setProperty('--project-preview-top', `${Math.min(0, element.clientHeight - preview.offsetHeight - 16)}px`);
+    const observer = new ResizeObserver(fitPreview);
+    observer.observe(element);observer.observe(preview);fitPreview();
+    return () => {observer.disconnect();element.style.removeProperty('--project-preview-top');};
+  }, [selected.id, selected.gallery]);
+
   const projectCopy = (
     <div className="computer-projects__copy">
       <section className="computer-projects__story-note">
@@ -177,7 +190,7 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
           </button>)}
         </nav>}
 
-        <article className={`computer-projects__detail${videoProject ? ' computer-projects__detail--video' : ''}${selected.previewAspectRatio ? ' computer-projects__detail--capture' : ''}${selected.embedUrl ? ' computer-projects__detail--embed' : ''}`} ref={detail} id={detailId} tabIndex={-1} aria-labelledby={videoProject && single ? titleId : projectTitleId}>
+        <article className={`computer-projects__detail${videoProject ? ' computer-projects__detail--video' : ''}${selected.previewAspectRatio ? ' computer-projects__detail--capture' : ''}${selected.embedUrl ? ' computer-projects__detail--embed' : ''}${selected.gallery?.length ? ' computer-projects__detail--gallery' : ''}`} ref={detail} id={detailId} tabIndex={-1} aria-labelledby={videoProject && single ? titleId : projectTitleId}>
           {videoProject && !single && <div className="computer-projects__video-heading">
             <p className="computer-projects__type">{selected.type}</p>
             <h2 id={projectTitleId}>{selected.title}</h2>
@@ -198,6 +211,7 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
 
           {!selected.previewAspectRatio && projectCopy}
           {selected.workflowEmbedUrl && <ProjectWorkflow key={selected.id} project={selected} onEscape={() => close.current?.()}/>}
+          {selected.gallery?.length > 0 && <ProjectGallery key={selected.id} items={selected.gallery} intro={selected.galleryIntro}/>}
           {nextProject && <button ref={nextNote} className="computer-projects__next" data-project-next type="button" onClick={() => advance.current?.()} aria-label={`Open next project: ${nextProject.title}`}>
             <span className="computer-projects__next-copy"><small>Next up</small><strong>{nextProject.title}</strong><span>Scroll or swipe down again to continue</span></span>
             <span className="computer-projects__next-arrow" aria-hidden="true">↓</span>

@@ -1,0 +1,53 @@
+.project-gallery{grid-column:1 / -1;min-width:0;width:100%;padding-top:9px;color:var(--ink,#554832);font-family:'Nunito','Avenir Next',sans-serif}
+.project-gallery__header{margin-bottom:17px;padding:0 3px}
+.project-gallery__header h3{margin:0 0 7px;font-family:var(--hand,'Chalkboard SE','Segoe Print','Comic Sans MS',cursive);font-size:27px;font-weight:400;line-height:1.25;color:#5d593c}
+.project-gallery__header p{max-width:72ch;margin:0;font-size:14px;font-weight:500;line-height:1.65;color:#776c50}
+.project-gallery__choices{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 15px}
+.project-gallery .project-gallery__choices button{min-width:0;min-height:44px;padding:9px 15px;border:1px solid #d4c6a1;border-radius:3px 5px 3px 2px;background:#f8efd2;box-shadow:1px 2px 2px #76613d0d;font-family:var(--hand,'Chalkboard SE','Segoe Print','Comic Sans MS',cursive);font-size:16px;font-weight:400;line-height:1.3;text-align:left;overflow-wrap:anywhere}
+.project-gallery .project-gallery__choices button:hover{background:#fff3bf;border-color:#c3ac77}
+.project-gallery .project-gallery__choices button[aria-pressed=true]{background:#ffec9e;border-color:#b89a57;box-shadow:inset 0 -2px #d7bb71,1px 2px 2px #76613d0d;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.project-gallery__figure{min-width:0;margin:0}
+.project-gallery__image-link{display:block;min-width:0;padding:7px 7px 0;border:1px solid #e1d7bc;border-radius:2px;background:#fffdf6;box-shadow:1px 5px 10px #78653713;color:#5b6741;text-decoration:none}
+.project-gallery__image-link img{display:block;width:100%;max-width:100%;height:auto;background:#eee8d7}
+.project-gallery__open{display:flex;align-items:center;justify-content:flex-end;gap:7px;min-height:44px;padding:8px 5px;font-size:12px;font-weight:800;line-height:1.4;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.project-gallery__image-link:hover .project-gallery__open{color:#3f4a2b;text-decoration-thickness:2px}
+.project-gallery .project-gallery__choices button:focus-visible,.project-gallery__image-link:focus-visible{outline:2px solid #87683b;outline-offset:4px}
+.project-gallery__caption{padding:15px 4px 0}
+.project-gallery__caption h4{margin:0 0 5px;font-family:var(--hand,'Chalkboard SE','Segoe Print','Comic Sans MS',cursive);font-size:21px;font-weight:400;line-height:1.3;color:#5d593c}
+.project-gallery__caption p{max-width:80ch;margin:0;font-size:13.5px;font-weight:500;line-height:1.65;color:#776c50}
+@media(max-width:760px){
+ .project-gallery__header h3{font-size:24px}
+ .project-gallery__choices{gap:7px;margin-bottom:13px}
+ .project-gallery .project-gallery__choices button{padding-inline:12px;font-size:15px}
+ .project-gallery__image-link{padding:5px 5px 0}
+ .project-gallery__caption{padding-top:12px}
+}
+@media(orientation:landscape) and (max-height:520px){
+ .project-gallery{padding-top:4px}
+ .project-gallery__header{margin-bottom:12px}
+ .project-gallery__header h3{font-size:23px}
+ .project-gallery__header p,.project-gallery__caption p{font-size:13px;line-height:1.55}
+ .project-gallery .project-gallery__choices button{padding:8px 11px;font-size:14px}
+}
+
+/* Let the design screenshots fill the column immediately beneath the notes. */
+.computer-projects .computer-projects__detail--embed.computer-projects__detail--gallery{grid-template-rows:auto 1fr}
+.computer-projects__detail--embed.computer-projects__detail--gallery>.computer-projects__media-column{grid-column:1;grid-row:1 / span 2;align-self:start}
+.computer-projects__detail--embed.computer-projects__detail--gallery>.computer-projects__copy{grid-column:2;grid-row:1}
+.computer-projects__detail--embed.computer-projects__detail--gallery>.project-gallery{grid-column:2;grid-row:2;padding-top:0}
+@media(max-width:760px){
+ .computer-projects .computer-projects__detail--embed.computer-projects__detail--gallery{grid-template-rows:none}
+ .computer-projects__detail--embed.computer-projects__detail--gallery>.computer-projects__media-column,
+ .computer-projects__detail--embed.computer-projects__detail--gallery>.computer-projects__copy,
+ .computer-projects__detail--embed.computer-projects__detail--gallery>.project-gallery{grid-column:1 / -1;grid-row:auto}
+}
+@media(orientation:landscape) and (max-height:520px) and (min-width:650px) and (max-width:900px){
+ .computer-projects .computer-projects__detail--embed.computer-projects__detail--gallery{grid-template-rows:auto auto}
+ .computer-projects__detail--embed.computer-projects__detail--gallery>.computer-projects__media-column{grid-column:1;grid-row:1}
+ .computer-projects__detail--embed.computer-projects__detail--gallery>.computer-projects__copy{grid-column:2;grid-row:1}
+ .computer-projects__detail--embed.computer-projects__detail--gallery>.project-gallery{grid-column:1 / -1;grid-row:2}
+}
+
+@media(min-width:901px),(min-width:761px) and (min-height:521px){
+ .computer-projects__detail--embed.computer-projects__detail--gallery>.computer-projects__media-column{position:sticky;top:var(--project-preview-top,0px)}
+}
