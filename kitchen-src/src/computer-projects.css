@@ -174,3 +174,16 @@
 @container project-workflow (max-width:760px){
  .computer-projects__workflow>iframe{height:860px}
 }
+
+/* A small paper tab makes continuing past the end discoverable. */
+.computer-projects__next{--next-pull:0;position:relative;grid-column:1 / -1;display:flex;align-items:center;justify-content:space-between;gap:20px;width:100%;min-width:0;margin-top:8px;padding:19px 24px;overflow:hidden;border:0;border-top:1px dashed #cabc98;border-radius:2px;background:#f5edcf;text-align:left;box-shadow:1px 3px 5px #7865370d}
+.computer-projects__next::after{content:'';position:absolute;inset:auto 0 0;height:3px;background:#b39350;transform:scaleX(var(--next-pull));transform-origin:left;transition:transform .1s linear;pointer-events:none}
+.computer-projects__next:hover{background:#f1e5b9}
+.computer-projects__next-copy{display:grid;gap:5px;min-width:0}
+.computer-projects__next-copy>small{font-size:11px;color:#8a7b5b}
+.computer-projects__next-copy>strong{font-family:var(--hand);font-size:22px;line-height:1.25;font-weight:400;overflow-wrap:anywhere}
+.computer-projects__next-copy>span{font-size:12px;line-height:1.45;color:#827353}
+.computer-projects__next-arrow{flex:none;font-family:var(--hand);font-size:30px;color:#8e7446;transform:translateY(calc(var(--next-pull) * 6px));transition:transform .1s linear}
+.computer-projects__detail:focus{outline:none}
+@media(orientation:landscape) and (max-height:520px){.computer-projects__next{padding:14px 18px}.computer-projects__next-copy>strong{font-size:20px}}
+@media(prefers-reduced-motion:reduce){.computer-projects__next::after,.computer-projects__next-arrow{transition:none}}

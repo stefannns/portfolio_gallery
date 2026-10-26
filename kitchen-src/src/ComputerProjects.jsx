@@ -2,6 +2,7 @@ import React, {useEffect, useId, useMemo, useRef, useState} from 'react';
 import {projects, computerProjectIds} from './projects.js';
 import ProjectGameEmbed from './ProjectGameEmbed.jsx';
 import ProjectWorkflow from './ProjectWorkflow.jsx';
+import {attachProjectEndGesture} from './project-end-gesture.js';
 import './computer-projects.css';
 
 const computerIds = computerProjectIds;
@@ -33,14 +34,30 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
   const [selectedId, setSelectedId] = useState(() => library.some(project => project.id === projectId) ? projectId : library[0].id);
   const [reel, setReel] = useState(null);
   const dialog = useRef(null), closeButton = useRef(null), detail = useRef(null);
+  const nextNote = useRef(null), advanceFocus = useRef(false), endGesture = useRef(null);
   const close = useRef(onClose);
   close.current = onClose;
   const titleId = useId(), detailId = useId(), projectTitleId = useId();
   const selected = library.find(project => project.id === selectedId) || library[0];
+  const nextProject = library[library.findIndex(project => project.id === selected.id) + 1];
   const single = library.length === 1;
   const heading = typeof title === 'string' && title.trim() ? title.trim() : single ? selected.title : 'Capybara’s computer';
   const video = selected.moreVideos?.some(clip => clip.url === reel) ? reel : selected.video || selected.moreVideos?.[0]?.url;
   const videoProject = Boolean(video && !selected.embedUrl && !selected.previewUrl);
+  const advance = useRef(null);
+  advance.current = () => {
+    if (!nextProject) return;
+    advanceFocus.current = true;
+    select(nextProject.id);
+  };
+  endGesture.current = {enabled: Boolean(nextProject), projectKey: selected.id};
+
+  useEffect(() => attachProjectEndGesture({
+    element: detail.current,
+    readState: () => endGesture.current,
+    onAdvance: () => advance.current?.(),
+    onProgress: progress => nextNote.current?.style.setProperty('--next-pull', String(progress)),
+  }), []);
 
   useEffect(() => {
     setSelectedId(current => library.some(project => project.id === projectId) ? projectId
@@ -86,8 +103,16 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
 
   useEffect(() => {
     if (detail.current) detail.current.scrollTop = 0;
+    nextNote.current?.style.setProperty('--next-pull', '0');
     dialog.current?.querySelector('.computer-projects__card[aria-pressed="true"]')
       ?.scrollIntoView({block: 'nearest', inline: 'nearest'});
+    if (advanceFocus.current && detail.current) {
+      advanceFocus.current = false;
+      detail.current.focus({preventScroll: true});
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        detail.current.animate([{opacity: .55, transform: 'translateY(10px)'}, {opacity: 1, transform: 'translateY(0)'}], {duration: 220, easing: 'ease-out'});
+      }
+    }
   }, [selected.id]);
 
   function select(id) {
@@ -152,7 +177,7 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
           </button>)}
         </nav>}
 
-        <article className={`computer-projects__detail${videoProject ? ' computer-projects__detail--video' : ''}${selected.previewAspectRatio ? ' computer-projects__detail--capture' : ''}${selected.embedUrl ? ' computer-projects__detail--embed' : ''}`} ref={detail} id={detailId} aria-labelledby={videoProject && single ? titleId : projectTitleId}>
+        <article className={`computer-projects__detail${videoProject ? ' computer-projects__detail--video' : ''}${selected.previewAspectRatio ? ' computer-projects__detail--capture' : ''}${selected.embedUrl ? ' computer-projects__detail--embed' : ''}`} ref={detail} id={detailId} tabIndex={-1} aria-labelledby={videoProject && single ? titleId : projectTitleId}>
           {videoProject && !single && <div className="computer-projects__video-heading">
             <p className="computer-projects__type">{selected.type}</p>
             <h2 id={projectTitleId}>{selected.title}</h2>
@@ -173,6 +198,10 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
 
           {!selected.previewAspectRatio && projectCopy}
           {selected.workflowEmbedUrl && <ProjectWorkflow key={selected.id} project={selected} onEscape={() => close.current?.()}/>}
+          {nextProject && <button ref={nextNote} className="computer-projects__next" data-project-next type="button" onClick={() => advance.current?.()} aria-label={`Open next project: ${nextProject.title}`}>
+            <span className="computer-projects__next-copy"><small>Next up</small><strong>{nextProject.title}</strong><span>Scroll or swipe down again to continue</span></span>
+            <span className="computer-projects__next-arrow" aria-hidden="true">↓</span>
+          </button>}
         </article>
       </div>
       <span className="computer-projects__announcement" role="status" aria-live="polite">{selected.title} selected.</span>
