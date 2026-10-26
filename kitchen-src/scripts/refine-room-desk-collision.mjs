@@ -4,7 +4,7 @@ const file = new URL('../src/room-v10-surfaces.json', import.meta.url);
 const data = JSON.parse(await fs.readFile(file, 'utf8'));
 const {width, height, step, minX, minZ, floorY, clearanceRadius} = data;
 // Include the outer front walking lane as well as the desk approach.
-const region = {minX: 2, maxX: 4.72, minZ: 1.8, maxZ: 5.4};
+const region = {minX: 2, maxX: 4.56, minZ: 1.8, maxZ: 5.4};
 const samplingMargin = .03;
 const disk = [], reach = Math.ceil((clearanceRadius + samplingMargin) / step);
 for (let dz = -reach; dz <= reach; dz++) for (let dx = -reach; dx <= reach; dx++) {

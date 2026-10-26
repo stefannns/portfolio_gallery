@@ -79,6 +79,13 @@ for (const x of [4.4, 4.45, 4.5, 4.55, 4.56]) {
     assert(direction > 0 ? player.z >= 4.9 : player.z <= 1.5, 'Held movement crosses the old desk barrier in both directions');
   }
 }
+// Holding down must keep a consistent front boundary rather than exposing a
+// second partial lane that would snag at the same desk corner.
+let edgePlayer = {x: 4.4, z: 1.5};
+for (let frame = 0; frame < 30; frame++) edgePlayer = room.stepRoomPlayer(edgePlayer, {x: 1, z: 0}, 1 / 60);
+assert(edgePlayer.x >= 4.5 && edgePlayer.x <= 4.56 + 1e-7, 'The front edge remains consistent beside the desk');
+for (let frame = 0; frame < 60; frame++) edgePlayer = room.stepRoomPlayer(edgePlayer, {x: 0, z: 1}, 1 / 60);
+assert(edgePlayer.z >= 4.9, 'Walking left at the outermost reachable edge clears the desk');
 assert(!room.canWalk(3.3, 4), 'The desk itself still blocks walking');
 assert(!room.canWalk(4.9, 3.5), 'The outer slab edge still retains player clearance');
 
