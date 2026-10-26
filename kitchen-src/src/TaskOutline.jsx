@@ -25,6 +25,7 @@ class VisibleTaskOutlinePass extends OutlinePass {
     // image. AdditiveBlending would multiply by its own edge alpha here and
     // fade small silhouettes a second time before our final composite.
     this.overlayMaterial.blending = NoBlending;
+    this.separableBlurMaterial2.uniforms.kernelRadius.value = 3.5;
   }
 
   render(renderer, writeBuffer, readBuffer, deltaTime, maskActive) {
@@ -135,8 +136,8 @@ function TaskOutlineRenderer({registry, reducedMotion}) {
     // Retain camera scaling, with a floor so the cue never becomes sub-pixel.
     const sceneScale = Math.max(.8, getSceneUiScale(camera, frameSize));
     outline.edgeThickness = Math.min(4, (nearby ? 2.1 : 1.7 + breath * .5) * sceneScale * pixelRatio);
-    outline.edgeStrength = nearby ? 7 : 4.5 + breath * 2;
-    outline.edgeGlow = 1.2 + breath * 1.3;
+    outline.edgeStrength = nearby ? 6.3 : 4.1 + breath * 1.7;
+    outline.edgeGlow = 1.05 + breath * 1.05;
     state.material.uniforms.outlineOpacity.value = nearby ? 1 : .82 + breath * .16;
     const autoClear = gl.autoClear;
     const clearAlpha = gl.getClearAlpha();
