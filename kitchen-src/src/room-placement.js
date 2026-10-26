@@ -62,7 +62,7 @@ function createRoomPlacement(surfaceData, version) {
         if (canWalk(x, z, placements)) return {x, y: PLAYER_START.y, z};
       }
     }
-    // Six floor objects cannot cover the whole room, but keep malformed saved
+    // The room props cannot cover the whole room, but keep malformed saved
     // layouts from trapping the player if the local spawn area is crowded.
     let best = null, nearest = Infinity;
     for (let row = 0; row < rows; row++) for (let column = 0; column < columns; column++) {
@@ -165,7 +165,6 @@ function createRoomPlacement(surfaceData, version) {
     {id: 'seed-squad', asset: 'discovery-groceries-v2', label: 'Groceries', width: .72, position: [-2.15, ROOM_FLOOR_Y, 3.3], rotationY: 0},
     {id: 'smarttester', asset: 'discovery-smarttester-v2', label: 'Recorder', width: .52, position: [0, 1.12, -.4], rotationY: 0},
     {id: 'h3-otome', asset: 'discovery-h3-v2', label: 'Otome notebook', width: .6, position: [0, 1.12, -2.1], rotationY: 0},
-    {id: 'toad-defense', asset: 'discovery-toad-v2', label: 'Frog tea pets', width: .42, position: [0, 1.12, 1.3], rotationY: 0},
     {id: 'games-computer', asset: 'discovery-computer-v2', label: 'Games computer', width: 1.1038849354, position: [3.2, 1.23, 4], rotationY: 0},
     {id: 'a-bot-can-do-better', asset: 'discovery-bot-v3', label: 'Specials chalkboard', width: 1.1, position: [3.05, ROOM_FLOOR_Y, -3.9], rotationY: 0, modelOffset: [-.1200942993, 0, 0]},
   ] : [

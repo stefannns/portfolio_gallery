@@ -45,7 +45,7 @@ function persistLayout(storageKey, items) {
   } catch {return false;}
 }
 
-function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus, onActivate, onError, editable, objective, highlighted, reducedMotion}) {
+function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus, onActivate, onError, editable, objective, highlighted, hovered, reducedMotion}) {
   const ignorePointerTarget = useTaskOutlineIgnore();
   const markerBounds = useRef(new THREE.Box3()), markerPoint = useRef(new THREE.Vector3());
   const markerPosition = useCallback((anchor, camera, size) => {
@@ -74,9 +74,9 @@ function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus,
 
   return <group ref={node => register(item.id, node)} position={item.position} rotation={[0, item.rotationY, 0]}
     onPointerDown={event => onStart(event, item.id)}
-    onPointerOver={event => {event.stopPropagation();onHover(item.id);}}
-    onPointerOut={() => onHover(null)}>
-    <group name={`room-item-model-${item.id}`} position={item.modelOffset || [0, 0, 0]}><RestaurantModel entry={entry} dimensions={[item.width, item.width, item.width]} rotationY={0} uniform objective={objective} highlighted={highlighted} reducedMotion={reducedMotion} onError={onError}/></group>
+    onPointerOver={event => {event.stopPropagation();if (event.pointerType !== 'touch') onHover(item.id);}}
+    onPointerOut={() => onHover(null, item.id)}>
+    <group name={`room-item-model-${item.id}`} position={item.modelOffset || [0, 0, 0]}><RestaurantModel entry={entry} dimensions={[item.width, item.width, item.width]} rotationY={0} uniform objective={objective} highlighted={highlighted || hovered} reducedMotion={reducedMotion} onError={onError}/></group>
     {/* Invisible pointer targets make small items easy to grab without changing their art. */}
     <mesh ref={ignorePointerTarget} position={[0, item.width * .3, 0]}>
       <boxGeometry args={[Math.max(.62, item.width), Math.max(.45, item.width * .65), Math.max(.62, item.width)]}/>
@@ -87,7 +87,7 @@ function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus,
     </Html>}
     <Html center position={[0, item.width * .6 + .12, 0]} style={{pointerEvents: 'none'}} zIndexRange={[12, 1]}>
       <button type="button" className="room-item-keyboard" aria-label={editable ? `Select ${item.label}` : item.id === 'games-computer' ? 'Open computer' : `Open ${item.label} project`}
-        onFocus={() => onFocus(item.id)} onBlur={() => onHover(null)}
+        onFocus={() => onFocus(item.id)} onBlur={() => onHover(null, item.id)}
         onKeyDown={event => onNudge(event, item.id)} onClick={() => onActivate(item.id, {direct: true})}>{item.label}<span>{editable ? 'Enter to select · Arrows to place · R to rotate' : highlighted ? 'E or click to inspect' : 'Click to inspect · move closer for E'}</span></button>
     </Html>
   </group>;
@@ -107,6 +107,7 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
   const [assets, setAssets] = useState(null);
   const [characterReady, setCharacterReady] = useState(false);
   const [highlightId, setHighlightId] = useState('');
+  const [hoverId, setHoverId] = useState('');
   const readySent = useRef(false);
   const firstMoveSent = useRef(false);
   const characterLoaded = useCallback(() => setCharacterReady(true), []);
@@ -323,10 +324,12 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
     // Synchronize both opening and closing before the next paint/key event.
     // No old key, joystick deflection or click destination may survive a dialog.
     resetMovement();
-    if (paused) finishDrag(false);
+    if (paused) {
+      finishDrag(false);hover.current = null;setHoverId('');onHover('');
+    }
     engine.paused = paused || Boolean(drag.current) || document.hidden;
     if (controls.current) controls.current.enabled = !fixedCamera && !engine.paused;
-  }, [controls, engine, finishDrag, fixedCamera, paused, resetMovement]);
+  }, [controls, engine, finishDrag, fixedCamera, onHover, paused, resetMovement]);
 
   useEffect(() => {
     if (resetToken === lastReset.current) return;
@@ -426,6 +429,7 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
       rootRef.current.dataset.inspectable = String(Boolean(target));
       rootRef.current.dataset.objectiveGlow = !editable && !paused ? objectiveId : '';
       rootRef.current.dataset.nearbyGlow = target?.id || '';
+      rootRef.current.dataset.hoverGlow = !editable && !paused ? hoverId : '';
     }
   }, -1);
 
@@ -442,9 +446,10 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
     const position = safePosition(id, [item.position[0] + vector.x * amount * sign, item.position[1], item.position[2] + vector.z * amount * sign]);
     if (position) commit(id, position);
   };
-  const hoverItem = id => {
-    if (drag.current) return;
+  const hoverItem = (id, leavingId) => {
+    if (drag.current?.editable || (paused && id) || (!id && leavingId && hover.current !== leavingId)) return;
     hover.current = id;
+    setHoverId(id || '');
     const item = latest.current.find(value => value.id === id);
     document.body.style.cursor = !paused && item ? editable ? 'grab' : 'pointer' : '';
     onHover(ROOM_ITEMS.find(item => item.id === id)?.label || '');
@@ -456,7 +461,7 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
       <planeGeometry args={[ROOM_BOUNDS.maxX - ROOM_BOUNDS.minX, ROOM_BOUNDS.maxZ - ROOM_BOUNDS.minZ]}/>
       <meshBasicMaterial transparent opacity={0} colorWrite={false} depthWrite={false}/>
     </mesh>
-    {placements.map(item => <MovableItem key={item.id} item={item} entry={assets.props.assets?.[item.asset]} editable={editable} objective={item.id === objectiveId && !editable && !paused} highlighted={item.id === highlightId && !editable && !paused} reducedMotion={reducedMotion}
+    {placements.map(item => <MovableItem key={item.id} item={item} entry={assets.props.assets?.[item.asset]} editable={editable} objective={item.id === objectiveId && !editable && !paused} highlighted={item.id === highlightId && !editable && !paused} hovered={item.id === hoverId && !editable && !paused} reducedMotion={reducedMotion}
       register={(id, node) => {if (node) groups.current.set(id, node);else groups.current.delete(id);}}
       onStart={startDrag} onHover={hoverItem} onNudge={nudge} onFocus={id => {selectItem(id);hoverItem(id);}} onActivate={activateItem} onError={onError}/>)}
     <group ref={player} position={[PLAYER_START.x, PLAYER_START.y, PLAYER_START.z]} rotation={[0, Math.PI / 2, 0]}>

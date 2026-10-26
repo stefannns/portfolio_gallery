@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createRoomNavigator, canTraverseRoomSegment} from '../src/room-navigation.js';
+import {computerProjectIds, projects} from '../src/projects.js';
 
 const bounds = {minX: 0, maxX: 8, minZ: 0, maxZ: 8};
 const safe = (x, z) => x >= .15 && x <= 7.85 && z >= .15 && z <= 7.85;
@@ -37,8 +38,8 @@ for (const [name, file] of [['surfaceV7', 'room-v7-surfaces.json'], ['surfaceV10
 const {getRoomPlacement} = await import(`data:text/javascript;base64,${Buffer.from(placementSource).toString('base64')}`);
 const room = getRoomPlacement(10);
 const publishedLayout = JSON.parse(await readFile(new URL('../src/room-v10-layout.json', import.meta.url), 'utf8'));
-const expectedIds = ['seed-squad', 'smarttester', 'h3-otome', 'toad-defense', 'games-computer', 'a-bot-can-do-better'];
-assert.deepEqual(room.ROOM_ITEMS.map(item => item.id), expectedIds, 'Publishing a layout retains all six project objects');
+const expectedIds = ['seed-squad', 'smarttester', 'h3-otome', 'games-computer', 'a-bot-can-do-better'];
+assert.deepEqual(room.ROOM_ITEMS.map(item => item.id), expectedIds, 'The current room contains the five retained project objects');
 assert.equal(publishedLayout.version, 1, 'Published layout uses the supported data version');
 assert.deepEqual(publishedLayout.items.map(item => item.id), expectedIds, 'Published positions cover every project object');
 for (const expected of publishedLayout.items) {
@@ -49,6 +50,21 @@ for (const expected of publishedLayout.items) {
   assert(Number.isFinite(actual.rotationY), `${expected.id} has a finite published rotation`);
 }
 assert(Math.abs(room.ROOM_ITEMS.find(item => item.id === 'seed-squad').rotationY - Math.PI / 4) < .000001, 'The vegetables bag retains its authored 45-degree turn');
+// An older device can still have the removed tea set in its saved layout.
+const oldTeaSet = {id: 'toad-defense', position: [-3.967614349968157, 1.101999981880188, -2.866209386140361], rotationY: 0};
+for (const legacy of [
+  [...publishedLayout.items, oldTeaSet],
+  Object.fromEntries([...publishedLayout.items, oldTeaSet].map(item => [item.id, item.position])),
+]) {
+  const sanitized = room.sanitizeRoomPlacements(legacy);
+  assert.deepEqual(sanitized.map(item => item.id), expectedIds, 'Old saved tea sets cannot reappear in the current room');
+  for (const expected of publishedLayout.items) {
+    assert.deepEqual(sanitized.find(item => item.id === expected.id).position, expected.position, 'Retained device positions survive sanitizing the removed object');
+  }
+}
+assert(getRoomPlacement(7).ROOM_ITEMS.some(item => item.id === 'toad-defense'), 'The historical V7 room stays unchanged');
+assert(computerProjectIds.includes('toad-defense') && projects.some(project => project.id === 'toad-defense'), 'Toad Defense remains available in the computer project library');
+
 const roomNavigator = createRoomNavigator({bounds: room.ROOM_BOUNDS, canWalk: room.canWalk});
 const placements = room.sanitizeRoomPlacements(null);
 const roomStart = room.getPlayerStart(placements);

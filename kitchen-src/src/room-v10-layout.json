@@ -29,15 +29,6 @@
       "rotationY": 0
     },
     {
-      "id": "toad-defense",
-      "position": [
-        -3.967614349968157,
-        1.101999981880188,
-        -2.866209386140361
-      ],
-      "rotationY": 2.6645352591003757e-15
-    },
-    {
       "id": "games-computer",
       "position": [
         3.2,
