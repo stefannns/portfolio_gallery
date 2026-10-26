@@ -65,6 +65,23 @@ for (const legacy of [
 assert(getRoomPlacement(7).ROOM_ITEMS.some(item => item.id === 'toad-defense'), 'The historical V7 room stays unchanged');
 assert(computerProjectIds.includes('toad-defense') && projects.some(project => project.id === 'toad-defense'), 'Toad Defense remains available in the computer project library');
 
+// The front lane used to stop at z≈3.28: its outer cells were excluded
+// from the desk refinement even though the floor had enough clearance.
+for (const x of [4.4, 4.45, 4.5, 4.55, 4.56]) {
+  for (const direction of [-1, 1]) {
+    const origin = {x, z: direction > 0 ? 1.5 : 4.9};
+    const destination = {x, z: direction > 0 ? 4.9 : 1.5};
+    assert(canTraverseRoomSegment(origin, destination, room.canWalk), `The front desk lane is continuous at x=${x}`);
+    let player = origin;
+    for (let frame = 0; frame < 60; frame++) {
+      player = room.stepRoomPlayer(player, {x: 0, z: direction}, 1 / 60);
+    }
+    assert(direction > 0 ? player.z >= 4.9 : player.z <= 1.5, 'Held movement crosses the old desk barrier in both directions');
+  }
+}
+assert(!room.canWalk(3.3, 4), 'The desk itself still blocks walking');
+assert(!room.canWalk(4.9, 3.5), 'The outer slab edge still retains player clearance');
+
 const roomNavigator = createRoomNavigator({bounds: room.ROOM_BOUNDS, canWalk: room.canWalk});
 const placements = room.sanitizeRoomPlacements(null);
 const roomStart = room.getPlayerStart(placements);
