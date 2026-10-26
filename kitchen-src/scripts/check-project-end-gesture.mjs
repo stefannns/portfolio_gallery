@@ -69,7 +69,8 @@ const swipe = (f, distance, target = f.element, across = 0) => {
 // Trackpad accumulation, one advance, consumed momentum, cooldown and fresh burst.
 {
   const f = fixture();f.bottom();
-  assert.equal(f.wheel(80).defaultPrevented, false);assert(f.progress() > .3);
+  assert.equal(f.wheel(80).defaultPrevented, true, 'The first weak bottom wheel is claimed while still cancelable');
+  assert.equal(f.advances(), 0, 'Claiming bottom overscroll does not bypass the deliberate threshold');assert(f.progress() > .3);
   f.tick(30);f.wheel(80);f.tick(30);assert.equal(f.wheel(60).defaultPrevented, true);
   assert.equal(f.advances(), 1);
   f.state({projectKey: 'two'});f.element.scrollTop = 0;

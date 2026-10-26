@@ -65,6 +65,9 @@ export function attachProjectEndGesture({element, readState, onAdvance, onProgre
       || dy <= 0 || (Math.abs(dx) > 4 && Math.abs(dx) > dy * .75)) {
       wheel.eligible = false;report(0);return;
     }
+    // Some browsers make only the first wheel in a burst cancelable. Claim
+    // bottom-starting overscroll immediately so its momentum cannot move the next page.
+    prevent(event);
     wheel.amount += dy;report(wheel.amount / wheelThreshold);
     if (wheel.amount >= wheelThreshold) {
       prevent(event);wheel.eligible = false;wheel.consume = true;advance(time);
