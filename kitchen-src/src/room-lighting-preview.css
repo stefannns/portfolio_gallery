@@ -1,0 +1,3 @@
+.room-review-viewport--color-graded{position:relative}
+.room-scene-backdrop{position:absolute;inset:0;pointer-events:none}
+.room-review--color-graded .room-review__stage canvas{filter:saturate(var(--room-scene-saturation,1))}

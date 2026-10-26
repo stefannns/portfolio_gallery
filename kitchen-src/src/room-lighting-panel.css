@@ -1,0 +1,32 @@
+.room-lighting-panel{position:absolute;z-index:140;left:16px;bottom:16px;display:flex;flex-direction:column;width:min(280px,calc(100% - 32px));max-height:calc(100% - 32px);min-height:0;border:1px solid #cbb990;border-radius:5px 7px 6px 3px;background:repeating-linear-gradient(0deg,#78673903 0 1px,transparent 1px 4px),#faf3da;box-shadow:2px 5px 0 #d8c69d,0 9px 24px #5d4b2920;color:#625239;font-family:'Nunito','Avenir Next',sans-serif;pointer-events:auto;isolation:isolate}
+.room-lighting-panel *{box-sizing:border-box}
+.room-lighting-panel--collapsed{width:190px}
+.room-lighting-panel button,.room-lighting-panel input{font:inherit;-webkit-tap-highlight-color:transparent}
+.room-lighting-panel button{cursor:pointer;color:inherit}
+.room-lighting-panel button:focus-visible,.room-lighting-panel input:focus-visible{outline:2px solid #927240;outline-offset:3px}
+.room-lighting-panel__toggle{display:flex;align-items:center;gap:10px;flex-shrink:0;width:100%;min-height:48px;padding:9px 14px;border:0;border-bottom:1px solid #d8c99f;border-radius:4px 6px 0 0;background:#f5e8b9;text-align:left}
+.room-lighting-panel__toggle>span{font-family:'Chalkboard SE','Segoe Print','Comic Sans MS',cursive;font-size:21px;line-height:1.3;letter-spacing:-.025em}
+.room-lighting-panel__toggle>small{margin-left:auto;color:#8a7755;font-size:11px}
+.room-lighting-panel__toggle svg{width:18px;height:18px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transform:rotate(180deg)}
+.room-lighting-panel--collapsed .room-lighting-panel__toggle{border-bottom:0;border-radius:4px 6px 5px 3px}
+.room-lighting-panel--collapsed .room-lighting-panel__toggle svg{transform:none}
+.room-lighting-panel__body{min-height:0;overflow:auto;padding:13px 14px 8px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#c5ad7d transparent}
+.room-lighting-panel__hint{margin:0 0 11px;color:#897452;font-size:11px;line-height:1.45}
+.room-lighting-panel__fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 15px}
+.room-lighting-panel__field{min-width:0}
+.room-lighting-panel__label{display:flex;align-items:baseline;justify-content:space-between;gap:5px;min-height:19px;white-space:nowrap}
+.room-lighting-panel__label label{font-size:12px;font-weight:800;line-height:1.5}
+.room-lighting-panel__label output{color:#897452;font-size:10px;font-variant-numeric:tabular-nums;line-height:1.5}
+.room-lighting-panel input[type=range]{display:block;width:100%;min-width:0;height:28px;margin:0;accent-color:#a47d43;cursor:ew-resize;touch-action:pan-y}
+.room-lighting-panel input[type=color]{display:block;width:100%;height:28px;margin:0;padding:2px;border:1px solid #d5c59e;border-radius:4px;background:#fff9e7;cursor:pointer}
+.room-lighting-panel input[type=color]::-webkit-color-swatch-wrapper{padding:2px}
+.room-lighting-panel input[type=color]::-webkit-color-swatch{border:0;border-radius:2px}
+.room-lighting-panel input[type=color]::-moz-color-swatch{border:0;border-radius:2px}
+.room-lighting-panel__actions{display:flex;gap:10px;margin-top:12px}
+.room-lighting-panel__actions button{min-height:40px;padding:8px 12px;border:1px solid #c9b58a;border-radius:3px 4px 4px 2px;background:#f3e4b5;font-size:12px;font-weight:800;line-height:1.4;box-shadow:0 2px 0 #cbb78e}
+.room-lighting-panel__actions button:last-child{flex:1}
+.room-lighting-panel__actions button:hover{background:#eddda7}
+.room-lighting-panel__actions button:disabled{cursor:wait;opacity:.65}
+.room-lighting-panel__notice{min-height:17px;margin:9px 0 0;color:#897452;font-size:11px;line-height:1.5}
+@media(any-pointer:coarse){.room-lighting-panel input[type=range],.room-lighting-panel input[type=color],.room-lighting-panel__actions button{min-height:44px}}
+@media(max-height:430px){.room-lighting-panel{left:12px;bottom:12px;max-height:calc(100% - 24px)}.room-lighting-panel__body{padding-top:10px}.room-lighting-panel__fields{gap:5px 15px}}

@@ -12,10 +12,14 @@ import RoomJoystick from './RoomJoystick.jsx';
 import RoomInteract from './RoomInteract.jsx';
 import RoomLoading from './RoomLoading.jsx';
 import TaskOutline from './TaskOutline.jsx';
+import RoomLighting from './RoomLighting.jsx';
+import RoomLightingPanel from './RoomLightingPanel.jsx';
+import {ROOM_LIGHTING_DEFAULTS, loadRoomLightingSettings, saveRoomLightingSettings, sanitizeRoomLightingSettings} from './room-lighting-settings.js';
 import {kitchenTracks} from './music-tracks.js';
 import {projects, computerProjectIds} from './projects.js';
 import './room-fonts.css';
 import './room-review.css';
+import './room-lighting-preview.css';
 
 // Optional room manifest `review` values override these without changing the GLB.
 export const ROOM_REVIEW_VIEW = {
@@ -32,6 +36,7 @@ const requestedVersion = query.get('version');
 const ROOM_VERSION = ['4', '5', '7', '10'].includes(requestedVersion) ? Number(requestedVersion) : 10;
 const INTERACTIVE_ROOM = ROOM_VERSION === 7 || ROOM_VERSION === 10;
 const EDITOR_MODE = INTERACTIVE_ROOM && query.get('arrange') === '1';
+const LIGHTING_PREVIEW = query.get('lighting') === '1';
 const MANIFEST_URL = `/models/tripo/room-v${ROOM_VERSION}.json`;
 const ROOM_ID = `sushi-room-v${ROOM_VERSION}`;
 const TITLE_STYLE = ['counter', 'board', 'none'].includes(query.get('sign')) ? query.get('sign') : 'letters';
@@ -190,7 +195,8 @@ export default function RoomReview() {
   const [computerOpen, setComputerOpen] = useState(false), [activeProject, setActiveProject] = useState(null), [selectedItem, setSelectedItem] = useState(null);
   const [videoPlaying, setVideoPlaying] = useState(false);
   const [arranging, setArranging] = useState(EDITOR_MODE);
-  const [introduced, setIntroduced] = useState(!INTERACTIVE_ROOM || EDITOR_MODE);
+  const [introduced, setIntroduced] = useState(!INTERACTIVE_ROOM || EDITOR_MODE || LIGHTING_PREVIEW);
+  const [lightingSettings, setLightingSettings] = useState(() => LIGHTING_PREVIEW ? loadRoomLightingSettings() : ROOM_LIGHTING_DEFAULTS);
   const [welcomeExiting, setWelcomeExiting] = useState(false);
   const [hasMoved, setHasMoved] = useState(false);
   const [welcomeAnchor, setWelcomeAnchor] = useState(null);
@@ -198,7 +204,7 @@ export default function RoomReview() {
   const [vegetablesViewed, setVegetablesViewed] = useState(false), [recorderViewed, setRecorderViewed] = useState(false), [computerViewed, setComputerViewed] = useState(false);
   const controls = useRef(null), rootRef = useRef(null), arrangementActions = useRef(null), titlePhysics = useRef(null);
   const welcomeShownAt = useRef(null);
-  const welcomeDismissed = useRef(!INTERACTIVE_ROOM || EDITOR_MODE);
+  const welcomeDismissed = useRef(!INTERACTIVE_ROOM || EDITOR_MODE || LIGHTING_PREVIEW);
   const modalOpen = computerOpen || Boolean(activeProject);
   const introducing = INTERACTIVE_ROOM && !introduced;
   const landscapeBlocked = INTERACTIVE_ROOM && portraitPhone;
@@ -233,11 +239,16 @@ export default function RoomReview() {
       cameraDirection: vector(requested.cameraDirection, ROOM_REVIEW_VIEW.cameraDirection),
       modelRotation: vector(entry?.rotation || requested.modelRotation, ROOM_REVIEW_VIEW.modelRotation),
       projection: !INTERACTIVE_ROOM && requested.projection === 'orthographic' ? 'orthographic' : 'perspective',
-      exposure: Number.isFinite(requested.exposure) ? THREE.MathUtils.clamp(requested.exposure, .5, 1.5) : (INTERACTIVE_ROOM ? .85 : 1),
+      exposure: Number.isFinite(requested.exposure) ? THREE.MathUtils.clamp(requested.exposure, .5, 1.5) : (INTERACTIVE_ROOM ? ROOM_LIGHTING_DEFAULTS.exposure : 1),
       fieldOfView: Number.isFinite(requested.fieldOfView) ? THREE.MathUtils.clamp(requested.fieldOfView, 25, 65) : ROOM_REVIEW_VIEW.fieldOfView,
       framePadding: Number.isFinite(requested.framePadding) ? THREE.MathUtils.clamp(requested.framePadding, 1.02, 1.8) : ROOM_REVIEW_VIEW.framePadding,
     };
   }, [manifest, entry]);
+  const lighting = useMemo(() => LIGHTING_PREVIEW ? lightingSettings : {...ROOM_LIGHTING_DEFAULTS, exposure: view.exposure}, [lightingSettings, view.exposure]);
+  const changeLighting = useCallback(value => setLightingSettings(sanitizeRoomLightingSettings(value)), []);
+  useEffect(() => {
+    if (LIGHTING_PREVIEW) saveRoomLightingSettings(lightingSettings);
+  }, [lightingSettings]);
   const loaded = useCallback(details => {setInfo(details);setPhase('ready');}, []);
   const failed = useCallback(error => {console.error('Kitchen scene loading failed.', error);setPhase('error');}, []);
   // Reload also clears rejected model/chunk promises, not just the room cache.
@@ -306,8 +317,9 @@ export default function RoomReview() {
     event.preventDefault();orbit.update();
   };
 
-  return <div className={`room-review-viewport${INTERACTIVE_ROOM ? ' room-review-viewport--game' : ''}`}>
-  <main inert={landscapeBlocked ? true : undefined} ref={rootRef} onClickCapture={introducing ? dismissWelcome : undefined} className={`room-review ${INTERACTIVE_ROOM ? 'room-review--interactive room-review--game' : ''} ${arranging ? 'room-review--arrange' : ''} ${touchMode ? 'room-review--touch' : ''}`} data-room-version={ROOM_VERSION} data-room-status={phase} data-game-phase={introducing ? 'welcome' : 'explore'} data-has-moved={hasMoved} data-room-url={entry?.url || ''} data-room-scale={info?.scalar || ''} data-selected-item={selectedItem?.id || ''} data-selected-rotation-y={selectedItem?.rotationY ?? ''} data-active-project={activeProject || ''} data-computer-open={computerOpen} data-project-video-playing={videoPlaying} data-arranging={arranging} data-camera-locked={INTERACTIVE_ROOM} data-landscape-only={INTERACTIVE_ROOM}>
+  return <div className={`room-review-viewport${INTERACTIVE_ROOM ? ' room-review-viewport--game' : ''} room-review-viewport--color-graded`}>
+  <div className="room-scene-backdrop" style={{background: lighting.background, filter: `saturate(${lighting.saturation})`}}/>
+  <main inert={landscapeBlocked ? true : undefined} ref={rootRef} onClickCapture={introducing ? dismissWelcome : undefined} className={`room-review ${INTERACTIVE_ROOM ? 'room-review--interactive room-review--game' : ''} ${arranging ? 'room-review--arrange' : ''} ${touchMode ? 'room-review--touch' : ''} room-review--color-graded`} style={{background: 'transparent', '--room-scene-saturation': lighting.saturation}} data-room-version={ROOM_VERSION} data-room-status={phase} data-game-phase={introducing ? 'welcome' : 'explore'} data-has-moved={hasMoved} data-room-url={entry?.url || ''} data-room-scale={info?.scalar || ''} data-selected-item={selectedItem?.id || ''} data-selected-rotation-y={selectedItem?.rotationY ?? ''} data-active-project={activeProject || ''} data-computer-open={computerOpen} data-project-video-playing={videoPlaying} data-arranging={arranging} data-camera-locked={INTERACTIVE_ROOM} data-landscape-only={INTERACTIVE_ROOM}>
     {!INTERACTIVE_ROOM && <header className="room-review__header"><h1>Sushi bar — room study</h1><a href="/">Back to kitchen</a></header>}
     {INTERACTIVE_ROOM && <div className="room-hud-layer">
       {gameReady && !arranging && !touchMode && !compactViewport && <KitchenMusicPlayer tracks={kitchenTracks} ducked={videoPlaying}/>}
@@ -332,11 +344,7 @@ export default function RoomReview() {
           aria-hidden={INTERACTIVE_ROOM ? undefined : true}
         >
           <TaskOutline reducedMotion={reducedMotion}>
-          <color attach="background" args={['#f2f3ed']}/>
-          <ambientLight intensity={.7}/>
-          <hemisphereLight args={['#fff5e4', '#aab6ac', 1.5]}/>
-          <directionalLight castShadow position={[-7, 16, 10]} intensity={2.5} color="#fff3dc" shadow-mapSize={touchMode || compactViewport ? [1024, 1024] : [2048, 2048]} shadow-camera-left={-14} shadow-camera-right={14} shadow-camera-top={14} shadow-camera-bottom={-14} shadow-camera-far={60} shadow-normalBias={.025} shadow-bias={-.0001}/>
-          <directionalLight position={[8, 8, -6]} intensity={1} color="#e8f1f3"/>
+          <RoomLighting settings={lighting} compact={touchMode || compactViewport}/>
           <Suspense fallback={null}><FurnishedRoom entry={entry} rotation={view.modelRotation} onLoaded={loaded}/></Suspense>
           {ROOM_VERSION === 10 && TITLE_STYLE !== 'none' && <Suspense fallback={null}><KitchenTitle variant={TITLE_STYLE} physicsRef={titlePhysics} rootRef={rootRef}/></Suspense>}
           {INTERACTIVE_ROOM && info && <RoomArrangement key={ROOM_VERSION} roomVersion={ROOM_VERSION} controls={controls} rootRef={rootRef} titlePhysics={titlePhysics} resetToken={resetLayoutToken} onStatus={setArrangementStatus} onHover={setHoveredItem} onReady={objectsLoaded} onError={failed} onFirstMove={firstMove} onWelcomeMove={dismissWelcome} onWelcomeAnchor={welcomePositioned} welcomeActive={introducing || welcomeExiting} onInspectTarget={inspectionChanged} objectiveId={objectiveId} reducedMotion={reducedMotion} onOpenComputer={openComputer} onOpenProject={openProject} onSelection={setSelectedItem} actionsRef={arrangementActions} paused={interactionPaused} editable={arranging} fixedCamera/>}
@@ -359,6 +367,7 @@ export default function RoomReview() {
         {INTERACTIVE_ROOM && <button type="button" disabled={!objectsReady} aria-pressed={arranging} onClick={() => {setArranging(value => !value);setHoveredItem('');setArrangementStatus('');}}>{arranging ? 'Done arranging' : 'Arrange'}</button>}
       </div>
     </footer>}
+    {LIGHTING_PREVIEW && gameReady && <div hidden={modalOpen}><RoomLightingPanel settings={lightingSettings} onChange={changeLighting} onReset={() => changeLighting({...ROOM_LIGHTING_DEFAULTS, exposure: view.exposure})}/></div>}
     {modalOpen && <ComputerProjects key={activeProject || 'games-computer'} onClose={closeProject} onVideoPlaybackChange={setVideoPlaying} projectIds={activeProject ? [activeProject] : computerProjectIds} projectId={activeProject || undefined} title={activeProject ? projects.find(project => project.id === activeProject)?.title : undefined}/>}
   </main>
     {!sceneReady && <RoomLoading error={phase === 'error'} status={phase === 'ready' ? 'Setting out the projects…' : 'Getting everything ready for you.'} onRetry={retry}/>}
