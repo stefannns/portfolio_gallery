@@ -1,6 +1,6 @@
 import React, {createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef} from 'react';
 import {useFrame, useThree} from '@react-three/fiber';
-import {Color, HalfFloatType, NormalBlending, ShaderMaterial, Vector2, WebGLRenderTarget} from 'three';
+import {Color, HalfFloatType, NoBlending, NormalBlending, ShaderMaterial, UnsignedByteType, Vector2, WebGLRenderTarget} from 'three';
 import {OutlinePass} from 'three/addons/postprocessing/OutlinePass.js';
 import {FullScreenQuad} from 'three/addons/postprocessing/Pass.js';
 import {getSceneUiScale} from './scene-ui-scale.js';
@@ -16,8 +16,15 @@ class VisibleTaskOutlinePass extends OutlinePass {
     this.ignoredObjects = ignoredObjects;
     this.ignoredVisibility = new Map();
     this.hiddenEdgeColor.set(0x000000);
-    this.visibleEdgeColor.set('#ffd54a');
+    this.visibleEdgeColor.set(0xffffff);
     this.usePatternTexture = false;
+    // RGBADepthPacking stores four base-256 digits. Half-float channels round
+    // those digits and falsely hide small props against nearby countertops.
+    this.renderTargetDepthBuffer.texture.type = UnsignedByteType;
+    // This pass writes coverage into an empty texture, not onto the beauty
+    // image. AdditiveBlending would multiply by its own edge alpha here and
+    // fade small silhouettes a second time before our final composite.
+    this.overlayMaterial.blending = NoBlending;
   }
 
   render(renderer, writeBuffer, readBuffer, deltaTime, maskActive) {
@@ -75,7 +82,7 @@ function TaskOutlineRenderer({registry, reducedMotion}) {
     const target = new WebGLRenderTarget(1, 1, {type: HalfFloatType, depthBuffer: false});
     target.texture.name = 'KitchenTaskOutline.overlay';
     const material = new ShaderMaterial({
-      uniforms: {edgeTexture: {value: target.texture}, outlineColor: {value: new Color('#ffd54a')}, outlineOpacity: {value: .7}},
+      uniforms: {edgeTexture: {value: target.texture}, outlineColor: {value: new Color('#ffc52a')}, outlineOpacity: {value: .9}},
       vertexShader: `varying vec2 vUv;
         void main() {vUv = uv;gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);}`,
       fragmentShader: `varying vec2 vUv;uniform sampler2D edgeTexture;
@@ -124,11 +131,13 @@ function TaskOutlineRenderer({registry, reducedMotion}) {
     gl.render(scene, camera);
     if (!selected.length) return;
     const breath = reducedMotion ? .5 : .5 + Math.sin(clock.elapsedTime * 2.6) * .5;
-    const sceneScale = getSceneUiScale(camera, frameSize);
-    outline.edgeThickness = Math.min(4, Math.max(.75, (nearby ? 1.7 : 1.4 + breath * .5) * sceneScale * pixelRatio));
-    outline.edgeStrength = nearby ? 4 : 2.2 + breath * 1.1;
-    outline.edgeGlow = .25 + breath * .25;
-    state.material.uniforms.outlineOpacity.value = nearby ? .92 : .52 + breath * .26;
+    // Small props need a readable rim even when the room is fitted to a phone.
+    // Retain camera scaling, with a floor so the cue never becomes sub-pixel.
+    const sceneScale = Math.max(.8, getSceneUiScale(camera, frameSize));
+    outline.edgeThickness = Math.min(4, (nearby ? 2.1 : 1.7 + breath * .5) * sceneScale * pixelRatio);
+    outline.edgeStrength = nearby ? 7 : 4.5 + breath * 2;
+    outline.edgeGlow = 1.2 + breath * 1.3;
+    state.material.uniforms.outlineOpacity.value = nearby ? 1 : .82 + breath * .16;
     const autoClear = gl.autoClear;
     const clearAlpha = gl.getClearAlpha();
     gl.getClearColor(state.clearColor);

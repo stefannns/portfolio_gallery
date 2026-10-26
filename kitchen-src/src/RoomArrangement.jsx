@@ -1,4 +1,4 @@
-import React, {Suspense, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useFrame, useThree} from '@react-three/fiber';
 import {Html} from '@react-three/drei';
 import * as THREE from 'three';
@@ -7,6 +7,7 @@ import {RestaurantModel} from './TripoRestaurant.jsx';
 import {getRoomPlacement} from './room-placement.js';
 import {getSceneUiScale} from './scene-ui-scale.js';
 import {createRoomNavigator} from './room-navigation.js';
+import {attachRoomMovementInput} from './room-movement-input.js';
 import {useTaskOutlineIgnore} from './TaskOutline.jsx';
 
 const up = new THREE.Vector3(0, 1, 0);
@@ -116,6 +117,11 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
   const direction = useRef(new THREE.Vector3()), right = useRef(new THREE.Vector3());
   const inspectTarget = useRef(null), welcomePoint = useRef(new THREE.Vector3()), lastWelcomeAnchor = useRef(null);
   const engine = useRef({player: {...PLAYER_START}, keys: new Set(), moving: false, paused: false, joystick: {x: 0, z: 0}}).current;
+  const inputState = useRef(null);
+  const resetMovement = useCallback(() => {
+    walkRoute.current = [];walkPress.current = null;walkStalled.current = 0;
+    engine.keys.clear();engine.moving = false;engine.joystick.x = 0;engine.joystick.z = 0;
+  }, [engine]);
 
   const selectItem = useCallback(id => {
     const item = latest.current.find(value => value.id === id);
@@ -132,9 +138,11 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
     if (!editable && !direct && !canInspectItem(engine.player, item)) {onStatus('Move closer to inspect.');return;}
     selectItem(id);
     if (editable) {onStatus('');return;}
+    // Stop immediately, before React mounts the project dialog and swallows input.
+    resetMovement();engine.paused = true;
     if (id === 'games-computer') onOpenComputer?.();
     else onOpenProject?.(id);
-  }, [editable, engine, onOpenComputer, onOpenProject, onStatus, paused, selectItem]);
+  }, [editable, engine, onOpenComputer, onOpenProject, onStatus, paused, resetMovement, selectItem]);
 
   const currentInspectTarget = useCallback(() => paused || editable ? null : chooseInspectTarget(engine.player, latest.current, hover.current, objectiveId), [editable, engine, objectiveId, paused]);
 
@@ -270,27 +278,20 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
     };
   }, [editable, engine, finishDrag, gl, invalidate, navigator, paused, pointAt, ROOM_FLOOR_Y, safePosition]);
 
-  useEffect(() => {
-    const clear = () => {walkRoute.current = [];walkPress.current = null;engine.keys.clear();engine.moving = false;engine.joystick.x = 0;engine.joystick.z = 0;finishDrag(false);};
-    const down = event => {
-      if (event.key === 'Escape' && drag.current) {event.preventDefault();finishDrag(false);return;}
-      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(event.target.tagName) || event.target.isContentEditable || engine.paused || paused) return;
-      if (event.code === 'KeyE') {
-        if (editable || event.repeat) return;
-        event.preventDefault();
-        const target = currentInspectTarget();
-        if (target) activateItem(target.id);
-        else onStatus('Move closer to inspect.');
-        return;
+  // Keep one input subscription across project/task changes. Its callbacks read
+  // the current phase rather than retaining a closed dialog's paused state.
+  inputState.current = {paused, editable, dragging: Boolean(drag.current), finishDrag, inspectNearby, onStatus};
+  useEffect(() => attachRoomMovementInput({
+    windowTarget: window, documentTarget: document, engine,
+    readState: () => ({...inputState.current, dragging: Boolean(drag.current)}),
+    cancelRoute: () => {walkRoute.current = [];walkPress.current = null;walkStalled.current = 0;},
+    clear: () => {resetMovement();inputState.current.finishDrag(false);},
+    focusStage: target => {
+      if (target?.closest?.('.room-item-keyboard')) {
+        gl.domElement.closest('.room-review__stage')?.focus({preventScroll: true});
       }
-      if (['KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(event.code)) {event.preventDefault();walkRoute.current = [];walkPress.current = null;engine.keys.add(event.code);}
-    };
-    const keyup = event => engine.keys.delete(event.code);
-    const joystick = event => {engine.joystick.x = event.detail?.x || 0;engine.joystick.z = event.detail?.z || 0;if (Math.hypot(engine.joystick.x, engine.joystick.z) > .04) {walkRoute.current = [];walkPress.current = null;}};
-    window.addEventListener('keydown', down);window.addEventListener('keyup', keyup);window.addEventListener('blur', clear);
-    window.addEventListener('room-joystick', joystick);document.addEventListener('visibilitychange', clear);
-    return () => {clear();window.removeEventListener('keydown', down);window.removeEventListener('keyup', keyup);window.removeEventListener('blur', clear);window.removeEventListener('room-joystick', joystick);document.removeEventListener('visibilitychange', clear);};
-  }, [activateItem, currentInspectTarget, editable, engine, finishDrag, onStatus, paused]);
+    },
+  }), [engine, gl, resetMovement]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -318,12 +319,14 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
     rootRef.current.dataset.propCount = String(placements.length);
   }, [placements, rootRef]);
 
-  useEffect(() => {
-    if (controls.current) controls.current.enabled = !fixedCamera && !paused && !drag.current;
-    if (!paused) return;
-    walkRoute.current = [];walkPress.current = null;finishDrag(false);engine.keys.clear();engine.moving = false;engine.joystick.x = 0;engine.joystick.z = 0;
-    if (controls.current) controls.current.enabled = false;
-  }, [controls, engine, finishDrag, fixedCamera, paused]);
+  useLayoutEffect(() => {
+    // Synchronize both opening and closing before the next paint/key event.
+    // No old key, joystick deflection or click destination may survive a dialog.
+    resetMovement();
+    if (paused) finishDrag(false);
+    engine.paused = paused || Boolean(drag.current) || document.hidden;
+    if (controls.current) controls.current.enabled = !fixedCamera && !engine.paused;
+  }, [controls, engine, finishDrag, fixedCamera, paused, resetMovement]);
 
   useEffect(() => {
     if (resetToken === lastReset.current) return;
