@@ -14,7 +14,7 @@ export default function RoomTasks({vegetablesViewed = false, recorderViewed = fa
 
   return <aside className="room-tasks" aria-label="Tasks">
     <header className="room-tasks__header">
-      <h2>{current < 0 ? 'All done!' : 'To do'}</h2>
+      <h2>To do</h2>
       <span className="room-tasks__progress" role="status" aria-live="polite" aria-atomic="true">
         <span aria-hidden="true">{completed}/{tasks.length}</span>
         <span className="room-tasks__sr">{progress} {next}</span>
