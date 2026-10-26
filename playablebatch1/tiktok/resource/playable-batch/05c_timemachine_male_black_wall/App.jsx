@@ -277,7 +277,7 @@ const App = () => {
           background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");
         }
         .app-shell > *:not(.ui-guide) { position: relative; z-index: 1; }
-        .time-print-guide{left:6%;right:6%;bottom:calc(var(--print-width) * .055);font-size:max(14px,calc(18px * var(--ui-scale)));color:#666b61;line-height:1.4}
+        .time-print-guide{position:absolute;left:50%;right:auto;top:calc(100% - var(--print-width) * .10);bottom:auto;width:88%;margin:0;translate:-50% -50%;text-align:center;font-size:max(14px,calc(18px * var(--ui-scale)));color:#666b61;line-height:1.4}
         .app-shell[data-feed-preview="true"] .time-footer{visibility:hidden;pointer-events:none}
       `}</style>
       <style>{themeCss}</style>
@@ -312,11 +312,10 @@ const App = () => {
               />
             ))}
           </div>
+          {!hasInteracted && <figcaption className="ui-guide ui-float time-print-guide">Drag to change age</figcaption>}
           </figure>
         </div>
       </div>
-
-      {!hasInteracted && <p className="ui-guide ui-float time-print-guide">Drag to change age</p>}
 
       {/* 底部时间轴区域 */}
       <div className="time-footer" style={footerStyle}>

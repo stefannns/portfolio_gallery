@@ -1,5 +1,5 @@
 /* Existing guide text only; position, opacity lifecycle and hit regions remain game-owned. */
-@keyframes batch-guide-breathe{0%,100%{filter:opacity(1)}50%{filter:opacity(.65)}}
+@keyframes batch-guide-breathe{0%,100%{filter:opacity(1);scale:1}50%{filter:opacity(.6);scale:1.035}}
 html:root:root :is(.year-guide-copy){animation:batch-guide-breathe 2.4s ease-in-out infinite!important}
 html[data-guide-breathing-paused]:root:root :is(.year-guide-copy){animation-play-state:paused!important}
 @media(prefers-reduced-motion:reduce){html:root:root :is(.year-guide-copy){animation:none!important}}

@@ -423,9 +423,9 @@ window.PlayableGameDownloads = {
   "playable2_20261013020955_2hyyml": {
     "url": "/playablebatch1/downloads/61-playable2_20261013020955_2hyyml.zip",
     "filename": "61-playable2_20261013020955_2hyyml.zip",
-    "bytes": 525100,
+    "bytes": 525122,
     "files": 19,
-    "sha256": "a21dbdfdb34b775e5239279376baf980f855b319d0557c90c8761c7b3b79563a"
+    "sha256": "f0bc386ec3590755cadfd5276f34bbcce400f687bb6c746ebf3a1987752a66f3"
   },
   "playable2_20261013021144_kzqdfu": {
     "url": "/playablebatch1/downloads/62-playable2_20261013021144_kzqdfu.zip",
@@ -451,16 +451,16 @@ window.PlayableGameDownloads = {
   "05c_timemachine_male_black_wall": {
     "url": "/playablebatch1/downloads/65-05c_timemachine_male_black_wall.zip",
     "filename": "65-05c_timemachine_male_black_wall.zip",
-    "bytes": 3423493,
+    "bytes": 3423644,
     "files": 36,
-    "sha256": "36e6d52eec0613f9ff446321585ed51d67fc5cd2f81947fc22c52f86e175db08"
+    "sha256": "cdc89c6599b996cb27beb4dd2396875e2ba6bc3e22ebdc0da23379d36ab81ebd"
   },
   "mianbao": {
     "url": "/playablebatch1/downloads/66-mianbao.zip",
     "filename": "66-mianbao.zip",
-    "bytes": 2474766,
+    "bytes": 2475010,
     "files": 26,
-    "sha256": "f2e647c7cea7d44b38a336ceaacf254d241deaf3afc258657a349d3b3b009f9e"
+    "sha256": "ebcb747dc7a5b5717151b901dd1d836412e0d61ea38bc2555ee3a18d93525d9f"
   },
   "playable_20260807211217_q9i9d6": {
     "url": "/playablebatch1/downloads/67-playable_20260807211217_q9i9d6.zip",

@@ -136,7 +136,7 @@ window.PlayableItalianGames={
     "number": 61,
     "name": "Fotocamera nel tempo",
     "entry": "/playablebatch1/games/playable2_20261013020955_2hyyml/game.it.html",
-    "revision": "c0436eeed9df"
+    "revision": "16636307ff57"
   },
   "playable2_20261013021144_kzqdfu": {
     "number": 62,
@@ -160,13 +160,13 @@ window.PlayableItalianGames={
     "number": 65,
     "name": "Macchina del tempo",
     "entry": "/playablebatch1/games/05c_timemachine_male_black_wall/game.it.html",
-    "revision": "9d99f62d982a"
+    "revision": "bc70984f02bf"
   },
   "mianbao": {
     "number": 66,
     "name": "Tostapane",
     "entry": "/playablebatch1/games/mianbao/game.it.html",
-    "revision": "f11eefa8b2e3"
+    "revision": "b7ca49beed02"
   },
   "playable_20260807211217_q9i9d6": {
     "number": 67,

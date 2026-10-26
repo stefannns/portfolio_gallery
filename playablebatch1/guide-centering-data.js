@@ -190,12 +190,12 @@
   [
     65,
     "05c_timemachine_male_black_wall",
-    "Below the face; original print and age label stay put"
+    "User follow-up: inside the photo frame blank bottom border; frame-relative, without covering the portrait"
   ],
   [
     66,
     "mianbao",
-    "On the clear toaster front, not its dark slot"
+    "User follow-up: above the toaster and full preview toast, anchored to the slightly lowered assembly"
   ],
   [
     67,

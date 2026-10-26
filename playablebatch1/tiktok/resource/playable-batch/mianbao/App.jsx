@@ -216,8 +216,7 @@ const App = () => {
       <GlobalStyle />
       <style>{themeCss}</style>
       <style>{`
-        .toaster-game[data-feed-preview="true"] .toaster-assembly{top:calc(84px * var(--ui-scale))!important}
-        .toaster-game[data-feed-preview="true"] .ui-guide{top:16%;bottom:auto!important}
+        .toaster-game[data-feed-preview="true"] .toaster-assembly{top:calc(104px * var(--ui-scale))!important}
         .toaster-game[data-feed-preview="true"] .toaster-lever{animation:preview-lever 3.2s .7s ease-in-out both}
         .toaster-game[data-feed-preview="true"] .toaster-bread{animation:preview-bread 3.2s .7s ease-in-out both}
         .toaster-game[data-page-hidden="true"] .toaster-lever,.toaster-game[data-page-hidden="true"] .toaster-bread{animation-play-state:paused}
@@ -232,11 +231,13 @@ const App = () => {
         animate={toasterControls} 
         style={{ 
           position: 'relative', 
-          width: 'min(72cqi, calc(280px * var(--ui-scale)))',
-          top: 'calc(36px * var(--ui-scale))',
+          '--toaster-width': 'min(72cqi, calc(280px * var(--ui-scale)))',
+          width: 'var(--toaster-width)',
+          top: 'max(calc(56px * var(--ui-scale)), calc(var(--toaster-width) * 1.051 + 40px * var(--ui-scale) - 50cqh))',
           aspectRatio: '1402 / 1122'
         }}
       >
+        {!hasInteracted && <p className="ui-guide ui-float toaster-guide" style={{top:'calc(var(--toaster-width) * -.65 - 26px * var(--ui-scale))',bottom:'auto',fontFamily:'var(--font-body)',color:'#4b352a',fontWeight:800}}>Pull the lever down</p>}
         {/* The shaft crosses over the black opening but enters behind the
             casing lip to its left. The grip stays in front and draggable. */}
         <div 
@@ -383,7 +384,6 @@ const App = () => {
         </AnimatePresence>
 
       </motion.div>
-      {!hasInteracted && <p className="ui-guide ui-float" style={{bottom:'max(var(--ui-bottom), 20%)',fontFamily:'var(--font-body)',color:'#4b352a',fontWeight:650}}>Pull the lever down</p>}
       {gameState==='done'&&<div className="toaster-result" role="dialog" aria-modal="true" aria-label="Toast result" aria-describedby="toaster-result-text" style={{position:'absolute',inset:0,zIndex:30,display:'flex',alignItems:'center',justifyContent:'center',background:'transparent',padding:'var(--ui-top) var(--ui-side) var(--ui-bottom)',fontFamily:'var(--font-body)',textAlign:'center'}}>
         <p id="toaster-result-text" className="toaster-result-text" style={{margin:0,maxWidth:'100%',fontSize:'max(20px, calc(24px * var(--ui-scale)))',lineHeight:1.3,overflowWrap:'anywhere',fontWeight:800,color:'#4b352a'}}>{cfg.RESULT_TEXT}</p>
         <button className="toaster-again" autoFocus type="button" onClick={resetGame} style={{position:'absolute',left:'50%',bottom:'var(--ui-bottom)',transform:'translateX(-50%)',minWidth:112,minHeight:44,border:0,borderRadius:999,padding:'12px 28px',background:'#4b352a',color:'#fff',fontFamily:'var(--font-body)',fontSize:18,fontWeight:700}}>Again</button>
