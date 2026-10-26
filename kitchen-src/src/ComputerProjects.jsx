@@ -94,6 +94,24 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
     setReel(null);
   }
 
+  const projectCopy = (
+    <div className="computer-projects__copy">
+      <section className="computer-projects__story-note">
+        {!videoProject && <><p className="computer-projects__type">{selected.type}</p>
+        <h2 id={projectTitleId} className={selected.logo ? 'computer-projects__branded-title' : undefined}>{selected.logo && <img className="computer-projects__brand-mark" src={selected.logo} alt="" aria-hidden="true" width="40" height="40"/>}{selected.title}</h2></>}
+        <p className="computer-projects__description">{selected.description}</p>
+        {(selected.url || selected.github) && <div className="computer-projects__links">
+          {selected.url && <a href={selected.url} target="_blank" rel="noopener noreferrer">{selected.embedUrl ? 'Open game in a new tab ↗' : selected.collection === 'games' ? 'Play the game' : selected.id === 'smarttester' ? 'Open Smarttester' : 'Open project'}</a>}
+          {selected.github && <a href={selected.github} target="_blank" rel="noopener noreferrer">Source on GitHub</a>}
+        </div>}
+      </section>
+      <div className="computer-projects__notes">
+        {selected.design && <section><h3>Design</h3><p>{selected.design}</p></section>}
+        {selected.process && <section><h3>{selected.processTitle || 'Process'}</h3><p>{selected.process}</p></section>}
+      </div>
+    </div>
+  );
+
   const stop = event => event.stopPropagation();
   return <div
     className={`computer-projects${single ? ' computer-projects--single' : ''}`}
@@ -138,6 +156,7 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
             <p className="computer-projects__type">{selected.type}</p>
             <h2 id={projectTitleId}>{selected.title}</h2>
           </div>}
+          {selected.previewAspectRatio && projectCopy}
           <div className={`computer-projects__media-column${selected.embedUrl ? ' computer-projects__media-column--embed' : ''}`}>
             {selected.embedUrl ? <ProjectGameEmbed key={selected.id} project={selected}/>
               : videoProject ? <ProjectVideo key={`${selected.id}-${video}`} src={video} poster={selected.image} label={`${selected.title} gameplay`} aspectRatio={selected.videoAspectRatio} onPlaybackChange={onVideoPlaybackChange}/>
@@ -151,21 +170,7 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
             </nav>}
           </div>
 
-          <div className="computer-projects__copy">
-            <section className="computer-projects__story-note">
-              {!videoProject && <><p className="computer-projects__type">{selected.type}</p>
-              <h2 id={projectTitleId} className={selected.logo ? 'computer-projects__branded-title' : undefined}>{selected.logo && <img className="computer-projects__brand-mark" src={selected.logo} alt="" aria-hidden="true" width="40" height="40"/>}{selected.title}</h2></>}
-              <p className="computer-projects__description">{selected.description}</p>
-              {(selected.url || selected.github) && <div className="computer-projects__links">
-                {selected.url && <a href={selected.url} target="_blank" rel="noopener noreferrer">{selected.embedUrl ? 'Open game in a new tab ↗' : selected.collection === 'games' ? 'Play the game' : selected.id === 'smarttester' ? 'Open Smarttester' : 'Open project'}</a>}
-                {selected.github && <a href={selected.github} target="_blank" rel="noopener noreferrer">Source on GitHub</a>}
-              </div>}
-            </section>
-            <div className="computer-projects__notes">
-              {selected.design && <section><h3>Design</h3><p>{selected.design}</p></section>}
-              {selected.process && <section><h3>{selected.processTitle || 'Process'}</h3><p>{selected.process}</p></section>}
-            </div>
-          </div>
+          {!selected.previewAspectRatio && projectCopy}
         </article>
       </div>
       <span className="computer-projects__announcement" role="status" aria-live="polite">{selected.title} selected.</span>
