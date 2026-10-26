@@ -35,8 +35,8 @@ export async function createKitchenLetterPhysics(specifications, {rootRef} = {})
     .enabledTranslations(true, false, true).lockRotations().setCanSleep(false).setCcdEnabled(true));
   const playerCollider = world.createCollider(RAPIER.ColliderDesc.capsule(.25, .33)
     .setMass(6).setFriction(.05).setRestitution(0).setCollisionGroups(0x00020001), playerBody);
-  let accumulator = 0, pushes = 0, disposed = false, previousContacts = new Set();
-  const fixedStep = 1 / 120;
+  let pushes = 0, disposed = false, previousContacts = new Set();
+  const maxStep = 1 / 120;
 
   function publish(contacts = new Set()) {
     const root = rootRef?.current || rootRef;
@@ -59,22 +59,23 @@ export async function createKitchenLetterPhysics(specifications, {rootRef} = {})
     playerBody.setTranslation({x: player.x, y: floor.y + .58, z: player.z}, true);
     if (paused || !dt) {
       playerBody.setLinvel({x: 0, y: 0, z: 0}, true);
-      accumulator = 0;
       publish();
       return {...next, moving: false};
     }
     const vx = (next.x - player.x) / dt, vz = (next.z - player.z) / dt;
     playerBody.setLinvel({x: vx, y: 0, z: vz}, true);
-    accumulator += dt;
+    // Advance on every rendered frame. An accumulator skipped short frames
+    // on high-refresh screens, falsely stopping and restarting the walk clip.
+    // Small bounded substeps retain collision accuracy without visual gaps.
+    const substeps = Math.max(1, Math.ceil(dt / maxStep));
     const contacts = new Set();
-    while (accumulator + 1e-9 >= fixedStep) {
-      world.timestep = fixedStep;
+    for (let substep = 0; substep < substeps; substep++) {
+      world.timestep = dt / substeps;
       world.step();
       world.contactPairsWith(playerCollider, collider => {
         const letter = byCollider.get(collider.handle);
         if (letter) contacts.add(letter.collider.handle);
       });
-      accumulator -= fixedStep;
     }
     for (const handle of contacts) if (!previousContacts.has(handle) && Math.hypot(vx, vz) > .05) pushes++;
     previousContacts = contacts;
@@ -90,7 +91,7 @@ export async function createKitchenLetterPhysics(specifications, {rootRef} = {})
 
   function reset() {
     if (disposed) return;
-    accumulator = 0;pushes = 0;previousContacts.clear();
+    pushes = 0;previousContacts.clear();
     for (const letter of letters) {
       letter.body.setEnabled(true);
       letter.body.setTranslation({x: letter.specification.position[0], y: letter.specification.position[1], z: letter.specification.position[2]}, false);
