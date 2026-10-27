@@ -6,7 +6,7 @@ import CapybaraActor from './CapybaraActor.jsx';
 import FootprintTrail from './FootprintTrail.jsx';
 import KitchenToys from './KitchenToys.jsx';
 import SushiPlates from './SushiPlates.jsx';
-import {KITCHEN_TOYS, isNearRoomTarget, chooseRoomTarget} from './kitchen-toy-state.js';
+import {KITCHEN_TOYS, isNearRoomTarget, chooseRoomTarget, isKitchenToyAvailable} from './kitchen-toy-state.js';
 import {RestaurantModel} from './TripoRestaurant.jsx';
 import {getRoomPlacement} from './room-placement.js';
 import {getSceneUiScale} from './scene-ui-scale.js';
@@ -150,7 +150,7 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
 
   const currentInspectTarget = useCallback(() => {
     if (paused || editable || engine.tomatoAction?.active) return null;
-    const availableToys = toyItems.filter(item => item.id !== 'tomato-throw' || engine.tomatoRemaining !== 0);
+    const availableToys = toyItems.filter(item => isKitchenToyAvailable(item, engine));
     return chooseRoomTarget(engine.player, [...latest.current, ...availableToys]);
   }, [editable, engine, paused, toyItems]);
 

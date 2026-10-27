@@ -1,6 +1,6 @@
 const MASTER_VOLUME = .18;
 const MAX_VOICES = 24;
-const EFFECT_COOLDOWN = {sink: .9, stove: .5, pop: .045, land: .15, tomatoThrow: .1, tomatoSplat: .1};
+const EFFECT_COOLDOWN = {sink: .9, stove: .5, pop: .045, land: .15, tomatoThrow: .1, tomatoSplat: .1, fishFlop: .12, fishLand: .2};
 
 /** Small, gesture-unlocked kitchen sounds. No downloads or delayed unlock replay. */
 export function createKitchenToyAudio({getRoot, isEnabled = () => true} = {}) {
@@ -8,8 +8,8 @@ export function createKitchenToyAudio({getRoot, isEnabled = () => true} = {}) {
   const page = typeof document === 'undefined' ? null : document;
   let context, master, noiseBuffer, disposed = false, unavailable = false;
   const voices = new Set();
-  const counts = {sink: 0, stove: 0, pop: 0, land: 0, tomatoThrow: 0, tomatoSplat: 0};
-  const lastPlayed = {sink: -Infinity, stove: -Infinity, pop: -Infinity, land: -Infinity, tomatoThrow: -Infinity, tomatoSplat: -Infinity};
+  const counts = {sink: 0, stove: 0, pop: 0, land: 0, tomatoThrow: 0, tomatoSplat: 0, fishFlop: 0, fishLand: 0};
+  const lastPlayed = {sink: -Infinity, stove: -Infinity, pop: -Infinity, land: -Infinity, tomatoThrow: -Infinity, tomatoSplat: -Infinity, fishFlop: -Infinity, fishLand: -Infinity};
 
   function publish() {
     const root = getRoot?.();
@@ -22,6 +22,8 @@ export function createKitchenToyAudio({getRoot, isEnabled = () => true} = {}) {
     root.dataset.kitchenSoundVoices = String(voices.size);
     root.dataset.kitchenSoundTomatoThrowCount = String(counts.tomatoThrow);
     root.dataset.kitchenSoundTomatoSplatCount = String(counts.tomatoSplat);
+    root.dataset.kitchenSoundFishFlopCount = String(counts.fishFlop);
+    root.dataset.kitchenSoundFishLandCount = String(counts.fishLand);
   }
 
   function release(voice, shouldStop = false) {
@@ -145,6 +147,15 @@ export function createKitchenToyAudio({getRoot, isEnabled = () => true} = {}) {
     tone(now, .12, 370, 110, .18, .003);
   });
 
+  const playFishFlop = () => play('fishFlop', now => {
+    noise(now, .085, 1300, 450, .22, .003, 'lowpass');
+    tone(now, .08, 260, 115, .09, .003);
+  });
+  const playFishLand = () => play('fishLand', now => {
+    noise(now, .12, 1100, 330, .28, .004, 'lowpass');
+    tone(now, .11, 210, 90, .12, .003);
+  });
+
   const hidden = () => {if (page?.hidden) stop();};
   browser?.addEventListener('keydown', unlock, {capture: true});
   browser?.addEventListener('pointerdown', unlock, {capture: true});
@@ -153,7 +164,7 @@ export function createKitchenToyAudio({getRoot, isEnabled = () => true} = {}) {
   publish();
 
   return {
-    playSink, playBubblePop, playStove, playPanLand, playTomatoThrow, playTomatoSplat, stop,
+    playSink, playBubblePop, playStove, playPanLand, playTomatoThrow, playTomatoSplat, playFishFlop, playFishLand, stop,
     dispose() {
       if (disposed) return;
       disposed = true;stop();

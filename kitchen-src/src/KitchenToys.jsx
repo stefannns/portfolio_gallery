@@ -5,6 +5,7 @@ import {Group} from 'three';
 import SinkBubbles from './SinkBubbles.jsx';
 import StovePanToy from './StovePanToy.jsx';
 import TomatoToy from './TomatoToy.jsx';
+import FishFlopToy from './FishFlopToy.jsx';
 import {useTaskOutline, useTaskOutlineIgnore} from './TaskOutline.jsx';
 import {KITCHEN_TOYS, isNearRoomTarget} from './kitchen-toy-state.js';
 import {createKitchenToyAudio} from './kitchen-toy-audio.js';
@@ -41,8 +42,13 @@ function FixtureTarget({toy, available, hovered, highlighted, onHover, onUse, en
 }
 
 export default function KitchenToys({engine, actionsRef, onUse, onHover, hoveredId, nearbyId, paused, editable, reducedMotion, rootRef, onReady, resetToken, onTomatoSplat}) {
-  const sink = useRef(null), stove = useRef(null), tomatoes = useRef(null), sounds = useRef(null);
-  const loaded = useRef({pan: false, tomatoes: false});
+  const sink = useRef(null), stove = useRef(null), tomatoes = useRef(null), fish = useRef(null), sounds = useRef(null);
+  const loaded = useRef({pan: false, tomatoes: false, fish: false});
+  const [fishAvailable, setFishAvailable] = useState(() => !engine.fishToy?.used);
+  const fishAvailabilityChanged = useCallback(available => {
+    setFishAvailable(available);
+    if (!available) onHover(null, 'fish-flop');
+  }, [onHover]);
   const [tomatoesRemaining, setTomatoesRemaining] = useState(4);
   const tomatoStockChanged = useCallback(remaining => {
     setTomatoesRemaining(remaining);
@@ -60,13 +66,18 @@ export default function KitchenToys({engine, actionsRef, onUse, onHover, hovered
     return () => {audio.dispose();if (sounds.current === audio) sounds.current = null;};
   }, [engine, rootRef]);
   useEffect(() => {if (paused || editable) sounds.current?.stop();}, [paused, editable]);
-  const panReady = useCallback(() => {loaded.current.pan = true;if (loaded.current.tomatoes) onReady?.();}, [onReady]);
-  const tomatoesReady = useCallback(() => {loaded.current.tomatoes = true;if (loaded.current.pan) onReady?.();}, [onReady]);
+  const markReady = useCallback(key => {loaded.current[key] = true;if (Object.values(loaded.current).every(Boolean)) onReady?.();}, [onReady]);
+  const panReady = useCallback(() => markReady('pan'), [markReady]);
+  const tomatoesReady = useCallback(() => markReady('tomatoes'), [markReady]);
+  const fishReady = useCallback(() => markReady('fish'), [markReady]);
+  const fishFlopped = useCallback(() => sounds.current?.playFishFlop(), []);
+  const fishLanded = useCallback(() => sounds.current?.playFishLand(), []);
   const tomatoReleased = useCallback(() => sounds.current?.playTomatoThrow(), []);
   const tomatoSplat = useCallback(event => {sounds.current?.playTomatoSplat();onTomatoSplat?.(event);}, [onTomatoSplat]);
   useEffect(() => {
     const api = {trigger(id) {
       if (id === 'tomato-throw') return tomatoes.current?.burst() || false;
+      if (id === 'fish-flop') return fish.current?.burst() || false;
       if (id === 'sink-bubbles') {
         const fired = sink.current?.burst() || false;
         if (fired) sounds.current?.playSink();
@@ -82,16 +93,19 @@ export default function KitchenToys({engine, actionsRef, onUse, onHover, hovered
     actionsRef.current = api;
     return () => {if (actionsRef.current === api) actionsRef.current = null;};
   }, [actionsRef]);
-  useEffect(() => {sink.current?.reset();stove.current?.reset();tomatoes.current?.reset();sounds.current?.stop();}, [resetToken]);
+  useEffect(() => {sink.current?.reset();stove.current?.reset();tomatoes.current?.reset();fish.current?.reset();sounds.current?.stop();}, [resetToken]);
 
   return <>
     {KITCHEN_TOYS.map(toy => <FixtureTarget key={toy.id} toy={toy} available={isNearRoomTarget(engine.player, toy)}
-      enabled={!paused && !editable && (toy.id !== 'tomato-throw' || tomatoesRemaining > 0)} hovered={hoveredId === toy.id} highlighted={nearbyId === toy.id}
+      enabled={!paused && !editable && (toy.id !== 'tomato-throw' || tomatoesRemaining > 0) && (toy.id !== 'fish-flop' || fishAvailable)} hovered={hoveredId === toy.id} highlighted={nearbyId === toy.id}
       onUse={onUse} onHover={onHover}/>)}
     <Suspense fallback={null}><TomatoToy engine={engine} actionRef={tomatoes} position={KITCHEN_TOYS.find(toy => toy.id === 'tomato-throw').position}
       paused={paused || editable} reducedMotion={reducedMotion} rootRef={rootRef} onReady={tomatoesReady}
       highlighted={tomatoesRemaining > 0 && !paused && !editable && (hoveredId === 'tomato-throw' || nearbyId === 'tomato-throw')}
       onRelease={tomatoReleased} onSplat={tomatoSplat} onRemainingChange={tomatoStockChanged}/></Suspense>
+    <Suspense fallback={null}><FishFlopToy engine={engine} actionRef={fish} paused={paused || editable} reducedMotion={reducedMotion}
+      highlighted={fishAvailable && !paused && !editable && (hoveredId === 'fish-flop' || nearbyId === 'fish-flop')}
+      rootRef={rootRef} onReady={fishReady} onAvailableChange={fishAvailabilityChanged} onFlop={fishFlopped} onLand={fishLanded}/></Suspense>
     <SinkBubbles actionRef={sink} position={[-3.96, 1.3, 2.778]} paused={paused || editable}
       reducedMotion={reducedMotion} rootRef={rootRef} onPop={bubblePopped}/>
     <Suspense fallback={null}><StovePanToy actionRef={stove} paused={paused || editable}

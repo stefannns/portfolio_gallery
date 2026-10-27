@@ -1,4 +1,8 @@
+import {FISH_POSITION} from './fish-flop-state.js';
+
 export const KITCHEN_TOYS = Object.freeze([
+  {id: 'fish-flop', kind: 'toy', label: 'Fish', actionLabel: 'Startle the fish', interactionRange: 1.65,
+    position: FISH_POSITION, hitSize: [.92, .5, .5], hitOffset: [0, .16, 0]},
   {id: 'tomato-throw', kind: 'toy', label: 'Tomatoes', actionLabel: 'Throw a tomato', interactionRange: 1.65,
     position: [.3, 1.118, 4.95], hitSize: [.75, .65, .75], hitOffset: [0, .24, 0]},
   {id: 'sink-bubbles', kind: 'toy', label: 'Sink', actionLabel: 'Blow bubbles', interactionRange: 1.65,
@@ -38,4 +42,11 @@ export function stoveMotion(elapsed, reducedMotion = false) {
   return {lift, tilt: (reducedMotion ? .025 : .1) * Math.sin(flight * Math.PI * 2) * arc,
     // Keep the flame within the air gap, with clearance for the tilted pan.
     flame, flameHeight: Math.max(0, lift - .03) * flame};
+}
+
+/** Spent toys leave E/touch targeting immediately, even before React updates. */
+export function isKitchenToyAvailable(toy, engine = {}) {
+  if (toy.id === 'tomato-throw') return engine.tomatoRemaining !== 0;
+  if (toy.id === 'fish-flop') return !engine.fishToy?.used;
+  return true;
 }

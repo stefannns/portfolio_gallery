@@ -8,7 +8,7 @@ The homepage is now a playable capybara kitchen portfolio. Explore the room, ins
 - Click or tap project objects to open them; E inspects a nearby highlighted object.
 - Sticky notes guide the vegetables bag → recorder → computer tour. All project objects stay available.
 - Desktop plays quiet background music after the browser allows audio. Mobile keeps footsteps and interaction sounds; the music player is hidden on all screens.
-- Try the sink bubbles, launch the frying pan, or throw the four tomatoes at the camera. Tomatoes do not refill during a visit. E uses the closest object in reach.
+- Try the sink bubbles, launch the frying pan, startle the fish beside the knives, or throw the four tomatoes at the camera. Tomatoes do not refill during a visit. E uses the closest object in reach.
 - The game scene keeps a 16:9 landscape frame. Portrait phones show a rotation prompt.
 
 Seed Squad has an embedded game preview and a design content library. Smarttester links to its workflow tour. Otome Story Engine (Minimax H3) includes a demo video and an English AI workflow diagram. Existing game covers and reels are retained.
