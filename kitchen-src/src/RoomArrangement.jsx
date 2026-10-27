@@ -10,7 +10,8 @@ import {KITCHEN_TOYS, isNearRoomTarget, chooseRoomTarget, isKitchenToyAvailable}
 import {RestaurantModel} from './TripoRestaurant.jsx';
 import {getRoomPlacement} from './room-placement.js';
 import {getSceneUiScale} from './scene-ui-scale.js';
-import {createRoomNavigator} from './room-navigation.js';
+import {createRoomNavigator, canTraverseRoomSegment} from './room-navigation.js';
+import {getLandedFishCollider, recoverFishOverlap} from './fish-ground-collision.js';
 import {attachRoomMovementInput} from './room-movement-input.js';
 import {useTaskOutlineIgnore} from './TaskOutline.jsx';
 
@@ -85,7 +86,7 @@ function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus,
 export default function RoomArrangement({roomVersion = 10, controls, rootRef, titlePhysics, resetToken, onStatus, onHover, onReady, onError, onOpenComputer, onOpenProject, onSelection, actionsRef, objectiveId = '', activeItemId = '', onToyUse, onTomatoSplat, onFirstMove, onWelcomeMove, onInspectTarget, onWelcomeAnchor, welcomeActive = false, reducedMotion = false, paused = false, editable = false, fixedCamera = true}) {
   const ignoreWalkFloor = useTaskOutlineIgnore();
   const {
-    CAPYBARA_HEIGHT, PLAYER_START, PLAYER_SPEED, ROOM_FLOOR_Y, ROOM_BOUNDS, ROOM_ITEMS,
+    CAPYBARA_HEIGHT, PLAYER_START, PLAYER_SPEED, PLAYER_RADIUS, ROOM_FLOOR_Y, ROOM_BOUNDS, ROOM_ITEMS,
     pickRoomSurface, sanitizeRoomPlacements, snapPropPosition, stepRoomPlayer, canWalk,
   } = getRoomPlacement(roomVersion);
   const toyItems = roomVersion === 10 ? KITCHEN_TOYS : NO_TOYS;
@@ -114,6 +115,36 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
   const inspectTarget = useRef(null), welcomePoint = useRef(new THREE.Vector3()), lastWelcomeAnchor = useRef(null);
   const engine = useRef({player: {...PLAYER_START}, keys: new Set(), moving: false, paused: false, joystick: {x: 0, z: 0}}).current;
   const inputState = useRef(null);
+  const fishCollisionActive = useRef(false), fishCollisionRecoveries = useRef(0);
+  const walkingObstacles = useCallback(({recover = true} = {}) => {
+    const fish = roomVersion === 10 ? getLandedFishCollider(engine.fishToy) : null;
+    const active = Boolean(fish);
+    if (active !== fishCollisionActive.current) {
+      fishCollisionActive.current = active;
+      // A route planned while the fish was airborne must not run through it.
+      walkRoute.current = [];walkPress.current = null;walkStalled.current = 0;
+    }
+    const items = fish ? [...latest.current, fish] : latest.current;
+    let startValid = true;
+    if (fish && canWalk(engine.player.x, engine.player.z, latest.current) && !canWalk(engine.player.x, engine.player.z, items)) {
+      startValid = false;
+      if (recover) {
+        const safe = recoverFishOverlap(engine.player, fish, {
+          playerRadius: PLAYER_RADIUS,
+          canWalk: (x, z) => canWalk(x, z, items),
+          canTraverse: (from, to) => canTraverseRoomSegment(from, to, canWalk, latest.current),
+        });
+        if (safe && canWalk(safe.x, safe.z, items)) {
+          if (Math.hypot(safe.x - engine.player.x, safe.z - engine.player.z) > .00001) {
+            engine.player.x = safe.x;engine.player.z = safe.z;fishCollisionRecoveries.current++;
+            walkRoute.current = [];walkPress.current = null;walkStalled.current = 0;
+          }
+          startValid = true;
+        }
+      }
+    }
+    return {items, startValid, active};
+  }, [canWalk, engine, PLAYER_RADIUS, roomVersion]);
   const resetMovement = useCallback(() => {
     walkRoute.current = [];walkPress.current = null;walkStalled.current = 0;
     engine.keys.clear();engine.moving = false;engine.joystick.x = 0;engine.joystick.z = 0;
@@ -269,7 +300,8 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
         if (!paused && !editable && !drag.current && Math.hypot(event.clientX - press.startX, event.clientY - press.startY) <= 6) {
           const hit = pointAt(event);
           if (hit && Math.abs(hit[1] - ROOM_FLOOR_Y) <= .08) {
-            walkRoute.current = navigator.findPath(engine.player, {x: hit[0], z: hit[2]}, latest.current);
+            const walking = walkingObstacles();
+            walkRoute.current = walking.startValid ? navigator.findPath(engine.player, {x: hit[0], z: hit[2]}, walking.items) : [];
             walkStalled.current = 0;
           }
         }
@@ -285,7 +317,7 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
       window.removeEventListener('pointermove', move);window.removeEventListener('pointerup', release);window.removeEventListener('pointercancel', cancel);
       gl.domElement.removeEventListener('lostpointercapture', lost);cancel();document.body.style.cursor = '';
     };
-  }, [editable, engine, finishDrag, gl, invalidate, navigator, paused, pointAt, ROOM_FLOOR_Y, safePosition]);
+  }, [editable, engine, finishDrag, gl, invalidate, navigator, paused, pointAt, ROOM_FLOOR_Y, safePosition, walkingObstacles]);
 
   // Keep one input subscription across project/task changes. Its callbacks read
   // the current phase rather than retaining a closed dialog's paused state.
@@ -366,6 +398,7 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
       onReady?.();
     }
     engine.rootDOM = rootRef;engine.paused = paused || Boolean(drag.current) || document.hidden;
+    const walking = walkingObstacles({recover: !engine.paused && !editable});
     camera.getWorldDirection(direction.current);direction.current.y = 0;direction.current.normalize();
     right.current.crossVectors(direction.current, up).normalize();
     const horizontal = Number(engine.keys.has('KeyD')) - Number(engine.keys.has('KeyA')) + engine.joystick.x;
@@ -384,13 +417,14 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
     }
     const tomatoBusy = Boolean(engine.tomatoAction?.active);
     if (tomatoBusy) walkRoute.current = [];
-    const proposed = engine.paused || tomatoBusy ? {...engine.player, moving: false} : stepRoomPlayer(engine.player, input, delta, latest.current);
-    let next = titlePhysics?.current?.step(engine.player, proposed, delta, {paused: engine.paused || tomatoBusy}) || proposed;
-    if (!canWalk(next.x, next.z, latest.current)) {
-      const x = canWalk(next.x, engine.player.z, latest.current) ? next.x : engine.player.x;
-      const z = canWalk(x, next.z, latest.current) ? next.z : engine.player.z;
+    const proposed = engine.paused || tomatoBusy || !walking.startValid ? {...engine.player, moving: false} : stepRoomPlayer(engine.player, input, delta, walking.items);
+    let next = titlePhysics?.current?.step(engine.player, proposed, delta, {paused: engine.paused || tomatoBusy || !walking.startValid}) || proposed;
+    if (!canWalk(next.x, next.z, walking.items)) {
+      const x = canWalk(next.x, engine.player.z, walking.items) ? next.x : engine.player.x;
+      const z = canWalk(x, next.z, walking.items) ? next.z : engine.player.z;
       next = {x, z, moving: Math.hypot(x - engine.player.x, z - engine.player.z) > .00001};
     }
+    next.moving = Boolean(next.moving) && !engine.paused && !tomatoBusy && walking.startValid && Math.hypot(next.x - engine.player.x, next.z - engine.player.z) > .00001;
     if (walkRoute.current.length) {
       walkStalled.current = Math.hypot(next.x - engine.player.x, next.z - engine.player.z) > .001 ? 0 : walkStalled.current + Math.min(delta, .05);
       if (walkStalled.current > .8) {walkRoute.current = [];walkStalled.current = 0;}
@@ -438,6 +472,8 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
     if (rootRef.current) {
       rootRef.current.dataset.playerX = next.x.toFixed(3);rootRef.current.dataset.playerZ = next.z.toFixed(3);
       rootRef.current.dataset.playerMoving = String(next.moving);
+      rootRef.current.dataset.fishCollisionActive = String(walking.active);
+      rootRef.current.dataset.fishCollisionRecoveries = String(fishCollisionRecoveries.current);
       rootRef.current.dataset.walkDestination = walkRoute.current.length ? JSON.stringify(walkRoute.current[walkRoute.current.length - 1]) : '';
       rootRef.current.dataset.walkWaypoints = String(walkRoute.current.length);
       rootRef.current.dataset.nearbyItem = target?.id || '';

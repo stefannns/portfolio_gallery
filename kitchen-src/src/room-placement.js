@@ -36,7 +36,7 @@ function createRoomPlacement(surfaceData, version) {
     return x0 < 0 || z0 < 0 || x1 >= columns || z1 >= rows ? null : [x0, x1, z0, z1];
   }
 
-  /** Static room clearance is already included in the mask. Optional floor props add circles. */
+  /** Static room clearance is in the mask; floor props add circles or X-aligned capsules. */
   function canWalk(x, z, placements = []) {
     if (!finite(x) || !finite(z)) return false;
     const cells = surroundingCells(x, z);
@@ -46,8 +46,13 @@ function createRoomPlacement(surfaceData, version) {
     for (const item of placements || []) {
       const position = item?.position;
       if (!Array.isArray(position) || Math.abs(position[1] - ROOM_FLOOR_Y) > .08) continue;
-      const radius = (finite(item.width) ? item.width : .5) * .3 + PLAYER_RADIUS;
-      if (Math.hypot(x - position[0], z - position[2]) < radius) return false;
+      if (item.collisionShape === 'capsule-x' && finite(item.collisionRadius) && finite(item.collisionHalfLength)) {
+        const dx = Math.max(0, Math.abs(x - position[0]) - Math.max(0, item.collisionHalfLength));
+        if (Math.hypot(dx, z - position[2]) < Math.max(0, item.collisionRadius) + PLAYER_RADIUS) return false;
+      } else {
+        const radius = (finite(item.width) ? item.width : .5) * .3 + PLAYER_RADIUS;
+        if (Math.hypot(x - position[0], z - position[2]) < radius) return false;
+      }
     }
     return true;
   }
