@@ -3,7 +3,7 @@ import {useFrame} from '@react-three/fiber';
 import {useGLTF} from '@react-three/drei';
 import {createFishModel, updateFishModel} from './fish-model-animation.js';
 import {useTaskOutline} from './TaskOutline.jsx';
-import {FISH_DURATION, FISH_LAND_TIME, advanceFishFlop, createFishFlopState, fishFlopPose, startFishFlop} from './fish-flop-state.js';
+import {FISH_DURATION, FISH_FLOP_CONTACTS, FISH_LAND_TIME, advanceFishFlop, createFishFlopState, fishFlopPose, startFishFlop} from './fish-flop-state.js';
 
 const FISH_URL = '/models/tripo/kitchen-fish-v1.glb';
 
@@ -60,7 +60,7 @@ export default function FishFlopToy({engine, actionRef, paused = false, reducedM
     advanceFishFlop(current, delta, blocked);
     const motion = fishFlopPose(current.elapsed, props.reducedMotion);
     if (!blocked && current.used) {
-      for (const contact of [.42, .84, 1.26, 2.42]) {
+      for (const contact of FISH_FLOP_CONTACTS) {
         if (before < contact && current.elapsed >= contact) props.onFlop?.();
       }
       if (before < FISH_LAND_TIME && current.elapsed >= FISH_LAND_TIME) props.onLand?.();

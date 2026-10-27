@@ -26,6 +26,6 @@ data.walkRows = data.walkRows.map((line, row) => [...line].map((cell, column) =>
   if (cell === '1' && next === '0') closed++;
   return next;
 }).join(''));
-data.collisionRefinements = [{name: 'cashier-desk', bounds: region, clearanceRadius, samplingMargin}];
+data.collisionRefinements = [...(data.collisionRefinements || []).filter(entry => entry.name !== 'cashier-desk'), {name: 'cashier-desk', bounds: region, clearanceRadius, samplingMargin}];
 await fs.writeFile(file, `${JSON.stringify(data)}\n`);
 console.log(`Refined desk clearance: ${opened} floor cells opened, ${closed} closed; furniture and other room collisions retained.`);
