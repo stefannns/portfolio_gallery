@@ -1,5 +1,5 @@
 .room-tomato-splat{position:absolute;z-index:60;inset:0;display:grid;place-items:center;pointer-events:none;animation:tomato-lens-splat .82s ease-out both}
-.room-tomato-splat img{display:block;width:min(72%,560px,92svh);height:auto;filter:drop-shadow(0 4px 3px #793c1820)}
+.room-tomato-splat img{display:block;width:min(93.6%,728px,119.6svh);height:auto;filter:drop-shadow(0 4px 3px #793c1820)}
 @keyframes tomato-lens-splat{0%{opacity:0;transform:scale(.35)}12%{opacity:1;transform:scale(1.07)}26%,66%{opacity:1;transform:scale(1)}100%{opacity:0;transform:translateY(25px) scale(1.02)}}
 .room-tomato-splat--still{animation:tomato-lens-splat-still .42s ease-out both}
 @keyframes tomato-lens-splat-still{0%,65%{opacity:1}100%{opacity:0}}
