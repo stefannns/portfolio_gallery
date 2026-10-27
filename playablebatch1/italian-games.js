@@ -28,25 +28,25 @@ window.PlayableItalianGames={
     "number": 10,
     "name": "Ruota dei colori",
     "entry": "/playablebatch1/games/playable2_20260927020828_y5a1vt/game.it.html",
-    "revision": "60f7c79e6512"
+    "revision": "00f600b282b8"
   },
   "playable2_20260927020825_hjn7q5": {
     "number": 14,
     "name": "Tela musicale",
     "entry": "/playablebatch1/games/playable2_20260927020825_hjn7q5/game.it.html",
-    "revision": "ef25617780a6"
+    "revision": "7156e2558cbe"
   },
   "playable2_20260927020825_n4r34c": {
     "number": 15,
     "name": "Cerchio orbitale",
     "entry": "/playablebatch1/games/playable2_20260927020825_n4r34c/game.it.html",
-    "revision": "b364276418ab"
+    "revision": "5ea03b1f5c1c"
   },
   "playable2_20260927020825_lnwh1h": {
     "number": 16,
     "name": "Scava nella sabbia",
     "entry": "/playablebatch1/games/playable2_20260927020825_lnwh1h/game.it.html",
-    "revision": "9b91ac5bb2c5"
+    "revision": "f9db5cfd611d"
   },
   "playable2_20260927020825_ufhwuj": {
     "number": 17,
@@ -58,7 +58,7 @@ window.PlayableItalianGames={
     "number": 19,
     "name": "Cubi in movimento",
     "entry": "/playablebatch1/games/playable2_20260927021136_x3i163/game.it.html",
-    "revision": "a65a2ad32c25"
+    "revision": "9fd9273a3654"
   },
   "playable2_20260928024549_3bsc4d": {
     "number": 24,
@@ -94,7 +94,7 @@ window.PlayableItalianGames={
     "number": 40,
     "name": "Laboratorio di pixel",
     "entry": "/playablebatch1/games/playable2_20261001225611_zgfls0/game.it.html",
-    "revision": "355d85a029d5"
+    "revision": "d1c124efbdaa"
   },
   "playable2_20261001225611_23t98b": {
     "number": 41,
@@ -106,19 +106,19 @@ window.PlayableItalianGames={
     "number": 45,
     "name": "Incidi una stella",
     "entry": "/playablebatch1/games/playable2_20261001225821_af5uee/game.it.html",
-    "revision": "897e89f468a0"
+    "revision": "cf564ebb2ea9"
   },
   "playable2_20261001230052_xrken6b": {
     "number": 51,
     "name": "Giardino delle creature",
     "entry": "/playablebatch1/games/playable2_20261001230052_xrken6_57b/game.it.html",
-    "revision": "a7468a295205"
+    "revision": "e998c9228834"
   },
   "playable2_20261001230122_0sowkn": {
     "number": 53,
     "name": "Serpente",
     "entry": "/playablebatch1/games/playable2_20261001230122_0sowkn/game.it.html",
-    "revision": "bb87bb23cdb8"
+    "revision": "0d651e650e36"
   },
   "playable2_20261001230352_h4uxll": {
     "number": 57,
@@ -130,25 +130,25 @@ window.PlayableItalianGames={
     "number": 58,
     "name": "Torre",
     "entry": "/playablebatch1/games/playable2_20261001230412_o52e38/game.it.html",
-    "revision": "386bfc8d474a"
+    "revision": "339d122509a7"
   },
   "playable2_20261013020955_2hyyml": {
     "number": 61,
     "name": "Fotocamera nel tempo",
     "entry": "/playablebatch1/games/playable2_20261013020955_2hyyml/game.it.html",
-    "revision": "16636307ff57"
+    "revision": "fce319f8718b"
   },
   "playable2_20261013021144_kzqdfu": {
     "number": 62,
     "name": "Nutri le koi",
     "entry": "/playablebatch1/games/playable2_20261013021144_kzqdfu/game.it.html",
-    "revision": "809178e31be1"
+    "revision": "cf6ba9b95147"
   },
   "01_petme_9gw00a_game": {
     "number": 63,
     "name": "Coccolami",
     "entry": "/playablebatch1/games/01_petme_9gw00a_game/game.it.html",
-    "revision": "5912be76be6f"
+    "revision": "ff78891655e3"
   },
   "playable_20260727203355_w1cgvm": {
     "number": 64,
@@ -196,7 +196,7 @@ window.PlayableItalianGames={
     "number": 71,
     "name": "Giro di perline",
     "entry": "/playablebatch1/games/bead_loop_20261019/game.it.html",
-    "revision": "8f371a2e5277"
+    "revision": "190eac956d38"
   },
   "height_together_20261019": {
     "number": 72,

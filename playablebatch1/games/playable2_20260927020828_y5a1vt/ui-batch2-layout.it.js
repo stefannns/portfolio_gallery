@@ -14,11 +14,11 @@
     html[data-ui-batch2-preview] .string-hud{position:absolute;top:12%;left:30px;right:30px;padding:0!important}
     html[data-ui-batch2-preview] .string-board{position:absolute!important;inset:24% 0 20%}
     html[data-ui-batch2-preview] .string-guide{top:-12px;bottom:auto!important}
-    html[data-ui-batch2-preview] .cw-header{position:absolute;top:18%;left:30px;right:30px;padding:0!important}
-    html[data-ui-batch2-preview] .cw-target{margin-top:8px!important;padding:4px 16px!important}
-    html[data-ui-batch2-preview] .cw-target .hud-text{color:#fff!important;text-shadow:none!important}
-    html[data-ui-batch2-preview] .cw-stage{inset:34% 30px 28%}
-    html[data-ui-batch2-preview] .cw-guide{top:75%}
+    .cw-game .cw-header{position:absolute;top:10%;left:30px;right:30px;padding:0!important}
+    .cw-game .cw-target{margin-top:8px!important;padding:4px 16px!important}
+    .cw-game .cw-target .hud-text{color:#fff!important;text-shadow:none!important}
+    .cw-game .cw-stage{inset:26% 30px 36%}
+    .cw-game .cw-guide{top:67%}
   `;
   document.head.append(style);
   window.addEventListener('message', event => {

@@ -59,16 +59,16 @@ window.PlayableGameDownloads = {
   "playable2_20260927020828_86gl5z": {
     "url": "/playablebatch1/downloads/09-playable2_20260927020828_86gl5z.zip",
     "filename": "09-playable2_20260927020828_86gl5z.zip",
-    "bytes": 367964,
-    "files": 10,
-    "sha256": "5042ff41b3a6641ee290f8bcb6d0d88d01e16757bb0440ecb06e94dcc593ea03"
+    "bytes": 373139,
+    "files": 14,
+    "sha256": "c487b23f14cb01a91afdf6bfe52d68ab52e4c6cea0c8f75f9bb2aba197483d35"
   },
   "playable2_20260927020828_y5a1vt": {
     "url": "/playablebatch1/downloads/10-playable2_20260927020828_y5a1vt.zip",
     "filename": "10-playable2_20260927020828_y5a1vt.zip",
-    "bytes": 356585,
+    "bytes": 356582,
     "files": 18,
-    "sha256": "3a028d49d0bf10ca603f8a7f5689aafeebd18e01758dae587c579bc8ced29dec"
+    "sha256": "6f9a8c9049ea9d7a09558285690b442f21cbd9e95597621191bf67ce9536edde"
   },
   "playable2_20260927021659_jfkvov": {
     "url": "/playablebatch1/downloads/11-playable2_20260927021659_jfkvov.zip",
@@ -94,23 +94,23 @@ window.PlayableGameDownloads = {
   "playable2_20260927020825_hjn7q5": {
     "url": "/playablebatch1/downloads/14-playable2_20260927020825_hjn7q5.zip",
     "filename": "14-playable2_20260927020825_hjn7q5.zip",
-    "bytes": 735990,
+    "bytes": 735996,
     "files": 23,
-    "sha256": "c24a4be265eb286f68de56193ecc6d5b6042f5a873ec94ab0db5d250a3718103"
+    "sha256": "6b5988e8c51635fac05f208a9553d4bbdcbbff934512b8e101f5942145b01c9b"
   },
   "playable2_20260927020825_n4r34c": {
     "url": "/playablebatch1/downloads/15-playable2_20260927020825_n4r34c.zip",
     "filename": "15-playable2_20260927020825_n4r34c.zip",
-    "bytes": 430880,
+    "bytes": 430883,
     "files": 21,
-    "sha256": "cf28baf52b205222e53645169b819d68431afb030c1f7b26370b1f3765c6f262"
+    "sha256": "3c467f7a73eda1bb85124d987da2f291d4c7f3306f9e9142c2f06640f7fa44a5"
   },
   "playable2_20260927020825_lnwh1h": {
     "url": "/playablebatch1/downloads/16-playable2_20260927020825_lnwh1h.zip",
     "filename": "16-playable2_20260927020825_lnwh1h.zip",
-    "bytes": 540453,
-    "files": 23,
-    "sha256": "3fd1a3b6553a86a831929e3ea782112b36448937d900d90dc882462b0c4b1af3"
+    "bytes": 541666,
+    "files": 25,
+    "sha256": "b4cf286a913fad9b0a7e40702e198278ac06f5ddae4c08b7fcaac396ff1fd2ac"
   },
   "playable2_20260927020825_ufhwuj": {
     "url": "/playablebatch1/downloads/17-playable2_20260927020825_ufhwuj.zip",
@@ -129,9 +129,9 @@ window.PlayableGameDownloads = {
   "playable2_20260927021136_x3i163": {
     "url": "/playablebatch1/downloads/19-playable2_20260927021136_x3i163.zip",
     "filename": "19-playable2_20260927021136_x3i163.zip",
-    "bytes": 403096,
+    "bytes": 403098,
     "files": 25,
-    "sha256": "fca8c5b55b62b9c635e2ab594103ffa559d49e587ea7ee5c692d4cc535dbbcc4"
+    "sha256": "da42d6246ea2b2bc49c70ac48f51119b3df53e62762bbd56b4027644677e6299"
   },
   "playable2_20260927021201_7etgko": {
     "url": "/playablebatch1/downloads/20-playable2_20260927021201_7etgko.zip",
@@ -227,9 +227,9 @@ window.PlayableGameDownloads = {
   "playable2_20260928030932_n6urd6": {
     "url": "/playablebatch1/downloads/33-playable2_20260928030932_n6urd6.zip",
     "filename": "33-playable2_20260928030932_n6urd6.zip",
-    "bytes": 216033,
-    "files": 8,
-    "sha256": "da8523ee37dd44b99cae788aceca5e2893d32f67be853d8df323f79d62cc85ad"
+    "bytes": 220769,
+    "files": 11,
+    "sha256": "d425b91d1085b98dd649a7f0d2e374f7875a7ed835bb77112e6434ddc012017b"
   },
   "playable2_20260928031234_805376": {
     "url": "/playablebatch1/downloads/34-playable2_20260928031234_805376.zip",
@@ -276,9 +276,9 @@ window.PlayableGameDownloads = {
   "playable2_20261001225611_zgfls0": {
     "url": "/playablebatch1/downloads/40-playable2_20261001225611_zgfls0.zip",
     "filename": "40-playable2_20261001225611_zgfls0.zip",
-    "bytes": 277695,
+    "bytes": 277694,
     "files": 21,
-    "sha256": "11e429798045e839c3a9bf7ba3840015e22e7df18a448a94ad88172d167e93e3"
+    "sha256": "c61fb06f42fd0d7fbfcfafd4da67ad4cbaf2a28ff02c45e70fba923a41f64393"
   },
   "playable2_20261001225611_23t98b": {
     "url": "/playablebatch1/downloads/41-playable2_20261001225611_23t98b.zip",
@@ -311,9 +311,9 @@ window.PlayableGameDownloads = {
   "playable2_20261001225821_af5uee": {
     "url": "/playablebatch1/downloads/45-playable2_20261001225821_af5uee.zip",
     "filename": "45-playable2_20261001225821_af5uee.zip",
-    "bytes": 5317082,
+    "bytes": 5317261,
     "files": 29,
-    "sha256": "3d8d24d363142bf8efe485a1c085c28f5d0b23ed1a233384fa74e886f48c1ffc"
+    "sha256": "c215237bb71c5ca2d57abf2ce67fe9bbcd2f96b572b689cbc52700bbe8466ea3"
   },
   "playable2_20261001225836_jx30zt": {
     "url": "/playablebatch1/downloads/46-playable2_20261001225836_jx30zt.zip",
@@ -325,9 +325,9 @@ window.PlayableGameDownloads = {
   "playable2_20261001225842_2d0kul": {
     "url": "/playablebatch1/downloads/47-playable2_20261001225842_2d0kul.zip",
     "filename": "47-playable2_20261001225842_2d0kul.zip",
-    "bytes": 4649824,
-    "files": 8,
-    "sha256": "5ce0e543a7c5c94edb59aa13c1ad61547cdc3a064a7673ef45ce9bd89c7c15dd"
+    "bytes": 4655042,
+    "files": 12,
+    "sha256": "d73d75f7efea7a45a15807e4478edf9045c28b348c43372fba61c0dd18c0d876"
   },
   "playable2_20261001225926_ibkv62": {
     "url": "/playablebatch1/downloads/48-playable2_20261001225926_ibkv62.zip",
@@ -353,9 +353,9 @@ window.PlayableGameDownloads = {
   "playable2_20261001230052_xrken6_57b": {
     "url": "/playablebatch1/downloads/51-playable2_20261001230052_xrken6_57b.zip",
     "filename": "51-playable2_20261001230052_xrken6_57b.zip",
-    "bytes": 168160,
+    "bytes": 168161,
     "files": 22,
-    "sha256": "35fa38ae9a4c80dd8ad2f438d60ca18033893e9362eebee0167db6a5372e6f9b"
+    "sha256": "ae5ac1755ac27aa66e97f943d09db272492ab620042099afd99cb5ae5a8b3ab4"
   },
   "playable2_20261001230112_0ivocb": {
     "url": "/playablebatch1/downloads/52-playable2_20261001230112_0ivocb.zip",
@@ -367,9 +367,9 @@ window.PlayableGameDownloads = {
   "playable2_20261001230122_0sowkn": {
     "url": "/playablebatch1/downloads/53-playable2_20261001230122_0sowkn.zip",
     "filename": "53-playable2_20261001230122_0sowkn.zip",
-    "bytes": 478620,
+    "bytes": 478659,
     "files": 44,
-    "sha256": "2f6a52f336c04a92e0af00ee95fea3d2d95c3405395c711ca74f7d1ce6780ff6"
+    "sha256": "83d71e7a6b95f7a1428f1b838ebf7b9828c6cc95f97a7036f29f0e33c0efa92b"
   },
   "playable2_20261001230212_tajqhm": {
     "url": "/playablebatch1/downloads/54-playable2_20261001230212_tajqhm.zip",
@@ -402,9 +402,9 @@ window.PlayableGameDownloads = {
   "playable2_20261001230412_o52e38": {
     "url": "/playablebatch1/downloads/58-playable2_20261001230412_o52e38.zip",
     "filename": "58-playable2_20261001230412_o52e38.zip",
-    "bytes": 376789,
+    "bytes": 376790,
     "files": 19,
-    "sha256": "697af7dbf6c3bad2262678747ffc4d8346b73f655c51dc95d9d96d9c09e9a478"
+    "sha256": "b2193656961066925e02edefbb9b1979198ab04f9830ade712390adb8443dcb9"
   },
   "playable2_20261013020814_twgfzt": {
     "url": "/playablebatch1/downloads/59-playable2_20261013020814_twgfzt.zip",
@@ -423,23 +423,23 @@ window.PlayableGameDownloads = {
   "playable2_20261013020955_2hyyml": {
     "url": "/playablebatch1/downloads/61-playable2_20261013020955_2hyyml.zip",
     "filename": "61-playable2_20261013020955_2hyyml.zip",
-    "bytes": 525122,
-    "files": 19,
-    "sha256": "f0bc386ec3590755cadfd5276f34bbcce400f687bb6c746ebf3a1987752a66f3"
+    "bytes": 694555,
+    "files": 24,
+    "sha256": "284bfc3a60de546f8377fa3b0110dc8c210c74d37792cc9286b3c595ec119f25"
   },
   "playable2_20261013021144_kzqdfu": {
     "url": "/playablebatch1/downloads/62-playable2_20261013021144_kzqdfu.zip",
     "filename": "62-playable2_20261013021144_kzqdfu.zip",
-    "bytes": 493781,
+    "bytes": 493992,
     "files": 31,
-    "sha256": "8438913f1e885b17da5895c1343fba78dd9ca462af42b7487a314fc0d5852211"
+    "sha256": "a5b438fdb767ca7da6c813019703e38f948c07e63fab121fa5737377feb147a2"
   },
   "01_petme_9gw00a_game": {
     "url": "/playablebatch1/downloads/63-01_petme_9gw00a_game.zip",
     "filename": "63-01_petme_9gw00a_game.zip",
-    "bytes": 5397003,
+    "bytes": 5397117,
     "files": 30,
-    "sha256": "af21146dd7deef8a8edb00d8129c01332d4450b2e9e2a908a6259616656de8bb"
+    "sha256": "ce8b6f1d26c1ed3aa12671cdbf75831602be1ffb65f621a2ea851ca8e9b43d96"
   },
   "playable_20260727203355_w1cgvm_game": {
     "url": "/playablebatch1/downloads/64-playable_20260727203355_w1cgvm_game.zip",
@@ -495,7 +495,7 @@ window.PlayableGameDownloads = {
     "filename": "71-bead_loop_20261019.zip",
     "bytes": 791998,
     "files": 19,
-    "sha256": "da8f8c17b5961dec69a4914aed0f7515987f91a03c0baf7845e6bdaae48b4f66"
+    "sha256": "ae692d42d0a5727d6251ad2bdb51fb8a489a30e278efad77041b6e45e3dbccdf"
   },
   "height_together_20261019": {
     "url": "/playablebatch1/downloads/72-height_together_20261019.zip",
@@ -535,9 +535,9 @@ window.PlayableGameDownloads = {
   "eh_catch_the_hair_20261020": {
     "url": "/playablebatch1/downloads/77-eh_catch_the_hair_20261020.zip",
     "filename": "77-eh_catch_the_hair_20261020.zip",
-    "bytes": 397612,
-    "files": 18,
-    "sha256": "8301a7f41622be385968c5110128ff8dcebcc4a4a81ab9be3ad367d0bd62b6b3"
+    "bytes": 402565,
+    "files": 21,
+    "sha256": "d094a1bce32cf2578fde756830ec157660626e0b370e9cc7d4402eaa112d98f5"
   },
   "eh_makeover_20261020": {
     "url": "/playablebatch1/downloads/78-eh_makeover_20261020.zip",

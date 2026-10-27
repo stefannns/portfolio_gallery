@@ -6,6 +6,7 @@
     'playable_20260924213804_34rslj',
     'playable2_20260927020828_5pmrhn',
     'playable2_20260927020828_oumj12',
+    'playable2_20260927020828_86gl5z',
     'playable2_20260927020828_y5a1vt',
     'playable2_20260927020825_hjn7q5',
     'playable2_20260927020825_n4r34c',
@@ -15,11 +16,13 @@
     'playable2_20260928024549_3bsc4d',
     'playable2_20260928030211_tdjer2',
     'playable2_20260928030642_uthymy',
+    'playable2_20260928030932_n6urd6',
     'playable2_20260928031559_rckaf4',
     'playable2_20260928031734_t68did',
     'playable2_20261001225611_zgfls0',
     'playable2_20261001225611_23t98b',
     'playable2_20261001225821_af5uee',
+    'playable2_20261001225842_2d0kul',
     'playable2_20261001230052_xrken6b',
     'playable2_20261001230122_0sowkn',
     'playable2_20261001230352_h4uxll',
@@ -35,7 +38,8 @@
     '02e_pickalook_p8xys3_game',
     'playable_20261015220925_0pn002',
     'bead_loop_20261019',
-    'height_together_20261019'
+    'height_together_20261019',
+    'eh_catch_the_hair_20261020'
   ]);
   const membership = new Set(batch1TaskIds);
   const storageKey = 'playable-review-batch-v1';

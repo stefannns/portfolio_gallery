@@ -23,14 +23,24 @@
     "Below the food image rather than across its fresh/spoiled detail"
   ],
   [
+    9,
+    "playable2_20260927020828_86gl5z",
+    "New Batch1 member: above the mixing bowl and tube demonstration"
+  ],
+  [
     14,
     "playable2_20260927020825_hjn7q5",
-    null
+    "User batch follow-up: aligned with the other selected guides in the upper quarter"
   ],
   [
     15,
     "playable2_20260927020825_n4r34c",
-    null
+    "User batch follow-up: aligned with the other selected guides in the upper quarter"
+  ],
+  [
+    16,
+    "playable2_20260927020825_lnwh1h",
+    "User batch follow-up: upper-quarter instruction with a reserved lane; sand, balls, cup and touch coordinates share the lower playfield"
   ],
   [
     17,
@@ -45,7 +55,7 @@
   [
     19,
     "playable2_20260927021136_x3i163",
-    "User follow-up: above the central cube; lowered the canvas and matching hit area together to keep clear space below the words"
+    "User batch follow-up: upper-quarter guide above the cube; keep the lowered canvas and matching hit area"
   ],
   [
     21,
@@ -85,7 +95,7 @@
   [
     33,
     "playable2_20260928030932_n6urd6",
-    null
+    "New Batch1 member: upper-quarter guide over the net demonstration"
   ],
   [
     34,
@@ -110,7 +120,7 @@
   [
     40,
     "playable2_20261001225611_zgfls0",
-    "Centered over the sand demo with a legible dark backing"
+    "User batch follow-up: upper-quarter guide above the sand demo, retaining its legible backing"
   ],
   [
     42,
@@ -125,7 +135,7 @@
   [
     45,
     "playable2_20261001225821_af5uee",
-    "User follow-up: responsive clearance above the full moving knife handle and star working area"
+    "User batch follow-up: compact white CTA background, with responsive clearance above the moving knife handle"
   ],
   [
     46,
@@ -135,7 +145,7 @@
   [
     47,
     "playable2_20261001225842_2d0kul",
-    null
+    "New Batch1 member: upper-quarter guide above the thermal trail"
   ],
   [
     48,
@@ -150,7 +160,7 @@
   [
     51,
     "playable2_20261001230052_xrken6b",
-    "User follow-up: raised farther above the opening grass-swipe demo to avoid overlap"
+    "User batch follow-up: upper-quarter guide above the opening grass-swipe demo"
   ],
   [
     56,
@@ -165,7 +175,7 @@
   [
     58,
     "playable2_20261001230412_o52e38",
-    "Above the stack"
+    "User batch follow-up: upper-quarter guide; keep its short post-action dismissal"
   ],
   [
     59,
@@ -175,12 +185,12 @@
   [
     62,
     "playable2_20261013021144_kzqdfu",
-    null
+    "User batch follow-up: upper-quarter guide on a compact white background"
   ],
   [
     63,
     "01_petme_9gw00a_game",
-    "User follow-up: above the dog, clear of its head and grooming area; HUD remains unchanged"
+    "User batch follow-up: upper-quarter guide on a compact white background, clear of the dog"
   ],
   [
     64,
@@ -220,7 +230,7 @@
   [
     71,
     "bead_loop_20261019",
-    "User follow-up: CTA raised a little farther above the bead loop; stage and material picker remain unchanged"
+    "User batch follow-up: cover bead loop raised by5% of the game canvas; guidance, entered stage and material picker remain stable"
   ],
   [
     72,
@@ -245,7 +255,7 @@
   [
     77,
     "eh_catch_the_hair_20261020",
-    "Below the falling hair alignment area"
+    "New Batch1 member: above the portrait and fitted preview wigs"
   ],
   [
     78,

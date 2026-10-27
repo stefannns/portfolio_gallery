@@ -1,6 +1,6 @@
 (function(){'use strict';
 const el=id=>document.getElementById(id),canvas=el('canvas'),ctx=canvas.getContext('2d',{alpha:false}),spec=window.GAME_SPEC;
-const images={},config={},hosted=new URLSearchParams(location.search).get('host')==='fyp';let running=false,hidden=false,hostActive=!hosted,paused=false,last=0,age=0,app;
+const images={},config={},hosted=new URLSearchParams(location.search).get('host')==='fyp'||new URLSearchParams(location.search).get('feedReview')==='1'||!!document.querySelector('script[src*="playable-batch/review-host.js"]');let running=false,hidden=false,hostActive=!hosted,paused=false,last=0,age=0,app;
 document.documentElement.dataset.feedPreview=String(hosted&&!hostActive);
 const soundNodes=new Set(),voices=new Set();let ac;
 const R=window.Playable={spec,images,ctx,canvas,w:390,h:598,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches,config,

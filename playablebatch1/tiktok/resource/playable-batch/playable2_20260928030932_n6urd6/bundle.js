@@ -350,6 +350,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         I = requestAnimationFrame(M);
         let D = O - E;
         (D > 100 && (D = 16), (E = O));
+        if(document.hidden)return;
         let F = i.current;
         if (!F) return;
         let k = F.getContext("2d"),
@@ -358,8 +359,9 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
           we = F.clientHeight,
           Q = pe / y,
           X = we / w,
+          demoDrag = window.PlayableBatch4Preview?.netDrag(pe,we,y,w,O),
           G = (j, R) => {
-            let drag = _.current,
+            let drag = _.current || demoDrag,
               baseX = R * Q,
               baseY = j * X;
             if (!drag) return { x: baseX, y: baseY };
@@ -372,7 +374,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
               { x: baseX + drag.dx * fall, y: baseY + drag.dy * fall }
             );
           };
-        if (l.current === "playing") {
+        if (l.current === "playing" && !window.PlayableBatch4Preview?.active) {
           ((c.current -= D / 1e3),
             c.current <= 0 &&
               ((c.current = 0), (l.current = "over"), n("over")));
@@ -485,7 +487,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         ((k.globalAlpha = 1), (k.shadowBlur = 0));
         for (let j of f.current) {
           k.save();
-          k.translate(j.x, j.y);
+          k.translate(j.x + (demoDrag ? Math.sin(O*.001+j.y)*Q*.22 : 0), j.y + (demoDrag ? Math.cos(O*.0012+j.x)*X*.18 : 0));
           k.rotate(Math.atan2(j.vy, j.vx));
           let J = Math.sin(O * 0.018 + j.x * 0.04) * 2.5;
           k.shadowColor = j.color;
@@ -656,7 +658,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
             vy: (Math.random() - 0.5) * 0.8,
             life: 1,
           });
-        broken && ((u.current += broken * 40), A(), _V("medium"));
+        broken && (A(), _V("medium"));
         let nextRow = Math.max(0, Math.min(w, Math.round(O / X))),
           nextCol = Math.max(0, Math.min(y, Math.round(M / Q)));
         if (!nodeAlive.current[nextRow]?.[nextCol]) {
@@ -749,14 +751,11 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                 className: "hud",
                 children: [
                   (0, Ee.jsxs)("div", {
-                    "aria-label":"Score",children:[(0,Ee.jsx)("span",{ref:s,children:"0"})],
-                  }),
-                  (0, Ee.jsxs)("div", {
                     "aria-label":"Time remaining",children:[(0,Ee.jsxs)("span",{ref:a,children:[t.TIME_LIMIT,"s"]})],
                   }),
                 ],
               }),
-              r === "ready" && (0, Ee.jsx)("p", {className:"feed-first-action",style:{position:"absolute",top:"90px",left:30,right:30,zIndex:12,margin:0,fontSize:18,lineHeight:1.35,textAlign:"center",pointerEvents:"none",color:"#e4faff"},children:"Drag the net to start · pull far to tear"}),
+              r === "ready" && (0, Ee.jsx)("p", {className:"feed-first-action",style:{position:"absolute",top:"90px",left:30,right:30,zIndex:12,margin:0,fontSize:18,lineHeight:1.35,textAlign:"center",pointerEvents:"none",color:"#e4faff"},children:"Drag the net to tear it"}),
               (0, Ee.jsxs)(Yx, {
                 children: [
                   null,
@@ -773,7 +772,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                         }),
                         (0, Ee.jsxs)("div", {
                           className: "stat",
-                          children: [t.LBL_SCORE, ": ", u.current],
+                          children: [Math.ceil(Math.max(0,t.TIME_LIMIT-c.current)), "s"],
                         }),
                         (0, Ee.jsxs)("div", {
                           className: "btn-group",

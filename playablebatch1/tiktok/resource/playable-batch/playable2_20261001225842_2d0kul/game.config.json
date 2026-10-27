@@ -25,8 +25,8 @@
     {
       "id": "LABEL_INSTRUCTION",
       "label": "Instruction Text",
-      "value": "DRAG THE HEAT DOT",
-      "default": "DRAG THE HEAT DOT",
+      "value": "Drag to leave heat",
+      "default": "Drag to leave heat",
       "max_length": 20
     }
   ],
