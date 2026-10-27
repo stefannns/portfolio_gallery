@@ -32,7 +32,7 @@
     {
       "id": "SUBTITLE",
       "label": "Subtitle",
-      "value": "Tocca il vuoto per aggiungere cubi",
+      "value": "Tocca uno spazio libero per creare cubi",
       "default": "Tocca il cubo che cade!",
       "max_length": 40
     }

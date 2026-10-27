@@ -377,7 +377,7 @@ var NV=()=>{
   const world=Yt.useRef({g:null,strings:melodyStrings.createStrings(),pointer:null,keyboard:7,raf:0,draw:null,background:null,strokes:[],notes:[],started:null,duration:0,playback:null,version:0});
   const sound=Yt.useRef({ready:false,pending:null,synth:null,reverb:null,lastNote:-1,lastTime:-1,latest:null,disposed:false});
   const [hasRecording,setHasRecording]=Yt.useState(false),[playing,setPlaying]=Yt.useState(false),[status,setStatus]=Yt.useState('');
-  Yt.useEffect(()=>{let live=true;(async()=>{let c={tweaks:[],texts:[],images:[]};try{const r=await fetch("./game.config.it.json?l10n=7156e2558cbe",{cache:'no-store'});if(r.ok)c=await r.json();}catch{}if(live)setConfig(bV(c));})();return()=>{live=false;};},[]);
+  Yt.useEffect(()=>{let live=true;(async()=>{let c={tweaks:[],texts:[],images:[]};try{const r=await fetch("./game.config.it.json?l10n=3e96156278ba",{cache:'no-store'});if(r.ok)c=await r.json();}catch{}if(live)setConfig(bV(c));})();return()=>{live=false;};},[]);
   const playNote=(index,velocity,gain=1)=>{
     const audio=sound.current;if(!audio.ready||!audio.synth||audio.disposed)return;
     const now=BE();

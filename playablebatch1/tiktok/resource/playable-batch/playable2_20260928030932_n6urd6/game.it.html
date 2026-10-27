@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<script src="/resource/playable-batch/review-host.js"></script><script src="/resource/playable-feed/pocket-host.js" data-seed-random="off"></script>
+<script data-playable-feed-gate="v1">
+// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
+(() => {
+  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
+  let active=false,alive=true;
+  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
+  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
+  if(navigator.mediaDevices?.getUserMedia){
+    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia=async constraints=>{
+      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
+      const stream=await native(constraints);
+      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
+      streams.add(stream);return stream;
+    };
+  }
+  for(const key of ['AudioContext','webkitAudioContext']){
+    const Native=window[key];if(!Native)continue;
+    window[key]=class FeedAudioContext extends Native {
+      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
+      async resume(){if(!active)await wait();if(alive)return super.resume();}
+    };
+  }
+  const nativePlay=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
+  addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    active=alive&&event.data.active===true;
+    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
+    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
+  });
+  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
+})();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Strappa la rete</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    #root { isolation: isolate; }
+    canvas { touch-action: none; }
+    button, input, select, textarea { touch-action: manipulation; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=01490b990c13&v=61eb5beb4704">
+<link data-batch4-preview rel="stylesheet" href="./preview.it.css?l10n=01490b990c13&v=8d4d9e0cbb1f">
+<script data-batch4-preview defer data-game="33" src="./preview-models.it.js?l10n=01490b990c13&v=93e1a307cbed"></script>
+<script data-batch4-preview defer data-game="33" src="./preview-controller.it.js?l10n=01490b990c13&v=b487e18c9adf"></script>
+<link data-italian-layout rel="stylesheet" href="./locale.it.css?v=20261021-1">
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"TIME_LIMIT","kind":"number","label":"Time Limit","value":30,"default":30,"min":10,"max":60,"step":1},{"id":"FISH_COUNT","kind":"number","label":"Fish Count","value":24,"default":24,"min":5,"max":50,"step":1},{"id":"FISH_SPEED","kind":"number","label":"Fish Speed","value":0.16,"default":0.16,"min":0.05,"max":0.4,"step":0.01}],"texts":[{"id":"GAME_TITLE","label":"Game Title","value":"STRAPPA LA RETE","default":"STRAPPA LA RETE","max_length":30},{"id":"BTN_START","label":"Start Button","value":"INIZIA","default":"INIZIA","max_length":20},{"id":"BTN_RESTART","label":"Restart Button","value":"RIGIOCA","default":"RIGIOCA","max_length":20},{"id":"LBL_SCORE","label":"Score Label","value":"PUNTI","default":"PUNTI","max_length":15},{"id":"LBL_TIME","label":"Time Label","value":"TEMPO","default":"TEMPO","max_length":15}],"images":[{"id":"BG_MAIN","label":"Background Image","path":"./assets/bg_main.webp","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"it","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    (() => {
+      if (window.location.protocol !== "file:" || !window.fetch) return;
+      const configNode = document.getElementById("playable-inline-config");
+      if (!configNode) return;
+      let inlineConfig;
+      try { inlineConfig = JSON.parse(configNode.textContent); } catch (_) { return; }
+      const nativeFetch = window.fetch.bind(window);
+      window.fetch = (input, init) => {
+        const url = typeof input === "string" ? input : input && input.url;
+        if (url === "./game.config.it.json?l10n=01490b990c13" || url === "game.config.it.json?l10n=01490b990c13") {
+          return Promise.resolve(new Response(JSON.stringify(inlineConfig), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+          }));
+        }
+        return nativeFetch(input, init);
+      };
+    })();
+  </script>
+  <script src="./bundle.it.js?l10n=01490b990c13&ui=batch4-5910a69c7de6"></script>
+  <script src="./fishing-net-repair.it.js?l10n=01490b990c13"></script>
+<script defer src="./feed-entry-motion.it.js?l10n=01490b990c13&v=feed-first-20261008-1" data-subject="#root canvas"></script>
+</body>
+</html>

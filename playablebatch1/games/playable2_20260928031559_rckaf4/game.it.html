@@ -52,10 +52,10 @@
 html[data-feed-background] .feed-first-action{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
 </style>
-<link rel="stylesheet" href="./fyp-meeting.it.css?l10n=f60f91bc1803&v=meeting-fyp-early-20261021-6">
-<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=f60f91bc1803&v=57a0677642e2">
-<link data-guide-breathing="20261021" rel="stylesheet" href="./guide-breathing.it.css?l10n=f60f91bc1803&v=c5d67d46343b">
-<script data-guide-breathing="20261021" defer src="./guide-breathing.it.js?l10n=f60f91bc1803&v=c5d67d46343b"></script>
+<link rel="stylesheet" href="./fyp-meeting.it.css?l10n=9eaa8b97a3bb&v=meeting-fyp-early-20261021-6">
+<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=9eaa8b97a3bb&v=57a0677642e2">
+<link data-guide-breathing="20261021" rel="stylesheet" href="./guide-breathing.it.css?l10n=9eaa8b97a3bb&v=c5d67d46343b">
+<script data-guide-breathing="20261021" defer src="./guide-breathing.it.js?l10n=9eaa8b97a3bb&v=c5d67d46343b"></script>
 <link data-italian-layout rel="stylesheet" href="./locale.it.css?v=20261021-1">
 </head>
 <body>
@@ -71,7 +71,7 @@ html[data-feed-background] .feed-first-action{animation-play-state:paused}
       const nativeFetch = window.fetch.bind(window);
       window.fetch = (input, init) => {
         const url = typeof input === "string" ? input : input && input.url;
-        if (url === "./game.config.it.json?l10n=f60f91bc1803" || url === "game.config.it.json?l10n=f60f91bc1803") {
+        if (url === "./game.config.it.json?l10n=9eaa8b97a3bb" || url === "game.config.it.json?l10n=9eaa8b97a3bb") {
           return Promise.resolve(new Response(JSON.stringify(inlineConfig), {
             status: 200,
             headers: { "Content-Type": "application/json" }
@@ -81,8 +81,8 @@ html[data-feed-background] .feed-first-action{animation-play-state:paused}
       };
     })();
   </script>
-  <script src="./bundle.it.js?l10n=f60f91bc1803&v=meeting-fyp-early-20261021-6"></script>
-<script defer src="./feed-entry-motion.it.js?l10n=f60f91bc1803&v=feed-first-20261008-1" data-subject="#root canvas"></script>
-<script defer src="./fyp-meeting.it.js?l10n=f60f91bc1803&v=meeting-fyp-early-20261021-6" data-game="35"></script>
+  <script src="./bundle.it.js?l10n=9eaa8b97a3bb&v=meeting-fyp-early-20261021-6"></script>
+<script defer src="./feed-entry-motion.it.js?l10n=9eaa8b97a3bb&v=feed-first-20261008-1" data-subject="#root canvas"></script>
+<script defer src="./fyp-meeting.it.js?l10n=9eaa8b97a3bb&v=meeting-fyp-early-20261021-6" data-game="35"></script>
 </body>
 </html>

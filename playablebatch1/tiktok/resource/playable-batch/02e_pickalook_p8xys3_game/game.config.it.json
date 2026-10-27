@@ -25,8 +25,8 @@
     {
       "id": "HINT_TEXT",
       "label": "提示文案",
-      "value": "GRATTA PER SCOPRIRE!",
-      "default": "GRATTA PER SCOPRIRE!",
+      "value": "GRATTA E SCOPRI!",
+      "default": "GRATTA E SCOPRI!",
       "max_length": 30
     }
   ],

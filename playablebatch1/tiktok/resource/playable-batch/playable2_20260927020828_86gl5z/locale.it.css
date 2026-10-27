@@ -1,0 +1,7 @@
+/* Italian copy keeps the approved role sizes and may wrap instead of clipping. */
+html[lang="it"] :is(.meeting-guide,.feed-first-action,.melody-guide,.particle-guide,.dive-guide,.sandbox-guide,.koi-guide,.ui-guide,.bead-guide,.coloring-guide,.look-guide,.time-print-guide){white-space:normal;overflow-wrap:normal;word-break:normal;line-height:1.4}
+html[lang="it"] :is(button,.btn,.btn-neon){overflow-wrap:normal;word-break:normal}
+html[lang="it"] .melody-controls button{font-size:18px;padding-inline:12px}
+html[lang="it"] .meeting-sand-ball-count{gap:6px!important}
+html[lang="it"] #people-dialog fieldset label{min-width:0}
+html[lang="it"] #people-dialog input{max-width:100%;min-width:0}

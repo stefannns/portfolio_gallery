@@ -48,7 +48,7 @@ function computeGroupPlacements({ bounds, slots }) {
     BTN_CLEAR: "CANCELLA",
     BTN_NEXT: "AVANTI",
     BTN_FINISH: "FATTO",
-    BTN_BLINK: "AMMICCA",
+    BTN_BLINK: "SBATTI LE PALPEBRE",
     BTN_SNIFF: "ANNUSA",
     BTN_TALK: "PARLA",
     BTN_AGAIN: "RIDISEGNA",
@@ -92,7 +92,7 @@ function computeGroupPlacements({ bounds, slots }) {
       } catch (_) {}
     } else {
       try {
-        const response = await fetch("./game.config.it.json?l10n=523249e2d4e0", { cache: "no-store" });
+        const response = await fetch("./game.config.it.json?l10n=64738a20889c", { cache: "no-store" });
         if (response.ok) config = await response.json();
       } catch (_) {
         if (inlineConfig) {

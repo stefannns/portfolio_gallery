@@ -65,7 +65,7 @@ var ys=new class{constructor(){this.ready=!1,this.synth=null,this.failSynth=null
         (async () => {
           let t = { tweaks: [], texts: [], images: [] };
           try {
-            let e = await fetch("./game.config.it.json?l10n=a68e9c18bab5", { cache: "no-store" });
+            let e = await fetch("./game.config.it.json?l10n=6303e8fca1a5", { cache: "no-store" });
             e.ok && (t = await e.json());
           } catch {}
           e &&

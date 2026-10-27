@@ -36,9 +36,9 @@
     {
       "id": "BTN_BLINK",
       "label": "Blink Button Text",
-      "value": "AMMICCA",
-      "default": "AMMICCA",
-      "max_length": 14
+      "value": "SBATTI LE PALPEBRE",
+      "default": "SBATTI LE PALPEBRE",
+      "max_length": 18
     },
     {
       "id": "BTN_SNIFF",

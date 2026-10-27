@@ -5,8 +5,8 @@
     {
       "id": "HINT_TEXT",
       "label": "Spin instruction",
-      "value": "Scorri sulle perline per girarle",
-      "default": "Scorri sulle perline per girarle",
+      "value": "Trascina le perline per farle girare",
+      "default": "Trascina le perline per farle girare",
       "max_length": 40
     }
   ],

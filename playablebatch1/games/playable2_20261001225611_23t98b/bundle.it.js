@@ -221,7 +221,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 			return val;
 		}
 	}
-`;df(bb,lV);var lke=[1557/44100,1617/44100,1491/44100,1422/44100,1277/44100,1356/44100,1188/44100,1116/44100];var gke=[1687/25e3,1601/25e3,2053/25e3,2251/25e3];var Ea=class t extends L{constructor(){let e=k(t.getDefaults(),arguments,["solo"]);super(e),this.name="Solo",this.input=this.output=new $({context:this.context}),t._allSolos.has(this.context)||t._allSolos.set(this.context,new Set),t._allSolos.get(this.context).add(this),this.solo=e.solo}static getDefaults(){return Object.assign(L.getDefaults(),{solo:!1})}get solo(){return this._isSoloed()}set solo(e){e?this._addSolo():this._removeSolo(),t._allSolos.get(this.context).forEach(r=>r._updateSolo())}get muted(){return this.input.gain.value===0}_addSolo(){t._soloed.has(this.context)||t._soloed.set(this.context,new Set),t._soloed.get(this.context).add(this)}_removeSolo(){t._soloed.has(this.context)&&t._soloed.get(this.context).delete(this)}_isSoloed(){return t._soloed.has(this.context)&&t._soloed.get(this.context).has(this)}_noSolos(){return!t._soloed.has(this.context)||t._soloed.has(this.context)&&t._soloed.get(this.context).size===0}_updateSolo(){this._isSoloed()?this.input.gain.value=1:this._noSolos()?this.input.gain.value=1:this.input.gain.value=0}dispose(){return super.dispose(),t._allSolos.get(this.context).delete(this),this._removeSolo(),this}};Ea._allSolos=new Map;Ea._soloed=new Map;var vf=class t extends L{constructor(){let e=k(t.getDefaults(),arguments,["pan","volume"]);super(e),this.name="PanVol",this._panner=this.input=new Lu({context:this.context,pan:e.pan,channelCount:e.channelCount}),this.pan=this._panner.pan,this._volume=this.output=new Fr({context:this.context,volume:e.volume}),this.volume=this._volume.volume,this._panner.connect(this._volume),this.mute=e.mute,q(this,["pan","volume"])}static getDefaults(){return Object.assign(L.getDefaults(),{mute:!1,pan:0,volume:0,channelCount:1})}get mute(){return this._volume.mute}set mute(e){this._volume.mute=e}dispose(){return super.dispose(),this._panner.dispose(),this.pan.dispose(),this._volume.dispose(),this.volume.dispose(),this}};var Jx=class t extends L{constructor(){let e=k(t.getDefaults(),arguments,["volume","pan"]);super(e),this.name="Channel",this._solo=this.input=new Ea({solo:e.solo,context:this.context}),this._panVol=this.output=new vf({context:this.context,pan:e.pan,volume:e.volume,mute:e.mute,channelCount:e.channelCount}),this.pan=this._panVol.pan,this.volume=this._panVol.volume,this._solo.connect(this._panVol),q(this,["pan","volume"])}static getDefaults(){return Object.assign(L.getDefaults(),{pan:0,volume:0,mute:!1,solo:!1,channelCount:1})}get solo(){return this._solo.solo}set solo(e){this._solo.solo=e}get muted(){return this._solo.muted||this.mute}get mute(){return this._panVol.mute}set mute(e){this._panVol.mute=e}_getBus(e){return t.buses.has(e)||t.buses.set(e,new $({context:this.context})),t.buses.get(e)}send(e,r=0){let n=this._getBus(e),o=new $({context:this.context,units:"decibels",gain:r});return this.connect(o),o.connect(n),o}receive(e){return this._getBus(e).connect(this),this}dispose(){return super.dispose(),this._panVol.dispose(),this.pan.dispose(),this.volume.dispose(),this._solo.dispose(),this}};Jx.buses=new Map;var eDe=Ke().transport;var tDe=Ke().destination,rDe=Ke().destination;var nDe=Ke().listener;var oDe=Ke().draw;var iDe=Ke();var se=ne(Co()),ey={start:{ex:"Ehi… sei sveglio?",options:[{text:"Cosa vuoi?",nextId:"defensive"},{text:"Sì, che c’è?",nextId:"friendly"},{text:"Numero nuovo, chi sei?",nextId:"savage"}]},defensive:{ex:"Scusa il disturbo. Pensavo all’estate scorsa.",options:[{text:"Anch’io…",nextId:"nostalgic"},{text:"Vai avanti.",nextId:"end_ignored"}]},friendly:{ex:"Mi manchi. Possiamo parlare?",options:[{text:"Anche tu mi manchi.",nextId:"end_back_together"},{text:"È troppo tardi.",nextId:"end_closure"}]},savage:{ex:"Molto maturo. Volevo solo ridarti la felpa.",options:[{text:"Tienila.",nextId:"end_closure"},{text:"Spediscila.",nextId:"end_angry"}]},nostalgic:{ex:"Possiamo riprovarci?",options:[{text:"Proviamoci.",nextId:"end_back_together"},{text:"Certe cose è meglio lasciarle al passato.",nextId:"end_friends"}]}},gV={end_ignored:"Ignorato. Hai scelto la tranquillità.",end_back_together:"Di nuovo insieme? Staremo a vedere…",end_closure:"Capitolo chiuso. È ora di andare avanti.",end_angry:"Rabbia irrisolta. Bloccato ed eliminato.",end_friends:"Solo amici. Un finale dolceamaro."};function xV(){let t=typeof window<"u"&&typeof window.tt<"u"&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,ot.useState)(!1);return(0,ot.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]),{canSubmit:t,submitting:e,submitRecording:()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] playableRecordingSubmission failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))}}}function yV(){let{canSubmit:t,submitting:e,submitRecording:r}=xV();return t?(0,se.jsx)("button",{type:"button",disabled:e,onClick:r,className:"btn btn-secondary",style:{opacity:e?.6:1},children:"Condividi"}):null}function _V(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var vV=
+`;df(bb,lV);var lke=[1557/44100,1617/44100,1491/44100,1422/44100,1277/44100,1356/44100,1188/44100,1116/44100];var gke=[1687/25e3,1601/25e3,2053/25e3,2251/25e3];var Ea=class t extends L{constructor(){let e=k(t.getDefaults(),arguments,["solo"]);super(e),this.name="Solo",this.input=this.output=new $({context:this.context}),t._allSolos.has(this.context)||t._allSolos.set(this.context,new Set),t._allSolos.get(this.context).add(this),this.solo=e.solo}static getDefaults(){return Object.assign(L.getDefaults(),{solo:!1})}get solo(){return this._isSoloed()}set solo(e){e?this._addSolo():this._removeSolo(),t._allSolos.get(this.context).forEach(r=>r._updateSolo())}get muted(){return this.input.gain.value===0}_addSolo(){t._soloed.has(this.context)||t._soloed.set(this.context,new Set),t._soloed.get(this.context).add(this)}_removeSolo(){t._soloed.has(this.context)&&t._soloed.get(this.context).delete(this)}_isSoloed(){return t._soloed.has(this.context)&&t._soloed.get(this.context).has(this)}_noSolos(){return!t._soloed.has(this.context)||t._soloed.has(this.context)&&t._soloed.get(this.context).size===0}_updateSolo(){this._isSoloed()?this.input.gain.value=1:this._noSolos()?this.input.gain.value=1:this.input.gain.value=0}dispose(){return super.dispose(),t._allSolos.get(this.context).delete(this),this._removeSolo(),this}};Ea._allSolos=new Map;Ea._soloed=new Map;var vf=class t extends L{constructor(){let e=k(t.getDefaults(),arguments,["pan","volume"]);super(e),this.name="PanVol",this._panner=this.input=new Lu({context:this.context,pan:e.pan,channelCount:e.channelCount}),this.pan=this._panner.pan,this._volume=this.output=new Fr({context:this.context,volume:e.volume}),this.volume=this._volume.volume,this._panner.connect(this._volume),this.mute=e.mute,q(this,["pan","volume"])}static getDefaults(){return Object.assign(L.getDefaults(),{mute:!1,pan:0,volume:0,channelCount:1})}get mute(){return this._volume.mute}set mute(e){this._volume.mute=e}dispose(){return super.dispose(),this._panner.dispose(),this.pan.dispose(),this._volume.dispose(),this.volume.dispose(),this}};var Jx=class t extends L{constructor(){let e=k(t.getDefaults(),arguments,["volume","pan"]);super(e),this.name="Channel",this._solo=this.input=new Ea({solo:e.solo,context:this.context}),this._panVol=this.output=new vf({context:this.context,pan:e.pan,volume:e.volume,mute:e.mute,channelCount:e.channelCount}),this.pan=this._panVol.pan,this.volume=this._panVol.volume,this._solo.connect(this._panVol),q(this,["pan","volume"])}static getDefaults(){return Object.assign(L.getDefaults(),{pan:0,volume:0,mute:!1,solo:!1,channelCount:1})}get solo(){return this._solo.solo}set solo(e){this._solo.solo=e}get muted(){return this._solo.muted||this.mute}get mute(){return this._panVol.mute}set mute(e){this._panVol.mute=e}_getBus(e){return t.buses.has(e)||t.buses.set(e,new $({context:this.context})),t.buses.get(e)}send(e,r=0){let n=this._getBus(e),o=new $({context:this.context,units:"decibels",gain:r});return this.connect(o),o.connect(n),o}receive(e){return this._getBus(e).connect(this),this}dispose(){return super.dispose(),this._panVol.dispose(),this.pan.dispose(),this.volume.dispose(),this._solo.dispose(),this}};Jx.buses=new Map;var eDe=Ke().transport;var tDe=Ke().destination,rDe=Ke().destination;var nDe=Ke().listener;var oDe=Ke().draw;var iDe=Ke();var se=ne(Co()),ey={start:{ex:"Ehi… sei sveglio?",options:[{text:"Cosa vuoi?",nextId:"defensive"},{text:"Sì, che c’è?",nextId:"friendly"},{text:"Telefono nuovo, chi sei?",nextId:"savage"}]},defensive:{ex:"Scusa il disturbo. Pensavo all’estate scorsa.",options:[{text:"Anch’io…",nextId:"nostalgic"},{text:"Vai avanti.",nextId:"end_ignored"}]},friendly:{ex:"Mi manchi. Possiamo parlare?",options:[{text:"Mi manchi anche tu.",nextId:"end_back_together"},{text:"È troppo tardi.",nextId:"end_closure"}]},savage:{ex:"Che maturità. Volevo solo ridarti il maglione.",options:[{text:"Tienilo.",nextId:"end_closure"},{text:"Spediscilo.",nextId:"end_angry"}]},nostalgic:{ex:"Possiamo riprovarci?",options:[{text:"Proviamoci.",nextId:"end_back_together"},{text:"Certe cose è meglio lasciarle al passato.",nextId:"end_friends"}]}},gV={end_ignored:"Ignorato. Hai scelto la tranquillità.",end_back_together:"Di nuovo insieme? Staremo a vedere…",end_closure:"Capitolo chiuso. È ora di andare avanti.",end_angry:"Rabbia irrisolta. Bloccato ed eliminato.",end_friends:"Solo amici. Un finale dolceamaro."};function xV(){let t=typeof window<"u"&&typeof window.tt<"u"&&typeof window.tt.playableRecordingSubmission=="function",[e,r]=(0,ot.useState)(!1);return(0,ot.useEffect)(()=>{let o=()=>r(!1),i=()=>{document.visibilityState==="visible"&&o()};return document.addEventListener("visibilitychange",i),window.addEventListener("pageshow",o),()=>{document.removeEventListener("visibilitychange",i),window.removeEventListener("pageshow",o)}},[]),{canSubmit:t,submitting:e,submitRecording:()=>{e||!t||(r(!0),window.tt.playableRecordingSubmission({success(){},fail(o){console.error("[post_my_play] playableRecordingSubmission failed",o&&(o.errMsg||o.message)),r(!1)},complete(){}}))}}}function yV(){let{canSubmit:t,submitting:e,submitRecording:r}=xV();return t?(0,se.jsx)("button",{type:"button",disabled:e,onClick:r,className:"btn btn-secondary",style:{opacity:e?.6:1},children:"Condividi"}):null}function _V(t){let e={};return(t.tweaks||[]).forEach(r=>{e[r.id]=r.value}),(t.texts||[]).forEach(r=>{e[r.id]=r.value}),(t.images||[]).forEach(r=>{e[r.id]=r.path}),(t.mentions||[]).forEach(r=>{e[r.id]=r.path!=null&&r.path!==""?r.path:r.value}),(t.motions||[]).forEach(r=>{!r||!r.id||(r.base_path!=null&&r.base_path!==""&&(e[r.id]=r.base_path,e[r.id+"_BASE"]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count))}),e}var vV=
 () => {
   const h = ot.createElement;
   const [config, setConfig] = (0, ot.useState)({});
@@ -260,7 +260,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     "ok",
     "meme",
     "🎵",
-    "ubriaco",
+    "ho bevuto",
     "regalo",
     "playlist",
     "$$$",
@@ -269,18 +269,18 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     "🎤",
     "📸",
     "nuovo tipo?",
-    "non sono geloso",
+    "non è gelosia",
     "hackerato",
     "numero sbagliato",
   ];
   const reply = (word, i) => {
     if (["scusa", "colpa mia", "ti prego", "mi manchi"].includes(word))
       return [
-        "Apprezzo che tu lo dica.",
+        "Mi fa piacere sentirlo.",
         "Forse possiamo parlarne.",
-        "Anche tu mi sei mancato.",
+        "Anche io sentivo la tua mancanza.",
       ][i % 3];
-    if (["ti odio", "come vuoi", "non sono geloso", "numero sbagliato"].includes(word))
+    if (["ti odio", "come vuoi", "non è gelosia", "numero sbagliato"].includes(word))
       return ["Che cattiveria.", "Direi che abbiamo chiuso.", "Wow. Va bene."][
         i % 3
       ];
@@ -288,7 +288,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       return [
         "Dici sul serio?",
         "Non posso credere che tu l’abbia detto.",
-        "Non sei cambiato 😂",
+        "Non cambi mai 😂",
       ][i % 3];
     return [
       "Dobbiamo parlare.",
@@ -320,7 +320,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         if (nextTurn >= 5) {
           setEnding(
             ["scusa", "colpa mia", "ti prego", "mi manchi"].includes(word)
-              ? "Forse c’è una seconda possibilità."
+              ? "Forse possiamo riprovarci."
               : ["ti odio", "come vuoi", "numero sbagliato"].includes(word)
                 ? "La conversazione finisce qui."
                 : "È complicato…",
@@ -333,7 +333,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   };
   (0, ot.useEffect)(() => {
     let active = true;
-    fetch("./game.config.it.json?l10n=1ae1d5890529", { cache: "no-store" })
+    fetch("./game.config.it.json?l10n=cd8f6ff99370", { cache: "no-store" })
       .then((response) => (response.ok ? response.json() : null))
       .then((value) => {
         if (active && value) setConfig(_V(value));
@@ -476,7 +476,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                     gap: 4,
                   },
                 },
-                "Il tuo ex",
+                "Ex",
                 h("span", {
                   "aria-hidden": "true",
                   style: {
@@ -597,7 +597,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                 h(
                   "div",
                   {
-                    "aria-label": "Il tuo ex sta scrivendo",
+                    "aria-label": "Sta scrivendo…",
                     style: {
                       height: 34,
                       minWidth: 55,

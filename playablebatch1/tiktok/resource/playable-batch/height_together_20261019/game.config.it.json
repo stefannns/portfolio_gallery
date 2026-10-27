@@ -5,8 +5,8 @@
     {
       "id": "HINT_TEXT",
       "label": "Camera guide",
-      "value": "Trascina o pizzica per esplorare",
-      "default": "Trascina o pizzica per esplorare",
+      "value": "Ruota trascinando, zoom con due dita",
+      "default": "Ruota trascinando, zoom con due dita",
       "max_length": 42
     }
   ],

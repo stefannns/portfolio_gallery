@@ -16,7 +16,7 @@
 
   const loadConfig = async () => {
     try {
-      const response = await fetch("./game.config.it.json?l10n=5fbc6d812f37", { cache: 'no-store' });
+      const response = await fetch("./game.config.it.json?l10n=175319106901", { cache: 'no-store' });
       if (response.ok) return flattenConfig(await response.json());
     } catch (_) {}
     const inline = document.getElementById('playable-config-inline');
@@ -96,7 +96,7 @@
         </header>
         <nav class="storm-controls" aria-label="Storm options">
           <button type="button" class="storm-control" id="color-toggle" aria-pressed="false" aria-label="Fulmini colorati"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 2-9 12h7l-1 8 10-13h-7z"/></svg><span>Colore</span></button>
-          <button type="button" class="storm-control" id="music-toggle" aria-pressed="false" aria-busy="false" aria-label="Musica rock"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l11-2v13M9 9l11-2"/><ellipse cx="6" cy="18" rx="3" ry="2"/><ellipse cx="17" cy="16" rx="3" ry="2"/></svg><span id="music-label">Rock spento</span></button>
+          <button type="button" class="storm-control" id="music-toggle" aria-pressed="false" aria-busy="false" aria-label="Musica rock"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l11-2v13M9 9l11-2"/><ellipse cx="6" cy="18" rx="3" ry="2"/><ellipse cx="17" cy="16" rx="3" ry="2"/></svg><span id="music-label">Musica disattivata</span></button>
         </nav>
       </main>
     `;
@@ -109,7 +109,7 @@
     const colorToggle = document.getElementById('color-toggle');
     const musicToggle = document.getElementById('music-toggle');
     const musicLabel = document.getElementById('music-label');
-    guide.textContent = cfg.GUIDE_TEXT || "Tocca le nuvole per i fulmini";
+    guide.textContent = cfg.GUIDE_TEXT || "Tocca le nuvole per scatenare i fulmini";
     const storm=root.querySelector('.storm');
     let feedPreview=new URLSearchParams(location.search).has('review')||new URLSearchParams(location.search).get('feedReview')==='1';
     storm.dataset.feedPreview=String(feedPreview);
@@ -476,7 +476,7 @@
     const updateMusicControl = (busy = false) => {
       musicToggle.setAttribute('aria-pressed', String(musicWanted));
       musicToggle.setAttribute('aria-busy', String(busy));
-      musicLabel.textContent = busy ? "Caricamento…" : musicWanted ? "Rock attivo" : "Rock spento";
+      musicLabel.textContent = busy ? "Caricamento…" : musicWanted ? "Musica attiva" : "Musica disattivata";
     };
 
     const cancelMusicFade = () => {

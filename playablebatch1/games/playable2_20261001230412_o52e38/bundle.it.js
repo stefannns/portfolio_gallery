@@ -300,7 +300,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
   let [timingHint,setTimingHint]=(0,Ve.useState)("show");
   (0,Ve.useEffect)(()=>{if(phase!=="playing"||score===0){setTimingHint("show");return;}const fade=setTimeout(()=>setTimingHint("fading"),1200),hide=setTimeout(()=>setTimingHint("hidden"),1700);return()=>{clearTimeout(fade);clearTimeout(hide)}},[phase,score>0]);
   let {canSubmit,submitting,submitRecording}=GT();
-  (0,Ve.useEffect)(()=>{let live=true;(async()=>{let data={tweaks:[],texts:[],images:[]};try{let response=await fetch("./game.config.it.json?l10n=339d122509a7",{cache:"no-store"});if(response.ok)data=await response.json()}catch{}if(live)setConfig(QT(data))})();return()=>{live=false}},[]);
+  (0,Ve.useEffect)(()=>{let live=true;(async()=>{let data={tweaks:[],texts:[],images:[]};try{let response=await fetch("./game.config.it.json?l10n=a407f06dd8b0",{cache:"no-store"});if(response.ok)data=await response.json()}catch{}if(live)setConfig(QT(data))})();return()=>{live=false}},[]);
   (0,Ve.useEffect)(()=>{if(!config?.BLOCK_IMG)return;let image=new Image;image.onload=()=>surface.current=image;image.src=config.BLOCK_IMG;return()=>{surface.current=null}},[config]);
   let colors=[
     {top:"#f7a9ba",front:"#d96f8a",side:"#bd526f"},

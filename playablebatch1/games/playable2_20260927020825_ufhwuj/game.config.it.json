@@ -29,8 +29,8 @@
     {
       "id": "DESC",
       "label": "Description",
-      "value": "Impila i blocchi al neon senza mancarli.",
-      "default": "Impila i blocchi al neon senza mancarli.",
+      "value": "Impila i blocchi al neon senza sbagliare.",
+      "default": "Impila i blocchi al neon senza sbagliare.",
       "max_length": 150
     },
     {

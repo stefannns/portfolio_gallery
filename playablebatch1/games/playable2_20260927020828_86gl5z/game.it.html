@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<script data-playable-feed-gate="v1">
+// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
+(() => {
+  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
+  let active=false,alive=true;
+  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
+  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
+  if(navigator.mediaDevices?.getUserMedia){
+    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    navigator.mediaDevices.getUserMedia=async constraints=>{
+      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
+      const stream=await native(constraints);
+      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
+      streams.add(stream);return stream;
+    };
+  }
+  for(const key of ['AudioContext','webkitAudioContext']){
+    const Native=window[key];if(!Native)continue;
+    window[key]=class FeedAudioContext extends Native {
+      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
+      async resume(){if(!active)await wait();if(alive)return super.resume();}
+    };
+  }
+  const nativePlay=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
+  addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    active=alive&&event.data.active===true;
+    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
+    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
+  });
+  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
+})();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Abbina i colori</title>
+  <style>
+    @font-face {
+      font-family: DynaPuff;
+      src: url("./assets/fonts/dynapuff/DynaPuff-SemiBold.woff2") format("woff2");
+      font-weight: 600; font-style: normal; font-display: swap;
+    }
+    :root {
+      --font-display: DynaPuff, system-ui, sans-serif;
+      --font-mono: ui-monospace, Menlo, monospace;
+      --color-panel: #fff;
+      --color-text: #1f2937;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      overscroll-behavior: none;
+      overscroll-behavior-y: none;
+      touch-action: none;
+    }
+    #root {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      overscroll-behavior: none;
+      touch-action: none;
+      contain: layout paint size;
+    }
+    body {
+      background: #f6f7f9;
+      color: #1f2937;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    img { -webkit-touch-callout: none; }
+    #root, #root * { touch-action: none !important; }
+    button { min-width: 44px; min-height: 44px; }
+    #paint-drag-indicator {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      border: 3px solid rgba(15, 23, 42, .78);
+      border-radius: 50%;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, .28);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translate3d(-80px, -80px, 0);
+      will-change: transform;
+      z-index: 9999;
+    }
+    /* Iteration repair: replace mislabeled source art with accurate, draggable paint controls. */
+    div:has(> img[src*="tube_"]) { position: relative !important; }
+    img[src*="tube_"] { opacity: 0 !important; position: relative; z-index: 2; }
+    div:has(> img[src*="tube_"])::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      bottom: 0;
+      height: 104px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 10px;
+      border: 3px solid rgba(15,23,42,.72);
+      border-radius: 14px 14px 9px 9px;
+      box-sizing: border-box;
+      color: #fff;
+      font: 700 11px/1 Arial, sans-serif;
+      letter-spacing: .03em;
+      text-shadow: 0 1px 2px #000;
+      box-shadow: 0 5px 10px rgba(0,0,0,.2);
+      pointer-events: none;
+    }
+    div:has(> img[src*="tube_red"])::after { background: linear-gradient(#ff8794,#d62839); }
+    div:has(> img[src*="tube_yellow"])::after { background: linear-gradient(#ffe66d,#e0a800); }
+    div:has(> img[src*="tube_blue"])::after { background: linear-gradient(#71c7ff,#2166d1); }
+    div:has(> img[src*="tube_white"])::after { background: linear-gradient(#fff,#dfe7ef); }
+    div:has(> img[src*="tube_black"])::after { background: linear-gradient(#4b5563,#070b12); }
+    /* Keep the target bowl clear of the tube dock on compact portrait screens. */
+    @media (max-height: 600px) {
+      #root > div > div:nth-of-type(1) { padding: calc(40px + env(safe-area-inset-top, 0px)) 25px 10px !important; }
+      #root > div > div:nth-of-type(1) > div { padding: 10px !important; gap: 6px !important; }
+      #root > div > div:nth-of-type(2) { padding: 6px !important; }
+      #root > div > div:nth-of-type(2) > div { width: min(60vw, 220px) !important; }
+      #root > div > div:nth-of-type(3) { padding: 10px 25px calc(40px + env(safe-area-inset-bottom, 0px)) !important; }
+      #root > div > div:nth-of-type(3) > div { height: 82px !important; }
+      div:has(> img[src*="tube_"])::after { height: 78px; }
+    }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<style id="confirmed-ui-20261013">
+.color-round{position:absolute;top:30px;left:30px}.color-match-hud{position:absolute;top:30px;right:30px}
+</style>
+<link data-guide-centering="20261021" rel="stylesheet" href="./guide-centering.it.css?l10n=7a5412dbdf7a&v=f9cb2a7a025b">
+<link data-batch4-preview rel="stylesheet" href="./preview.it.css?l10n=7a5412dbdf7a&v=8d4d9e0cbb1f">
+<script data-batch4-preview defer data-game="9" src="./preview-models.it.js?l10n=7a5412dbdf7a&v=93e1a307cbed"></script>
+<script data-batch4-preview defer data-game="9" src="./preview-controller.it.js?l10n=7a5412dbdf7a&v=b487e18c9adf"></script>
+<link data-italian-layout rel="stylesheet" href="./locale.it.css?v=20261021-1">
+</head>
+<body>
+  <div id="root"></div>
+  <div id="paint-drag-indicator" aria-hidden="true"></div>
+  <script>
+    // Track the drag marker outside the React layout so the game UI never reflows.
+    (function () {
+      var indicator = document.getElementById('paint-drag-indicator');
+      var activePointerId = null;
+      var colors = {
+        red: '#dc2828',
+        yellow: '#f0c828',
+        blue: '#2850dc',
+        white: '#f4f4f4',
+        black: '#282828'
+      };
+
+      function moveIndicator(event) {
+        indicator.style.transform = 'translate3d(' + (event.clientX - 24) + 'px,' + (event.clientY - 24) + 'px,0)';
+      }
+
+      function endIndicator(event) {
+        if (activePointerId === null || (event.pointerId != null && event.pointerId !== activePointerId)) return;
+        indicator.style.opacity = '0';
+        indicator.style.visibility = 'hidden';
+        activePointerId = null;
+      }
+
+      document.addEventListener('touchmove', function (event) {
+        event.preventDefault();
+      }, { passive: false });
+      document.addEventListener('pointerdown', function (event) {
+        var tube = event.target.closest && event.target.closest('img[src*="tube_"]');
+        if (!tube) return;
+        event.preventDefault();
+        activePointerId = event.pointerId;
+        indicator.style.background = colors[(tube.alt || '').toLowerCase()] || '#ffffff';
+        indicator.style.opacity = '1';
+        indicator.style.visibility = 'visible';
+        moveIndicator(event);
+      }, { capture: true, passive: false });
+      document.addEventListener('pointermove', function (event) {
+        if (event.pointerId !== activePointerId) return;
+        event.preventDefault();
+        moveIndicator(event);
+      }, { capture: true, passive: false });
+      document.addEventListener('pointerup', endIndicator, { capture: true });
+      document.addEventListener('pointercancel', endIndicator, { capture: true });
+      document.addEventListener('lostpointercapture', endIndicator, { capture: true });
+      window.addEventListener('blur', function () { endIndicator({}); });
+    }());
+  </script>
+  <!-- playable-inline-config:start -->
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"MATCH_THRESHOLD","kind":"number","label":"匹配成功阈值(%)","value":90,"default":90,"min":50,"max":100,"step":1}],"texts":[{"id":"TXT_LEVEL","label":"关卡文案","value":"LIVELLO","default":"LIVELLO","max_length":15},{"id":"TXT_TARGET","label":"目标颜色文案","value":"Colore da ottenere","default":"Colore da ottenere","max_length":25},{"id":"TXT_MATCH","label":"匹配进度文案","value":"Corrispondenza","default":"Corrispondenza","max_length":15},{"id":"TXT_SUCCESS_MSG","label":"过关提示语","value":"Colore perfetto!","default":"Colore perfetto!","max_length":30},{"id":"TXT_NEXT","label":"下一关按钮","value":"Prossimo livello","default":"Prossimo livello","max_length":20},{"id":"TXT_POST","label":"投稿按钮","value":"Condividi","default":"Condividi","max_length":20}],"images":[{"id":"IMG_TUBE_RED","label":"红色颜料管","path":"./assets/tube_red.webp","replaceable":true},{"id":"IMG_TUBE_YELLOW","label":"黄色颜料管","path":"./assets/tube_yellow.webp","replaceable":true},{"id":"IMG_TUBE_BLUE","label":"蓝色颜料管","path":"./assets/tube_blue.webp","replaceable":true},{"id":"IMG_TUBE_WHITE","label":"白色颜料管","path":"./assets/tube_white.webp","replaceable":true},{"id":"IMG_TUBE_BLACK","label":"黑色颜料管","path":"./assets/tube_black.webp","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"it","min_capability_level":1,"full_capability_level":1}}</script>
+  <script>
+    (function () {
+      if (window.location.protocol !== 'file:') return;
+      var configText = document.getElementById('playable-inline-config').textContent;
+      var nativeFetch = window.fetch;
+      window.fetch = function (input) {
+        var url = typeof input === 'string' ? input : (input && input.url) || '';
+        if (/(^|\/)game\.config\.it\.json(?:[?#]|$)/.test(url)) {
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: function () { return Promise.resolve(JSON.parse(configText)); },
+            text: function () { return Promise.resolve(configText); }
+          });
+        }
+        return nativeFetch.apply(window, arguments);
+      };
+    }());
+  </script>
+  <!-- playable-inline-config:end -->
+  <script src="./bundle.it.js?l10n=7a5412dbdf7a&ui=03ec93f4c594"></script>
+<script defer src="./feed-entry-motion.it.js?l10n=7a5412dbdf7a&v=feed-first-20261008-1" data-subject="#root img"></script>
+</body>
+</html>

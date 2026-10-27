@@ -45,8 +45,8 @@
     {
       "id": "TXT_PERFECT",
       "label": "Perfect Peel Text",
-      "value": "Taglio perfetto!",
-      "default": "Taglio perfetto!",
+      "value": "Sbucciatura perfetta",
+      "default": "Sbucciatura perfetta",
       "max_length": 20
     },
     {

@@ -222,7 +222,7 @@
       <span class="tap-duel__player">
         <span class="tap-duel__copy">
           <span class="tap-duel__name">GIOCATORE ROSSO</span>
-          <span class="tap-duel__instruction">TOCCA VELOCE</span>
+          <span class="tap-duel__instruction">TOCCA RAPIDAMENTE</span>
         </span>
         <span class="tap-duel__orb tap-duel__orb--red"></span>
       </span>
@@ -231,7 +231,7 @@
       <span class="tap-duel__player">
         <span class="tap-duel__copy">
           <span class="tap-duel__name">GIOCATORE BLU</span>
-          <span class="tap-duel__instruction">TOCCA VELOCE</span>
+          <span class="tap-duel__instruction">TOCCA RAPIDAMENTE</span>
         </span>
         <span class="tap-duel__orb tap-duel__orb--blue"></span>
       </span>

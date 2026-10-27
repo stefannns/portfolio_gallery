@@ -34,7 +34,7 @@
       mark(app.querySelector('.hide-scrollbar'),'meeting-pixel-palette');
       const clear=[...app.querySelectorAll('button')].find(b=>b.textContent==="Cancella");mark(clear?.parentElement,'meeting-pixel-clear');
       const label=[...app.children].find(el=>el.tagName==='DIV'&&!el.querySelector('canvas,button')&&el.textContent==="Sabbia");mark(label,'meeting-pixel-label');
-      addGuide(app,"Trascina e scegli un materiale");
+      addGuide(app,"Scegli un materiale e trascina per versarlo");
     }
     if(game===41){const shell=app.querySelector('header')?.parentElement;mark(shell,'meeting-chat-shell');}
     // No.45's real knife renderer supplies its decorative, non-scoring preview.

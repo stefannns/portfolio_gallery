@@ -90,8 +90,8 @@
     {
       "id": "TIP_TEXT",
       "label": "Bottom Tip",
-      "value": "Tocca sul colore giusto",
-      "default": "Tocca sul colore giusto",
+      "value": "Tocca quando la lancetta è sul colore giusto",
+      "default": "Tocca quando la lancetta è sul colore giusto",
       "max_length": 50
     },
     {

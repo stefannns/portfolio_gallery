@@ -138,8 +138,8 @@
     {
       "id": "TXT_LBL_SHAPE",
       "label": "Shape Label",
-      "value": "Forma particelle",
-      "default": "Forma particelle",
+      "value": "Forma",
+      "default": "Forma",
       "max_length": 20
     },
     {

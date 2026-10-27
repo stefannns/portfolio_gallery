@@ -52,8 +52,8 @@
     {
       "id": "GUIDE_TEXT",
       "label": "Guide Text",
-      "value": "Tocca le nuvole per i fulmini",
-      "default": "Tocca le nuvole per i fulmini",
+      "value": "Tocca le nuvole per scatenare i fulmini",
+      "default": "Tocca le nuvole per scatenare i fulmini",
       "max_length": 44
     }
   ],
