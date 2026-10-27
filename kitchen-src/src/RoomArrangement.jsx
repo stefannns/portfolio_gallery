@@ -12,6 +12,7 @@ import {getRoomPlacement} from './room-placement.js';
 import {getSceneUiScale} from './scene-ui-scale.js';
 import {createRoomNavigator, canTraverseRoomSegment} from './room-navigation.js';
 import {getLandedFishCollider, recoverFishOverlap} from './fish-ground-collision.js';
+import {resolveFishPush} from './fish-ground-pushing.js';
 import {attachRoomMovementInput} from './room-movement-input.js';
 import {useTaskOutlineIgnore} from './TaskOutline.jsx';
 
@@ -417,8 +418,15 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
     }
     const tomatoBusy = Boolean(engine.tomatoAction?.active);
     if (tomatoBusy) walkRoute.current = [];
-    const proposed = engine.paused || tomatoBusy || !walking.startValid ? {...engine.player, moving: false} : stepRoomPlayer(engine.player, input, delta, walking.items);
+    const proposed = engine.paused || tomatoBusy || !walking.startValid ? {...engine.player, moving: false} : stepRoomPlayer(engine.player, input, delta, latest.current);
     let next = titlePhysics?.current?.step(engine.player, proposed, delta, {paused: engine.paused || tomatoBusy || !walking.startValid}) || proposed;
+    if (walking.active && canWalk(engine.player.x, engine.player.z, latest.current)) {
+      next = resolveFishPush(engine.fishToy, engine.player, next, {
+        playerRadius: PLAYER_RADIUS,
+        paused: engine.paused || tomatoBusy || !walking.startValid,
+        canWalk: (x, z) => canWalk(x, z, latest.current),
+      });
+    }
     if (!canWalk(next.x, next.z, walking.items)) {
       const x = canWalk(next.x, engine.player.z, walking.items) ? next.x : engine.player.x;
       const z = canWalk(x, next.z, walking.items) ? next.z : engine.player.z;

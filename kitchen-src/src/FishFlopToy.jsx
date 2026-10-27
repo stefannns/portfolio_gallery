@@ -3,6 +3,7 @@ import {useFrame} from '@react-three/fiber';
 import {useGLTF} from '@react-three/drei';
 import {createFishModel, updateFishModel} from './fish-model-animation.js';
 import {useTaskOutline} from './TaskOutline.jsx';
+import {getLandedFishCollider} from './fish-ground-collision.js';
 import {FISH_DURATION, FISH_FLOP_CONTACTS, FISH_LAND_TIME, advanceFishFlop, createFishFlopState, fishFlopPose, startFishFlop} from './fish-flop-state.js';
 
 const FISH_URL = '/models/tripo/kitchen-fish-v1.glb';
@@ -15,7 +16,7 @@ export default function FishFlopToy({engine, actionRef, paused = false, reducedM
   if (!state.current) state.current = engine.fishToy || createFishFlopState();
   const latest = useRef({});
   latest.current = {paused, reducedMotion, engine, rootRef, onAvailableChange, onFlop, onLand};
-  const previous = useRef({elapsed: -1, dirty: true, available: null});
+  const previous = useRef({elapsed: -1, groundRevision: -1, dirty: true, available: null});
   const models = useMemo(() => createFishModel(scene), [scene]);
   useTaskOutline(models.object, false, highlighted && !state.current.used);
 
@@ -33,6 +34,9 @@ export default function FishFlopToy({engine, actionRef, paused = false, reducedM
       root.dataset.fishActive = String(current.used && current.elapsed < FISH_DURATION);
       root.dataset.fishAvailable = String(available);root.dataset.fishUses = String(current.uses);
       root.dataset.fishPosition = JSON.stringify(models.object.position.toArray().map(value => +value.toFixed(4)));
+      root.dataset.fishGroundPosition = current.ground ? JSON.stringify([current.ground.x, current.ground.z].map(value => +value.toFixed(4))) : '';
+      root.dataset.fishPushes = String(current.ground?.pushes || 0);
+      root.dataset.fishPushedDistance = (current.ground?.distance || 0).toFixed(4);
     }
     return {
       burst() {
@@ -59,15 +63,21 @@ export default function FishFlopToy({engine, actionRef, paused = false, reducedM
     const before = current.elapsed;
     advanceFishFlop(current, delta, blocked);
     const motion = fishFlopPose(current.elapsed, props.reducedMotion);
+    const ground = getLandedFishCollider(current) ? current.ground : null;
+    const groundRevision = ground?.revision ?? -1;
+    if (ground) {motion.x = ground.x;motion.z = ground.z;}
     if (!blocked && current.used) {
       for (const contact of FISH_FLOP_CONTACTS) {
         if (before < contact && current.elapsed >= contact) props.onFlop?.();
       }
       if (before < FISH_LAND_TIME && current.elapsed >= FISH_LAND_TIME) props.onLand?.();
     }
-    if (previous.current.dirty || previous.current.elapsed !== current.elapsed) {
-      updateFishModel(models, motion, current.elapsed);
-      previous.current.elapsed = current.elapsed;previous.current.dirty = false;api.publish();
+    if (previous.current.dirty || previous.current.elapsed !== current.elapsed || previous.current.groundRevision !== groundRevision) {
+      if (ground && current.elapsed >= FISH_DURATION && previous.current.elapsed === current.elapsed && !previous.current.dirty) {
+        // A settled fish only translates when pushed; keep its vertex buffers idle.
+        models.object.position.x = motion.x;models.object.position.z = motion.z;models.object.updateMatrixWorld(true);
+      } else updateFishModel(models, motion, current.elapsed);
+      previous.current.elapsed = current.elapsed;previous.current.groundRevision = groundRevision;previous.current.dirty = false;api.publish();
     }
   }, -.15);
 

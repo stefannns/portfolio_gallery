@@ -48,20 +48,20 @@ export function fishFlopPose(elapsed, reducedMotion = false) {
     pose.bend = Math.sin(Math.PI * u) * .09 * amount;
   } else if (t < FISH_LAND_TIME) {
     const u = (t - FISH_LAUNCH_END) / (FISH_LAND_TIME - FISH_LAUNCH_END);
-    pose.phase = 'falling';pose.x += 1.02 + .16 * u;
+    pose.phase = 'falling';pose.x += 1.02 + .76 * u;
     pose.y = y - (y - FISH_FLOOR_Y) * u * u;
     pose.pitch = (-.2 * (1 - u) - .8 * Math.sin(Math.PI * u)) * amount;
     pose.roll = -1.2 * Math.sin(Math.PI * 2 * u) * amount;
     pose.bend = Math.sin(Math.PI * u) * .07 * amount;
   } else if (t < FISH_BOUNCE_END) {
     const u = (t - FISH_LAND_TIME) / (FISH_BOUNCE_END - FISH_LAND_TIME);
-    pose.phase = 'landing';pose.x += 1.18 + .05 * smooth(u);
+    pose.phase = 'landing';pose.x += 1.78 + .05 * smooth(u);
     pose.y = FISH_FLOOR_Y + Math.sin(Math.PI * u) * .12 * amount;
     pose.roll = Math.sin(Math.PI * 2 * u) * .65 * amount;
     pose.bend = Math.sin(Math.PI * u) * .06 * amount;
   } else {
     const u = clamp((t - FISH_BOUNCE_END) / (FISH_DURATION - FISH_BOUNCE_END));
-    pose.phase = t >= FISH_DURATION ? 'escaped' : 'settling';pose.x += 1.23;pose.y = FISH_FLOOR_Y;
+    pose.phase = t >= FISH_DURATION ? 'escaped' : 'settling';pose.x += 1.83;pose.y = FISH_FLOOR_Y;
     pose.bend = Math.sin(Math.PI * u) * (1 - u) * .015 * amount;
   }
   return pose;

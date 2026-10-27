@@ -55,7 +55,7 @@ const staticTraverse = (from, to) => canTraverseRoomSegment(from, to, room.canWa
 const validOutside = {x: cx + 1, z: cz, y: room.ROOM_FLOOR_Y};
 assert.equal(recoverFishOverlap(validOutside, collider, {canWalk: combinedCanWalk, canTraverse: staticTraverse}), validOutside);
 assert.equal(recoverFishOverlap(validOutside, null, {canWalk: combinedCanWalk, canTraverse: staticTraverse}), validOutside);
-const overlaps = [{x: -2.75, z: cz}, {x: cx, z: cz}, {x: -2.8, z: cz}];
+const overlaps = [{x: cx - .16, z: cz}, {x: cx, z: cz}, {x: cx - .21, z: cz}];
 for (const initial of overlaps) {
   assert(baseCanWalk(initial.x, initial.z), 'The recovery case starts on valid static room floor.');
   const player = {...initial, y: room.ROOM_FLOOR_Y, moving: false};

@@ -1,14 +1,20 @@
 import {FISH_BOUNCE_END, FISH_DURATION, FISH_FLOOR_Y, FISH_LENGTH, fishFlopPose} from './fish-flop-state.js';
 
 const finalPose = fishFlopPose(FISH_DURATION);
-const landedFishCollider = Object.freeze({
-  id: 'landed-fish', position: Object.freeze([finalPose.x, FISH_FLOOR_Y, finalPose.z]),
-  collisionShape: 'capsule-x', collisionHalfLength: .16, collisionRadius: .24, width: FISH_LENGTH,
-});
 
-/** A floor obstacle appears only after the fish finishes its landing bounce. */
+/** Each fish owns its floor pose and collider, so separate visits cannot share motion. */
 export function getLandedFishCollider(fishState) {
-  return fishState?.used && Number.isFinite(fishState.elapsed) && fishState.elapsed >= FISH_BOUNCE_END ? landedFishCollider : null;
+  if (!fishState?.used || !Number.isFinite(fishState.elapsed) || fishState.elapsed < FISH_BOUNCE_END) return null;
+  if (!fishState.ground) {
+    fishState.ground = {
+      x: finalPose.x, z: finalPose.z, revision: 0, pushes: 0, distance: 0,
+      collider: {id: 'landed-fish', position: [finalPose.x, FISH_FLOOR_Y, finalPose.z],
+        collisionShape: 'capsule-x', collisionHalfLength: .16, collisionRadius: .24, width: FISH_LENGTH},
+    };
+  }
+  const ground = fishState.ground;
+  ground.collider.position[0] = ground.x;ground.collider.position[2] = ground.z;
+  return ground.collider;
 }
 
 /** Resolve a newly appeared obstacle locally; never send the character to spawn. */
