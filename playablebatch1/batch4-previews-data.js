@@ -2,8 +2,8 @@
 (()=>{
  const map=window.PLAYABLE_IMPLEMENTED_FIXES;if(!map)return;
  const rows=[
-  [9,'playable2_20260927020828_86gl5z','Added a paint-tube and mixing preview; placed the breathing drag guide above the bowl. Removed the accidental red rectangle.'],
-  [33,'playable2_20260928030932_n6urd6','Added a stretching-net preview and breathing drag guide on a rounded white capsule. Removed points; only centered seconds remain, with the countdown starting on the first real drag.'],
+  [9,'playable2_20260927020828_86gl5z','Added a paint-tube and mixing preview; placed the breathing drag guide above the bowl. Removed the accidental red rectangle. The round, target and match HUD are hidden in the CTA preview and return during play.'],
+  [33,'playable2_20260928030932_n6urd6','Added a stretching-net preview and breathing drag guide on a rounded white capsule. Removed points; centered seconds appear during play and are hidden in the CTA preview. The first real drag starts the countdown.'],
   [47,'playable2_20261001225842_2d0kul','Added a thermal-trail preview and breathing drag guide; preview trails clear on entry. Dragging now follows the full play area beyond the old circular limit.'],
   [77,'eh_catch_the_hair_20261020','Added endless falling hair in the preview, with no pause or fitted stop; the breathing guide stays above the portrait. Tap timing remains unchanged.']
  ];

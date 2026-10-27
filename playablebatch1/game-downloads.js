@@ -59,9 +59,9 @@ window.PlayableGameDownloads = {
   "playable2_20260927020828_86gl5z": {
     "url": "/playablebatch1/downloads/09-playable2_20260927020828_86gl5z.zip",
     "filename": "09-playable2_20260927020828_86gl5z.zip",
-    "bytes": 373139,
+    "bytes": 373217,
     "files": 14,
-    "sha256": "c487b23f14cb01a91afdf6bfe52d68ab52e4c6cea0c8f75f9bb2aba197483d35"
+    "sha256": "bdeb1ea21d91cc0106418fd25644a85f3a71e760c49b7f72f5d9799a53938f85"
   },
   "playable2_20260927020828_y5a1vt": {
     "url": "/playablebatch1/downloads/10-playable2_20260927020828_y5a1vt.zip",
@@ -227,9 +227,9 @@ window.PlayableGameDownloads = {
   "playable2_20260928030932_n6urd6": {
     "url": "/playablebatch1/downloads/33-playable2_20260928030932_n6urd6.zip",
     "filename": "33-playable2_20260928030932_n6urd6.zip",
-    "bytes": 220769,
+    "bytes": 220848,
     "files": 11,
-    "sha256": "d425b91d1085b98dd649a7f0d2e374f7875a7ed835bb77112e6434ddc012017b"
+    "sha256": "5e2ef849cd45658a01992540118a6964345d76a2e265c464cd491564814b42a5"
   },
   "playable2_20260928031234_805376": {
     "url": "/playablebatch1/downloads/34-playable2_20260928031234_805376.zip",
@@ -325,9 +325,9 @@ window.PlayableGameDownloads = {
   "playable2_20261001225842_2d0kul": {
     "url": "/playablebatch1/downloads/47-playable2_20261001225842_2d0kul.zip",
     "filename": "47-playable2_20261001225842_2d0kul.zip",
-    "bytes": 4655042,
+    "bytes": 4655120,
     "files": 12,
-    "sha256": "d73d75f7efea7a45a15807e4478edf9045c28b348c43372fba61c0dd18c0d876"
+    "sha256": "616392ec37f921562c4d312b2e53e16cc731f9600d3b1c9fdd99a37a99e74b2d"
   },
   "playable2_20261001225926_ibkv62": {
     "url": "/playablebatch1/downloads/48-playable2_20261001225926_ibkv62.zip",
@@ -535,9 +535,9 @@ window.PlayableGameDownloads = {
   "eh_catch_the_hair_20261020": {
     "url": "/playablebatch1/downloads/77-eh_catch_the_hair_20261020.zip",
     "filename": "77-eh_catch_the_hair_20261020.zip",
-    "bytes": 402565,
+    "bytes": 402644,
     "files": 21,
-    "sha256": "d094a1bce32cf2578fde756830ec157660626e0b370e9cc7d4402eaa112d98f5"
+    "sha256": "0b993ee77e093b99ac993a58f1928b2cdb00e51439f9fa2279659a0ebb3b7aed"
   },
   "eh_makeover_20261020": {
     "url": "/playablebatch1/downloads/78-eh_makeover_20261020.zip",
