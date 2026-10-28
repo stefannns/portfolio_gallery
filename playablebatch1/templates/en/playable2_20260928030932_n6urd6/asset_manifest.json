@@ -1,0 +1,31 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260928030932_n6urd6",
+  "number": 33,
+  "name": "Fishing Net Slice",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/bg_main.webp",
+      "ids": [
+        "BG_MAIN"
+      ],
+      "bytes": 16714,
+      "sha256": "80a5a70869558462afc73345cba2cf878d80ad5de0a63882e3cf269012994e8a"
+    },
+    {
+      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
+      "ids": [],
+      "bytes": 37004,
+      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+    }
+  ],
+  "files": {
+    "App.jsx": "113278f6f791191299bd1c7589a1776b0c2aa0c3e86d9b75d44843d8dc590aec",
+    "dist/bundle.js": "113278f6f791191299bd1c7589a1776b0c2aa0c3e86d9b75d44843d8dc590aec",
+    "dist/game.html": "9e89cacc56aa30c0b567446bbd8a6292db7b46bcb2cda41cdcb6965a58a36703",
+    "dist/game.config.json": "8c63fa7d0c07e5c897dfd7af63ba4a4f2ddccc984d4395c3c6a9bd965002a58c"
+  }
+}

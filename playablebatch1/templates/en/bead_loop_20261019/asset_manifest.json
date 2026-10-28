@@ -1,0 +1,43 @@
+{
+  "manifest_version": 1,
+  "task_id": "bead_loop_20261019",
+  "number": 71,
+  "name": "Bead Loop",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/DMSans.woff",
+      "ids": [],
+      "bytes": 109300,
+      "sha256": "28882e64586b903638e580b0782fe44b00ada28963745ea21b0aed4381b4ab1e"
+    },
+    {
+      "path": "dist/assets/fonts/OFL.txt",
+      "ids": [],
+      "bytes": 4482,
+      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1"
+    },
+    {
+      "path": "dist/assets/licenses/THREE-LICENSE.txt",
+      "ids": [],
+      "bytes": 1081,
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
+    },
+    {
+      "path": "dist/assets/textures/tabby-face.jpg",
+      "ids": [
+        "CAT_TEXTURE"
+      ],
+      "bytes": 375730,
+      "sha256": "af624d878bd8fe828b0119ad0cad3ce4b2abad40411e55371700ca89aaf37800"
+    }
+  ],
+  "files": {
+    "App.jsx": "eebbaaf936a3af676fcff5fcd63c393a5434298636ab8bca3cbe23c4df505ff3",
+    "dist/bundle.js": "eebbaaf936a3af676fcff5fcd63c393a5434298636ab8bca3cbe23c4df505ff3",
+    "dist/game.html": "4fde4377ac8d98d2c801c4d72a4eef5f51115104383b425a7102bc58ebc7a83f",
+    "dist/game.config.json": "c6f10a700074ace51bd3ead81138ca6783d499aa3ed498e56f89bf5077e06dc2"
+  }
+}

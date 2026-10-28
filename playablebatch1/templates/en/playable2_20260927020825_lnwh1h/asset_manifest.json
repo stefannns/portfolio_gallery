@@ -1,0 +1,31 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260927020825_lnwh1h",
+  "number": 16,
+  "name": "Sand Digging",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "ids": [],
+      "bytes": 37464,
+      "sha256": "487694c955a01a6b9e0985b4839ebe6f5406770db551ea163799ee02deb7d3a4"
+    },
+    {
+      "path": "dist/assets/media2_20260927020936_pzpo8p00.webp",
+      "ids": [
+        "SAND_DECO"
+      ],
+      "bytes": 115742,
+      "sha256": "577a59517ae041b8bd34a79d72cdf686666c057452c31bf5d32402b037420151"
+    }
+  ],
+  "files": {
+    "App.jsx": "ed43f93d360dded006262b3718cd5f0cf1a60cf7a02e9d105b69b19cce4533db",
+    "dist/bundle.js": "ed43f93d360dded006262b3718cd5f0cf1a60cf7a02e9d105b69b19cce4533db",
+    "dist/game.html": "502f4ce60c59f30a16b2565b5cdd994a29ae3710e2fecc80d803fe4d816a3a49",
+    "dist/game.config.json": "3f24e5e619f6350246cbfbbd2a2f894f3a7b904b2fd03e526ff840bf058358d8"
+  }
+}

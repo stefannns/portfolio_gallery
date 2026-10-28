@@ -1,0 +1,69 @@
+<!doctype html><html lang="en" data-playable-loading="true"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Playable</title><style >
+@font-face{font-family:Poppins;src:url('./assets/fonts/Poppins-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Poppins;src:url('./assets/fonts/Poppins-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+:root{font-family:Poppins,Arial,sans-serif;color:#fff;background:#222;--ink:#fff;--ui:1;--accent:#ffcf4c}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}body{overscroll-behavior:none}button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #ffcd45;outline-offset:-5px}button:disabled{cursor:default}
+#stage{position:relative;width:100%;height:100%;isolation:isolate;overflow:hidden;touch-action:manipulation;color:var(--ink)}canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#play{position:absolute;inset:0;border:0;background:none;z-index:1;padding:0;touch-action:manipulation;color:transparent}
+.makeover #play{touch-action:none}
+.hud{position:absolute;top:max(calc(30px * var(--ui)),env(safe-area-inset-top));left:calc(30px * var(--ui));right:calc(30px * var(--ui));display:flex;align-items:flex-start;justify-content:space-between;pointer-events:none;z-index:2;text-shadow:0 1px 4px #0009;font-size:calc(28px * var(--ui));font-weight:700;line-height:1.25;letter-spacing:-.6px;font-variant-numeric:tabular-nums}
+.hud.center{justify-content:center}.hud small{font-size:calc(14px * var(--ui));display:block;line-height:1.4;letter-spacing:0;font-weight:400;margin-top:3px}.hud span:empty{display:none}
+#guide{position:absolute;z-index:2;left:calc(30px * var(--ui));right:calc(30px * var(--ui));bottom:max(calc(62px * var(--ui)),env(safe-area-inset-bottom));font-size:calc(18px * var(--ui));font-weight:700;line-height:1.4;text-align:center;pointer-events:none;text-shadow:0 1px 4px #000a;animation:float 2s ease-in-out infinite;margin:0}
+#guide[hidden], [hidden]{display:none!important}html[data-feed-preview="true"] #guide,html[data-feed-preview="true"] .controls{visibility:hidden}.controls{position:absolute;z-index:3;left:calc(30px * var(--ui));right:calc(30px * var(--ui));bottom:max(calc(50px * var(--ui)),env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center;gap:12px;pointer-events:none}
+.control{min-height:48px;min-width:48px;padding:10px 22px;border:0;border-radius:30px;background:#fff;color:#20252b;font-weight:700;font-size:16px;box-shadow:0 2px 10px #0002;pointer-events:auto}.control:active{transform:scale(.97)}#direction{margin-left:auto;border:1px solid #ffffff80;background:#2228;color:#fff;backdrop-filter:blur(8px);padding:10px 13px;display:flex;align-items:center;gap:8px}#direction svg{width:22px;height:22px;transition:transform .2s}
+#result{position:absolute;z-index:2;left:24px;right:24px;bottom:calc(122px * var(--ui));text-align:center;pointer-events:none;font-size:calc(28px * var(--ui));font-weight:700;line-height:1.2;text-shadow:0 2px 8px #0009}#result small{font-size:calc(18px * var(--ui));font-weight:400;display:block;margin-top:8px}
+#loading{position:absolute;inset:0;z-index:6;background:#25272a;display:grid;place-content:center;text-align:center;padding:30px;font-size:18px;line-height:1.5}#loading:before{content:'';width:28px;height:28px;border:3px solid #ffffff35;border-top-color:#fff;border-radius:50%;margin:0 auto 18px;animation:turn .8s linear infinite}#loading.error:before{display:none}.hair-catch{--ink:#30251e}.hair-catch .hud,.hair-catch #guide,.hair-catch #result{text-shadow:none}.hair-catch #guide{bottom:calc(70px * var(--ui))}.hair-catch .hud{top:calc(50px * var(--ui))}.hair-catch #result{bottom:calc(170px * var(--ui))}
+.hair-catch #guide{color:#fff;text-shadow:0 1px 4px #000b}.hair-catch .hud span:not(:empty){background:#fffef7ed;border-radius:24px;padding:6px 18px}.hair-shave #guide{bottom:calc(120px * var(--ui))}.makeover .hud{font-size:calc(24px * var(--ui))}.makeover .hud #left{max-width:75%}#pause{position:absolute;inset:0;z-index:7;background:#15191c90;display:grid;place-content:center;backdrop-filter:blur(4px)}#resume{border:1px solid #ffffff80;background:#fff;color:#222;font-size:18px;padding:15px 25px;border-radius:30px;min-height:50px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}@keyframes float{50%{transform:translateY(-5px)}}@keyframes turn{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){*,*:before{animation:none!important;transition:none!important}}
+
+</style><style data-guide-centering="20261021">
+/* User override 2026-10-21: favor visual center, not a fixed upper band. */
+html:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) p#guide{position:fixed!important;top:14%!important;bottom:auto!important;left:50%!important;right:auto!important;width:max-content!important;max-width:calc(100vw - 60px)!important;min-height:0!important;margin:0!important;text-align:center!important;translate:-50% -50%!important;transform:none!important;pointer-events:none!important;z-index:25!important;overflow-wrap:anywhere}
+
+</style>
+<style data-batch4-preview="">
+/* Only the four newly selected games. Host frame, gradients and launch pill stay host-owned. */
+@keyframes batch4-guide-breathe{0%,100%{filter:opacity(1)}50%{filter:opacity(.68)}}
+html:root:root :is(.color-guide,p.feed-first-action,.hint,#guide){animation:batch4-guide-breathe 2.4s ease-in-out infinite!important}
+html[data-batch4-paused]:root:root :is(.color-guide,p.feed-first-action,.hint,#guide){animation-play-state:paused!important}
+html[data-batch4-game="33"]:root:root p.feed-first-action{font-family:var(--font-body,system-ui,sans-serif)!important;font-weight:700!important;color:#17384a!important;background:#fff!important;border-radius:999px!important;padding:10px 18px!important;box-sizing:border-box;text-shadow:none!important;box-shadow:0 3px 12px #001b3833}
+html[data-batch4-game="33"] .hud{justify-content:center}
+/* Keep the CTA preview focused on the demonstration. Restore the HUD on entry. */
+html[data-batch4-game="33"][data-batch4-preview="true"] .hud,
+html[data-batch4-game="9"][data-batch4-preview="true"] .color-header{visibility:hidden!important}
+[data-net-preview-guide]{display:none}
+html[data-batch4-preview="true"] [data-net-preview-guide]:not([hidden]){display:block;color:#e4faff;font-size:18px;line-height:1.35}
+html[data-batch4-game="47"][data-batch4-preview="true"]:root:root .hint{visibility:visible!important}
+html[data-batch4-preview="false"]:root:root .hint[style*="visibility: hidden"]{animation:none!important}
+html:root:root .color-guide{position:fixed;z-index:25;top:24%;left:50%;translate:-50% -50%;width:max-content;max-width:calc(100% - 60px);margin:0;text-align:center;pointer-events:none;color:#334155;font:700 18px/1.4 var(--font-display,system-ui,sans-serif)}
+.color-guide[hidden]{display:none!important}
+html:root:root .color-header{position:absolute;inset:0;pointer-events:none;padding:0!important;z-index:10!important}
+html:root:root .color-panel{position:static!important;padding:0!important;box-shadow:none!important;background:transparent!important;pointer-events:none}
+html:root:root .color-round{position:absolute;top:30px;left:30px}
+html:root:root .color-round-group>div:not(.color-round){display:none}
+html:root:root .color-target-group{position:absolute;top:30px;left:calc(50% - 18px);transform:none;pointer-events:auto}
+html:root:root .color-target-swatch{width:36px!important;height:36px!important}
+html:root:root .color-reset{position:fixed;bottom:50px;right:30px}
+html:root:root .color-match-hud{position:fixed;top:30px;right:30px}
+html:root:root .color-progress-row{position:absolute;top:82px;left:30px;right:30px;pointer-events:none}
+html:root:root .color-bowl-wrap{position:absolute;inset:0;padding:0!important;pointer-events:none}
+html:root:root .color-mix-bowl{position:absolute!important;left:50%!important;top:47%!important;translate:-50% -50%;transform:none!important;min-width:0!important;box-sizing:border-box!important;width:min(62vw,35vh)!important;height:auto;pointer-events:auto}
+html:root:root .color-mix-bowl>div:not(.color-preview-paint){display:none}
+html:root:root .color-tubes{position:absolute;left:30px;right:30px;top:66%;height:13%;padding:0!important;background:transparent!important;box-shadow:none!important;pointer-events:auto}
+html:root:root .color-tubes>div{height:100%!important}
+html[data-batch4-preview="true"] .color-reset{visibility:hidden;pointer-events:none}
+.color-preview-paint{position:absolute;inset:8%;border-radius:50%;pointer-events:none;display:none;background:radial-gradient(ellipse at 35% 35%,#fba6b0 0%,#cf637b 26%,#6b5dcc 64%,#3b4a9f 100%);box-shadow:inset 0 8px 18px #ffffff45}
+.color-preview-tube{position:absolute!important;top:0;left:0;width:var(--paint-tw)!important;height:var(--paint-th)!important;box-sizing:border-box;pointer-events:none;z-index:15;display:none;border:3px solid #0f172ab8;border-radius:14px 14px 9px 9px;background:linear-gradient(#ff8794,#d62839);filter:drop-shadow(0 4px 6px #0003)}
+html[data-batch4-preview="true"] .color-preview-paint{display:block;animation:paint-mix-preview 3.6s ease-in-out infinite}
+html[data-batch4-preview="true"] .color-preview-tube{display:block;animation:paint-tube-preview 3.6s ease-in-out infinite}
+@keyframes paint-mix-preview{0%,18%,100%{opacity:0;scale:.35}46%,72%{opacity:1;scale:1}86%{opacity:.2;scale:1}}
+@keyframes paint-tube-preview{0%,7%{opacity:0;transform:translate(calc(var(--paint-sx) - 50%),calc(var(--paint-sy) - 50%)) rotate(0)}14%{opacity:1}40%,62%{opacity:1;transform:translate(calc(var(--paint-ex) - 50%),calc(var(--paint-ey) - 50%)) rotate(-22deg)}78%,100%{opacity:0;transform:translate(calc(var(--paint-ex) - 50%),calc(var(--paint-ey) - 50%)) rotate(-22deg)}}
+html[data-batch4-paused] :is(.color-preview-paint,.color-preview-tube){animation-play-state:paused!important}
+html:root:root #stage #guide{visibility:visible!important;color:#30251e!important;text-shadow:none!important}
+@media(prefers-reduced-motion:reduce){html:root:root :is(.color-guide,p.feed-first-action,.hint,#guide){animation:none!important}.color-preview-tube{display:none!important}.color-preview-paint{animation:none!important;opacity:.7!important;scale:1!important}}
+
+</style>
+
+
+</head><body><main id="stage"><canvas id="canvas" aria-hidden="true"></canvas><button id="play" aria-label="Play"></button><div id="hud" class="hud" aria-hidden="true"><span id="left"></span><span id="right"></span></div><p id="guide"></p><div id="result" hidden><span id="resultTitle"></span><small id="resultSub"></small></div><div class="controls"><button id="retry" class="control" hidden>Again</button><button id="direction" class="control" hidden aria-label="Change shaving direction"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 17V4m-3 3 3-3 3 3m9 0v13m-3-3 3 3 3-3"/></svg><span>Direction</span></button></div><div id="pause" hidden><button id="resume">Tap to resume</button></div><div id="loading" role="status">Loading…</div><div id="status" role="status" aria-live="polite" class="sr"></div></main><script src="./bundle.js"></script>
+</body></html>

@@ -1,0 +1,31 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260928031734_t68did",
+  "number": 36,
+  "name": "Underwater Breath Hold",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
+      "ids": [],
+      "bytes": 37004,
+      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+    },
+    {
+      "path": "dist/assets/icon_mask.webp",
+      "ids": [
+        "ICON_MASK"
+      ],
+      "bytes": 50814,
+      "sha256": "af451971b8523564cb69945799f1e566b092dd9b14f0549fa6e89df3267d93e6"
+    }
+  ],
+  "files": {
+    "App.jsx": "16265e804edd19de1468017147573c20d0a21f4d7bf2702956f714b1e00bd376",
+    "dist/bundle.js": "16265e804edd19de1468017147573c20d0a21f4d7bf2702956f714b1e00bd376",
+    "dist/game.html": "9c4994c18e25478f2e1c9bbfc5a3195c7e66ccd9df3c08d2c818b241a73355d1",
+    "dist/game.config.json": "4ab8c8a8fec5fb61182b36dbe3286a54c4fd3dd90dc9b011c533caf01a661f46"
+  }
+}

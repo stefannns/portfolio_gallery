@@ -1,0 +1,29 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260927020828_5pmrhn",
+  "number": 3,
+  "name": "One Stroke",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    }
+  ],
+  "files": {
+    "App.jsx": "139b76f42b73dae529a3d28a37ffe419d7e448b5ed171b3fcb011af10aec58d7",
+    "dist/bundle.js": "139b76f42b73dae529a3d28a37ffe419d7e448b5ed171b3fcb011af10aec58d7",
+    "dist/game.html": "d83d6f83ee6584aed032e4dd6cb113c1739f3dfd75e8553433afa4e67818c8d2",
+    "dist/game.config.json": "2ed925aa5c58300deda68d4f909d1c5a9c26f28685c6ab1eec2f92f373768171"
+  }
+}

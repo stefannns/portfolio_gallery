@@ -1,0 +1,14 @@
+{
+  "config_version": "2.0",
+  "tweaks": [],
+  "texts": [
+    {
+      "id": "HINT_TEXT",
+      "label": "Camera guide",
+      "value": "Ruota trascinando, zoom con due dita",
+      "default": "Ruota trascinando, zoom con due dita",
+      "max_length": 42
+    }
+  ],
+  "images": []
+}

@@ -1,0 +1,148 @@
+{
+  "tweaks": [
+    {
+      "id": "BATTERY_START",
+      "kind": "number",
+      "label": "Start Battery (%)",
+      "value": 25,
+      "default": 25,
+      "min": 5,
+      "max": 90,
+      "step": 1
+    },
+    {
+      "id": "DRAIN_BASE",
+      "kind": "number",
+      "label": "Drain Speed Base",
+      "value": 1.5,
+      "default": 1.5,
+      "min": 0.5,
+      "max": 5,
+      "step": 0.1
+    },
+    {
+      "id": "DRAIN_PENALTY",
+      "kind": "number",
+      "label": "Drain Penalty Multiplier",
+      "value": 3,
+      "default": 3,
+      "min": 1,
+      "max": 8,
+      "step": 1
+    },
+    {
+      "id": "CHARGE_AMOUNT",
+      "kind": "number",
+      "label": "Charge Amount Per Hit",
+      "value": 15,
+      "default": 15,
+      "min": 5,
+      "max": 40,
+      "step": 1
+    },
+    {
+      "id": "SWING_SPEED",
+      "kind": "number",
+      "label": "Cable Swing Speed",
+      "value": 0.003,
+      "default": 0.003,
+      "min": 0.001,
+      "max": 0.01,
+      "step": 0.001
+    },
+    {
+      "id": "MAX_ANGLE",
+      "kind": "number",
+      "label": "Cable Swing Max Angle",
+      "value": 50,
+      "default": 50,
+      "min": 20,
+      "max": 80,
+      "step": 1
+    },
+    {
+      "id": "TOLERANCE_ANGLE",
+      "kind": "number",
+      "label": "Hit Tolerance Angle",
+      "value": 6,
+      "default": 6,
+      "min": 2,
+      "max": 15,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "TITLE",
+      "label": "Game Title",
+      "value": "Phone Charging Timing Challenge",
+      "default": "Phone Charging Timing Challenge",
+      "max_length": 40
+    },
+    {
+      "id": "TXT_CHARGING",
+      "label": "Charging State Text",
+      "value": "CHARGING",
+      "default": "CHARGING",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_TIMEOUT",
+      "label": "Timeout State Text",
+      "value": "CONNECTION TIMEOUT",
+      "default": "CONNECTION TIMEOUT",
+      "max_length": 25
+    },
+    {
+      "id": "TXT_LOW",
+      "label": "Low Battery Text",
+      "value": "LOW BATTERY",
+      "default": "LOW BATTERY",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_RECHARGE",
+      "label": "Recharge Text",
+      "value": "RECHARGE",
+      "default": "RECHARGE",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_FULL",
+      "label": "Fully Charged Text",
+      "value": "FULLY CHARGED",
+      "default": "FULLY CHARGED",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_DIED",
+      "label": "Phone Died Text",
+      "value": "PHONE DIED",
+      "default": "PHONE DIED",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_PLAY_AGAIN",
+      "label": "Play Again Button",
+      "value": "Play Again",
+      "default": "Play Again",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "CABLE_HEAD",
+      "label": "Cable Head Img",
+      "path": "./assets/cable_connector.svg",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

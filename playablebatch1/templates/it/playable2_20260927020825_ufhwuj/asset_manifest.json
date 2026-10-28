@@ -1,0 +1,43 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260927020825_ufhwuj",
+  "number": 17,
+  "name": "Synthwave Stack",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/bg_main.png",
+      "ids": [
+        "BG_MAIN"
+      ],
+      "bytes": 3950932,
+      "sha256": "9fcedc2a0f61b283a9d5e81e80d3503ebd1bc7aad1b39ab430bce4ac4c150768"
+    },
+    {
+      "path": "dist/assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "ids": [],
+      "bytes": 18880,
+      "sha256": "4650e661683335ff42987353137525ee47444acff82525f647beb9d82b534216"
+    },
+    {
+      "path": "dist/assets/fonts/exo2/Exo2-Latin.woff",
+      "ids": [],
+      "bytes": 55176,
+      "sha256": "27b4de410dcaaf49fdebc42dee96ff431d5a7d2f759d6a5aea8637e4d1965d88"
+    },
+    {
+      "path": "dist/assets/fonts/exo2/OFL.txt",
+      "ids": [],
+      "bytes": 4386,
+      "sha256": "7f95a8eeecc6904ffc81cd10cc8ebc7fcee72a67922924bf45f02dff03b88127"
+    }
+  ],
+  "files": {
+    "App.jsx": "2728fca63470b96dfbb26e4f51ec67fecbc02c6ac82e1c943c20fb1dd36bcc7a",
+    "dist/bundle.js": "2728fca63470b96dfbb26e4f51ec67fecbc02c6ac82e1c943c20fb1dd36bcc7a",
+    "dist/game.html": "879a459ab9c77c0a9e57c81051c71050f629e5c4d4d26c78c588426ab20d65db",
+    "dist/game.config.json": "8cfcc92fb5a9e77c28298caa1603888141429da15befbea3acbe0d9b6e9b7eb7"
+  }
+}

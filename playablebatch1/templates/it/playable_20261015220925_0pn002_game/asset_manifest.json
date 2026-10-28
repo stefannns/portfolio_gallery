@@ -1,0 +1,59 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable_20261015220925_0pn002",
+  "number": 70,
+  "name": "Ironing Fuse Beads",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/bg_bead.webp",
+      "ids": [
+        "BG_BEAD"
+      ],
+      "bytes": 226770,
+      "sha256": "29d844a9b9337fb78cd56228c9ec43c2481fd0785ad7dc71873cadae9d0346fa"
+    },
+    {
+      "path": "dist/assets/bg_pixel.webp",
+      "ids": [
+        "BG_PIXEL"
+      ],
+      "bytes": 146460,
+      "sha256": "c3ad75f98d8276a5bf51e8bd424fbc98b6ed65675e9cd988a96ac325208e115d"
+    },
+    {
+      "path": "dist/assets/cursor_iron.webp",
+      "ids": [
+        "CURSOR_IRON"
+      ],
+      "bytes": 106694,
+      "sha256": "22d36a62385e61eea555ee6fbed571c8886f270e462d4ba0ddad6e969f16d992"
+    },
+    {
+      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
+      "ids": [],
+      "bytes": 37004,
+      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+    },
+    {
+      "path": "dist/assets/fonts/ui/NunitoSans.woff",
+      "ids": [],
+      "bytes": 261628,
+      "sha256": "e9456519e92dcb6c5857cad504f67c93203e86e81714510f341c72ace8e2313f"
+    },
+    {
+      "path": "dist/assets/fonts/ui/OFL.txt",
+      "ids": [],
+      "bytes": 4393,
+      "sha256": "efbb0c9e864cef973982d9a17567e6be5c3d1759695574586f3f18c7ecca064b"
+    }
+  ],
+  "files": {
+    "App.jsx": "0af5df8f9f2cc10daa51a4c072118eec12f159b06cf8607926985a49c6f26e3c",
+    "dist/bundle.js": "0af5df8f9f2cc10daa51a4c072118eec12f159b06cf8607926985a49c6f26e3c",
+    "dist/game.html": "685346b79bd36214bd2772b30c0bdf18655be685285a0f0b55c894d339b17a0f",
+    "dist/game.config.json": "8c113dd52c87b256bb8deda1272b5720a17cff48403ede9f699a81aa9cebfd95"
+  }
+}

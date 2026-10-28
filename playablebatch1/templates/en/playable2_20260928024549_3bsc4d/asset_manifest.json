@@ -1,0 +1,37 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260928024549_3bsc4d",
+  "number": 24,
+  "name": "Phone Charging",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/cable_connector.svg",
+      "ids": [
+        "CABLE_HEAD"
+      ],
+      "bytes": 535,
+      "sha256": "05a6fd6e2a1c36ccdd49836a590a18626b18cd412ba8065aa388804e5720b035"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    }
+  ],
+  "files": {
+    "App.jsx": "a1e1bd443d56ff4a2f6110a55f68baee95f046c611e72698954b77fdb81a6458",
+    "dist/bundle.js": "a1e1bd443d56ff4a2f6110a55f68baee95f046c611e72698954b77fdb81a6458",
+    "dist/game.html": "2d4b5651dc5d41fdc8981aa7f95129e570db5b79d12f5d2e3f547f8b8c02ac15",
+    "dist/game.config.json": "0100f332cdf0375f5b2b67c88339140a39c15f0974b70e06c410e50aa558215c"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable_20260924213804_34rslj",
+  "number": 2,
+  "name": "Draw Face",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    }
+  ],
+  "files": {
+    "App.jsx": "494df94a30af22c496e2327941f72e91c63f65a4a8f6aa1d7ddaa0d309f65ca7",
+    "dist/bundle.js": "494df94a30af22c496e2327941f72e91c63f65a4a8f6aa1d7ddaa0d309f65ca7",
+    "dist/game.html": "3909170f35f0df00bb7f7df0db4c55e6132a3ab8117510e54016ef9b379d15f1",
+    "dist/game.config.json": "290d3c23efe4e9779683b3a335d39f4debfba67a8926ffddac593570a7aa00f9"
+  }
+}

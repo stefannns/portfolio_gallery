@@ -1,0 +1,74 @@
+{
+  "tweaks": [
+    {
+      "id": "MAX_OXYGEN",
+      "kind": "number",
+      "label": "Max Oxygen (ms)",
+      "value": 45000,
+      "default": 45000,
+      "min": 10000,
+      "max": 120000,
+      "step": 1000
+    }
+  ],
+  "texts": [
+    {
+      "id": "INSTRUCTION_MAIN",
+      "label": "Instruction Title",
+      "value": "Hold to dive",
+      "default": "Hold to dive",
+      "max_length": 30
+    },
+    {
+      "id": "INSTRUCTION_SUB",
+      "label": "Instruction Subtitle",
+      "value": "Take a deep breath first",
+      "default": "Take a deep breath first",
+      "max_length": 50
+    },
+    {
+      "id": "RESULT_TITLE",
+      "label": "Result Title",
+      "value": "Breath Hold Time",
+      "default": "Breath Hold Time",
+      "max_length": 30
+    },
+    {
+      "id": "RESULT_DESC_NORMAL",
+      "label": "Result Desc (Normal)",
+      "value": "You surfaced for air!",
+      "default": "You surfaced for air!",
+      "max_length": 40
+    },
+    {
+      "id": "RESULT_DESC_O2",
+      "label": "Result Desc (Out of O2)",
+      "value": "Out of oxygen!",
+      "default": "Out of oxygen!",
+      "max_length": 40
+    },
+    {
+      "id": "BTN_REPLAY",
+      "label": "Replay Button",
+      "value": "Try Again",
+      "default": "Try Again",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "ICON_MASK",
+      "label": "Snorkel Mask Icon",
+      "path": "./assets/icon_mask.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

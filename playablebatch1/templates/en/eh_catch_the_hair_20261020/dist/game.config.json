@@ -1,0 +1,81 @@
+{
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game"
+  },
+  "tweaks": [
+    {
+      "id": "fallSpeed",
+      "kind": "number",
+      "label": "fallSpeed",
+      "value": 900,
+      "default": 900,
+      "min": 200,
+      "max": 900,
+      "step": 10
+    },
+    {
+      "id": "wigFitFactor",
+      "kind": "number",
+      "label": "wigFitFactor",
+      "value": 2.05,
+      "default": 2.05,
+      "min": 1.2,
+      "max": 3.2,
+      "step": 0.05
+    }
+  ],
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Opening guide",
+      "value": "Tap to catch the hair",
+      "max_length": 64
+    }
+  ],
+  "images": [
+    {
+      "id": "PERSON",
+      "label": "Reference-inspired bald character",
+      "path": "./assets/person.webp",
+      "replaceable": true
+    },
+    {
+      "id": "BACKGROUND",
+      "label": "Yellow background",
+      "path": "./assets/background.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HAIR_0",
+      "label": "Hairstyle 1",
+      "path": "./assets/hair_0.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HAIR_1",
+      "label": "Hairstyle 2",
+      "path": "./assets/hair_1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HAIR_2",
+      "label": "Hairstyle 3",
+      "path": "./assets/hair_2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HAIR_3",
+      "label": "Hairstyle 4",
+      "path": "./assets/hair_3.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HAIR_4",
+      "label": "Hairstyle 5",
+      "path": "./assets/hair_4.webp",
+      "replaceable": true
+    }
+  ]
+}

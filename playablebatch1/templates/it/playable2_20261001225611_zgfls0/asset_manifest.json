@@ -1,0 +1,29 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261001225611_zgfls0",
+  "number": 40,
+  "name": "Pixel Sandbox",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    }
+  ],
+  "files": {
+    "App.jsx": "fa63978b8dbcaf34244d59300ca4a3badc9a5953c977823ae17cca4c36a15a2e",
+    "dist/bundle.js": "fa63978b8dbcaf34244d59300ca4a3badc9a5953c977823ae17cca4c36a15a2e",
+    "dist/game.html": "c3a02db0026d27c4e3c40bd9b286ee4630a616d8085304362f962c95520831b6",
+    "dist/game.config.json": "7c7626ba950b882e48180deae97b100af599ca71a916abab277faa0c9ac03f87"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "manifest_version": 1,
+  "task_id": "mianbao",
+  "number": 66,
+  "name": "Toaster",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/burnt_bread.webp",
+      "ids": [
+        "BURNT_BREAD_IMG"
+      ],
+      "bytes": 717430,
+      "sha256": "6e9441352e100e6baed08bcfe8a053e115c9dc79990ac9000b06fdc7231caa86"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/fonts/ui/NunitoSans.woff",
+      "ids": [],
+      "bytes": 261628,
+      "sha256": "e9456519e92dcb6c5857cad504f67c93203e86e81714510f341c72ace8e2313f"
+    },
+    {
+      "path": "dist/assets/fonts/ui/OFL.txt",
+      "ids": [],
+      "bytes": 4393,
+      "sha256": "efbb0c9e864cef973982d9a17567e6be5c3d1759695574586f3f18c7ecca064b"
+    },
+    {
+      "path": "dist/assets/normal_bread.webp",
+      "ids": [
+        "NORMAL_BREAD_IMG"
+      ],
+      "bytes": 799418,
+      "sha256": "11130df9aa19389a7856405611469a76da113d4f1e3a944400500d6ff5b1d24b"
+    },
+    {
+      "path": "dist/assets/toaster.webp",
+      "ids": [
+        "TOASTER_IMG"
+      ],
+      "bytes": 116540,
+      "sha256": "5b8cd17485a5bd2a9a7af11e3c4698f29f10bd9d1274e0c1850ea1ffcf5edecf"
+    },
+    {
+      "path": "dist/assets/toaster_handle.webp",
+      "ids": [
+        "HANDLE_IMG"
+      ],
+      "bytes": 108120,
+      "sha256": "cac259267fdf36342429c5b1d226779068222c2cf3a256d134d5d2da3429ff3a"
+    }
+  ],
+  "files": {
+    "App.jsx": "cfed5b25138f5b5742e47267d825454d484ec725698ffca8d1731f5599ef6d4c",
+    "dist/bundle.js": "cfed5b25138f5b5742e47267d825454d484ec725698ffca8d1731f5599ef6d4c",
+    "dist/game.html": "2eabe648c82ce0d2665f5bd7031e1db5dbcb04a1e094068b07c8b4fe6823c6db",
+    "dist/game.config.json": "bbd6d6511a6d987acf7bcd0d3f6796c9a6a3f581940975458e5f0040d861ed1c"
+  }
+}

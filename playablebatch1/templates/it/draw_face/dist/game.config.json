@@ -1,0 +1,144 @@
+{
+  "tweaks": [
+    {
+      "id": "BRUSH_SIZE",
+      "kind": "number",
+      "label": "Brush Size",
+      "value": 4,
+      "default": 4,
+      "min": 1,
+      "max": 20,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "BTN_CLEAR",
+      "label": "Clear Button Text",
+      "value": "CANCELLA",
+      "default": "CANCELLA",
+      "max_length": 10
+    },
+    {
+      "id": "BTN_NEXT",
+      "label": "Next Button Text",
+      "value": "AVANTI",
+      "default": "AVANTI",
+      "max_length": 10
+    },
+    {
+      "id": "BTN_FINISH",
+      "label": "Finish Button Text",
+      "value": "FATTO",
+      "default": "FATTO",
+      "max_length": 10
+    },
+    {
+      "id": "BTN_BLINK",
+      "label": "Blink Button Text",
+      "value": "SBATTI LE PALPEBRE",
+      "default": "SBATTI LE PALPEBRE",
+      "max_length": 18
+    },
+    {
+      "id": "BTN_SNIFF",
+      "label": "Sniff Button Text",
+      "value": "ANNUSA",
+      "default": "ANNUSA",
+      "max_length": 14
+    },
+    {
+      "id": "BTN_TALK",
+      "label": "Talk Button Text",
+      "value": "PARLA",
+      "default": "PARLA",
+      "max_length": 14
+    },
+    {
+      "id": "BTN_AGAIN",
+      "label": "Draw Again Button Text",
+      "value": "RIDISEGNA",
+      "default": "RIDISEGNA",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_STEP",
+      "label": "Step Label",
+      "value": "FASE",
+      "default": "FASE",
+      "max_length": 12
+    },
+    {
+      "id": "TXT_OF",
+      "label": "Step Separator",
+      "value": "DI",
+      "default": "DI",
+      "max_length": 12
+    },
+    {
+      "id": "PROMPT_1",
+      "label": "Step 1 Prompt",
+      "value": "Disegna gli occhi aperti",
+      "default": "Disegna gli occhi aperti",
+      "max_length": 40
+    },
+    {
+      "id": "PROMPT_2",
+      "label": "Step 2 Prompt",
+      "value": "Disegna gli occhi chiusi",
+      "default": "Disegna gli occhi chiusi",
+      "max_length": 40
+    },
+    {
+      "id": "PROMPT_3",
+      "label": "Step 3 Prompt",
+      "value": "Disegna un naso",
+      "default": "Disegna un naso",
+      "max_length": 40
+    },
+    {
+      "id": "PROMPT_4",
+      "label": "Step 4 Prompt",
+      "value": "Disegna un naso piccolo",
+      "default": "Disegna un naso piccolo",
+      "max_length": 40
+    },
+    {
+      "id": "PROMPT_5",
+      "label": "Step 5 Prompt",
+      "value": "Disegna la bocca aperta",
+      "default": "Disegna la bocca aperta",
+      "max_length": 40
+    },
+    {
+      "id": "PROMPT_6",
+      "label": "Step 6 Prompt",
+      "value": "Disegna la bocca socchiusa",
+      "default": "Disegna la bocca socchiusa",
+      "max_length": 40
+    },
+    {
+      "id": "PROMPT_7",
+      "label": "Step 7 Prompt",
+      "value": "Disegna la bocca chiusa",
+      "default": "Disegna la bocca chiusa",
+      "max_length": 40
+    },
+    {
+      "id": "MSG_DONE",
+      "label": "Done Message",
+      "value": "IL TUO VISO!",
+      "default": "IL TUO VISO!",
+      "max_length": 60
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

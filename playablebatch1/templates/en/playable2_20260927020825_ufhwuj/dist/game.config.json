@@ -1,0 +1,81 @@
+{
+  "tweaks": [
+    {
+      "id": "BASE_SPEED",
+      "kind": "number",
+      "label": "Initial Block Speed",
+      "value": 0.4,
+      "default": 0.4,
+      "min": 0.1,
+      "max": 1.0,
+      "step": 0.05
+    },
+    {
+      "id": "HARD_MODE",
+      "kind": "boolean",
+      "label": "Hard Mode (Faster Acceleration)",
+      "value": false,
+      "default": false
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "SYNTHWAVE STACK",
+      "default": "SYNTHWAVE STACK",
+      "max_length": 30
+    },
+    {
+      "id": "DESC",
+      "label": "Description",
+      "value": "Stack neon blocks. Keep going until you miss!",
+      "default": "Stack neon blocks. Keep going until you miss!",
+      "max_length": 150
+    },
+    {
+      "id": "BTN_START",
+      "label": "Start Button",
+      "value": "START GAME",
+      "default": "START GAME",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_GAMEOVER",
+      "label": "Game Over Text",
+      "value": "GAME OVER",
+      "default": "GAME OVER",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "PLAY AGAIN",
+      "default": "PLAY AGAIN",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_POST",
+      "label": "Post Button (Not in form, fallback)",
+      "value": "POST MY PLAY",
+      "default": "POST MY PLAY",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Main Background Fallback",
+      "path": "./assets/bg_main.png",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

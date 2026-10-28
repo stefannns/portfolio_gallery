@@ -1,0 +1,25 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261001225611_23t98b",
+  "number": 41,
+  "name": "Text Your Ex",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/text_ex_backdrop.svg",
+      "ids": [
+        "START_BG"
+      ],
+      "bytes": 685,
+      "sha256": "d5a0557258b9b4b91753627a0317a4aa07a68010022441776d0e8a8a79bf1aa6"
+    }
+  ],
+  "files": {
+    "App.jsx": "50558447234df2ef0a6f2a013ecc3adac757493a05cfa681a0eacbed00719950",
+    "dist/bundle.js": "50558447234df2ef0a6f2a013ecc3adac757493a05cfa681a0eacbed00719950",
+    "dist/game.html": "086a1808eb21afac873ef0d9d3965544d67ba8ec107e02391ce6ad544ba1a21c",
+    "dist/game.config.json": "4f698a91f356a27b943fc3d0333cfe54c8aff7b5831ee705ed8a94be61d7d36f"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "manifest_version": 1,
+  "task_id": "eh_catch_the_hair_20261020",
+  "number": 77,
+  "name": "Catch the Hair",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/background.webp",
+      "ids": [
+        "BACKGROUND"
+      ],
+      "bytes": 66,
+      "sha256": "9b7cd8d1bcc291278a16500a7ccb07d21da96e03442f4aabc19263aecf1ade85"
+    },
+    {
+      "path": "dist/assets/fonts/OFL.txt",
+      "ids": [],
+      "bytes": 4385,
+      "sha256": "6be04893d770899a015649c7aa3b582f871b272f8747a92b78b17c3e5c8b2573"
+    },
+    {
+      "path": "dist/assets/fonts/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/hair_0.webp",
+      "ids": [
+        "HAIR_0"
+      ],
+      "bytes": 36570,
+      "sha256": "0ab726640dc8386fcdd4f41eb4b6905133345e003a477316457ecbbef5a271f8"
+    },
+    {
+      "path": "dist/assets/hair_1.webp",
+      "ids": [
+        "HAIR_1"
+      ],
+      "bytes": 32794,
+      "sha256": "a1cfdd92e97d05fdcd96634c4879e454301191d53f3b5bac56e938080f52aadc"
+    },
+    {
+      "path": "dist/assets/hair_2.webp",
+      "ids": [
+        "HAIR_2"
+      ],
+      "bytes": 34466,
+      "sha256": "07cf1677483c7a5a66e13f4d5eb8be01b6425ef970f97ff8bb1b4746542b5e15"
+    },
+    {
+      "path": "dist/assets/hair_3.webp",
+      "ids": [
+        "HAIR_3"
+      ],
+      "bytes": 50124,
+      "sha256": "522e8810027c7345ed2aca6b9452873221e848e8642739158ecddaa655d39e20"
+    },
+    {
+      "path": "dist/assets/hair_4.webp",
+      "ids": [
+        "HAIR_4"
+      ],
+      "bytes": 41758,
+      "sha256": "0df4a0e97772218182134b8d78bd84312e2bb93d5af48e928aeef82fed6d2e72"
+    },
+    {
+      "path": "dist/assets/person.webp",
+      "ids": [
+        "PERSON"
+      ],
+      "bytes": 87074,
+      "sha256": "2029c43227de3b0ac9778570177954e4f9dcd66d8fc43cfe4101519afbe2887e"
+    }
+  ],
+  "files": {
+    "App.jsx": "3c6243f41c9f5ad27e875a51ea2ee88c5d2d4c3683764295739bee9e708fa778",
+    "dist/bundle.js": "3c6243f41c9f5ad27e875a51ea2ee88c5d2d4c3683764295739bee9e708fa778",
+    "dist/game.html": "966e28c0375ebf98d3d3a97bcc28aff8abb7c816adb7b299fd3d3a3ee58af46e",
+    "dist/game.config.json": "0f49b8069bae79e87819c96217de2006094e61b9832b501fe583d97a48b855c5"
+  }
+}

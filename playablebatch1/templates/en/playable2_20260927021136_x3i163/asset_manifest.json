@@ -1,0 +1,16 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260927021136_x3i163",
+  "number": 19,
+  "name": "Cube Physics",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [],
+  "files": {
+    "App.jsx": "a523f77e5dbb3a6eff1c5f4852dec079231c4182d05df4931e21acaa13b7f25c",
+    "dist/bundle.js": "a523f77e5dbb3a6eff1c5f4852dec079231c4182d05df4931e21acaa13b7f25c",
+    "dist/game.html": "bdd180ef27819a8d7ec9d274ad45996682a005407ee0c2a658201d84374c069b",
+    "dist/game.config.json": "222bb53621203f995d405f560aec373f6c156df68a788e29346532adc0eeb602"
+  }
+}

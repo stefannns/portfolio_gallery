@@ -1,0 +1,89 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable_20260807211217_q9i9d6",
+  "number": 67,
+  "name": "Find Voxel Items (q9i9d6)",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/bg_main.webp",
+      "ids": [
+        "BG_MAIN"
+      ],
+      "bytes": 1665569,
+      "sha256": "260c9f1f4c0dbd0fec3535d39e52558019a2d67bc2e8d51e40b2bd84126ccedc"
+    },
+    {
+      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
+      "ids": [],
+      "bytes": 37004,
+      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+    },
+    {
+      "path": "dist/assets/fonts/ui/OFL.txt",
+      "ids": [],
+      "bytes": 4384,
+      "sha256": "472cbe7c25441df63e9c7864b43eb3c0f4b3df950c66a76224e6cfe1eae843fb"
+    },
+    {
+      "path": "dist/assets/fonts/ui/Rubik-Bold.woff",
+      "ids": [],
+      "bytes": 87140,
+      "sha256": "fd9b2f6ff5ef2252edd019755db60ed8f776ebb690e8f10e3b69a3da231a4a85"
+    },
+    {
+      "path": "dist/assets/fonts/ui/Rubik-Regular.woff",
+      "ids": [],
+      "bytes": 145748,
+      "sha256": "9f060ad97bd7139df795eaabdd3489297cb5de70e63d360548456c55fc0275cb"
+    },
+    {
+      "path": "dist/assets/item_coconut.webp",
+      "ids": [
+        "ITEM_3"
+      ],
+      "bytes": 112294,
+      "sha256": "a81b619873598adf2d0a0700e52053aaa8c3ec68257b53048e4b39c0fd7681bb"
+    },
+    {
+      "path": "dist/assets/item_fish.webp",
+      "ids": [
+        "ITEM_5"
+      ],
+      "bytes": 122644,
+      "sha256": "b1b89f31dffa41ca0af8259ba3d07bd5b8fe511d538a2a3d383353b8f7fd7725"
+    },
+    {
+      "path": "dist/assets/item_leaf.webp",
+      "ids": [
+        "ITEM_4"
+      ],
+      "bytes": 122006,
+      "sha256": "f29919738f570a0a5c285b1dd00b4d4768242be4f03d9f70b4cefad8ad4637e9"
+    },
+    {
+      "path": "dist/assets/item_shell.webp",
+      "ids": [
+        "ITEM_2"
+      ],
+      "bytes": 113514,
+      "sha256": "d48901ad4f455b2fa62df9f7b67819d858e28a71f3b3ff31b6ff684875ce32dc"
+    },
+    {
+      "path": "dist/assets/item_starfish.webp",
+      "ids": [
+        "ITEM_1"
+      ],
+      "bytes": 182782,
+      "sha256": "05651d5117ca77d193a2a62227d91246b4c74ce143f0f7c08cc66061aee0a421"
+    }
+  ],
+  "files": {
+    "App.jsx": "ebded2c5e5fea752faf24b5da0fa0da16034fd70d7831b8135ab4143ec01409a",
+    "dist/bundle.js": "ebded2c5e5fea752faf24b5da0fa0da16034fd70d7831b8135ab4143ec01409a",
+    "dist/game.html": "9461f7c11b51b1003819c3b88d5d129bf78db3188195b40151bf2a8f4654f044",
+    "dist/game.config.json": "fce58e3e3b6f86d980636192c9d25ae034aea27ccacd68d4b5f8fb311067f6de"
+  }
+}

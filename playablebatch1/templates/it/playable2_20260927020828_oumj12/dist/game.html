@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Disegna con il filo</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #E6F5F0; -webkit-tap-highlight-color: transparent; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<style data-guide-centering="20261021">
+/* User override 2026-10-21: favor visual center, not a fixed upper band. */
+html:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) .string-guide{position:fixed!important;top:30%!important;bottom:auto!important;left:50%!important;right:auto!important;width:max-content!important;max-width:calc(100vw - 60px)!important;min-height:0!important;margin:0!important;text-align:center!important;translate:-50% -50%!important;transform:none!important;pointer-events:none!important;z-index:25!important;overflow-wrap:anywhere}
+@font-face{font-family:"String Poppins";src:url("./assets/fonts/poppins/Poppins-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"String Poppins";src:url("./assets/fonts/poppins/Poppins-Bold.woff2") format("woff2");font-weight:700 900;font-style:normal;font-display:swap}
+html:root{--font-display:"String Poppins",Arial,sans-serif;--font-body:"String Poppins",Arial,sans-serif;--font-mono:"String Poppins",Arial,sans-serif}
+html:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) .string-guide{position:absolute!important;top:var(--string-guide-y,30%)!important;max-width:calc(100% - 60px)!important;font-size:16px!important;line-height:1.4!important;white-space:normal!important;overflow-wrap:normal!important;word-break:normal!important}
+html:root .string-board:not([data-string-guide-aligned]) .string-guide{visibility:hidden!important}
+
+</style>
+
+<style data-guide-breathing="20261021">
+/* Existing guide text only; position, opacity lifecycle and hit regions remain game-owned. */
+@keyframes batch-guide-breathe{0%,100%{filter:opacity(1)}50%{filter:opacity(.65)}}
+html:root:root :is(.string-guide){animation:batch-guide-breathe 2.4s ease-in-out infinite!important}
+html:root:root .string-guide,html:root:root .string-guide :is(p,span){font-weight:800!important}
+html[data-guide-breathing-paused]:root:root :is(.string-guide){animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){html:root:root :is(.string-guide){animation:none!important}}
+
+</style>
+
+<style data-italian-layout="">
+/* Italian copy keeps the approved role sizes and may wrap instead of clipping. */
+html[lang="it"] :is(.meeting-guide,.feed-first-action,.melody-guide,.particle-guide,.dive-guide,.sandbox-guide,.koi-guide,.ui-guide,.bead-guide,.coloring-guide,.look-guide,.time-print-guide){white-space:normal;overflow-wrap:normal;word-break:normal;line-height:1.4}
+html[lang="it"] :is(button,.btn,.btn-neon){overflow-wrap:normal;word-break:normal}
+html[lang="it"] .melody-controls button{font-size:18px;padding-inline:12px}
+html[lang="it"] .meeting-sand-ball-count{gap:6px!important}
+html[lang="it"] #people-dialog fieldset label{min-width:0}
+html[lang="it"] #people-dialog input{max-width:100%;min-width:0}
+
+</style>
+</head>
+<body>
+  <div id="root"></div>
+  <!-- playable-inline-config:start -->
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"DRAW_SPEED","kind":"number","label":"Drawing Speed","value":0.4,"default":0.4,"min":0.1,"max":1,"step":0.05},{"id":"MIN_RADIUS","kind":"number","label":"Min Radius","value":50,"default":50,"min":30,"max":80,"step":1},{"id":"MAX_RADIUS","kind":"number","label":"Max Radius","value":140,"default":140,"min":100,"max":180,"step":1}],"texts":[{"id":"TXT_PROMPT","label":"Prompt Text","value":"Tieni premuto e disegna","default":"Tieni premuto e disegna","max_length":30},{"id":"TXT_PERFECT","label":"Perfect Text","value":"Perfetto! 🎯","default":"Perfetto! 🎯","max_length":15},{"id":"TXT_GOOD","label":"Good Text","value":"Bene! 👍","default":"Bene! 👍","max_length":15},{"id":"TXT_OK","label":"OK Text","value":"Non male 🤔","default":"Non male 🤔","max_length":15},{"id":"TXT_MISS","label":"Miss Text","value":"Mancato!","default":"Mancato!","max_length":15}],"images":[],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"it","min_capability_level":1,"full_capability_level":1}}</script>
+  
+  <!-- playable-inline-config:end -->
+  
+  
+
+<script src="./bundle.js"></script>
+</body>
+</html>

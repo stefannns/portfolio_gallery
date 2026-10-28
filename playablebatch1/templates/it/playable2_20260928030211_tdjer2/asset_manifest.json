@@ -1,0 +1,23 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260928030211_tdjer2",
+  "number": 31,
+  "name": "Particle Art Creator",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "ids": [],
+      "bytes": 18880,
+      "sha256": "4650e661683335ff42987353137525ee47444acff82525f647beb9d82b534216"
+    }
+  ],
+  "files": {
+    "App.jsx": "7976ee0c1d90055334776cbc1dfa165abda726e98b342160b610da8f74b57ca5",
+    "dist/bundle.js": "7976ee0c1d90055334776cbc1dfa165abda726e98b342160b610da8f74b57ca5",
+    "dist/game.html": "80e52d1e2eea14b5d374420681cbdffafa244ff88941a8fb10236675e499ec65",
+    "dist/game.config.json": "0c4f09527a7a33e8734092d53f836bb1fc7b7a46531237e49fd738762ca0b660"
+  }
+}

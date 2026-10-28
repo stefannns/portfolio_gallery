@@ -1,0 +1,56 @@
+{
+  "tweaks": [
+    {
+      "id": "SPEED_BASE_FRAC",
+      "kind": "number",
+      "label": "Initial Speed",
+      "value": 0.0006,
+      "default": 0.0006,
+      "min": 0.0002,
+      "max": 0.0015,
+      "step": 0.0001
+    },
+    {
+      "id": "SPEED_INC_FRAC",
+      "kind": "number",
+      "label": "Speed Increment",
+      "value": 0.000015,
+      "default": 0.000015,
+      "min": 0.000001,
+      "max": 0.00005,
+      "step": 0.000001
+    }
+  ],
+  "texts": [
+    {
+      "id": "TXT_GAME_OVER",
+      "label": "Game Over Text",
+      "value": "PARTITA FINITA",
+      "default": "PARTITA FINITA",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "TOCCA PER RIPROVARE",
+      "default": "TOCCA PER RIPROVARE",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "UI_KEYBOARD",
+      "label": "Keyboard Watermark",
+      "path": "./assets/ui_piano_keyboard.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

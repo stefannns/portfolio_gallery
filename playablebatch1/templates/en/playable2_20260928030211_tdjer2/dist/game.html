@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Playable</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    #root { isolation: isolate; }
+    canvas { touch-action: none; }
+    button, input, select, textarea { touch-action: manipulation; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<style data-guide-centering="20261021">
+/* User override 2026-10-21: favor visual center, not a fixed upper band. */
+html:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) .particle-guide{position:fixed!important;top:50%!important;bottom:auto!important;left:50%!important;right:auto!important;width:max-content!important;max-width:calc(100vw - 60px)!important;min-height:0!important;margin:0!important;text-align:center!important;translate:-50% -50%!important;transform:none!important;pointer-events:none!important;z-index:25!important;overflow-wrap:anywhere}
+
+</style>
+<style data-guide-breathing="20261021">
+/* Existing guide text only; position, opacity lifecycle and hit regions remain game-owned. */
+@keyframes batch-guide-breathe{0%,100%{filter:opacity(1)}50%{filter:opacity(.65)}}
+html:root:root :is(.particle-guide){animation:batch-guide-breathe 2.4s ease-in-out infinite!important}
+html[data-guide-breathing-paused]:root:root :is(.particle-guide){animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){html:root:root :is(.particle-guide){animation:none!important}}
+
+</style>
+
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"PARTICLE_DENSITY","kind":"number","label":"Sampling Step (Smaller=More)","value":4,"default":4,"min":2,"max":10,"step":1},{"id":"SPRING_FORCE","kind":"number","label":"Spring Force","value":0.05,"default":0.05,"min":0.01,"max":0.2,"step":0.01},{"id":"FRICTION","kind":"number","label":"Friction","value":0.85,"default":0.85,"min":0.7,"max":0.98,"step":0.01},{"id":"POINTER_RADIUS","kind":"number","label":"Interaction Radius","value":150,"default":150,"min":50,"max":300,"step":10},{"id":"REPULSE_STRENGTH","kind":"number","label":"Repulse Strength","value":5,"default":5,"min":1,"max":20,"step":1},{"id":"SPIRAL_STRENGTH","kind":"number","label":"Spiral Strength","value":8,"default":8,"min":0,"max":20,"step":1},{"id":"MAX_PARTICLES","kind":"number","label":"Max Particles Limit","value":6000,"default":6000,"min":1000,"max":10000,"step":500}],"texts":[{"id":"TXT_TITLE","label":"App Title","value":"Particle Studio","default":"Particle Studio","max_length":20},{"id":"TXT_SHOW_CTRL","label":"Show Controls Btn","value":"Controls","default":"Controls","max_length":15},{"id":"TXT_HIDE_CTRL","label":"Hide Controls Btn","value":"Hide","default":"Hide","max_length":15},{"id":"TXT_TAB_TEXT","label":"Tab Text","value":"Text","default":"Text","max_length":10},{"id":"TXT_TAB_MEDIA","label":"Tab Media","value":"Media","default":"Media","max_length":10},{"id":"TXT_INPUT_PLACEHOLDER","label":"Input Placeholder","value":"Type something...","default":"Type something...","max_length":30},{"id":"TXT_UPLOAD_BTN","label":"Upload Button Text","value":"Upload Image / Video","default":"Upload Image / Video","max_length":30},{"id":"TXT_DEFAULT_INPUT","label":"Default Text Value","value":"LOOP","default":"LOOP","max_length":20},{"id":"TXT_LBL_COLOR","label":"Color Theme Label","value":"Color Theme","default":"Color Theme","max_length":20},{"id":"TXT_LBL_SHAPE","label":"Shape Label","value":"Particle Shape","default":"Particle Shape","max_length":20},{"id":"TXT_LBL_FONT","label":"Font Label","value":"Font Family","default":"Font Family","max_length":20},{"id":"TXT_LBL_FILTER","label":"Filter Label","value":"Media Filter","default":"Media Filter","max_length":20}],"images":[],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script>
+  
+  
+
+<script src="./bundle.js"></script>
+</body>
+</html>

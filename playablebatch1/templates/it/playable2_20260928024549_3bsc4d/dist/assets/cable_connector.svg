@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 40" role="img" aria-label="Charging connector">
+  <defs>
+    <linearGradient id="metal"><stop stop-color="#8d98a5"/><stop offset=".5" stop-color="#f9fafb"/><stop offset="1" stop-color="#8d98a5"/></linearGradient>
+  </defs>
+  <path d="M8 8h12v6H8z" fill="#d1d5db" stroke="#59636e" stroke-width="2"/>
+  <rect x="2" y="13" width="24" height="26" rx="5" fill="url(#metal)" stroke="#59636e" stroke-width="2"/>
+  <rect x="8" y="18" width="12" height="4" rx="2" fill="#677280"/>
+</svg>

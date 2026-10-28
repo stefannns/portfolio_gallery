@@ -1,0 +1,31 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261001225842_2d0kul",
+  "number": 47,
+  "name": "Drag Toy",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/bg_main.png",
+      "ids": [
+        "BG_MAIN"
+      ],
+      "bytes": 4513773,
+      "sha256": "fe577b232e75de9ea9646b537c71ce84a5ef18ff3caa555839c7b4a29dffaddc"
+    },
+    {
+      "path": "dist/assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "ids": [],
+      "bytes": 18880,
+      "sha256": "4650e661683335ff42987353137525ee47444acff82525f647beb9d82b534216"
+    }
+  ],
+  "files": {
+    "App.jsx": "09d050a6fc12cc00505f0018e46fce5870b04ca0ccf42140f61b39fb1379f563",
+    "dist/bundle.js": "09d050a6fc12cc00505f0018e46fce5870b04ca0ccf42140f61b39fb1379f563",
+    "dist/game.html": "067df7fdd5c1035b2bb2956823661fb6c9c4e273cdbeaafd326e3407ace028ca",
+    "dist/game.config.json": "d2bb4c6ace2b9fc2214819fcd9dcd77bafb0523a89a2352db5cc6f87c495f75f"
+  }
+}

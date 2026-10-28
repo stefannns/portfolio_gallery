@@ -1,0 +1,67 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261001230052_xrken6b",
+  "number": 51,
+  "name": "Creature Sandbox — top-down",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/bee_topdown.svg",
+      "ids": [
+        "IMG_FOOD"
+      ],
+      "bytes": 575,
+      "sha256": "d388cf5366644560af18102094f27d56dd35b2313fbdfc36e3f3d8370e431355"
+    },
+    {
+      "path": "dist/assets/flower_topdown.svg",
+      "ids": [
+        "IMG_BLOCK"
+      ],
+      "bytes": 492,
+      "sha256": "c54169e9c5df1ee64e27122e21cbe0a3a030f7bccccfd22b7917698b54b7a0cc"
+    },
+    {
+      "path": "dist/assets/fonts/OFL.txt",
+      "ids": [],
+      "bytes": 4472,
+      "sha256": "4298634965b3003e2e6f669c8056715375658504a08dbacbbb21ea1b0bbe6960"
+    },
+    {
+      "path": "dist/assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "ids": [],
+      "bytes": 37464,
+      "sha256": "487694c955a01a6b9e0985b4839ebe6f5406770db551ea163799ee02deb7d3a4"
+    },
+    {
+      "path": "dist/assets/ladybug.svg",
+      "ids": [
+        "IMG_CREATURE"
+      ],
+      "bytes": 898,
+      "sha256": "09d253ee106c5f4f347ed15828e99255ceec854e5281405e38d4116497924edf"
+    },
+    {
+      "path": "dist/assets/meadow_topdown.svg",
+      "ids": [
+        "BG_MAIN"
+      ],
+      "bytes": 138,
+      "sha256": "6816d6c89259e8db0ae42851a6dd3bba343c99e09cfac78b2864f280eb7cfe60"
+    },
+    {
+      "path": "dist/assets/procedural-plants.LICENSE.txt",
+      "ids": [],
+      "bytes": 1394,
+      "sha256": "a4571f7da485a4c05f4ba539da241af76e2c64f4700167506a986dce360690f8"
+    }
+  ],
+  "files": {
+    "App.jsx": "a15c8cae4b2af2e54526d95c799232dfabe42660b947ef2dbc13c1ce62d95bb1",
+    "dist/bundle.js": "a15c8cae4b2af2e54526d95c799232dfabe42660b947ef2dbc13c1ce62d95bb1",
+    "dist/game.html": "d81a9a2125e84d425b3ff2e4d9a56597d98eb03b83c0afff9dc07dd66e027b48",
+    "dist/game.config.json": "197129dff21cf3ff41f9bf773bbeebb47d5a40cbc71200026d8f464d8a0ebbf7"
+  }
+}

@@ -1,12 +1,14 @@
-// Build deterministic ZIPs from the game folders currently served by this site.
-// Run: node scripts/build-game-downloads.mjs [--check]
-// No dependencies, remote requests, original packages or review data are used.
+// Batch 1 exports one standardized template per language. Other exports retain
+// their existing format. Refresh templates first when the served games change:
+// node scripts/standardize-playable-templates.mjs
+// node scripts/build-game-downloads.mjs [--check]
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import {deflateRawSync} from 'node:zlib';
 import {fileURLToPath} from 'node:url';
+import {loadTemplates,checkTemplate} from './playable-template-tools.mjs';
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const library = path.join(repo, 'playablebatch1');
@@ -19,6 +21,7 @@ const page = fs.readFileSync(path.join(library, 'index.html'), 'utf8');
 const games = JSON.parse(page.match(/^const games = (\[.*\]);$/m)?.[1] || 'null');
 assert(Array.isArray(games) && games.length > 0, 'Missing game catalog');
 assert.equal(new Set(games.map(game => game.base)).size, games.length, 'Duplicate game folder');
+const templates=new Map(loadTemplates(library).map(row=>[row.taskId+':'+row.language,row]));
 const sha256 = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const privateFile = /(?:^|\/)(?:\.[^/]*|node_modules|feedback-tracking|feedback-art-review|tests?|backups?)(?:\/|$)|\.(?:zip|bak)$/i;
 
@@ -51,7 +54,8 @@ function zipFolder(base, dir, files) {
   let offset = 0;
   for (const relative of files) {
     const name = Buffer.from(base + '/' + relative);
-    const bytes = fs.readFileSync(path.join(dir, relative));
+    const directory = relative.endsWith('/');
+    const bytes = directory ? Buffer.alloc(0) : fs.readFileSync(path.join(dir, relative));
     assert(name.length < 65536 && bytes.length < 0xffffffff, 'ZIP32 entry exceeds size limit');
     const compressed = deflateRawSync(bytes, {level: 9});
     const method = compressed.length < bytes.length ? 8 : 0;
@@ -79,6 +83,7 @@ function zipFolder(base, dir, files) {
     record.writeUInt32LE(data.length, 20);
     record.writeUInt32LE(bytes.length, 24);
     record.writeUInt16LE(name.length, 28);
+    if(directory) record.writeUInt32LE(0x10,38);
     record.writeUInt32LE(offset, 42);
     central.push(record, name);
     offset += header.length + name.length + data.length;
@@ -97,15 +102,15 @@ function zipFolder(base, dir, files) {
 if (!check) fs.mkdirSync(output, {recursive: true});
 const manifest = {};
 let totalFiles = 0, totalBytes = 0, changed = 0;
-for (const game of games) {
-  assert(/^[A-Za-z0-9_-]+$/.test(game.base), 'Unsafe game folder');
-  assert(/^\d+b?$/.test(String(game.number)), 'Unsafe game number');
-  assert.equal(game.src, '/playablebatch1/games/' + game.base + '/game.html', 'Unexpected game source');
-  const dir = path.join(gameRoot, game.base);
-  const files = inventory(dir);
-  assert(files.includes('game.html') && files.includes('game.config.json'), 'Incomplete game folder: ' + game.base);
-  const bytes = zipFolder(game.base, dir, files);
-  const filename = String(game.number).padStart(2, '0') + '-' + game.base + '.zip';
+function archive(game,language){
+  const row=templates.get(game.taskId+':'+language);
+  const dir=row?checkTemplate(library,row):path.join(gameRoot,game.base);
+  const files=inventory(dir);
+  if(row)files.push('dist/','dist/assets/');
+  else assert(files.includes('game.html')&&files.includes('game.config.json'),'Incomplete game folder: '+game.base);
+  files.sort();
+  const bytes=zipFolder(game.base+(row&&language==='it'?'-it':''),dir,files);
+  const filename=String(game.number).padStart(2,'0')+'-'+game.base+(row&&language==='it'?'-it':'')+'.zip';
   const destination = path.join(output, filename);
   assert(bytes.length < 100 * 1024 * 1024, 'GitHub file-size limit exceeded');
   if (check) {
@@ -115,11 +120,20 @@ for (const game of games) {
     fs.writeFileSync(destination, bytes);
     changed++;
   }
-  manifest[game.base] = {url: '/playablebatch1/downloads/' + filename, filename, bytes: bytes.length, files: files.length, sha256: sha256(bytes)};
+  const record={url:'/playablebatch1/downloads/'+filename,filename,bytes:bytes.length,files:files.filter(f=>!f.endsWith('/')).length,sha256:sha256(bytes)};
+  if(row)Object.assign(record,{language,format:'template-v1'});
   totalFiles += files.length;
   totalBytes += bytes.length;
+  return record;
+}
+for (const game of games) {
+  assert(/^[A-Za-z0-9_-]+$/.test(game.base), 'Unsafe game folder');
+  assert(/^\d+b?$/.test(String(game.number)), 'Unsafe game number');
+  assert.equal(game.src, '/playablebatch1/games/' + game.base + '/game.html', 'Unexpected game source');
+  const english=archive(game,'en');
+  manifest[game.base]=templates.has(game.taskId+':en')?{...english,languages:{en:english,it:archive(game,'it')}}:english;
 }
 const manifestText = '// Generated by scripts/build-game-downloads.mjs. Rebuild after changing game files.\nwindow.PlayableGameDownloads = ' + JSON.stringify(manifest, null, 2) + ';\n';
 if (check) assert.equal(fs.readFileSync(manifestFile, 'utf8'), manifestText, 'Stale download catalog');
 else if (!fs.existsSync(manifestFile) || fs.readFileSync(manifestFile, 'utf8') !== manifestText) fs.writeFileSync(manifestFile, manifestText);
-console.log(JSON.stringify({checked: check, games: games.length, files: totalFiles, zipBytes: totalBytes, rebuiltArchives: changed}));
+console.log(JSON.stringify({checked:check,games:games.length,standardTemplates:templates.size,archives:games.length+templates.size/2,files:totalFiles,zipBytes:totalBytes,rebuiltArchives:changed}));

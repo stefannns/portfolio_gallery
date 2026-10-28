@@ -1,0 +1,157 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261013021144_kzqdfu",
+  "number": 62,
+  "name": "Novelty Koi Feeding",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/cartoon-chili-v1.webp",
+      "ids": [
+        "ICON_CHILI"
+      ],
+      "bytes": 6464,
+      "sha256": "1e6707849dea8aa70fb2521a758c339c0924ce1e3e8e0d4ce994491f1364eb44"
+    },
+    {
+      "path": "dist/assets/cartoon-disco-v1.webp",
+      "ids": [
+        "ICON_DISCO"
+      ],
+      "bytes": 6748,
+      "sha256": "efd30ba976948040d45f042b1d882987ad052dff4255c14c786cdae45fdbcc7e"
+    },
+    {
+      "path": "dist/assets/cartoon-donut-v1.webp",
+      "ids": [
+        "ICON_DONUT"
+      ],
+      "bytes": 8678,
+      "sha256": "3193d5bd2df1c22a7a5ac4a231a2b7fec4255811c3f2cc16c213b98f6e7858e3"
+    },
+    {
+      "path": "dist/assets/cartoon-ghost-v1.webp",
+      "ids": [
+        "ICON_GHOST"
+      ],
+      "bytes": 4166,
+      "sha256": "9197f2a08b6b035f8d37f300793786a26bc7470b16c1219c9d7ee734c19e41d1"
+    },
+    {
+      "path": "dist/assets/cartoon-ice-effect-v1.webp",
+      "ids": [
+        "FX_ICE"
+      ],
+      "bytes": 15904,
+      "sha256": "008cecd2acbaf1c04bd93086904328524f4870dfdbd5cf8787d3728945f76802"
+    },
+    {
+      "path": "dist/assets/cartoon-ice-v1.webp",
+      "ids": [
+        "ICON_ICE"
+      ],
+      "bytes": 4976,
+      "sha256": "89bf90f01008336d9fdd1f69db313564a5232d3d98b78abdfc67df59d2ae0504"
+    },
+    {
+      "path": "dist/assets/cartoon-koi-v1.webp",
+      "ids": [
+        "KOI_FISH"
+      ],
+      "bytes": 11538,
+      "sha256": "2b19f95bcfcf3c972c5823b64e6dfc1b4c01cc1ea4ab52dcf4841a4270971e37"
+    },
+    {
+      "path": "dist/assets/cartoon-lily-pad-v1.webp",
+      "ids": [
+        "LILY_PAD"
+      ],
+      "bytes": 6250,
+      "sha256": "5439d9a3e40b4739dd63d4d2c6a3b3922ed7374b0288fbf5f1ef8dfae6e32c07"
+    },
+    {
+      "path": "dist/assets/cartoon-magnet-v1.webp",
+      "ids": [
+        "ICON_MAGNET"
+      ],
+      "bytes": 7330,
+      "sha256": "5971dfa259f2f8c974c3688073875c17621110b6470ae007ccac76fe26c81406"
+    },
+    {
+      "path": "dist/assets/cartoon-mix-v1.webp",
+      "ids": [
+        "ICON_MIX"
+      ],
+      "bytes": 8410,
+      "sha256": "b77238bcebbb7eedf83bcedc500fc1533103569ad540ba7f32f0312962608c49"
+    },
+    {
+      "path": "dist/assets/cartoon-pellets-v1.webp",
+      "ids": [
+        "ICON_PELLET"
+      ],
+      "bytes": 5448,
+      "sha256": "43787eb70236cd68cdd1d24fcf4cb4bbffac76e31abbb59296eb341ff719cc0f"
+    },
+    {
+      "path": "dist/assets/cartoon-pond-v1.webp",
+      "ids": [
+        "BG_WATER"
+      ],
+      "bytes": 40158,
+      "sha256": "713db97516ead170c056f2e8b14d84022ea645dd230052721f688f3c2a6a899d"
+    },
+    {
+      "path": "dist/assets/cartoon-soap-v1.webp",
+      "ids": [
+        "ICON_SOAP"
+      ],
+      "bytes": 3320,
+      "sha256": "24f06e964f3ed78bc3d1d2fd87ced2eb8cf2c67cff4c3b1e313b58e9eaf78ff1"
+    },
+    {
+      "path": "dist/assets/cartoon-soda-v1.webp",
+      "ids": [
+        "ICON_SODA"
+      ],
+      "bytes": 5626,
+      "sha256": "e33ce2f8e0112f87c65471acac83583d08e712147915979b281ad018cc4392e7"
+    },
+    {
+      "path": "dist/assets/cartoon-star-halo-v1.webp",
+      "ids": [
+        "FX_STAR_HALO"
+      ],
+      "bytes": 10450,
+      "sha256": "5f54a4db8731e97680c4d0d4172bffa53db6a58f0a554612e3de8c733afe2719"
+    },
+    {
+      "path": "dist/assets/cartoon-star-v1.webp",
+      "ids": [
+        "ICON_STAR"
+      ],
+      "bytes": 6164,
+      "sha256": "0572910f83fd2908591799d47ef7daa2c5aafe2ad231db9b5e51da725bc01733"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    }
+  ],
+  "files": {
+    "App.jsx": "88543b4e04aa37967e67240ea5046f82b414c41fa0059eb4a68ddcd1727a59ec",
+    "dist/bundle.js": "88543b4e04aa37967e67240ea5046f82b414c41fa0059eb4a68ddcd1727a59ec",
+    "dist/game.html": "5fe125920c6b132646fad900ccc404e536848294529c54e885b047d6d7bc92ba",
+    "dist/game.config.json": "b38335829ca2ee897dc93c0b28533e3ecd4f5dbde350ef407d5677cd5b7249ab"
+  }
+}

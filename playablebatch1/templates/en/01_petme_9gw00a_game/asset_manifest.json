@@ -1,0 +1,75 @@
+{
+  "manifest_version": 1,
+  "task_id": "01_petme_9gw00a_game",
+  "number": 63,
+  "name": "Pet Me",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/comb.webp",
+      "ids": [
+        "COMB"
+      ],
+      "bytes": 80622,
+      "sha256": "31aace0587b7b99457b65864a3e77e440d4638846e700573b5a2bbfa64d7dece"
+    },
+    {
+      "path": "dist/assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "ids": [],
+      "bytes": 37464,
+      "sha256": "487694c955a01a6b9e0985b4839ebe6f5406770db551ea163799ee02deb7d3a4"
+    },
+    {
+      "path": "dist/assets/fonts/ui/NunitoSans.woff",
+      "ids": [],
+      "bytes": 261628,
+      "sha256": "e9456519e92dcb6c5857cad504f67c93203e86e81714510f341c72ace8e2313f"
+    },
+    {
+      "path": "dist/assets/fonts/ui/OFL.txt",
+      "ids": [],
+      "bytes": 4393,
+      "sha256": "efbb0c9e864cef973982d9a17567e6be5c3d1759695574586f3f18c7ecca064b"
+    },
+    {
+      "path": "dist/assets/pet_base.webp",
+      "ids": [
+        "PET_BASE"
+      ],
+      "bytes": 282438,
+      "sha256": "ee2b2d8f1e218204cb5b07e4254f726023a1ae98467782a45311e0db3dbcb847"
+    },
+    {
+      "path": "dist/assets/pet_finish.webp",
+      "ids": [
+        "PET_FINISH"
+      ],
+      "bytes": 1458612,
+      "sha256": "ecf6854b1ab2e514fa17d8cbf454cc407c850c7eccd0dd595031ef4f2fce0c29"
+    },
+    {
+      "path": "dist/assets/pet_happy.webp",
+      "ids": [
+        "PET_HAPPY"
+      ],
+      "bytes": 1456142,
+      "sha256": "50388f2f4f738334df0a628793fa8d5f4972e7bb56258ed618eadec268764a1b"
+    },
+    {
+      "path": "dist/assets/pet_resist.webp",
+      "ids": [
+        "PET_RESIST"
+      ],
+      "bytes": 1457940,
+      "sha256": "d796977326b134d955088ac0b46a145ecfb077bda164b92703114571c2d4d526"
+    }
+  ],
+  "files": {
+    "App.jsx": "ca2284f2b56c82e40447fd2e92fdea44cef60bcbe09113c7af5e69606715b712",
+    "dist/bundle.js": "ca2284f2b56c82e40447fd2e92fdea44cef60bcbe09113c7af5e69606715b712",
+    "dist/game.html": "d93a6875cc788c7ded4c996c7915647ab7ba4cd755f58392960bbe17782bb46e",
+    "dist/game.config.json": "d73fbbde099300cbe77c85b3df9355b105d562e0ad4119bfdd9700df2e04a680"
+  }
+}

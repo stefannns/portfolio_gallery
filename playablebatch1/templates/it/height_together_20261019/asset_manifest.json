@@ -1,0 +1,35 @@
+{
+  "manifest_version": 1,
+  "task_id": "height_together_20261019",
+  "number": 72,
+  "name": "Height Together",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/DMSans.woff",
+      "ids": [],
+      "bytes": 109300,
+      "sha256": "28882e64586b903638e580b0782fe44b00ada28963745ea21b0aed4381b4ab1e"
+    },
+    {
+      "path": "dist/assets/fonts/OFL.txt",
+      "ids": [],
+      "bytes": 4482,
+      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1"
+    },
+    {
+      "path": "dist/assets/licenses/THREE-LICENSE.txt",
+      "ids": [],
+      "bytes": 1081,
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
+    }
+  ],
+  "files": {
+    "App.jsx": "f786e48ab27710adeb20922699392febd0f32102f65d5d5522e75845dcc8667f",
+    "dist/bundle.js": "f786e48ab27710adeb20922699392febd0f32102f65d5d5522e75845dcc8667f",
+    "dist/game.html": "d44f6d2c4cb91e047e5d8556d57cf9ec9f0c249c130a55c1f5ef0a0cf5f18bd9",
+    "dist/game.config.json": "f32a246bf41a8973241050cd7795ea369a9bef654de301d0353af3c8a98f57f8"
+  }
+}

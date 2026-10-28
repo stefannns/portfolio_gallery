@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Tracce di calore</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050b3b; -webkit-tap-highlight-color: transparent; }
+    #thermal-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    #root canvas { opacity: 0; }
+    #root .heading, #root .hint { z-index: 2; }
+    #root .heading { color: #e5ffff !important; text-shadow: 0 0 13px #18badc !important; }
+    #root .hint {
+      color: #edffff !important;
+      background: rgba(4, 16, 57, 0.82) !important;
+      border-color: rgba(84, 234, 224, 0.46) !important;
+      text-shadow: 0 0 8px #13c0d0 !important;
+    }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<style id="confirmed-ui-20261013">
+#root .heading{display:none!important}#root .hint{left:30px!important;right:30px!important;bottom:50px!important;font-size:18px!important;letter-spacing:0!important;line-height:1.3!important}
+</style>
+<style data-guide-centering="20261021">
+/* User override 2026-10-21: favor visual center, not a fixed upper band. */
+html:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) .hint{position:fixed!important;top:24%!important;bottom:auto!important;left:50%!important;right:auto!important;width:max-content!important;max-width:calc(100vw - 60px)!important;min-height:0!important;margin:0!important;text-align:center!important;translate:-50% -50%!important;transform:none!important;pointer-events:none!important;z-index:25!important;overflow-wrap:anywhere}
+
+</style>
+<style data-batch4-preview="">
+/* Only the four newly selected games. Host frame, gradients and launch pill stay host-owned. */
+@keyframes batch4-guide-breathe{0%,100%{filter:opacity(1)}50%{filter:opacity(.68)}}
+html:root:root :is(.color-guide,p.feed-first-action,.hint,#guide){animation:batch4-guide-breathe 2.4s ease-in-out infinite!important}
+html[data-batch4-paused]:root:root :is(.color-guide,p.feed-first-action,.hint,#guide){animation-play-state:paused!important}
+html[data-batch4-game="33"]:root:root p.feed-first-action{font-family:var(--font-body,system-ui,sans-serif)!important;font-weight:700!important;color:#17384a!important;background:#fff!important;border-radius:999px!important;padding:10px 18px!important;box-sizing:border-box;text-shadow:none!important;box-shadow:0 3px 12px #001b3833}
+html[data-batch4-game="33"] .hud{justify-content:center}
+/* Keep the CTA preview focused on the demonstration. Restore the HUD on entry. */
+html[data-batch4-game="33"][data-batch4-preview="true"] .hud,
+html[data-batch4-game="9"][data-batch4-preview="true"] .color-header{visibility:hidden!important}
+[data-net-preview-guide]{display:none}
+html[data-batch4-preview="true"] [data-net-preview-guide]:not([hidden]){display:block;color:#e4faff;font-size:18px;line-height:1.35}
+html[data-batch4-game="47"][data-batch4-preview="true"]:root:root .hint{visibility:visible!important}
+html[data-batch4-preview="false"]:root:root .hint[style*="visibility: hidden"]{animation:none!important}
+html:root:root .color-guide{position:fixed;z-index:25;top:24%;left:50%;translate:-50% -50%;width:max-content;max-width:calc(100% - 60px);margin:0;text-align:center;pointer-events:none;color:#334155;font:700 18px/1.4 var(--font-display,system-ui,sans-serif)}
+.color-guide[hidden]{display:none!important}
+html:root:root .color-header{position:absolute;inset:0;pointer-events:none;padding:0!important;z-index:10!important}
+html:root:root .color-panel{position:static!important;padding:0!important;box-shadow:none!important;background:transparent!important;pointer-events:none}
+html:root:root .color-round{position:absolute;top:30px;left:30px}
+html:root:root .color-round-group>div:not(.color-round){display:none}
+html:root:root .color-target-group{position:absolute;top:30px;left:calc(50% - 18px);transform:none;pointer-events:auto}
+html:root:root .color-target-swatch{width:36px!important;height:36px!important}
+html:root:root .color-reset{position:fixed;bottom:50px;right:30px}
+html:root:root .color-match-hud{position:fixed;top:30px;right:30px}
+html:root:root .color-progress-row{position:absolute;top:82px;left:30px;right:30px;pointer-events:none}
+html:root:root .color-bowl-wrap{position:absolute;inset:0;padding:0!important;pointer-events:none}
+html:root:root .color-mix-bowl{position:absolute!important;left:50%!important;top:47%!important;translate:-50% -50%;transform:none!important;min-width:0!important;box-sizing:border-box!important;width:min(62vw,35vh)!important;height:auto;pointer-events:auto}
+html:root:root .color-mix-bowl>div:not(.color-preview-paint){display:none}
+html:root:root .color-tubes{position:absolute;left:30px;right:30px;top:66%;height:13%;padding:0!important;background:transparent!important;box-shadow:none!important;pointer-events:auto}
+html:root:root .color-tubes>div{height:100%!important}
+html[data-batch4-preview="true"] .color-reset{visibility:hidden;pointer-events:none}
+.color-preview-paint{position:absolute;inset:8%;border-radius:50%;pointer-events:none;display:none;background:radial-gradient(ellipse at 35% 35%,#fba6b0 0%,#cf637b 26%,#6b5dcc 64%,#3b4a9f 100%);box-shadow:inset 0 8px 18px #ffffff45}
+.color-preview-tube{position:absolute!important;top:0;left:0;width:var(--paint-tw)!important;height:var(--paint-th)!important;box-sizing:border-box;pointer-events:none;z-index:15;display:none;border:3px solid #0f172ab8;border-radius:14px 14px 9px 9px;background:linear-gradient(#ff8794,#d62839);filter:drop-shadow(0 4px 6px #0003)}
+html[data-batch4-preview="true"] .color-preview-paint{display:block;animation:paint-mix-preview 3.6s ease-in-out infinite}
+html[data-batch4-preview="true"] .color-preview-tube{display:block;animation:paint-tube-preview 3.6s ease-in-out infinite}
+@keyframes paint-mix-preview{0%,18%,100%{opacity:0;scale:.35}46%,72%{opacity:1;scale:1}86%{opacity:.2;scale:1}}
+@keyframes paint-tube-preview{0%,7%{opacity:0;transform:translate(calc(var(--paint-sx) - 50%),calc(var(--paint-sy) - 50%)) rotate(0)}14%{opacity:1}40%,62%{opacity:1;transform:translate(calc(var(--paint-ex) - 50%),calc(var(--paint-ey) - 50%)) rotate(-22deg)}78%,100%{opacity:0;transform:translate(calc(var(--paint-ex) - 50%),calc(var(--paint-ey) - 50%)) rotate(-22deg)}}
+html[data-batch4-paused] :is(.color-preview-paint,.color-preview-tube){animation-play-state:paused!important}
+html:root:root #stage #guide{visibility:visible!important;color:#30251e!important;text-shadow:none!important}
+@media(prefers-reduced-motion:reduce){html:root:root :is(.color-guide,p.feed-first-action,.hint,#guide){animation:none!important}.color-preview-tube{display:none!important}.color-preview-paint{animation:none!important;opacity:.7!important;scale:1!important}}
+
+</style>
+
+
+<style data-italian-layout="">
+/* Italian copy keeps the approved role sizes and may wrap instead of clipping. */
+html[lang="it"] :is(.meeting-guide,.feed-first-action,.melody-guide,.particle-guide,.dive-guide,.sandbox-guide,.koi-guide,.ui-guide,.bead-guide,.coloring-guide,.look-guide,.time-print-guide){white-space:normal;overflow-wrap:normal;word-break:normal;line-height:1.4}
+html[lang="it"] :is(button,.btn,.btn-neon){overflow-wrap:normal;word-break:normal}
+html[lang="it"] .melody-controls button{font-size:18px;padding-inline:12px}
+html[lang="it"] .meeting-sand-ball-count{gap:6px!important}
+html[lang="it"] #people-dialog fieldset label{min-width:0}
+html[lang="it"] #people-dialog input{max-width:100%;min-width:0}
+
+</style>
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-config-inline" type="application/json">{"tweaks":[{"id":"GRAVITY","kind":"number","label":"Particle Gravity","value":0.0015,"default":0.0015,"min":0.0005,"max":0.005,"step":0.0001},{"id":"COMBO_DECAY_MS","kind":"number","label":"Combo Reset Time (ms)","value":2000,"default":2000,"min":1000,"max":5000,"step":100}],"texts":[{"id":"LABEL_INSTRUCTION","label":"Instruction Text","value":"Trascina e scalda","default":"Trascina e scalda","max_length":20}],"images":[{"id":"BG_MAIN","label":"Main Background","path":"./assets/bg_main.png","replaceable":true}],"config_version":"2.0","playable":{"post_id":"99278849158007137","version_id":"99278849158144913","runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"it","min_capability_level":1,"full_capability_level":1}}</script>
+  
+  
+  <canvas id="thermal-overlay" aria-hidden="true"></canvas>
+  
+
+<script src="./bundle.js"></script>
+</body>
+</html>

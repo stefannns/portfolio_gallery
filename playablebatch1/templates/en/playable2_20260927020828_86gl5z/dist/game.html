@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  
+  <style>
+    @font-face {
+      font-family: DynaPuff;
+      src: url("./assets/fonts/dynapuff/DynaPuff-SemiBold.woff2") format("woff2");
+      font-weight: 600; font-style: normal; font-display: swap;
+    }
+    :root {
+      --font-display: DynaPuff, system-ui, sans-serif;
+      --font-mono: ui-monospace, Menlo, monospace;
+      --color-panel: #fff;
+      --color-text: #1f2937;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      overscroll-behavior: none;
+      overscroll-behavior-y: none;
+      touch-action: none;
+    }
+    #root {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      overscroll-behavior: none;
+      touch-action: none;
+      contain: layout paint size;
+    }
+    body {
+      background: #f6f7f9;
+      color: #1f2937;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    img { -webkit-touch-callout: none; }
+    #root, #root * { touch-action: none !important; }
+    button { min-width: 44px; min-height: 44px; }
+    #paint-drag-indicator {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 48px;
+      height: 48px;
+      box-sizing: border-box;
+      border: 3px solid rgba(15, 23, 42, .78);
+      border-radius: 50%;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, .28);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translate3d(-80px, -80px, 0);
+      will-change: transform;
+      z-index: 9999;
+    }
+    /* Iteration repair: replace mislabeled source art with accurate, draggable paint controls. */
+    div:has(> img[src*="tube_"]) { position: relative !important; }
+    img[src*="tube_"] { opacity: 0 !important; position: relative; z-index: 2; }
+    div:has(> img[src*="tube_"])::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      bottom: 0;
+      height: 104px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 10px;
+      border: 3px solid rgba(15,23,42,.72);
+      border-radius: 14px 14px 9px 9px;
+      box-sizing: border-box;
+      color: #fff;
+      font: 700 11px/1 Arial, sans-serif;
+      letter-spacing: .03em;
+      text-shadow: 0 1px 2px #000;
+      box-shadow: 0 5px 10px rgba(0,0,0,.2);
+      pointer-events: none;
+    }
+    div:has(> img[src*="tube_red"])::after { background: linear-gradient(#ff8794,#d62839); }
+    div:has(> img[src*="tube_yellow"])::after { background: linear-gradient(#ffe66d,#e0a800); }
+    div:has(> img[src*="tube_blue"])::after { background: linear-gradient(#71c7ff,#2166d1); }
+    div:has(> img[src*="tube_white"])::after { background: linear-gradient(#fff,#dfe7ef); }
+    div:has(> img[src*="tube_black"])::after { background: linear-gradient(#4b5563,#070b12); }
+    /* Keep the target bowl clear of the tube dock on compact portrait screens. */
+    @media (max-height: 600px) {
+      #root > div > div:nth-of-type(1) { padding: calc(40px + env(safe-area-inset-top, 0px)) 25px 10px !important; }
+      #root > div > div:nth-of-type(1) > div { padding: 10px !important; gap: 6px !important; }
+      #root > div > div:nth-of-type(2) { padding: 6px !important; }
+      #root > div > div:nth-of-type(2) > div { width: min(60vw, 220px) !important; }
+      #root > div > div:nth-of-type(3) { padding: 10px 25px calc(40px + env(safe-area-inset-bottom, 0px)) !important; }
+      #root > div > div:nth-of-type(3) > div { height: 82px !important; }
+      div:has(> img[src*="tube_"])::after { height: 78px; }
+    }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<style id="confirmed-ui-20261013">
+.color-round{position:absolute;top:30px;left:30px}.color-match-hud{position:absolute;top:30px;right:30px}
+</style>
+<style data-guide-centering="20261021">
+/* User override 2026-10-21: favor visual center, not a fixed upper band. */
+html:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) .color-guide{position:fixed!important;top:24%!important;bottom:auto!important;left:50%!important;right:auto!important;width:max-content!important;max-width:calc(100vw - 60px)!important;min-height:0!important;margin:0!important;text-align:center!important;translate:-50% -50%!important;transform:none!important;pointer-events:none!important;z-index:25!important;overflow-wrap:anywhere}
+
+</style>
+<style data-batch4-preview="">
+/* Only the four newly selected games. Host frame, gradients and launch pill stay host-owned. */
+@keyframes batch4-guide-breathe{0%,100%{filter:opacity(1)}50%{filter:opacity(.68)}}
+html:root:root :is(.color-guide,p.feed-first-action,.hint,#guide){animation:batch4-guide-breathe 2.4s ease-in-out infinite!important}
+html[data-batch4-paused]:root:root :is(.color-guide,p.feed-first-action,.hint,#guide){animation-play-state:paused!important}
+html[data-batch4-game="33"]:root:root p.feed-first-action{font-family:var(--font-body,system-ui,sans-serif)!important;font-weight:700!important;color:#17384a!important;background:#fff!important;border-radius:999px!important;padding:10px 18px!important;box-sizing:border-box;text-shadow:none!important;box-shadow:0 3px 12px #001b3833}
+html[data-batch4-game="33"] .hud{justify-content:center}
+/* Keep the CTA preview focused on the demonstration. Restore the HUD on entry. */
+html[data-batch4-game="33"][data-batch4-preview="true"] .hud,
+html[data-batch4-game="9"][data-batch4-preview="true"] .color-header{visibility:hidden!important}
+[data-net-preview-guide]{display:none}
+html[data-batch4-preview="true"] [data-net-preview-guide]:not([hidden]){display:block;color:#e4faff;font-size:18px;line-height:1.35}
+html[data-batch4-game="47"][data-batch4-preview="true"]:root:root .hint{visibility:visible!important}
+html[data-batch4-preview="false"]:root:root .hint[style*="visibility: hidden"]{animation:none!important}
+html:root:root .color-guide{position:fixed;z-index:25;top:24%;left:50%;translate:-50% -50%;width:max-content;max-width:calc(100% - 60px);margin:0;text-align:center;pointer-events:none;color:#334155;font:700 18px/1.4 var(--font-display,system-ui,sans-serif)}
+.color-guide[hidden]{display:none!important}
+html:root:root .color-header{position:absolute;inset:0;pointer-events:none;padding:0!important;z-index:10!important}
+html:root:root .color-panel{position:static!important;padding:0!important;box-shadow:none!important;background:transparent!important;pointer-events:none}
+html:root:root .color-round{position:absolute;top:30px;left:30px}
+html:root:root .color-round-group>div:not(.color-round){display:none}
+html:root:root .color-target-group{position:absolute;top:30px;left:calc(50% - 18px);transform:none;pointer-events:auto}
+html:root:root .color-target-swatch{width:36px!important;height:36px!important}
+html:root:root .color-reset{position:fixed;bottom:50px;right:30px}
+html:root:root .color-match-hud{position:fixed;top:30px;right:30px}
+html:root:root .color-progress-row{position:absolute;top:82px;left:30px;right:30px;pointer-events:none}
+html:root:root .color-bowl-wrap{position:absolute;inset:0;padding:0!important;pointer-events:none}
+html:root:root .color-mix-bowl{position:absolute!important;left:50%!important;top:47%!important;translate:-50% -50%;transform:none!important;min-width:0!important;box-sizing:border-box!important;width:min(62vw,35vh)!important;height:auto;pointer-events:auto}
+html:root:root .color-mix-bowl>div:not(.color-preview-paint){display:none}
+html:root:root .color-tubes{position:absolute;left:30px;right:30px;top:66%;height:13%;padding:0!important;background:transparent!important;box-shadow:none!important;pointer-events:auto}
+html:root:root .color-tubes>div{height:100%!important}
+html[data-batch4-preview="true"] .color-reset{visibility:hidden;pointer-events:none}
+.color-preview-paint{position:absolute;inset:8%;border-radius:50%;pointer-events:none;display:none;background:radial-gradient(ellipse at 35% 35%,#fba6b0 0%,#cf637b 26%,#6b5dcc 64%,#3b4a9f 100%);box-shadow:inset 0 8px 18px #ffffff45}
+.color-preview-tube{position:absolute!important;top:0;left:0;width:var(--paint-tw)!important;height:var(--paint-th)!important;box-sizing:border-box;pointer-events:none;z-index:15;display:none;border:3px solid #0f172ab8;border-radius:14px 14px 9px 9px;background:linear-gradient(#ff8794,#d62839);filter:drop-shadow(0 4px 6px #0003)}
+html[data-batch4-preview="true"] .color-preview-paint{display:block;animation:paint-mix-preview 3.6s ease-in-out infinite}
+html[data-batch4-preview="true"] .color-preview-tube{display:block;animation:paint-tube-preview 3.6s ease-in-out infinite}
+@keyframes paint-mix-preview{0%,18%,100%{opacity:0;scale:.35}46%,72%{opacity:1;scale:1}86%{opacity:.2;scale:1}}
+@keyframes paint-tube-preview{0%,7%{opacity:0;transform:translate(calc(var(--paint-sx) - 50%),calc(var(--paint-sy) - 50%)) rotate(0)}14%{opacity:1}40%,62%{opacity:1;transform:translate(calc(var(--paint-ex) - 50%),calc(var(--paint-ey) - 50%)) rotate(-22deg)}78%,100%{opacity:0;transform:translate(calc(var(--paint-ex) - 50%),calc(var(--paint-ey) - 50%)) rotate(-22deg)}}
+html[data-batch4-paused] :is(.color-preview-paint,.color-preview-tube){animation-play-state:paused!important}
+html:root:root #stage #guide{visibility:visible!important;color:#30251e!important;text-shadow:none!important}
+@media(prefers-reduced-motion:reduce){html:root:root :is(.color-guide,p.feed-first-action,.hint,#guide){animation:none!important}.color-preview-tube{display:none!important}.color-preview-paint{animation:none!important;opacity:.7!important;scale:1!important}}
+
+</style>
+
+
+</head>
+<body>
+  <div id="root"></div>
+  <div id="paint-drag-indicator" aria-hidden="true"></div>
+  
+  <!-- playable-inline-config:start -->
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"MATCH_THRESHOLD","kind":"number","label":"匹配成功阈值(%)","value":90,"default":90,"min":50,"max":100,"step":1}],"texts":[{"id":"TXT_LEVEL","label":"关卡文案","value":"LEVEL","default":"LEVEL","max_length":15},{"id":"TXT_TARGET","label":"目标颜色文案","value":"Target Color","default":"Target Color","max_length":25},{"id":"TXT_MATCH","label":"匹配进度文案","value":"Match","default":"Match","max_length":15},{"id":"TXT_SUCCESS_MSG","label":"过关提示语","value":"Perfect Match!","default":"Perfect Match!","max_length":30},{"id":"TXT_NEXT","label":"下一关按钮","value":"Next Level","default":"Next Level","max_length":20},{"id":"TXT_POST","label":"投稿按钮","value":"Post My Play","default":"Post My Play","max_length":20}],"images":[{"id":"IMG_TUBE_RED","label":"红色颜料管","path":"./assets/tube_red.webp","replaceable":true},{"id":"IMG_TUBE_YELLOW","label":"黄色颜料管","path":"./assets/tube_yellow.webp","replaceable":true},{"id":"IMG_TUBE_BLUE","label":"蓝色颜料管","path":"./assets/tube_blue.webp","replaceable":true},{"id":"IMG_TUBE_WHITE","label":"白色颜料管","path":"./assets/tube_white.webp","replaceable":true},{"id":"IMG_TUBE_BLACK","label":"黑色颜料管","path":"./assets/tube_black.webp","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script>
+  
+  <!-- playable-inline-config:end -->
+  
+
+<script src="./bundle.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260927020825_hjn7q5",
+  "number": 14,
+  "name": "Melody Canvas",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/soundboard-realistic-v1.webp",
+      "ids": [
+        "BG_OVERLAY"
+      ],
+      "bytes": 131636,
+      "sha256": "26090e19277b1c37093b331cc59a8bfbf5e3fbc3c43983c21a86c0f4501b6ff5"
+    }
+  ],
+  "files": {
+    "App.jsx": "311980c388d5805dbadc41ef6578331089c0e86d3b5cd2e2b613b3ead6b1ae76",
+    "dist/bundle.js": "311980c388d5805dbadc41ef6578331089c0e86d3b5cd2e2b613b3ead6b1ae76",
+    "dist/game.html": "c82fe499de7c0b5cb4c956bd9d2804e6db31a698153450d10dd3d8336969418c",
+    "dist/game.config.json": "5e674a9fe95bd8fae5f8bbd01bc6e15370ca21f8b81fdf31b677592e15269807"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable_20260727203355_w1cgvm",
+  "number": 64,
+  "name": "Pick a Look",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/bg_a.webp",
+      "ids": [
+        "BG_A"
+      ],
+      "bytes": 341042,
+      "sha256": "876b15e46aa0672cfcc77c73a1b1c9f0854d049fab4e0f9d70280e2872cf4579"
+    },
+    {
+      "path": "dist/assets/bg_ab.webp",
+      "ids": [
+        "BG_AB"
+      ],
+      "bytes": 337972,
+      "sha256": "734c06d590d8fc2d27c3dfec151e178ea1b5ce33350d9d63d888e9788a8e4842"
+    },
+    {
+      "path": "dist/assets/bg_b.webp",
+      "ids": [
+        "BG_B"
+      ],
+      "bytes": 354228,
+      "sha256": "9ae5caf96d5ff470b54b5eb3c74bf1d326e6e6bea277e4aa00b414fd5e170d7f"
+    },
+    {
+      "path": "dist/assets/bg_base.webp",
+      "ids": [
+        "BG_BASE"
+      ],
+      "bytes": 396356,
+      "sha256": "c64b04b806969fb841ddc2ed39d5d273ed2d98440def2334e2be1b1b001cfad4"
+    },
+    {
+      "path": "dist/assets/fonts/ui/DMSans.woff",
+      "ids": [],
+      "bytes": 109300,
+      "sha256": "28882e64586b903638e580b0782fe44b00ada28963745ea21b0aed4381b4ab1e"
+    },
+    {
+      "path": "dist/assets/fonts/ui/OFL.txt",
+      "ids": [],
+      "bytes": 4482,
+      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1"
+    },
+    {
+      "path": "dist/assets/item_a.webp",
+      "ids": [
+        "ITEM_A"
+      ],
+      "bytes": 190920,
+      "sha256": "44462bc05f3cb026febd267e79c6ef9d5075f19b031d651707c83f89dfb7d7da"
+    },
+    {
+      "path": "dist/assets/item_b.webp",
+      "ids": [
+        "ITEM_B"
+      ],
+      "bytes": 144676,
+      "sha256": "27b3355e15e13f8fc158c9ed88acea023979eabba65e1dabd0c016a516ecc5be"
+    }
+  ],
+  "files": {
+    "App.jsx": "1b8f9427e5573e73b0493e14e020039ef3dd498c7e6f93da82764468f47154cc",
+    "dist/bundle.js": "1b8f9427e5573e73b0493e14e020039ef3dd498c7e6f93da82764468f47154cc",
+    "dist/game.html": "de0d60b08f8f003bc4d54e334f11eb2108f4c5d52bccacc835eafd13222ab17c",
+    "dist/game.config.json": "4b7787ba2761aaa0b36622afd74c7252efe0564949f546b2b6895d854a6ce199"
+  }
+}

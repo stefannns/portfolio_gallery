@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #fdf8ea; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<style data-guide-breathing="20261021">
+/* Existing guide text only; position, opacity lifecycle and hit regions remain game-owned. */
+@keyframes batch-guide-breathe{0%,100%{filter:opacity(1)}50%{filter:opacity(.65)}}
+html:root:root :is(.face-game__prompt){animation:batch-guide-breathe 2.4s ease-in-out infinite!important}
+html[data-guide-breathing-paused]:root:root :is(.face-game__prompt){animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){html:root:root :is(.face-game__prompt){animation:none!important}}
+
+</style>
+
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"BRUSH_SIZE","kind":"number","label":"Brush Size","value":4,"default":4,"min":1,"max":20,"step":1}],"texts":[{"id":"BTN_CLEAR","label":"Clear Button Text","value":"CLEAR","default":"CLEAR","max_length":10},{"id":"BTN_NEXT","label":"Next Button Text","value":"NEXT","default":"NEXT","max_length":10},{"id":"BTN_FINISH","label":"Finish Button Text","value":"FINISH","default":"FINISH","max_length":10},{"id":"BTN_BLINK","label":"Blink Button Text","value":"BLINK","default":"BLINK","max_length":14},{"id":"BTN_SNIFF","label":"Sniff Button Text","value":"SNIFF","default":"SNIFF","max_length":14},{"id":"BTN_TALK","label":"Talk Button Text","value":"TALK","default":"TALK","max_length":14},{"id":"BTN_AGAIN","label":"Draw Again Button Text","value":"DRAW AGAIN","default":"DRAW AGAIN","max_length":20},{"id":"TXT_STEP","label":"Step Label","value":"STEP","default":"STEP","max_length":12},{"id":"TXT_OF","label":"Step Separator","value":"OF","default":"OF","max_length":12},{"id":"PROMPT_1","label":"Step 1 Prompt","value":"Draw OPEN eyes","default":"Draw OPEN eyes","max_length":40},{"id":"PROMPT_2","label":"Step 2 Prompt","value":"Draw CLOSED eyes","default":"Draw CLOSED eyes","max_length":40},{"id":"PROMPT_3","label":"Step 3 Prompt","value":"Draw a NORMAL nose","default":"Draw a NORMAL nose","max_length":40},{"id":"PROMPT_4","label":"Step 4 Prompt","value":"Draw a SMALLER nose","default":"Draw a SMALLER nose","max_length":40},{"id":"PROMPT_5","label":"Step 5 Prompt","value":"Draw an OPEN mouth","default":"Draw an OPEN mouth","max_length":40},{"id":"PROMPT_6","label":"Step 6 Prompt","value":"Draw a KINDA OPEN mouth","default":"Draw a KINDA OPEN mouth","max_length":40},{"id":"PROMPT_7","label":"Step 7 Prompt","value":"Draw a CLOSED mouth","default":"Draw a CLOSED mouth","max_length":40},{"id":"MSG_DONE","label":"Done Message","value":"YOUR FACE!","default":"YOUR FACE!","max_length":60}],"images":[],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script>
+  
+  
+
+<script src="./bundle.js"></script>
+</body>
+</html>

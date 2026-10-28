@@ -1,0 +1,29 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260927020828_oumj12",
+  "number": 6,
+  "name": "String Drawing",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    }
+  ],
+  "files": {
+    "App.jsx": "7bc1dd0ee9f23d58e9108ee18eefc31454297289cd41d6847a05da59f4c9dd83",
+    "dist/bundle.js": "7bc1dd0ee9f23d58e9108ee18eefc31454297289cd41d6847a05da59f4c9dd83",
+    "dist/game.html": "5dc9e8c572017d8ecf1ae37c1748fbd118d4d8e756333f55e4528c69a3c76bd6",
+    "dist/game.config.json": "c813f1c16172f642807a8e5ea76fc88de25b7033f94a2193ad937c09ad7125ea"
+  }
+}

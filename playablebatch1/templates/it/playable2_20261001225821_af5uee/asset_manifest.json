@@ -1,0 +1,45 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261001225821_af5uee",
+  "number": 45,
+  "name": "Draw a Star",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/beach-sand-v1.webp",
+      "ids": [
+        "BG_MAIN"
+      ],
+      "bytes": 476536,
+      "sha256": "24ac6b8262b33f53f4ebfb5ae2a38ffbf23d23d5edda54b8ab11ee1c0410bc9c"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/img_coconut_uncarved.png",
+      "ids": [
+        "IMG_COCONUT"
+      ],
+      "bytes": 648026,
+      "sha256": "52739c2716831dbfd78558befd49e308f947ac6f13bbabceb0e3b2f30e0dbcb0"
+    }
+  ],
+  "files": {
+    "App.jsx": "72014cf848f8694f5cfbcdd26580ba81f9a757d881ba80d5f1216c3f0be247d7",
+    "dist/bundle.js": "72014cf848f8694f5cfbcdd26580ba81f9a757d881ba80d5f1216c3f0be247d7",
+    "dist/game.html": "6121ad9209707655d902dfd05ab32e151257c3dddead2e4ea71c4ff5c4f7ab1d",
+    "dist/game.config.json": "3bd8d5529de8275dc17ec8e90124b83e59c4a7110f30b489e3031028dd021bb2"
+  }
+}

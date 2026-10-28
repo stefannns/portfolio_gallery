@@ -1,0 +1,149 @@
+{
+  "manifest_version": 1,
+  "task_id": "05c_timemachine_male_black_wall",
+  "number": 65,
+  "name": "Time Machine",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/age_01.webp",
+      "ids": [
+        "AGE_01"
+      ],
+      "bytes": 205458,
+      "sha256": "f1739ae23dcbe80dace6c2f52f719584f18c6ac9ab09293d8f555ac8a1914b19"
+    },
+    {
+      "path": "dist/assets/age_03.webp",
+      "ids": [
+        "AGE_03"
+      ],
+      "bytes": 216716,
+      "sha256": "b85514a8ad9c44f1fbaea8134cceb78a807215de651beb634262dee1c50aa917"
+    },
+    {
+      "path": "dist/assets/age_05.webp",
+      "ids": [
+        "AGE_05"
+      ],
+      "bytes": 152912,
+      "sha256": "5af5381890aa1240fb2c3d3afead7843dfb277c19abbf3445f4f468276dea94a"
+    },
+    {
+      "path": "dist/assets/age_07.webp",
+      "ids": [
+        "AGE_07"
+      ],
+      "bytes": 163212,
+      "sha256": "28e806a6a1f5401e0804818d9c61e927afc62af82288c5c7ee5fa5ad1c35e7da"
+    },
+    {
+      "path": "dist/assets/age_10.webp",
+      "ids": [
+        "AGE_10"
+      ],
+      "bytes": 157246,
+      "sha256": "7d0660b9ea84584950110ad78d176793852c922ff4308a476d2aa176f005533b"
+    },
+    {
+      "path": "dist/assets/age_12.webp",
+      "ids": [
+        "AGE_12"
+      ],
+      "bytes": 143106,
+      "sha256": "8d466d98d723919f75c530df00f617c589e8d10b0c87d51f0b9440dc2f5948b3"
+    },
+    {
+      "path": "dist/assets/age_16.webp",
+      "ids": [
+        "AGE_16"
+      ],
+      "bytes": 127818,
+      "sha256": "f4709045c49efb1829401ae6a518d789f34ec4db68fdb485d75eddb7aa1eb48e"
+    },
+    {
+      "path": "dist/assets/age_22.webp",
+      "ids": [
+        "AGE_22"
+      ],
+      "bytes": 127966,
+      "sha256": "f09989901c3758c52b85f1422e186cececec5dc19a7a07ec5235c4798ae29d5a"
+    },
+    {
+      "path": "dist/assets/age_28.webp",
+      "ids": [
+        "AGE_28"
+      ],
+      "bytes": 122486,
+      "sha256": "28c3143db08a505450295739e066c2b87291ef7b5da5ddc50741e0cbcedb2040"
+    },
+    {
+      "path": "dist/assets/age_38.webp",
+      "ids": [
+        "AGE_38"
+      ],
+      "bytes": 190828,
+      "sha256": "9c060e47d3a45b04b032e5285b4d487b990e0924317b51ff145684db2c61a247"
+    },
+    {
+      "path": "dist/assets/age_47.webp",
+      "ids": [
+        "AGE_47"
+      ],
+      "bytes": 237748,
+      "sha256": "2ca0844777f3402abf5bc29531eae385b8cab3f926910e425c69d4636ae465f1"
+    },
+    {
+      "path": "dist/assets/age_55.webp",
+      "ids": [
+        "AGE_55"
+      ],
+      "bytes": 240012,
+      "sha256": "334b49c91896ae18ced591d21af02f7a40c2bbe9b71d22f89ec10e91dcf3e1b3"
+    },
+    {
+      "path": "dist/assets/age_65_v2.webp",
+      "ids": [
+        "AGE_65"
+      ],
+      "bytes": 272710,
+      "sha256": "1ef226eb9147e822a1fffc3f38ce0a84f2ec21b79ce01dde53cd3be4cba873c2"
+    },
+    {
+      "path": "dist/assets/age_75.webp",
+      "ids": [
+        "AGE_75"
+      ],
+      "bytes": 324578,
+      "sha256": "361c5fc1c2cfe2ba134b111242b326da73f3341cd2a730d8b9901f151a4fc463"
+    },
+    {
+      "path": "dist/assets/age_85.webp",
+      "ids": [
+        "AGE_85"
+      ],
+      "bytes": 339798,
+      "sha256": "db56d4b1c3184e2c542f12fe60562cd568085b2262cce82977de4fe0fde75d0a"
+    },
+    {
+      "path": "dist/assets/fonts/ui/DMSans.woff",
+      "ids": [],
+      "bytes": 109300,
+      "sha256": "28882e64586b903638e580b0782fe44b00ada28963745ea21b0aed4381b4ab1e"
+    },
+    {
+      "path": "dist/assets/fonts/ui/OFL.txt",
+      "ids": [],
+      "bytes": 4482,
+      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1"
+    }
+  ],
+  "files": {
+    "App.jsx": "0d5b83bf711c3db8e4b06db95bbf02e774c794fcc3d447a86dce84e9e83c9722",
+    "dist/bundle.js": "0d5b83bf711c3db8e4b06db95bbf02e774c794fcc3d447a86dce84e9e83c9722",
+    "dist/game.html": "e92639efcf2d2683e98491bedfeaee2a822d6ff56d172e29db9a186b9e3ba8f2",
+    "dist/game.config.json": "2bce2608e43563dfd5d3a386b05e4eaef0db08fac4ffadbd52f403b77fe4cbb6"
+  }
+}

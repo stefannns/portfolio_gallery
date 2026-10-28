@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Twilight Grayscale</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #11151d; -webkit-tap-highlight-color: transparent; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<style data-guide-centering="20261021">
+/* User override 2026-10-21: favor visual center, not a fixed upper band. */
+html:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) p#guide{position:fixed!important;top:26%!important;bottom:auto!important;left:50%!important;right:auto!important;width:max-content!important;max-width:calc(100vw - 60px)!important;min-height:0!important;margin:0!important;text-align:center!important;translate:-50% -50%!important;transform:none!important;pointer-events:none!important;z-index:25!important;overflow-wrap:anywhere}
+html:root:root:root #root .hud{filter:none!important}
+html:root:root:root #root .counter{filter:drop-shadow(0 3px 12px rgba(0,0,0,.72))}
+html:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) p#guide{color:#eef3ff;text-shadow:0 2px 8px #000a}
+
+</style>
+<style data-guide-breathing="20261021">
+/* Existing guide text only; position, opacity lifecycle and hit regions remain game-owned. */
+@keyframes batch-guide-breathe{0%,100%{filter:opacity(1)}50%{filter:opacity(.65)}}
+html:root:root :is(p#guide){animation:batch-guide-breathe 2.4s ease-in-out infinite!important}
+html[data-guide-breathing-paused]:root:root :is(p#guide){animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){html:root:root :is(p#guide){animation:none!important}}
+
+</style>
+
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-config-inline" type="application/json">{"tweaks":[{"id":"CLOUD_SPEED","kind":"number","label":"Cloud Speed","value":0.34,"default":0.34,"min":0.1,"max":1,"step":0.02},{"id":"CLOUD_DENSITY","kind":"number","label":"Cloud Density","value":18,"default":18,"min":8,"max":30,"step":1},{"id":"LIGHTNING_GLOW","kind":"number","label":"Lightning Glow","value":30,"default":30,"min":10,"max":60,"step":2},{"id":"THUNDER_VOLUME","kind":"number","label":"Thunder Volume","value":0.28,"default":0.28,"min":0,"max":0.6,"step":0.02}],"texts":[{"id":"GAME_TITLE","label":"Game Title","value":"Twilight Grayscale","default":"Twilight Grayscale","max_length":30},{"id":"GUIDE_TEXT","label":"Guide Text","value":"Tap the clouds to call lightning","default":"Tap the clouds to call lightning","max_length":44}],"images":[],"motions":[],"config_version":"2.0","playable":{"post_id":"99280150965238575","version_id":"99280150965135547","runtime_target":"h5","h5_playstyle_type":"image_expression","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script>
+  
+  
+
+
+<script src="./bundle.js"></script>
+</body>
+</html>

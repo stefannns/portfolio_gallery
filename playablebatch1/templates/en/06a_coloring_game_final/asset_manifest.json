@@ -1,0 +1,51 @@
+{
+  "manifest_version": 1,
+  "task_id": "06a_coloring_game_final",
+  "number": 68,
+  "name": "Color by Number",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/bg_cartoon_canonical_v5.png",
+      "ids": [
+        "BG_CARTOON"
+      ],
+      "bytes": 1083237,
+      "sha256": "a6f2d188bff577bdf7f86a7a2837c1ade35fb9f24ba7a3b82fb14a176fcb480c"
+    },
+    {
+      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
+      "ids": [],
+      "bytes": 37004,
+      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+    },
+    {
+      "path": "dist/assets/fonts/ui/NunitoSans.woff",
+      "ids": [],
+      "bytes": 261628,
+      "sha256": "e9456519e92dcb6c5857cad504f67c93203e86e81714510f341c72ace8e2313f"
+    },
+    {
+      "path": "dist/assets/fonts/ui/OFL.txt",
+      "ids": [],
+      "bytes": 4393,
+      "sha256": "efbb0c9e864cef973982d9a17567e6be5c3d1759695574586f3f18c7ecca064b"
+    },
+    {
+      "path": "dist/assets/source_original.png",
+      "ids": [
+        "SOURCE_ORIGINAL"
+      ],
+      "bytes": 1972231,
+      "sha256": "6ba91b83090a7b09de6850a7bf7c766a57ac6af872cb1cd8045bf7188be7b9dc"
+    }
+  ],
+  "files": {
+    "App.jsx": "a4882f324c4a9e7d17cd8cb08b52fbc1d9463cdd58f8297df022535ef77f3878",
+    "dist/bundle.js": "a4882f324c4a9e7d17cd8cb08b52fbc1d9463cdd58f8297df022535ef77f3878",
+    "dist/game.html": "76ec8ba3ebb4949431a4ff89037d28d95c31cd9f2407c95f24c02f899d5ac3f6",
+    "dist/game.config.json": "f1d86516f7d5c26ec9ddbcb41fd6760e04c8177e54c965ea8559ccfe6be22458"
+  }
+}

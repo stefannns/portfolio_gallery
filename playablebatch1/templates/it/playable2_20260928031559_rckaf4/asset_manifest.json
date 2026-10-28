@@ -1,0 +1,37 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260928031559_rckaf4",
+  "number": 35,
+  "name": "Piano Tiles Rhythm Game",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/ui_piano_keyboard.webp",
+      "ids": [
+        "UI_KEYBOARD"
+      ],
+      "bytes": 123580,
+      "sha256": "33d23e25978e3570d6e1fc0d71b6d394ef0fce6f484a64575055b96df427f496"
+    }
+  ],
+  "files": {
+    "App.jsx": "eb8b7d32c70f8e10c4afccea379fd39c5d8b02910ea5e1cd1d80e089a9b998c9",
+    "dist/bundle.js": "eb8b7d32c70f8e10c4afccea379fd39c5d8b02910ea5e1cd1d80e089a9b998c9",
+    "dist/game.html": "9c9776361593e97da2bda4e55df916eab89ff42533a3dbecf3586c1524c4537a",
+    "dist/game.config.json": "b2c33c814af58833fef440043f492cde24acf0e9470c89f33f4ef988567dfc57"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260924214501_peqvrc",
+  "number": 1,
+  "name": "Dual Tap Duel",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
+      "ids": [],
+      "bytes": 37004,
+      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+    }
+  ],
+  "files": {
+    "App.jsx": "521059a2b5fb9a7ff1265cd8212476ed8a2244bfe64957aa29cc939b3e8f4005",
+    "dist/bundle.js": "521059a2b5fb9a7ff1265cd8212476ed8a2244bfe64957aa29cc939b3e8f4005",
+    "dist/game.html": "420c158cdfe5088ebecd73687791e06b306adeb869940992e13973f51c68b27d",
+    "dist/game.config.json": "fc2ec132e667796c5309fac17a44d08253a9cd93bcb4633a6f8ffa1374e6d71e"
+  }
+}

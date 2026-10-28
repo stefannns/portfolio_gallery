@@ -1,0 +1,47 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260928030642_uthymy",
+  "number": 32,
+  "name": "Fruit Peeler Challenge",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
+      "ids": [],
+      "bytes": 37004,
+      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+    },
+    {
+      "path": "dist/assets/peeler.webp",
+      "ids": [
+        "PEELER_IMG"
+      ],
+      "bytes": 58178,
+      "sha256": "83180ef3bae800864bb0e2cd64577bbdfb0133469b012aba9f9806ad22505803"
+    },
+    {
+      "path": "dist/assets/potato_peeled_v2.webp",
+      "ids": [
+        "POTATO_PEELED"
+      ],
+      "bytes": 29892,
+      "sha256": "8bb53b5c63f430ed6fc418199094eaf854e36621b105dec9cc5e781aeddf7b75"
+    },
+    {
+      "path": "dist/assets/potato_unpeeled_v2.webp",
+      "ids": [
+        "POTATO_UNPEELED"
+      ],
+      "bytes": 45572,
+      "sha256": "6f6111820fafc710230dbd67d9198124fe11d5e1e6981dc774d26e3309d2f69c"
+    }
+  ],
+  "files": {
+    "App.jsx": "02b6b9cab3b07d594b028b8742fb756e10ae28b97d4d17747b13c467cb017c56",
+    "dist/bundle.js": "02b6b9cab3b07d594b028b8742fb756e10ae28b97d4d17747b13c467cb017c56",
+    "dist/game.html": "113a2de5077e35564999ce198da473b4d9c0df360bda3130a127edd79567f9cb",
+    "dist/game.config.json": "ef64bbda2bc30f1abdbc6a3847929292903d91c73836b8b41118b162fe483606"
+  }
+}

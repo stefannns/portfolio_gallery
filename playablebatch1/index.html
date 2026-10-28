@@ -60,6 +60,7 @@
 <link rel="stylesheet" href="/playablebatch1/batch-filter.css?v=stable-batches-20261021-1">
 <script src="/playablebatch1/italian-games.js?v=italian38-d4e50dc64050"></script>
 <script src="/playablebatch1/review-language.js?v=italian-20261021-2"></script>
+<script src="/playablebatch1/game-download-ui.js?v=standard-templates-20261027-1"></script>
 </head>
 <body>
 <div class="shell">
@@ -86,7 +87,7 @@
   </main>
 </div>
 <dialog id="review-drawer" class="review-drawer" aria-labelledby="review-drawer-heading"><header class="review-details-head"><h2 id="review-drawer-heading">Review</h2><button class="review-drawer-close" type="button">Close</button></header><div class="review-drawer-body"></div></dialog>
-<script src="/playablebatch1/game-downloads.js?v=italian38-d4e50dc64050"></script>
+<script src="/playablebatch1/game-downloads.js?v=standard-templates-20261027-1"></script>
 <script src="/playablebatch1/feedback-config.js?v=preview-hud-hidden-20261026-1"></script>
 <script src="/playablebatch1/developer-notes.js?v=preview-hud-hidden-20261026-1"></script>
   <script src="/playablebatch1/implemented-fixes-data.js?v=preview-hud-hidden-20261026-1"></script>
@@ -187,14 +188,7 @@ function select(game, options = {}) {
   $('reference').hidden = !game.referenceUrl;
   $('reference').href = game.referenceUrl || '';
   $('reference').setAttribute('aria-label', 'Open original reference for ' + game.number + '. ' + game.name);
-  const archive = window.PlayableGameDownloads?.[game.base], download = $('download');
-  download.hidden = !archive;
-  if (archive) {
-    download.href = archive.url + '?v=' + archive.sha256.slice(0,16);
-    download.download = archive.filename;
-    download.setAttribute('aria-label', 'Download current game folder for ' + game.number + '. ' + game.name + ' as a ZIP');
-    download.title = 'Current game files · ' + (archive.bytes / 1048576).toFixed(1) + ' MB';
-  } else { download.removeAttribute('href'); download.removeAttribute('download'); }
+  window.PlayableGameDownloadsUI?.reflect(game);
   window.PlayableDeveloperNotes?.selectGame(game);
   window.PlayableImplementedFixes?.selectGame(game);
   window.PlayableFeedback?.selectGame(game);

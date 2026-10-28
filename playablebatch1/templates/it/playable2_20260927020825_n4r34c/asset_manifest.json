@@ -1,0 +1,29 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260927020825_n4r34c",
+  "number": 15,
+  "name": "Orbital Circle",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    }
+  ],
+  "files": {
+    "App.jsx": "30775fd1d917ea4970b9235a9dbf410f32f817b4145ad81dfe43c30beda9da06",
+    "dist/bundle.js": "30775fd1d917ea4970b9235a9dbf410f32f817b4145ad81dfe43c30beda9da06",
+    "dist/game.html": "5ec4491c60feb2c2e219af711a8f55d1238f365e97a4d9a68a72018678e9e224",
+    "dist/game.config.json": "12b3dfc6b0720ae8013c4ca0c243d54c1cd66d70e80a299948ef80683dc05f97"
+  }
+}

@@ -38,3 +38,7 @@ kitchen-src/public/
 
 # Supplied H3 Otome portfolio demo, served with the website.
 !/videos/h3-otome-demo.mp4
+
+# Required runtime files in checked-in downloadable templates.
+!/playablebatch1/templates/**/dist/
+!/playablebatch1/templates/**/dist/**

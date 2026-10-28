@@ -1,0 +1,45 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261001230122_0sowkn",
+  "number": 53,
+  "name": "Snake",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/motion/reveal.svg",
+      "ids": [
+        "BG_STONE"
+      ],
+      "bytes": 2203,
+      "sha256": "a45ea890c4294ad140ab11ff23dbd9037a88d27deb6577fdae7b733179fb8f1c"
+    },
+    {
+      "path": "dist/assets/yellow-handheld-20261021.webp",
+      "ids": [
+        "IMG_CONSOLE"
+      ],
+      "bytes": 79236,
+      "sha256": "35b2fef6e6a7e019b5ee98ece74ad0e55b2ee64bf02e8a7516383c8a087f2d80"
+    }
+  ],
+  "files": {
+    "App.jsx": "2566b158a391d7c1842957467a60d1abde8ed6c3050d9591b497a7e52f0afed1",
+    "dist/bundle.js": "2566b158a391d7c1842957467a60d1abde8ed6c3050d9591b497a7e52f0afed1",
+    "dist/game.html": "a72379987386b6010f9f6290be1b79d6ddb98f573bd5c1e812bbc1df91e4dd88",
+    "dist/game.config.json": "de3f5f7b84a66335de4a05db63116f507619eb15855a996c6e0fdb233cd0e695"
+  }
+}

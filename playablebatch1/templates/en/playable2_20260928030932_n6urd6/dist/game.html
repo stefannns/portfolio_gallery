@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Playable</title>
+  <style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    #root { isolation: isolate; }
+    canvas { touch-action: none; }
+    button, input, select, textarea { touch-action: manipulation; }
+  </style>
+<style id="feed-entry-motion">
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+</style>
+<style data-guide-centering="20261021">
+/* User override 2026-10-21: favor visual center, not a fixed upper band. */
+html:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) p.feed-first-action{position:fixed!important;top:24%!important;bottom:auto!important;left:50%!important;right:auto!important;width:max-content!important;max-width:calc(100vw - 60px)!important;min-height:0!important;margin:0!important;text-align:center!important;translate:-50% -50%!important;transform:none!important;pointer-events:none!important;z-index:25!important;overflow-wrap:anywhere}
+
+</style>
+<style data-batch4-preview="">
+/* Only the four newly selected games. Host frame, gradients and launch pill stay host-owned. */
+@keyframes batch4-guide-breathe{0%,100%{filter:opacity(1)}50%{filter:opacity(.68)}}
+html:root:root :is(.color-guide,p.feed-first-action,.hint,#guide){animation:batch4-guide-breathe 2.4s ease-in-out infinite!important}
+html[data-batch4-paused]:root:root :is(.color-guide,p.feed-first-action,.hint,#guide){animation-play-state:paused!important}
+html[data-batch4-game="33"]:root:root p.feed-first-action{font-family:var(--font-body,system-ui,sans-serif)!important;font-weight:700!important;color:#17384a!important;background:#fff!important;border-radius:999px!important;padding:10px 18px!important;box-sizing:border-box;text-shadow:none!important;box-shadow:0 3px 12px #001b3833}
+html[data-batch4-game="33"] .hud{justify-content:center}
+/* Keep the CTA preview focused on the demonstration. Restore the HUD on entry. */
+html[data-batch4-game="33"][data-batch4-preview="true"] .hud,
+html[data-batch4-game="9"][data-batch4-preview="true"] .color-header{visibility:hidden!important}
+[data-net-preview-guide]{display:none}
+html[data-batch4-preview="true"] [data-net-preview-guide]:not([hidden]){display:block;color:#e4faff;font-size:18px;line-height:1.35}
+html[data-batch4-game="47"][data-batch4-preview="true"]:root:root .hint{visibility:visible!important}
+html[data-batch4-preview="false"]:root:root .hint[style*="visibility: hidden"]{animation:none!important}
+html:root:root .color-guide{position:fixed;z-index:25;top:24%;left:50%;translate:-50% -50%;width:max-content;max-width:calc(100% - 60px);margin:0;text-align:center;pointer-events:none;color:#334155;font:700 18px/1.4 var(--font-display,system-ui,sans-serif)}
+.color-guide[hidden]{display:none!important}
+html:root:root .color-header{position:absolute;inset:0;pointer-events:none;padding:0!important;z-index:10!important}
+html:root:root .color-panel{position:static!important;padding:0!important;box-shadow:none!important;background:transparent!important;pointer-events:none}
+html:root:root .color-round{position:absolute;top:30px;left:30px}
+html:root:root .color-round-group>div:not(.color-round){display:none}
+html:root:root .color-target-group{position:absolute;top:30px;left:calc(50% - 18px);transform:none;pointer-events:auto}
+html:root:root .color-target-swatch{width:36px!important;height:36px!important}
+html:root:root .color-reset{position:fixed;bottom:50px;right:30px}
+html:root:root .color-match-hud{position:fixed;top:30px;right:30px}
+html:root:root .color-progress-row{position:absolute;top:82px;left:30px;right:30px;pointer-events:none}
+html:root:root .color-bowl-wrap{position:absolute;inset:0;padding:0!important;pointer-events:none}
+html:root:root .color-mix-bowl{position:absolute!important;left:50%!important;top:47%!important;translate:-50% -50%;transform:none!important;min-width:0!important;box-sizing:border-box!important;width:min(62vw,35vh)!important;height:auto;pointer-events:auto}
+html:root:root .color-mix-bowl>div:not(.color-preview-paint){display:none}
+html:root:root .color-tubes{position:absolute;left:30px;right:30px;top:66%;height:13%;padding:0!important;background:transparent!important;box-shadow:none!important;pointer-events:auto}
+html:root:root .color-tubes>div{height:100%!important}
+html[data-batch4-preview="true"] .color-reset{visibility:hidden;pointer-events:none}
+.color-preview-paint{position:absolute;inset:8%;border-radius:50%;pointer-events:none;display:none;background:radial-gradient(ellipse at 35% 35%,#fba6b0 0%,#cf637b 26%,#6b5dcc 64%,#3b4a9f 100%);box-shadow:inset 0 8px 18px #ffffff45}
+.color-preview-tube{position:absolute!important;top:0;left:0;width:var(--paint-tw)!important;height:var(--paint-th)!important;box-sizing:border-box;pointer-events:none;z-index:15;display:none;border:3px solid #0f172ab8;border-radius:14px 14px 9px 9px;background:linear-gradient(#ff8794,#d62839);filter:drop-shadow(0 4px 6px #0003)}
+html[data-batch4-preview="true"] .color-preview-paint{display:block;animation:paint-mix-preview 3.6s ease-in-out infinite}
+html[data-batch4-preview="true"] .color-preview-tube{display:block;animation:paint-tube-preview 3.6s ease-in-out infinite}
+@keyframes paint-mix-preview{0%,18%,100%{opacity:0;scale:.35}46%,72%{opacity:1;scale:1}86%{opacity:.2;scale:1}}
+@keyframes paint-tube-preview{0%,7%{opacity:0;transform:translate(calc(var(--paint-sx) - 50%),calc(var(--paint-sy) - 50%)) rotate(0)}14%{opacity:1}40%,62%{opacity:1;transform:translate(calc(var(--paint-ex) - 50%),calc(var(--paint-ey) - 50%)) rotate(-22deg)}78%,100%{opacity:0;transform:translate(calc(var(--paint-ex) - 50%),calc(var(--paint-ey) - 50%)) rotate(-22deg)}}
+html[data-batch4-paused] :is(.color-preview-paint,.color-preview-tube){animation-play-state:paused!important}
+html:root:root #stage #guide{visibility:visible!important;color:#30251e!important;text-shadow:none!important}
+@media(prefers-reduced-motion:reduce){html:root:root :is(.color-guide,p.feed-first-action,.hint,#guide){animation:none!important}.color-preview-tube{display:none!important}.color-preview-paint{animation:none!important;opacity:.7!important;scale:1!important}}
+
+</style>
+
+
+</head>
+<body>
+  <div id="root"></div>
+  <script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"TIME_LIMIT","kind":"number","label":"Time Limit","value":30,"default":30,"min":10,"max":60,"step":1},{"id":"FISH_COUNT","kind":"number","label":"Fish Count","value":24,"default":24,"min":5,"max":50,"step":1},{"id":"FISH_SPEED","kind":"number","label":"Fish Speed","value":0.16,"default":0.16,"min":0.05,"max":0.4,"step":0.01}],"texts":[{"id":"GAME_TITLE","label":"Game Title","value":"FISHING NET TEAR","default":"FISHING NET TEAR","max_length":30},{"id":"BTN_START","label":"Start Button","value":"START","default":"START","max_length":20},{"id":"BTN_RESTART","label":"Restart Button","value":"PLAY AGAIN","default":"PLAY AGAIN","max_length":20},{"id":"LBL_SCORE","label":"Score Label","value":"SCORE","default":"SCORE","max_length":15},{"id":"LBL_TIME","label":"Time Label","value":"TIME","default":"TIME","max_length":15}],"images":[{"id":"BG_MAIN","label":"Background Image","path":"./assets/bg_main.webp","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script>
+  
+  
+  
+
+<script src="./bundle.js"></script>
+</body>
+</html>

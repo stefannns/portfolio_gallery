@@ -1,0 +1,37 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261001230412_o52e38",
+  "number": 58,
+  "name": "Stack",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/block_surface.svg",
+      "ids": [
+        "BLOCK_IMG"
+      ],
+      "bytes": 610,
+      "sha256": "9b3d3017d9d8b43e145e87ba0f4d370190f09ba3da50230c6d46fcc7ef0e2020"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    }
+  ],
+  "files": {
+    "App.jsx": "556785dc10bff8ccbbb2544a7cb12d3ef1d5b26e10d235f6de291cef441a69b4",
+    "dist/bundle.js": "556785dc10bff8ccbbb2544a7cb12d3ef1d5b26e10d235f6de291cef441a69b4",
+    "dist/game.html": "80106322ac2135377aab808bdf11b7b5aef166be668ae0e4f174c63db2c0968b",
+    "dist/game.config.json": "6ac19c839a24c1f048dba8cb3fb5c11a4b22255e3946dc62e2e6b7edaa0872f7"
+  }
+}

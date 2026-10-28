@@ -1,0 +1,39 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260927020828_y5a1vt",
+  "number": 10,
+  "name": "Color Wheel",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/bg_wheel.webp",
+      "ids": [
+        "BG_WHEEL"
+      ],
+      "bytes": 12362,
+      "sha256": "6ec4831c5867ecc084d3bdff4439c8eb1b7dbcbbaa0cf38a9048d3a75d78a5be"
+    },
+    {
+      "path": "dist/assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "ids": [],
+      "bytes": 18880,
+      "sha256": "4650e661683335ff42987353137525ee47444acff82525f647beb9d82b534216"
+    },
+    {
+      "path": "dist/assets/icon_needle.webp",
+      "ids": [
+        "ICON_NEEDLE"
+      ],
+      "bytes": 4968,
+      "sha256": "270af6c2692c04fddbda5888fca01d3df62942d06ec057c168d1811dd840bea6"
+    }
+  ],
+  "files": {
+    "App.jsx": "eb01c3dcd187b5f16b2cd21b009ab0888118d7d892c26702a29e7cd7d5644e9c",
+    "dist/bundle.js": "eb01c3dcd187b5f16b2cd21b009ab0888118d7d892c26702a29e7cd7d5644e9c",
+    "dist/game.html": "ada2125e6f7396a00416331a063ce0febc8ee86001dc0a99c141dd2563cf9ed6",
+    "dist/game.config.json": "4d74c4fa5b296fc85d62228f30c1a6e2065248e8a035c06fcdff0508c5186825"
+  }
+}

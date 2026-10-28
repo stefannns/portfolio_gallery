@@ -1,0 +1,63 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260927020828_86gl5z",
+  "number": 9,
+  "name": "Color Match",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "ids": [],
+      "bytes": 37464,
+      "sha256": "487694c955a01a6b9e0985b4839ebe6f5406770db551ea163799ee02deb7d3a4"
+    },
+    {
+      "path": "dist/assets/tube_black.webp",
+      "ids": [
+        "IMG_TUBE_BLACK"
+      ],
+      "bytes": 27138,
+      "sha256": "0baec112da65f30537e77940afda2507c3638672fbd6b6e1008c441f4af39ecc"
+    },
+    {
+      "path": "dist/assets/tube_blue.webp",
+      "ids": [
+        "IMG_TUBE_BLUE"
+      ],
+      "bytes": 25398,
+      "sha256": "3328755cd5c5c3d729761636c1de85d2328e1661d0d14fd686478eab359df2ff"
+    },
+    {
+      "path": "dist/assets/tube_red.webp",
+      "ids": [
+        "IMG_TUBE_RED"
+      ],
+      "bytes": 20316,
+      "sha256": "780577c44a5fb03e7fda1004f404ef1916e3133c8255494f888fed8c6578999d"
+    },
+    {
+      "path": "dist/assets/tube_white.webp",
+      "ids": [
+        "IMG_TUBE_WHITE"
+      ],
+      "bytes": 26266,
+      "sha256": "afb9e0c91565ae9c03b16e279f8a0f149c04c79a09f997e9396a57fc0c8c4630"
+    },
+    {
+      "path": "dist/assets/tube_yellow.webp",
+      "ids": [
+        "IMG_TUBE_YELLOW"
+      ],
+      "bytes": 70836,
+      "sha256": "e2c9693a68d8bf72e6f42f6ece56f1149017273edfec71d6030a55210e3d4e3a"
+    }
+  ],
+  "files": {
+    "App.jsx": "6716965bdd0dcfb7069b221632a2851e2a6a674645b8afdb5687358a8dbb6b66",
+    "dist/bundle.js": "6716965bdd0dcfb7069b221632a2851e2a6a674645b8afdb5687358a8dbb6b66",
+    "dist/game.html": "3784bd29101e39d33499a1bf1c34d1d1cfb8fd5a1befe22158b1a42066280b04",
+    "dist/game.config.json": "2e19924f4ba9937fe4c112ae3f95ba9455778afe017d9da0bd8c376de0cf86de"
+  }
+}

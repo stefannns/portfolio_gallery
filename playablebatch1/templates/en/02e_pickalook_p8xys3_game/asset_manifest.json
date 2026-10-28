@@ -1,0 +1,51 @@
+{
+  "manifest_version": 1,
+  "task_id": "02e_pickalook_p8xys3_game",
+  "number": 69,
+  "name": "Scratch Reveal",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
+      "ids": [],
+      "bytes": 37004,
+      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+    },
+    {
+      "path": "dist/assets/fonts/ui/DMSans.woff",
+      "ids": [],
+      "bytes": 109300,
+      "sha256": "28882e64586b903638e580b0782fe44b00ada28963745ea21b0aed4381b4ab1e"
+    },
+    {
+      "path": "dist/assets/fonts/ui/OFL.txt",
+      "ids": [],
+      "bytes": 4482,
+      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1"
+    },
+    {
+      "path": "dist/assets/image_1.webp",
+      "ids": [
+        "ORIGINAL_IMG"
+      ],
+      "bytes": 739268,
+      "sha256": "86f5f3325d4e49565900bd569074fe76f30bf4beee9202f6a7145fa0f3824e1a"
+    },
+    {
+      "path": "dist/assets/material.webp",
+      "ids": [
+        "COMIC_IMG"
+      ],
+      "bytes": 2265943,
+      "sha256": "378a1026880b809301b05f8e27367b8ff9d0d55ea7eabd89dc9996c2c16a71a0"
+    }
+  ],
+  "files": {
+    "App.jsx": "401f31152f68c97b86ec0607d063628944780417e05dc0d95b6ecf4c8008f64c",
+    "dist/bundle.js": "401f31152f68c97b86ec0607d063628944780417e05dc0d95b6ecf4c8008f64c",
+    "dist/game.html": "7285449f569daaa1f7cfcaef7b60c0c7db5065944c9d147456271371990cade5",
+    "dist/game.config.json": "97fa43ff535ad5935d965d1b678a0e06361856ba1af188af21b1efef9762ca79"
+  }
+}

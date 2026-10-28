@@ -1,0 +1,59 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261013020955_2hyyml",
+  "number": 61,
+  "name": "Time Camera",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/devices/antique-camera-front-20261026.webp",
+      "ids": [],
+      "bytes": 52396,
+      "sha256": "418e3b0035aaca0ce74162f6768323afc0e9404a3d2b169fa4c0a2e744ea8e30"
+    },
+    {
+      "path": "dist/assets/devices/camera-phone-front-20261026.webp",
+      "ids": [],
+      "bytes": 21360,
+      "sha256": "e23bf53f8e7f4b4e77fec1c02a638f33773d4bdaa15a0758635be5f0eba52ee2"
+    },
+    {
+      "path": "dist/assets/devices/ccd-camera-front-20261026.webp",
+      "ids": [],
+      "bytes": 32414,
+      "sha256": "6b72e503eb281402d531402b2bc8852eef4aae4f8639015844a8537301b34a2f"
+    },
+    {
+      "path": "dist/assets/devices/film-camera-front-20261026.webp",
+      "ids": [],
+      "bytes": 49062,
+      "sha256": "4dde4ddbcee00c2b388a9f4dae45c39764a74ff994606484e6469a76ffaaf958"
+    },
+    {
+      "path": "dist/assets/devices/smartphone-front-20261026.webp",
+      "ids": [],
+      "bytes": 13258,
+      "sha256": "3b7c59d16949fa589bc59720dd5a9caaa128f15ca622b3852dd08dba9b4b0c56"
+    },
+    {
+      "path": "dist/assets/fonts/ui/DMSans.woff",
+      "ids": [],
+      "bytes": 109300,
+      "sha256": "28882e64586b903638e580b0782fe44b00ada28963745ea21b0aed4381b4ab1e"
+    },
+    {
+      "path": "dist/assets/fonts/ui/OFL.txt",
+      "ids": [],
+      "bytes": 4482,
+      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1"
+    }
+  ],
+  "files": {
+    "App.jsx": "a8c5488df66dec749b6578f9876ad45c3fc20d815a186382418b4be5ad93bbc2",
+    "dist/bundle.js": "a8c5488df66dec749b6578f9876ad45c3fc20d815a186382418b4be5ad93bbc2",
+    "dist/game.html": "0e191334cb563f6af142cc42111f635911afd855c5e857b83fc75458cfc3303d",
+    "dist/game.config.json": "a209aad069af0ac1be59c50f34143affc876af6580193ffccebde9700595a17a"
+  }
+}

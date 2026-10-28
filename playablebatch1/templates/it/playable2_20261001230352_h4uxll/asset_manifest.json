@@ -1,0 +1,23 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261001230352_h4uxll",
+  "number": 57,
+  "name": "Twilight Grayscale",
+  "language": "it",
+  "entry": "dist/game.html",
+  "source_kind": "consolidated-current-runtime",
+  "assets": [
+    {
+      "path": "dist/assets/audio/rock-theme-song-loop.mp3",
+      "ids": [],
+      "bytes": 436614,
+      "sha256": "d9702a6e5e74e6dce7273535d757c08022d273ff6c85e9e7d9a1a8e3ee94ef6f"
+    }
+  ],
+  "files": {
+    "App.jsx": "5fe385453d8a54fcb5aacf16d9fc53d58f3b699de329430a0654fe7b23bab933",
+    "dist/bundle.js": "5fe385453d8a54fcb5aacf16d9fc53d58f3b699de329430a0654fe7b23bab933",
+    "dist/game.html": "7319044098ad03f978400a9c145d7c5dc8611116d420c19aa0475f49d4e6e2d5",
+    "dist/game.config.json": "01e0c45d8ffea28b9070bd25ceb055a2fff898b6e3fb050aae3e2e4f4936d886"
+  }
+}
