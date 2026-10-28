@@ -116,8 +116,8 @@ export const projects = [
 
 // The computer has an editorial order independent of the room and older galleries.
 export const computerProjectIds = [
-  'seed-squad', 'smarttester', 'h3-otome', 'a-bot-can-do-better', 'toad-defense',
-  'recurve', 'assassin', 'niflheim',
+  'seed-squad', 'smarttester', 'h3-otome', 'a-bot-can-do-better',
+  'recurve', 'assassin', 'niflheim', 'toad-defense',
 ];
 
 // Display order is also the keyboard/swipe order. Recent work opens nearest.
