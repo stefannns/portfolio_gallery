@@ -851,5 +851,77 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
     "evidence": [
       "Batch79–86 polish20261028"
     ]
+  },
+  "playable2_20261029183430_hxuf8g": {
+    "number": 86,
+    "items": [
+      "Faster initial ball and stronger speed increase on each bounce.",
+      "Best removed from play/results; centered score only.",
+      "Safe FYP layout, breathing guide and replay positions restored."
+    ],
+    "status": "Latest reviewed changes · 29 October 2026",
+    "evidence": [
+      "No.86 faster and score only · 29 October 2026"
+    ]
+  },
+  "playable2_20261029183430_v5avg1": {
+    "number": 87,
+    "items": [
+      "Fine spray mist, realistic suds and flowing rinse water with dirty runoff.",
+      "Each area cleans only after Spray → Scrub → Rinse; wrong-order actions give a short hint.",
+      "Drying is optional; spray/rinse audio is softer and water-like."
+    ],
+    "status": "Latest reviewed changes · 29 October 2026",
+    "evidence": [
+      "No.87 ordered spray, scrub and rinse · 29 October 2026"
+    ]
+  },
+  "playable2_20261029183430_9mlt5d": {
+    "number": 88,
+    "items": [
+      "Removed the redundant game heading, strengthened the 18px breathing CTA and lowered the orbital scene to avoid it.",
+      "Aligned HUD margins/type and placed Pause 30px from the right and 50px from the bottom.",
+      "Enlarged palette hit areas. Existing Score/Perfect/Best roles and timing-transfer gameplay remain."
+    ],
+    "status": "Latest reviewed changes · 29 October 2026",
+    "evidence": [
+      "New five UI round · 29 October 2026"
+    ]
+  },
+  "playable2_20261029183430_9mlt5d_88b": {
+    "number": "88b",
+    "items": [
+      "One continuous gradient strip shows the widest safe tangent launch window.",
+      "Clearer center, fading ends and correct wrapping around the orbit; updates after each transfer.",
+      "Tangent flight, gradual acceleration and centered score-only HUD retained."
+    ],
+    "status": "Latest reviewed changes · 29 October 2026",
+    "evidence": [
+      "No.88b single working launch strip · 29 October 2026"
+    ]
+  },
+  "playable2_20261029183430_ctpmni": {
+    "number": 89,
+    "items": [
+      "New cartoon character, workshop background and 17 weapon/auto illustrations.",
+      "Level text centered above the character and coins centered at the top, both without panels.",
+      "Repeat-hit feedback, safe FYP layout and current source/dist structure."
+    ],
+    "status": "Latest reviewed changes · 29 October 2026",
+    "evidence": [
+      "No.89 overhead level and centered coins · 29 October 2026"
+    ]
+  },
+  "playable2_20261029183430_cvsxhd": {
+    "number": 90,
+    "items": [
+      "Rotated the score 90 degrees and placed it on the left at the vertical center.",
+      "Rotated the win panel and its replay action 90 degrees; retained independent two-player touch controls and first-to-five rules.",
+      "Kept the preview/start instruction normally oriented, following the latest clarification."
+    ],
+    "status": "Latest reviewed changes · 29 October 2026",
+    "evidence": [
+      "New five UI round · 29 October 2026"
+    ]
   }
 };

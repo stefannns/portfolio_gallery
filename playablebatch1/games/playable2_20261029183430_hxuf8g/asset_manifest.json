@@ -1,0 +1,48 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261029183430_hxuf8g",
+  "number": 86,
+  "name": "Ricochet",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "editable-current-react-source",
+  "files": {
+    "App.jsx": "c8a701000239e888db7e84c9c40116f46c073dbe86ceb0dd09f6f0ed8b17c0be",
+    "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
+    "dist/game.html": "ed77519f0fa81bed25fdd6103b98acbedabd4a4be5ea0a521378effd52c62213",
+    "dist/bundle.js": "53fa6dce61b1eca123da5e93b26b1a26fc56b0acc080a5093a15b034dd1e78ea",
+    "dist/game.config.json": "53d84011f620c66ed08d0f71588dc165774d5a3eacc101c69c19d39ef3c306d5"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/sfx_game_over.mp3",
+      "ids": [],
+      "bytes": 21605,
+      "sha256": "19b52628dbec7c8b7b9e5a2eee43c95a9dfd471e802f72a923057bb6bf12664c"
+    },
+    {
+      "path": "dist/assets/sfx_reset.mp3",
+      "ids": [],
+      "bytes": 29765,
+      "sha256": "d7a7ac5e555f7d0dd31b2da31b67b1e909433f66bc46b8222186c96ef93eccb1"
+    },
+    {
+      "path": "dist/assets/sfx_tick.mp3",
+      "ids": [],
+      "bytes": 45209,
+      "sha256": "73fe883896294317daeb7c5395fb437c5c6b96cf9b250f6e360891d284352e4e"
+    }
+  ]
+}

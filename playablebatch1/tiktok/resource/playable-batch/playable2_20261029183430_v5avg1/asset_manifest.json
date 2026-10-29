@@ -1,0 +1,84 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261029183430_v5avg1",
+  "number": 87,
+  "name": "Satisfying Carpet Clean",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "editable-current-react-source",
+  "files": {
+    "App.jsx": "e263b328ef7e2a71ab203bf92e732dd121c966527a46455c23c23e59c820f5f5",
+    "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
+    "dist/game.html": "0a4e5e272829e691697f9990708b895c11b34b9df4c2540f5883fb1b79dd6709",
+    "dist/bundle.js": "2c50eea854f2609354d2b50478b8e72163d1072ff573118c603054b26e445046",
+    "dist/game.config.json": "64fc0b54968c33ebb3df7aa7ea82c83811d0008f1333ff6703b3ea23ccd96458"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/rug-overhead.webp",
+      "ids": [
+        "RUG_MAIN"
+      ],
+      "bytes": 398906,
+      "sha256": "444892d9102c505823f6a78a7c84b7189351662e214e9cf8e7c0712a26e5f1d7"
+    },
+    {
+      "path": "dist/assets/sfx_tool_select.mp3",
+      "ids": [],
+      "bytes": 3212,
+      "sha256": "72ff4f25645d97f545f2fba9783afb582e63d8902b3a1b0eea4208953dcdf12d"
+    },
+    {
+      "path": "dist/assets/tool-brush.svg",
+      "ids": [
+        "TOOL_BRUSH"
+      ],
+      "bytes": 909,
+      "sha256": "4b3963c071352d11c4b1c2cad3f419ba7b4efd132fff84c945578776fe679431"
+    },
+    {
+      "path": "dist/assets/tool-dry.svg",
+      "ids": [
+        "TOOL_DRY"
+      ],
+      "bytes": 853,
+      "sha256": "7d0676178da48d1afd62d166d93cf8c188117e45090d4e7fc00aaf87bfb5b799"
+    },
+    {
+      "path": "dist/assets/tool-rinse.svg",
+      "ids": [
+        "TOOL_RINSE"
+      ],
+      "bytes": 959,
+      "sha256": "d56b9b3ad76b033369c2d09dfdeb7b1db82e263c27f953649711dd2d1ae1d4a1"
+    },
+    {
+      "path": "dist/assets/tool-spray.svg",
+      "ids": [
+        "TOOL_SPRAY"
+      ],
+      "bytes": 942,
+      "sha256": "fa0a725bf774dedb47221a69080d74fa29dbf78c1be90bc87a5fa21741d8a8b1"
+    },
+    {
+      "path": "dist/assets/upholstery-overhead.webp",
+      "ids": [
+        "UPHOLSTERY_MAIN"
+      ],
+      "bytes": 343532,
+      "sha256": "a9ed22d58e3d41cfac53ba8afa59ba1d680cced453379d5aeae4811bcabc1bbf"
+    }
+  ]
+}

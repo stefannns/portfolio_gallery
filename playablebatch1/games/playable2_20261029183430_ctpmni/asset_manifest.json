@@ -1,0 +1,224 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261029183430_ctpmni",
+  "number": 89,
+  "name": "Stickman Upgrade Clicker",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "editable-current-react-source",
+  "files": {
+    "App.jsx": "d1175435950bd726aec8b8b712e67c04873caa97297219665ce26ad8b3a32e8a",
+    "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
+    "dist/game.html": "e9727f76326ccd8764fe49da4729ebf0578220900bc9e21d6977aa085fc13fd7",
+    "dist/bundle.js": "63b001b20d7e0ef89f2501b8c9dffa0ea0d449cdf91d437ddd2744b4bbfe73a5",
+    "dist/game.config.json": "a29ee7d525a7fd195ca0cccddc31343283f23b4726d42ff68b856a2b9493ce40"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
+      "ids": [],
+      "bytes": 37004,
+      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/sfx_boom_hit.mp3",
+      "ids": [],
+      "bytes": 70052,
+      "sha256": "1cb1ded7bf87a6b3f3746c76be69149eefbf176c660697fee40ff829feb15407"
+    },
+    {
+      "path": "dist/assets/sfx_clear.mp3",
+      "ids": [],
+      "bytes": 60736,
+      "sha256": "ac162bafed07dd06aa8d4fd5e633a07f9fa6c340109f0880cd3d99d48a852477"
+    },
+    {
+      "path": "dist/assets/sfx_heavy_hit.mp3",
+      "ids": [],
+      "bytes": 6092,
+      "sha256": "37c6b69c9c243e9f562210b2082b06b7f12b42a148e40601bece0adc136b3e75"
+    },
+    {
+      "path": "dist/assets/sfx_light_hit.mp3",
+      "ids": [],
+      "bytes": 6092,
+      "sha256": "d9d44be7f56c7af93076090d292a530552a4927cdb6876c546591432e329fa72"
+    },
+    {
+      "path": "dist/assets/sfx_tech_hit.mp3",
+      "ids": [],
+      "bytes": 29765,
+      "sha256": "d7a7ac5e555f7d0dd31b2da31b67b1e909433f66bc46b8222186c96ef93eccb1"
+    },
+    {
+      "path": "dist/assets/sfx_ui.mp3",
+      "ids": [],
+      "bytes": 3500,
+      "sha256": "01578fddd7022cdab38793c533aac259c152634ab762fc727967b3bb863a2ce7"
+    },
+    {
+      "path": "dist/assets/stickman-mascot.webp",
+      "ids": [
+        "CHARACTER_MAIN"
+      ],
+      "bytes": 160630,
+      "sha256": "73edbfd48f841cb12cf5a3d54e059cd96f0b7d95a0b02ed9097da40118aa6ac9"
+    },
+    {
+      "path": "dist/assets/training-workshop.webp",
+      "ids": [
+        "BACKGROUND_MAIN"
+      ],
+      "bytes": 18810,
+      "sha256": "63757f9d9f030f6f32a9589b4e13172eb2778c6973dbbc82991b1b0f98ed3f08"
+    },
+    {
+      "path": "dist/assets/weapons/admin.svg",
+      "ids": [
+        "TOOL_ADMIN"
+      ],
+      "bytes": 542,
+      "sha256": "9934b4d6dddaa14e1253249bfdccc0f3ec27fa1f6be436ece919911a09fa67a0"
+    },
+    {
+      "path": "dist/assets/weapons/atomic.svg",
+      "ids": [
+        "TOOL_ATOMIC"
+      ],
+      "bytes": 608,
+      "sha256": "7aac52db789ce1bd798ba7330666dfeea09d3675fc1cd4ae9e77d338805db86c"
+    },
+    {
+      "path": "dist/assets/weapons/auto.svg",
+      "ids": [
+        "TOOL_AUTO"
+      ],
+      "bytes": 396,
+      "sha256": "a1ad445867a8e9c47973f1dbc95e2adfad656dbf81a8251b06edb25dd6b22936"
+    },
+    {
+      "path": "dist/assets/weapons/axe.svg",
+      "ids": [
+        "TOOL_AXE"
+      ],
+      "bytes": 426,
+      "sha256": "40856aebaa4a387212b49021dcccf318eb02776d322238ee9c84fab8c26f87e3"
+    },
+    {
+      "path": "dist/assets/weapons/bat.svg",
+      "ids": [
+        "TOOL_BAT"
+      ],
+      "bytes": 401,
+      "sha256": "f11ac744f2ade1adbc0b72c957af9e6cf4d712a4df2ea3690d96c21f99dd1809"
+    },
+    {
+      "path": "dist/assets/weapons/blackhole.svg",
+      "ids": [
+        "TOOL_BLACKHOLE"
+      ],
+      "bytes": 474,
+      "sha256": "90d956fd7cc010ea95ad2f0d4d258c9cc19b84ca5ea1229c6669f25931794e0e"
+    },
+    {
+      "path": "dist/assets/weapons/bomb.svg",
+      "ids": [
+        "TOOL_BOMB"
+      ],
+      "bytes": 539,
+      "sha256": "84d93060b82c6aa27987fde7bd07456b4c314dcc1acf480c6de5c81aac1c1da0"
+    },
+    {
+      "path": "dist/assets/weapons/chainsaw.svg",
+      "ids": [
+        "TOOL_CHAINSAW"
+      ],
+      "bytes": 490,
+      "sha256": "d7b7edda5f4a0dda98e0ebf2136f66c9d9f6f8dfb5397a2b250593fbbc7c646a"
+    },
+    {
+      "path": "dist/assets/weapons/comet.svg",
+      "ids": [
+        "TOOL_COMET"
+      ],
+      "bytes": 420,
+      "sha256": "5aafd78f00d117ee9369162042cc25653f5c2e54eaef5f711f0c91bc07334b81"
+    },
+    {
+      "path": "dist/assets/weapons/fist.svg",
+      "ids": [
+        "TOOL_FIST"
+      ],
+      "bytes": 502,
+      "sha256": "d64854494bff47a442bd3533b7275a5eff3e13b2a2fd550f6baa6ca911984557"
+    },
+    {
+      "path": "dist/assets/weapons/galaxy.svg",
+      "ids": [
+        "TOOL_GALAXY"
+      ],
+      "bytes": 548,
+      "sha256": "15c91e1b601f96c8e0d21a1be51e02dd2e7e55f8cd531c5173814c0fa600de75"
+    },
+    {
+      "path": "dist/assets/weapons/katana.svg",
+      "ids": [
+        "TOOL_KATANA"
+      ],
+      "bytes": 448,
+      "sha256": "43ed3d8b5e376bba127b8792112cee7108aef06e12f850bb7613df3faf577a47"
+    },
+    {
+      "path": "dist/assets/weapons/laser.svg",
+      "ids": [
+        "TOOL_LASER"
+      ],
+      "bytes": 438,
+      "sha256": "ae8710d2d177fec8d313052dde3930d415a28e433f4596aa4bf0ba523f194ac2"
+    },
+    {
+      "path": "dist/assets/weapons/plasma.svg",
+      "ids": [
+        "TOOL_PLASMA"
+      ],
+      "bytes": 529,
+      "sha256": "af46dfa67f3f7700600bbb65175df924ce076018cca081adf9c7d27b0deac5b5"
+    },
+    {
+      "path": "dist/assets/weapons/rocket.svg",
+      "ids": [
+        "TOOL_ROCKET"
+      ],
+      "bytes": 500,
+      "sha256": "d809602b567001db536f030ce860c3995538ec2e53c94cfb762eab22fa21de41"
+    },
+    {
+      "path": "dist/assets/weapons/sledge.svg",
+      "ids": [
+        "TOOL_SLEDGE"
+      ],
+      "bytes": 420,
+      "sha256": "c75f0357da09880d1e9c9cc2fc6b8002dfb774e19eab653c5d62bd28fd2ee8ce"
+    },
+    {
+      "path": "dist/assets/weapons/ufo.svg",
+      "ids": [
+        "TOOL_UFO"
+      ],
+      "bytes": 590,
+      "sha256": "c90cecb927d1c17d86fdd10c6e80ede2cb5c60497d0fee1bd3cf927d0ba7f72c"
+    }
+  ]
+}

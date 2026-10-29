@@ -1,0 +1,60 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261029183430_9mlt5d",
+  "number": 88,
+  "name": "Orbit",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "editable-current-react-source",
+  "files": {
+    "App.jsx": "c66e67d6e93cc40adcac682d922782925691da1ab596f6eae0010f5fbcba740e",
+    "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
+    "dist/game.html": "24808a3a8252a9fb1b3d1bcdf49f9864feaa765493ff461b6ccae91bd0172ad2",
+    "dist/bundle.js": "c9a9ae6619c3673f5829c9c3d523a2b1e3910631439829b1833628cc9664cca6",
+    "dist/game.config.json": "f15757ac7acd12666d72222c9b172c7030f722c273f7b9b19f1ee78d3039fa79"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/sfx_catch.mp3",
+      "ids": [],
+      "bytes": 3116,
+      "sha256": "1b0eea9f814c67ad746d98fce62405abf148e81aaa48018d20ef957ae569345c"
+    },
+    {
+      "path": "dist/assets/sfx_click.mp3",
+      "ids": [],
+      "bytes": 3212,
+      "sha256": "72ff4f25645d97f545f2fba9783afb582e63d8902b3a1b0eea4208953dcdf12d"
+    },
+    {
+      "path": "dist/assets/sfx_launch.mp3",
+      "ids": [],
+      "bytes": 5420,
+      "sha256": "19a2183f79695bbe4a96d37424c4890bdbeddf335c491f347d15b8d90f78bf07"
+    },
+    {
+      "path": "dist/assets/sfx_miss.mp3",
+      "ids": [],
+      "bytes": 21605,
+      "sha256": "19b52628dbec7c8b7b9e5a2eee43c95a9dfd471e802f72a923057bb6bf12664c"
+    },
+    {
+      "path": "dist/assets/sfx_perfect.mp3",
+      "ids": [],
+      "bytes": 9260,
+      "sha256": "b58b418eac362cbc96a3e79335d563f27a4460b155ac7c2918e2fa8e12d8740b"
+    }
+  ]
+}

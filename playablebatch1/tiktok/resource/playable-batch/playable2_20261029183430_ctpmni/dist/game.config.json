@@ -1,0 +1,433 @@
+{
+  "tweaks": [
+    {
+      "id": "BASE_HEALTH",
+      "kind": "number",
+      "label": "Starting health",
+      "value": 1000000,
+      "default": 1000000,
+      "min": 1000,
+      "max": 1000000000,
+      "step": 1000
+    },
+    {
+      "id": "HEALTH_MULTIPLIER",
+      "kind": "number",
+      "label": "Health multiplier",
+      "value": 4,
+      "default": 4,
+      "min": 1,
+      "max": 10,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_REWARD",
+      "kind": "number",
+      "label": "Level reward",
+      "value": 1000,
+      "default": 1000,
+      "min": 1,
+      "max": 1000000,
+      "step": 1
+    },
+    {
+      "id": "AUTO_COST",
+      "kind": "number",
+      "label": "Auto upgrade cost",
+      "value": 10000,
+      "default": 10000,
+      "min": 1,
+      "max": 100000000,
+      "step": 1
+    },
+    {
+      "id": "ADMIN_DAMAGE",
+      "kind": "number",
+      "label": "Admin hammer damage",
+      "value": 15000000,
+      "default": 15000000,
+      "min": 1,
+      "max": 1000000000,
+      "step": 1
+    },
+    {
+      "id": "AUTO_INTERVAL",
+      "kind": "number",
+      "label": "Auto attack interval",
+      "value": 760,
+      "default": 760,
+      "min": 300,
+      "max": 3000,
+      "step": 20
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game title",
+      "value": "STICKMAN CLICKER PRO",
+      "default": "STICKMAN CLICKER PRO",
+      "max_length": 28
+    },
+    {
+      "id": "GUIDE",
+      "label": "First-use guide",
+      "value": "Tap to hit and upgrade",
+      "default": "Tap to hit and upgrade",
+      "max_length": 32
+    },
+    {
+      "id": "HEALTH_LABEL",
+      "label": "Health label",
+      "value": "HP",
+      "default": "HP",
+      "max_length": 8
+    },
+    {
+      "id": "LEVEL_LABEL",
+      "label": "Level label",
+      "value": "LEVEL",
+      "default": "LEVEL",
+      "max_length": 8
+    },
+    {
+      "id": "COINS_LABEL",
+      "label": "Coins label",
+      "value": "COINS",
+      "default": "COINS",
+      "max_length": 8
+    },
+    {
+      "id": "STORE_LABEL",
+      "label": "Store label",
+      "value": "ARSENAL",
+      "default": "ARSENAL",
+      "max_length": 12
+    },
+    {
+      "id": "EQUIPPED",
+      "label": "Equipped status",
+      "value": "EQUIPPED",
+      "default": "EQUIPPED",
+      "max_length": 12
+    },
+    {
+      "id": "OWNED",
+      "label": "Owned status",
+      "value": "OWNED",
+      "default": "OWNED",
+      "max_length": 12
+    },
+    {
+      "id": "UNAFFORDABLE",
+      "label": "Unaffordable status",
+      "value": "LOCKED",
+      "default": "LOCKED",
+      "max_length": 12
+    },
+    {
+      "id": "FREE",
+      "label": "Free price",
+      "value": "FREE",
+      "default": "FREE",
+      "max_length": 8
+    },
+    {
+      "id": "AUTO_NAME",
+      "label": "Auto upgrade name",
+      "value": "AUTO",
+      "default": "AUTO",
+      "max_length": 8
+    },
+    {
+      "id": "AUTO_ON",
+      "label": "Auto enabled",
+      "value": "ON",
+      "default": "ON",
+      "max_length": 8
+    },
+    {
+      "id": "AUTO_OFF",
+      "label": "Auto disabled",
+      "value": "OFF",
+      "default": "OFF",
+      "max_length": 8
+    },
+    {
+      "id": "ADMIN_NAME",
+      "label": "Admin tool name",
+      "value": "ADMIN HAMMER",
+      "default": "ADMIN HAMMER",
+      "max_length": 18
+    },
+    {
+      "id": "CLEARED",
+      "label": "Level clear feedback",
+      "value": "CLEARED",
+      "default": "CLEARED",
+      "max_length": 12
+    },
+    {
+      "id": "REWARD",
+      "label": "Reward suffix",
+      "value": "BONUS",
+      "default": "BONUS",
+      "max_length": 12
+    },
+    {
+      "id": "NEED_MORE",
+      "label": "Unaffordable feedback",
+      "value": "Need more coins",
+      "default": "Need more coins",
+      "max_length": 20
+    }
+  ],
+  "tools": [
+    {
+      "id": "fist",
+      "name": "FIST",
+      "damage": 1,
+      "price": 0,
+      "sound": "light",
+      "accent": "#334155"
+    },
+    {
+      "id": "bat",
+      "name": "WOODEN BAT",
+      "damage": 3,
+      "price": 50,
+      "sound": "light",
+      "accent": "#b87537"
+    },
+    {
+      "id": "katana",
+      "name": "KATANA",
+      "damage": 8,
+      "price": 200,
+      "sound": "tech",
+      "accent": "#56b4d3"
+    },
+    {
+      "id": "sledge",
+      "name": "SLEDGEHAMMER",
+      "damage": 20,
+      "price": 600,
+      "sound": "heavy",
+      "accent": "#e26d5a"
+    },
+    {
+      "id": "laser",
+      "name": "LASER SWORD",
+      "damage": 50,
+      "price": 1500,
+      "sound": "tech",
+      "accent": "#ef476f"
+    },
+    {
+      "id": "chainsaw",
+      "name": "CHAINSAW",
+      "damage": 150,
+      "price": 5000,
+      "sound": "heavy",
+      "accent": "#f59e0b"
+    },
+    {
+      "id": "rocket",
+      "name": "ROCKET",
+      "damage": 400,
+      "price": 15000,
+      "sound": "boom",
+      "accent": "#fb7185"
+    },
+    {
+      "id": "axe",
+      "name": "FIRE AXE",
+      "damage": 1200,
+      "price": 50000,
+      "sound": "heavy",
+      "accent": "#ef4444"
+    },
+    {
+      "id": "bomb",
+      "name": "BOMB",
+      "damage": 3500,
+      "price": 150000,
+      "sound": "boom",
+      "accent": "#7c3aed"
+    },
+    {
+      "id": "ufo",
+      "name": "UFO BLASTER",
+      "damage": 10000,
+      "price": 500000,
+      "sound": "tech",
+      "accent": "#22c55e"
+    },
+    {
+      "id": "comet",
+      "name": "COMET",
+      "damage": 30000,
+      "price": 2000000,
+      "sound": "boom",
+      "accent": "#06b6d4"
+    },
+    {
+      "id": "atomic",
+      "name": "ATOMIC BOMB",
+      "damage": 100000,
+      "price": 10000000,
+      "sound": "boom",
+      "accent": "#f97316"
+    },
+    {
+      "id": "plasma",
+      "name": "PLASMA CANNON",
+      "damage": 300000,
+      "price": 50000000,
+      "sound": "tech",
+      "accent": "#a855f7"
+    },
+    {
+      "id": "blackhole",
+      "name": "BLACK HOLE",
+      "damage": 1000000,
+      "price": 250000000,
+      "sound": "boom",
+      "accent": "#111827"
+    },
+    {
+      "id": "galaxy",
+      "name": "GALAXY",
+      "damage": 3000000,
+      "price": 1000000000,
+      "sound": "boom",
+      "accent": "#2563eb"
+    }
+  ],
+  "images": [
+    {
+      "id": "CHARACTER_MAIN",
+      "label": "Cartoon stickman target",
+      "path": "./assets/stickman-mascot.webp",
+      "replaceable": true
+    },
+    {
+      "id": "BACKGROUND_MAIN",
+      "label": "Training workshop backdrop",
+      "path": "./assets/training-workshop.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_FIST",
+      "label": "FIST artwork",
+      "path": "./assets/weapons/fist.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_BAT",
+      "label": "WOODEN BAT artwork",
+      "path": "./assets/weapons/bat.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_KATANA",
+      "label": "KATANA artwork",
+      "path": "./assets/weapons/katana.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_SLEDGE",
+      "label": "SLEDGEHAMMER artwork",
+      "path": "./assets/weapons/sledge.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_LASER",
+      "label": "LASER SWORD artwork",
+      "path": "./assets/weapons/laser.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_CHAINSAW",
+      "label": "CHAINSAW artwork",
+      "path": "./assets/weapons/chainsaw.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_ROCKET",
+      "label": "ROCKET artwork",
+      "path": "./assets/weapons/rocket.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_AXE",
+      "label": "FIRE AXE artwork",
+      "path": "./assets/weapons/axe.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_BOMB",
+      "label": "BOMB artwork",
+      "path": "./assets/weapons/bomb.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_UFO",
+      "label": "UFO BLASTER artwork",
+      "path": "./assets/weapons/ufo.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_COMET",
+      "label": "COMET artwork",
+      "path": "./assets/weapons/comet.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_ATOMIC",
+      "label": "ATOMIC BOMB artwork",
+      "path": "./assets/weapons/atomic.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_PLASMA",
+      "label": "PLASMA CANNON artwork",
+      "path": "./assets/weapons/plasma.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_BLACKHOLE",
+      "label": "BLACK HOLE artwork",
+      "path": "./assets/weapons/blackhole.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_GALAXY",
+      "label": "GALAXY artwork",
+      "path": "./assets/weapons/galaxy.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_ADMIN",
+      "label": "Admin hammer artwork",
+      "path": "./assets/weapons/admin.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_AUTO",
+      "label": "Auto attack artwork",
+      "path": "./assets/weapons/auto.svg",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109359222646831522",
+    "version_id": "109359222646851249",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

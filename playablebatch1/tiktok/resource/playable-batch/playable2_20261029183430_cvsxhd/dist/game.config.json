@@ -1,0 +1,112 @@
+{
+  "tweaks": [
+    {
+      "id": "MATCH_POINTS",
+      "kind": "number",
+      "label": "Points to win",
+      "value": 5,
+      "default": 5,
+      "min": 1,
+      "max": 9,
+      "step": 1
+    },
+    {
+      "id": "BALL_SPEED",
+      "kind": "number",
+      "label": "Ball speed",
+      "value": 0.38,
+      "default": 0.38,
+      "min": 0.2,
+      "max": 0.7,
+      "step": 0.01
+    },
+    {
+      "id": "AI_SPEED",
+      "kind": "number",
+      "label": "Opponent reaction speed",
+      "value": 0.24,
+      "default": 0.24,
+      "min": 0.1,
+      "max": 0.45,
+      "step": 0.01
+    },
+    {
+      "id": "PADDLE_WIDTH",
+      "kind": "number",
+      "label": "Paddle width",
+      "value": 86,
+      "default": 86,
+      "min": 64,
+      "max": 120,
+      "step": 1
+    },
+    {
+      "id": "BALL_SIZE",
+      "kind": "number",
+      "label": "Ball size",
+      "value": 16,
+      "default": 16,
+      "min": 12,
+      "max": 22,
+      "step": 1
+    },
+    {
+      "id": "SCORE_PAUSE_MS",
+      "kind": "number",
+      "label": "Point reset pause",
+      "value": 650,
+      "default": 650,
+      "min": 300,
+      "max": 1200,
+      "step": 50
+    }
+  ],
+  "texts": [
+    {
+      "id": "GUIDE_TEXT",
+      "label": "Play guide",
+      "value": "2 players \u00b7 Drag your half",
+      "default": "2 players \u00b7 Drag your half",
+      "max_length": 32
+    },
+    {
+      "id": "YOU_WIN",
+      "label": "Red player result",
+      "value": "Red wins",
+      "default": "Red wins",
+      "max_length": 20
+    },
+    {
+      "id": "YOU_LOSE",
+      "label": "Blue player result",
+      "value": "Blue wins",
+      "default": "Blue wins",
+      "max_length": 20
+    },
+    {
+      "id": "FINAL_SCORE",
+      "label": "Final score label",
+      "value": "Final score",
+      "default": "Final score",
+      "max_length": 20
+    },
+    {
+      "id": "PLAY_AGAIN",
+      "label": "Replay button",
+      "value": "Play again",
+      "default": "Play again",
+      "max_length": 20
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109359222655217773",
+    "version_id": "109359222655234699",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

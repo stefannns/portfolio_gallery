@@ -1,0 +1,177 @@
+{
+  "tweaks": [
+    {
+      "id": "GRID_COLS",
+      "kind": "number",
+      "label": "清洁网格列数",
+      "value": 14,
+      "default": 14,
+      "min": 8,
+      "max": 20,
+      "step": 1
+    },
+    {
+      "id": "GRID_ROWS",
+      "kind": "number",
+      "label": "清洁网格行数",
+      "value": 20,
+      "default": 20,
+      "min": 12,
+      "max": 28,
+      "step": 1
+    },
+    {
+      "id": "CLEAN_GOAL",
+      "kind": "number",
+      "label": "清洁完成阈值",
+      "value": 0.92,
+      "default": 0.92,
+      "min": 0.8,
+      "max": 1,
+      "step": 0.01
+    },
+    {
+      "id": "BRUSH_POWER",
+      "kind": "number",
+      "label": "刷洗力度",
+      "value": 0.22,
+      "default": 0.22,
+      "min": 0.08,
+      "max": 0.4,
+      "step": 0.01
+    },
+    {
+      "id": "RINSE_POWER",
+      "kind": "number",
+      "label": "冲洗力度",
+      "value": 0.3,
+      "default": 0.3,
+      "min": 0.1,
+      "max": 0.5,
+      "step": 0.01
+    },
+    {
+      "id": "VACUUM_POWER",
+      "kind": "number",
+      "label": "吸水力度",
+      "value": 0.32,
+      "default": 0.32,
+      "min": 0.12,
+      "max": 0.55,
+      "step": 0.01
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "游戏标题",
+      "value": "Rug Restore",
+      "default": "Rug Restore",
+      "max_length": 20
+    },
+    {
+      "id": "GUIDE",
+      "label": "玩法引导",
+      "value": "Spray → Scrub → Rinse",
+      "default": "Spray → Scrub → Rinse",
+      "max_length": 32
+    },
+    {
+      "id": "COMPLETE",
+      "label": "完成文案",
+      "value": "Satisfyingly clean!",
+      "default": "Satisfyingly clean!",
+      "max_length": 28
+    },
+    {
+      "id": "NEXT_ITEM",
+      "label": "下一件按钮",
+      "value": "Next item",
+      "default": "Next item",
+      "max_length": 20
+    },
+    {
+      "id": "SPRAY",
+      "label": "喷雾瓶",
+      "value": "Spray",
+      "default": "Spray",
+      "max_length": 12
+    },
+    {
+      "id": "BRUSH",
+      "label": "手刷",
+      "value": "Scrub",
+      "default": "Scrub",
+      "max_length": 12
+    },
+    {
+      "id": "RINSE",
+      "label": "水枪",
+      "value": "Rinse",
+      "default": "Rinse",
+      "max_length": 12
+    },
+    {
+      "id": "VACUUM",
+      "label": "吸尘器",
+      "value": "Dry",
+      "default": "Dry",
+      "max_length": 12
+    },
+    {
+      "id": "CLEANED",
+      "label": "进度标签",
+      "value": "CLEANED",
+      "default": "CLEANED",
+      "max_length": 12
+    }
+  ],
+  "images": [
+    {
+      "id": "RUG_MAIN",
+      "label": "Overhead patterned rug",
+      "path": "./assets/rug-overhead.webp",
+      "replaceable": true
+    },
+    {
+      "id": "UPHOLSTERY_MAIN",
+      "label": "Overhead woven upholstery",
+      "path": "./assets/upholstery-overhead.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_SPRAY",
+      "label": "Spray bottle icon",
+      "path": "./assets/tool-spray.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_BRUSH",
+      "label": "Hand brush icon",
+      "path": "./assets/tool-brush.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_RINSE",
+      "label": "Rinse nozzle icon",
+      "path": "./assets/tool-rinse.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_DRY",
+      "label": "Fabric extractor icon",
+      "path": "./assets/tool-dry.svg",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109359222638342475",
+    "version_id": "109359222638275435",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

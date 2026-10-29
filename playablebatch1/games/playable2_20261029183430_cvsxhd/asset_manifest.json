@@ -1,0 +1,42 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261029183430_cvsxhd",
+  "number": 90,
+  "name": "Pocket Pong",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "editable-current-react-source",
+  "files": {
+    "App.jsx": "636125cae84374abbf3834c9fdff0ad0920d599a776440de6680e43cbea9454e",
+    "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
+    "dist/game.html": "0d7ea0fe2a664a0a0b155a1944852f4b238030a63b1f08673c547060d058ed52",
+    "dist/bundle.js": "8bf35612cb6b9ea45ae3ee049f5d4a21055f57f26c72a7038cb48c1a134c0d0e",
+    "dist/game.config.json": "6171bc3475f04fd3e6b66080c7fe4675a0ca624e3d8945098332bbb38c51a975"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/sfx_pingpong_click.mp3",
+      "ids": [],
+      "bytes": 3500,
+      "sha256": "01578fddd7022cdab38793c533aac259c152634ab762fc727967b3bb863a2ce7"
+    },
+    {
+      "path": "dist/assets/sfx_result_chime.mp3",
+      "ids": [],
+      "bytes": 10493,
+      "sha256": "ea0f0ea3faf61a44b74724acaf88f8c64e38714be7b68a03624f48b4f7fc6a7c"
+    }
+  ]
+}

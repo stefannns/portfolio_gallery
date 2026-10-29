@@ -1381,5 +1381,96 @@ window.PlayableGameDownloads = {
     "bytes": 3221052,
     "files": 187,
     "sha256": "268c281c9c7c849aa88261b11678ae74eb3e2264cdaec1ae7579a6d76dff80f4"
+  },
+  "playable2_20261028202811_hz9v37": {
+    "url": "/playablebatch1/downloads/79-playable2_20261028202811_hz9v37.zip",
+    "filename": "79-playable2_20261028202811_hz9v37.zip",
+    "bytes": 218161,
+    "files": 11,
+    "sha256": "3e4926bf8dd76aefbe67ca027f4ced5da717d0619a043957b1a381833ffd0753"
+  },
+  "playable2_20261028202811_rf6gbi": {
+    "url": "/playablebatch1/downloads/80-playable2_20261028202811_rf6gbi.zip",
+    "filename": "80-playable2_20261028202811_rf6gbi.zip",
+    "bytes": 249443,
+    "files": 14,
+    "sha256": "c46837fdcf50cde93873bcac962375a84843444a48948836f4a44a4be7f27e4f"
+  },
+  "playable2_20261028202811_dsl58j": {
+    "url": "/playablebatch1/downloads/81-playable2_20261028202811_dsl58j.zip",
+    "filename": "81-playable2_20261028202811_dsl58j.zip",
+    "bytes": 322859,
+    "files": 10,
+    "sha256": "3d71528a10e651bef23ed8d394ad91c67eac00bf73770a82deba94214e7593ef"
+  },
+  "playable2_20261028202811_gia8r5": {
+    "url": "/playablebatch1/downloads/82-playable2_20261028202811_gia8r5.zip",
+    "filename": "82-playable2_20261028202811_gia8r5.zip",
+    "bytes": 171049,
+    "files": 9,
+    "sha256": "dd0630cc271a2809c33b397a7962d607ec6daa7ff57f29243cc23c85e212fe79"
+  },
+  "playable2_20261028202811_5uuyhb": {
+    "url": "/playablebatch1/downloads/83-playable2_20261028202811_5uuyhb.zip",
+    "filename": "83-playable2_20261028202811_5uuyhb.zip",
+    "bytes": 171028,
+    "files": 10,
+    "sha256": "48c22e76cfcafbc99460dece2c06d3f6695133be91627d74bc108e3d7d666a7c"
+  },
+  "playable2_20261028202811_q0f68t": {
+    "url": "/playablebatch1/downloads/84-playable2_20261028202811_q0f68t.zip",
+    "filename": "84-playable2_20261028202811_q0f68t.zip",
+    "bytes": 694333,
+    "files": 21,
+    "sha256": "9104bf2a310d657aa8bb9f44b72a74f4c4a2b5eda93d92d6faafc2befee16935"
+  },
+  "playable2_20261028202811_ke0xpl": {
+    "url": "/playablebatch1/downloads/85-playable2_20261028202811_ke0xpl.zip",
+    "filename": "85-playable2_20261028202811_ke0xpl.zip",
+    "bytes": 767292,
+    "files": 13,
+    "sha256": "db1b9438d5152ca1eba3d401a35c7f62daf36e29a36b9567dab481a538e0c372"
+  },
+  "playable2_20261029183430_hxuf8g": {
+    "url": "/playablebatch1/downloads/86-playable2_20261029183430_hxuf8g.zip",
+    "filename": "86-playable2_20261029183430_hxuf8g.zip",
+    "bytes": 222828,
+    "files": 11,
+    "sha256": "3bca5f52f79060a1bb477b0e678c1ba350fc390338ae48aefe7c7336ab8f3ca8"
+  },
+  "playable2_20261029183430_v5avg1": {
+    "url": "/playablebatch1/downloads/87-playable2_20261029183430_v5avg1.zip",
+    "filename": "87-playable2_20261029183430_v5avg1.zip",
+    "bytes": 923042,
+    "files": 15,
+    "sha256": "7598c882d8c5b046b38b1e1c0f9a015974e0ba03d034784f9064baf25a90dcd6"
+  },
+  "playable2_20261029183430_9mlt5d": {
+    "url": "/playablebatch1/downloads/88-playable2_20261029183430_9mlt5d.zip",
+    "filename": "88-playable2_20261029183430_9mlt5d.zip",
+    "bytes": 208376,
+    "files": 13,
+    "sha256": "893a2aff182d6b29d1e14f8f0504c7ff1bb3412d65fa26c99da52921a2cc26f0"
+  },
+  "playable2_20261029183430_9mlt5d_88b": {
+    "url": "/playablebatch1/downloads/88b-playable2_20261029183430_9mlt5d_88b.zip",
+    "filename": "88b-playable2_20261029183430_9mlt5d_88b.zip",
+    "bytes": 210465,
+    "files": 13,
+    "sha256": "dcbeb2719520f5fdb032371ebccb937fb1e4285d9edf3c2253df679a9e2d80a1"
+  },
+  "playable2_20261029183430_ctpmni": {
+    "url": "/playablebatch1/downloads/89-playable2_20261029183430_ctpmni.zip",
+    "filename": "89-playable2_20261029183430_ctpmni.zip",
+    "bytes": 548611,
+    "files": 34,
+    "sha256": "36a8ab3edc9663948ab2c251dbba3d5d8b892423c4dcc37dcfaaaf767cc5fbfc"
+  },
+  "playable2_20261029183430_cvsxhd": {
+    "url": "/playablebatch1/downloads/90-playable2_20261029183430_cvsxhd.zip",
+    "filename": "90-playable2_20261029183430_cvsxhd.zip",
+    "bytes": 178061,
+    "files": 10,
+    "sha256": "c22b519dc3791ba2bc5e17d12d6d1345981b6f5976244a1a113acb6284eb7360"
   }
 };

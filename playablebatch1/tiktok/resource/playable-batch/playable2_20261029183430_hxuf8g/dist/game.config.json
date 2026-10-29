@@ -1,0 +1,132 @@
+{
+  "tweaks": [
+    {
+      "id": "BOARD_INSET",
+      "kind": "number",
+      "label": "Court inset",
+      "value": 30,
+      "default": 30,
+      "min": 10,
+      "max": 32,
+      "step": 1
+    },
+    {
+      "id": "PADDLE_WIDTH",
+      "kind": "number",
+      "label": "Paddle width",
+      "value": 148,
+      "default": 148,
+      "min": 96,
+      "max": 190,
+      "step": 1
+    },
+    {
+      "id": "PADDLE_HEIGHT",
+      "kind": "number",
+      "label": "Paddle height",
+      "value": 16,
+      "default": 16,
+      "min": 12,
+      "max": 24,
+      "step": 1
+    },
+    {
+      "id": "PADDLE_BOTTOM",
+      "kind": "number",
+      "label": "Paddle bottom",
+      "value": 76,
+      "default": 76,
+      "min": 54,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "id": "BALL_RADIUS",
+      "kind": "number",
+      "label": "Ball radius",
+      "value": 8,
+      "default": 8,
+      "min": 6,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "START_SPEED",
+      "kind": "number",
+      "label": "Starting speed",
+      "value": 340,
+      "default": 340,
+      "min": 180,
+      "max": 450,
+      "step": 1
+    },
+    {
+      "id": "MAX_SPEED",
+      "kind": "number",
+      "label": "Maximum speed",
+      "value": 720,
+      "default": 720,
+      "min": 360,
+      "max": 900,
+      "step": 1
+    },
+    {
+      "id": "SPEED_STEP",
+      "kind": "number",
+      "label": "Rally speed step",
+      "value": 22,
+      "default": 22,
+      "min": 4,
+      "max": 35,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Guide",
+      "value": "Drag to keep it bouncing",
+      "default": "Drag to keep it bouncing",
+      "max_length": 30
+    },
+    {
+      "id": "RESULT_TITLE",
+      "label": "Result title",
+      "value": "Rally over",
+      "default": "Rally over",
+      "max_length": 20
+    },
+    {
+      "id": "FINAL_SCORE",
+      "label": "Final score label",
+      "value": "Final score",
+      "default": "Final score",
+      "max_length": 20
+    },
+    {
+      "id": "BEST_SCORE",
+      "label": "Best score label",
+      "value": "Best",
+      "default": "Best",
+      "max_length": 12
+    },
+    {
+      "id": "PLAY_AGAIN",
+      "label": "Play again",
+      "value": "Play again",
+      "default": "Play again",
+      "max_length": 20
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109359222634108639",
+    "version_id": "109359222634059425",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

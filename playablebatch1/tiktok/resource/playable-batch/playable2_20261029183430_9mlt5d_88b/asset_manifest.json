@@ -1,0 +1,60 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261029183430_9mlt5d_88b",
+  "number": "88b",
+  "name": "Orbit — Tangent",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "editable-current-react-source",
+  "files": {
+    "App.jsx": "393b9457bdd74fd1008adadc23bbe750492e65342dceeef88a1579ff8954e5d8",
+    "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
+    "dist/game.html": "d58ed9ce6265ef29f1b91a6900c3978f94410b70fcc4bf79976aeb01836a295f",
+    "dist/bundle.js": "9caf8682f4ef299065db453c54e99b51e7aee68426354ad33b930374054f7c9e",
+    "dist/game.config.json": "ef3ce21252aef1815ff16cbf9ec83a74deb8c75b9841727ca3ae172545103dbe"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/sfx_catch.mp3",
+      "ids": [],
+      "bytes": 3116,
+      "sha256": "1b0eea9f814c67ad746d98fce62405abf148e81aaa48018d20ef957ae569345c"
+    },
+    {
+      "path": "dist/assets/sfx_click.mp3",
+      "ids": [],
+      "bytes": 3212,
+      "sha256": "72ff4f25645d97f545f2fba9783afb582e63d8902b3a1b0eea4208953dcdf12d"
+    },
+    {
+      "path": "dist/assets/sfx_launch.mp3",
+      "ids": [],
+      "bytes": 5420,
+      "sha256": "19a2183f79695bbe4a96d37424c4890bdbeddf335c491f347d15b8d90f78bf07"
+    },
+    {
+      "path": "dist/assets/sfx_miss.mp3",
+      "ids": [],
+      "bytes": 21605,
+      "sha256": "19b52628dbec7c8b7b9e5a2eee43c95a9dfd471e802f72a923057bb6bf12664c"
+    },
+    {
+      "path": "dist/assets/sfx_perfect.mp3",
+      "ids": [],
+      "bytes": 9260,
+      "sha256": "b58b418eac362cbc96a3e79335d563f27a4460b155ac7c2918e2fa8e12d8740b"
+    }
+  ]
+}

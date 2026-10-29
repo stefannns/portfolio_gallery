@@ -107,7 +107,7 @@ function archive(game,language){
   const dir=row?checkTemplate(library,row):path.join(gameRoot,game.base);
   const files=inventory(dir);
   if(row)files.push('dist/','dist/assets/');
-  else assert(files.includes('game.html')&&files.includes('game.config.json'),'Incomplete game folder: '+game.base);
+  else assert((files.includes('game.html')&&files.includes('game.config.json')) || (files.includes('dist/game.html')&&files.includes('dist/game.config.json')),'Incomplete game folder: '+game.base);
   files.sort();
   const bytes=zipFolder(game.base+(row&&language==='it'?'-it':''),dir,files);
   const filename=String(game.number).padStart(2,'0')+'-'+game.base+(row&&language==='it'?'-it':'')+'.zip';
@@ -129,7 +129,8 @@ function archive(game,language){
 for (const game of games) {
   assert(/^[A-Za-z0-9_-]+$/.test(game.base), 'Unsafe game folder');
   assert(/^\d+b?$/.test(String(game.number)), 'Unsafe game number');
-  assert.equal(game.src, '/playablebatch1/games/' + game.base + '/game.html', 'Unexpected game source');
+  const entryPath = new URL(game.src, 'https://example.invalid').pathname;
+  assert(['/playablebatch1/games/' + game.base + '/game.html', '/playablebatch1/games/' + game.base + '/dist/game.html'].includes(entryPath), 'Unexpected game source');
   const english=archive(game,'en');
   manifest[game.base]=templates.has(game.taskId+':en')?{...english,languages:{en:english,it:archive(game,'it')}}:english;
 }

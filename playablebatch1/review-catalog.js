@@ -11,10 +11,16 @@
     'playable2_20261001230147_id39lj', // Former56:Northern Lights.
   ]);
   function normalize(games) {
-    return games.filter(game => !removedTaskIds.includes(game.taskId)).map((game, index) => ({
+    const active = games.filter(game => !removedTaskIds.includes(game.taskId));
+    const activeIds = new Set(active.map(game => game.taskId));
+    const isLettered = game => !!(game.variantSuffix && game.variantOf && activeIds.has(game.variantOf));
+    let nextNumber = 0;
+    const primaryNumbers = new Map(active.filter(game => !isLettered(game)).map(game => [game.taskId, ++nextNumber]));
+    return active.map(game => ({
       ...game,
       sourceNumber: game.sourceNumber ?? game.number,
-      number: index + 1
+      // Lettered alternatives sit beside their parent without renumbering later games.
+      number: isLettered(game) ? String(primaryNumbers.get(game.variantOf)) + game.variantSuffix : primaryNumbers.get(game.taskId)
     }));
   }
   const catalog = Object.freeze({normalize, removedTaskIds});
