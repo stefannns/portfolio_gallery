@@ -1,0 +1,112 @@
+{
+  "tweaks": [
+    {
+      "id": "START_TENSION",
+      "kind": "number",
+      "label": "Starting tension",
+      "value": 34,
+      "default": 34,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "id": "MAX_TENSION",
+      "kind": "number",
+      "label": "Maximum tension",
+      "value": 100,
+      "default": 100,
+      "min": 50,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "id": "MIN_ZOOM",
+      "kind": "number",
+      "label": "Minimum zoom",
+      "value": 1.1,
+      "default": 1.1,
+      "min": 0.6,
+      "max": 1.2,
+      "step": 0.01
+    },
+    {
+      "id": "MAX_ZOOM",
+      "kind": "number",
+      "label": "Maximum zoom",
+      "value": 1.9,
+      "default": 1.9,
+      "min": 1,
+      "max": 2,
+      "step": 0.01
+    },
+    {
+      "id": "PHOTO_IMPACT",
+      "kind": "number",
+      "label": "Photo impact",
+      "value": 3,
+      "default": 3,
+      "min": 1,
+      "max": 8,
+      "step": 1
+    },
+    {
+      "id": "SIM_STEP_MS",
+      "kind": "number",
+      "label": "Simulation step",
+      "value": 80,
+      "default": 80,
+      "min": 40,
+      "max": 200,
+      "step": 10
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game title",
+      "value": "Town Square Observer",
+      "default": "Town Square Observer",
+      "max_length": 30
+    },
+    {
+      "id": "GUIDE",
+      "label": "First-use guide",
+      "value": "Drag to explore the town",
+      "default": "Drag to explore the town",
+      "max_length": 80
+    },
+    {
+      "id": "RESET_LABEL",
+      "label": "Reset button label",
+      "value": "Reset",
+      "default": "Reset",
+      "max_length": 12
+    },
+    {
+      "id": "CONTINUE_LABEL",
+      "label": "Continue button label",
+      "value": "Keep observing",
+      "default": "Keep observing",
+      "max_length": 24
+    },
+    {
+      "id": "RESET_WORLD_LABEL",
+      "label": "Reset world button label",
+      "value": "Reset the world",
+      "default": "Reset the world",
+      "max_length": 24
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109025442472098446",
+    "version_id": "109025442471994948",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

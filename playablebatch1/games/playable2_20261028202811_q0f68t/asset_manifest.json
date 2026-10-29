@@ -1,0 +1,126 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261028202811_q0f68t",
+  "number": 85,
+  "name": "Did You Watch It?",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "editable-current-react-source",
+  "files": {
+    "App.jsx": "3e68414fb60bf92cb9eb5a53aa5f4a81aed334b3b5dc807cda8af0beed2a07f4",
+    "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
+    "dist/game.html": "f74618314968b19075072255aacfaef2ad4368e03b7738bf0daab88305687a33",
+    "dist/bundle.js": "412e6f9ed7ce17c5ddfc8966b814f288efaa93e0a9843f3467c1ce9594054c5a",
+    "dist/game.config.json": "a7e74001e913c682ba648f0f15d35fe7180d70a4410ac56eaa659d3be0dcf135"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/cat.webp",
+      "ids": [
+        "CAT"
+      ],
+      "bytes": 45792,
+      "sha256": "6f20c803e47cee7a5aed10c05ffbad34e02897722afc1e2988a86c449a02b96d"
+    },
+    {
+      "path": "dist/assets/coffee.webp",
+      "ids": [
+        "COFFEE"
+      ],
+      "bytes": 48484,
+      "sha256": "7ac524f17214dc5e8bb9c8e6ae7407446ce1cbd2587eccc5f6cde18f381dbdf6"
+    },
+    {
+      "path": "dist/assets/dog_skate.webp",
+      "ids": [
+        "DOG_SKATE"
+      ],
+      "bytes": 58210,
+      "sha256": "dea77ba7cf9de72b9317fe9c45a6636f5fdb5394aefd5d10a77f8ee47b0cb5ee"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/laughing_baby.webp",
+      "ids": [
+        "LAUGHING_BABY"
+      ],
+      "bytes": 31386,
+      "sha256": "a0c77acd13d345cfd4b7554d90276ec9d66ded63bde8f3289d64a9ff42ddbbfc"
+    },
+    {
+      "path": "dist/assets/office_chair.webp",
+      "ids": [
+        "OFFICE_CHAIR"
+      ],
+      "bytes": 40658,
+      "sha256": "13ff0154fd8470ce95b263f43dd3848b48f9b3904e0eccf029f6140f130b6199"
+    },
+    {
+      "path": "dist/assets/plant.webp",
+      "ids": [
+        "PLANT"
+      ],
+      "bytes": 46168,
+      "sha256": "53248779042d6f1ae804010bd7f268957f2396756a8a4f5f923b21068befdbb1"
+    },
+    {
+      "path": "dist/assets/ramen.webp",
+      "ids": [
+        "RAMEN"
+      ],
+      "bytes": 70614,
+      "sha256": "b2d629918ca1d69b6224eebc59ece7d06fe57bc6a04c9b3a718dae87fe0bdfc4"
+    },
+    {
+      "path": "dist/assets/sfx_fail.mp3",
+      "ids": [],
+      "bytes": 4945,
+      "sha256": "494466675e3caa81d07545706b10881b9c1ce41c1c7a4e86d2ddbdcebf832e52"
+    },
+    {
+      "path": "dist/assets/sfx_select.mp3",
+      "ids": [],
+      "bytes": 36736,
+      "sha256": "2cfb97811c92ebf1228740ead82514214fae68cafaecaae188856268870565aa"
+    },
+    {
+      "path": "dist/assets/sfx_success.mp3",
+      "ids": [],
+      "bytes": 9260,
+      "sha256": "b58b418eac362cbc96a3e79335d563f27a4460b155ac7c2918e2fa8e12d8740b"
+    },
+    {
+      "path": "dist/assets/sfx_verify.mp3",
+      "ids": [],
+      "bytes": 60552,
+      "sha256": "77c334a607efed6deb3bf9aa42f85395bb3aebbed0089dec0860c542af7032ce"
+    },
+    {
+      "path": "dist/assets/sunset.webp",
+      "ids": [
+        "SUNSET"
+      ],
+      "bytes": 38650,
+      "sha256": "2f935ea76fbbfdc6ac98493fd23b3ad78383a46c50a309b866b36e803f88fa15"
+    },
+    {
+      "path": "dist/assets/taco.webp",
+      "ids": [
+        "TACO"
+      ],
+      "bytes": 62864,
+      "sha256": "0c8f57a18bc41aecd6da759ec211a6202acc3b813192b35d7bde326086b384ff"
+    }
+  ]
+}

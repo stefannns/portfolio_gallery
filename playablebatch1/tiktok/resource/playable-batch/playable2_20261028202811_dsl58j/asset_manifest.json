@@ -1,0 +1,42 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261028202811_dsl58j",
+  "number": 82,
+  "name": "Soft Serve Swirl",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "editable-current-react-source",
+  "files": {
+    "App.jsx": "7625833c09a5c6c086e5b17820a184c06fcea4c673bb374064c45238d47fb105",
+    "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
+    "dist/game.html": "b5177fe7853406cd0146c857a22416d1e8cf317bb0b28df070f770117eba2f03",
+    "dist/bundle.js": "17672ecf2e5f8a7940d3b8352420c7bde5bc26789ea16679b53f45c8872d3422",
+    "dist/game.config.json": "d5bf5369908713aa7ea2181b8489f040081332dfdbee54560c447abde78a6f1d"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/sfx_reset.mp3",
+      "ids": [],
+      "bytes": 3500,
+      "sha256": "01578fddd7022cdab38793c533aac259c152634ab762fc727967b3bb863a2ce7"
+    },
+    {
+      "path": "dist/assets/sfx_result.mp3",
+      "ids": [],
+      "bytes": 13580,
+      "sha256": "6c07f22fd26264deecc6452af8b26017be668b3840cc3e4e34342aa664e1bba3"
+    }
+  ]
+}

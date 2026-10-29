@@ -1,0 +1,42 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261028202811_5uuyhb",
+  "number": 84,
+  "name": "Wordy Sketchpad",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "editable-current-react-source",
+  "files": {
+    "App.jsx": "a123649c32cd2b66739d6097adc6a26db0fdb399f31944560478f6b91b2b063d",
+    "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
+    "dist/game.html": "a07a054947ae2e6d9891f2892ac88586f9012f7f318267208f92836c420994f8",
+    "dist/bundle.js": "61880ebf3342d25d020fef4f006a95029467a6d776a753708f8da55ea125825d",
+    "dist/game.config.json": "1066655193e73207cd8efac2b22ab739ad98271c2f6c1ca66f58a854db560503"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/sfx_paper_clear.mp3",
+      "ids": [],
+      "bytes": 4940,
+      "sha256": "b1d5d9be268cfd1a8b24c2576161c7175895df57aa28516fd35fff81ae151b78"
+    },
+    {
+      "path": "dist/assets/sfx_paper_tap.mp3",
+      "ids": [],
+      "bytes": 3788,
+      "sha256": "5c63aff6c673176c5fd29fdc656d5b9d972d1ce0069453c9c4338555d3447e6b"
+    }
+  ]
+}

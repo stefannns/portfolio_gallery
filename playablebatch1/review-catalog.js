@@ -3,6 +3,7 @@
   'use strict';
   // Only explicit, task-ID-specific removals belong here; never remove games by display position.
   const removedTaskIds = Object.freeze([
+    'playable2_20261028202811_071b88', // Former81: Doodle Zoo, removed October 28.
     '07b_lifesim_ss41g7', // Duplicate voxel.
     'playable_20260909035048_1wdfrh', // Body ranking.
     'playable2_20261001225856_15hv2j', // Former48:2048 Ball Merge.

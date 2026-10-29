@@ -1,0 +1,74 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261028202811_rf6gbi",
+  "number": 80,
+  "name": "Squishy Shapes",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "editable-current-react-source",
+  "files": {
+    "App.jsx": "3fc86295ab4651a12676dbcd2c80c46c897bff78ecb93a434014a09ab2dbbe28",
+    "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
+    "dist/game.html": "30d21cb992a98641e659800d87074a9c5226db0baaea4af80a0620214c93041a",
+    "dist/bundle.js": "d2d3b458a4403d0293ba0aa269f96b2c8ad1b99d2d110ecc400e6c12f218da47",
+    "dist/game.config.json": "6ee59ec938adeb6f20530f5cdf36f721bfb005b0b03bbc32b6350201103b418a"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/eyes-frame-classic.webp",
+      "ids": [
+        "EYES_CLASSIC"
+      ],
+      "bytes": 31198,
+      "sha256": "89fc08e0ba57b201409bd1c14a140dc6fdd8fe83244fe274837fc55dcc131445"
+    },
+    {
+      "path": "dist/assets/eyes-frame-googly.webp",
+      "ids": [
+        "EYES_GOOGLY"
+      ],
+      "bytes": 28338,
+      "sha256": "f5acfc64c5234b3c547a193ac4f39c1d0a5c022b4cb32821461d65f11c915741"
+    },
+    {
+      "path": "dist/assets/eyes-frame-happy.webp",
+      "ids": [
+        "EYES_HAPPY"
+      ],
+      "bytes": 17052,
+      "sha256": "ef008e4826cdf38141e8fa9145562767afe47728286a534ef12765aa054d4970"
+    },
+    {
+      "path": "dist/assets/eyes-frame-sleepy.webp",
+      "ids": [
+        "EYES_SLEEPY"
+      ],
+      "bytes": 24978,
+      "sha256": "b6fdacd8cdb11a6bfbcbe8117f16bb2f6298f0ffbf8e5e1e33b9cc3aeb6b41b1"
+    },
+    {
+      "path": "dist/assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "ids": [],
+      "bytes": 37464,
+      "sha256": "487694c955a01a6b9e0985b4839ebe6f5406770db551ea163799ee02deb7d3a4"
+    },
+    {
+      "path": "dist/assets/sfx_contact.mp3",
+      "ids": [],
+      "bytes": 4940,
+      "sha256": "39b3d7a741ca87b906c88d6542daa2407599212a4a21d3d40346fa23053edaf5"
+    },
+    {
+      "path": "dist/assets/sfx_plop.mp3",
+      "ids": [],
+      "bytes": 3884,
+      "sha256": "be28619f61825f521cd89b71be16b46ce8137c5773a2f81dde2c81f26a8a5b2c"
+    },
+    {
+      "path": "dist/assets/sfx_tap.mp3",
+      "ids": [],
+      "bytes": 3212,
+      "sha256": "7bf1498cb4587b2cd6fe7d4d6fe51912a56e6bbbd2d923022ddfc6b298e435f3"
+    }
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "tweaks": [
+    {
+      "id": "VIDEO_STEP_MS",
+      "kind": "number",
+      "label": "Video moment duration",
+      "value": 900,
+      "default": 900,
+      "min": 500,
+      "max": 1800,
+      "step": 100
+    },
+    {
+      "id": "SUCCESS_PAUSE_MS",
+      "kind": "number",
+      "label": "Success reveal duration",
+      "value": 1500,
+      "default": 1500,
+      "min": 800,
+      "max": 3000,
+      "step": 100
+    },
+    {
+      "id": "TARGET_COUNT",
+      "kind": "number",
+      "label": "Memories per round",
+      "value": 3,
+      "default": 3,
+      "min": 3,
+      "max": 4,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_NAME",
+      "label": "Game name",
+      "value": "Did You Watch It?",
+      "default": "Did You Watch It?",
+      "max_length": 20
+    },
+    {
+      "id": "HINT_TEXT",
+      "label": "First-use hint",
+      "value": "Watch, then choose",
+      "default": "Watch, then choose",
+      "max_length": 32
+    },
+    {
+      "id": "WATCH_LABEL",
+      "label": "Video label",
+      "value": "Watch closely",
+      "default": "Watch closely",
+      "max_length": 12
+    },
+    {
+      "id": "PICK_LABEL",
+      "label": "Grid label",
+      "value": "Select the moments you saw",
+      "default": "Select the moments you saw",
+      "max_length": 40
+    },
+    {
+      "id": "VERIFY_LABEL",
+      "label": "Verify button",
+      "value": "Verify",
+      "default": "Verify",
+      "max_length": 12
+    },
+    {
+      "id": "REPLAY_LABEL",
+      "label": "Replay button",
+      "value": "Replay",
+      "default": "Replay",
+      "max_length": 12
+    },
+    {
+      "id": "SUCCESS_LABEL",
+      "label": "Success label",
+      "value": "Unlocked",
+      "default": "Unlocked",
+      "max_length": 20
+    },
+    {
+      "id": "SUCCESS_MESSAGE",
+      "label": "Success message",
+      "value": "You caught every moment.",
+      "default": "You caught every moment.",
+      "max_length": 40
+    },
+    {
+      "id": "FAIL_MESSAGE",
+      "label": "Try again message",
+      "value": "Not quite. Try again or replay.",
+      "default": "Not quite. Try again or replay.",
+      "max_length": 48
+    }
+  ],
+  "images": [
+    {
+      "id": "DOG_SKATE",
+      "label": "Skateboard dog",
+      "path": "./assets/dog_skate.webp",
+      "replaceable": true
+    },
+    {
+      "id": "OFFICE_CHAIR",
+      "label": "Wobbling office chair",
+      "path": "./assets/office_chair.webp",
+      "replaceable": true
+    },
+    {
+      "id": "LAUGHING_BABY",
+      "label": "Laughing baby",
+      "path": "./assets/laughing_baby.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CAT",
+      "label": "Orange cat",
+      "path": "./assets/cat.webp",
+      "replaceable": true
+    },
+    {
+      "id": "RAMEN",
+      "label": "Ramen bowl",
+      "path": "./assets/ramen.webp",
+      "replaceable": true
+    },
+    {
+      "id": "SUNSET",
+      "label": "Sunset hills",
+      "path": "./assets/sunset.webp",
+      "replaceable": true
+    },
+    {
+      "id": "COFFEE",
+      "label": "Coffee cup",
+      "path": "./assets/coffee.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TACO",
+      "label": "Taco",
+      "path": "./assets/taco.webp",
+      "replaceable": true
+    },
+    {
+      "id": "PLANT",
+      "label": "Houseplant",
+      "path": "./assets/plant.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109025442497227683",
+    "version_id": "109025442497066965",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261028202811_hz9v37",
+  "number": 79,
+  "name": "Framed",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "editable-current-react-source",
+  "files": {
+    "App.jsx": "fb5296cbddb9c151ef6edece6b60e827f691764bfd368f0fe3a8a29d471b9395",
+    "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
+    "dist/game.html": "817aad23a885c5251bdfcdd8c4ca2e022352e88d63ac90e90246eb392131505a",
+    "dist/bundle.js": "054e6d13e890444a1616abced81638ba564634a7cdab764f8cf78d08f0845200",
+    "dist/game.config.json": "acda48e1ca02580eed263cd5df31e89753b43296eca34f6171d99858fca03ef3"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/fonts/encode_sans_sc/EncodeSansSemiCondensed-Regular.woff2",
+      "ids": [],
+      "bytes": 54404,
+      "sha256": "a1160f63f6d8e7ca6870bf5d9e705f36be8e19e7047b593e8001b8737c95d475"
+    },
+    {
+      "path": "dist/assets/sfx_conflict.mp3",
+      "ids": [],
+      "bytes": 18772,
+      "sha256": "60d575237e29f7447f78e91709f6127af8144b35c74772d9e5e88438121776e2"
+    },
+    {
+      "path": "dist/assets/sfx_event.mp3",
+      "ids": [],
+      "bytes": 60552,
+      "sha256": "77c334a607efed6deb3bf9aa42f85395bb3aebbed0089dec0860c542af7032ce"
+    },
+    {
+      "path": "dist/assets/sfx_friendly.mp3",
+      "ids": [],
+      "bytes": 19340,
+      "sha256": "b1ca8a33d5b3bf113c58fd8044994493406ad55826b5fc739827431bcd18528e"
+    },
+    {
+      "path": "dist/assets/sfx_shutter.mp3",
+      "ids": [],
+      "bytes": 19505,
+      "sha256": "9f0726991d0330adab0d74aa71d477a074363eaf1e2a2372a9acd4081842d448"
+    }
+  ]
+}

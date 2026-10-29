@@ -1,0 +1,145 @@
+{
+  "tweaks": [
+    {
+      "id": "TRACE_CLOSE_GAP",
+      "kind": "number",
+      "label": "Trace close gap",
+      "value": 28,
+      "default": 28,
+      "min": 12,
+      "max": 50,
+      "step": 1
+    },
+    {
+      "id": "TRACE_MIN_LENGTH",
+      "kind": "number",
+      "label": "Minimum trace length",
+      "value": 90,
+      "default": 90,
+      "min": 40,
+      "max": 180,
+      "step": 1
+    },
+    {
+      "id": "SOFT_BODY_COLUMNS",
+      "kind": "number",
+      "label": "Soft body columns",
+      "value": 9,
+      "default": 9,
+      "min": 7,
+      "max": 11,
+      "step": 1
+    },
+    {
+      "id": "SOFT_BODY_ROWS",
+      "kind": "number",
+      "label": "Soft body rows",
+      "value": 9,
+      "default": 9,
+      "min": 7,
+      "max": 11,
+      "step": 1
+    },
+    {
+      "id": "GRAVITY",
+      "kind": "number",
+      "label": "Soft body gravity",
+      "value": 0.7,
+      "default": 0.7,
+      "min": 0.6,
+      "max": 1,
+      "step": 0.05
+    },
+    {
+      "id": "BODY_WIDTH_RATIO",
+      "kind": "number",
+      "label": "Body width ratio",
+      "value": 0.74,
+      "default": 0.74,
+      "min": 0.55,
+      "max": 0.86,
+      "step": 0.01
+    }
+  ],
+  "texts": [
+    {
+      "id": "GUIDE_TEXT",
+      "label": "Trace guide",
+      "value": "Trace around the cat",
+      "default": "Trace around the cat",
+      "max_length": 80
+    },
+    {
+      "id": "RESET_LABEL",
+      "label": "Reset button",
+      "value": "Reset",
+      "default": "Reset",
+      "max_length": 20
+    },
+    {
+      "id": "CONFIRM_LABEL",
+      "label": "Confirm button",
+      "value": "Make squishy",
+      "default": "Make squishy",
+      "max_length": 20
+    },
+    {
+      "id": "RESET_SHAPE_LABEL",
+      "label": "Compact reset shape button",
+      "value": "Reset shape",
+      "default": "Reset shape",
+      "max_length": 30
+    },
+    {
+      "id": "CHOOSE_LABEL",
+      "label": "Choose image button",
+      "value": "Choose image",
+      "default": "Choose image",
+      "max_length": 30
+    },
+    {
+      "id": "PICKER_TITLE",
+      "label": "Picker title",
+      "value": "Choose an image",
+      "default": "Choose an image",
+      "max_length": 30
+    },
+    {
+      "id": "BACK_LABEL",
+      "label": "Picker back button",
+      "value": "Back",
+      "default": "Back",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "HAMSTER_HONEY",
+      "label": "Cat on the rug",
+      "path": "./assets/cat-phone-rug.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HAMSTER_CARAMEL",
+      "label": "Cat on the sofa",
+      "path": "./assets/cat-phone-sofa.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HAMSTER_SILVER",
+      "label": "Cat by the window",
+      "path": "./assets/cat-phone-window.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109025442509735103",
+    "version_id": "109025442509759752",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "image_expression",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261028202811_gia8r5",
+  "number": 83,
+  "name": "Toilet Paper Pull",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "editable-current-react-source",
+  "files": {
+    "App.jsx": "58aa99b9256c04396e95452efe0799878579e78c8cb1938e7728d682cae7a734",
+    "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
+    "dist/game.html": "c2dfacb142013ee25508a7c42c02b7687fc25f7fec0fba2be6f138bd42ba04e9",
+    "dist/bundle.js": "381b58b9a37de19715212fea8a51eac9476a512100de54ae04f94316507b61df",
+    "dist/game.config.json": "228852e275e93b15add0f1250b72668d1676301084cfedf004c9edc5ec2c4dea"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/sfx_reset.mp3",
+      "ids": [],
+      "bytes": 3212,
+      "sha256": "72ff4f25645d97f545f2fba9783afb582e63d8902b3a1b0eea4208953dcdf12d"
+    }
+  ]
+}

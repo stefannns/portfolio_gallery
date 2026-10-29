@@ -1,0 +1,66 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261028202811_ke0xpl",
+  "number": 86,
+  "name": "Photo Squishy",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "editable-current-react-source",
+  "files": {
+    "App.jsx": "5d07cfc223ea6319502971a5ab18d6cb78e8d79db57e6c81dd146b0c82a6b626",
+    "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
+    "dist/game.html": "f41428ff8715371544d59aefcdc15faa8417a31b2faf6cd7ada5fe7f720a24bc",
+    "dist/bundle.js": "2dd95a02b14a130f6b73b9477e0a6741778e6c7eea449ef58fc4b9f8046aadc3",
+    "dist/game.config.json": "7cfaecbeba245ac80b9f74e5ffb4b9f45b5ebbafb44a405807dffd663958e2ae"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/cat-phone-rug.webp",
+      "ids": [
+        "HAMSTER_HONEY"
+      ],
+      "bytes": 156930,
+      "sha256": "4969952acb22c3ee587424ed9ac95d65eef3384a99085a9d887cce057e9eda3a"
+    },
+    {
+      "path": "dist/assets/cat-phone-sofa.webp",
+      "ids": [
+        "HAMSTER_CARAMEL"
+      ],
+      "bytes": 169374,
+      "sha256": "0f400c48cc23dbf49cb831f831e0c228e6b9b8f12ec095a710f4e9d62c2e3240"
+    },
+    {
+      "path": "dist/assets/cat-phone-window.webp",
+      "ids": [
+        "HAMSTER_SILVER"
+      ],
+      "bytes": 96760,
+      "sha256": "4df6350b4716c9d4175398350e124f8163fce70ec9a7ea76dc1458f95e1bb1a3"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
+      "ids": [],
+      "bytes": 50616,
+      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+    },
+    {
+      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
+      "ids": [],
+      "bytes": 51212,
+      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/sfx_click_soft.mp3",
+      "ids": [],
+      "bytes": 3212,
+      "sha256": "7bf1498cb4587b2cd6fe7d4d6fe51912a56e6bbbd2d923022ddfc6b298e435f3"
+    },
+    {
+      "path": "dist/assets/sfx_squish.mp3",
+      "ids": [],
+      "bytes": 6092,
+      "sha256": "a881dea13a40a91a49613c6cc0d575bfc2ce3e3a518272edbfb09c4d5b147716"
+    }
+  ]
+}
