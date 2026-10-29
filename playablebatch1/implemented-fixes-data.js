@@ -891,13 +891,13 @@ window.PLAYABLE_IMPLEMENTED_FIXES = {
   "playable2_20261029183430_9mlt5d_88b": {
     "number": "88b",
     "items": [
-      "One continuous gradient strip shows the widest safe tangent launch window.",
-      "Clearer center, fading ends and correct wrapping around the orbit; updates after each transfer.",
-      "Tangent flight, gradual acceleration and centered score-only HUD retained."
+      "Two gradient strips mark valid launch windows for both sides of the next orbit.",
+      "Strips update after each transfer and fade toward the unsafe boundaries.",
+      "Tangent flight, gradual acceleration and centered score-only layout retained."
     ],
     "status": "Latest reviewed changes · 29 October 2026",
     "evidence": [
-      "No.88b single working launch strip · 29 October 2026"
+      "No.88b two valid launch strips · 29 October 2026"
     ]
   },
   "playable2_20261029183430_ctpmni": {

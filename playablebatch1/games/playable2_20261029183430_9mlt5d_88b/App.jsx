@@ -222,7 +222,7 @@ function traceOrbitLaunch(orbit, destination, angle, spin = 1, band = 8) {
   return { start, direction, destination, distance, outcome, clearance, perfect: outcome === 'catch' && Math.abs(clearance - destination.r) <= band };
 }
 
-function launchHintWindow(orbit, destination, spin, band) {
+function launchHintWindows(orbit, destination, spin, band) {
   const count = 1024, step = Math.PI * 2 / count, groups = [];
   let group = null;
   for (let index = 0; index < count; index += 1) {
@@ -237,19 +237,17 @@ function launchHintWindow(orbit, destination, spin, band) {
     const first = groups.shift();
     groups[groups.length - 1].push(...first.map(sample => ({ ...sample, angle: sample.angle + Math.PI * 2 })));
   }
-  if (!groups.length) return null;
-  // Prefer the widest safe timing window; use the shorter flight to break ties.
-  groups.sort((a, b) => b.length - a.length || a[Math.floor(a.length / 2)].distance - b[Math.floor(b.length / 2)].distance);
-  const selected = groups[0];
-  if (selected.length < 2) return null;
-  const startAngle = selected[0].angle + step * .25;
-  const endAngle = selected[selected.length - 1].angle - step * .25;
-  return {
-    startAngle, endAngle, centerAngle: (startAngle + endAngle) / 2,
-    start: pointOnCircle(orbit.x, orbit.y, orbit.r, startAngle),
-    end: pointOnCircle(orbit.x, orbit.y, orbit.r, endAngle),
-    path: arcPath(orbit.x, orbit.y, orbit.r, startAngle, endAngle),
-  };
+  // Both sides of the destination planet have a valid tangent approach.
+  return groups.filter(samples => samples.length >= 2).map(samples => {
+    const startAngle = samples[0].angle + step * .25;
+    const endAngle = samples[samples.length - 1].angle - step * .25;
+    return {
+      startAngle, endAngle, centerAngle: (startAngle + endAngle) / 2,
+      start: pointOnCircle(orbit.x, orbit.y, orbit.r, startAngle),
+      end: pointOnCircle(orbit.x, orbit.y, orbit.r, endAngle),
+      path: arcPath(orbit.x, orbit.y, orbit.r, startAngle, endAngle),
+    };
+  });
 }
 
 const feedSession = (() => {
@@ -521,7 +519,7 @@ function App() {
 
   const layout = targetLayout(level);
   const currentOrbit = currentOrbitRef.current;
-  const launchHint = useMemo(() => launchHintWindow(currentOrbit, { x: layout.x, y: layout.y, r: layout.orbit }, spinRef.current, safeNumber(cfg.CAPTURE_BAND, 8)),
+  const launchHints = useMemo(() => launchHintWindows(currentOrbit, { x: layout.x, y: layout.y, r: layout.orbit }, spinRef.current, safeNumber(cfg.CAPTURE_BAND, 8)),
     [currentOrbit, layout.x, layout.y, layout.orbit, cfg.CAPTURE_BAND, spinRef.current]);
   const unlocked = useMemo(() => {
     const conditions = {
@@ -563,13 +561,13 @@ function App() {
               )}
               <svg className="orbit-svg" viewBox="0 -72 400 650" role="img" aria-label={cfg.GAME_TITLE}>
                 <defs>
-                  {launchHint && <linearGradient id="launchHintShade" gradientUnits="userSpaceOnUse" x1={launchHint.start.x} y1={launchHint.start.y} x2={launchHint.end.x} y2={launchHint.end.y}>
+                  {launchHints.map((hint, index) => <linearGradient key={index} id={`launchHintShade-${index}`} gradientUnits="userSpaceOnUse" x1={hint.start.x} y1={hint.start.y} x2={hint.end.x} y2={hint.end.y}>
                     <stop offset="0" stopColor={palette.sage} stopOpacity="0" />
                     <stop offset=".2" stopColor={palette.sage} stopOpacity=".52" />
                     <stop offset=".5" stopColor={palette.sage} stopOpacity=".82" />
                     <stop offset=".8" stopColor={palette.sage} stopOpacity=".52" />
                     <stop offset="1" stopColor={palette.sage} stopOpacity="0" />
-                  </linearGradient>}
+                  </linearGradient>)}
                   <radialGradient id="planetGlow" cx="35%" cy="28%">
                     <stop offset="0" stopColor={palette.planetHi} />
                     <stop offset="1" stopColor={palette.planet} />
@@ -578,7 +576,7 @@ function App() {
                 </defs>
                 <circle cx={currentOrbit.x} cy={currentOrbit.y} r={currentOrbit.r + 18} fill="none" stroke={palette.faint} strokeWidth="1" strokeDasharray="2 10" opacity=".32" />
                 <g ref={launchGuideRef} data-testid="launch-sweet-guide" pointerEvents="none" aria-hidden="true">
-                  {launchHint && <path data-testid="launch-sweet-strip" d={launchHint.path} fill="none" stroke="url(#launchHintShade)" strokeWidth="18" strokeLinecap="butt" />}
+                  {launchHints.map((hint, index) => <path key={index} data-testid="launch-sweet-strip" d={hint.path} fill="none" stroke={`url(#launchHintShade-${index})`} strokeWidth="18" strokeLinecap="butt" />)}
                 </g>
                 <circle cx={currentOrbit.x} cy={currentOrbit.y} r={currentOrbit.r} fill="none" stroke={palette.ink} strokeWidth="1.2" strokeDasharray="2 8" opacity=".42" />
                 <circle cx={currentOrbit.x} cy={currentOrbit.y} r="34" fill={palette.ink} opacity=".05" filter="url(#softShadow)" />

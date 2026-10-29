@@ -1455,9 +1455,9 @@ window.PlayableGameDownloads = {
   "playable2_20261029183430_9mlt5d_88b": {
     "url": "/playablebatch1/downloads/88b-playable2_20261029183430_9mlt5d_88b.zip",
     "filename": "88b-playable2_20261029183430_9mlt5d_88b.zip",
-    "bytes": 210465,
+    "bytes": 210414,
     "files": 13,
-    "sha256": "dcbeb2719520f5fdb032371ebccb937fb1e4285d9edf3c2253df679a9e2d80a1"
+    "sha256": "e5ecf0751645a80e0cbc4bcb946b8f2267e5d7c4214d7bb9a663d11c508e0861"
   },
   "playable2_20261029183430_ctpmni": {
     "url": "/playablebatch1/downloads/89-playable2_20261029183430_ctpmni.zip",

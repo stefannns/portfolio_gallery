@@ -41,10 +41,34 @@
     'height_together_20261019',
     'eh_catch_the_hair_20261020'
   ]);
+  const batch2TaskIds = Object.freeze([
+      "playable2_20260927020825_kxh9p4",
+      "playable2_20260928023148_i47u62",
+      "playable2_20260928023148_kiq9wu",
+      "playable2_20260928024159_iasubp",
+      "playable2_20261001225611_9its9h",
+      "playable2_20261001230222_8qptsc",
+      "eh_feed_your_friend_20261020",
+      "eh_hair_shave_20261020",
+      "eh_makeover_20261020",
+      "playable2_20261028202811_hz9v37",
+      "playable2_20261028202811_rf6gbi",
+      "playable2_20261028202811_dsl58j",
+      "playable2_20261028202811_gia8r5",
+      "playable2_20261028202811_5uuyhb",
+      "playable2_20261028202811_q0f68t",
+      "playable2_20261028202811_ke0xpl",
+      "playable2_20261029183430_hxuf8g",
+      "playable2_20261029183430_v5avg1",
+      "playable2_20261029183430_9mlt5d",
+      "playable2_20261029183430_ctpmni",
+      "playable2_20261029183430_cvsxhd"
+  ]);
   const membership = new Set(batch1TaskIds);
+  const batch2Membership = new Set(batch2TaskIds);
   const storageKey = 'playable-review-batch-v1';
-  const normalizeBatch = value => ['all', 'batch1', 'other'].includes(value) ? value : 'all';
-  const categoryOf = game => membership.has(game?.taskId) ? 'batch1' : 'other';
+  const normalizeBatch = value => ['all', 'batch1', 'batch2', 'other'].includes(value) ? value : 'all';
+  const categoryOf = game => membership.has(game?.taskId) ? 'batch1' : batch2Membership.has(game?.taskId) ? 'batch2' : 'other';
   const matchesBatch = (game, value) => normalizeBatch(value) === 'all' || categoryOf(game) === value;
   const matchesQuery = (game, query) => {
     const q = String(query || '').trim().toLowerCase();
@@ -61,7 +85,7 @@
     if (index < 0) return null;
     return games[index + (direction === 'next' ? 1 : -1)] || null;
   };
-  const model = Object.freeze({batch1TaskIds, storageKey, normalizeBatch, categoryOf, matchesBatch, matchesQuery, filterGames, reveal, neighbor});
+  const model = Object.freeze({batch1TaskIds, batch2TaskIds, storageKey, normalizeBatch, categoryOf, matchesBatch, matchesQuery, filterGames, reveal, neighbor});
   if (typeof module === 'object' && module.exports) module.exports = model;
   else root.PlayableBatchFilter = model;
 })(typeof window === 'object' ? window : globalThis);
