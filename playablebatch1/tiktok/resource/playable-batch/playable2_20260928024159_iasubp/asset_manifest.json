@@ -1,0 +1,37 @@
+{
+  "number": 23,
+  "task_id": "playable2_20260928024159_iasubp",
+  "name": "Soda Drop Physics Puzzle",
+  "manifest_version": 1,
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "rebuildable-current-runtime-source",
+  "files": {
+    "App.jsx": "c27faaf8d7db10bf0c257f4443dbff0b52e25603295a222a2476d4e75a4cfedc",
+    "dist/bundle.js": "c27faaf8d7db10bf0c257f4443dbff0b52e25603295a222a2476d4e75a4cfedc",
+    "dist/game.html": "0c67cdfd0f372e6284fbb4cfbf3f42a02f635bf15c05e336729b6a0c460126bd",
+    "dist/game.config.json": "6ef291def0671a05d1b283770d4a17be656ea6f8f317eb8276b75f5084b0089e"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/fonts/special-elite/LICENSE.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "dist/assets/fonts/special-elite/SpecialElite-Regular.ttf",
+      "bytes": 166180,
+      "sha256": "a776fcb4ceb8bdf03e2967688ebdad42680de5b91a7e62c17e718ae212d14bc4"
+    },
+    {
+      "path": "dist/assets/glass-ink.svg",
+      "bytes": 548,
+      "sha256": "d909a63035eee34e59227ddf7f6b4b56cad2ba0db34a786d3a0b9f75513e89d5"
+    },
+    {
+      "path": "dist/assets/paper-grain.svg",
+      "bytes": 1135,
+      "sha256": "6eec112894de0674588db67b572fd9f3246efe1445e6e974d1d198177166e7d8"
+    }
+  ]
+}

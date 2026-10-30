@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Soda Drop Physics Puzzle</title><style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    #root { isolation: isolate; }
+    canvas { touch-action: none; }
+    button, input, select, textarea { touch-action: manipulation; }
+  
+
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+
+/* User override 2026-10-21: favor visual center, not a fixed upper band. */
+html:root:root:root #root#root#root>div>div[style*="border-radius: 16px"][style*="pointer-events: none"]{position:fixed!important;top:50%!important;bottom:auto!important;left:50%!important;right:auto!important;width:max-content!important;max-width:calc(100vw - 60px)!important;min-height:0!important;margin:0!important;text-align:center!important;translate:-50% -50%!important;transform:none!important;pointer-events:none!important;z-index:25!important;overflow-wrap:anywhere}
+html[data-guide-action-used="true"]:root:root:root #root#root#root>div>div[style*="border-radius: 16px"][style*="pointer-events: none"]{visibility:hidden!important;opacity:0!important}
+
+
+@font-face{font-family:'Special Elite';src:url('./assets/fonts/special-elite/SpecialElite-Regular.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
+:root:root{--font-display:'Special Elite',Georgia,serif;--font-body:'Special Elite',Georgia,serif;--font-mono:'Special Elite',Georgia,serif;--color-ink:#242322}
+html,body,#root{background:#2858db!important}button{font-family:var(--font-display);-webkit-text-stroke:.12px currentColor}button:focus-visible{outline:3px solid #2858db;outline-offset:3px}
+
+:root:root{--color-primary:#242322;--color-soda:#59c6b1;--color-obstacle:#d8eb61}
+#root>div{isolation:isolate;background:#2858db url('./assets/paper-grain.svg') repeat!important}
+.notebook-bg{inset:14px 14px 24px!important;z-index:0!important;background:#fff8df url('./assets/paper-grain.svg') repeat!important;background-size:150px 150px!important;border:1.6px solid #242322;border-radius:3px 5px 6px 2px;box-shadow:2px 3px 0 #242322}
+.notebook-margin,.notebook-holes{display:none!important}
+#root button{background-image:url('./assets/paper-grain.svg');text-shadow:none}
+#root h1{text-shadow:none!important;color:#242322!important;font-size:34px!important;font-weight:400!important}
+
+#root>div::after{content:"";position:absolute;inset:0;background:url('./assets/paper-grain.svg') repeat;background-size:220px 220px;opacity:.10;mix-blend-mode:multiply;pointer-events:none;z-index:2}
+.notebook-bg{background-size:220px 220px!important}
+</style></head><body><div id="root"></div><script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"DROP_COUNT","kind":"number","label":"Drops Limit","value":40,"default":40,"min":10,"max":100,"step":1},{"id":"WIN_THRESHOLD","kind":"number","label":"Win Threshold","value":20,"default":20,"min":1,"max":100,"step":1},{"id":"DROP_INTERVAL","kind":"number","label":"Drop Interval","value":150,"default":150,"min":50,"max":1000,"step":10},{"id":"GRAVITY","kind":"number","label":"Gravity","value":1,"default":1,"min":0.5,"max":3,"step":0.1}],"texts":[{"id":"INSTRUCTION","label":"Instruction","value":"Draw a line to guide the soda!","default":"Draw a line to guide the soda!","max_length":50},{"id":"BTN_RESET","label":"Reset Button","value":"Reset","default":"Reset","max_length":20},{"id":"BTN_POST","label":"Post Button","value":"Post My Play","default":"Post My Play","max_length":20},{"id":"BTN_REPLAY","label":"New Level Button","value":"New Level","default":"New Level","max_length":20},{"id":"MSG_WIN","label":"Win Message","value":"Level Cleared!","default":"Level Cleared!","max_length":30}],"images":[{"id":"GLASS_IMG","label":"Glass Image","path":"./assets/glass-ink.svg","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script><script src="./bundle.js"></script></body></html>

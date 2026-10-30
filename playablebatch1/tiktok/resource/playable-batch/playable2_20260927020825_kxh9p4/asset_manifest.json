@@ -1,0 +1,42 @@
+{
+  "number": 18,
+  "task_id": "playable2_20260927020825_kxh9p4",
+  "name": "Ant Trapper",
+  "manifest_version": 1,
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "rebuildable-current-runtime-source",
+  "files": {
+    "App.jsx": "13f5940d6a129552799e681b03a2946bcd475186c02932e0ffa66e005be766dc",
+    "dist/bundle.js": "13f5940d6a129552799e681b03a2946bcd475186c02932e0ffa66e005be766dc",
+    "dist/game.html": "01818248ad25c205155e8a5182f579828b5e13aaa03b9a638077c5cf44c56439",
+    "dist/game.config.json": "9b0c08fc9f458cb8fc266e324d1517f97fd80409dd2408e4bfb2c04e943a78db"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/ant-ink-v2.svg",
+      "bytes": 661,
+      "sha256": "174495656c7f8899caac797562d759439e1629e6b29b5b6a88013f6813e73034"
+    },
+    {
+      "path": "dist/assets/bg_paper_clean.svg",
+      "bytes": 386,
+      "sha256": "a66fee06801164a78b56b4ddb9131e533208dd6ab5349869c6363ade6075ac06"
+    },
+    {
+      "path": "dist/assets/fonts/special-elite/LICENSE.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "dist/assets/fonts/special-elite/SpecialElite-Regular.ttf",
+      "bytes": 166180,
+      "sha256": "a776fcb4ceb8bdf03e2967688ebdad42680de5b91a7e62c17e718ae212d14bc4"
+    },
+    {
+      "path": "dist/assets/paper-grain.svg",
+      "bytes": 1135,
+      "sha256": "9599f371f1d86994d22bf07212cbe67fbe2bb04836818cf56d5313e5465505c0"
+    }
+  ]
+}

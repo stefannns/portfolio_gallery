@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Ant Trapper</title><style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #050510; -webkit-tap-highlight-color: transparent; }
+    /* Iteration repair: crop baked social-app chrome out of the decorative paper layer. */
+    div[style*="bg_paper_clean.svg"] { background-size: cover !important; background-position: center !important; }
+    button:focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
+  
+
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+
+/* User override 2026-10-21: favor visual center, not a fixed upper band. */
+html:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) [data-ant-playfield]>div{position:fixed!important;top:50%!important;bottom:auto!important;left:50%!important;right:auto!important;width:max-content!important;max-width:calc(100vw - 60px)!important;min-height:0!important;margin:0!important;text-align:center!important;translate:-50% -50%!important;transform:none!important;pointer-events:none!important;z-index:25!important;overflow-wrap:anywhere}
+html[data-guide-action-used="true"]:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) [data-ant-playfield]>div{visibility:hidden!important;opacity:0!important}
+
+
+@font-face{font-family:'Special Elite';src:url('./assets/fonts/special-elite/SpecialElite-Regular.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
+:root:root{--font-display:'Special Elite',Georgia,serif;--font-body:'Special Elite',Georgia,serif;--font-mono:'Special Elite',Georgia,serif;--color-ink:#242322}
+html,body,#root{background:#a289cf!important}button{font-family:var(--font-display);-webkit-text-stroke:.12px currentColor}button:focus-visible{outline:3px solid #2858db;outline-offset:3px}
+
+#root>div>div[style*="bg_paper_clean.svg"]{background-size:cover!important}
+[data-ant-playfield]>div{font-family:'Special Elite',Georgia,serif!important;font-size:18px!important;font-weight:400!important;line-height:1.35!important}
+
+#root header,#root footer button{background-image:url('./assets/paper-grain.svg');background-size:220px 220px}
+[data-ant-playfield]{background-size:220px 220px!important}
+</style></head><body><div id="root"></div><script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"ANT_SPEED","kind":"number","label":"Ant speed","value":3,"default":3,"min":1,"max":10,"step":0.5},{"id":"REWARD_AMOUNT","kind":"number","label":"Hit reward ($)","value":10,"default":10,"min":1,"max":100,"step":1},{"id":"ADD_ANT_COST","kind":"number","label":"Add ant cost ($)","value":50,"default":50,"min":0,"max":500,"step":10}],"texts":[{"id":"TITLE_ANTS","label":"Ant count text","value":"Ants","default":"Ants","max_length":15},{"id":"BTN_ADD_ANT","label":"Add ant button","value":"Add Ant","default":"Add Ant","max_length":15},{"id":"BTN_CLEAR","label":"Clear all button","value":"Clear All","default":"Clear All","max_length":15},{"id":"HINT_TEXT","label":"Hint text","value":"Draw lines to trap ants! Earn $10 on hit","default":"Draw lines to trap ants! Earn $10 on hit","max_length":50}],"images":[{"id":"BG_MAIN","label":"Paper background","path":"./assets/bg_paper_clean.svg","replaceable":true},{"id":"CHAR_ANT","label":"Ant sprite","path":"./assets/ant-ink-v2.svg","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script><script src="./bundle.js"></script></body></html>

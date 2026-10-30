@@ -1236,3 +1236,40 @@ Object.assign(window.PLAYABLE_IMPLEMENTED_FIXES, {
     "number": 69
   }
 });
+
+/* Paper art and aligned soda physics, 30 October 2026. */
+Object.assign(window.PLAYABLE_IMPLEMENTED_FIXES, {
+  "playable2_20260927020825_kxh9p4": {
+    "number": 18,
+    "items": [
+      "Stronger paper grain and visible fibers across the violet background, drawing sheet and controls.",
+      "Printed-paper artwork: violet surround, ivory drawing sheet, lime/pink inked controls, a new black ink ant and a locally bundled typewriter font.",
+      "Kept ants inside the drawable board, away from controls.",
+      "Added recognizable six-legged ant artwork.",
+      "Fixed scaled drawing coordinates, resize bounds and Add/Clear input handling."
+    ],
+    "status": "Updated locally; focused portrait FYP checks completed.",
+    "evidence": [
+      "FB-019-4731a74d",
+      "Paper and ink art · 30 October 2026",
+      "Cup alignment and paper texture · 30 October 2026"
+    ]
+  },
+  "playable2_20260928024159_iasubp": {
+    "number": 23,
+    "items": [
+      "Softened the soda paper grain/fibers and overlay to roughly half strength for a lighter finish.",
+      "Water fill follows the new cup’s inner edges and curved base; cup collisions follow the same outline. Level generation places one ball in the gravity stream and another on the direct route to the cup. Stronger paper grain and fibers.",
+      "Printed-paper artwork: cobalt surround, ivory playfield, flat colored obstacles and soda, new outlined cup and dispenser, and a locally bundled typewriter font. Cup moved slightly up to clear the controls.",
+      "Made soda cyan and obstacles orange with clearer outlines.",
+      "Prevented obstacle overlap and kept emitter/cup clearance.",
+      "Cup fills gradually with blue; Reset preserves the level, New Level changes it."
+    ],
+    "status": "Updated locally; focused portrait FYP checks completed.",
+    "evidence": [
+      "FB-025-faebc6a4",
+      "Paper and ink art · 30 October 2026",
+      "Cup alignment and paper texture · 30 October 2026"
+    ]
+  }
+});

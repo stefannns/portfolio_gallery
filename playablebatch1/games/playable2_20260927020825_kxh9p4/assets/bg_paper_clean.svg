@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="590" height="1280" viewBox="0 0 590 1280">
-  <defs>
-    <pattern id="lines" width="590" height="40" patternUnits="userSpaceOnUse"><rect width="590" height="40" fill="#f4eedf"/><path d="M0 39H590" stroke="#7c9fc2" stroke-width="2" opacity=".3"/></pattern>
-  </defs>
-  <rect width="590" height="1280" fill="url(#lines)"/>
-  <path d="M72 0V1280" stroke="#cf6666" stroke-width="3" opacity=".35"/>
-</svg>
