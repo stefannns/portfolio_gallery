@@ -617,9 +617,9 @@ function App() {
       ctx.fillStyle = '#f39a61';
       ctx.fillRect(0, 0, width, height);
       // Faint printed guide dots belong to the paper, beneath every shape.
-      ctx.save(); ctx.fillStyle='#242322'; ctx.globalAlpha=.07;
+      ctx.save(); ctx.fillStyle='#242322'; ctx.globalAlpha=.12;
       ctx.beginPath();
-      for (let x=16; x<width; x+=32) for (let y=16; y<height; y+=32) { ctx.moveTo(x+.75,y); ctx.arc(x,y,.75,0,Math.PI*2); }
+      for (let x=16; x<width; x+=32) for (let y=16; y<height; y+=32) { ctx.moveTo(x+1.1,y); ctx.arc(x,y,1.1,0,Math.PI*2); }
       ctx.fill(); ctx.restore();
       shapesRef.current.forEach((shape) => drawShape(shape, ctx,time,elapsed));
       if (paperPattern) { ctx.save(); ctx.globalCompositeOperation='multiply'; ctx.globalAlpha=.74; ctx.fillStyle=paperPattern; ctx.fillRect(0,0,width,height); ctx.restore(); }

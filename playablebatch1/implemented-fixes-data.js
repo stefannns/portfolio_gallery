@@ -1294,3 +1294,24 @@ Object.assign(window.PLAYABLE_IMPLEMENTED_FIXES, {
     ]
   }
 });
+
+/* More legible background dots, 30 October 2026. */
+Object.assign(window.PLAYABLE_IMPLEMENTED_FIXES, {
+  "playable2_20261028202811_rf6gbi": {
+    "number": 80,
+    "items": [
+      "Paper dots made slightly larger and clearer so they remain faint but visible over the grain.",
+      "Paper-and-ink visual style: warm orange textured paper, lime/teal/pink/blue flat shapes, fine black outlines, print-style lettering and inked circular controls. Current shape physics, four eye styles, moving pupils and contact-sound behavior retained.",
+      "Drawing release closes the outline into a filled body. Straight strokes with no enclosed area are rejected instead of being expanded into a ribbon.",
+      "Four imagegen eye styles are assigned in shuffled random order: classic, sleepy, googly and happy. All four image slots are replaceable.",
+      "Body fills and eyes use matte flat colors, with no body gradients, gloss or cast shadows. The feed demonstration uses the same flat appearance.",
+      "A cancelled drawing adds no body; clear restores the guide and palette/gravity controls remain available.",
+      "Required App.jsx/check.js/asset_manifest.json/dist structure; matching Direct/FYP files."
+    ],
+    "status": "Updated; paper-style artwork, dots and current interaction behavior retained.",
+    "evidence": [
+      "Batch79–86 polish20261028",
+      "Paper and ink art · 30 October 2026"
+    ]
+  }
+});

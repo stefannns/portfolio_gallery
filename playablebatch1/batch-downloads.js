@@ -489,8 +489,8 @@ window.PlayableBatchDownloads = {
         "filename": "batch-2-en.zip",
         "language": "en",
         "games": 21,
-        "bytes": 14318166,
-        "sha256": "0c3afbde18fb58948486a52a256f48f426c7e199fe4358954e2decc2ab35f2a2",
+        "bytes": 14318162,
+        "sha256": "7a729ca6885a030daebc1b17ef8c799be3b197ee803dec7274ee10e2b102ef98",
         "members": [
           {
             "number": 18,
