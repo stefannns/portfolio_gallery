@@ -91,11 +91,10 @@ const DEFAULT_CFG = {
   SWEET_HALF_ANGLE: 0.42,
   FLIGHT_SPEED: 0.42,
   CAPTURE_BAND: 8,
-  SPEED_RAMP_SECONDS: 40,
-  MAX_SPEED_MULTIPLIER: 2.2,
+  SPEED_PER_LAUNCH: 15,
   SCORE_PER_CATCH: 1,
   GAME_TITLE: 'Orbit Jump B',
-  GUIDE: 'Tap to launch into the ring',
+  GUIDE: 'Tap to launch, aim at next orbit',
   SCORE_LABEL: 'Score',
   BEST_LABEL: 'Best',
   PERFECT_LABEL: 'Perfect',
@@ -130,9 +129,9 @@ function safeNumber(value, fallback) {
   return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
 }
 
-function speedMultiplier(elapsedMs, cfg) {
-  const rampMs = Math.max(1, safeNumber(cfg.SPEED_RAMP_SECONDS, 40)) * 1000;
-  return Math.min(Math.max(1, safeNumber(cfg.MAX_SPEED_MULTIPLIER, 2.2)), 1 + Math.max(0, elapsedMs) / rampMs);
+function speedMultiplier(launches, cfg) {
+  const increase = Math.max(0, safeNumber(cfg.SPEED_PER_LAUNCH, 15)) / 100;
+  return Math.pow(1 + increase, Math.max(0, launches));
 }
 
 function flattenConfig(data) {
@@ -211,15 +210,13 @@ function traceOrbitLaunch(orbit, destination, angle, spin = 1, band = 8) {
   const ahead = (destination.x - start.x) * direction.x + (destination.y - start.y) * direction.y;
   const nearest = { x: start.x + direction.x * Math.max(0, ahead), y: start.y + direction.y * Math.max(0, ahead) };
   const clearance = Math.hypot(nearest.x - destination.x, nearest.y - destination.y);
-  const coreDistance = rayCircleEntry(start, direction, destination, 23 + 5.5);
-  let distance = coreDistance;
-  let outcome = coreDistance === null ? 'miss' : 'planet';
-  if (coreDistance === null && ahead > 0 && clearance <= destination.r + band) {
-    // A center-bound shot crosses the ring first, but must hit the planet rather than auto-catch.
-    distance = rayCircleEntry(start, direction, destination, destination.r) ?? ahead;
-    outcome = 'catch';
-  }
-  return { start, direction, destination, distance, outcome, clearance, perfect: outcome === 'catch' && Math.abs(clearance - destination.r) <= band };
+  // Catch as soon as the flight reaches the next orbit. Center-bound
+  // trajectories cross that ring too; the planet is no longer a hazard.
+  const ringDistance = rayCircleEntry(start, direction, destination, destination.r);
+  const nearDistance = rayCircleEntry(start, direction, destination, destination.r + band);
+  const catches = ringDistance !== null || (ahead > 0 && nearDistance !== null);
+  const distance = catches ? (ringDistance ?? Math.max(0, ahead)) : null;
+  return { start, direction, destination, distance, outcome: catches ? 'catch' : 'miss', clearance, perfect: catches && Math.abs(clearance - destination.r) <= band };
 }
 
 function launchHintWindows(orbit, destination, spin, band) {
@@ -237,7 +234,7 @@ function launchHintWindows(orbit, destination, spin, band) {
     const first = groups.shift();
     groups[groups.length - 1].push(...first.map(sample => ({ ...sample, angle: sample.angle + Math.PI * 2 })));
   }
-  // Both sides of the destination planet have a valid tangent approach.
+  // Highlight every successful launch angle, including paths through the center.
   return groups.filter(samples => samples.length >= 2).map(samples => {
     const startAngle = samples[0].angle + step * .25;
     const endAngle = samples[samples.length - 1].angle - step * .25;
@@ -266,7 +263,7 @@ function App() {
   const statusRef = useRef('ready');
   const [score, setScore] = useState(0);
   const scoreRef = useRef(0);
-  const elapsedPlayMsRef = useRef(0);
+  const launchCountRef = useRef(0);
   const [games, setGames] = useState(() => {
     try { return Number(localStorage.getItem('orbit-jump-88b-games') || 0); } catch (error) { return 0; }
   });
@@ -407,10 +404,11 @@ function App() {
     const orbit = currentOrbitRef.current;
     const layout = targetLayout(levelRef.current);
     const destination = { x: layout.x, y: layout.y, r: layout.orbit };
+    launchCountRef.current += 1;
     flightRef.current = {
       ...traceOrbitLaunch(orbit, destination, angleRef.current, spinRef.current, safeNumber(cfgRef.current.CAPTURE_BAND, 8)),
       travelled: 0,
-      speed: Math.max(0.1, safeNumber(cfgRef.current.FLIGHT_SPEED, 0.42)) * speedMultiplier(elapsedPlayMsRef.current, cfgRef.current),
+      speed: Math.max(0.1, safeNumber(cfgRef.current.FLIGHT_SPEED, 0.42)) * speedMultiplier(launchCountRef.current, cfgRef.current),
     };
     if (!hasInteracted) setHasInteracted(true);
     if (!gameCountedRef.current) gameCountedRef.current = true;
@@ -445,7 +443,7 @@ function App() {
     currentOrbitRef.current = { x: 200, y: 335, r: 98 };
     levelRef.current = 0;
     scoreRef.current = 0;
-    elapsedPlayMsRef.current = 0;
+    launchCountRef.current = 0;
     gameCountedRef.current = false;
     setScore(0);
     setLevel(0);
@@ -465,8 +463,7 @@ function App() {
       const currentStatus = statusRef.current;
       const running = (currentStatus === 'ready' || currentStatus === 'active') && !document.hidden && (currentStatus === 'ready' || feedSession.active);
       if (running) {
-        if (currentStatus === 'active') elapsedPlayMsRef.current += dt;
-        if (!flightRef.current) angleRef.current += safeNumber(cfgRef.current.ORBIT_SPEED, .0018) * speedMultiplier(elapsedPlayMsRef.current, cfgRef.current) * spinRef.current * dt;
+        if (!flightRef.current) angleRef.current += safeNumber(cfgRef.current.ORBIT_SPEED, .0018) * speedMultiplier(launchCountRef.current, cfgRef.current) * spinRef.current * dt;
       }
       if (flightRef.current && running) {
         const flight = flightRef.current;
@@ -502,7 +499,7 @@ function App() {
         stageRef.current.dataset.orbitX = String(currentOrbitRef.current.x);
         stageRef.current.dataset.orbitY = String(currentOrbitRef.current.y);
         stageRef.current.dataset.motion = flightRef.current ? 'flight' : 'orbit';
-        stageRef.current.dataset.speedMultiplier = String(speedMultiplier(elapsedPlayMsRef.current, cfgRef.current));
+        stageRef.current.dataset.speedMultiplier = String(speedMultiplier(launchCountRef.current, cfgRef.current));
       }
       if (launchGuideRef.current) launchGuideRef.current.style.opacity = flightRef.current || statusRef.current === 'over' ? '0' : '1';
       rafRef.current = requestAnimationFrame(tick);
@@ -561,13 +558,6 @@ function App() {
               )}
               <svg className="orbit-svg" viewBox="0 -72 400 650" role="img" aria-label={cfg.GAME_TITLE}>
                 <defs>
-                  {launchHints.map((hint, index) => <linearGradient key={index} id={`launchHintShade-${index}`} gradientUnits="userSpaceOnUse" x1={hint.start.x} y1={hint.start.y} x2={hint.end.x} y2={hint.end.y}>
-                    <stop offset="0" stopColor={palette.sage} stopOpacity="0" />
-                    <stop offset=".2" stopColor={palette.sage} stopOpacity=".52" />
-                    <stop offset=".5" stopColor={palette.sage} stopOpacity=".82" />
-                    <stop offset=".8" stopColor={palette.sage} stopOpacity=".52" />
-                    <stop offset="1" stopColor={palette.sage} stopOpacity="0" />
-                  </linearGradient>)}
                   <radialGradient id="planetGlow" cx="35%" cy="28%">
                     <stop offset="0" stopColor={palette.planetHi} />
                     <stop offset="1" stopColor={palette.planet} />
@@ -575,15 +565,16 @@ function App() {
                   <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="8" /></filter>
                 </defs>
                 <circle cx={currentOrbit.x} cy={currentOrbit.y} r={currentOrbit.r + 18} fill="none" stroke={palette.faint} strokeWidth="1" strokeDasharray="2 10" opacity=".32" />
-                <g ref={launchGuideRef} data-testid="launch-sweet-guide" pointerEvents="none" aria-hidden="true">
-                  {launchHints.map((hint, index) => <path key={index} data-testid="launch-sweet-strip" d={hint.path} fill="none" stroke={`url(#launchHintShade-${index})`} strokeWidth="18" strokeLinecap="butt" />)}
-                </g>
                 <circle cx={currentOrbit.x} cy={currentOrbit.y} r={currentOrbit.r} fill="none" stroke={palette.ink} strokeWidth="1.2" strokeDasharray="2 8" opacity=".42" />
+                <g ref={launchGuideRef} data-testid="launch-sweet-guide" pointerEvents="none" aria-hidden="true">
+                  {launchHints.map((hint, index) => <g key={index}>
+                    <path d={hint.path} fill="none" stroke="#79a980" strokeWidth="16" opacity=".18" strokeLinecap="butt" />
+                    <path data-testid="launch-sweet-strip" d={hint.path} fill="none" stroke="#79a980" strokeWidth="3" opacity=".95" strokeLinecap="butt" />
+                  </g>)}
+                </g>
                 <circle cx={currentOrbit.x} cy={currentOrbit.y} r="34" fill={palette.ink} opacity=".05" filter="url(#softShadow)" />
                 <circle cx={currentOrbit.x} cy={currentOrbit.y} r="32" fill="url(#planetGlow)" stroke={palette.planet} strokeWidth="1" />
                 <ellipse cx={currentOrbit.x - 10} cy={currentOrbit.y - 10} rx="15" ry="9" fill={palette.planetHi} opacity=".38" />
-                <circle data-testid="capture-range" cx={layout.x} cy={layout.y} r={layout.orbit} fill="none" stroke={palette.sage} strokeWidth={safeNumber(cfg.CAPTURE_BAND, 8) * 2} opacity=".18" />
-                <circle cx={layout.x} cy={layout.y} r={layout.orbit} fill="none" stroke={palette.sage} strokeWidth="3" opacity=".8" />
                 <circle cx={layout.x} cy={layout.y} r={layout.orbit} fill="none" stroke={palette.ink} strokeWidth="1.2" strokeDasharray="2 8" opacity=".42" />
                 <circle cx={layout.x} cy={layout.y} r="26" fill={palette.planet} opacity=".18" />
                 <circle cx={layout.x} cy={layout.y} r="23" fill={palette.planet} stroke={palette.planetHi} strokeWidth="1" />

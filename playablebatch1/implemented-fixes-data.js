@@ -1315,3 +1315,34 @@ Object.assign(window.PLAYABLE_IMPLEMENTED_FIXES, {
     ]
   }
 });
+
+/* Current 80 stacking/color sets and 88b launch progression, 30 October 2026. */
+Object.assign(window.PLAYABLE_IMPLEMENTED_FIXES, {
+  "playable2_20261028202811_rf6gbi": {
+    "number": 80,
+    "items": [
+      "Softer, flexible blobs with elastic rebound. Improved stack support, stable resting contacts and fast-flick collision steps prevent overlap and jitter.",
+      "Filled blob collisions prevent interpenetration and support stacks while preserving soft outlines.",
+      "A visible three-swatch selector cycles Print, Coast, Garden and Pastel sets. Each new blob picks randomly from its selected three colors. Existing blobs keep their colors.",
+      "Warm paper-and-ink artwork with faint printed dots; four eye styles, moving pupils and closed-shape drawing retained.",
+      "Current source and build follow the required App.jsx/check.js/asset_manifest.json/dist structure."
+    ],
+    "status": "Updated locally; portrait FYP release/landing checked. Focused calm/strong gravity, fast-flick and drag-through-stack cases passed.",
+    "evidence": [
+      "Blob stacking and three-color sets · 30 October 2026"
+    ]
+  },
+  "playable2_20261029183430_9mlt5d_88b": {
+    "number": "88b",
+    "items": [
+      "Speed increases by 15% on each valid launch (compounded); the clock-based ramp and previous 2.2x cap are removed. Retry resets speed.",
+      "Reaching the target orbit succeeds, including paths toward the planet center.",
+      "A green arc on the occupied orbit marks valid launch positions; the target ring stays neutral.",
+      "CTA: Tap to launch, aim at next orbit. Score-only HUD retained."
+    ],
+    "status": "Updated; 15% speed progression is based on launches.",
+    "evidence": [
+      "Easier 88b and launch-based speed · 30 October 2026"
+    ]
+  }
+});

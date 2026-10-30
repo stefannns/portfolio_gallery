@@ -72,12 +72,13 @@ const DEFAULT_CFG = {
   MAX_POINT_DISTANCE: 18,
 };
 
-const PALETTES = [
-  { fill: '#d8eb61', hi: '#d8eb61', stroke: '#242322', eye: '#242322' },
-  { fill: '#59c6b1', hi: '#59c6b1', stroke: '#242322', eye: '#242322' },
-  { fill: '#ee94ac', hi: '#ee94ac', stroke: '#242322', eye: '#242322' },
-  { fill: '#7e9ee6', hi: '#7e9ee6', stroke: '#242322', eye: '#242322' },
+const COLOR_SETS = [
+  { name:'Print', colors:['#d8eb61','#59c6b1','#ee94ac'] },
+  { name:'Coast', colors:['#7e9ee6','#9fd7e1','#b5a3dc'] },
+  { name:'Garden', colors:['#b9cf78','#f1d878','#e99b9d'] },
+  { name:'Pastel', colors:['#eaa6c1','#a6b6ec','#a9d4b7'] },
 ];
+const PALETTES = COLOR_SETS.flatMap(set=>set.colors.map(fill=>({fill,hi:fill,stroke:'#242322',eye:'#242322'})));
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
@@ -97,10 +98,16 @@ function closedOutline(rawPoints){
   return ring;
 }
 
-let colorBag=[],lastRandomColor=-1;
-function chooseShapeColor(){
-  if(!colorBag.length){colorBag=PALETTES.map((_,i)=>i);for(let i=colorBag.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[colorBag[i],colorBag[j]]=[colorBag[j],colorBag[i]];}if(colorBag.at(-1)===lastRandomColor)[colorBag[0],colorBag[colorBag.length-1]]=[colorBag.at(-1),colorBag[0]];}
-  return lastRandomColor=colorBag.pop();
+const colorBags=COLOR_SETS.map(()=>[]),lastSetColors=COLOR_SETS.map(()=>-1);
+function chooseShapeColor(setIndex=0){
+  const set=((setIndex%COLOR_SETS.length)+COLOR_SETS.length)%COLOR_SETS.length;
+  if(!colorBags[set].length){
+    const bag=[set*3,set*3+1,set*3+2];
+    for(let i=bag.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[bag[i],bag[j]]=[bag[j],bag[i]];}
+    if(bag.at(-1)===lastSetColors[set])[bag[0],bag[bag.length-1]]=[bag.at(-1),bag[0]];
+    colorBags[set]=bag;
+  }
+  return lastSetColors[set]=colorBags[set].pop();
 }
 function analyzeEyeWhites(pixels,width,height){
   const size=width*height,white=new Uint8Array(size),mask=new Uint8ClampedArray(size*4),dist=new Float32Array(size),seen=new Uint8Array(size),queue=new Int32Array(size),components=[];
@@ -271,6 +278,157 @@ function makeAudioController() {
   return { play, unlock, stop, dispose, stats };
 }
 
+/* FILLED_SOFT_PHYSICS_START */
+function softArea(points){return points.reduce((sum,p,i)=>{const q=points[(i+1)%points.length];return sum+p.x*q.y-q.x*p.y;},0)*.5;}
+function createSoftShape(ringPoints,id,color){
+  const minDimension=Math.max(18,Math.min(Math.max(...ringPoints.map(p=>p.x))-Math.min(...ringPoints.map(p=>p.x)),Math.max(...ringPoints.map(p=>p.y))-Math.min(...ringPoints.map(p=>p.y))));
+  const radius=clamp(minDimension*.045,5,10),group=Matter.Body.nextGroup(true);
+  // Nodes still collide with the walls. Filled outlines handle inter-blob contact.
+  const filter={group,category:0x0002,mask:0x0001};
+  const ring=ringPoints.map(p=>Matter.Bodies.circle(p.x,p.y,radius,{label:id+':ring',collisionFilter:{...filter},friction:.62,frictionAir:.018,restitution:.62,density:.0014}));
+  const centerPoint=ringPoints.reduce((c,p)=>({x:c.x+p.x/ringPoints.length,y:c.y+p.y/ringPoints.length}),{x:0,y:0});
+  const center=Matter.Bodies.circle(centerPoint.x,centerPoint.y,Math.max(9,radius*.9),{label:id+':center',collisionFilter:{...filter},friction:.62,frictionAir:.024,restitution:.48,density:.0011});
+  const constraints=[];
+  ring.forEach((body,i)=>{constraints.push(Matter.Constraint.create({bodyA:body,bodyB:ring[(i+1)%ring.length],length:distance(ringPoints[i],ringPoints[(i+1)%ring.length]),stiffness:.205,damping:.055}));constraints.push(Matter.Constraint.create({bodyA:center,bodyB:body,length:distance(centerPoint,ringPoints[i]),stiffness:.09,damping:.045}));});
+  const bodies=[...ring,center],composite=Matter.Composite.create({label:'softbody:'+id});Matter.Composite.add(composite,[...bodies,...constraints]);
+  return {composite,bodies,ring,center,softContacts:new WeakMap(),contactClock:0,restArea:softArea(ringPoints),restOffsets:ringPoints.map(p=>({x:p.x-centerPoint.x,y:p.y-centerPoint.y})),mass:bodies.reduce((n,b)=>n+b.mass,0),color,eyeStyle:chooseEyeStyle(),gaze:{x:0,y:0,seed:Math.random()*Math.PI*2},createdAt:performance.now()};
+}
+function softOutline(shape){
+  const ring=shape.ring,points=[];
+  ring.forEach((body,i)=>{const p=body.position,a=ring[(i+ring.length-1)%ring.length].position,b=ring[(i+1)%ring.length].position;points.push({x:(a.x+p.x)*.5,y:(a.y+p.y)*.5},{x:a.x*.125+p.x*.75+b.x*.125,y:a.y*.125+p.y*.75+b.y*.125});});
+  return points;
+}
+function softBounds(points){let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;for(const p of points){minX=Math.min(minX,p.x);minY=Math.min(minY,p.y);maxX=Math.max(maxX,p.x);maxY=Math.max(maxY,p.y);}return {minX,minY,maxX,maxY};}
+function softPointInside(p,polygon,dx=0,dy=0){let inside=false;for(let i=0,j=polygon.length-1;i<polygon.length;j=i++){const a=polygon[i],b=polygon[j];if((a.y>p.y-dy)!==(b.y>p.y-dy)&&(p.x-dx)<(b.x-a.x)*(p.y-dy-a.y)/(b.y-a.y)+a.x)inside=!inside;}return inside;}
+function softPolygonsOverlap(a,b,dx=0,dy=0){
+  const aa=softBounds(a),bb=softBounds(b);if(aa.maxX+dx<=bb.minX||bb.maxX<=aa.minX+dx||aa.maxY+dy<=bb.minY||bb.maxY<=aa.minY+dy)return false;
+  if(softPointInside({x:a[0].x+dx,y:a[0].y+dy},b)||softPointInside(b[0],a,dx,dy))return true;
+  const cross=(ax,ay,bx,by,cx,cy)=>(bx-ax)*(cy-ay)-(by-ay)*(cx-ax);
+  for(let i=0;i<a.length;i++){const p=a[i],q=a[(i+1)%a.length],px=p.x+dx,py=p.y+dy,qx=q.x+dx,qy=q.y+dy;for(let j=0;j<b.length;j++){const r=b[j],s=b[(j+1)%b.length];if(Math.max(px,qx)<=Math.min(r.x,s.x)||Math.max(r.x,s.x)<=Math.min(px,qx)||Math.max(py,qy)<=Math.min(r.y,s.y)||Math.max(r.y,s.y)<=Math.min(py,qy))continue;if(cross(px,py,qx,qy,r.x,r.y)*cross(px,py,qx,qy,s.x,s.y)<-1e-8&&cross(r.x,r.y,s.x,s.y,px,py)*cross(r.x,r.y,s.x,s.y,qx,qy)<-1e-8)return true;}}
+  return false;
+}
+function softHull(points){
+  const p=points.slice().sort((a,b)=>a.x-b.x||a.y-b.y),cross=(a,b,c)=>(b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x),lower=[],upper=[];
+  for(const v of p){while(lower.length>1&&cross(lower.at(-2),lower.at(-1),v)<=0)lower.pop();lower.push(v);}for(let i=p.length-1;i>=0;i--){const v=p[i];while(upper.length>1&&cross(upper.at(-2),upper.at(-1),v)<=0)upper.pop();upper.push(v);}lower.pop();upper.pop();return lower.concat(upper);
+}
+function softSeparation(a,b){
+  if(!softPolygonsOverlap(a,b))return null;
+  const ah=softHull(a),bh=softHull(b),axes=[{x:0,y:1},{x:1,y:0}];for(const polygon of [ah,bh])for(let i=0;i<polygon.length;i++){const p=polygon[i],q=polygon[(i+1)%polygon.length],dx=q.x-p.x,dy=q.y-p.y,len=Math.hypot(dx,dy);if(len>1e-6)axes.push({x:-dy/len,y:dx/len});}
+  let best=null;
+  for(const axis of axes){let amin=Infinity,amax=-Infinity,bmin=Infinity,bmax=-Infinity;for(const p of ah){const d=p.x*axis.x+p.y*axis.y;amin=Math.min(amin,d);amax=Math.max(amax,d);}for(const p of bh){const d=p.x*axis.x+p.y*axis.y;bmin=Math.min(bmin,d);bmax=Math.max(bmax,d);}const negative=amax-bmin,positive=bmax-amin;if(negative<=0||positive<=0)return null;const depth=Math.min(negative,positive);if(!best||depth<best.depth-.1){const sign=positive<=negative?1:-1;best={x:axis.x*sign,y:axis.y*sign,depth};}}
+  if(!best)return null;
+  if(best.depth<1.5){best.depth+=.08;return best;}
+  // Use the actual filled outline, so concave lobes can touch without a hull gap.
+  let low=0,high=best.depth+.25;for(let i=0;i<9;i++){const mid=(low+high)*.5;if(softPolygonsOverlap(a,b,best.x*mid,best.y*mid))low=mid;else high=mid;}best.depth=high+.08;return best;
+}
+function softMotion(shape){const mass=shape.mass||shape.bodies.reduce((n,b)=>n+b.mass,0);return shape.bodies.reduce((v,b)=>({x:v.x+b.velocity.x*b.mass/mass,y:v.y+b.velocity.y*b.mass/mass}),{x:0,y:0});}
+function moveSoftShape(shape,x,y){for(const b of shape.bodies)Matter.Body.translate(b,{x,y});}
+function addSoftVelocity(shape,x,y){for(const b of shape.bodies)Matter.Body.setVelocity(b,{x:b.velocity.x+x,y:b.velocity.y+y});}
+// Apply a collision impulse through the touching side, so the spring ring can
+// compress and wobble rather than receiving only a rigid whole-blob rebound.
+function addSoftContactVelocity(shape,normal,amount){
+  const center=shape.center.position;
+  const reach=Math.max(12,...shape.ring.map(b=>Math.abs((b.position.x-center.x)*normal.x+(b.position.y-center.y)*normal.y)));
+  const weights=shape.bodies.map(b=>b===shape.center ? .85 : .8-clamp(((b.position.x-center.x)*normal.x+(b.position.y-center.y)*normal.y)/reach,-1,1)*.55);
+  const mean=shape.bodies.reduce((sum,b,i)=>sum+weights[i]*b.mass/shape.mass,0);
+  shape.bodies.forEach((b,i)=>{const impulse=amount*weights[i]/mean;Matter.Body.setVelocity(b,{x:b.velocity.x+normal.x*impulse,y:b.velocity.y+normal.y*impulse});});
+}
+function softNodeBounds(shape){return softBounds(shape.bodies.flatMap(b=>[{x:b.position.x-b.circleRadius,y:b.position.y-b.circleRadius},{x:b.position.x+b.circleRadius,y:b.position.y+b.circleRadius}]));}
+function confineSoftShape(shape,bounds){
+  for(const body of shape.bodies){
+    const r=body.circleRadius,p=body.position;let x=0,y=0;
+    if(p.x-r<0)x=r-p.x;else if(p.x+r>bounds.width)x=bounds.width-r-p.x;
+    if(p.y-r<0)y=r-p.y;else if(p.y+r>bounds.floor)y=bounds.floor-r-p.y;
+    if(x||y){const v={...body.velocity};Matter.Body.translate(body,{x,y});
+      Matter.Body.setVelocity(body,{x:x*v.x<0?(Math.abs(v.x)>.7?-v.x*.58:0):v.x,y:y*v.y<0?(Math.abs(v.y)>.7?-v.y*.58:0):v.y});}
+  }
+}
+// A weak, rotation-aware memory restores the drawn outline after a hard fling.
+function recoverSoftOutline(shape,delta=8.333){
+  let dot=0,cross=0;const origin=shape.center.position;
+  shape.ring.forEach((body,i)=>{const rest=shape.restOffsets[i],x=body.position.x-origin.x,y=body.position.y-origin.y;dot+=rest.x*x+rest.y*y;cross+=rest.x*y-rest.y*x;});
+  const angle=Math.atan2(cross,dot),c=Math.cos(angle),s=Math.sin(angle),recovery=softArea(shape.ring.map(b=>b.position))/shape.restArea<.55 ? .12 : .018;
+  shape.ring.forEach((body,i)=>{const rest=shape.restOffsets[i],dx=origin.x+rest.x*c-rest.y*s-body.position.x,dy=origin.y+rest.x*s+rest.y*c-body.position.y,blend=Math.min(recovery*delta/8.333,2/Math.max(1,Math.hypot(dx,dy)));Matter.Body.translate(body,{x:dx*blend,y:dy*blend});});
+}
+// Gentle area pressure keeps a stretched blob full while its outline flexes.
+function recoverSoftVolume(shape){
+  const points=shape.ring.map(body=>body.position),area=softArea(points),error=shape.restArea-area;
+  if(Math.abs(error)<Math.abs(shape.restArea)*.015)return;
+  const gradients=points.map((p,i)=>{const before=points[(i+points.length-1)%points.length],after=points[(i+1)%points.length];return{x:(after.y-before.y)*.5,y:(before.x-after.x)*.5};});
+  const norm=gradients.reduce((sum,g)=>sum+g.x*g.x+g.y*g.y,0);if(norm<1)return;
+  const scale=error/norm*.20;
+  shape.ring.forEach((body,i)=>{const g=gradients[i],length=Math.hypot(g.x,g.y),step=length?Math.min(1,3/(Math.abs(scale)*length)):0;Matter.Body.translate(body,{x:g.x*scale*step,y:g.y*scale*step});});
+}
+function softSupported(shape,normal,bounds){const b=softNodeBounds(shape);return normal.y>.5&&b.maxY>=bounds.floor-.6||normal.y<-.5&&b.minY<=.6||normal.x>.5&&b.maxX>=bounds.width-.6||normal.x<-.5&&b.minX<=.6;}
+// Resting support propagates upward through touching blobs, so landing on a
+// stack cannot push its middle layers down through the ones below.
+function softSupportSet(shapes,bounds,dragged){
+  const supported=new Set(),outlines=new Map(shapes.map(shape=>[shape,softOutline(shape)]));
+  for(const shape of shapes)if(shape!==dragged&&softNodeBounds(shape).maxY>=bounds.floor-1&&softMotion(shape).y>-.35)supported.add(shape);
+  for(let pass=0;pass<shapes.length;pass++){
+    let changed=false;
+    for(const upper of shapes){if(supported.has(upper)||upper===dragged)continue;
+      const speed=softMotion(upper).y;if(speed<-.35||speed>1.3)continue;
+      for(const lower of supported)if(upper.center.position.y<lower.center.position.y&&softPolygonsOverlap(outlines.get(upper),outlines.get(lower),0,1.6)){
+        supported.add(upper);changed=true;break;
+      }
+    }
+    if(!changed)break;
+  }
+  return supported;
+}
+function resolveFilledSoftContacts(shapes,bounds,dragged=null,delta=8.333){
+  const contacts=new Map();
+  for(const shape of shapes){
+    recoverSoftOutline(shape,delta);shape.contactClock+=delta;
+    shape.floorImpactCooldown=Math.max(0,(shape.floorImpactCooldown||0)-delta);
+    const velocity=softMotion(shape);
+    if(shape!==dragged&&!shape.floorImpactCooldown&&velocity.y>1.2&&softNodeBounds(shape).maxY>=bounds.floor-.8){
+      addSoftContactVelocity(shape,{x:0,y:-1},velocity.y*1.58);shape.floorImpactCooldown=100;
+    }
+  }
+  const ordered=shapes.slice().sort((a,b)=>b.center.position.y-a.center.position.y),supported=softSupportSet(ordered,bounds,dragged);
+  for(let pass=0;pass<10;pass++){
+    // Shape recovery runs once; later passes only finish contact separation.
+    // This avoids expanding a settled blob back inside its neighbour each pass.
+    for(const shape of ordered){if(pass<3)recoverSoftVolume(shape);confineSoftShape(shape,bounds);}
+    let corrected=false;
+    for(let i=0;i<ordered.length;i++)for(let j=i+1;j<ordered.length;j++){
+      const a=ordered[i],b=ordered[j],hit=softSeparation(softOutline(a),softOutline(b));if(!hit)continue;
+      const va=softMotion(a),vb=softMotion(b),key=i+':'+j,now=Math.max(a.contactClock,b.contactClock);
+      let state=a.softContacts.get(b);if(!state){state={lastTouch:-Infinity,lastBounce:-Infinity};a.softContacts.set(b,state);b.softContacts.set(a,state);}
+      const first=!contacts.has(key),fresh=now-state.lastTouch>65;
+      if(first){contacts.set(key,{bodyA:{label:a.center.label,velocity:{...va}},bodyB:{label:b.center.label,velocity:{...vb}},collision:{normal:{x:hit.x,y:hit.y}}});state.lastTouch=now;}
+      let ia=a===dragged||softSupported(a,hit,bounds)||(supported.has(a)&&hit.y>.5)?0:1/a.mass;
+      let ib=b===dragged||softSupported(b,{x:-hit.x,y:-hit.y},bounds)||(supported.has(b)&&hit.y<-.5)?0:1/b.mass;
+      if(ia+ib===0){ia=1/a.mass;ib=1/b.mass;}const wa=ia/(ia+ib),wb=ib/(ia+ib);
+      moveSoftShape(a,hit.x*hit.depth*wa,hit.y*hit.depth*wa);moveSoftShape(b,-hit.x*hit.depth*wb,-hit.y*hit.depth*wb);corrected=true;
+      const approach=(va.x-vb.x)*hit.x+(va.y-vb.y)*hit.y,tangent={x:-hit.y,y:hit.x},slide=(va.x-vb.x)*tangent.x+(va.y-vb.y)*tangent.y;
+      if(approach<0){
+        const bounce=first&&approach<-.7&&(fresh||(approach<-3&&now-state.lastBounce>90))?.64:0,impulse=-approach*(1+bounce);
+        if(bounce){state.lastBounce=now;addSoftContactVelocity(a,hit,impulse*wa);addSoftContactVelocity(b,{x:-hit.x,y:-hit.y},impulse*wb);}
+        else{addSoftVelocity(a,hit.x*impulse*wa,hit.y*impulse*wa);addSoftVelocity(b,-hit.x*impulse*wb,-hit.y*impulse*wb);}
+        const friction=clamp(slide,-impulse*.3,impulse*.3);addSoftVelocity(a,-tangent.x*friction*wa,-tangent.y*friction*wa);addSoftVelocity(b,tangent.x*friction*wb,tangent.y*friction*wb);
+      }
+      if(first&&Math.abs(approach)<.45&&Math.abs(slide)<.55){
+        addSoftVelocity(a,-tangent.x*slide*.28*wa,-tangent.y*slide*.28*wa);addSoftVelocity(b,tangent.x*slide*.28*wb,tangent.y*slide*.28*wb);
+      }
+    }
+    if(!corrected)break;
+  }
+  return [...contacts.values()];
+}
+// Keep fast flicks from stepping across small blobs in one collision update.
+function stepSoftWorld(engine,shapes,bounds,dragged=null){
+  let speed=0;for(const shape of shapes)for(const body of shape.bodies){
+    const v=body.velocity,length=Math.hypot(v.x,v.y);if(length>70)Matter.Body.setVelocity(body,{x:v.x*70/length,y:v.y*70/length});speed=Math.max(speed,Math.min(length,70));
+  }
+  const count=clamp(Math.ceil(speed/4),2,8),delta=16.666/count,contacts=[];
+  for(let step=0;step<count;step++){Matter.Engine.update(engine,delta);contacts.push(...resolveFilledSoftContacts(shapes,bounds,dragged,delta));}
+  return contacts;
+}
+/* FILLED_SOFT_PHYSICS_END */
+
 function App() {
   const canvasRef = useRef(null);
   const hostRef = useRef(null);
@@ -280,6 +438,7 @@ function App() {
   const resizeObserverRef = useRef(null);
   const cfgRef = useRef(DEFAULT_CFG);
   const paletteRef = useRef(0);
+  const colorSetRef = useRef(0);
   const gravityModeRef = useRef('calm');
   const hintRef = useRef(true);
   const pointerRef = useRef({ x: 0, y: 0, at: 0 });
@@ -292,14 +451,14 @@ function App() {
   const contactsRef = useRef(new Map());
   const audioRef = useRef(null);
   const [cfg, setCfg] = useState(DEFAULT_CFG);
-  const [paletteIndex, setPaletteIndex] = useState(0);
+  const [colorSetIndex, setColorSetIndex] = useState(0);
   const [gravityMode, setGravityMode] = useState('calm');
   const [hintVisible, setHintVisible] = useState(true);
   const [shapeCount, setShapeCount] = useState(0);
   const [dragCount, setDragCount] = useState(0);
 
   cfgRef.current = cfg;
-  paletteRef.current = paletteIndex;
+  colorSetRef.current = colorSetIndex;
   gravityModeRef.current = gravityMode;
   hintRef.current = hintVisible;
 
@@ -381,45 +540,8 @@ function App() {
     // no enclosed area and is not inflated into a narrow path-shaped ribbon.
     const ringPoints=closedOutline(rawPoints);if(!ringPoints)return false;
     const id = `doodle-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-    const minDimension = Math.max(18, Math.min(
-      Math.max(...ringPoints.map((p) => p.x)) - Math.min(...ringPoints.map((p) => p.x)),
-      Math.max(...ringPoints.map((p) => p.y)) - Math.min(...ringPoints.map((p) => p.y)),
-    ));
-    const radius = clamp(minDimension * 0.045, 5, 10);
-    const collisionGroup=Matter.Body.nextGroup(true);
-    const bodies = ringPoints.map((point) => Matter.Bodies.circle(point.x, point.y, radius, {
-      label: `${id}:ring`,collisionFilter:{group:collisionGroup},
-      friction: 0.62,
-      frictionAir: 0.024,
-      restitution: 0.34,
-      density: 0.0014,
-    }));
-    const center = ringPoints.reduce((acc, point) => ({ x: acc.x + point.x / ringPoints.length, y: acc.y + point.y / ringPoints.length }), { x: 0, y: 0 });
-    const centerBody = Matter.Bodies.circle(center.x, center.y, Math.max(9, radius * 0.9), {
-      label: `${id}:center`,collisionFilter:{group:collisionGroup},
-      friction: 0.62,
-      frictionAir: 0.03,
-      restitution: 0.28,
-      density: 0.0011,
-    });
-    const constraints = [];
-    for (let i = 0; i < bodies.length; i += 1) {
-      const next = bodies[(i + 1) % bodies.length];
-      constraints.push(Matter.Constraint.create({
-        bodyA: bodies[i], bodyB: next,
-        length: distance(ringPoints[i], ringPoints[(i + 1) % ringPoints.length]),
-        stiffness: 0.25, damping: 0.07,
-      }));
-      constraints.push(Matter.Constraint.create({
-        bodyA: centerBody, bodyB: bodies[i],
-        length: distance(center, ringPoints[i]),
-        stiffness: 0.12, damping: 0.055,
-      }));
-    }
-    const composite = Matter.Composite.create({ label: `softbody:${id}` });
-    Matter.Composite.add(composite, [...bodies, centerBody, ...constraints]);
-    const shape = { composite, bodies: [...bodies, centerBody], ring: bodies, center: centerBody, color: paletteRef.current, eyeStyle:chooseEyeStyle(), gaze:{x:0,y:0,seed:Math.random()*Math.PI*2}, createdAt: performance.now() };
-    Matter.Composite.add(engineRef.current.world, composite);
+    const shape = createSoftShape(ringPoints,id,paletteRef.current);
+    Matter.Composite.add(engineRef.current.world, shape.composite);
     shapesRef.current.push(shape);
     if (shapesRef.current.length > currentCfg.MAX_SHAPES) {
       const oldest = shapesRef.current.shift();
@@ -476,7 +598,7 @@ function App() {
       Matter.Composite.add(engineRef.current.world, constraint);
       dragRef.current = { constraint, shape: hit.shape };
     } else {
-      const next=chooseShapeColor();paletteRef.current=next;setPaletteIndex(next);
+      paletteRef.current=chooseShapeColor(colorSetRef.current);
       drawingRef.current = [point];
     }
   }, [getPoint, pointHitsShape, startTilt]);
@@ -519,7 +641,7 @@ function App() {
     const unsubscribeAudio=feedSession.subscribe(active=>{if(!active)audioRef.current?.stop();});
     const canvas = canvasRef.current;
     const host = hostRef.current;
-    const engine = Matter.Engine.create();
+    const engine = Matter.Engine.create({positionIterations:8,constraintIterations:4});
     engine.gravity.y = DEFAULT_CFG.CALM_GRAVITY;
     engine.gravity.scale = 0.001;
     engineRef.current = engine;
@@ -556,8 +678,7 @@ function App() {
       }
     };
     const onContactActive=event=>{noteShapeContacts(contactsRef.current,event.pairs,performance.now(),false);};
-    Matter.Events.on(engine, 'collisionStart', onCollision);
-    Matter.Events.on(engine, 'collisionActive', onContactActive);
+
 
     const eyeFrames=EYE_FILES.map(createEyeFrame);
     const ctx = canvas.getContext('2d');
@@ -607,7 +728,10 @@ function App() {
       const width = canvas.clientWidth || 320;
       const height = canvas.clientHeight || 640;
       const dpr = window.devicePixelRatio || 1;
-      if(feedSession.active)Matter.Engine.update(engine, 16.666);
+      if(feedSession.active){
+        const contacts=stepSoftWorld(engine,shapesRef.current,{width,height,floor:height-112},dragRef.current?.shape);
+        onCollision({pairs:contacts});
+      }
       const gyro = gyroRef.current;
       const baseGravity = gravityModeRef.current === 'calm' ? cfgRef.current.CALM_GRAVITY : cfgRef.current.SETTLE_GRAVITY;
       engine.gravity.y = baseGravity + clamp(gyro.pitch * 0.035, -0.12, 0.12);
@@ -644,8 +768,7 @@ function App() {
 
     return () => {
       cancelAnimationFrame(rafRef.current);
-      Matter.Events.off(engine, 'collisionStart', onCollision);
-      Matter.Events.off(engine, 'collisionActive', onContactActive);
+
       unsubscribeAudio();
       resizeObserverRef.current?.disconnect();
       if (typeof tt !== 'undefined' && tt.stopGyroscope) { try { tt.stopGyroscope(); } catch (_) {} }
@@ -657,13 +780,13 @@ function App() {
   }, []);
 
   const togglePalette = () => {
-    shapesRef.current.forEach(shape=>{shape.color=chooseShapeColor();});
-    const next = chooseShapeColor();
-    setPaletteIndex(next);
-    paletteRef.current = next;
+    const next=(colorSetRef.current+1)%COLOR_SETS.length;
+    colorSetRef.current=next;
+    setColorSetIndex(next);
     audioRef.current?.play('tap');
     vibrate('light');
   };
+
   const toggleGravity = () => {
     const next = gravityMode === 'calm' ? 'settle' : 'calm';
     setGravityMode(next);
@@ -673,7 +796,7 @@ function App() {
   };
 
   return (
-    <div ref={hostRef} className="doodle-app" data-shape-count={shapeCount} data-shape-colors={shapesRef.current.map(s=>PALETTES[s.color].fill).join(",")} data-random-colors="true" data-eye-styles={shapesRef.current.map(s=>s.eyeStyle).join(",")} data-closed-shapes="true" data-drag-count={dragCount} data-gravity-mode={gravityMode}>
+    <div ref={hostRef} className="doodle-app" data-color-set={COLOR_SETS[colorSetIndex].name} data-shape-count={shapeCount} data-shape-colors={shapesRef.current.map(s=>PALETTES[s.color].fill).join(",")} data-random-colors="true" data-eye-styles={shapesRef.current.map(s=>s.eyeStyle).join(",")} data-closed-shapes="true" data-drag-count={dragCount} data-gravity-mode={gravityMode}>
       <canvas
         ref={canvasRef}
         className="doodle-canvas"
@@ -685,9 +808,8 @@ function App() {
       />
       {hintVisible && <div className="hint" data-testid="draw-hint">{cfg.DRAW_HINT}</div>}
       <div className="controls" aria-label="Drawing controls">
-        <button type="button" className="tool-button" aria-label="Shuffle colors" data-testid="palette-button" onClick={togglePalette}>
-          <span className="palette-swatch" style={{ background: PALETTES[paletteIndex].fill }} />
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2a7.8 7.8 0 1 0 0 15.6h1.35a2 2 0 0 0 1.42-3.42l-.42-.42a1.35 1.35 0 0 1 .96-2.3H17A4.8 4.8 0 0 0 21.8 8.9C20.55 6.08 16.8 4.2 12 4.2Z" /><circle cx="7.8" cy="10" r="1" /><circle cx="10.7" cy="7.6" r="1" /><circle cx="14.2" cy="7.5" r="1" /></svg>
+        <button type="button" className="tool-button color-set-button" aria-label={'Change color set: '+COLOR_SETS[colorSetIndex].name} title="Tap for the next three-color set" data-testid="palette-button" onClick={togglePalette}>
+          <span className="color-set-swatches" aria-hidden="true">{COLOR_SETS[colorSetIndex].colors.map(color=><span key={color} style={{background:color}}/>)}</span>
         </button>
         <button type="button" className="tool-button" aria-label="Toggle gravity" data-testid="gravity-button" onClick={toggleGravity}>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v14M7 12l5 5 5-5M5 6h14" /></svg>
@@ -722,7 +844,9 @@ button { font: inherit; }
 .tool-button { position: relative; display: grid; place-items: center; width: 46px; height: 46px; padding: 0; border: 1.6px solid #242322; border-radius: 50%; color: #242322; background: #fff8df url('./assets/paper-grain.svg') repeat; box-shadow: 2px 3px 0 #242322; cursor: pointer; transition: transform .16s ease, box-shadow .16s ease; }
 .tool-button:active { transform: translateY(2px) scale(.96); box-shadow: 1px 1px 0 #242322; }
 .tool-button svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.palette-swatch { position: absolute; right: 9px; top: 9px; width: 7px; height: 7px; border-radius: 50%; border: 1px solid #242322; }
+ .tool-button.color-set-button { width:90px; min-width:90px; border-radius:999px; }
+.color-set-swatches { display:flex; gap:4px; align-items:center; }
+.color-set-swatches>span { width:18px; height:18px; border:1px solid #242322; border-radius:50%; }
 @media (max-width: 360px) { .controls { right: 12px; gap: 7px; } .tool-button { width: 42px; height: 42px; } }
       `}</style>
     </div>

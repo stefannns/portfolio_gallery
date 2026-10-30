@@ -71,24 +71,14 @@
       "step": 1
     },
     {
-      "id": "SPEED_RAMP_SECONDS",
+      "id": "SPEED_PER_LAUNCH",
       "kind": "number",
-      "label": "Seconds for one extra speed multiplier",
-      "value": 40,
-      "default": 40,
-      "min": 15,
-      "max": 90,
-      "step": 5
-    },
-    {
-      "id": "MAX_SPEED_MULTIPLIER",
-      "kind": "number",
-      "label": "Maximum speed multiplier",
-      "value": 2.2,
-      "default": 2.2,
-      "min": 1.2,
-      "max": 3,
-      "step": 0.1
+      "label": "Speed increase per launch (%)",
+      "value": 15,
+      "default": 15,
+      "min": 0,
+      "max": 50,
+      "step": 1
     }
   ],
   "texts": [
@@ -102,9 +92,9 @@
     {
       "id": "GUIDE",
       "label": "Gameplay guide",
-      "value": "Tap to launch into the ring",
-      "default": "Tap to launch into the ring",
-      "max_length": 30
+      "value": "Tap to launch, aim at next orbit",
+      "default": "Tap to launch, aim at next orbit",
+      "max_length": 48
     },
     {
       "id": "SCORE_LABEL",
