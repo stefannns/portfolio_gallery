@@ -2,7 +2,7 @@
  * Rebuild: node check.js --build. No historical authoring version is substituted.
  * External helpers and inline entry code are preserved in their original execution order.
  */
-// TEMPLATE_HTML_BASE64: PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InpoLUNOIj4KPGhlYWQ+CgogIDxtZXRhIGNoYXJzZXQ9IlVURi04IiAvPgogIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsIGluaXRpYWwtc2NhbGU9MS4wIiAvPgogIDx0aXRsZT5QbGF5YWJsZTwvdGl0bGU+CiAgPHN0eWxlPgogICAgaHRtbCwgYm9keSwgI3Jvb3QgeyB3aWR0aDogMTAwJTsgaGVpZ2h0OiAxMDAlOyBtYXJnaW46IDA7IHBhZGRpbmc6IDA7IG92ZXJmbG93OiBoaWRkZW47IH0KICAgIGJvZHkgeyBiYWNrZ3JvdW5kOiAjMDUwNTEwOyAtd2Via2l0LXRhcC1oaWdobGlnaHQtY29sb3I6IHRyYW5zcGFyZW50OyB9CiAgPC9zdHlsZT4KPHN0eWxlIGRhdGEtZ3VpZGUtYnJlYXRoaW5nPSIyMDI2MTAyMSI+Ci8qIEV4aXN0aW5nIGd1aWRlIHRleHQgb25seTsgcG9zaXRpb24sIG9wYWNpdHkgbGlmZWN5Y2xlIGFuZCBoaXQgcmVnaW9ucyByZW1haW4gZ2FtZS1vd25lZC4gKi8KQGtleWZyYW1lcyBiYXRjaC1ndWlkZS1icmVhdGhlezAlLDEwMCV7ZmlsdGVyOm9wYWNpdHkoMSk7c2NhbGU6MX01MCV7ZmlsdGVyOm9wYWNpdHkoLjYpO3NjYWxlOjEuMDM1fX0KaHRtbDpyb290OnJvb3QgOmlzKC55ZWFyLWd1aWRlLWNvcHkpe2FuaW1hdGlvbjpiYXRjaC1ndWlkZS1icmVhdGhlIDIuNHMgZWFzZS1pbi1vdXQgaW5maW5pdGUhaW1wb3J0YW50fQpodG1sW2RhdGEtZ3VpZGUtYnJlYXRoaW5nLXBhdXNlZF06cm9vdDpyb290IDppcygueWVhci1ndWlkZS1jb3B5KXthbmltYXRpb24tcGxheS1zdGF0ZTpwYXVzZWQhaW1wb3J0YW50fQpAbWVkaWEocHJlZmVycy1yZWR1Y2VkLW1vdGlvbjpyZWR1Y2Upe2h0bWw6cm9vdDpyb290IDppcygueWVhci1ndWlkZS1jb3B5KXthbmltYXRpb246bm9uZSFpbXBvcnRhbnR9fQoKPC9zdHlsZT4KCjwvaGVhZD4KPGJvZHk+CiAgPGRpdiBpZD0icm9vdCI+PC9kaXY+CiAgPHNjcmlwdCBpZD0icGxheWFibGUtaW5saW5lLWNvbmZpZyIgdHlwZT0iYXBwbGljYXRpb24vanNvbiI+eyJ0d2Vha3MiOlt7ImlkIjoiTUlOX1lFQVIiLCJraW5kIjoibnVtYmVyIiwibGFiZWwiOiJNaW4gWWVhciIsInZhbHVlIjoxOTAwLCJkZWZhdWx0IjoxOTAwLCJtaW4iOjE4MDAsIm1heCI6MTk1MCwic3RlcCI6MX0seyJpZCI6Ik1BWF9ZRUFSIiwia2luZCI6Im51bWJlciIsImxhYmVsIjoiTWF4IFllYXIiLCJ2YWx1ZSI6MjAyNiwiZGVmYXVsdCI6MjAyNiwibWluIjoyMDAwLCJtYXgiOjIwMjYsInN0ZXAiOjF9LHsiaWQiOiJERUZBVUxUX1lFQVIiLCJraW5kIjoibnVtYmVyIiwibGFiZWwiOiJEZWZhdWx0IFNlbGVjdGVkIFllYXIiLCJ2YWx1ZSI6MTk4NSwiZGVmYXVsdCI6MTk4NSwibWluIjoxOTAwLCJtYXgiOjIwMjYsInN0ZXAiOjF9XSwidGV4dHMiOlt7ImlkIjoiVElUTEVfTUFJTiIsImxhYmVsIjoiTWFpbiBUaXRsZSIsInZhbHVlIjoiVElNRSBDQU1FUkEiLCJkZWZhdWx0IjoiVElNRSBDQU1FUkEiLCJtYXhfbGVuZ3RoIjoyMH0seyJpZCI6IkJUTl9SRVNFVCIsImxhYmVsIjoiUmVzZXQgQnV0dG9uIFRleHQiLCJ2YWx1ZSI6IlJlc2V0IHRvIEN1cnJlbnQiLCJkZWZhdWx0IjoiUmVzZXQgdG8gQ3VycmVudCIsIm1heF9sZW5ndGgiOjIwfSx7ImlkIjoiQlROX0JVSUxEIiwibGFiZWwiOiJCdWlsZCBCdXR0b24gVGV4dCIsInZhbHVlIjoiQlVJTEQgTVkgQ0FNRVJBIiwiZGVmYXVsdCI6IkJVSUxEIE1ZIENBTUVSQSIsIm1heF9sZW5ndGgiOjIwfSx7ImlkIjoiQlROX0JBQ0siLCJsYWJlbCI6IkJhY2sgQnV0dG9uIFRleHQiLCJ2YWx1ZSI6IkNIQU5HRSBZRUFSIiwiZGVmYXVsdCI6IkNIQU5HRSBZRUFSIiwibWF4X2xlbmd0aCI6MTV9XSwiaW1hZ2VzIjpbXSwiY29uZmlnX3ZlcnNpb24iOiIyLjAiLCJwbGF5YWJsZSI6eyJwb3N0X2lkIjoiMTAzMzEzMjM4MDgyNzUyMzQyIiwidmVyc2lvbl9pZCI6IjEwMzMxMzIzODA4MjgyMjMyNSIsInJ1bnRpbWVfdGFyZ2V0IjoiaDUiLCJoNV9wbGF5c3R5bGVfdHlwZSI6ImdlbmVyYWxfZ2FtZSIsImNvbnRlbnRfbG9jYWxlIjoiZW4iLCJtaW5fY2FwYWJpbGl0eV9sZXZlbCI6MSwiZnVsbF9jYXBhYmlsaXR5X2xldmVsIjoxfX08L3NjcmlwdD4KICAKPHNjcmlwdCBzcmM9Ii4vYnVuZGxlLmpzIj48L3NjcmlwdD4KPC9ib2R5Pgo8L2h0bWw+Cg==
+// TEMPLATE_HTML_BASE64: PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InpoLUNOIj4KPGhlYWQ+CgogIDxtZXRhIGNoYXJzZXQ9IlVURi04IiAvPgogIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsIGluaXRpYWwtc2NhbGU9MS4wIiAvPgogIDx0aXRsZT5QbGF5YWJsZTwvdGl0bGU+CiAgPHN0eWxlPgogICAgaHRtbCwgYm9keSwgI3Jvb3QgeyB3aWR0aDogMTAwJTsgaGVpZ2h0OiAxMDAlOyBtYXJnaW46IDA7IHBhZGRpbmc6IDA7IG92ZXJmbG93OiBoaWRkZW47IH0KICAgIGJvZHkgeyBiYWNrZ3JvdW5kOiAjMDUwNTEwOyAtd2Via2l0LXRhcC1oaWdobGlnaHQtY29sb3I6IHRyYW5zcGFyZW50OyB9CiAgPC9zdHlsZT4KPHN0eWxlIGRhdGEtZ3VpZGUtYnJlYXRoaW5nPSIyMDI2MTAyMSI+Ci8qIEV4aXN0aW5nIGd1aWRlIHRleHQgb25seTsgcG9zaXRpb24sIG9wYWNpdHkgbGlmZWN5Y2xlIGFuZCBoaXQgcmVnaW9ucyByZW1haW4gZ2FtZS1vd25lZC4gKi8KQGtleWZyYW1lcyBiYXRjaC1ndWlkZS1icmVhdGhlezAlLDEwMCV7ZmlsdGVyOm9wYWNpdHkoMSk7c2NhbGU6MX01MCV7ZmlsdGVyOm9wYWNpdHkoLjYpO3NjYWxlOjEuMDM1fX0KaHRtbDpyb290OnJvb3QgOmlzKC55ZWFyLWd1aWRlLWNvcHkpe2FuaW1hdGlvbjpiYXRjaC1ndWlkZS1icmVhdGhlIDIuNHMgZWFzZS1pbi1vdXQgaW5maW5pdGUhaW1wb3J0YW50fQpodG1sW2RhdGEtZ3VpZGUtYnJlYXRoaW5nLXBhdXNlZF06cm9vdDpyb290IDppcygueWVhci1ndWlkZS1jb3B5KXthbmltYXRpb24tcGxheS1zdGF0ZTpwYXVzZWQhaW1wb3J0YW50fQpAbWVkaWEocHJlZmVycy1yZWR1Y2VkLW1vdGlvbjpyZWR1Y2Upe2h0bWw6cm9vdDpyb290IDppcygueWVhci1ndWlkZS1jb3B5KXthbmltYXRpb246bm9uZSFpbXBvcnRhbnR9fQoKPC9zdHlsZT4KCjwvaGVhZD4KPGJvZHk+CiAgPGRpdiBpZD0icm9vdCI+PC9kaXY+CiAgPHNjcmlwdCBpZD0icGxheWFibGUtaW5saW5lLWNvbmZpZyIgdHlwZT0iYXBwbGljYXRpb24vanNvbiI+eyJ0d2Vha3MiOlt7ImlkIjoiTUlOX1lFQVIiLCJraW5kIjoibnVtYmVyIiwibGFiZWwiOiJNaW4gWWVhciIsInZhbHVlIjoxOTAwLCJkZWZhdWx0IjoxOTAwLCJtaW4iOjE4MDAsIm1heCI6MTk1MCwic3RlcCI6MX0seyJpZCI6Ik1BWF9ZRUFSIiwia2luZCI6Im51bWJlciIsImxhYmVsIjoiTWF4IFllYXIiLCJ2YWx1ZSI6MjAyNiwiZGVmYXVsdCI6MjAyNiwibWluIjoyMDAwLCJtYXgiOjIwMjYsInN0ZXAiOjF9LHsiaWQiOiJERUZBVUxUX1lFQVIiLCJraW5kIjoibnVtYmVyIiwibGFiZWwiOiJEZWZhdWx0IFNlbGVjdGVkIFllYXIiLCJ2YWx1ZSI6MTk4NSwiZGVmYXVsdCI6MTk4NSwibWluIjoxOTAwLCJtYXgiOjIwMjYsInN0ZXAiOjF9XSwidGV4dHMiOlt7ImlkIjoiVElUTEVfTUFJTiIsImxhYmVsIjoiTWFpbiBUaXRsZSIsInZhbHVlIjoiVElNRSBDQU1FUkEiLCJkZWZhdWx0IjoiVElNRSBDQU1FUkEiLCJtYXhfbGVuZ3RoIjoyMH0seyJpZCI6IkJUTl9SRVNFVCIsImxhYmVsIjoiUmVzZXQgQnV0dG9uIFRleHQiLCJ2YWx1ZSI6IlJlc2V0IHRvIEN1cnJlbnQiLCJkZWZhdWx0IjoiUmVzZXQgdG8gQ3VycmVudCIsIm1heF9sZW5ndGgiOjIwfSx7ImlkIjoiQlROX0JVSUxEIiwibGFiZWwiOiJCdWlsZCBCdXR0b24gVGV4dCIsInZhbHVlIjoiQlVJTEQgTVkgQ0FNRVJBIiwiZGVmYXVsdCI6IkJVSUxEIE1ZIENBTUVSQSIsIm1heF9sZW5ndGgiOjIwfSx7ImlkIjoiQlROX0JBQ0siLCJsYWJlbCI6IkJhY2sgQnV0dG9uIFRleHQiLCJ2YWx1ZSI6IkNIQU5HRSBZRUFSIiwiZGVmYXVsdCI6IkNIQU5HRSBZRUFSIiwibWF4X2xlbmd0aCI6MTV9XSwiaW1hZ2VzIjpbXSwiY29uZmlnX3ZlcnNpb24iOiIyLjAiLCJwbGF5YWJsZSI6eyJwb3N0X2lkIjoiMTAzMzEzMjM4MDgyNzUyMzQyIiwidmVyc2lvbl9pZCI6IjEwMzMxMzIzODA4MjgyMjMyNSIsInJ1bnRpbWVfdGFyZ2V0IjoiaDUiLCJoNV9wbGF5c3R5bGVfdHlwZSI6ImdlbmVyYWxfZ2FtZSIsImNvbnRlbnRfbG9jYWxlIjoiZW4iLCJtaW5fY2FwYWJpbGl0eV9sZXZlbCI6MSwiZnVsbF9jYXBhYmlsaXR5X2xldmVsIjoxfX08L3NjcmlwdD4KICAKPCEtLSBDVEFfQlJFQVRISU5HX1NUQVJUIC0tPgoKPCEtLSBDVEFfQlJFQVRISU5HX0VORCAtLT4KPHNjcmlwdCBzcmM9Ii4vYnVuZGxlLmpzIj48L3NjcmlwdD4KPC9ib2R5Pgo8L2h0bWw+Cg==
 
 ;/* Current runtime segment: inline-0 */
 
@@ -168,6 +168,42 @@ react/cjs/react-jsx-runtime.production.min.js:
    * LICENSE file in the root directory of this source tree.
    *)
 */
+
+;
+
+;/* Current runtime segment: inline-2 */
+
+/* Decorative CTA breathing only. No positions, inputs, clocks or game state. */
+(()=>{
+ const selectors=[".year-guide-copy"],copy=new Set([].map(s=>s.replace(/\s+/g,' ').trim().toLowerCase()));
+ const motion=window.matchMedia('(prefers-reduced-motion: reduce)'),running=new Map();let queued=false,visible=true;
+ const action=/^(?:(?:tap|drag|hold|swipe|draw|use|press|click|release|brush|pull|touch|pinch|rub|move|trace)\b|spray\s*[→-]|tocca\b|trascina\b|tieni\b|scorri\b|disegna\b|premi\b|点击|轻触|滑动|按住|拖动|长按|双击)/i;
+ function scan(){
+  queued=false;for(const [el,a]of running)if(!el.isConnected){a.cancel();running.delete(el);}
+  if(motion.matches){for(const a of running.values())a.cancel();running.clear();return;}
+  const targets=new Set();for(const selector of selectors){try{document.querySelectorAll(selector).forEach(el=>targets.add(el));}catch{}}
+  for(const el of document.querySelectorAll('p,span,div,label,text')){
+   if(el.children.length||el.closest('button,a,input,select,textarea,[role="button"]'))continue;
+   const text=(el.textContent||'').replace(/\s+/g,' ').trim();
+   if(text.length>=5&&text.length<=140&&(copy.has(text.toLowerCase())||(!selectors.length&&action.test(text))))targets.add(el);
+  }
+  for(const el of targets){
+   if(running.has(el)||typeof el.animate!=='function')continue;
+   if([...targets].some(child=>child!==el&&el.contains(child)))continue;
+   const style=getComputedStyle(el);if(/breath/i.test(style.animationName))continue;
+   const base=style.filter.replace(/opacity\([^)]*\)/g,'').replace(/^none$/,'').trim(),filter=v=>(base?base+' ':'')+'opacity('+v+')';
+   const a=el.animate([{filter:filter(1)},{filter:filter(.65)},{filter:filter(1)}],{duration:2400,iterations:Infinity,easing:'ease-in-out'});running.set(el,a);if(document.hidden||!visible)a.pause();
+  }
+ }
+ const schedule=()=>{if(!queued){queued=true;requestAnimationFrame(scan);}};
+ const pause=()=>{for(const a of running.values())document.hidden||!visible?a.pause():a.play();};
+ const observer=new MutationObserver(schedule);observer.observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+ const intersection=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{visible=entries.some(e=>e.isIntersecting);pause();}):null;
+ if(document.body)intersection?.observe(document.body);else document.addEventListener('DOMContentLoaded',()=>intersection?.observe(document.body),{once:true});
+ document.addEventListener('visibilitychange',pause);motion.addEventListener?.('change',schedule);schedule();
+ window.addEventListener('pagehide',()=>{observer.disconnect();intersection?.disconnect();for(const a of running.values())a.cancel();running.clear();},{once:true});
+})();
+
 
 ;
 

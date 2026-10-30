@@ -1385,3 +1385,25 @@ Object.assign(window.PLAYABLE_IMPLEMENTED_FIXES, {
     ]
   }
 });
+
+/* Position-stable CTA breathing across the current collection, 30 October 2026. */
+(()=>{const map=window.PLAYABLE_IMPLEMENTED_FIXES;if(!map)return;for(const [number,id]of [[1,"playable2_20260924214501_peqvrc"],[2,"playable_20260924213804_34rslj"],[3,"playable2_20260927020828_5pmrhn"],[4,"playable2_20260927020828_hix8pk"],[5,"playable2_20260927020828_iuyca5"],[6,"playable2_20260927020828_oumj12"],[7,"playable2_20260927020828_9vxaxo"],[8,"playable2_20260927020828_bnkh36"],[9,"playable2_20260927020828_86gl5z"],[10,"playable2_20260927020828_y5a1vt"],[11,"playable2_20260927021659_jfkvov"],[12,"playable2_20260927020825_z23fv4"],[13,"playable2_20260927020825_iyfbfj"],[14,"playable2_20260927020825_hjn7q5"],[15,"playable2_20260927020825_n4r34c"],[16,"playable2_20260927020825_lnwh1h"],[17,"playable2_20260927020825_ufhwuj"],[18,"playable2_20260927020825_kxh9p4"],[19,"playable2_20260927021136_x3i163"],[20,"playable2_20260927021201_7etgko"],[21,"playable2_20260928023148_i47u62"],[22,"playable2_20260928023148_kiq9wu"],[23,"playable2_20260928024159_iasubp"],[24,"playable2_20260928024549_3bsc4d"],[25,"playable2_20260928024805_31g1lw"],[26,"playable2_20260928024950_5wf6st"],[27,"playable2_20260928025305_2wpf3o"],[28,"playable2_20260928025330_g1w5ss"],[29,"playable2_20260928025635_idnu2k"],[30,"playable2_20260928030116_67pobm"],[31,"playable2_20260928030211_tdjer2"],[32,"playable2_20260928030642_uthymy"],[33,"playable2_20260928030932_n6urd6"],[34,"playable2_20260928031234_805376"],[35,"playable2_20260928031559_rckaf4"],[36,"playable2_20260928031734_t68did"],[37,"playable2_20261001225611_9hp79k"],[38,"playable2_20261001225611_hg6unh"],[39,"playable2_20261001225611_gjmtbw"],[40,"playable2_20261001225611_zgfls0"],[41,"playable2_20261001225611_23t98b"],[42,"playable2_20261001225611_bz1ptc"],[43,"playable2_20261001225611_0e3wo5"],[44,"playable2_20261001225611_9its9h"],[45,"playable2_20261001225821_af5uee"],[46,"playable2_20261001225836_jx30zt"],[47,"playable2_20261001225842_2d0kul"],[48,"playable2_20261001225926_ibkv62"],[49,"playable2_20261001225941_zi6jj7"],[50,"playable2_20261001230001_ag49cj"],[51,"playable2_20261001230052_xrken6b"],[52,"playable2_20261001230112_0ivocb"],[53,"playable2_20261001230122_0sowkn"],[54,"playable2_20261001230212_tajqhm"],[55,"playable2_20261001230222_8qptsc"],[56,"playable2_20261001230332_5af21q"],[57,"playable2_20261001230352_h4uxll"],[58,"playable2_20261001230412_o52e38"],[59,"playable2_20261013020814_twgfzt"],[60,"playable2_20261013020814_b973b1"],[61,"playable2_20261013020955_2hyyml"],[62,"playable2_20261013021144_kzqdfu"],[63,"01_petme_9gw00a_game"],[64,"playable_20260727203355_w1cgvm"],[65,"05c_timemachine_male_black_wall"],[66,"mianbao"],[67,"playable_20260807211217_q9i9d6"],[68,"06a_coloring_game_final"],[69,"02e_pickalook_p8xys3_game"],[70,"playable_20261015220925_0pn002"],[71,"bead_loop_20261019"],[72,"height_together_20261019"],[73,"one_life_20261020"],[74,"eh_catch_the_beat_20261020"],[75,"eh_feed_your_friend_20261020"],[76,"eh_hair_shave_20261020"],[77,"eh_catch_the_hair_20261020"],[78,"eh_makeover_20261020"],[79,"playable2_20261028202811_hz9v37"],[80,"playable2_20261028202811_rf6gbi"],[81,"playable2_20261028202811_dsl58j"],[82,"playable2_20261028202811_gia8r5"],[83,"playable2_20261028202811_5uuyhb"],[84,"playable2_20261028202811_q0f68t"],[85,"playable2_20261028202811_ke0xpl"],[86,"playable2_20261029183430_hxuf8g"],[87,"playable2_20261029183430_v5avg1"],[88,"playable2_20261029183430_9mlt5d"],["88b","playable2_20261029183430_9mlt5d_88b"],[89,"playable2_20261029183430_ctpmni"],[90,"playable2_20261029183430_cvsxhd"]]){const previous=map[id]||{};map[id]={...previous,number,items:[...(previous.items||[]).filter(s=>!s.startsWith("Opening CTA breathing")),"Opening CTA breathing covers the existing guidance and translated variants, with reduced-motion and hidden-frame handling."],status:"Updated."};}})();
+Object.assign(window.PLAYABLE_IMPLEMENTED_FIXES,{
+  "playable2_20260928024159_iasubp": {
+    "number": 23,
+    "items": [
+      "Opening CTA has no background panel and breathes gently.",
+      "Spawned obstacle balls keep a clear gap around the CTA; dispenser/cup routing and matching water fill retained."
+    ],
+    "status": "Updated."
+  },
+  "playable2_20261029183430_9mlt5d_88b": {
+    "number": "88b",
+    "items": [
+      "Green valid-launch arc fades in smoothly when it appears and after a catch.",
+      "Reaching the target orbit succeeds, including center-bound paths. Neutral target ring and updated CTA retained.",
+      "Each valid launch adds 15% speed, compounded; retry resets speed."
+    ],
+    "status": "Updated."
+  }
+});

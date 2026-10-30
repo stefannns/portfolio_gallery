@@ -11,7 +11,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260924214501_peqvrc_game/game.html",
-          "sha256": "89b435da953b88b582d8b3b6ac63f245a20e00ba0bd87005145acf81bd37ad81"
+          "sha256": "6f5eab6f2bafbb6986ed7143b54d4c0d088348d58caeafcd8fca3a3fa022fc53"
         },
         {
           "file": "games/playable2_20260924214501_peqvrc_game/game.config.json",
@@ -58,7 +58,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260924214501_peqvrc_game/game.it.html",
-          "sha256": "c3a840fdfd44c2d4d507a39f3d499a239884621a78c0be37baf4d7a76195f298"
+          "sha256": "16e803aec10a466ff6ca69736cb64ad31996d0b39137ec05c7e66f49f7a9b092"
         },
         {
           "file": "games/playable2_20260924214501_peqvrc_game/game.config.it.json",
@@ -109,7 +109,7 @@
       "inputs": [
         {
           "file": "games/draw_face/game.html",
-          "sha256": "28fc465ee338cafa8a710a6b1d6863f528b78cd8618f1c30cc3263233cc05269"
+          "sha256": "a9270d08ec8a251e4051889d77dcd24d26d1db401f11815dadf1e5a0905eccfc"
         },
         {
           "file": "games/draw_face/game.config.json",
@@ -156,7 +156,7 @@
       "inputs": [
         {
           "file": "games/draw_face/game.it.html",
-          "sha256": "c76804fe5c28e758152fe18f981532523c1282cd81ff5676b31d9fa9198e1a70"
+          "sha256": "e1d6eb2c421798617192cefe17bebb34d0ea12d5bf2988199b6f9a22704649d9"
         },
         {
           "file": "games/draw_face/game.config.it.json",
@@ -207,7 +207,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020828_5pmrhn/game.html",
-          "sha256": "703016dadbb29ee6259444dbea65d069bfe170253a9db7fe5ba4d2ef2e21587c"
+          "sha256": "aaea87d1f3dc882bf59cbf79574e3a79cde9961184b2746073611837c4d51ced"
         },
         {
           "file": "games/playable2_20260927020828_5pmrhn/game.config.json",
@@ -254,7 +254,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020828_5pmrhn/game.it.html",
-          "sha256": "6ab088e900acba2bff80a9291b6921ed27758d950ef4a4648ddcb3718095df62"
+          "sha256": "a083d777c1784c0b3af59a3a3483e8be1b0c14656d1c02011bc32bedebb9dfe2"
         },
         {
           "file": "games/playable2_20260927020828_5pmrhn/game.config.it.json",
@@ -305,7 +305,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020828_oumj12/game.html",
-          "sha256": "d0b0628e16ebe1fbf688abdd605f0bd50ff955d00c6a478b4cfcf3f6e73a1241"
+          "sha256": "f1d0c0da1dea7f08be1e707e95c4201343e26499b48bd453c4cda76b3f2ea334"
         },
         {
           "file": "games/playable2_20260927020828_oumj12/game.config.json",
@@ -360,7 +360,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020828_oumj12/game.it.html",
-          "sha256": "ab52a8f6b3b88a18717e8b1a0affa5b139811df87eb5c9f25d4641fbac9ff491"
+          "sha256": "9ea437e6f13ca6913d105a654b4736e3fe33a8434be335e74c4748be2033fb09"
         },
         {
           "file": "games/playable2_20260927020828_oumj12/game.config.it.json",
@@ -419,7 +419,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020828_86gl5z/game.html",
-          "sha256": "e540e09379f45c97336dcd9e078ec92efa4994305c950eab4080fae78776bfaa"
+          "sha256": "a9cd40ff0aa5b2b1505e87f12c5824002484dc72d6ae6d3a6cf02d2798d9a888"
         },
         {
           "file": "games/playable2_20260927020828_86gl5z/game.config.json",
@@ -491,7 +491,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020828_86gl5z/game.it.html",
-          "sha256": "1eec25392a7ffb5fec2df3f45600066c4bbd76930aa01c9b34cbaffca8106755"
+          "sha256": "bbf19375057f0939d66d54e77e56b981fe062e559840ef5d35eb2c089773d577"
         },
         {
           "file": "games/playable2_20260927020828_86gl5z/game.config.it.json",
@@ -562,7 +562,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020828_y5a1vt/game.html",
-          "sha256": "8e00617e111ad909d0663346e4561e176ecbc408f610f318599bc7229541b658"
+          "sha256": "ccd156144b06d667f796b480e2f4443ba495bd0ef2aace13755c4542e0f2b71a"
         },
         {
           "file": "games/playable2_20260927020828_y5a1vt/game.config.json",
@@ -613,7 +613,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020828_y5a1vt/game.it.html",
-          "sha256": "9ff747862cc978f75cf0c5403f8a2999a2c670fa45c7b61e70a87c5df913dd62"
+          "sha256": "574e5c5ca71d27ecebacb27bce5a0f6393f3e092c9f3ea6837d2242d099f0f39"
         },
         {
           "file": "games/playable2_20260927020828_y5a1vt/game.config.it.json",
@@ -668,7 +668,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020825_hjn7q5/game.html",
-          "sha256": "f6232b76218c722452f688e0f0eb843946ab3d5bfc1b710b26a32ec11249ac5b"
+          "sha256": "685f43e2b31aeda1df9502d06674704903b4cb12496bf88e98987c541f08d266"
         },
         {
           "file": "games/playable2_20260927020825_hjn7q5/game.config.json",
@@ -727,7 +727,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020825_hjn7q5/game.it.html",
-          "sha256": "5812e19d1731f3aad1f10c7a0d0acc0198a31f39f10711cb10782fc46daf5c93"
+          "sha256": "d4a1424aed346934e1712a2457903ece4cdd8f9601852bbd28b791f147b4cc0c"
         },
         {
           "file": "games/playable2_20260927020825_hjn7q5/game.config.it.json",
@@ -790,7 +790,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020825_n4r34c/game.html",
-          "sha256": "701194edef78c9fca3b69ae63dcaabc9c2085b761fe8716e00f32682ae6aa278"
+          "sha256": "00d744695d693a7269adc22d4642d276a297be86c9975cdc98fb9cac2f44eb8a"
         },
         {
           "file": "games/playable2_20260927020825_n4r34c/game.config.json",
@@ -850,7 +850,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020825_n4r34c/game.it.html",
-          "sha256": "f09235aa05bbbf26f00ff12c2288c3f9e33ea8bcdc9831feac6dcb26dae3eea6"
+          "sha256": "8100b771e7db61ed96b6e9d7dbe8d9d4ab43b5f4d7f5cede8f620562c0806606"
         },
         {
           "file": "games/playable2_20260927020825_n4r34c/game.config.it.json",
@@ -909,7 +909,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020825_lnwh1h/game.html",
-          "sha256": "4b1a64635e9e9269e7247c80d7b313522dbb8a972867dc77020d32251956033f"
+          "sha256": "a6513d0623083e5a72465d8ac7df87b0c2b51a4c3238f7e58b7f694f65666564"
         },
         {
           "file": "games/playable2_20260927020825_lnwh1h/game.config.json",
@@ -977,7 +977,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020825_lnwh1h/game.it.html",
-          "sha256": "22ea494003b49fd606d4600aa7d11c435015ba556e3d2a19db89541c4df5d4fb"
+          "sha256": "43d430d47b4ddecdb75b38f5fc2d09bb21ab6f203873a3f6daef22d21a458b37"
         },
         {
           "file": "games/playable2_20260927020825_lnwh1h/game.config.it.json",
@@ -1044,7 +1044,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020825_ufhwuj/game.html",
-          "sha256": "8d0b1059f598f0b9e47925999f8e3984e3d8b4f01de3907ce26c75aa608f523c"
+          "sha256": "df0e5a3a2aeda0ae699accfa3ac5f6e6fa57821b9ca053c4cf1abf31ba74a025"
         },
         {
           "file": "games/playable2_20260927020825_ufhwuj/game.config.json",
@@ -1111,7 +1111,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020825_ufhwuj/game.it.html",
-          "sha256": "2f7204651545c097fcfa74fcadc5ca96fe94afc789745dec97ea3e311f6ad835"
+          "sha256": "445c41ca7cf089e2242642c34f1c02f5464ce9335d169a7410b2cd8951ba93a8"
         },
         {
           "file": "games/playable2_20260927020825_ufhwuj/game.config.it.json",
@@ -1182,7 +1182,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927021136_x3i163/game.html",
-          "sha256": "5223c4ba090358c457244b6234cd3e4702c74d887547e51e8fbbb244e73d1e69"
+          "sha256": "94fc3251964fe3f8d1fc16c97dc17923d3e0641491c087e23478225ec342d8f6"
         },
         {
           "file": "games/playable2_20260927021136_x3i163/game.config.json",
@@ -1237,7 +1237,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927021136_x3i163/game.it.html",
-          "sha256": "d39288665895e6ea62ed926e9a0f79cea476e2d9488a1f75f4984ce191b44e80"
+          "sha256": "1001d2be7729d86b38ba606f7be56e83720ab127994360a9c9ee6f07b90afac6"
         },
         {
           "file": "games/playable2_20260927021136_x3i163/game.config.it.json",
@@ -1296,7 +1296,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260928024549_3bsc4d/game.html",
-          "sha256": "1b7d424bbcd21d10c34ca3993901ab9430faf2d31a869a6adcbd6b80b9b885d3"
+          "sha256": "0ad19e2b4d7d57a29e4d8a2ecf5ad9bee382b64a2c83913c6df3bcd74d69edda"
         },
         {
           "file": "games/playable2_20260928024549_3bsc4d/game.config.json",
@@ -1351,7 +1351,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260928024549_3bsc4d/game.it.html",
-          "sha256": "ed73b9751c1311282f2a51365e4527fcfe680a63d92042f54e4e11063a018049"
+          "sha256": "37cdc433926e0f4976494511527f1fb4eb70542fc0358ffaf86b690c7267f67b"
         },
         {
           "file": "games/playable2_20260928024549_3bsc4d/game.config.it.json",
@@ -1410,7 +1410,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260928030211_tdjer2/game.html",
-          "sha256": "eb791d9a25e74456e04c9810d99d02189a41bcda8adb20ab30a1300f30950339"
+          "sha256": "438b59a5b0d16743948ae6b8e127de47760f9053b41f162f7bd70cdc975a7833"
         },
         {
           "file": "games/playable2_20260928030211_tdjer2/game.config.json",
@@ -1453,7 +1453,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260928030211_tdjer2/game.it.html",
-          "sha256": "c6c5dbb83f9a757805a6a81ede9307adfe163342783da258f87ceb27d9c60177"
+          "sha256": "4943a657424d9bc58c4def8c04fa1f6d43125a5df82e3706259bd0d971f8c284"
         },
         {
           "file": "games/playable2_20260928030211_tdjer2/game.config.it.json",
@@ -1500,7 +1500,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260928030642_uthymy/game.html",
-          "sha256": "92630283c6a12c76bd824edbdf8337c9b43752fab12afdedc160b32705c6c3c8"
+          "sha256": "cbf35ef4c073143ca157e155458e552689673bb7cfb55aba10d0d4d2fc9eb5ff"
         },
         {
           "file": "games/playable2_20260928030642_uthymy/game.config.json",
@@ -1563,7 +1563,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260928030642_uthymy/game.it.html",
-          "sha256": "633ab85047e4813a073ebf19270eab4ed479d21ad7b6cf406be2b97ee9aaa5dc"
+          "sha256": "33a3b06ba8edd213dc79ce6446a6327ae5609c75970bc72a95976d4e65c47bc3"
         },
         {
           "file": "games/playable2_20260928030642_uthymy/game.config.it.json",
@@ -1630,7 +1630,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260928030932_n6urd6/game.html",
-          "sha256": "02ab29e6bb8f2f277828ac422e6a85b297db61a3f8509ee7ee84f3976de2ca52"
+          "sha256": "d05ea96340c124afdc9f3f0ec6a02dca07ad69d3492c362b186e94c454e7eee9"
         },
         {
           "file": "games/playable2_20260928030932_n6urd6/game.config.json",
@@ -1685,7 +1685,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260928030932_n6urd6/game.it.html",
-          "sha256": "25abc93bba09a00946320b09aeb98e71285e5a5a160b611a5922bfd22962e94e"
+          "sha256": "a5223c54aafba2a001d222b5c659008e4a008597d78d77f8551ba5373e7fb7df"
         },
         {
           "file": "games/playable2_20260928030932_n6urd6/game.config.it.json",
@@ -1744,7 +1744,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260928031559_rckaf4/game.html",
-          "sha256": "525708d1097c1b0078887617cd27f0b9aa05c8903bad85e0c92be5b0c685215c"
+          "sha256": "afc118581b458b2c83a5703661bec7b6d4a37c33fad57e44ad726216dde2ab23"
         },
         {
           "file": "games/playable2_20260928031559_rckaf4/game.config.json",
@@ -1803,7 +1803,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260928031559_rckaf4/game.it.html",
-          "sha256": "f02d8017e488a76557af83e8150fd2e8b003ade3a6458d783292b25a36cd5f10"
+          "sha256": "18388cc33e918372ca01220bdf6cfee08e8f33d4b7c3866d3ef7a62cf4bb20df"
         },
         {
           "file": "games/playable2_20260928031559_rckaf4/game.config.it.json",
@@ -1866,7 +1866,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260928031734_t68did/game.html",
-          "sha256": "ae8ebc3389a480e52930d660a5c28432aa549ba95aa43fd0a2c3a62b237ebfc4"
+          "sha256": "3c5bd80e280fdae74edd8c383587f1d3c0d81060022a1e25fdee3372eb8adb5c"
         },
         {
           "file": "games/playable2_20260928031734_t68did/game.config.json",
@@ -1913,7 +1913,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260928031734_t68did/game.it.html",
-          "sha256": "1a2a626f4c173ddc075cd7de3e89e50cc9299ab86d66214a1bcf8bf17708dbb7"
+          "sha256": "e14fb51ea550a54c6195f8f7e93bfdb51d86e8de0c94f6bc6b92566263174fc6"
         },
         {
           "file": "games/playable2_20260928031734_t68did/game.config.it.json",
@@ -1964,7 +1964,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001225611_zgfls0/game.html",
-          "sha256": "0fdfd010f5d5694508ad173d9f0280e1174a2552ea4aebd98ec19ae7adbf4749"
+          "sha256": "d39b8a90b119c6437222df20d624173a94bee99e659d5409c0d3263074aa28ba"
         },
         {
           "file": "games/playable2_20261001225611_zgfls0/game.config.json",
@@ -2019,7 +2019,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001225611_zgfls0/game.it.html",
-          "sha256": "08b2444fec47dd37acc415405ba3e2881216f4c07dd98334219614e19d3492ad"
+          "sha256": "19cd4f3518ff6a1eab23c7b8c5e5693c85cb1d43892af92ba19afa8598b056c9"
         },
         {
           "file": "games/playable2_20261001225611_zgfls0/game.config.it.json",
@@ -2078,7 +2078,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001225611_23t98b/game.html",
-          "sha256": "9364764742f3dd38ba132ddb554cd82ed4d71c6478351dcd9e464ef0991d03c8"
+          "sha256": "e7c047b11e1970adb79a9a264d599eca9515481650bb9859e92a4333ba8411f1"
         },
         {
           "file": "games/playable2_20261001225611_23t98b/game.config.json",
@@ -2129,7 +2129,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001225611_23t98b/game.it.html",
-          "sha256": "8da47a782edef1106f0f6184fc76e3dcc69ce54d5fd3c77228936af7245f812c"
+          "sha256": "b0e1f243273f76af1afdae003e9d5fdb42b7a1360af296c99eb1a459c22fefdc"
         },
         {
           "file": "games/playable2_20261001225611_23t98b/game.config.it.json",
@@ -2184,7 +2184,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001225821_af5uee/game.html",
-          "sha256": "c7e98a20cf18b825d974ce927b3b3607f99606d38151e9504d0ba666bf6398fa"
+          "sha256": "7ae224627eaa54b12ae7ec8abdd8e5004cc97d18ee5c7510a3e25baddd48efe1"
         },
         {
           "file": "games/playable2_20261001225821_af5uee/game.config.json",
@@ -2251,7 +2251,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001225821_af5uee/game.it.html",
-          "sha256": "bdeb9ac45ae3d052fc7096e1dc6c0f1c6967c6ff49d076a17d7276cdb5d1fe6b"
+          "sha256": "1b351c2d7b60480a7938adab7e7050775d5b533737920890b9bc0ea6ce860934"
         },
         {
           "file": "games/playable2_20261001225821_af5uee/game.config.it.json",
@@ -2322,7 +2322,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001225842_2d0kul/game.html",
-          "sha256": "431ef0365c92b24517e54f296f21e7ba7e8ea161ac0cb8c44e348ddb2000b4fe"
+          "sha256": "71b6339654f0171a88f7945ec7f7b474dd88cfc08a97e79d4d23568da9f75c71"
         },
         {
           "file": "games/playable2_20261001225842_2d0kul/game.config.json",
@@ -2377,7 +2377,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001225842_2d0kul/game.it.html",
-          "sha256": "9cadfa7f0960f748f98691b7c67f758b14767de478a36529ea9dcf39bbbf7588"
+          "sha256": "772aa574e6be7b599b44b1358738b083a11b5e2f2790cc2a06635c18ee11c86f"
         },
         {
           "file": "games/playable2_20261001225842_2d0kul/game.config.it.json",
@@ -2436,7 +2436,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001230052_xrken6_57b/game.html",
-          "sha256": "67201159a3e00991def8033a7626f9c0d5cc23d947dbfa25d1500397f7c0528a"
+          "sha256": "1a8091864e7760af927b7835e239df1c95d4ce5897e69ebb03ac7f2e49d71e61"
         },
         {
           "file": "games/playable2_20261001230052_xrken6_57b/game.config.json",
@@ -2503,7 +2503,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001230052_xrken6_57b/game.it.html",
-          "sha256": "ae1ce43a9731406965a066a19508f92fefe2231d6b841a3bbbd4ced13e4b2520"
+          "sha256": "a73d09968b0e2e262c4377a706b3b158bc8feb93df468d6794978e36b7a16ba7"
         },
         {
           "file": "games/playable2_20261001230052_xrken6_57b/game.config.it.json",
@@ -2574,7 +2574,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001230122_0sowkn/game.html",
-          "sha256": "188b8ab97c52208073325569c5a59bebc0e51221d2be4cb4f9f599c4a6739439"
+          "sha256": "2b8f577e3bee95d770beeeb3c79326f20f2d08b49564621f539b16fc4aee6edc"
         },
         {
           "file": "games/playable2_20261001230122_0sowkn/game.config.json",
@@ -2629,7 +2629,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001230122_0sowkn/game.it.html",
-          "sha256": "882bbb558294a961eb82645b34d91007dcc82cbbae5bb21426b5b62015672622"
+          "sha256": "19b71e5f90517e6769fbbea527169f50c0345b29c5e7b1198091605fdf6b81e0"
         },
         {
           "file": "games/playable2_20261001230122_0sowkn/game.config.it.json",
@@ -2688,7 +2688,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001230352_h4uxll/game.html",
-          "sha256": "ddf3b57abae44a3eb05cb86e2d1ffd17a28b5b3dc7bb02a5b689abe4ced5f824"
+          "sha256": "6ff3a21d8afb052637decf4e59274070933896fe1617dec8aa9ec6ffa47397ef"
         },
         {
           "file": "games/playable2_20261001230352_h4uxll/game.config.json",
@@ -2735,7 +2735,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001230352_h4uxll/game.it.html",
-          "sha256": "6bbaa8855ca6dd4c7eb1bf9220e5ced2b78e950dbfcf7ece7c61a8a2c896f133"
+          "sha256": "23c0ca266b09acbb31bc2d4eb93fa1efb825b8c5dfdaf567da2044b522cad4a2"
         },
         {
           "file": "games/playable2_20261001230352_h4uxll/game.config.it.json",
@@ -2786,7 +2786,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001230412_o52e38/game.html",
-          "sha256": "fabc828de9845d7fbba690fb4a7b75fb5b15bab54081ff2c95bc6510ccbfa34c"
+          "sha256": "d085fc132a70088a00810270a34d89c6a864d4c128242d25a5adc38e5b02bdc1"
         },
         {
           "file": "games/playable2_20261001230412_o52e38/game.config.json",
@@ -2837,7 +2837,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001230412_o52e38/game.it.html",
-          "sha256": "7275319faccf3dda27e92d52963493bcb0e4268c31877c5b5883fbecef3f4711"
+          "sha256": "5386932b61a04ea6fcc577601a58f7d163566f8564bef1e9bc60bd5c109a7931"
         },
         {
           "file": "games/playable2_20261001230412_o52e38/game.config.it.json",
@@ -2892,7 +2892,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261013020955_2hyyml/game.html",
-          "sha256": "c75537b862f5f2526f938e4389b54366f8f6b22903f1cac2a9b9c44467579d21"
+          "sha256": "90d470abc3807eead35b243c516e65149b35e00af5241fcfc4712f59c9c17a54"
         },
         {
           "file": "games/playable2_20261013020955_2hyyml/game.config.json",
@@ -2951,7 +2951,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261013020955_2hyyml/game.it.html",
-          "sha256": "7e7abc1eeb2f04194800e89cdffb79b5dcf4afbd092dbf83340a66c27e2393c3"
+          "sha256": "ccc6b47d1787748cc8e10c43dc70308821db69fb65b07efd85022f8e23f6074b"
         },
         {
           "file": "games/playable2_20261013020955_2hyyml/game.config.it.json",
@@ -3014,7 +3014,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261013021144_kzqdfu/game.html",
-          "sha256": "ee1a85686ced5e111b44d595d154849be4bce45d30da044d37ecd7cec82dd94a"
+          "sha256": "6db0f0bb6e6a6324a54888a3c590a03d58de115b9d07351639e8540c20c07153"
         },
         {
           "file": "games/playable2_20261013021144_kzqdfu/game.config.json",
@@ -3121,7 +3121,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261013021144_kzqdfu/game.it.html",
-          "sha256": "1c3f78fcaf8145842224c5173280adce5b48a723c0ec20cce96651666d19a889"
+          "sha256": "9935a627ebc999f585a67b6ebd905e6c0c59c75236c0271d03d518179e0be84c"
         },
         {
           "file": "games/playable2_20261013021144_kzqdfu/game.config.it.json",
@@ -3232,7 +3232,7 @@
       "inputs": [
         {
           "file": "games/01_petme_9gw00a_game/game.html",
-          "sha256": "9ba92766f2dd5c76a1d0676ec27eea50ba34c5f6d3b0c336bbcea8e6939ab91c"
+          "sha256": "b09104af51e8ca5da7b30c6300f971e433d78a43b113f4034e2281fd1e080cb3"
         },
         {
           "file": "games/01_petme_9gw00a_game/game.config.json",
@@ -3299,7 +3299,7 @@
       "inputs": [
         {
           "file": "games/01_petme_9gw00a_game/game.it.html",
-          "sha256": "14930315fd4cf5a61e61d4dd1c74a7c9771eec3b79e3da53bd318384c890a131"
+          "sha256": "6268b3a8b5025f80e5a787a467b593a9768feeb614815df38cd0346ac23f556c"
         },
         {
           "file": "games/01_petme_9gw00a_game/game.config.it.json",
@@ -3370,7 +3370,7 @@
       "inputs": [
         {
           "file": "games/playable_20260727203355_w1cgvm_game/game.html",
-          "sha256": "7e4e788c47429a307c566c703f0fbf9d713356bf0c528affeb88d2614ec6bf98"
+          "sha256": "1a9af242918f13d34f7bd6aa09a0d869f9f839c617dae9b81f90c4f01e30810d"
         },
         {
           "file": "games/playable_20260727203355_w1cgvm_game/game.config.json",
@@ -3441,7 +3441,7 @@
       "inputs": [
         {
           "file": "games/playable_20260727203355_w1cgvm_game/game.it.html",
-          "sha256": "68ef608d732a9e10b7f5f1c26b0ae81dc481c4bf32c3cd765df9300be07db3c2"
+          "sha256": "e305685dc319e6def8f3a92e0ff0fdad5963b6bb5b9b15c59f7353ac9eefbdaa"
         },
         {
           "file": "games/playable_20260727203355_w1cgvm_game/game.config.it.json",
@@ -3516,7 +3516,7 @@
       "inputs": [
         {
           "file": "games/05c_timemachine_male_black_wall/game.html",
-          "sha256": "6bf28def3390caa70dd520fd693f9bc23c260e725a809edd7bf6ec2876d8aee4"
+          "sha256": "9000091803bf8da65e8d74b4515ba092b1e12dc265f8d6a91e62b2d97206607b"
         },
         {
           "file": "games/05c_timemachine_male_black_wall/game.config.json",
@@ -3619,7 +3619,7 @@
       "inputs": [
         {
           "file": "games/05c_timemachine_male_black_wall/game.it.html",
-          "sha256": "88ce34c8a8977adf67d5928c4d9415fe4ff6181ca930c5fac1bf005509f799d6"
+          "sha256": "11e280e845eeaec689f83bc2cdc32a5f4ce982de6d41cd4c990445f2d04d4691"
         },
         {
           "file": "games/05c_timemachine_male_black_wall/game.config.it.json",
@@ -3726,7 +3726,7 @@
       "inputs": [
         {
           "file": "games/mianbao/game.html",
-          "sha256": "34069af4e25b1dfa24086b0574325e0429573a4642058b353b2f9fa2e4fb2981"
+          "sha256": "ff4efd9ec0319eac4057cc55f82280ccecfc4e85ba4fde4a9d4098e85a9c9039"
         },
         {
           "file": "games/mianbao/game.config.json",
@@ -3793,7 +3793,7 @@
       "inputs": [
         {
           "file": "games/mianbao/game.it.html",
-          "sha256": "019791427cb2469406568a05d51c720ebd96d321ff1c2cc21b212a1bc6e7075f"
+          "sha256": "61f6d4d626a8624e699c5757604d4c9d9a65b099629516ba73175ecb3fe33208"
         },
         {
           "file": "games/mianbao/game.config.it.json",
@@ -3864,7 +3864,7 @@
       "inputs": [
         {
           "file": "games/playable_20260807211217_q9i9d6/game.html",
-          "sha256": "1bfdf6e626ac1b0bfaa6f5c8b69d2c45eb8a9a26c45d3421eb3f6b90f9f03699"
+          "sha256": "964eaa5a58a3b512a583f35695cf88de0b59d979baee22adfe6ed763cebd1afd"
         },
         {
           "file": "games/playable_20260807211217_q9i9d6/game.config.json",
@@ -3939,7 +3939,7 @@
       "inputs": [
         {
           "file": "games/playable_20260807211217_q9i9d6/game.it.html",
-          "sha256": "5f880c9b8ff975c0de1df5ef348d190752546d5dceb9ba02d49520f0bd73f0d9"
+          "sha256": "c04f1aa103d9a9fcefb76c080939dbcc1d432378550757ec54ab0fe7331c3e95"
         },
         {
           "file": "games/playable_20260807211217_q9i9d6/game.config.it.json",
@@ -4018,7 +4018,7 @@
       "inputs": [
         {
           "file": "games/06a_coloring_game_final/game.html",
-          "sha256": "e5ce0674290318bd0dbff6df356aec31274d7d138bc56c783c770546ea6ab712"
+          "sha256": "58a970d6d69efe236c6674b77363f9c05e316e2a9a5b20f0e8c2d5e21a12149e"
         },
         {
           "file": "games/06a_coloring_game_final/game.config.json",
@@ -4081,7 +4081,7 @@
       "inputs": [
         {
           "file": "games/06a_coloring_game_final/game.it.html",
-          "sha256": "612e96689ccf6c3e17ad46d74610c6bae711b105c813d8e8019053550a84d161"
+          "sha256": "dd95c50fe62d14459fd92343417f0289c5cb2c59eebda9e415e3032a70514a99"
         },
         {
           "file": "games/06a_coloring_game_final/game.config.it.json",
@@ -4148,7 +4148,7 @@
       "inputs": [
         {
           "file": "games/02e_pickalook_p8xys3_game/game.html",
-          "sha256": "a5a3b3253d0627b5c836543ced2acbb07c4be7129bee935325fd901c1c89c212"
+          "sha256": "266fa886c855e5fd2e83107a7c2731aaa18d633fd9de917ad6671c2d68bc2782"
         },
         {
           "file": "games/02e_pickalook_p8xys3_game/game.config.json",
@@ -4207,7 +4207,7 @@
       "inputs": [
         {
           "file": "games/02e_pickalook_p8xys3_game/game.it.html",
-          "sha256": "aedca123d41d7325caf227729dda886a5b21cd116f269fb72327145b5014d533"
+          "sha256": "d997c8fcbdab36277ce3a1459b3e56aff686d9f4a0ad8938818a520bb834b382"
         },
         {
           "file": "games/02e_pickalook_p8xys3_game/game.config.it.json",
@@ -4270,7 +4270,7 @@
       "inputs": [
         {
           "file": "games/playable_20261015220925_0pn002_game/game.html",
-          "sha256": "7cd2c32c848bd0a7ce434eb1ea1f0184973cf64b7630f3f5e59902b91935d20b"
+          "sha256": "b74d33936ab6b49dc1b083f8b08d68f8026921eb735507577065db1a37f1687e"
         },
         {
           "file": "games/playable_20261015220925_0pn002_game/game.config.json",
@@ -4333,7 +4333,7 @@
       "inputs": [
         {
           "file": "games/playable_20261015220925_0pn002_game/game.it.html",
-          "sha256": "441aa07a25a885a0cf80d4bfc7bd63fbe5e00f3e604558216b4906604d45576e"
+          "sha256": "debaac015689bd79e82190cb5cc67dc0653e1b74800698d956ecbbf1c348af79"
         },
         {
           "file": "games/playable_20261015220925_0pn002_game/game.config.it.json",
@@ -4400,7 +4400,7 @@
       "inputs": [
         {
           "file": "games/bead_loop_20261019/game.html",
-          "sha256": "e91f6895a30ef4127d616e25bcf1651eb41cf2332fe10d050a7f6714a03bec0d"
+          "sha256": "8274336a76b38bfe1b9006d9d994c34881bc7afd5bbc118a76211567a9083386"
         },
         {
           "file": "games/bead_loop_20261019/game.config.json",
@@ -4455,7 +4455,7 @@
       "inputs": [
         {
           "file": "games/bead_loop_20261019/game.it.html",
-          "sha256": "5464068d377062fd03813f9bc4aedfc45ab24f3dc562ba09c6a2a31ce226c82b"
+          "sha256": "715bf2ca189d1685f2a84e45418e5084cee27d0653ff9c5084abbec2cdd9bf74"
         },
         {
           "file": "games/bead_loop_20261019/game.config.it.json",
@@ -4514,7 +4514,7 @@
       "inputs": [
         {
           "file": "games/height_together_20261019/game.html",
-          "sha256": "5cc65c07ce9d2f2ec148097a33c5bb16b38354ce3404afa6a4e9cdeba6e70137"
+          "sha256": "a0625ae24f092d7099dd6db4eea0b225afcf7ed9fb9f2aae6f424126ed48925c"
         },
         {
           "file": "games/height_together_20261019/game.config.json",
@@ -4565,7 +4565,7 @@
       "inputs": [
         {
           "file": "games/height_together_20261019/game.it.html",
-          "sha256": "9bb98685af4f588123fe7187e2690cbfead665978b49e1e9f2ad64cce36991d7"
+          "sha256": "5a58053c06cfd5b98a6735ba5846cddccb1fbaa384b8442e774c72211d1439ad"
         },
         {
           "file": "games/height_together_20261019/game.config.it.json",
@@ -4620,7 +4620,7 @@
       "inputs": [
         {
           "file": "games/eh_catch_the_hair_20261020/game.html",
-          "sha256": "bd9ca001f87de9aabd8345d7f8570a18680d93a36d785749e5d05bf40d4f98aa"
+          "sha256": "b4b81b638032b075ae17142f8d1f3ad088f3e74720eb9d0d31bd8b0a6a5aa2d8"
         },
         {
           "file": "games/eh_catch_the_hair_20261020/game.config.json",
@@ -4715,7 +4715,7 @@
       "inputs": [
         {
           "file": "games/eh_catch_the_hair_20261020/game.it.html",
-          "sha256": "852113018f0b1d8ff656be35c856c5645b87fbed7d60960831551ffd2fec36ae"
+          "sha256": "c351f13d144c9451c1e9d5c27faa71092001f4545e73f72d9063a8c0e4620d0d"
         },
         {
           "file": "games/eh_catch_the_hair_20261020/game.config.it.json",

@@ -456,6 +456,8 @@ function App() {
 
   useEffect(() => {
     let lastTime = performance.now();
+    let launchHighlightOpacity = 0;
+    const highlightMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const tick = (time) => {
       const rawDt = time - lastTime;
       const dt = Math.min(Math.max(rawDt, 0), 32);
@@ -501,7 +503,11 @@ function App() {
         stageRef.current.dataset.motion = flightRef.current ? 'flight' : 'orbit';
         stageRef.current.dataset.speedMultiplier = String(speedMultiplier(launchCountRef.current, cfgRef.current));
       }
-      if (launchGuideRef.current) launchGuideRef.current.style.opacity = flightRef.current || statusRef.current === 'over' ? '0' : '1';
+      if (launchGuideRef.current) {
+        const target = flightRef.current || statusRef.current === 'over' ? 0 : 1;
+        launchHighlightOpacity = highlightMotion.matches ? target : launchHighlightOpacity + (target - launchHighlightOpacity) * (1 - Math.exp(-dt / (target ? 220 : 75)));
+        launchGuideRef.current.style.opacity = String(launchHighlightOpacity);
+      }
       rafRef.current = requestAnimationFrame(tick);
     };
     rafRef.current = requestAnimationFrame(tick);
@@ -566,7 +572,7 @@ function App() {
                 </defs>
                 <circle cx={currentOrbit.x} cy={currentOrbit.y} r={currentOrbit.r + 18} fill="none" stroke={palette.faint} strokeWidth="1" strokeDasharray="2 10" opacity=".32" />
                 <circle cx={currentOrbit.x} cy={currentOrbit.y} r={currentOrbit.r} fill="none" stroke={palette.ink} strokeWidth="1.2" strokeDasharray="2 8" opacity=".42" />
-                <g ref={launchGuideRef} data-testid="launch-sweet-guide" pointerEvents="none" aria-hidden="true">
+                <g ref={launchGuideRef} style={{opacity:0}} data-testid="launch-sweet-guide" pointerEvents="none" aria-hidden="true">
                   {launchHints.map((hint, index) => <g key={index}>
                     <path d={hint.path} fill="none" stroke="#79a980" strokeWidth="16" opacity=".18" strokeLinecap="butt" />
                     <path data-testid="launch-sweet-strip" d={hint.path} fill="none" stroke="#79a980" strokeWidth="3" opacity=".95" strokeLinecap="butt" />

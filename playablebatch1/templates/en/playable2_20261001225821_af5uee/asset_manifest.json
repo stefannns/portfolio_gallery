@@ -37,9 +37,9 @@
     }
   ],
   "files": {
-    "App.jsx": "83055d7697eb6992b5bbc1d7dc7897bac87d25cfaf1cae4d89133cdc8008f27d",
-    "dist/bundle.js": "83055d7697eb6992b5bbc1d7dc7897bac87d25cfaf1cae4d89133cdc8008f27d",
-    "dist/game.html": "2cc6198ab09ec8899e5acef121fb7f7d22c244624124a355c4cfcd6e19b88036",
+    "App.jsx": "995f9c5939b559a5bef1c65120d7a57d9bd674a05ae2266d3ac4257eb0aa8bd1",
+    "dist/bundle.js": "995f9c5939b559a5bef1c65120d7a57d9bd674a05ae2266d3ac4257eb0aa8bd1",
+    "dist/game.html": "daa6ac33d935d9834afe7bc3a2495acea86cf8e74be94f6654bb2226b4733713",
     "dist/game.config.json": "9e55985e529123e69e5548eb6fed23d62762a53b3e26085029cd749fc5fa3dbe"
   }
 }

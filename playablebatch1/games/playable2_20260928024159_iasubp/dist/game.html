@@ -30,4 +30,41 @@ html,body,#root{background:#2858db!important}button{font-family:var(--font-displ
 
 #root>div::after{content:"";position:absolute;inset:0;background:url('./assets/paper-grain.svg') repeat;background-size:220px 220px;opacity:.10;mix-blend-mode:multiply;pointer-events:none;z-index:2}
 .notebook-bg{background-size:220px 220px!important}
-</style></head><body><div id="root"></div><script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"DROP_COUNT","kind":"number","label":"Drops Limit","value":40,"default":40,"min":10,"max":100,"step":1},{"id":"WIN_THRESHOLD","kind":"number","label":"Win Threshold","value":20,"default":20,"min":1,"max":100,"step":1},{"id":"DROP_INTERVAL","kind":"number","label":"Drop Interval","value":150,"default":150,"min":50,"max":1000,"step":10},{"id":"GRAVITY","kind":"number","label":"Gravity","value":1,"default":1,"min":0.5,"max":3,"step":0.1}],"texts":[{"id":"INSTRUCTION","label":"Instruction","value":"Draw a line to guide the soda!","default":"Draw a line to guide the soda!","max_length":50},{"id":"BTN_RESET","label":"Reset Button","value":"Reset","default":"Reset","max_length":20},{"id":"BTN_POST","label":"Post Button","value":"Post My Play","default":"Post My Play","max_length":20},{"id":"BTN_REPLAY","label":"New Level Button","value":"New Level","default":"New Level","max_length":20},{"id":"MSG_WIN","label":"Win Message","value":"Level Cleared!","default":"Level Cleared!","max_length":30}],"images":[{"id":"GLASS_IMG","label":"Glass Image","path":"./assets/glass-ink.svg","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script><script src="./bundle.js"></script></body></html>
+
+html:root:root:root #root#root#root>div>div[style*="border-radius: 16px"][style*="pointer-events: none"]{background:transparent!important;box-shadow:none!important;border:0!important;padding:0!important;border-radius:0!important}
+</style></head><body><div id="root"></div><script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"DROP_COUNT","kind":"number","label":"Drops Limit","value":40,"default":40,"min":10,"max":100,"step":1},{"id":"WIN_THRESHOLD","kind":"number","label":"Win Threshold","value":20,"default":20,"min":1,"max":100,"step":1},{"id":"DROP_INTERVAL","kind":"number","label":"Drop Interval","value":150,"default":150,"min":50,"max":1000,"step":10},{"id":"GRAVITY","kind":"number","label":"Gravity","value":1,"default":1,"min":0.5,"max":3,"step":0.1}],"texts":[{"id":"INSTRUCTION","label":"Instruction","value":"Draw a line to guide the soda!","default":"Draw a line to guide the soda!","max_length":50},{"id":"BTN_RESET","label":"Reset Button","value":"Reset","default":"Reset","max_length":20},{"id":"BTN_POST","label":"Post Button","value":"Post My Play","default":"Post My Play","max_length":20},{"id":"BTN_REPLAY","label":"New Level Button","value":"New Level","default":"New Level","max_length":20},{"id":"MSG_WIN","label":"Win Message","value":"Level Cleared!","default":"Level Cleared!","max_length":30}],"images":[{"id":"GLASS_IMG","label":"Glass Image","path":"./assets/glass-ink.svg","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script><script src="./bundle.js"></script><!-- CTA_BREATHING_START -->
+<script id="playable-cta-breathing-20261030">
+/* Decorative CTA breathing only. No positions, inputs, clocks or game state. */
+(()=>{
+ const selectors=["#root>div>div[style*=\"border-radius: 16px\"][style*=\"pointer-events: none\"]"],copy=new Set(["Draw a line to guide the soda!"].map(s=>s.replace(/\s+/g,' ').trim().toLowerCase()));
+ const motion=window.matchMedia('(prefers-reduced-motion: reduce)'),running=new Map();let queued=false,visible=true;
+ const action=/^(?:(?:tap|drag|hold|swipe|draw|use|press|click|release|brush|pull|touch|pinch|rub|move|trace)\b|spray\s*[→-]|tocca\b|trascina\b|tieni\b|scorri\b|disegna\b|premi\b|点击|轻触|滑动|按住|拖动|长按|双击)/i;
+ function scan(){
+  queued=false;for(const [el,a]of running)if(!el.isConnected){a.cancel();running.delete(el);}
+  if(motion.matches){for(const a of running.values())a.cancel();running.clear();return;}
+  const targets=new Set();for(const selector of selectors){try{document.querySelectorAll(selector).forEach(el=>targets.add(el));}catch{}}
+  for(const el of document.querySelectorAll('p,span,div,label,text')){
+   if(el.children.length||el.closest('button,a,input,select,textarea,[role="button"]'))continue;
+   const text=(el.textContent||'').replace(/\s+/g,' ').trim();
+   if(text.length>=5&&text.length<=140&&(copy.has(text.toLowerCase())||(!selectors.length&&action.test(text))))targets.add(el);
+  }
+  for(const el of targets){
+   if(running.has(el)||typeof el.animate!=='function')continue;
+   if([...targets].some(child=>child!==el&&el.contains(child)))continue;
+   const style=getComputedStyle(el);if(/breath/i.test(style.animationName))continue;
+   const base=style.filter.replace(/opacity\([^)]*\)/g,'').replace(/^none$/,'').trim(),filter=v=>(base?base+' ':'')+'opacity('+v+')';
+   const a=el.animate([{filter:filter(1)},{filter:filter(.65)},{filter:filter(1)}],{duration:2400,iterations:Infinity,easing:'ease-in-out'});running.set(el,a);if(document.hidden||!visible)a.pause();
+  }
+ }
+ const schedule=()=>{if(!queued){queued=true;requestAnimationFrame(scan);}};
+ const pause=()=>{for(const a of running.values())document.hidden||!visible?a.pause():a.play();};
+ const observer=new MutationObserver(schedule);observer.observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+ const intersection=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{visible=entries.some(e=>e.isIntersecting);pause();}):null;
+ if(document.body)intersection?.observe(document.body);else document.addEventListener('DOMContentLoaded',()=>intersection?.observe(document.body),{once:true});
+ document.addEventListener('visibilitychange',pause);motion.addEventListener?.('change',schedule);schedule();
+ window.addEventListener('pagehide',()=>{observer.disconnect();intersection?.disconnect();for(const a of running.values())a.cancel();running.clear();},{once:true});
+})();
+
+</script>
+<!-- CTA_BREATHING_END -->
+</body></html>

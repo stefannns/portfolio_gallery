@@ -8,9 +8,9 @@
   "source_kind": "consolidated-current-runtime",
   "assets": [],
   "files": {
-    "App.jsx": "a523f77e5dbb3a6eff1c5f4852dec079231c4182d05df4931e21acaa13b7f25c",
-    "dist/bundle.js": "a523f77e5dbb3a6eff1c5f4852dec079231c4182d05df4931e21acaa13b7f25c",
-    "dist/game.html": "bdd180ef27819a8d7ec9d274ad45996682a005407ee0c2a658201d84374c069b",
+    "App.jsx": "52c4cc576851cc850bf14b66a4d902b53a48ddf5bc7bdd0d266d2cd7c6a76e6d",
+    "dist/bundle.js": "52c4cc576851cc850bf14b66a4d902b53a48ddf5bc7bdd0d266d2cd7c6a76e6d",
+    "dist/game.html": "fddb0027b7c0a4375024c27717c8925453fb9a1d3e80b93b7b741006cb24b870",
     "dist/game.config.json": "222bb53621203f995d405f560aec373f6c156df68a788e29346532adc0eeb602"
   }
 }

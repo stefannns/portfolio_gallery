@@ -4,4 +4,39 @@
 <script data-batch4-preview defer data-game="77" src="./preview-models.it.js?l10n=6382dd330332&v=93e1a307cbed"></script>
 <script data-batch4-preview defer data-game="77" src="./preview-controller.it.js?l10n=6382dd330332&v=b487e18c9adf"></script>
 <link data-italian-layout rel="stylesheet" href="./locale.it.css?v=20261021-1">
-</head><body><main id="stage"><canvas id="canvas" aria-hidden="true"></canvas><button id="play" aria-label="Play"></button><div id="hud" class="hud" aria-hidden="true"><span id="left"></span><span id="right"></span></div><p id="guide"></p><div id="result" hidden><span id="resultTitle"></span><small id="resultSub"></small></div><div class="controls"><button id="retry" class="control" hidden>Riprova</button><button id="direction" class="control" hidden aria-label="Cambia direzione"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 17V4m-3 3 3-3 3 3m9 0v13m-3-3 3 3 3-3"/></svg><span>Direction</span></button></div><div id="pause" hidden><button id="resume">Tocca per riprendere</button></div><div id="loading" role="status">Caricamento…</div><div id="status" role="status" aria-live="polite" class="sr"></div></main><script src="game-data.it.js?l10n=6382dd330332&v=db78ab1009f4"></script><script src="engine.it.js?l10n=6382dd330332&v=db78ab1009f4"></script><script src="game.it.js?l10n=6382dd330332&ui=batch4-ebea618eed22"></script><script src="runtime.it.js?l10n=6382dd330332&ui=batch4-4c1e0b32f7e4"></script></body></html>
+</head><body><main id="stage"><canvas id="canvas" aria-hidden="true"></canvas><button id="play" aria-label="Play"></button><div id="hud" class="hud" aria-hidden="true"><span id="left"></span><span id="right"></span></div><p id="guide"></p><div id="result" hidden><span id="resultTitle"></span><small id="resultSub"></small></div><div class="controls"><button id="retry" class="control" hidden>Riprova</button><button id="direction" class="control" hidden aria-label="Cambia direzione"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 17V4m-3 3 3-3 3 3m9 0v13m-3-3 3 3 3-3"/></svg><span>Direction</span></button></div><div id="pause" hidden><button id="resume">Tocca per riprendere</button></div><div id="loading" role="status">Caricamento…</div><div id="status" role="status" aria-live="polite" class="sr"></div></main><script src="game-data.it.js?l10n=6382dd330332&v=db78ab1009f4"></script><script src="engine.it.js?l10n=6382dd330332&v=db78ab1009f4"></script><script src="game.it.js?l10n=6382dd330332&ui=batch4-ebea618eed22"></script><script src="runtime.it.js?l10n=6382dd330332&ui=batch4-4c1e0b32f7e4"></script><!-- CTA_BREATHING_START -->
+<script id="playable-cta-breathing-20261030">
+/* Decorative CTA breathing only. No positions, inputs, clocks or game state. */
+(()=>{
+ const selectors=["p#guide"],copy=new Set(["Tocca per fermare la parrucca"].map(s=>s.replace(/\s+/g,' ').trim().toLowerCase()));
+ const motion=window.matchMedia('(prefers-reduced-motion: reduce)'),running=new Map();let queued=false,visible=true;
+ const action=/^(?:(?:tap|drag|hold|swipe|draw|use|press|click|release|brush|pull|touch|pinch|rub|move|trace)\b|spray\s*[→-]|tocca\b|trascina\b|tieni\b|scorri\b|disegna\b|premi\b|点击|轻触|滑动|按住|拖动|长按|双击)/i;
+ function scan(){
+  queued=false;for(const [el,a]of running)if(!el.isConnected){a.cancel();running.delete(el);}
+  if(motion.matches){for(const a of running.values())a.cancel();running.clear();return;}
+  const targets=new Set();for(const selector of selectors){try{document.querySelectorAll(selector).forEach(el=>targets.add(el));}catch{}}
+  for(const el of document.querySelectorAll('p,span,div,label,text')){
+   if(el.children.length||el.closest('button,a,input,select,textarea,[role="button"]'))continue;
+   const text=(el.textContent||'').replace(/\s+/g,' ').trim();
+   if(text.length>=5&&text.length<=140&&(copy.has(text.toLowerCase())||(!selectors.length&&action.test(text))))targets.add(el);
+  }
+  for(const el of targets){
+   if(running.has(el)||typeof el.animate!=='function')continue;
+   if([...targets].some(child=>child!==el&&el.contains(child)))continue;
+   const style=getComputedStyle(el);if(/breath/i.test(style.animationName))continue;
+   const base=style.filter.replace(/opacity\([^)]*\)/g,'').replace(/^none$/,'').trim(),filter=v=>(base?base+' ':'')+'opacity('+v+')';
+   const a=el.animate([{filter:filter(1)},{filter:filter(.65)},{filter:filter(1)}],{duration:2400,iterations:Infinity,easing:'ease-in-out'});running.set(el,a);if(document.hidden||!visible)a.pause();
+  }
+ }
+ const schedule=()=>{if(!queued){queued=true;requestAnimationFrame(scan);}};
+ const pause=()=>{for(const a of running.values())document.hidden||!visible?a.pause():a.play();};
+ const observer=new MutationObserver(schedule);observer.observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+ const intersection=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{visible=entries.some(e=>e.isIntersecting);pause();}):null;
+ if(document.body)intersection?.observe(document.body);else document.addEventListener('DOMContentLoaded',()=>intersection?.observe(document.body),{once:true});
+ document.addEventListener('visibilitychange',pause);motion.addEventListener?.('change',schedule);schedule();
+ window.addEventListener('pagehide',()=>{observer.disconnect();intersection?.disconnect();for(const a of running.values())a.cancel();running.clear();},{once:true});
+})();
+
+</script>
+<!-- CTA_BREATHING_END -->
+</body></html>

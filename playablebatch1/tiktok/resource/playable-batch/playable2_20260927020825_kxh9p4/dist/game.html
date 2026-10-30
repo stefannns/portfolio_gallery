@@ -26,4 +26,39 @@ html,body,#root{background:#a289cf!important}button{font-family:var(--font-displ
 
 #root header,#root footer button{background-image:url('./assets/paper-grain.svg');background-size:220px 220px}
 [data-ant-playfield]{background-size:220px 220px!important}
-</style></head><body><div id="root"></div><script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"ANT_SPEED","kind":"number","label":"Ant speed","value":3,"default":3,"min":1,"max":10,"step":0.5},{"id":"REWARD_AMOUNT","kind":"number","label":"Hit reward ($)","value":10,"default":10,"min":1,"max":100,"step":1},{"id":"ADD_ANT_COST","kind":"number","label":"Add ant cost ($)","value":50,"default":50,"min":0,"max":500,"step":10}],"texts":[{"id":"TITLE_ANTS","label":"Ant count text","value":"Ants","default":"Ants","max_length":15},{"id":"BTN_ADD_ANT","label":"Add ant button","value":"Add Ant","default":"Add Ant","max_length":15},{"id":"BTN_CLEAR","label":"Clear all button","value":"Clear All","default":"Clear All","max_length":15},{"id":"HINT_TEXT","label":"Hint text","value":"Draw lines to trap ants! Earn $10 on hit","default":"Draw lines to trap ants! Earn $10 on hit","max_length":50}],"images":[{"id":"BG_MAIN","label":"Paper background","path":"./assets/bg_paper_clean.svg","replaceable":true},{"id":"CHAR_ANT","label":"Ant sprite","path":"./assets/ant-ink-v2.svg","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script><script src="./bundle.js"></script></body></html>
+</style></head><body><div id="root"></div><script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"ANT_SPEED","kind":"number","label":"Ant speed","value":3,"default":3,"min":1,"max":10,"step":0.5},{"id":"REWARD_AMOUNT","kind":"number","label":"Hit reward ($)","value":10,"default":10,"min":1,"max":100,"step":1},{"id":"ADD_ANT_COST","kind":"number","label":"Add ant cost ($)","value":50,"default":50,"min":0,"max":500,"step":10}],"texts":[{"id":"TITLE_ANTS","label":"Ant count text","value":"Ants","default":"Ants","max_length":15},{"id":"BTN_ADD_ANT","label":"Add ant button","value":"Add Ant","default":"Add Ant","max_length":15},{"id":"BTN_CLEAR","label":"Clear all button","value":"Clear All","default":"Clear All","max_length":15},{"id":"HINT_TEXT","label":"Hint text","value":"Draw lines to trap ants! Earn $10 on hit","default":"Draw lines to trap ants! Earn $10 on hit","max_length":50}],"images":[{"id":"BG_MAIN","label":"Paper background","path":"./assets/bg_paper_clean.svg","replaceable":true},{"id":"CHAR_ANT","label":"Ant sprite","path":"./assets/ant-ink-v2.svg","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script><script src="./bundle.js"></script><!-- CTA_BREATHING_START -->
+<script id="playable-cta-breathing-20261030">
+/* Decorative CTA breathing only. No positions, inputs, clocks or game state. */
+(()=>{
+ const selectors=["[data-ant-playfield]>div"],copy=new Set(["Draw lines to trap ants! Earn $10 on hit"].map(s=>s.replace(/\s+/g,' ').trim().toLowerCase()));
+ const motion=window.matchMedia('(prefers-reduced-motion: reduce)'),running=new Map();let queued=false,visible=true;
+ const action=/^(?:(?:tap|drag|hold|swipe|draw|use|press|click|release|brush|pull|touch|pinch|rub|move|trace)\b|spray\s*[→-]|tocca\b|trascina\b|tieni\b|scorri\b|disegna\b|premi\b|点击|轻触|滑动|按住|拖动|长按|双击)/i;
+ function scan(){
+  queued=false;for(const [el,a]of running)if(!el.isConnected){a.cancel();running.delete(el);}
+  if(motion.matches){for(const a of running.values())a.cancel();running.clear();return;}
+  const targets=new Set();for(const selector of selectors){try{document.querySelectorAll(selector).forEach(el=>targets.add(el));}catch{}}
+  for(const el of document.querySelectorAll('p,span,div,label,text')){
+   if(el.children.length||el.closest('button,a,input,select,textarea,[role="button"]'))continue;
+   const text=(el.textContent||'').replace(/\s+/g,' ').trim();
+   if(text.length>=5&&text.length<=140&&(copy.has(text.toLowerCase())||(!selectors.length&&action.test(text))))targets.add(el);
+  }
+  for(const el of targets){
+   if(running.has(el)||typeof el.animate!=='function')continue;
+   if([...targets].some(child=>child!==el&&el.contains(child)))continue;
+   const style=getComputedStyle(el);if(/breath/i.test(style.animationName))continue;
+   const base=style.filter.replace(/opacity\([^)]*\)/g,'').replace(/^none$/,'').trim(),filter=v=>(base?base+' ':'')+'opacity('+v+')';
+   const a=el.animate([{filter:filter(1)},{filter:filter(.65)},{filter:filter(1)}],{duration:2400,iterations:Infinity,easing:'ease-in-out'});running.set(el,a);if(document.hidden||!visible)a.pause();
+  }
+ }
+ const schedule=()=>{if(!queued){queued=true;requestAnimationFrame(scan);}};
+ const pause=()=>{for(const a of running.values())document.hidden||!visible?a.pause():a.play();};
+ const observer=new MutationObserver(schedule);observer.observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+ const intersection=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{visible=entries.some(e=>e.isIntersecting);pause();}):null;
+ if(document.body)intersection?.observe(document.body);else document.addEventListener('DOMContentLoaded',()=>intersection?.observe(document.body),{once:true});
+ document.addEventListener('visibilitychange',pause);motion.addEventListener?.('change',schedule);schedule();
+ window.addEventListener('pagehide',()=>{observer.disconnect();intersection?.disconnect();for(const a of running.values())a.cancel();running.clear();},{once:true});
+})();
+
+</script>
+<!-- CTA_BREATHING_END -->
+</body></html>

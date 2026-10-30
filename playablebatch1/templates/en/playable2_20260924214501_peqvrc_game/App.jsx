@@ -2,7 +2,7 @@
  * Rebuild: node check.js --build. No historical authoring version is substituted.
  * External helpers and inline entry code are preserved in their original execution order.
  */
-// TEMPLATE_HTML_BASE64: PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InpoLUNOIj4KPGhlYWQ+CgogIDxtZXRhIGNoYXJzZXQ9IlVURi04IiAvPgogIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsIGluaXRpYWwtc2NhbGU9MS4wLCBtYXhpbXVtLXNjYWxlPTEuMCwgdXNlci1zY2FsYWJsZT1ubyIgLz4KICA8dGl0bGU+UGxheWFibGU8L3RpdGxlPgogIDxzdHlsZT4KICAgIGh0bWwsIGJvZHksICNyb290IHsgd2lkdGg6IDEwMCU7IGhlaWdodDogMTAwJTsgbWFyZ2luOiAwOyBwYWRkaW5nOiAwOyBvdmVyZmxvdzogaGlkZGVuOyB9CiAgICBib2R5IHsgYmFja2dyb3VuZDogIzA1MDUxMDsgLXdlYmtpdC10YXAtaGlnaGxpZ2h0LWNvbG9yOiB0cmFuc3BhcmVudDsgfQogIDwvc3R5bGU+CjxzdHlsZSBpZD0iZmVlZC1lbnRyeS1tb3Rpb24iPgpAa2V5ZnJhbWVzIGZlZWQtcHJvbXB0LWJyZWF0aGV7MCUsMTAwJXtvcGFjaXR5OjF9NTAle29wYWNpdHk6Ljc4fX0KLmZlZWQtZmlyc3QtYWN0aW9ue2FuaW1hdGlvbjpmZWVkLXByb21wdC1icmVhdGhlIDIuNHMgZWFzZS1pbi1vdXQgaW5maW5pdGV9Ci5mZWVkLWZpcnN0LWFjdGlvblthcmlhLWhpZGRlbj0idHJ1ZSJde2FuaW1hdGlvbjpub25lfQpodG1sW2RhdGEtZmVlZC1iYWNrZ3JvdW5kXSAuZmVlZC1maXJzdC1hY3Rpb257YW5pbWF0aW9uLXBsYXktc3RhdGU6cGF1c2VkfQpAbWVkaWEocHJlZmVycy1yZWR1Y2VkLW1vdGlvbjpyZWR1Y2Upey5mZWVkLWZpcnN0LWFjdGlvbnthbmltYXRpb246bm9uZX19Cjwvc3R5bGU+CjxzdHlsZSBkYXRhLWd1aWRlLWJyZWF0aGluZz0iMjAyNjEwMjEiPgovKiBFeGlzdGluZyBndWlkZSB0ZXh0IG9ubHk7IHBvc2l0aW9uLCBvcGFjaXR5IGxpZmVjeWNsZSBhbmQgaGl0IHJlZ2lvbnMgcmVtYWluIGdhbWUtb3duZWQuICovCkBrZXlmcmFtZXMgYmF0Y2gtZ3VpZGUtYnJlYXRoZXswJSwxMDAle2ZpbHRlcjpvcGFjaXR5KDEpfTUwJXtmaWx0ZXI6b3BhY2l0eSguNjUpfX0KaHRtbDpyb290OnJvb3QgOmlzKC50YXAtZHVlbF9faW5zdHJ1Y3Rpb24pe2FuaW1hdGlvbjpiYXRjaC1ndWlkZS1icmVhdGhlIDIuNHMgZWFzZS1pbi1vdXQgaW5maW5pdGUhaW1wb3J0YW50fQpodG1sW2RhdGEtZ3VpZGUtYnJlYXRoaW5nLXBhdXNlZF06cm9vdDpyb290IDppcygudGFwLWR1ZWxfX2luc3RydWN0aW9uKXthbmltYXRpb24tcGxheS1zdGF0ZTpwYXVzZWQhaW1wb3J0YW50fQpAbWVkaWEocHJlZmVycy1yZWR1Y2VkLW1vdGlvbjpyZWR1Y2Upe2h0bWw6cm9vdDpyb290IDppcygudGFwLWR1ZWxfX2luc3RydWN0aW9uKXthbmltYXRpb246bm9uZSFpbXBvcnRhbnR9fQoKPC9zdHlsZT4KCjwvaGVhZD4KPGJvZHk+CiAgPGRpdiBpZD0icm9vdCI+PC9kaXY+CiAgCiAgCiAgCgo8c2NyaXB0IHNyYz0iLi9idW5kbGUuanMiPjwvc2NyaXB0Pgo8L2JvZHk+CjwvaHRtbD4K
+// TEMPLATE_HTML_BASE64: PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InpoLUNOIj4KPGhlYWQ+CgogIDxtZXRhIGNoYXJzZXQ9IlVURi04IiAvPgogIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsIGluaXRpYWwtc2NhbGU9MS4wLCBtYXhpbXVtLXNjYWxlPTEuMCwgdXNlci1zY2FsYWJsZT1ubyIgLz4KICA8dGl0bGU+UGxheWFibGU8L3RpdGxlPgogIDxzdHlsZT4KICAgIGh0bWwsIGJvZHksICNyb290IHsgd2lkdGg6IDEwMCU7IGhlaWdodDogMTAwJTsgbWFyZ2luOiAwOyBwYWRkaW5nOiAwOyBvdmVyZmxvdzogaGlkZGVuOyB9CiAgICBib2R5IHsgYmFja2dyb3VuZDogIzA1MDUxMDsgLXdlYmtpdC10YXAtaGlnaGxpZ2h0LWNvbG9yOiB0cmFuc3BhcmVudDsgfQogIDwvc3R5bGU+CjxzdHlsZSBpZD0iZmVlZC1lbnRyeS1tb3Rpb24iPgpAa2V5ZnJhbWVzIGZlZWQtcHJvbXB0LWJyZWF0aGV7MCUsMTAwJXtvcGFjaXR5OjF9NTAle29wYWNpdHk6Ljc4fX0KLmZlZWQtZmlyc3QtYWN0aW9ue2FuaW1hdGlvbjpmZWVkLXByb21wdC1icmVhdGhlIDIuNHMgZWFzZS1pbi1vdXQgaW5maW5pdGV9Ci5mZWVkLWZpcnN0LWFjdGlvblthcmlhLWhpZGRlbj0idHJ1ZSJde2FuaW1hdGlvbjpub25lfQpodG1sW2RhdGEtZmVlZC1iYWNrZ3JvdW5kXSAuZmVlZC1maXJzdC1hY3Rpb257YW5pbWF0aW9uLXBsYXktc3RhdGU6cGF1c2VkfQpAbWVkaWEocHJlZmVycy1yZWR1Y2VkLW1vdGlvbjpyZWR1Y2Upey5mZWVkLWZpcnN0LWFjdGlvbnthbmltYXRpb246bm9uZX19Cjwvc3R5bGU+CjxzdHlsZSBkYXRhLWd1aWRlLWJyZWF0aGluZz0iMjAyNjEwMjEiPgovKiBFeGlzdGluZyBndWlkZSB0ZXh0IG9ubHk7IHBvc2l0aW9uLCBvcGFjaXR5IGxpZmVjeWNsZSBhbmQgaGl0IHJlZ2lvbnMgcmVtYWluIGdhbWUtb3duZWQuICovCkBrZXlmcmFtZXMgYmF0Y2gtZ3VpZGUtYnJlYXRoZXswJSwxMDAle2ZpbHRlcjpvcGFjaXR5KDEpfTUwJXtmaWx0ZXI6b3BhY2l0eSguNjUpfX0KaHRtbDpyb290OnJvb3QgOmlzKC50YXAtZHVlbF9faW5zdHJ1Y3Rpb24pe2FuaW1hdGlvbjpiYXRjaC1ndWlkZS1icmVhdGhlIDIuNHMgZWFzZS1pbi1vdXQgaW5maW5pdGUhaW1wb3J0YW50fQpodG1sW2RhdGEtZ3VpZGUtYnJlYXRoaW5nLXBhdXNlZF06cm9vdDpyb290IDppcygudGFwLWR1ZWxfX2luc3RydWN0aW9uKXthbmltYXRpb24tcGxheS1zdGF0ZTpwYXVzZWQhaW1wb3J0YW50fQpAbWVkaWEocHJlZmVycy1yZWR1Y2VkLW1vdGlvbjpyZWR1Y2Upe2h0bWw6cm9vdDpyb290IDppcygudGFwLWR1ZWxfX2luc3RydWN0aW9uKXthbmltYXRpb246bm9uZSFpbXBvcnRhbnR9fQoKPC9zdHlsZT4KCjwvaGVhZD4KPGJvZHk+CiAgPGRpdiBpZD0icm9vdCI+PC9kaXY+CiAgCiAgCiAgCgo8IS0tIENUQV9CUkVBVEhJTkdfU1RBUlQgLS0+Cgo8IS0tIENUQV9CUkVBVEhJTkdfRU5EIC0tPgo8c2NyaXB0IHNyYz0iLi9idW5kbGUuanMiPjwvc2NyaXB0Pgo8L2JvZHk+CjwvaHRtbD4K
 
 ;/* Current runtime segment: inline-0 */
 
@@ -658,6 +658,42 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 
 ;
 
+;/* Current runtime segment: inline-4 */
+
+/* Decorative CTA breathing only. No positions, inputs, clocks or game state. */
+(()=>{
+ const selectors=[".tap-duel__instruction"],copy=new Set([].map(s=>s.replace(/\s+/g,' ').trim().toLowerCase()));
+ const motion=window.matchMedia('(prefers-reduced-motion: reduce)'),running=new Map();let queued=false,visible=true;
+ const action=/^(?:(?:tap|drag|hold|swipe|draw|use|press|click|release|brush|pull|touch|pinch|rub|move|trace)\b|spray\s*[→-]|tocca\b|trascina\b|tieni\b|scorri\b|disegna\b|premi\b|点击|轻触|滑动|按住|拖动|长按|双击)/i;
+ function scan(){
+  queued=false;for(const [el,a]of running)if(!el.isConnected){a.cancel();running.delete(el);}
+  if(motion.matches){for(const a of running.values())a.cancel();running.clear();return;}
+  const targets=new Set();for(const selector of selectors){try{document.querySelectorAll(selector).forEach(el=>targets.add(el));}catch{}}
+  for(const el of document.querySelectorAll('p,span,div,label,text')){
+   if(el.children.length||el.closest('button,a,input,select,textarea,[role="button"]'))continue;
+   const text=(el.textContent||'').replace(/\s+/g,' ').trim();
+   if(text.length>=5&&text.length<=140&&(copy.has(text.toLowerCase())||(!selectors.length&&action.test(text))))targets.add(el);
+  }
+  for(const el of targets){
+   if(running.has(el)||typeof el.animate!=='function')continue;
+   if([...targets].some(child=>child!==el&&el.contains(child)))continue;
+   const style=getComputedStyle(el);if(/breath/i.test(style.animationName))continue;
+   const base=style.filter.replace(/opacity\([^)]*\)/g,'').replace(/^none$/,'').trim(),filter=v=>(base?base+' ':'')+'opacity('+v+')';
+   const a=el.animate([{filter:filter(1)},{filter:filter(.65)},{filter:filter(1)}],{duration:2400,iterations:Infinity,easing:'ease-in-out'});running.set(el,a);if(document.hidden||!visible)a.pause();
+  }
+ }
+ const schedule=()=>{if(!queued){queued=true;requestAnimationFrame(scan);}};
+ const pause=()=>{for(const a of running.values())document.hidden||!visible?a.pause():a.play();};
+ const observer=new MutationObserver(schedule);observer.observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+ const intersection=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{visible=entries.some(e=>e.isIntersecting);pause();}):null;
+ if(document.body)intersection?.observe(document.body);else document.addEventListener('DOMContentLoaded',()=>intersection?.observe(document.body),{once:true});
+ document.addEventListener('visibilitychange',pause);motion.addEventListener?.('change',schedule);schedule();
+ window.addEventListener('pagehide',()=>{observer.disconnect();intersection?.disconnect();for(const a of running.values())a.cancel();running.clear();},{once:true});
+})();
+
+
+;
+
 ;/* Current runtime segment: guide-breathing.js */
 /* Decorative guide visibility only: no inputs, timers, sound or game state. */
 (() => {
@@ -675,11 +711,11 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 ;
 
 ;/* Current runtime segment: feed-entry-motion.js */
-var __PLAYABLE_TEMPLATE_SCRIPT_5=(()=>{var node=document.createElement("script");for(var entry of Object.entries({"defer":"","src":"./feed-entry-motion.js?v=feed-first-20261008-1","data-subject":".tap-duel__orb"}))node.setAttribute(entry[0],entry[1]);return node;})();
+var __PLAYABLE_TEMPLATE_SCRIPT_6=(()=>{var node=document.createElement("script");for(var entry of Object.entries({"defer":"","src":"./feed-entry-motion.js?v=feed-first-20261008-1","data-subject":".tap-duel__orb"}))node.setAttribute(entry[0],entry[1]);return node;})();
 /* Decorative entry motion only. No game state, audio, timers or synthetic input. */
 (function () {
   'use strict';
-  const script = __PLAYABLE_TEMPLATE_SCRIPT_5;
+  const script = __PLAYABLE_TEMPLATE_SCRIPT_6;
   const selector = script?.getAttribute('data-subject') || '#root canvas';
   const media = window.matchMedia?.('(prefers-reduced-motion: reduce)');
   let observer, animation, entered = false;

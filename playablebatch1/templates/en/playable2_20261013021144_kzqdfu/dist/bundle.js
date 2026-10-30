@@ -2,7 +2,7 @@
  * Rebuild: node check.js --build. No historical authoring version is substituted.
  * External helpers and inline entry code are preserved in their original execution order.
  */
-// TEMPLATE_HTML_BASE64: PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CgogIDxtZXRhIGNoYXJzZXQ9IlVURi04IiAvPgogIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsIGluaXRpYWwtc2NhbGU9MS4wLCBtYXhpbXVtLXNjYWxlPTEuMCwgdXNlci1zY2FsYWJsZT1ubyIgLz4KICA8dGl0bGU+UGxheWFibGU8L3RpdGxlPgogIDxzdHlsZT4KICAgIGh0bWwsIGJvZHksICNyb290IHsgd2lkdGg6IDEwMCU7IGhlaWdodDogMTAwJTsgbWFyZ2luOiAwOyBwYWRkaW5nOiAwOyBvdmVyZmxvdzogaGlkZGVuOyB9CiAgICBib2R5IHsgYmFja2dyb3VuZDogIzQzOGU5NjsgLXdlYmtpdC10YXAtaGlnaGxpZ2h0LWNvbG9yOiB0cmFuc3BhcmVudDsgfQogIDwvc3R5bGU+CjxzdHlsZSBkYXRhLWd1aWRlLWNlbnRlcmluZz0iMjAyNjEwMjEiPgovKiBVc2VyIG92ZXJyaWRlIDIwMjYtMTAtMjE6IGZhdm9yIHZpc3VhbCBjZW50ZXIsIG5vdCBhIGZpeGVkIHVwcGVyIGJhbmQuICovCmh0bWw6cm9vdDpyb290OnJvb3QgOmlzKCNyb290LCNnYW1lLCNzdGFnZSk6aXMoI3Jvb3QsI2dhbWUsI3N0YWdlKSBwLmtvaS1ndWlkZXtwb3NpdGlvbjpmaXhlZCFpbXBvcnRhbnQ7dG9wOjI0JSFpbXBvcnRhbnQ7Ym90dG9tOmF1dG8haW1wb3J0YW50O2xlZnQ6NTAlIWltcG9ydGFudDtyaWdodDphdXRvIWltcG9ydGFudDt3aWR0aDptYXgtY29udGVudCFpbXBvcnRhbnQ7bWF4LXdpZHRoOmNhbGMoMTAwdncgLSA2MHB4KSFpbXBvcnRhbnQ7bWluLWhlaWdodDowIWltcG9ydGFudDttYXJnaW46MCFpbXBvcnRhbnQ7dGV4dC1hbGlnbjpjZW50ZXIhaW1wb3J0YW50O3RyYW5zbGF0ZTotNTAlIC01MCUhaW1wb3J0YW50O3RyYW5zZm9ybTpub25lIWltcG9ydGFudDtwb2ludGVyLWV2ZW50czpub25lIWltcG9ydGFudDt6LWluZGV4OjI1IWltcG9ydGFudDtvdmVyZmxvdy13cmFwOmFueXdoZXJlfQpodG1sOnJvb3Q6cm9vdDpyb290IDppcygjcm9vdCwjZ2FtZSwjc3RhZ2UpOmlzKCNyb290LCNnYW1lLCNzdGFnZSkgcC5rb2ktZ3VpZGV7Ym94LXNpemluZzpib3JkZXItYm94IWltcG9ydGFudDtiYWNrZ3JvdW5kOiNmZmYhaW1wb3J0YW50O2NvbG9yOiMyOTNjMzQhaW1wb3J0YW50O3BhZGRpbmc6NnB4IDE0cHghaW1wb3J0YW50O2JvcmRlcjowIWltcG9ydGFudDtib3JkZXItcmFkaXVzOjk5OXB4IWltcG9ydGFudDtib3gtc2hhZG93OjAgMnB4IDEwcHggcmdiYSgwLDAsMCwuMDgpIWltcG9ydGFudDt0ZXh0LXNoYWRvdzpub25lIWltcG9ydGFudH0KCjwvc3R5bGU+CjxzdHlsZSBkYXRhLWd1aWRlLWJyZWF0aGluZz0iMjAyNjEwMjEiPgovKiBFeGlzdGluZyBndWlkZSB0ZXh0IG9ubHk7IHBvc2l0aW9uLCBvcGFjaXR5IGxpZmVjeWNsZSBhbmQgaGl0IHJlZ2lvbnMgcmVtYWluIGdhbWUtb3duZWQuICovCkBrZXlmcmFtZXMgYmF0Y2gtZ3VpZGUtYnJlYXRoZXswJSwxMDAle2ZpbHRlcjpvcGFjaXR5KDEpfTUwJXtmaWx0ZXI6b3BhY2l0eSguNjUpfX0KaHRtbDpyb290OnJvb3QgOmlzKHAua29pLWd1aWRlKXthbmltYXRpb246YmF0Y2gtZ3VpZGUtYnJlYXRoZSAyLjRzIGVhc2UtaW4tb3V0IGluZmluaXRlIWltcG9ydGFudH0KaHRtbFtkYXRhLWd1aWRlLWJyZWF0aGluZy1wYXVzZWRdOnJvb3Q6cm9vdCA6aXMocC5rb2ktZ3VpZGUpe2FuaW1hdGlvbi1wbGF5LXN0YXRlOnBhdXNlZCFpbXBvcnRhbnR9CkBtZWRpYShwcmVmZXJzLXJlZHVjZWQtbW90aW9uOnJlZHVjZSl7aHRtbDpyb290OnJvb3QgOmlzKHAua29pLWd1aWRlKXthbmltYXRpb246bm9uZSFpbXBvcnRhbnR9fQoKPC9zdHlsZT4KCjwvaGVhZD4KPGJvZHk+CiAgPGRpdiBpZD0icm9vdCI+PC9kaXY+CiAgCjxzY3JpcHQgc3JjPSIuL2J1bmRsZS5qcyI+PC9zY3JpcHQ+CjwvYm9keT4KPC9odG1sPgo=
+// TEMPLATE_HTML_BASE64: PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CgogIDxtZXRhIGNoYXJzZXQ9IlVURi04IiAvPgogIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsIGluaXRpYWwtc2NhbGU9MS4wLCBtYXhpbXVtLXNjYWxlPTEuMCwgdXNlci1zY2FsYWJsZT1ubyIgLz4KICA8dGl0bGU+UGxheWFibGU8L3RpdGxlPgogIDxzdHlsZT4KICAgIGh0bWwsIGJvZHksICNyb290IHsgd2lkdGg6IDEwMCU7IGhlaWdodDogMTAwJTsgbWFyZ2luOiAwOyBwYWRkaW5nOiAwOyBvdmVyZmxvdzogaGlkZGVuOyB9CiAgICBib2R5IHsgYmFja2dyb3VuZDogIzQzOGU5NjsgLXdlYmtpdC10YXAtaGlnaGxpZ2h0LWNvbG9yOiB0cmFuc3BhcmVudDsgfQogIDwvc3R5bGU+CjxzdHlsZSBkYXRhLWd1aWRlLWNlbnRlcmluZz0iMjAyNjEwMjEiPgovKiBVc2VyIG92ZXJyaWRlIDIwMjYtMTAtMjE6IGZhdm9yIHZpc3VhbCBjZW50ZXIsIG5vdCBhIGZpeGVkIHVwcGVyIGJhbmQuICovCmh0bWw6cm9vdDpyb290OnJvb3QgOmlzKCNyb290LCNnYW1lLCNzdGFnZSk6aXMoI3Jvb3QsI2dhbWUsI3N0YWdlKSBwLmtvaS1ndWlkZXtwb3NpdGlvbjpmaXhlZCFpbXBvcnRhbnQ7dG9wOjI0JSFpbXBvcnRhbnQ7Ym90dG9tOmF1dG8haW1wb3J0YW50O2xlZnQ6NTAlIWltcG9ydGFudDtyaWdodDphdXRvIWltcG9ydGFudDt3aWR0aDptYXgtY29udGVudCFpbXBvcnRhbnQ7bWF4LXdpZHRoOmNhbGMoMTAwdncgLSA2MHB4KSFpbXBvcnRhbnQ7bWluLWhlaWdodDowIWltcG9ydGFudDttYXJnaW46MCFpbXBvcnRhbnQ7dGV4dC1hbGlnbjpjZW50ZXIhaW1wb3J0YW50O3RyYW5zbGF0ZTotNTAlIC01MCUhaW1wb3J0YW50O3RyYW5zZm9ybTpub25lIWltcG9ydGFudDtwb2ludGVyLWV2ZW50czpub25lIWltcG9ydGFudDt6LWluZGV4OjI1IWltcG9ydGFudDtvdmVyZmxvdy13cmFwOmFueXdoZXJlfQpodG1sOnJvb3Q6cm9vdDpyb290IDppcygjcm9vdCwjZ2FtZSwjc3RhZ2UpOmlzKCNyb290LCNnYW1lLCNzdGFnZSkgcC5rb2ktZ3VpZGV7Ym94LXNpemluZzpib3JkZXItYm94IWltcG9ydGFudDtiYWNrZ3JvdW5kOiNmZmYhaW1wb3J0YW50O2NvbG9yOiMyOTNjMzQhaW1wb3J0YW50O3BhZGRpbmc6NnB4IDE0cHghaW1wb3J0YW50O2JvcmRlcjowIWltcG9ydGFudDtib3JkZXItcmFkaXVzOjk5OXB4IWltcG9ydGFudDtib3gtc2hhZG93OjAgMnB4IDEwcHggcmdiYSgwLDAsMCwuMDgpIWltcG9ydGFudDt0ZXh0LXNoYWRvdzpub25lIWltcG9ydGFudH0KCjwvc3R5bGU+CjxzdHlsZSBkYXRhLWd1aWRlLWJyZWF0aGluZz0iMjAyNjEwMjEiPgovKiBFeGlzdGluZyBndWlkZSB0ZXh0IG9ubHk7IHBvc2l0aW9uLCBvcGFjaXR5IGxpZmVjeWNsZSBhbmQgaGl0IHJlZ2lvbnMgcmVtYWluIGdhbWUtb3duZWQuICovCkBrZXlmcmFtZXMgYmF0Y2gtZ3VpZGUtYnJlYXRoZXswJSwxMDAle2ZpbHRlcjpvcGFjaXR5KDEpfTUwJXtmaWx0ZXI6b3BhY2l0eSguNjUpfX0KaHRtbDpyb290OnJvb3QgOmlzKHAua29pLWd1aWRlKXthbmltYXRpb246YmF0Y2gtZ3VpZGUtYnJlYXRoZSAyLjRzIGVhc2UtaW4tb3V0IGluZmluaXRlIWltcG9ydGFudH0KaHRtbFtkYXRhLWd1aWRlLWJyZWF0aGluZy1wYXVzZWRdOnJvb3Q6cm9vdCA6aXMocC5rb2ktZ3VpZGUpe2FuaW1hdGlvbi1wbGF5LXN0YXRlOnBhdXNlZCFpbXBvcnRhbnR9CkBtZWRpYShwcmVmZXJzLXJlZHVjZWQtbW90aW9uOnJlZHVjZSl7aHRtbDpyb290OnJvb3QgOmlzKHAua29pLWd1aWRlKXthbmltYXRpb246bm9uZSFpbXBvcnRhbnR9fQoKPC9zdHlsZT4KCjwvaGVhZD4KPGJvZHk+CiAgPGRpdiBpZD0icm9vdCI+PC9kaXY+CiAgCjwhLS0gQ1RBX0JSRUFUSElOR19TVEFSVCAtLT4KCjwhLS0gQ1RBX0JSRUFUSElOR19FTkQgLS0+CjxzY3JpcHQgc3JjPSIuL2J1bmRsZS5qcyI+PC9zY3JpcHQ+CjwvYm9keT4KPC9odG1sPgo=
 
 ;/* Current runtime segment: inline-0 */
 
@@ -362,6 +362,42 @@ tone/build/esm/core/Tone.js:
    * @copyright 2014-2024 Yotam Mann
    *)
 */
+
+;
+
+;/* Current runtime segment: inline-2 */
+
+/* Decorative CTA breathing only. No positions, inputs, clocks or game state. */
+(()=>{
+ const selectors=["p.koi-guide"],copy=new Set([].map(s=>s.replace(/\s+/g,' ').trim().toLowerCase()));
+ const motion=window.matchMedia('(prefers-reduced-motion: reduce)'),running=new Map();let queued=false,visible=true;
+ const action=/^(?:(?:tap|drag|hold|swipe|draw|use|press|click|release|brush|pull|touch|pinch|rub|move|trace)\b|spray\s*[→-]|tocca\b|trascina\b|tieni\b|scorri\b|disegna\b|premi\b|点击|轻触|滑动|按住|拖动|长按|双击)/i;
+ function scan(){
+  queued=false;for(const [el,a]of running)if(!el.isConnected){a.cancel();running.delete(el);}
+  if(motion.matches){for(const a of running.values())a.cancel();running.clear();return;}
+  const targets=new Set();for(const selector of selectors){try{document.querySelectorAll(selector).forEach(el=>targets.add(el));}catch{}}
+  for(const el of document.querySelectorAll('p,span,div,label,text')){
+   if(el.children.length||el.closest('button,a,input,select,textarea,[role="button"]'))continue;
+   const text=(el.textContent||'').replace(/\s+/g,' ').trim();
+   if(text.length>=5&&text.length<=140&&(copy.has(text.toLowerCase())||(!selectors.length&&action.test(text))))targets.add(el);
+  }
+  for(const el of targets){
+   if(running.has(el)||typeof el.animate!=='function')continue;
+   if([...targets].some(child=>child!==el&&el.contains(child)))continue;
+   const style=getComputedStyle(el);if(/breath/i.test(style.animationName))continue;
+   const base=style.filter.replace(/opacity\([^)]*\)/g,'').replace(/^none$/,'').trim(),filter=v=>(base?base+' ':'')+'opacity('+v+')';
+   const a=el.animate([{filter:filter(1)},{filter:filter(.65)},{filter:filter(1)}],{duration:2400,iterations:Infinity,easing:'ease-in-out'});running.set(el,a);if(document.hidden||!visible)a.pause();
+  }
+ }
+ const schedule=()=>{if(!queued){queued=true;requestAnimationFrame(scan);}};
+ const pause=()=>{for(const a of running.values())document.hidden||!visible?a.pause():a.play();};
+ const observer=new MutationObserver(schedule);observer.observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+ const intersection=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{visible=entries.some(e=>e.isIntersecting);pause();}):null;
+ if(document.body)intersection?.observe(document.body);else document.addEventListener('DOMContentLoaded',()=>intersection?.observe(document.body),{once:true});
+ document.addEventListener('visibilitychange',pause);motion.addEventListener?.('change',schedule);schedule();
+ window.addEventListener('pagehide',()=>{observer.disconnect();intersection?.disconnect();for(const a of running.values())a.cancel();running.clear();},{once:true});
+})();
+
 
 ;
 
