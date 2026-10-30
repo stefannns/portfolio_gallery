@@ -344,7 +344,7 @@ window.PlayableGameDownloads = {
     "filename": "18-playable2_20260927020825_kxh9p4.zip",
     "bytes": 390924,
     "files": 11,
-    "sha256": "b5feb5f96bcf0a79e8f42fb32e9089a183ecfb5a1733659265189ea4a0a04425"
+    "sha256": "7f25101dac77bf3ba02e67ac59e0f5db7bd204629d5db60c07d9ce3e420f8925"
   },
   "playable2_20260927021136_x3i163": {
     "url": "/playablebatch1/downloads/19-playable2_20260927021136_x3i163.zip",
@@ -399,9 +399,9 @@ window.PlayableGameDownloads = {
   "playable2_20260928024159_iasubp": {
     "url": "/playablebatch1/downloads/23-playable2_20260928024159_iasubp.zip",
     "filename": "23-playable2_20260928024159_iasubp.zip",
-    "bytes": 397718,
+    "bytes": 397721,
     "files": 10,
-    "sha256": "bda7c108e1940f03f2fd86a2d63a50164e7b1c6ba680defa2e7bdea9df787369"
+    "sha256": "5feaa6faa9b67c5158e0bae05bf9e6a194636e9ee88534da126dfc8bea709a68"
   },
   "playable2_20260928024549_3bsc4d": {
     "url": "/playablebatch1/downloads/24-playable2_20260928024549_3bsc4d.zip",

@@ -7,9 +7,9 @@
   "entry": "dist/game.html",
   "source_kind": "rebuildable-current-runtime-source",
   "files": {
-    "App.jsx": "13f5940d6a129552799e681b03a2946bcd475186c02932e0ffa66e005be766dc",
-    "dist/bundle.js": "13f5940d6a129552799e681b03a2946bcd475186c02932e0ffa66e005be766dc",
-    "dist/game.html": "01818248ad25c205155e8a5182f579828b5e13aaa03b9a638077c5cf44c56439",
+    "App.jsx": "84e1eeb64dd6612c0866b45c82ee5ea526769aad75068d6299289bc945d8a4db",
+    "dist/bundle.js": "84e1eeb64dd6612c0866b45c82ee5ea526769aad75068d6299289bc945d8a4db",
+    "dist/game.html": "8d707ca6ce98e3cc6010bdf2a1c75ab976f2c65993ccd2243dad3b9496562d8c",
     "dist/game.config.json": "9b0c08fc9f458cb8fc266e324d1517f97fd80409dd2408e4bfb2c04e943a78db"
   },
   "assets": [
