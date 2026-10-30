@@ -7,10 +7,10 @@
   "entry": "dist/game.html",
   "source_kind": "editable-current-react-source",
   "files": {
-    "App.jsx": "3fc86295ab4651a12676dbcd2c80c46c897bff78ecb93a434014a09ab2dbbe28",
+    "App.jsx": "c3b3d6a1ac5260adf01df3c69840ebfef96ee773a55a564f39590f81d9f7fa5b",
     "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
-    "dist/game.html": "30d21cb992a98641e659800d87074a9c5226db0baaea4af80a0620214c93041a",
-    "dist/bundle.js": "d2d3b458a4403d0293ba0aa269f96b2c8ad1b99d2d110ecc400e6c12f218da47",
+    "dist/game.html": "e7bb7ec94b34e473f053a149a0e7f342c1dd4597a7ac7338fdd8809fcad565f6",
+    "dist/bundle.js": "8ee6d498a42869586314cfe23dad4ff6c2067de20a107e1f34c2296667caf4ff",
     "dist/game.config.json": "6ee59ec938adeb6f20530f5cdf36f721bfb005b0b03bbc32b6350201103b418a"
   },
   "assets": [
@@ -47,10 +47,22 @@
       "sha256": "b6fdacd8cdb11a6bfbcbe8117f16bb2f6298f0ffbf8e5e1e33b9cc3aeb6b41b1"
     },
     {
-      "path": "dist/assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "path": "dist/assets/fonts/special-elite/LICENSE.txt",
       "ids": [],
-      "bytes": 37464,
-      "sha256": "487694c955a01a6b9e0985b4839ebe6f5406770db551ea163799ee02deb7d3a4"
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "dist/assets/fonts/special-elite/SpecialElite-Regular.ttf",
+      "ids": [],
+      "bytes": 166180,
+      "sha256": "a776fcb4ceb8bdf03e2967688ebdad42680de5b91a7e62c17e718ae212d14bc4"
+    },
+    {
+      "path": "dist/assets/paper-grain.svg",
+      "ids": [],
+      "bytes": 1135,
+      "sha256": "6eec112894de0674588db67b572fd9f3246efe1445e6e974d1d198177166e7d8"
     },
     {
       "path": "dist/assets/sfx_contact.mp3",

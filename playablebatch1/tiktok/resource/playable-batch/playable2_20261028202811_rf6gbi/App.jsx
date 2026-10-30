@@ -35,7 +35,7 @@ function BatchPolish() {
   return <>
     <style>{POLISH_CSS}</style>
     {!active && [80,81,84].includes(GAME_NUMBER) && <div className={'preview-example example-' + GAME_NUMBER} aria-hidden="true">
-      {GAME_NUMBER === 80 && <svg viewBox="0 0 320 220"><path className="example-blob" d="M78 61C112 16 184 23 192 66C206 88 248 75 249 113C251 162 200 176 165 166C117 195 69 166 80 124C40 101 47 78 78 61Z" fill={demoPalette.fill} stroke={demoPalette.stroke} strokeWidth="2"/><PreviewSquishyEyes/></svg>}
+      {GAME_NUMBER === 80 && <svg viewBox="0 0 320 220"><defs><pattern id="paper80-preview" width="220" height="220" patternUnits="userSpaceOnUse"><image href="./assets/paper-grain.svg" width="220" height="220"/></pattern></defs><g className="example-blob"><path d="M78 61C112 16 184 23 192 66C206 88 248 75 249 113C251 162 200 176 165 166C117 195 69 166 80 124C40 101 47 78 78 61Z" fill={demoPalette.fill} stroke={demoPalette.stroke} strokeWidth="1.8"/><path d="M78 61C112 16 184 23 192 66C206 88 248 75 249 113C251 162 200 176 165 166C117 195 69 166 80 124C40 101 47 78 78 61Z" fill="url(#paper80-preview)" style={{mixBlendMode:'multiply',opacity:.74}}/><PreviewSquishyEyes/></g></svg>}
       {GAME_NUMBER === 81 && <svg viewBox="0 0 320 220"><path className="example-noodle" d="M65 145C44 109 84 61 115 88S139 171 187 151S250 80 263 126" fill="none" stroke="#e4d3ed" strokeWidth="29" strokeLinecap="round"/><path className="example-noodle" d="M65 145C44 109 84 61 115 88S139 171 187 151S250 80 263 126" fill="none" stroke="#3e3b42" strokeWidth="13" strokeLinecap="round"/><circle cx="129" cy="103" r="6" fill="white"/><circle cx="144" cy="111" r="6" fill="white"/><circle cx="130" cy="104" r="2.4"/><circle cx="145" cy="112" r="2.4"/><path d="M115 151q-5 17-15 11M186 160q5 18 15 9" fill="none" stroke="#3e3b42" strokeWidth="3" strokeLinecap="round"/></svg>}
       {GAME_NUMBER === 84 && <div className="example-poem">a little line becomes a thought<br/>the words wander across the paper<br/><em>softly</em> a small world opens<br/>every mark is a moment<br/>and every moment can begin again</div>}
     </div>}
@@ -48,6 +48,7 @@ button:focus-visible { outline: 3px solid #3c8ddd; outline-offset: 3px; }
 @keyframes batchBreathe { 0%,100% { opacity:.72; } 50% { opacity:1; } }
 .preview-example { position:fixed; z-index:2; pointer-events:none; width:min(80%,340px); left:50%; top:35%; transform:translateX(-50%); }
 .preview-example svg { width:100%; height:auto; overflow:visible; }
+
 .example-blob { transform-origin:50% 60%; animation:exampleSquish 3.8s ease-in-out infinite; }
 .example-noodle { transform-origin:50% 70%; animation:exampleWiggle 3.6s ease-in-out infinite; }
 .example-poem { padding:20px; color:#44444c; font:15px/1.8 ui-monospace,monospace; clip-path:ellipse(49% 47% at 50% 50%); animation:exampleInk 5s ease-in-out infinite; }
@@ -59,7 +60,7 @@ button:focus-visible { outline: 3px solid #3c8ddd; outline-offset: 3px; }
 `;
 
 const GAME_NUMBER=80;
-const POLISH_CSS=BASE_CSS+".hint{top:24%;left:30px;right:30px;transform:translateY(-50%);font-size:18px;line-height:1.3;text-align:center;white-space:normal;color:#674c54;animation:batchBreathe 2.6s ease-in-out infinite}.controls{left:50%;right:auto;bottom:50px;transform:translateX(-50%);gap:12px}.tool-button{width:48px;height:48px;border:1px solid #e6d9d6;box-shadow:0 4px 14px #7e666414}[data-feed-preview=true] .controls{visibility:hidden}";
+const POLISH_CSS=BASE_CSS+".hint{top:24%;left:30px;right:30px;transform:translateY(-50%);font-size:18px;line-height:1.3;text-align:center;white-space:normal;color:#242322;-webkit-text-stroke:.15px currentColor;animation:batchBreathe 2.6s ease-in-out infinite}.controls{left:50%;right:auto;bottom:50px;transform:translateX(-50%);gap:12px}.tool-button{width:48px;height:48px;border:1.6px solid #242322;box-shadow:2px 3px 0 #242322}[data-feed-preview=true] .controls{visibility:hidden}";
 
 const DEFAULT_CFG = {
   DRAW_HINT: 'Draw a closed shape',
@@ -72,10 +73,10 @@ const DEFAULT_CFG = {
 };
 
 const PALETTES = [
-  { fill: '#F7AFC5', hi: '#FFDCE6', stroke: '#A95274', eye: '#49324B' },
-  { fill: '#A9D9D0', hi: '#E0F6ED', stroke: '#4A8D85', eye: '#303F4A' },
-  { fill: '#FFD28D', hi: '#FFF0C8', stroke: '#B87644', eye: '#49383A' },
-  { fill: '#B9B3F2', hi: '#E9E7FF', stroke: '#6D65AF', eye: '#3C395D' },
+  { fill: '#d8eb61', hi: '#d8eb61', stroke: '#242322', eye: '#242322' },
+  { fill: '#59c6b1', hi: '#59c6b1', stroke: '#242322', eye: '#242322' },
+  { fill: '#ee94ac', hi: '#ee94ac', stroke: '#242322', eye: '#242322' },
+  { fill: '#7e9ee6', hi: '#7e9ee6', stroke: '#242322', eye: '#242322' },
 ];
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -560,6 +561,9 @@ function App() {
 
     const eyeFrames=EYE_FILES.map(createEyeFrame);
     const ctx = canvas.getContext('2d');
+    const paperImage = new Image(); let paperPattern = null;
+    paperImage.onload = () => { paperPattern = ctx.createPattern(paperImage, 'repeat'); };
+    paperImage.src = './assets/paper-grain.svg';
     const drawShape = (shape, context,time,elapsed) => {
       const ring = shape.ring;
       if (!ring.length) return;
@@ -571,7 +575,7 @@ function App() {
       context.save();
       context.fillStyle = palette.fill;
       context.strokeStyle = palette.stroke;
-      context.lineWidth = 2.3;
+      context.lineWidth = 1.8;
       context.lineJoin = 'round';
       const first = points[0];
       const last = points[points.length - 1];
@@ -610,15 +614,15 @@ function App() {
       engine.gravity.x = clamp(gyro.roll * 0.5, -0.7, 0.7);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = '#FFF6E8';
+      ctx.fillStyle = '#f39a61';
       ctx.fillRect(0, 0, width, height);
-      ctx.fillStyle = 'rgba(212, 166, 128, 0.12)';
-      for (let x = 24; x < width; x += 52) {
-        for (let y = 86; y < height; y += 64) {
-          ctx.beginPath(); ctx.arc(x + ((y / 64) % 2) * 11, y, 1.4, 0, Math.PI * 2); ctx.fill();
-        }
-      }
+      // Faint printed guide dots belong to the paper, beneath every shape.
+      ctx.save(); ctx.fillStyle='#242322'; ctx.globalAlpha=.07;
+      ctx.beginPath();
+      for (let x=16; x<width; x+=32) for (let y=16; y<height; y+=32) { ctx.moveTo(x+.75,y); ctx.arc(x,y,.75,0,Math.PI*2); }
+      ctx.fill(); ctx.restore();
       shapesRef.current.forEach((shape) => drawShape(shape, ctx,time,elapsed));
+      if (paperPattern) { ctx.save(); ctx.globalCompositeOperation='multiply'; ctx.globalAlpha=.74; ctx.fillStyle=paperPattern; ctx.fillRect(0,0,width,height); ctx.restore(); }
       canvas.dataset.shapeColors=shapesRef.current.map(s=>PALETTES[s.color].fill).join(",");canvas.dataset.pupilGlances=JSON.stringify(shapesRef.current.map(s=>({style:s.eyeStyle,x:+s.gaze.x.toFixed(3),y:+s.gaze.y.toFixed(3)})));canvas.dataset.eyeFrameReady=String(eyeFrames.filter(frame=>frame.mask).length);
       canvas.dataset.contactSounds=String(audioRef.current?.stats.contactPlays||0);
       const draft = drawingRef.current;
@@ -694,31 +698,31 @@ function App() {
       </div>
       <style>{`
 @font-face {
-  font-family: 'DynaPuff';
-  src: url('./assets/fonts/dynapuff/DynaPuff-SemiBold.woff2') format('woff2');
+  font-family: 'Special Elite';
+  src: url('./assets/fonts/special-elite/SpecialElite-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 :root {
-  --font-display: "DynaPuff", "PingFang SC", system-ui, sans-serif;
-  --font-body:    "DynaPuff", "PingFang SC", system-ui, sans-serif;
+  --font-display: "Special Elite", Georgia, serif;
+  --font-body:    "Special Elite", Georgia, serif;
   --font-mono:   ui-monospace, Menlo, monospace;
 }
 
 * { box-sizing: border-box; }
 html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
-body { background: #FFF6E8; -webkit-tap-highlight-color: transparent; }
+body { background: #f39a61; -webkit-tap-highlight-color: transparent; }
 button { font: inherit; }
-.doodle-app { position: relative; width: 100%; height: 100%; min-height: 0; overflow: clip; background: #FFF6E8; }
+.doodle-app { position: relative; width: 100%; height: 100%; min-height: 0; overflow: clip; background: #f39a61; }
 .doodle-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
-.hint { position: absolute; top: max(26px, env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); color: #785B57; font-family: var(--font-body); font-size: 17px; line-height: 1.2; white-space: nowrap; letter-spacing: .01em; pointer-events: none; }
+.hint { position: absolute; top: max(26px, env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); color: #242322; font-family: var(--font-body); font-size: 17px; line-height: 1.2; white-space: nowrap; letter-spacing: .01em; pointer-events: none; }
 .controls { position: absolute; right: 16px; bottom: max(18px, env(safe-area-inset-bottom, 0px)); display: flex; gap: 10px; align-items: center; }
-.tool-button { position: relative; display: grid; place-items: center; width: 46px; height: 46px; padding: 0; border: 0; border-radius: 50%; color: #705757; background: rgba(255,255,255,.94); box-shadow: 0 5px 13px rgba(134, 94, 83, .17), 0 1px 2px rgba(134,94,83,.13); cursor: pointer; transition: transform .16s ease, box-shadow .16s ease; }
-.tool-button:active { transform: translateY(2px) scale(.96); box-shadow: 0 2px 6px rgba(134,94,83,.14); }
+.tool-button { position: relative; display: grid; place-items: center; width: 46px; height: 46px; padding: 0; border: 1.6px solid #242322; border-radius: 50%; color: #242322; background: #fff8df url('./assets/paper-grain.svg') repeat; box-shadow: 2px 3px 0 #242322; cursor: pointer; transition: transform .16s ease, box-shadow .16s ease; }
+.tool-button:active { transform: translateY(2px) scale(.96); box-shadow: 1px 1px 0 #242322; }
 .tool-button svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.palette-swatch { position: absolute; right: 9px; top: 9px; width: 7px; height: 7px; border-radius: 50%; border: 1px solid rgba(91,64,67,.3); }
+.palette-swatch { position: absolute; right: 9px; top: 9px; width: 7px; height: 7px; border-radius: 50%; border: 1px solid #242322; }
 @media (max-width: 360px) { .controls { right: 12px; gap: 7px; } .tool-button { width: 42px; height: 42px; } }
       `}</style>
     </div>
@@ -726,3 +730,71 @@ button { font: inherit; }
 }
 
 createRoot(document.getElementById('root')).render(<><App/><BatchPolish/></>);
+
+/* Current FYP palette adapter; no host UI is drawn into the game. */
+(()=>{if(parent===window)return;
+  // Feed palette: post a 32×12 RGBA band from the top and the bottom of the first screen. The feed
+  // keeps the first valid post, so sample fast until one lands, then settle to once a second.
+  const BAND = { w: 32, h: 12 };
+  const post = (top, bottom) => parent.postMessage({ type: 'playable-palette', top, bottom }, '*');
+  /** The game's main canvas: the largest one, if it covers a good part of the screen. */
+  function mainCanvas() {
+    const canvases = [...document.querySelectorAll('canvas')].filter(c => c.width && c.height);
+    const source = canvases.sort((a, b) => b.clientWidth * b.clientHeight - a.clientWidth * a.clientHeight)[0];
+    return source && source.clientWidth * source.clientHeight >= innerWidth * innerHeight * 0.3 ? source : null;
+  }
+  function sampleCanvas(source) {
+    try {
+      const canvas = document.createElement('canvas'); canvas.width = BAND.w; canvas.height = 48;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      // Transparent canvas games paint their scene over a CSS background. Include that visible surface
+      // rather than rejecting empty bands and leaving the generic blue/green fallback over dark games.
+      for (let node = source; node && node.nodeType === 1; node = node.parentElement) {
+        const color = getComputedStyle(node).backgroundColor;
+        const channels = color.match(/[\d.]+/g);
+        if (channels && (channels[3] === undefined || Number(channels[3]) > .5)) {
+          ctx.fillStyle = color; ctx.fillRect(0,0,BAND.w,48); break;
+        }
+      }
+      ctx.drawImage(source, 0, 0, BAND.w, 48);
+      const top = Array.from(ctx.getImageData(0, 0, BAND.w, BAND.h).data);
+      const bottom = Array.from(ctx.getImageData(0, 48 - BAND.h, BAND.w, BAND.h).data);
+      return top.some((v, i) => i % 4 === 3 && v > 0) ? [top, bottom] : null;
+    } catch { return null; }
+  }
+  /** DOM games: the painted background under a grid of points (images can't be read cross-origin). */
+  function sampleDom() {
+    const rgba = (el) => {
+      for (let node = el; node && node.nodeType === 1; node = node.parentElement) {
+        const match = getComputedStyle(node).backgroundColor.match(/[\d.]+/g);
+        if (match && (match[3] === undefined || Number(match[3]) > 0.5)) return [+match[0], +match[1], +match[2], 255];
+      }
+      return null;
+    };
+    const band = (y0) => {
+      const out = [];
+      for (let row = 0; row < BAND.h; row++) for (let col = 0; col < BAND.w; col++) {
+        const x = (col + 0.5) / BAND.w * innerWidth, y = y0 + (row + 0.5) / BAND.h * innerHeight * 0.25;
+        out.push(...(rgba(document.elementFromPoint(x, y)) ?? rgba(document.body) ?? rgba(document.documentElement) ?? [0, 0, 0, 0]));
+      }
+      return out;
+    };
+    const top = band(0), bottom = band(innerHeight * 0.75);
+    return top.some((v, i) => i % 4 === 3 && v > 0) ? [top, bottom] : null;
+  }
+  let sampledOnce = false;
+  function sample() {
+    // Converted photo templates explicitly mark their asynchronous preload. Never lock
+    // the feed palette to an empty canvas or loading veil instead of the actual scene.
+    if (document.documentElement.dataset.playableLoading === 'true') return;
+    const land = (found) => { if (found) { sampledOnce = true; post(...found); } return !!found; };
+    const source = mainCanvas();
+    if (!source) { if (document.body?.childElementCount) land(sampleDom()); return; }
+    // WebGL may clear after compositing; if the direct read is empty, read inside the next frame.
+    if (!land(sampleCanvas(source))) requestAnimationFrame(() => land(sampleCanvas(source)));
+  }
+  const schedule = () => { sample(); setTimeout(schedule, sampledOnce ? 1000 : 250); };
+  // Let the app paint its first screen before reading it.
+  if (document.readyState === 'complete') setTimeout(schedule, 300);
+  else window.addEventListener('load', () => setTimeout(schedule, 300), { once: true });
+})();

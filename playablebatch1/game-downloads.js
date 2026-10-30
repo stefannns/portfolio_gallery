@@ -1392,9 +1392,9 @@ window.PlayableGameDownloads = {
   "playable2_20261028202811_rf6gbi": {
     "url": "/playablebatch1/downloads/80-playable2_20261028202811_rf6gbi.zip",
     "filename": "80-playable2_20261028202811_rf6gbi.zip",
-    "bytes": 249443,
-    "files": 14,
-    "sha256": "c46837fdcf50cde93873bcac962375a84843444a48948836f4a44a4be7f27e4f"
+    "bytes": 311026,
+    "files": 16,
+    "sha256": "927a893da3a60833ad0e9adbb943e6ab570a03ac8448f685eee30a456350cb27"
   },
   "playable2_20261028202811_dsl58j": {
     "url": "/playablebatch1/downloads/81-playable2_20261028202811_dsl58j.zip",
