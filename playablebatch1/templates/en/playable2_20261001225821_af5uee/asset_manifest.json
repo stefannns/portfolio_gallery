@@ -28,18 +28,18 @@
       "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
     },
     {
-      "path": "dist/assets/img_coconut_uncarved.png",
+      "path": "dist/assets/img_coconut_uncarved.webp",
       "ids": [
         "IMG_COCONUT"
       ],
-      "bytes": 648026,
-      "sha256": "52739c2716831dbfd78558befd49e308f947ac6f13bbabceb0e3b2f30e0dbcb0"
+      "bytes": 434748,
+      "sha256": "e931c64b676849049ee7139fa6c833e1f26010c5bf98585dbe2f6884ec8e343c"
     }
   ],
   "files": {
-    "App.jsx": "c05e78c42af1ae79b35361002313ea05032ce72c0dae36a9cc8f2240094f49f0",
-    "dist/bundle.js": "c05e78c42af1ae79b35361002313ea05032ce72c0dae36a9cc8f2240094f49f0",
-    "dist/game.html": "bbaa3ed323d63bc2028dc7400688f6523e62de9a5b3568fab02c472fe7fc5300",
-    "dist/game.config.json": "e94a543e5910de81214f1fb2009a992588fa914962b796055f1113f47bc3e3de"
+    "App.jsx": "83055d7697eb6992b5bbc1d7dc7897bac87d25cfaf1cae4d89133cdc8008f27d",
+    "dist/bundle.js": "83055d7697eb6992b5bbc1d7dc7897bac87d25cfaf1cae4d89133cdc8008f27d",
+    "dist/game.html": "2cc6198ab09ec8899e5acef121fb7f7d22c244624124a355c4cfcd6e19b88036",
+    "dist/game.config.json": "9e55985e529123e69e5548eb6fed23d62762a53b3e26085029cd749fc5fa3dbe"
   }
 }

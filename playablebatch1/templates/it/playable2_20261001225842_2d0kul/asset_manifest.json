@@ -8,12 +8,12 @@
   "source_kind": "consolidated-current-runtime",
   "assets": [
     {
-      "path": "dist/assets/bg_main.png",
+      "path": "dist/assets/bg_main.webp",
       "ids": [
         "BG_MAIN"
       ],
-      "bytes": 4513773,
-      "sha256": "fe577b232e75de9ea9646b537c71ce84a5ef18ff3caa555839c7b4a29dffaddc"
+      "bytes": 3727360,
+      "sha256": "0cc3ec5d5bf32593575939557e1afa46e6c586ed43f61a639638c6916b1821c5"
     },
     {
       "path": "dist/assets/fonts/audiowide/Audiowide-Regular.woff2",
@@ -23,9 +23,9 @@
     }
   ],
   "files": {
-    "App.jsx": "09d050a6fc12cc00505f0018e46fce5870b04ca0ccf42140f61b39fb1379f563",
-    "dist/bundle.js": "09d050a6fc12cc00505f0018e46fce5870b04ca0ccf42140f61b39fb1379f563",
-    "dist/game.html": "067df7fdd5c1035b2bb2956823661fb6c9c4e273cdbeaafd326e3407ace028ca",
-    "dist/game.config.json": "d2bb4c6ace2b9fc2214819fcd9dcd77bafb0523a89a2352db5cc6f87c495f75f"
+    "App.jsx": "72fa586223a20be7a52a75b9551dbe1af14d837eecf9e2a35f5c7d7ebaf284de",
+    "dist/bundle.js": "72fa586223a20be7a52a75b9551dbe1af14d837eecf9e2a35f5c7d7ebaf284de",
+    "dist/game.html": "53f2dfcff1ac8f291034ac042b7b8c47148e6bca4c2167f0c218b675758757f7",
+    "dist/game.config.json": "88f2d4022bd5065e9d35e9fce67ed7e1d0d7b20c9a7364d1a7938d49b71843d1"
   }
 }

@@ -1,0 +1,52 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20261001225611_9its9h",
+  "number": 44,
+  "name": "Draw Your Blade",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "rebuildable-current-runtime-source",
+  "files": {
+    "App.jsx": "d9d766f5855797d39e4c07ea7989fa9129e75422dc50c4af13cda30cc83e8aa2",
+    "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
+    "dist/game.html": "9beeaa8e8336343c778ffb178bb13299d79c6ac13f05c112147e261bdd72493d",
+    "dist/bundle.js": "9e3b70205445977c62af408723e3f420813860ba744a8eeddcfaba68f614c0ee",
+    "dist/game.config.json": "2af5c33317258c7919a5d9b11f8705bee324dd60ec4f16e33a3c26d7bfa9965b"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/bg_blueprint.webp",
+      "ids": [],
+      "bytes": 261524,
+      "sha256": "276f73b571c5d7cfb2084d39034634d61bd3e95a11034537ab4029242befeb8b"
+    },
+    {
+      "path": "dist/assets/bg_metal.svg",
+      "ids": [
+        "BG_MAIN"
+      ],
+      "bytes": 142,
+      "sha256": "f48e51fa2e5edb75bdce1909cbde4e4751c05484e1ee0206a1f82720f87355f6"
+    },
+    {
+      "path": "dist/assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "ids": [],
+      "bytes": 18880,
+      "sha256": "4650e661683335ff42987353137525ee47444acff82525f647beb9d82b534216"
+    },
+    {
+      "path": "dist/assets/obj_enemy.svg",
+      "ids": [
+        "TARGET_IMG"
+      ],
+      "bytes": 113,
+      "sha256": "ed968dda0671ca6331725fea519dc4e4636b0b28c6165f51d030d28fce0ca6be"
+    },
+    {
+      "path": "dist/assets/obj_target.webp",
+      "ids": [],
+      "bytes": 255176,
+      "sha256": "b25b041c7bef17abea7205098a119dd1aba6931d18212e4b82f19d9af5f8c842"
+    }
+  ]
+}

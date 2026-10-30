@@ -35,13 +35,13 @@
     {
       "id": "SOURCE_ORIGINAL",
       "label": "Original Input Image",
-      "path": "./assets/source_original.png",
+      "path": "./assets/source_original.webp",
       "replaceable": true
     },
     {
       "id": "BG_CARTOON",
       "label": "Generated Color-by-Number Artwork",
-      "path": "./assets/bg_cartoon_canonical_v5.png",
+      "path": "./assets/bg_cartoon_canonical_v5.webp",
       "replaceable": false
     }
   ],

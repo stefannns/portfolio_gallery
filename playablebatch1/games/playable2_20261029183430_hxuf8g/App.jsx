@@ -397,16 +397,16 @@ function App() {
       const paddleX = game.paddleX || width / 2;
       context.save();
       context.shadowColor = 'rgba(38, 35, 31, 0.15)';
-      context.shadowBlur = 12;
-      context.shadowOffsetY = 5;
-      context.fillStyle = '#292724';
+      context.shadowBlur = 0;
+      context.shadowOffsetY = 0;
+      context.fillStyle = '#252627';
       roundedRect(context, paddleX - cfg.PADDLE_WIDTH / 2, paddleY, cfg.PADDLE_WIDTH, cfg.PADDLE_HEIGHT, cfg.PADDLE_HEIGHT / 2);
       context.fill();
       context.restore();
 
       if (game.pulse > 0) {
         context.save();
-        context.strokeStyle = `rgba(185, 121, 78, ${game.pulse * 0.48})`;
+        context.strokeStyle = `rgba(123, 142, 127, ${game.pulse * 0.48})`;
         context.lineWidth = 2;
         context.beginPath();
         context.arc(paddleX, paddleY + cfg.PADDLE_HEIGHT / 2, 18 + (1 - game.pulse) * 18, 0, Math.PI * 2);
@@ -427,9 +427,9 @@ function App() {
       });
       context.save();
       context.shadowColor = 'rgba(31, 28, 25, 0.2)';
-      context.shadowBlur = 10;
+      context.shadowBlur = 5;
       context.shadowOffsetY = 4;
-      context.fillStyle = '#242220';
+      context.fillStyle = '#252627';
       context.beginPath();
       context.arc(ballX, ballY, radius, 0, Math.PI * 2);
       context.fill();
@@ -472,11 +472,11 @@ function App() {
 
 * { box-sizing: border-box; }
 html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
-body { background: #f4ede3; -webkit-tap-highlight-color: transparent; }
+body { background: #f5f4ef; -webkit-tap-highlight-color: transparent; }
 button { font: inherit; }
-.app { position: relative; width: 100%; height: 100%; overflow: clip; background: #f4ede3; color: #292724; user-select: none; touch-action: none; }
+.app { position: relative; width: 100%; height: 100%; overflow: clip; background: #f5f4ef; color: #252627; user-select: none; touch-action: none; }
 .gameCanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
-.hud { position: absolute; z-index: 2; top: max(18px, env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 14px; color: #292724; font-family: var(--font-display); font-size: 18px; font-weight: 700; letter-spacing: 0.03em; pointer-events: none; }
+.hud { position: absolute; z-index: 2; top: max(18px, env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 14px; color: #252627; font-family: var(--font-display); font-size: 18px; font-weight: 700; letter-spacing: 0.03em; pointer-events: none; }
 .hudDot { width: 4px; height: 4px; border-radius: 50%; background: #b9794e; }
 .hint { position: absolute; z-index: 2; top: 30%; left: 50%; transform: translate(-50%, -50%); width: max-content; max-width: calc(100% - 48px); color: rgba(41, 39, 36, 0.72); font-family: var(--font-body); font-size: 17px; font-weight: 700; text-align: center; letter-spacing: -0.02em; animation: breathe 2.4s ease-in-out infinite; pointer-events: none; }
 .resultOverlay { position: absolute; inset: 0; z-index: 4; display: flex; align-items: center; justify-content: center; padding: 28px; background: rgba(244, 237, 227, 0.94); }
@@ -485,10 +485,10 @@ button { font: inherit; }
 .resultStats { display: flex; justify-content: center; gap: 34px; margin-bottom: 34px; }
 .stat { display: grid; gap: 5px; min-width: 86px; }
 .statLabel { color: rgba(41, 39, 36, 0.54); font-family: var(--font-body); font-size: 12px; font-weight: 400; }
-.statValue { color: #292724; font-family: var(--font-display); font-size: 34px; line-height: 1; font-weight: 700; }
+.statValue { color: #252627; font-family: var(--font-display); font-size: 34px; line-height: 1; font-weight: 700; }
 .resultActions { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
-.resultButton { min-height: 52px; padding: 0 25px; border: 0; border-radius: 999px; color: #f8f1e8; background: #292724; box-shadow: 0 9px 18px rgba(41, 39, 36, 0.14); font-family: var(--font-display); font-size: 16px; font-weight: 700; cursor: pointer; touch-action: manipulation; }
-.resultButton.secondary { color: #292724; background: transparent; border: 1px solid rgba(41, 39, 36, 0.25); box-shadow: none; }
+.resultButton { min-height: 52px; padding: 0 25px; border: 0; border-radius: 999px; color: #f8f1e8; background: #252627; box-shadow: 0 9px 18px rgba(41, 39, 36, 0.14); font-family: var(--font-display); font-size: 16px; font-weight: 700; cursor: pointer; touch-action: manipulation; }
+.resultButton.secondary { color: #252627; background: transparent; border: 1px solid rgba(41, 39, 36, 0.25); box-shadow: none; }
 .resultButton:disabled { opacity: 0.55; cursor: default; }
 @keyframes breathe { 0%, 100% { opacity: 0.56; transform: translate(-50%, -50%) translateY(0); } 50% { opacity: 0.92; transform: translate(-50%, -50%) translateY(-4px); } }
 

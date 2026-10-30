@@ -8,12 +8,12 @@
   "source_kind": "consolidated-current-runtime",
   "assets": [
     {
-      "path": "dist/assets/bg_cartoon_canonical_v5.png",
+      "path": "dist/assets/bg_cartoon_canonical_v5.webp",
       "ids": [
         "BG_CARTOON"
       ],
-      "bytes": 1083237,
-      "sha256": "a6f2d188bff577bdf7f86a7a2837c1ade35fb9f24ba7a3b82fb14a176fcb480c"
+      "bytes": 779208,
+      "sha256": "2b8e6c3cf78e8aebc3fd0236eced2676322f75e592aee433ecb5bbe20e99eab3"
     },
     {
       "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
@@ -34,18 +34,18 @@
       "sha256": "efbb0c9e864cef973982d9a17567e6be5c3d1759695574586f3f18c7ecca064b"
     },
     {
-      "path": "dist/assets/source_original.png",
+      "path": "dist/assets/source_original.webp",
       "ids": [
         "SOURCE_ORIGINAL"
       ],
-      "bytes": 1972231,
-      "sha256": "6ba91b83090a7b09de6850a7bf7c766a57ac6af872cb1cd8045bf7188be7b9dc"
+      "bytes": 1274520,
+      "sha256": "0d0769916a2fae483c5d679fb788a1f61f936b26fd17f813927facd8be36f817"
     }
   ],
   "files": {
-    "App.jsx": "1ce68a717031a0e13c0e64ed849bc13384b66c2cd4b78ee2e3aab45f7b79bae8",
-    "dist/bundle.js": "1ce68a717031a0e13c0e64ed849bc13384b66c2cd4b78ee2e3aab45f7b79bae8",
-    "dist/game.html": "a6a6912e7c91482a98bd23483a4fd245a96d45ebc42582c603464d7ac958fd16",
-    "dist/game.config.json": "c264ae3f0c3af20cb2e36ad9df7554fd2bda6e53b737f03c7662549c91e2621d"
+    "App.jsx": "16b351d9e5f2b15d7398e1919384e985316830f77e2046fba37c374412abf6a0",
+    "dist/bundle.js": "16b351d9e5f2b15d7398e1919384e985316830f77e2046fba37c374412abf6a0",
+    "dist/game.html": "4465986ca2f3a497d2a74b3c9bbc874d2664dc6aedb6221ec9c59d29164da333",
+    "dist/game.config.json": "26bd534d16407c9b4be1f202418a2f6d3af30aaa7712cd96f0ebdeb2557e47ed"
   }
 }

@@ -1,0 +1,18 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Army Commander</title><style>
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #f5f4ef; overscroll-behavior: none; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    #root { isolation: isolate; }
+    canvas { touch-action: none; }
+    button, input, select, textarea { touch-action: manipulation; }
+  
+
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
+
+/* User override 2026-10-21: favor visual center, not a fixed upper band. */
+html:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) p.feed-first-action{position:fixed!important;top:42%!important;bottom:auto!important;left:50%!important;right:auto!important;width:max-content!important;max-width:calc(100vw - 60px)!important;min-height:0!important;margin:0!important;text-align:center!important;translate:-50% -50%!important;transform:none!important;pointer-events:none!important;z-index:25!important;overflow-wrap:anywhere}
+html:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) p.feed-first-action{color:#38474e!important;text-shadow:none!important}
+</style></head><body><div id="root"></div><script id="playable-inline-config" type="application/json">{"tweaks":[{"id":"ENEMY_SPAWN_INTERVAL","kind":"number","label":"Enemy Spawn Interval","value":1500,"default":1500,"min":500,"max":3000,"step":100},{"id":"MAX_ENEMIES","kind":"number","label":"Max Enemies","value":40,"default":40,"min":10,"max":100,"step":5},{"id":"PLAYER_SPEED","kind":"number","label":"Player Speed","value":0.15,"default":0.15,"min":0.05,"max":0.3,"step":0.01}],"texts":[{"id":"GAME_TITLE","label":"Game Title","value":"Army Commander","default":"Army Commander","max_length":30},{"id":"TXT_VICTORY","label":"Victory Text","value":"VICTORY","default":"VICTORY","max_length":20},{"id":"TXT_TRY_AGAIN","label":"Try Again Button","value":"Try Again","default":"Try Again","max_length":20},{"id":"TXT_POST","label":"Post Button","value":"Post My Play","default":"Post My Play","max_length":20},{"id":"TXT_ALL_CLEARED","label":"Victory Subtext","value":"You crushed the enemy!","default":"You crushed the enemy!","max_length":50}],"images":[{"id":"UI_DEFEAT_PANEL","label":"Defeat Panel","path":"./assets/ui_defeat_panel.png","replaceable":true}],"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1}}</script><script src="./bundle.js"></script></body></html>

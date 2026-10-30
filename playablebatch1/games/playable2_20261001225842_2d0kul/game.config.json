@@ -34,7 +34,7 @@
     {
       "id": "BG_MAIN",
       "label": "Main Background",
-      "path": "./assets/bg_main.png",
+      "path": "./assets/bg_main.webp",
       "replaceable": true
     }
   ],

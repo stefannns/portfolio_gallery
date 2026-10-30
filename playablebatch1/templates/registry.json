@@ -1044,11 +1044,11 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020825_ufhwuj/game.html",
-          "sha256": "710574c4f2c88c3976339a1337c26b1d04d27bc76ba2b92542c32c3b80299865"
+          "sha256": "8d0b1059f598f0b9e47925999f8e3984e3d8b4f01de3907ce26c75aa608f523c"
         },
         {
           "file": "games/playable2_20260927020825_ufhwuj/game.config.json",
-          "sha256": "944328f1a0995ee16129af4cc6f8fb760a019365fce4988cc76ac53d745d9b05"
+          "sha256": "838ad0173df765377406602832ed6814c9b56108d59fe6c2eb046f4fa89386fd"
         },
         {
           "file": "games/playable2_20260927020825_ufhwuj/fyp-meeting.css",
@@ -1083,8 +1083,8 @@
           "sha256": "e14e88d30222b15f7439b5b5e8b428b656172c59c3a092835bf8ccb8c86f71fe"
         },
         {
-          "file": "games/playable2_20260927020825_ufhwuj/assets/bg_main.png",
-          "sha256": "9fcedc2a0f61b283a9d5e81e80d3503ebd1bc7aad1b39ab430bce4ac4c150768"
+          "file": "games/playable2_20260927020825_ufhwuj/assets/bg_main.webp",
+          "sha256": "85cd1cbf9e14ec972167d98b2c24b6e3a6e276ca7bc703b7f45fe01ee458809d"
         },
         {
           "file": "games/playable2_20260927020825_ufhwuj/assets/fonts/audiowide/Audiowide-Regular.woff2",
@@ -1111,11 +1111,11 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020825_ufhwuj/game.it.html",
-          "sha256": "415ea7035a55a0df523ebbdd544688aa27eed12020482b5b5785317dcea286cc"
+          "sha256": "2f7204651545c097fcfa74fcadc5ca96fe94afc789745dec97ea3e311f6ad835"
         },
         {
           "file": "games/playable2_20260927020825_ufhwuj/game.config.it.json",
-          "sha256": "8cfcc92fb5a9e77c28298caa1603888141429da15befbea3acbe0d9b6e9b7eb7"
+          "sha256": "15aaf1bddf3ceb514e6230a9811e61dd798bf9638710aba75ed7d0ff2fe1a4a6"
         },
         {
           "file": "games/playable2_20260927020825_ufhwuj/fyp-meeting.it.css",
@@ -1154,8 +1154,8 @@
           "sha256": "d9e1cb7a8677e690f7a7c5a0b33fa554b8a6f0fd839deab5f2b196738e3e2c8e"
         },
         {
-          "file": "games/playable2_20260927020825_ufhwuj/assets/bg_main.png",
-          "sha256": "9fcedc2a0f61b283a9d5e81e80d3503ebd1bc7aad1b39ab430bce4ac4c150768"
+          "file": "games/playable2_20260927020825_ufhwuj/assets/bg_main.webp",
+          "sha256": "85cd1cbf9e14ec972167d98b2c24b6e3a6e276ca7bc703b7f45fe01ee458809d"
         },
         {
           "file": "games/playable2_20260927020825_ufhwuj/assets/fonts/audiowide/Audiowide-Regular.woff2",
@@ -2184,11 +2184,11 @@
       "inputs": [
         {
           "file": "games/playable2_20261001225821_af5uee/game.html",
-          "sha256": "492180c82779a4ed36965be27327a905748e189ba99798825ba81546dc93a11b"
+          "sha256": "c7e98a20cf18b825d974ce927b3b3607f99606d38151e9504d0ba666bf6398fa"
         },
         {
           "file": "games/playable2_20261001225821_af5uee/game.config.json",
-          "sha256": "e94a543e5910de81214f1fb2009a992588fa914962b796055f1113f47bc3e3de"
+          "sha256": "9e55985e529123e69e5548eb6fed23d62762a53b3e26085029cd749fc5fa3dbe"
         },
         {
           "file": "games/playable2_20261001225821_af5uee/fyp-meeting.css",
@@ -2235,8 +2235,8 @@
           "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
         },
         {
-          "file": "games/playable2_20261001225821_af5uee/assets/img_coconut_uncarved.png",
-          "sha256": "52739c2716831dbfd78558befd49e308f947ac6f13bbabceb0e3b2f30e0dbcb0"
+          "file": "games/playable2_20261001225821_af5uee/assets/img_coconut_uncarved.webp",
+          "sha256": "e931c64b676849049ee7139fa6c833e1f26010c5bf98585dbe2f6884ec8e343c"
         }
       ],
       "omittedReferences": []
@@ -2251,11 +2251,11 @@
       "inputs": [
         {
           "file": "games/playable2_20261001225821_af5uee/game.it.html",
-          "sha256": "53844e947faa522a61bf5f3f8e50b71ceffe64eecffba50fa47819aa8c29ea53"
+          "sha256": "bdeb9ac45ae3d052fc7096e1dc6c0f1c6967c6ff49d076a17d7276cdb5d1fe6b"
         },
         {
           "file": "games/playable2_20261001225821_af5uee/game.config.it.json",
-          "sha256": "3bd8d5529de8275dc17ec8e90124b83e59c4a7110f30b489e3031028dd021bb2"
+          "sha256": "6ea0a6d5358145b60494201986a74fafe9c6f04ef4552b2e97633c46f740cb9e"
         },
         {
           "file": "games/playable2_20261001225821_af5uee/fyp-meeting.it.css",
@@ -2306,8 +2306,8 @@
           "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
         },
         {
-          "file": "games/playable2_20261001225821_af5uee/assets/img_coconut_uncarved.png",
-          "sha256": "52739c2716831dbfd78558befd49e308f947ac6f13bbabceb0e3b2f30e0dbcb0"
+          "file": "games/playable2_20261001225821_af5uee/assets/img_coconut_uncarved.webp",
+          "sha256": "e931c64b676849049ee7139fa6c833e1f26010c5bf98585dbe2f6884ec8e343c"
         }
       ],
       "omittedReferences": []
@@ -2322,11 +2322,11 @@
       "inputs": [
         {
           "file": "games/playable2_20261001225842_2d0kul/game.html",
-          "sha256": "8190f3fbcd0e27cc4817ff8e247cda1b98f63b2a92bbdee8699096ec92d8015b"
+          "sha256": "431ef0365c92b24517e54f296f21e7ba7e8ea161ac0cb8c44e348ddb2000b4fe"
         },
         {
           "file": "games/playable2_20261001225842_2d0kul/game.config.json",
-          "sha256": "7f1e809af8d39b89a9b730f34e7d4b8c3d1fb939516e7cb82801fd50a2309f52"
+          "sha256": "7b2b4456b50c63a32457733273ba165c0952f697eca523d56e9c080c861c6534"
         },
         {
           "file": "games/playable2_20261001225842_2d0kul/guide-centering.css",
@@ -2357,8 +2357,8 @@
           "sha256": "c4a47bff3aaa6796f8269696b875cfe048085b3cc1457773f452d3298426b70c"
         },
         {
-          "file": "games/playable2_20261001225842_2d0kul/assets/bg_main.png",
-          "sha256": "fe577b232e75de9ea9646b537c71ce84a5ef18ff3caa555839c7b4a29dffaddc"
+          "file": "games/playable2_20261001225842_2d0kul/assets/bg_main.webp",
+          "sha256": "0cc3ec5d5bf32593575939557e1afa46e6c586ed43f61a639638c6916b1821c5"
         },
         {
           "file": "games/playable2_20261001225842_2d0kul/assets/fonts/audiowide/Audiowide-Regular.woff2",
@@ -2377,11 +2377,11 @@
       "inputs": [
         {
           "file": "games/playable2_20261001225842_2d0kul/game.it.html",
-          "sha256": "7288dc5b7a2c7e6d532d555a57951be42c3963427c662b6b43b7748bb057b611"
+          "sha256": "9cadfa7f0960f748f98691b7c67f758b14767de478a36529ea9dcf39bbbf7588"
         },
         {
           "file": "games/playable2_20261001225842_2d0kul/game.config.it.json",
-          "sha256": "d2bb4c6ace2b9fc2214819fcd9dcd77bafb0523a89a2352db5cc6f87c495f75f"
+          "sha256": "88f2d4022bd5065e9d35e9fce67ed7e1d0d7b20c9a7364d1a7938d49b71843d1"
         },
         {
           "file": "games/playable2_20261001225842_2d0kul/guide-centering.it.css",
@@ -2416,8 +2416,8 @@
           "sha256": "c4a47bff3aaa6796f8269696b875cfe048085b3cc1457773f452d3298426b70c"
         },
         {
-          "file": "games/playable2_20261001225842_2d0kul/assets/bg_main.png",
-          "sha256": "fe577b232e75de9ea9646b537c71ce84a5ef18ff3caa555839c7b4a29dffaddc"
+          "file": "games/playable2_20261001225842_2d0kul/assets/bg_main.webp",
+          "sha256": "0cc3ec5d5bf32593575939557e1afa46e6c586ed43f61a639638c6916b1821c5"
         },
         {
           "file": "games/playable2_20261001225842_2d0kul/assets/fonts/audiowide/Audiowide-Regular.woff2",
@@ -3276,15 +3276,15 @@
         },
         {
           "file": "games/01_petme_9gw00a_game/assets/pet_finish.webp",
-          "sha256": "ecf6854b1ab2e514fa17d8cbf454cc407c850c7eccd0dd595031ef4f2fce0c29"
+          "sha256": "f1273b6e8aad04cc5895838cdaaa2b33b7fcfc1c2e555d1d7382d8f976df9b68"
         },
         {
           "file": "games/01_petme_9gw00a_game/assets/pet_happy.webp",
-          "sha256": "50388f2f4f738334df0a628793fa8d5f4972e7bb56258ed618eadec268764a1b"
+          "sha256": "663ba5dff9d401faf6220dab06c1aeb8a7d5d93190d71cb4e531943eb322c962"
         },
         {
           "file": "games/01_petme_9gw00a_game/assets/pet_resist.webp",
-          "sha256": "d796977326b134d955088ac0b46a145ecfb077bda164b92703114571c2d4d526"
+          "sha256": "9fc05611880ae6a1ad8937514de1d34028e490f868ef429e125eecc5d24ed559"
         }
       ],
       "omittedReferences": []
@@ -3347,15 +3347,15 @@
         },
         {
           "file": "games/01_petme_9gw00a_game/assets/pet_finish.webp",
-          "sha256": "ecf6854b1ab2e514fa17d8cbf454cc407c850c7eccd0dd595031ef4f2fce0c29"
+          "sha256": "f1273b6e8aad04cc5895838cdaaa2b33b7fcfc1c2e555d1d7382d8f976df9b68"
         },
         {
           "file": "games/01_petme_9gw00a_game/assets/pet_happy.webp",
-          "sha256": "50388f2f4f738334df0a628793fa8d5f4972e7bb56258ed618eadec268764a1b"
+          "sha256": "663ba5dff9d401faf6220dab06c1aeb8a7d5d93190d71cb4e531943eb322c962"
         },
         {
           "file": "games/01_petme_9gw00a_game/assets/pet_resist.webp",
-          "sha256": "d796977326b134d955088ac0b46a145ecfb077bda164b92703114571c2d4d526"
+          "sha256": "9fc05611880ae6a1ad8937514de1d34028e490f868ef429e125eecc5d24ed559"
         }
       ],
       "omittedReferences": []
@@ -3888,7 +3888,7 @@
         },
         {
           "file": "games/playable_20260807211217_q9i9d6/assets/bg_main.webp",
-          "sha256": "260c9f1f4c0dbd0fec3535d39e52558019a2d67bc2e8d51e40b2bd84126ccedc"
+          "sha256": "576edc1d8fdb34b403c8bf1a6f866b3c5b46a91e0b2f9f7a7e1ef728635b8800"
         },
         {
           "file": "games/playable_20260807211217_q9i9d6/assets/fonts/bangers/Bangers-Regular.woff2",
@@ -3967,7 +3967,7 @@
         },
         {
           "file": "games/playable_20260807211217_q9i9d6/assets/bg_main.webp",
-          "sha256": "260c9f1f4c0dbd0fec3535d39e52558019a2d67bc2e8d51e40b2bd84126ccedc"
+          "sha256": "576edc1d8fdb34b403c8bf1a6f866b3c5b46a91e0b2f9f7a7e1ef728635b8800"
         },
         {
           "file": "games/playable_20260807211217_q9i9d6/assets/fonts/bangers/Bangers-Regular.woff2",
@@ -4018,11 +4018,11 @@
       "inputs": [
         {
           "file": "games/06a_coloring_game_final/game.html",
-          "sha256": "4cad87636a66a16c532b892b8506e952f253f606979f2ff00d47b263c6ab950c"
+          "sha256": "e5ce0674290318bd0dbff6df356aec31274d7d138bc56c783c770546ea6ab712"
         },
         {
           "file": "games/06a_coloring_game_final/game.config.json",
-          "sha256": "f1d86516f7d5c26ec9ddbcb41fd6760e04c8177e54c965ea8559ccfe6be22458"
+          "sha256": "041103a38680e4efae6fed22259b23cc30f2de730dfd094b2ec69f63d51ced75"
         },
         {
           "file": "games/06a_coloring_game_final/playable-design.css",
@@ -4038,7 +4038,7 @@
         },
         {
           "file": "games/06a_coloring_game_final/bundle.js",
-          "sha256": "f1a4d96675fbc42de09076003fcddfcc093217c44cabd9dc03c61f8b610566f3"
+          "sha256": "6f22a6b192bf80c1f2371e34f5a2289cbc49986cbe3c07161760afccdc7489cb"
         },
         {
           "file": "games/06a_coloring_game_final/playable-design.js",
@@ -4049,8 +4049,8 @@
           "sha256": "87f235e0989c1e88d0d8312fe072a046b7e8477f858a4ffe5946872e31ec801e"
         },
         {
-          "file": "games/06a_coloring_game_final/assets/bg_cartoon_canonical_v5.png",
-          "sha256": "a6f2d188bff577bdf7f86a7a2837c1ade35fb9f24ba7a3b82fb14a176fcb480c"
+          "file": "games/06a_coloring_game_final/assets/bg_cartoon_canonical_v5.webp",
+          "sha256": "2b8e6c3cf78e8aebc3fd0236eced2676322f75e592aee433ecb5bbe20e99eab3"
         },
         {
           "file": "games/06a_coloring_game_final/assets/fonts/bangers/Bangers-Regular.woff2",
@@ -4065,8 +4065,8 @@
           "sha256": "efbb0c9e864cef973982d9a17567e6be5c3d1759695574586f3f18c7ecca064b"
         },
         {
-          "file": "games/06a_coloring_game_final/assets/source_original.png",
-          "sha256": "6ba91b83090a7b09de6850a7bf7c766a57ac6af872cb1cd8045bf7188be7b9dc"
+          "file": "games/06a_coloring_game_final/assets/source_original.webp",
+          "sha256": "0d0769916a2fae483c5d679fb788a1f61f936b26fd17f813927facd8be36f817"
         }
       ],
       "omittedReferences": []
@@ -4081,11 +4081,11 @@
       "inputs": [
         {
           "file": "games/06a_coloring_game_final/game.it.html",
-          "sha256": "2275c226557330f5bd2aa4f177feb1877565786944408068139358a72cf9445f"
+          "sha256": "612e96689ccf6c3e17ad46d74610c6bae711b105c813d8e8019053550a84d161"
         },
         {
           "file": "games/06a_coloring_game_final/game.config.it.json",
-          "sha256": "c264ae3f0c3af20cb2e36ad9df7554fd2bda6e53b737f03c7662549c91e2621d"
+          "sha256": "26bd534d16407c9b4be1f202418a2f6d3af30aaa7712cd96f0ebdeb2557e47ed"
         },
         {
           "file": "games/06a_coloring_game_final/playable-design.it.css",
@@ -4105,7 +4105,7 @@
         },
         {
           "file": "games/06a_coloring_game_final/bundle.it.js",
-          "sha256": "a9a4ae502ed1df739f422f50a0f123d9c244b6328b1506f6f5da0eb63d22d372"
+          "sha256": "7a0d6686492edcc82d69b2c300376d50e8cdf99060af9ef420cfdb9c63d3f2bc"
         },
         {
           "file": "games/06a_coloring_game_final/playable-design.it.js",
@@ -4116,8 +4116,8 @@
           "sha256": "87f235e0989c1e88d0d8312fe072a046b7e8477f858a4ffe5946872e31ec801e"
         },
         {
-          "file": "games/06a_coloring_game_final/assets/bg_cartoon_canonical_v5.png",
-          "sha256": "a6f2d188bff577bdf7f86a7a2837c1ade35fb9f24ba7a3b82fb14a176fcb480c"
+          "file": "games/06a_coloring_game_final/assets/bg_cartoon_canonical_v5.webp",
+          "sha256": "2b8e6c3cf78e8aebc3fd0236eced2676322f75e592aee433ecb5bbe20e99eab3"
         },
         {
           "file": "games/06a_coloring_game_final/assets/fonts/bangers/Bangers-Regular.woff2",
@@ -4132,8 +4132,8 @@
           "sha256": "efbb0c9e864cef973982d9a17567e6be5c3d1759695574586f3f18c7ecca064b"
         },
         {
-          "file": "games/06a_coloring_game_final/assets/source_original.png",
-          "sha256": "6ba91b83090a7b09de6850a7bf7c766a57ac6af872cb1cd8045bf7188be7b9dc"
+          "file": "games/06a_coloring_game_final/assets/source_original.webp",
+          "sha256": "0d0769916a2fae483c5d679fb788a1f61f936b26fd17f813927facd8be36f817"
         }
       ],
       "omittedReferences": []
@@ -4192,7 +4192,7 @@
         },
         {
           "file": "games/02e_pickalook_p8xys3_game/assets/material.webp",
-          "sha256": "378a1026880b809301b05f8e27367b8ff9d0d55ea7eabd89dc9996c2c16a71a0"
+          "sha256": "1c0c65ae1527201e0050c1448a1975efc549e15cf9bc2924165aa7f547193269"
         }
       ],
       "omittedReferences": []
@@ -4255,7 +4255,7 @@
         },
         {
           "file": "games/02e_pickalook_p8xys3_game/assets/material.webp",
-          "sha256": "378a1026880b809301b05f8e27367b8ff9d0d55ea7eabd89dc9996c2c16a71a0"
+          "sha256": "1c0c65ae1527201e0050c1448a1975efc549e15cf9bc2924165aa7f547193269"
         }
       ],
       "omittedReferences": []

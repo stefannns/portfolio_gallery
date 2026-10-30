@@ -46,24 +46,24 @@
       "ids": [
         "PET_FINISH"
       ],
-      "bytes": 1458612,
-      "sha256": "ecf6854b1ab2e514fa17d8cbf454cc407c850c7eccd0dd595031ef4f2fce0c29"
+      "bytes": 1048462,
+      "sha256": "f1273b6e8aad04cc5895838cdaaa2b33b7fcfc1c2e555d1d7382d8f976df9b68"
     },
     {
       "path": "dist/assets/pet_happy.webp",
       "ids": [
         "PET_HAPPY"
       ],
-      "bytes": 1456142,
-      "sha256": "50388f2f4f738334df0a628793fa8d5f4972e7bb56258ed618eadec268764a1b"
+      "bytes": 1047336,
+      "sha256": "663ba5dff9d401faf6220dab06c1aeb8a7d5d93190d71cb4e531943eb322c962"
     },
     {
       "path": "dist/assets/pet_resist.webp",
       "ids": [
         "PET_RESIST"
       ],
-      "bytes": 1457940,
-      "sha256": "d796977326b134d955088ac0b46a145ecfb077bda164b92703114571c2d4d526"
+      "bytes": 1040438,
+      "sha256": "9fc05611880ae6a1ad8937514de1d34028e490f868ef429e125eecc5d24ed559"
     }
   ],
   "files": {

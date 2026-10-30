@@ -308,13 +308,13 @@
     {
       "id": "CHARACTER_MAIN",
       "label": "Cartoon stickman target",
-      "path": "./assets/stickman-mascot.webp",
+      "path": "./assets/stickman-minimal.svg",
       "replaceable": true
     },
     {
       "id": "BACKGROUND_MAIN",
       "label": "Training workshop backdrop",
-      "path": "./assets/training-workshop.webp",
+      "path": "./assets/minimal-room.svg",
       "replaceable": true
     },
     {

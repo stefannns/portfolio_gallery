@@ -1,0 +1,38 @@
+{
+  "manifest_version": 1,
+  "task_id": "playable2_20260928023148_i47u62",
+  "number": 21,
+  "name": "Army Commander",
+  "language": "en",
+  "entry": "dist/game.html",
+  "source_kind": "rebuildable-current-runtime-source",
+  "files": {
+    "App.jsx": "713dd49d96a6482f5dfb281eed428744200b8e56cddea11230945f590e906e8b",
+    "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
+    "dist/game.html": "db98f3e4780c79237f0361359e6b6fb08e9269f9ca7e939f287937bcd0e168af",
+    "dist/bundle.js": "17d6da791671914d36d1d36026bde7ac1bf5cfa31be3a946f0b4b2d27aeb3467",
+    "dist/game.config.json": "bca30f56049d03cf3d4699865fceec60af70443ec4dd372dcecd7073b02cd009"
+  },
+  "assets": [
+    {
+      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
+      "ids": [],
+      "bytes": 37004,
+      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+    },
+    {
+      "path": "dist/assets/sand-rocks-shells-v2.png",
+      "ids": [],
+      "bytes": 1010797,
+      "sha256": "aedc69002bd3f8095d1bd98dc734b4f5dc4d41a5865f00b6fe0255ffd365b339"
+    },
+    {
+      "path": "dist/assets/ui_defeat_panel.png",
+      "ids": [
+        "UI_DEFEAT_PANEL"
+      ],
+      "bytes": 27330,
+      "sha256": "92dc322cafad9b4a10b7e9ef011277e1eb74e23fe7a2618c5a3b904551dfb9f4"
+    }
+  ]
+}

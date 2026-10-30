@@ -11,8 +11,8 @@ const SOUND_FILES = {
 };
 
 const DEFAULT_ART = {
-  "CHARACTER_MAIN": "./assets/stickman-mascot.webp",
-  "BACKGROUND_MAIN": "./assets/training-workshop.webp",
+  "CHARACTER_MAIN": "./assets/stickman-minimal.svg",
+  "BACKGROUND_MAIN": "./assets/minimal-room.svg",
   "TOOL_FIST": "./assets/weapons/fist.svg",
   "TOOL_BAT": "./assets/weapons/bat.svg",
   "TOOL_KATANA": "./assets/weapons/katana.svg",
@@ -141,7 +141,7 @@ function StickFigure({ pulse, defeated, src }) {
     ], { duration: 240, easing: 'cubic-bezier(.2,.7,.2,1)' });
     return () => animation.cancel();
   }, [pulse, defeated]);
-  return <span ref={targetRef} className={`stick-figure target-art ${defeated ? 'is-defeated' : ''}`}><img className="character-art" src={src} alt="Cartoon stickman training dummy" draggable="false" /></span>;
+  return <span ref={targetRef} className={`stick-figure target-art ${defeated ? 'is-defeated' : ''}`}><img className="character-art" src={src} alt="Simple black stick figure" draggable="false" /></span>;
 }
 
 function ToolGlyph({ id, config }) {
@@ -558,7 +558,7 @@ function App() {
         .tool-detail { font-size:11px; line-height:14px; align-self:start; }
         .auto-switch { align-self:center; gap:4px; }
 
-        .app-shell { background:#dce8ec; }
+        .app-shell { background:#f5f5f2; }
         .room { background-size:cover; background-position:center center; background-repeat:no-repeat; }
         .room::before,.room::after,.arena::before { display:none; }
         .arena { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:96px 30px 64px; }
@@ -566,11 +566,11 @@ function App() {
         html[data-feed-preview="true"] .hint { top:calc(50% - 164px); }
         .target-art { display:block; width:100%; height:100%; min-height:0; min-width:0; position:relative; transform-origin:50% 72%; transition:opacity .22s,filter .22s,transform .22s; }
         .character-art { position:relative; z-index:1; display:block; width:100%; height:100%; object-fit:contain; user-select:none; pointer-events:none; }
-        .figure-button::after { content:''; position:absolute; z-index:-1; bottom:0; left:21%; width:58%; height:12px; border-radius:50%; background:rgba(28,59,67,.2); filter:blur(4px); pointer-events:none; }
+        .figure-button::after { content:''; position:absolute; z-index:-1; bottom:0; left:21%; width:58%; height:12px; border-radius:50%; background:rgba(37,38,39,.12); filter:blur(4px); pointer-events:none; }
         .target-art.is-defeated { opacity:.38; transform:rotate(8deg) scale(.94); filter:grayscale(.35); }
         .weapon-art { display:block; width:100%; height:100%; object-fit:contain; pointer-events:none; user-select:none; }
         .tool-swing { width:80px; height:80px; filter:drop-shadow(0 3px 1px rgba(24,48,58,.12)); }
-        .hint { top:calc(50% - 150px); color:#24424e; text-shadow:0 1px 0 rgba(255,255,255,.4); }
+        .hint { top:calc(50% - 150px); color:#252627; text-shadow:0 1px 0 rgba(255,255,255,.4); }
         .stat { min-width:88px; padding:8px 13px; border:0; border-radius:0; background:none; box-shadow:none; }
         .stats { justify-content:center; }
         .stat.right { min-width:0; padding:0; border:0; border-radius:0; background:none; box-shadow:none; text-align:center; }
@@ -578,15 +578,15 @@ function App() {
         .character-slot .figure-button { width:100%; height:100%; max-height:none; }
         .character-level { position:absolute; z-index:4; left:50%; bottom:calc(100% + 12px); transform:translateX(-50%); text-align:center; pointer-events:none; opacity:0; visibility:hidden; transition:opacity .25s; }
         .character-level.visible { opacity:1; visibility:visible; }
-        .stat-value { color:#183b4b; }
-        .stat-value.coin-value { color:#926000; }
-        .tool-card { background:rgba(248,252,251,.94); border-color:rgba(37,80,90,.2); box-shadow:0 3px 0 rgba(21,59,69,.14); }
-        .tool-card.equipped { background:#f8fdfb; }
+        .stat-value { color:#252627; }
+        .stat-value.coin-value { color:#252627; }
+        .tool-card { background:#ffffff; border-color:#d8dbd6; box-shadow:none; }
+        .tool-card.equipped { background:#fffdf5; border-color:#baa267; }
         .tool-card.locked { opacity:.8; }
         .tool-glyph,.auto-icon { width:38px; height:38px; margin-left:-2px; }
-        .health-track { border-color:#345d6b; background:rgba(249,254,250,.85); }
-        .health-fill { background:linear-gradient(90deg,#e7ab51,#ee8061); }
-        .health-number,.health-numbers { color:#214653; text-shadow:0 1px 0 rgba(255,255,255,.4); }
+        .health-track { border-color:#cdd1ca; background:#e7e9e3; }
+        .health-fill { background:#b96f65; }
+        .health-number,.health-numbers { color:#555957; text-shadow:0 1px 0 rgba(255,255,255,.4); }
         @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; } }
 
       `}</style>

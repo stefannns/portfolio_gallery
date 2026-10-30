@@ -58,7 +58,7 @@
     {
       "id": "IMG_COCONUT",
       "label": "Coconut Object",
-      "path": "./assets/img_coconut_uncarved.png",
+      "path": "./assets/img_coconut_uncarved.webp",
       "replaceable": true
     }
   ],

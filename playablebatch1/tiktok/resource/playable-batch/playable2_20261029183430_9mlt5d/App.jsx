@@ -26,9 +26,9 @@ const CSS = `
 
 * { box-sizing: border-box; }
 html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
-body { background: #f4f0e8; color: #282b2c; -webkit-tap-highlight-color: transparent; }
+body { background: #f5f4ef; color: #282b2c; -webkit-tap-highlight-color: transparent; }
 button { font: inherit; }
-.app-shell { width: 100%; height: 100%; min-height: 0; overflow: clip; position: relative; background: #f4f0e8; font-family: var(--font-body); }
+.app-shell { width: 100%; height: 100%; min-height: 0; overflow: clip; position: relative; background: #f5f4ef; font-family: var(--font-body); }
 .canvas { width: 100%; height: 100%; min-height: 0; display: flex; flex-direction: column; position: relative; }
 .topline { flex: 0 0 auto; height: 58px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 3; }
 .wordmark { color: #303536; letter-spacing: .22em; font-family: var(--font-display); font-weight: 700; font-size: 13px; text-transform: uppercase; opacity: .78; }
@@ -62,7 +62,7 @@ button { font: inherit; }
 .unlocks-label { color: #8b938a; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 11px; }
 .swatches { display: flex; justify-content: center; gap: 9px; flex-wrap: wrap; }
 .swatch { width: 27px; height: 27px; padding: 0; border-radius: 50%; border: 2px solid transparent; cursor: pointer; position: relative; }
-.swatch.selected { border-color: #303536; box-shadow: 0 0 0 2px #f4f0e8; }
+.swatch.selected { border-color: #303536; box-shadow: 0 0 0 2px #f5f4ef; }
 .swatch.locked { opacity: .2; cursor: default; }
 .swatch span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 @media (max-height: 620px) { .topline { height: 42px; } .intro-guide { top: 15px; } .result-layer { padding-top: 40px; } .result-title { margin-bottom: 17px; } .unlocks { margin-top: 17px; } }
@@ -102,7 +102,7 @@ const DEFAULT_CFG = {
 };
 
 const PALETTES = {
-  charcoal: { name: 'charcoal', ink: '#303536', planet: '#d8d9d1', planetHi: '#ecebe2', sage: '#91a893', faint: '#c4c9bf' },
+  charcoal: { name: 'charcoal', ink: '#303536', planet: '#dcded8', planetHi: '#f5f4ef', sage: '#91a893', faint: '#c4c9bf' },
   sage: { name: 'sage', ink: '#3c5148', planet: '#cddbd0', planetHi: '#eaf0e7', sage: '#718f79', faint: '#b4c7b5' },
   ivory: { name: 'ivory', ink: '#625c4f', planet: '#e9e3d4', planetHi: '#faf7ed', sage: '#9ba68c', faint: '#d9d2c3' },
   'matte gold': { name: 'matte gold', ink: '#514637', planet: '#e4d4b4', planetHi: '#f6edda', sage: '#aa9971', faint: '#d4c4a0' },
@@ -520,32 +520,19 @@ function App() {
                 </div>
               )}
               <svg className="orbit-svg" viewBox="0 -72 400 650" role="img" aria-label={cfg.GAME_TITLE}>
-                <defs>
-                  <radialGradient id="planetGlow" cx="35%" cy="28%">
-                    <stop offset="0" stopColor={palette.planetHi} />
-                    <stop offset="1" stopColor={palette.planet} />
-                  </radialGradient>
-                  <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="8" /></filter>
-                </defs>
-                <circle cx={currentOrbit.x} cy={currentOrbit.y} r={currentOrbit.r + 18} fill="none" stroke={palette.faint} strokeWidth="1" strokeDasharray="2 10" opacity=".32" />
-                <circle cx={currentOrbit.x} cy={currentOrbit.y} r={currentOrbit.r} fill="none" stroke={palette.ink} strokeWidth="1.2" strokeDasharray="2 8" opacity=".42" />
-                <circle cx={currentOrbit.x} cy={currentOrbit.y} r="34" fill={palette.ink} opacity=".05" filter="url(#softShadow)" />
-                <circle cx={currentOrbit.x} cy={currentOrbit.y} r="32" fill="url(#planetGlow)" stroke={palette.planet} strokeWidth="1" />
-                <ellipse cx={currentOrbit.x - 10} cy={currentOrbit.y - 10} rx="15" ry="9" fill={palette.planetHi} opacity=".38" />
-                <circle cx={layout.x} cy={layout.y} r="76" fill="none" stroke={palette.faint} strokeWidth="1" strokeDasharray="2 9" opacity=".2" />
-                <circle cx={layout.x} cy={layout.y} r={layout.orbit} fill="none" stroke={palette.ink} strokeWidth="1.2" strokeDasharray="2 8" opacity=".42" />
-                <circle cx={layout.x} cy={layout.y} r="26" fill={palette.planet} opacity=".18" />
-                <circle cx={layout.x} cy={layout.y} r="23" fill={palette.planet} stroke={palette.planetHi} strokeWidth="1" />
-                <ellipse cx={layout.x - 6} cy={layout.y - 7} rx="10" ry="6" fill={palette.planetHi} opacity=".56" />
+                <circle cx={currentOrbit.x} cy={currentOrbit.y} r={currentOrbit.r} fill="none" stroke={palette.ink} strokeWidth="1.1" strokeDasharray="1 7" strokeLinecap="round" opacity=".36" />
+                <circle cx={currentOrbit.x} cy={currentOrbit.y} r="32" fill={palette.planet} stroke={palette.faint} strokeWidth="1" />
+                <circle cx={layout.x} cy={layout.y} r={layout.orbit} fill="none" stroke={palette.ink} strokeWidth="1.1" strokeDasharray="1 7" strokeLinecap="round" opacity=".36" />
+                <circle cx={layout.x} cy={layout.y} r="23" fill={palette.planet} stroke={palette.faint} strokeWidth="1" />
                 <path d={targetArc} fill="none" stroke={palette.sage} strokeWidth="12" strokeLinecap="round" opacity=".2" pointerEvents="none" />
                 <path data-testid="sweet-range" d={targetArc} fill="none" stroke={palette.sage} strokeWidth="6" strokeLinecap="round" opacity="1" pointerEvents="none" />
                 <g ref={playerRef}>
                   <line ref={(el) => { trailRefs.current[0] = el; }} stroke={palette.sage} strokeWidth="2.6" strokeLinecap="round" />
                   <line ref={(el) => { trailRefs.current[1] = el; }} stroke={palette.sage} strokeWidth="1.8" strokeLinecap="round" />
                   <line ref={(el) => { trailRefs.current[2] = el; }} stroke={palette.sage} strokeWidth="1.1" strokeLinecap="round" />
-                  <circle r="9" fill={palette.sage} opacity=".18" />
+
                   <circle r="5.5" fill={palette.ink} />
-                  <circle cx="-1.5" cy="-1.7" r="1.5" fill={palette.planetHi} opacity=".8" />
+
                 </g>
                 {catchPulse && <circle cx={currentOrbit.x} cy={currentOrbit.y} r="30" fill="none" stroke={palette.sage} strokeWidth="2" opacity=".55" className="pulse-ring" />}
               </svg>

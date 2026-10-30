@@ -1,0 +1,6 @@
+.batch-download { display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;min-height:44px;padding:9px 12px;border:1px solid var(--review-line,#dfe5de);border-radius:9px;background:var(--review-surface,#fff);color:var(--review-accent,#294f3d);font:inherit;font-size:13px;font-weight:650;white-space:nowrap;cursor:pointer; }
+.batch-download svg { width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round; }
+.batch-download:hover:enabled { background:#edf5ec;border-color:#b8ceb9; }
+.batch-download:disabled { color:#87938a;background:#f3f5f1;cursor:default; }
+.batch-download:focus-visible { outline:3px solid #478462;outline-offset:3px; }
+@media(max-width:900px) { .batch-download { width:44px;padding:10px; } .batch-download [data-batch-download-label] { display:none; } }

@@ -7,11 +7,11 @@
   "entry": "dist/game.html",
   "source_kind": "editable-current-react-source",
   "files": {
-    "App.jsx": "d1175435950bd726aec8b8b712e67c04873caa97297219665ce26ad8b3a32e8a",
+    "App.jsx": "c3d61faddcc6a7cea0278d769d2565af91cdcfee79ee39b4302588f72f3dfd3d",
     "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
     "dist/game.html": "e9727f76326ccd8764fe49da4729ebf0578220900bc9e21d6977aa085fc13fd7",
-    "dist/bundle.js": "63b001b20d7e0ef89f2501b8c9dffa0ea0d449cdf91d437ddd2744b4bbfe73a5",
-    "dist/game.config.json": "a29ee7d525a7fd195ca0cccddc31343283f23b4726d42ff68b856a2b9493ce40"
+    "dist/bundle.js": "8631efe18f393afd1fcd729cbca6d3ac9754fdfec147d4699e889878c4d977e1",
+    "dist/game.config.json": "0b0ded08383afa4bc27fa9904101e78e8959042318184a5568c09a38cb7cbcb2"
   },
   "assets": [
     {
@@ -31,6 +31,14 @@
       "ids": [],
       "bytes": 51212,
       "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/minimal-room.svg",
+      "ids": [
+        "BACKGROUND_MAIN"
+      ],
+      "bytes": 270,
+      "sha256": "37cffaab11996ee1a90911e4ad46bfab2511335e1c8eedfb577ddfdaf45a428d"
     },
     {
       "path": "dist/assets/sfx_boom_hit.mp3",
@@ -69,20 +77,12 @@
       "sha256": "01578fddd7022cdab38793c533aac259c152634ab762fc727967b3bb863a2ce7"
     },
     {
-      "path": "dist/assets/stickman-mascot.webp",
+      "path": "dist/assets/stickman-minimal.svg",
       "ids": [
         "CHARACTER_MAIN"
       ],
-      "bytes": 160630,
-      "sha256": "73edbfd48f841cb12cf5a3d54e059cd96f0b7d95a0b02ed9097da40118aa6ac9"
-    },
-    {
-      "path": "dist/assets/training-workshop.webp",
-      "ids": [
-        "BACKGROUND_MAIN"
-      ],
-      "bytes": 18810,
-      "sha256": "63757f9d9f030f6f32a9589b4e13172eb2778c6973dbbc82991b1b0f98ed3f08"
+      "bytes": 412,
+      "sha256": "6f1597cc47ecfbc1fd37284f9578d9a463237f8d94e25115cdee1bcf00bccb32"
     },
     {
       "path": "dist/assets/weapons/admin.svg",
