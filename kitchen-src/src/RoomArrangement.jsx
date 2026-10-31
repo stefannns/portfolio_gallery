@@ -13,6 +13,7 @@ import {getSceneUiScale} from './scene-ui-scale.js';
 import {createRoomNavigator, canTraverseRoomSegment} from './room-navigation.js';
 import {getLandedFishCollider, recoverFishOverlap} from './fish-ground-collision.js';
 import {resolveFishPush} from './fish-ground-pushing.js';
+import {resolveCabinetArmClearance} from './cabinet-arm-clearance.js';
 import {attachRoomMovementInput} from './room-movement-input.js';
 import {useTaskOutlineIgnore} from './TaskOutline.jsx';
 
@@ -427,6 +428,22 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
         canWalk: (x, z) => canWalk(x, z, latest.current),
       });
     }
+    let nextHeading = player.current?.rotation.y ?? Math.PI / 2;
+    const turning = !engine.paused && !tomatoBusy && walking.startValid && Math.hypot(input.x, input.z) > .04;
+    if (turning) {
+      const target = Math.atan2(input.x, input.z);
+      const difference = Math.atan2(Math.sin(target - nextHeading), Math.cos(target - nextHeading));
+      nextHeading += difference * (1 - Math.exp(-17 * Math.min(delta, .05)));
+    }
+    if (roomVersion === 10 && !engine.paused && !editable && !tomatoBusy && walking.startValid) {
+      const safe = resolveCabinetArmClearance(next, nextHeading, (x, z) => canWalk(x, z, walking.items));
+      if (safe) next = safe;
+      else {
+        // Hold a blocked turn instead of snapping to spawn or pushing through furniture.
+        nextHeading = player.current?.rotation.y ?? nextHeading;
+        next = resolveCabinetArmClearance(next, nextHeading, (x, z) => canWalk(x, z, walking.items)) || {...engine.player, moving: false};
+      }
+    }
     if (!canWalk(next.x, next.z, walking.items)) {
       const x = canWalk(next.x, engine.player.z, walking.items) ? next.x : engine.player.x;
       const z = canWalk(x, next.z, walking.items) ? next.z : engine.player.z;
@@ -447,9 +464,8 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
         const angle = Math.atan2(target[0] - next.x, target[2] - next.z);
         const difference = Math.atan2(Math.sin(angle - player.current.rotation.y), Math.cos(angle - player.current.rotation.y));
         player.current.rotation.y += difference * (1 - Math.exp(-16 * delta));
-      } else if (next.moving) {
-        const angle = Math.atan2(input.x, input.z), difference = Math.atan2(Math.sin(angle - player.current.rotation.y), Math.cos(angle - player.current.rotation.y));
-        player.current.rotation.y += difference * (1 - Math.exp(-17 * delta));
+      } else {
+        player.current.rotation.y = nextHeading;
       }
     }
     const target = currentInspectTarget();
