@@ -1,4 +1,4 @@
-import {Color, Matrix4, Mesh, MeshBasicMaterial, PlaneGeometry, SRGBColorSpace, TextureLoader, Vector3} from 'three';
+import {Matrix4, Mesh, MeshBasicMaterial, PlaneGeometry, SRGBColorSpace, TextureLoader, Vector3} from 'three';
 
 /** Add painted chalk marks in the original Tripo model's coordinate frame. */
 export function addChalkCutlery(model) {
@@ -18,27 +18,4 @@ export function addChalkCutlery(model) {
   drawing.raycast = () => {};
   model.add(drawing);
   return () => {model.remove(drawing);geometry.dispose();material.dispose();texture.dispose();};
-}
-
-/** Keep the baked casing intact; only the curved dark-green glass emits light. */
-export function addComputerScreenGlow(material, amount) {
-  const previousCompile = material.onBeforeCompile;
-  material.onBeforeCompile = (shader, renderer) => {
-    previousCompile.call(material, shader, renderer);
-    shader.uniforms.kitchenScreenAmount = amount;
-    shader.uniforms.kitchenScreenTint = {value: new Color('#bce8d2')};
-    shader.vertexShader = `varying vec3 vKitchenScreenPosition;\n${shader.vertexShader}`
-      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvKitchenScreenPosition = position;');
-    shader.fragmentShader = `varying vec3 vKitchenScreenPosition;\nuniform float kitchenScreenAmount;\nuniform vec3 kitchenScreenTint;\n${shader.fragmentShader}`
-      .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
-        vec3 screenPosition = vKitchenScreenPosition;
-        float glassArea = smoothstep(.005, .022, screenPosition.x) * (1.0 - smoothstep(.065, .085, screenPosition.x));
-        glassArea *= smoothstep(.285, .315, screenPosition.y) * (1.0 - smoothstep(.79, .82, screenPosition.y));
-        glassArea *= 1.0 - smoothstep(.395, .425, abs(screenPosition.z));
-        float glassColor = 1.0 - smoothstep(.23, .36, max(diffuseColor.r, max(diffuseColor.g, diffuseColor.b)));
-        glassColor *= smoothstep(.005, .035, diffuseColor.g - diffuseColor.r);
-        totalEmissiveRadiance += kitchenScreenTint * kitchenScreenAmount * glassArea * glassColor * .9;
-      `);
-  };
-  material.customProgramCacheKey = () => 'kitchen-computer-screen-v1';
 }

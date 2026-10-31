@@ -3,6 +3,7 @@ import {useThree} from '@react-three/fiber';
 import {Html} from '@react-three/drei';
 import {Group} from 'three';
 import SinkBubbles from './SinkBubbles.jsx';
+import FaucetWater from './FaucetWater.jsx';
 import StovePanToy from './StovePanToy.jsx';
 import TomatoToy from './TomatoToy.jsx';
 import FishFlopToy from './FishFlopToy.jsx';
@@ -106,6 +107,7 @@ export default function KitchenToys({engine, actionsRef, onUse, onHover, hovered
     <Suspense fallback={null}><FishFlopToy engine={engine} actionRef={fish} paused={paused || editable} reducedMotion={reducedMotion}
       highlighted={fishAvailable && !paused && !editable && (hoveredId === 'fish-flop' || nearbyId === 'fish-flop')}
       rootRef={rootRef} onReady={fishReady} onAvailableChange={fishAvailabilityChanged} onFlop={fishFlopped} onLand={fishLanded}/></Suspense>
+    <FaucetWater paused={paused || editable} reducedMotion={reducedMotion}/>
     <SinkBubbles actionRef={sink} position={[-3.96, 1.3, 2.778]} paused={paused || editable}
       reducedMotion={reducedMotion} rootRef={rootRef} onPop={bubblePopped}/>
     <Suspense fallback={null}><StovePanToy actionRef={stove} paused={paused || editable}

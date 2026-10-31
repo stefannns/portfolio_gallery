@@ -36,7 +36,7 @@ function persistLayout(storageKey, items) {
   } catch {return false;}
 }
 
-function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus, onActivate, onError, editable, objective, highlighted, hovered, interacting, reducedMotion}) {
+function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus, onActivate, onError, editable, objective, highlighted, hovered, reducedMotion}) {
   const ignorePointerTarget = useTaskOutlineIgnore();
   const markerBounds = useRef(new THREE.Box3()), markerPoint = useRef(new THREE.Vector3());
   const markerPosition = useCallback((anchor, camera, size) => {
@@ -67,7 +67,7 @@ function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus,
     onPointerDown={event => onStart(event, item.id)}
     onPointerOver={event => {event.stopPropagation();if (event.pointerType !== 'touch') onHover(item.id);}}
     onPointerOut={() => onHover(null, item.id)}>
-    <group name={`room-item-model-${item.id}`} position={item.modelOffset || [0, 0, 0]}><RestaurantModel entry={entry} dimensions={[item.width, item.width, item.width]} rotationY={0} uniform objective={objective} highlighted={highlighted || hovered} interacting={interacting} reducedMotion={reducedMotion} onError={onError}/></group>
+    <group name={`room-item-model-${item.id}`} position={item.modelOffset || [0, 0, 0]}><RestaurantModel entry={entry} dimensions={[item.width, item.width, item.width]} rotationY={0} uniform objective={objective} highlighted={highlighted || hovered} reducedMotion={reducedMotion} onError={onError}/></group>
     {/* Invisible pointer targets make small items easy to grab without changing their art. */}
     <mesh ref={ignorePointerTarget} position={[0, item.width * .3, 0]}>
       <boxGeometry args={[Math.max(.62, item.width), Math.max(.45, item.width * .65), Math.max(.62, item.width)]}/>
@@ -84,7 +84,7 @@ function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus,
   </group>;
 }
 
-export default function RoomArrangement({roomVersion = 10, controls, rootRef, titlePhysics, resetToken, onStatus, onHover, onReady, onError, onOpenComputer, onOpenProject, onSelection, actionsRef, objectiveId = '', activeItemId = '', onToyUse, onTomatoSplat, onFirstMove, onWelcomeMove, onInspectTarget, onWelcomeAnchor, welcomeActive = false, reducedMotion = false, paused = false, editable = false, fixedCamera = true}) {
+export default function RoomArrangement({roomVersion = 10, controls, rootRef, titlePhysics, resetToken, onStatus, onHover, onReady, onError, onOpenComputer, onOpenProject, onSelection, actionsRef, objectiveId = '', onToyUse, onTomatoSplat, onFirstMove, onWelcomeMove, onInspectTarget, onWelcomeAnchor, welcomeActive = false, reducedMotion = false, paused = false, editable = false, fixedCamera = true}) {
   const ignoreWalkFloor = useTaskOutlineIgnore();
   const {
     CAPYBARA_HEIGHT, PLAYER_START, PLAYER_SPEED, PLAYER_RADIUS, ROOM_FLOOR_Y, ROOM_BOUNDS, ROOM_ITEMS,
@@ -520,7 +520,7 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
       <planeGeometry args={[ROOM_BOUNDS.maxX - ROOM_BOUNDS.minX, ROOM_BOUNDS.maxZ - ROOM_BOUNDS.minZ]}/>
       <meshBasicMaterial transparent opacity={0} colorWrite={false} depthWrite={false}/>
     </mesh>
-    {placements.map(item => <MovableItem key={item.id} item={item} entry={assets.props.assets?.[item.asset]} editable={editable} objective={item.id === objectiveId && !editable && !paused} highlighted={item.id === highlightId && !editable && !paused} hovered={item.id === hoverId && !editable && !paused} interacting={item.id === activeItemId} reducedMotion={reducedMotion}
+    {placements.map(item => <MovableItem key={item.id} item={item} entry={assets.props.assets?.[item.asset]} editable={editable} objective={item.id === objectiveId && !editable && !paused} highlighted={item.id === highlightId && !editable && !paused} hovered={item.id === hoverId && !editable && !paused} reducedMotion={reducedMotion}
       register={(id, node) => {if (node) groups.current.set(id, node);else groups.current.delete(id);}}
       onStart={startDrag} onHover={hoverItem} onNudge={nudge} onFocus={id => {selectItem(id);hoverItem(id);}} onActivate={activateItem} onError={onError}/>)}
     {roomVersion === 10 && <Suspense fallback={null}><SushiPlates onReady={sushiLoaded} rootRef={rootRef}/></Suspense>}
