@@ -39,6 +39,14 @@ function createRoomPlacement(surfaceData, version) {
   /** Static room clearance is in the mask; floor props add circles or X-aligned capsules. */
   function canWalk(x, z, placements = []) {
     if (!finite(x) || !finite(z)) return false;
+    // The raised walking paws reach .735 from the root, beyond the body mask.
+    // Give only the left cabinet that clearance; round its ends rather than
+    // extending an invisible wall across the front desk lane or room corners.
+    if (version === 10) {
+      const dx = Math.max(-2.52 - x, 0, x - 1.731);
+      const dz = Math.max(4.66 - z, 0, z - 5.562);
+      if (Math.hypot(dx, dz) < .77) return false;
+    }
     const cells = surroundingCells(x, z);
     if (!cells) return false;
     const [x0, x1, z0, z1] = cells;
