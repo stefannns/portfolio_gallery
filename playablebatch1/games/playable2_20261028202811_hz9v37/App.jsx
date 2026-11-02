@@ -110,10 +110,12 @@ function buildConfig(json) {
   const next = { ...DEFAULTS };
   if (json && Array.isArray(json.tweaks)) json.tweaks.forEach((item) => { next[item.id] = item.value; });
   if (json && Array.isArray(json.texts)) json.texts.forEach((item) => { next[item.id] = item.value; });
+  if (json && Array.isArray(json.images)) json.images.forEach((item) => { if (item.path) next[item.id] = item.path; });
   return next;
 }
 
 const WORLD = { width: 3200, height: 1900, startX: 1600, startY: 1080 };
+const FOUNTAIN = { x: 2300, y: 835, nozzleY: -31 };
 const TOWN_GRASS='#f5f4ef';
 const TOWN_SPOTS = [
   { x: 1600, y: 1080, place: 'Town Square', kinds: ['fight', 'friendly', 'dance'], offset: 0, count: 2 },
@@ -129,7 +131,7 @@ const STORIES = {
   kindness: { category: 'friendly', priority: 65, section: 'PEOPLE / COMMUNITY', headline: 'A helping hand makes the day', caption: 'A passerby helps gather a neighbor’s scattered shopping.' },
   music: { category: 'friendly', priority: 55, section: 'ARTS / STREET LIFE', headline: 'Street musician draws a crowd', caption: 'An impromptu guitar performance turns the pavement into a tiny stage.' },
   dance: { category: 'friendly', priority: 50, section: 'ARTS / STREET LIFE', headline: 'Neighbors dance in the street', caption: 'A spontaneous dance gives the afternoon a lighter rhythm.' },
-  splash: { category: 'calm', priority: 75, section: 'LOCAL / LITTLE DRAMAS', headline: 'A splash catches a passerby', caption: 'A mischievous splash by the fountain leaves one neighbor dripping.' },
+  splash: { category: 'calm', priority: 75, section: 'LOCAL / LITTLE DRAMAS', headline: 'A splash catches a passerby', caption: 'Water sprays from the fountain, leaving a passing neighbor dripping.' },
   trip: { category: 'calm', priority: 80, section: 'LOCAL / LITTLE DRAMAS', headline: 'A stumble stops the afternoon', caption: 'A walker loses their footing while a nearby neighbor rushes to help.' },
   juggle: { category: 'friendly', priority: 60, section: 'ARTS / STREET LIFE', headline: 'Market performer steals the show', caption: 'Flying fruit and quick hands bring a little spectacle to the market.' },
   soccer: { category: 'friendly', priority: 58, section: 'SPORT / AROUND TOWN', headline: 'A friendly kickabout in the park', caption: 'Two locals trade passes in a lively game on the grass.' },
@@ -190,7 +192,15 @@ function updateTown(sim, dt) {
 function storyForCrop(sim, bounds) {
   const inside = p => p.x - 22 * p.size >= bounds.left && p.x + 22 * p.size <= bounds.right && p.y - 62 * p.size >= bounds.top && p.y + 62 * p.size <= bounds.bottom;
   const cx = (bounds.left + bounds.right) / 2, cy = (bounds.top + bounds.bottom) / 2;
-  const candidates = sim.events.filter(ev => STORIES[ev.kind] && ev.people.every(id => inside(sim.residents.find(p => p.id === id))));
+  const candidates = sim.events.filter(ev => {
+    if (!STORIES[ev.kind]) return false;
+    if (ev.kind === 'splash') {
+      const passerby = sim.residents.find(p => p.spot === ev.id && p.role === 1);
+      const nozzleY = FOUNTAIN.y + FOUNTAIN.nozzleY;
+      return passerby && inside(passerby) && FOUNTAIN.x >= bounds.left && FOUNTAIN.x <= bounds.right && nozzleY >= bounds.top && nozzleY <= bounds.bottom;
+    }
+    return ev.people.every(id => inside(sim.residents.find(p => p.id === id)));
+  });
   candidates.sort((a, b) => {
     const score = ev => STORIES[ev.kind].priority - Math.hypot(ev.x - cx, ev.y - cy) * .06;
     return score(b) - score(a);
@@ -600,25 +610,74 @@ function App() {
   );
 }
 
-// Restrained reference art. World coordinates and event poses are unchanged.
+// Original town layout and dimensions; scenery restyled to match the current stick figures.
 const TOWN_INK='#252627';
+function townRound(ctx,x,y,w,h,r,fill,stroke=null,lw=3){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw;ctx.stroke();}}
 function townEllipse(ctx,x,y,rx,ry,fill){ctx.fillStyle=fill;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fill();}
+function townFlower(ctx,x,y,color){ctx.strokeStyle=TOWN_INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,y+17);ctx.lineTo(x,y);ctx.stroke();for(let i=0;i<5;i++){const a=i*Math.PI*2/5;townEllipse(ctx,x+Math.cos(a)*5,y+Math.sin(a)*5,4,4,color);ctx.strokeStyle=TOWN_INK;ctx.lineWidth=1.5;ctx.stroke();}townEllipse(ctx,x,y,3,3,TOWN_INK);}
 function drawTown(ctx,viewW,viewH,sim,motionTime){
-  const pad=Math.max(viewW,viewH,200);
-  ctx.fillStyle=TOWN_GRASS;ctx.fillRect(-pad,-pad,WORLD.width+pad*2,WORLD.height+pad*2);
-  // Sparse ground flecks keep the open space legible without framing the scene.
-  ctx.fillStyle='#d8d8d1';for(let i=0;i<135;i++){const x=80+(i*239)%3050,y=110+(i*367)%1700;ctx.fillRect(x,y,2,2);}
-  ctx.strokeStyle='#cecfca';ctx.lineWidth=3;ctx.lineCap='round';
-  for(const [x,y] of [[740,1260],[1940,1390],[2620,1320]]){ctx.beginPath();ctx.moveTo(x-50,y);ctx.lineTo(x+50,y);ctx.moveTo(x-40,y-25);ctx.lineTo(x+40,y-25);ctx.moveTo(x-40,y-25);ctx.lineTo(x-40,y+22);ctx.moveTo(x+40,y-25);ctx.lineTo(x+40,y+22);ctx.stroke();}
-  ctx.beginPath();ctx.ellipse(2300,858,72,20,0,0,Math.PI*2);ctx.moveTo(2300,838);ctx.lineTo(2300,800);ctx.stroke();
+  // Carry the lawns past every camera edge instead of framing them in sand.
+  const grassPad=Math.max(viewW,viewH,200);
+  ctx.fillStyle=TOWN_GRASS;ctx.fillRect(-grassPad,-grassPad,WORLD.width+grassPad*2,WORLD.height+grassPad*2);
+  townRound(ctx,-grassPad,1360,WORLD.width+grassPad*2,WORLD.height-1360+grassPad,90,'#f5f4ef');
+  // Broad warm paving, small offset stones and a circular civic square.
+  townRound(ctx,75,755,3050,625,45,'#f5f4ef','#d5d7d2',2);
+  for(let row=0;row<8;row++)for(let col=0;col<34;col++){
+    const x=75+col*92-(row%2)*46,y=766+row*79;
+    townRound(ctx,x+3,y+3,86,72,9,'#f5f4ef','#e5e5df',1);
+  }
+  ctx.strokeStyle='#b9bcb6';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(1600,1080,245,215,0,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.ellipse(1600,1080,230,201,0,0,Math.PI*2);ctx.stroke();
+  for(let i=0;i<12;i++){const a=i*Math.PI/6;ctx.beginPath();ctx.moveTo(1600+Math.cos(a)*213,1080+Math.sin(a)*186);ctx.lineTo(1600+Math.cos(a)*230,1080+Math.sin(a)*201);ctx.stroke();}
+  // Backdrop architecture stays outside the photographed action lanes.
+  drawBuilding(ctx,520,470,300,220,'#f5f4ef','CORNER CAFÉ');
+  drawBuilding(ctx,1000,440,330,250,'#f5f4ef','THE DAILY SQUARE');
+  drawBuilding(ctx,1960,430,350,260,'#f5f4ef','TOWN HALL');
+  drawBuilding(ctx,2570,485,350,205,'#f5f4ef','MARKET');
+  // A striped produce stand and separate crates, rather than flat bars.
+  townEllipse(ctx,2820,869,180,23,'#2526270b');townRound(ctx,2665,770,295,90,10,'#f5f4ef',TOWN_INK,3);
+  for(let i=0;i<7;i++)townRound(ctx,2655+i*45,728,46,64,[8,8,18,18],i%2?'#f5f4ef':'#f5f4ef',TOWN_INK,2);
+  for(let k=0;k<3;k++){townRound(ctx,2683+k*88,800,78,44,3,'#f5f4ef',TOWN_INK,2);for(let i=0;i<7;i++)townEllipse(ctx,2693+k*88+(i%4)*17,807+Math.floor(i/4)*16,9,9,['#f5f4ef','#f5f4ef','#f5f4ef'][k]);}
+  drawFountain(ctx,FOUNTAIN.x,FOUNTAIN.y);
+  drawBench(ctx,740,1260,1);drawBench(ctx,1940,1390,1);drawBench(ctx,2620,1320,-1);
+  // Lawn edges are planted, leaving the people and their event silhouettes clear.
+  [[170,660,1.6],[400,560,1.4],[1210,280,1.5],[1860,280,1.7],[2380,420,1.3],[3080,650,1.5],[340,1450,1.3],[1240,1490,1.5],[2050,1600,1.4],[2960,1480,1.7]].forEach(args=>drawTree(ctx,...args));
+  for(let i=0;i<48;i++){const x=120+(i*193)%2960,y=i%2?1460+(i*31)%210:580+(i*17)%130;townFlower(ctx,x,y,['#f5f4ef','#f5f4ef','#f5f4ef'][i%3]);}
+  ctx.save();ctx.strokeStyle='#b9bcb6';ctx.lineWidth=3;ctx.strokeRect(1430,350,360,260);ctx.beginPath();ctx.moveTo(1610,350);ctx.lineTo(1610,610);ctx.stroke();ctx.beginPath();ctx.arc(1610,480,60,0,Math.PI*2);ctx.stroke();ctx.restore();
+  [[1370,648],[1835,718],[2220,1450],[500,1340]].forEach(([x,y])=>{townEllipse(ctx,x,y+7,33,10,'#2526270b');townRound(ctx,x-26,y-25,52,32,6,'#f5f4ef',TOWN_INK,2);for(let i=0;i<4;i++)townFlower(ctx,x-18+i*12,y-27,['#f5f4ef','#f5f4ef'][i%2]);});
+  ctx.fillStyle='#7b807b';ctx.font='600 15px system-ui,sans-serif';ctx.textAlign='center';
+  [['WEST GARDEN',390,1335],['CAFÉ CORNER',930,1310],['TOWN SQUARE',1600,1340],['FOUNTAIN WALK',2320,1340],['MARKET LANE',2820,1300],['GREEN PARK',1610,685]].forEach(([t,x,y])=>ctx.fillText(t,x,y));
   [...sim.residents].sort((a,b)=>a.y-b.y).forEach(p=>drawResident(ctx,p,motionTime));
-  sim.events.forEach(ev=>drawEvent(ctx,ev,motionTime));
+  sim.events.forEach(ev=>drawEvent(ctx,ev,motionTime,sim));
 }
+function drawBuilding(ctx,x,y,w,h,color,name){
+  ctx.save();ctx.translate(x,y);ctx.lineJoin='round';
+  townRound(ctx,15,14,w,h,8,'#2526270b');townRound(ctx,0,0,w,h,5,color,TOWN_INK,4);
+  ctx.fillStyle='#f5f4ef';ctx.strokeStyle=TOWN_INK;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(-14,8);ctx.lineTo(20,-42);ctx.lineTo(w-22,-42);ctx.lineTo(w+15,8);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.strokeStyle=TOWN_INK;ctx.lineWidth=2;for(let i=20;i<w;i+=33){ctx.beginPath();ctx.moveTo(i,-38);ctx.lineTo(i-13,4);ctx.stroke();}
+  townRound(ctx,w-64,-72,28,38,3,'#f5f4ef',TOWN_INK,3);
+  for(let i=0;i<4;i++){
+    const wx=24+i*(w-44)/4;townRound(ctx,wx,30,42,56,10,'#f5f4ef',TOWN_INK,3);townRound(ctx,wx+6,37,30,36,6,'#f5f4ef');ctx.strokeStyle=TOWN_INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(wx+21,38);ctx.lineTo(wx+21,73);ctx.moveTo(wx+6,56);ctx.lineTo(wx+36,56);ctx.stroke();townRound(ctx,wx-4,81,50,10,2,'#f5f4ef',TOWN_INK,2);
+  }
+  townRound(ctx,15,104,w-30,36,4,'#f5f4ef',TOWN_INK,3);ctx.fillStyle=TOWN_INK;ctx.textAlign='center';ctx.font='700 16px system-ui,sans-serif';ctx.fillText(name,w/2,129);
+  townRound(ctx,w/2-27,h-66,54,66,[20,20,0,0],'#f5f4ef',TOWN_INK,3);townEllipse(ctx,w/2+15,h-31,3,3,'#f5f4ef');
+  for(let side of [-1,1]){townRound(ctx,w/2+side*90-28,h-65,56,46,6,'#f5f4ef',TOWN_INK,3);ctx.strokeStyle=TOWN_INK;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(w/2+side*90,h-62);ctx.lineTo(w/2+side*90,h-22);ctx.stroke();}
+  townRound(ctx,-8,h-4,w+16,12,3,'#f5f4ef',TOWN_INK,2);ctx.restore();
+}
+function drawTree(ctx,x,y,s){
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);townEllipse(ctx,19,78,44,13,'#2526270b');
+  ctx.strokeStyle=TOWN_INK;ctx.lineCap='round';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,13);ctx.lineTo(0,77);ctx.stroke();ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(0,40);ctx.lineTo(-18,18);ctx.moveTo(0,30);ctx.lineTo(18,10);ctx.stroke();
+  const crowns=[[-23,0,30,'#f5f4ef'],[20,-9,31,'#f5f4ef'],[-2,-28,34,'#f5f4ef']];for(const [a,b,r,c]of crowns){townEllipse(ctx,a,b,r,r,c);ctx.strokeStyle=TOWN_INK;ctx.lineWidth=2;ctx.beginPath();ctx.arc(a,b,r,0,Math.PI*2);ctx.stroke();}
+  ctx.strokeStyle=TOWN_INK;ctx.lineWidth=4;ctx.beginPath();ctx.arc(-8,-35,16,3.5,5);ctx.stroke();ctx.restore();
+}
+function drawBench(ctx,x,y,flip){ctx.save();ctx.translate(x,y);ctx.scale(flip,1);townEllipse(ctx,5,34,65,10,'#2526270b');ctx.strokeStyle=TOWN_INK;ctx.lineWidth=3;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-44,-30);ctx.lineTo(-44,32);ctx.moveTo(44,-30);ctx.lineTo(44,32);ctx.stroke();for(let y=-29;y<7;y+=14)townRound(ctx,-57,y,114,10,3,'#f5f4ef',TOWN_INK,2);ctx.restore();}
+function drawFountain(ctx,x,y){ctx.save();ctx.translate(x,y);townEllipse(ctx,10,54,109,25,'#2526270b');townEllipse(ctx,0,34,102,32,'#f5f4ef');ctx.strokeStyle=TOWN_INK;ctx.lineWidth=3;ctx.stroke();townEllipse(ctx,0,24,102,32,'#f5f4ef');ctx.strokeStyle=TOWN_INK;ctx.lineWidth=3;ctx.stroke();townEllipse(ctx,0,23,81,23,'#eceee8');ctx.strokeStyle=TOWN_INK;ctx.lineWidth=2;ctx.stroke();ctx.strokeStyle=TOWN_INK;ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(0,23,80,22,0,.2,2.6);ctx.stroke();townRound(ctx,-11,-27,22,53,4,'#f5f4ef',TOWN_INK,2);townEllipse(ctx,0,-28,29,10,'#f5f4ef');ctx.strokeStyle=TOWN_INK;ctx.stroke();ctx.strokeStyle='#777c77';ctx.lineWidth=3;for(let side of[-1,1]){ctx.beginPath();ctx.moveTo(side*3,-31);ctx.quadraticCurveTo(side*31,-88,side*55,15);ctx.stroke();}townEllipse(ctx,0,-38,6,10,'#f5f4ef');ctx.restore();}
 function drawResident(ctx,p,time){
   const t=reducedMotionQuery.matches?1:time,side=p.role?1:-1,fight=p.kind==='fight',dance=p.kind==='dance',wave=Math.sin(t*(fight?9:5)+p.role*Math.PI);
+  const soaked=p.kind==='splash'&&p.role===1;
   ctx.save();ctx.translate(p.x,p.y);ctx.scale(p.size,p.size);
   townEllipse(ctx,1,62,21,4,'#2526270b');
   if(p.kind==='trip'&&!p.role){ctx.translate(0,22);ctx.rotate(-.9+Math.sin(t*3)*.1);}else ctx.rotate(fight?wave*.12:dance?wave*.17:0);ctx.translate(0,dance?-Math.abs(wave)*9:0);
+  if(soaked){ctx.translate(2,0);ctx.rotate(.08+Math.sin(t*8)*.025);}
   const stride=p.kind==='walk'?Math.sin(t*3+p.id)*10:dance?wave*13:0;
   ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=TOWN_INK;ctx.lineWidth=4;
   ctx.beginPath();ctx.moveTo(0,-8);ctx.lineTo(0,27);ctx.lineTo(-13-stride,57);ctx.moveTo(0,27);ctx.lineTo(13+stride,57);ctx.stroke();
@@ -630,6 +689,7 @@ function drawResident(ctx,p,time){
   if(p.kind==='soccer'&&wave>.2){ctx.beginPath();ctx.moveTo(0,27);ctx.lineTo(-side*37,45);ctx.stroke();}
   if(p.kind==='music')arms=p.role?[[0,0,-28,-12+wave*9],[0,0,28,-15-wave*9]]:[[0,0,-28,14],[0,0,28,10+wave*8]];
   if(p.kind==='juggle'&&!p.role)arms=[[0,0,-29,-12-wave*9],[0,0,29,-12+wave*9]];
+  if(soaked)arms=[[0,0,-23,-38],[0,0,15,-31]];
   ctx.beginPath();arms.forEach(([a,b,c,d])=>{ctx.moveTo(a,b);ctx.lineTo(c,d);});ctx.stroke();
   townEllipse(ctx,0,-29,19,20,TOWN_GRASS);ctx.beginPath();ctx.ellipse(0,-29,19,20,0,0,Math.PI*2);ctx.stroke();
   townEllipse(ctx,-6,-29,2,2,TOWN_INK);townEllipse(ctx,6,-29,2,2,TOWN_INK);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-4,-20);ctx.quadraticCurveTo(0,fight?-24:-16,4,-20);ctx.stroke();
@@ -637,7 +697,14 @@ function drawResident(ctx,p,time){
   ctx.restore();
 }
 
-function drawEvent(ctx,ev,time){
+function fountainSplashPoint(target,f){
+  const start={x:FOUNTAIN.x+3,y:FOUNTAIN.y+FOUNTAIN.nozzleY};
+  const end={x:target.x-8,y:target.y-29*target.size};
+  const control={x:start.x+(end.x-start.x)*.7+30,y:start.y-110};
+  return {x:(1-f)*(1-f)*start.x+2*(1-f)*f*control.x+f*f*end.x,y:(1-f)*(1-f)*start.y+2*(1-f)*f*control.y+f*f*end.y};
+}
+
+function drawEvent(ctx,ev,time,sim){
   if(ev.kind==='calm')return;
   const t=reducedMotionQuery.matches?1:time;
   ctx.save();ctx.translate(ev.x,ev.y);ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=3;
@@ -654,7 +721,22 @@ function drawEvent(ctx,ev,time){
   }else if(ev.kind==='soccer'){
     const x=Math.sin(t*2.3)*48;ctx.fillStyle='#f5f4ef';ctx.strokeStyle='#414343';ctx.beginPath();ctx.arc(x,51-Math.abs(Math.cos(t*2.3))*16,12,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.beginPath();ctx.moveTo(x-4,42);ctx.lineTo(x+5,50);ctx.lineTo(x-4,57);ctx.stroke();
   }else if(ev.kind==='splash'){
-    ctx.strokeStyle='#9aa9a2';for(let i=0;i<6;i++){const f=(t*.8+i/6)%1;ctx.beginPath();ctx.moveTo(-28+f*75,-25-Math.sin(f*Math.PI)*65);ctx.lineTo(-26+f*75,-18-Math.sin(f*Math.PI)*65);ctx.stroke();}
+    const target=sim.residents.find(p=>p.spot===ev.id&&p.role===1);
+    if(target){
+      // Cancel the event's person-centered transform: every drop starts at the actual nozzle.
+      ctx.translate(-ev.x,-ev.y);ctx.strokeStyle='#89938f';ctx.lineWidth=3;
+      for(let i=0;i<15;i++){
+        const f=(t*.8+i/15)%1,a=fountainSplashPoint(target,Math.max(0,f-.028)),b=fountainSplashPoint(target,f);
+        const spread=Math.sin(i*4.7)*f*4;
+        ctx.beginPath();ctx.moveTo(a.x+spread,a.y);ctx.lineTo(b.x+spread,b.y);ctx.stroke();
+      }
+      const impact=fountainSplashPoint(target,1);
+      for(let i=0;i<5;i++){
+        const f=(t*1.5+i/5)%1,side=i%2?1:-1;
+        const x=impact.x+side*(4+f*22),y=impact.y+f*f*58-8*Math.sin(f*Math.PI);
+        ctx.globalAlpha=1-f;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+side*2,y+5);ctx.stroke();
+      }
+    }
   }else if(ev.kind==='trip'){
     ctx.strokeStyle='#7b807b';ctx.beginPath();ctx.moveTo(-94,51);ctx.lineTo(-109,41);ctx.moveTo(-98,61);ctx.lineTo(-117,65);ctx.stroke();ctx.fillStyle='#c4c7bf';ctx.beginPath();ctx.ellipse(-90,61,9,5,0,0,Math.PI*2);ctx.fill();
   }else if(ev.kind==='juggle'){

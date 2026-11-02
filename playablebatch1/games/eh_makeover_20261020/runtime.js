@@ -9,7 +9,13 @@ const R=window.Playable={spec,images,ctx,canvas,w:390,h:598,reduced:matchMedia('
  photo(id,alpha=1){const p=R.cover(id);ctx.save();ctx.globalAlpha=alpha;ctx.drawImage(images[id],p.x,p.y,p.w,p.h);ctx.restore();return p;},
  point(id,p){const b=R.cover(id);return{x:b.x+b.w*p.x,y:b.y+b.h*p.y};},
  sprite(id,x,y,w,h,rotation=0,alpha=1,anchor={x:.5,y:.5}){const im=images[id];if(!im||!Number.isFinite(x+y+w))return;h=h??w*im.height/im.width;ctx.save();ctx.translate(x,y);ctx.rotate(rotation);ctx.globalAlpha=alpha;ctx.drawImage(im,-w*anchor.x,-h*anchor.y,w,h);ctx.restore();},
- frame(ids,t,duration,x,y,w,h,loop=false){if(t<0||(!loop&&t>=duration))return;if(loop&&R.reduced)t=duration*.5;const n=Math.min(ids.length-1,Math.floor((loop?t%duration:t)/duration*ids.length));R.sprite(ids[n],x,y,w,h);},
+ frame(ids,t,duration,x,y,w,h,loop=false){
+ if(t<0||(!loop&&t>=duration))return;if(loop&&R.reduced)t=duration*.5;
+ const n=Math.min(ids.length-1,Math.floor((loop?t%duration:t)/duration*ids.length));
+ for(let ahead=0;ahead<3;ahead++){const index=loop?(n+ahead)%ids.length:n+ahead;if(index<ids.length)loadAsset(ids[index]).catch(()=>{});}
+ let index=n;while(index>=Math.max(0,n-3)&&!images[ids[index]])index--;
+ if(index>=Math.max(0,n-3))R.sprite(ids[index],x,y,w,h);
+},
  hud(left='',right='',center=false){el('left').textContent=left;el('right').textContent=right;el('hud').classList.toggle('center',center);},
  guide(text,show=true){el('guide').textContent=text;el('guide').hidden=!show;},
  result(title,sub=''){el('resultTitle').textContent=title;el('resultSub').textContent=sub;el('result').hidden=!title;el('retry').hidden=!title;},
@@ -23,6 +29,66 @@ const R=window.Playable={spec,images,ctx,canvas,w:390,h:598,reduced:matchMedia('
  releaseInput(){endPointer();},
  setDirection(show,fn){el('direction').hidden=!show;el('direction').onclick=()=>{if(paused||!hostActive)return;R.unlock();fn();};},
  debug:()=>({state:app?.state?.(),paused,hostActive,hidden,loaded:Object.keys(images).length,sounds:soundNodes.size})};
+// Keep startup independent of optional animation frames and bound decode work.
+const assetSlots=new Map(),assetJobs=new Map(),assetQueue=[],frameCache=new Map(),frameFailures=new Map();
+let assetLoads=0,assetAlive=true,frameStamp=0,booting=false;
+const effectSlot=id=>/^FX_/.test(id),frameLimit=12;
+function trimFrames(){
+  while(frameCache.size>frameLimit){
+    let oldest=null,stamp=Infinity;
+    for(const [id,time]of frameCache)if(time<stamp){oldest=id;stamp=time;}
+    frameCache.delete(oldest);const image=images[oldest];delete images[oldest];
+    if(image)image.removeAttribute('src');
+  }
+}
+function readImage(slot,attempt=0){
+  return new Promise((resolve,reject)=>{
+    const image=new Image();image.decoding='async';
+    const done=error=>{
+      clearTimeout(timer);image.onload=null;image.onerror=null;
+      if(error){image.removeAttribute('src');reject(error);}else resolve(image);
+    };
+    const timer=setTimeout(()=>done(Error('Image timed out: '+slot.id)),12000);
+    image.onload=()=>done(image.naturalWidth>0&&image.naturalHeight>0?null:Error('Image is empty: '+slot.id));
+    image.onerror=()=>done(Error('Image could not be loaded: '+slot.id));
+    // load/naturalWidth works even when the optional decode() promise is rejected
+    // under memory pressure. Canvas decodes only the images it actually paints.
+    image.src=slot.path+(attempt?(slot.path.includes('?')?'&':'?')+'retry='+attempt:'');
+  });
+}
+function pumpAssets(){
+  while(assetAlive&&assetLoads<3&&assetQueue.length){
+    const job=assetQueue.shift();assetLoads++;
+    (async()=>{
+      let image;
+      try{image=await readImage(job.slot);}catch(first){if(!assetAlive)throw first;image=await readImage(job.slot,1);}
+      if(!assetAlive){image.removeAttribute('src');return null;}
+      images[job.slot.id]=image;
+      if(effectSlot(job.slot.id)){frameFailures.delete(job.slot.id);frameCache.set(job.slot.id,++frameStamp);trimFrames();}
+      return image;
+    })().then(job.resolve,error=>{
+      if(effectSlot(job.slot.id)){frameFailures.set(job.slot.id,performance.now());job.resolve(null);}
+      else job.reject(error);
+    }).finally(()=>{assetLoads--;assetJobs.delete(job.slot.id);pumpAssets();});
+  }
+}
+function loadAsset(id){
+  if(images[id]){if(effectSlot(id))frameCache.set(id,++frameStamp);return Promise.resolve(images[id]);}
+  if(assetJobs.has(id))return assetJobs.get(id);
+  const slot=assetSlots.get(id);if(!slot)return Promise.reject(Error('Missing image slot: '+id));
+  if(effectSlot(id)&&((frameFailures.has(id)&&performance.now()-frameFailures.get(id)<2500)||assetJobs.size>=6))return Promise.resolve(null);
+  let resolve,reject;const promise=new Promise((yes,no)=>{resolve=yes;reject=no;});
+  assetJobs.set(id,promise);
+  const job={slot,resolve,reject};effectSlot(id)?assetQueue.push(job):assetQueue.unshift(job);
+  pumpAssets();return promise;
+}
+window.addEventListener('pagehide',()=>{
+  assetAlive=false;
+  for(const job of assetQueue.splice(0))job.resolve(null);
+  for(const [id,image]of Object.entries(images)){image.removeAttribute('src');delete images[id];}
+  frameCache.clear();assetJobs.clear();
+},{once:true});
+
 function size(){const b=canvas.getBoundingClientRect();R.w=b.width;R.h=b.height;const d=Math.min(2,devicePixelRatio||1);canvas.width=Math.round(b.width*d);canvas.height=Math.round(b.height*d);ctx.setTransform(d,0,0,d,0,0);document.documentElement.style.setProperty('--ui',Math.min(b.width/390,b.height/598));app?.resize?.();}
 function reset(){endPointer();R.silence();paused=false;el('pause').hidden=true;R.result('');el('direction').hidden=true;app.reset();R.announce('Ready');if(running)app.draw(0);last=0;}
 function point(e){const b=canvas.getBoundingClientRect();return{x:e.clientX-b.left,y:e.clientY-b.top};}
@@ -45,6 +111,31 @@ window.addEventListener('blur',pause);window.addEventListener('resize',size);
 window.addEventListener('message',e=>{if(e.source!==parent||parent===window)return;const d=e.data;if(d?.type==='playable-active'&&typeof d.active==='boolean'){hostActive=d.active;document.documentElement.dataset.feedPreview=String(!hostActive);if(!hostActive&&running){pause();reset();}last=0;}});
 function palette(){if(parent===window)return;const c=document.createElement('canvas');c.width=32;c.height=48;const x=c.getContext('2d');x.drawImage(canvas,0,0,32,48);try{parent.postMessage({type:'playable-palette',top:Array.from(x.getImageData(0,0,32,12).data),bottom:Array.from(x.getImageData(0,36,32,12).data)},location.origin);}catch{}}
 function loop(t){requestAnimationFrame(loop);if(!running||hidden||paused){last=0;return;}const dt=last?Math.min(.05,(t-last)/1000):0;last=t;age+=dt;if(hostActive)app.update(dt);else app.previewUpdate?.(dt);app.draw(age);const state=app.state?.().state;if(el('stage').dataset.state!==state)el('stage').dataset.state=state;}
-async function boot(){try{const c=await fetch('./game.config.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Configuration failed to load');return r.json();});Object.assign(config,c);for(const t of c.tweaks||[]){if(typeof t.value==='number'&&Number.isFinite(t.value))spec.settings[t.id]=R.clamp(t.value,t.min??-Infinity,t.max??Infinity);}await Promise.all(c.images.map(async slot=>{if(!slot.path||/^(https?:|data:)/.test(slot.path))throw Error('Image slot must use a local relative path: '+slot.id);const im=new Image();im.src=slot.path;await im.decode();images[slot.id]=im;}));await document.fonts.ready;document.title=spec.title;el('stage').className=spec.id;app=window.createGame(R);size();reset();running=true;el('loading').hidden=true;app.draw(0);document.documentElement.dataset.playableLoading='false';palette();requestAnimationFrame(loop);}catch(e){el('loading').classList.add('error');el('loading').textContent='Could not load this game. '+e.message;console.error(e);}}
+async function boot(){
+  if(booting||running)return;booting=true;
+  const loading=el('loading');loading.hidden=false;loading.classList.remove('error');loading.textContent='Loading…';
+  frameFailures.clear();
+  try{
+    const c=await fetch('./game.config.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Configuration failed to load');return r.json();});
+    Object.assign(config,c);
+    for(const t of c.tweaks||[])if(typeof t.value==='number'&&Number.isFinite(t.value))spec.settings[t.id]=R.clamp(t.value,t.min??-Infinity,t.max??Infinity);
+    for(const slot of c.images||[]){
+      if(!slot.path||/^(https?:|data:)/.test(slot.path))throw Error('Image slot must use a local relative path: '+slot.id);
+      assetSlots.set(slot.id,slot);
+    }
+    // Only portraits, tools and the result frame are required for the first view.
+    // Effect frames load as they are used and never hold up the playable.
+    await Promise.all([...assetSlots.keys()].filter(id=>!effectSlot(id)).map(loadAsset));
+    if(!assetAlive)return;
+    document.title=spec.title;el('stage').className=spec.id;app=window.createGame(R);size();reset();
+    app.draw(0);running=true;loading.hidden=true;document.documentElement.dataset.playableLoading='false';palette();requestAnimationFrame(loop);
+  }catch(error){
+    running=false;loading.hidden=false;loading.classList.add('error');loading.textContent='Could not load this game. '+error.message+' ';
+    const retry=document.createElement('button');retry.type='button';retry.textContent='Tap to retry';
+    retry.style.cssText='display:block;margin:16px auto 0;padding:12px 20px;border:0;border-radius:24px;font:600 16px system-ui;cursor:pointer';
+    retry.onclick=()=>{booting=false;boot();};loading.append(retry);console.error(error);
+  }finally{booting=false;}
+}
+
 boot();
 })();

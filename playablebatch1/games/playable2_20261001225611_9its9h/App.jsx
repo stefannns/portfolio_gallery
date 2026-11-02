@@ -13050,7 +13050,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
           if (t.mode === "playing") {
             t.time >= t.nextSpawn && (x(t), t.nextSpawn = t.time + Math.max(640, Number(M.SPAWN_INTERVAL) || 1e3)), t.hero.invulnerable = Math.max(0, t.hero.invulnerable - s);
             let h = Math.atan2(Math.sin(t.facing - t.aim), Math.cos(t.facing - t.aim));
-            t.aim += on(h, -s * 8, s * 8), t.swing += s * 11;
+            t.aim += on(h, -s * 8, s * 8), t.swing += s * 13.2;
           }
           let o = t.swing, m = Math.cos(o), u = Math.sin(o), f = t.blade.map((h) => ({ x: t.hero.x + h.x * m - h.y * u, y: t.hero.y + h.x * u + h.y * m })), l = N(t);
           e.strokeStyle = "#d1d6ce", e.lineWidth = 2, e.strokeRect(l.left - 8, l.top - 14, l.right - l.left + 16, l.bottom - l.top + 28);
