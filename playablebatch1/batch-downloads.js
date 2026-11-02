@@ -8,8 +8,8 @@ window.PlayableBatchDownloads = {
         "filename": "batch-1-en.zip",
         "language": "en",
         "games": 38,
-        "bytes": 40672071,
-        "sha256": "e3191b3881e64844467c47157254f7bdb307f329a4b6e57c6089b5b6ad51e56b",
+        "bytes": 40673369,
+        "sha256": "f75dcbfaddd9c636df5cdaf6101d3dc3e8d2421a54da40a67ade2dc623ba6ff2",
         "members": [
           {
             "number": 1,
@@ -246,8 +246,8 @@ window.PlayableBatchDownloads = {
         "filename": "batch-1-it.zip",
         "language": "it",
         "games": 38,
-        "bytes": 40720837,
-        "sha256": "b63ea3930a200340c838f870c9ea190711b22157cd6f24990a975749ce65c358",
+        "bytes": 40722098,
+        "sha256": "c22a0df54dccbbf0f5df494bb15bf61c317d1e6f15e30fa52bc91e8c6a42cf1a",
         "members": [
           {
             "number": 1,

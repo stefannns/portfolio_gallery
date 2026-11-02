@@ -1407,3 +1407,6 @@ Object.assign(window.PLAYABLE_IMPLEMENTED_FIXES,{
     "status": "Updated."
   }
 });
+
+/* Requested local game updates, 2 November 2026. */
+(()=>{const map=window.PLAYABLE_IMPLEMENTED_FIXES;if(!map)return;const updates={"playable2_20260928030211_tdjer2":{"number":31,"item":"Color themes now share the horizontally scrollable swatch row. Settings fit below the canvas and reflow the artwork instead of covering it."},"playable2_20260927020828_y5a1vt":{"number":10,"item":"Red and blue target labels use their matching colors; removed the white-text override."},"playable2_20260927020825_lnwh1h":{"number":16,"item":"Catcher keeps the same position between cover and play. Wave-cleared results use a solid cream background and single-color text."}};for(const [id,u]of Object.entries(updates)){const prior=map[id]||{};map[id]={...prior,number:u.number,items:[...(prior.items||[]).filter(item=>item!==u.item),u.item],status:"Implemented and synchronized to GitHub."};}})();

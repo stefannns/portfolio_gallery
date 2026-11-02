@@ -176,27 +176,27 @@ window.PlayableGameDownloads = {
   "playable2_20260927020828_y5a1vt": {
     "url": "/playablebatch1/downloads/10-playable2_20260927020828_y5a1vt.zip",
     "filename": "10-playable2_20260927020828_y5a1vt.zip",
-    "bytes": 362204,
+    "bytes": 362196,
     "files": 9,
-    "sha256": "1f0fb61f653565697575aa16f84a26cdcfceb07bc26903d7cd831f02cfcd25f9",
+    "sha256": "cc17b1de23d23c8daf118d0b61d9559e72eb5dea66094dee36a0673bc7f4f692",
     "language": "en",
     "format": "template-v1",
     "languages": {
       "en": {
         "url": "/playablebatch1/downloads/10-playable2_20260927020828_y5a1vt.zip",
         "filename": "10-playable2_20260927020828_y5a1vt.zip",
-        "bytes": 362204,
+        "bytes": 362196,
         "files": 9,
-        "sha256": "1f0fb61f653565697575aa16f84a26cdcfceb07bc26903d7cd831f02cfcd25f9",
+        "sha256": "cc17b1de23d23c8daf118d0b61d9559e72eb5dea66094dee36a0673bc7f4f692",
         "language": "en",
         "format": "template-v1"
       },
       "it": {
         "url": "/playablebatch1/downloads/10-playable2_20260927020828_y5a1vt-it.zip",
         "filename": "10-playable2_20260927020828_y5a1vt-it.zip",
-        "bytes": 363846,
+        "bytes": 363832,
         "files": 9,
-        "sha256": "0ed39dc87b547309e5beb6932cb4d29586962fa4066b994825974ba9302d0fbd",
+        "sha256": "39801b358237187c4665ea85a8f3188fdf98f91937e5abb7dca97558b3e5671d",
         "language": "it",
         "format": "template-v1"
       }
@@ -284,27 +284,27 @@ window.PlayableGameDownloads = {
   "playable2_20260927020825_lnwh1h": {
     "url": "/playablebatch1/downloads/16-playable2_20260927020825_lnwh1h.zip",
     "filename": "16-playable2_20260927020825_lnwh1h.zip",
-    "bytes": 548520,
+    "bytes": 548374,
     "files": 8,
-    "sha256": "df767a616a720955e14ab124073195af9b71375014264bb6465a9a5f07c34f1e",
+    "sha256": "dd4f61a062abbd04b27b0efbb9e7a8f6064b415415304204c15ebb566b7e05c6",
     "language": "en",
     "format": "template-v1",
     "languages": {
       "en": {
         "url": "/playablebatch1/downloads/16-playable2_20260927020825_lnwh1h.zip",
         "filename": "16-playable2_20260927020825_lnwh1h.zip",
-        "bytes": 548520,
+        "bytes": 548374,
         "files": 8,
-        "sha256": "df767a616a720955e14ab124073195af9b71375014264bb6465a9a5f07c34f1e",
+        "sha256": "dd4f61a062abbd04b27b0efbb9e7a8f6064b415415304204c15ebb566b7e05c6",
         "language": "en",
         "format": "template-v1"
       },
       "it": {
         "url": "/playablebatch1/downloads/16-playable2_20260927020825_lnwh1h-it.zip",
         "filename": "16-playable2_20260927020825_lnwh1h-it.zip",
-        "bytes": 549926,
+        "bytes": 549773,
         "files": 8,
-        "sha256": "f5e16bb567e3df9daefb6579050406ccc83d35b7bfb1c6db4849c5a2761b6421",
+        "sha256": "e4304bb8e2722c6c77ab6a599b23961ad9589efe53695e5f82716543fdae19c3",
         "language": "it",
         "format": "template-v1"
       }
@@ -477,27 +477,27 @@ window.PlayableGameDownloads = {
   "playable2_20260928030211_tdjer2": {
     "url": "/playablebatch1/downloads/31-playable2_20260928030211_tdjer2.zip",
     "filename": "31-playable2_20260928030211_tdjer2.zip",
-    "bytes": 231765,
+    "bytes": 233217,
     "files": 7,
-    "sha256": "945247faee98228510d7f385b08e5c34b31f5d53509088053cd3e9f7edffdde4",
+    "sha256": "b0b7c89bc1014da195e9bd0cf7196bd5814adcd4b44413a58b8f0ed472e87cdc",
     "language": "en",
     "format": "template-v1",
     "languages": {
       "en": {
         "url": "/playablebatch1/downloads/31-playable2_20260928030211_tdjer2.zip",
         "filename": "31-playable2_20260928030211_tdjer2.zip",
-        "bytes": 231765,
+        "bytes": 233217,
         "files": 7,
-        "sha256": "945247faee98228510d7f385b08e5c34b31f5d53509088053cd3e9f7edffdde4",
+        "sha256": "b0b7c89bc1014da195e9bd0cf7196bd5814adcd4b44413a58b8f0ed472e87cdc",
         "language": "en",
         "format": "template-v1"
       },
       "it": {
         "url": "/playablebatch1/downloads/31-playable2_20260928030211_tdjer2-it.zip",
         "filename": "31-playable2_20260928030211_tdjer2-it.zip",
-        "bytes": 233125,
+        "bytes": 234553,
         "files": 7,
-        "sha256": "10d42a620124a3c24d48dd44353b4e8c85d192df106463697e79ae78fde27af4",
+        "sha256": "b417781f8667f60e011d50bc3a27a8bf1edc9b1527939922d718871a245f61b1",
         "language": "it",
         "format": "template-v1"
       }

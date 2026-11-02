@@ -82,7 +82,7 @@
     html[data-ui-batch2-preview] .string-guide{top:-12px;bottom:auto!important}
     .cw-game .cw-header{position:absolute;top:10%;left:30px;right:30px;padding:0!important}
     .cw-game .cw-target{margin-top:8px!important;padding:4px 16px!important}
-    .cw-game .cw-target .hud-text{color:#fff!important;text-shadow:none!important}
+    .cw-game .cw-target .hud-text{text-shadow:none!important}
     .cw-game .cw-stage{inset:26% 30px 36%}
     .cw-game .cw-guide{top:67%}
   `;

@@ -562,7 +562,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020828_y5a1vt/game.html",
-          "sha256": "ccd156144b06d667f796b480e2f4443ba495bd0ef2aace13755c4542e0f2b71a"
+          "sha256": "11d8f0bef798fa93ec023d482536916b4681dbdbafddf27eaca9a0e63a27694c"
         },
         {
           "file": "games/playable2_20260927020828_y5a1vt/game.config.json",
@@ -574,7 +574,7 @@
         },
         {
           "file": "games/playable2_20260927020828_y5a1vt/ui-batch2-layout.js",
-          "sha256": "098af3089b9b11040feefe7b1d9b82226e68d30b238d61792bbd0a8803120114"
+          "sha256": "9554cfa76388314b123468dd3c31bee55a9c720b19419bf6ced13b300eb210c4"
         },
         {
           "file": "games/playable2_20260927020828_y5a1vt/bundle.js",
@@ -613,7 +613,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020828_y5a1vt/game.it.html",
-          "sha256": "574e5c5ca71d27ecebacb27bce5a0f6393f3e092c9f3ea6837d2242d099f0f39"
+          "sha256": "511637178deb82face0456d0ed2a14d87740516f138942e59b270485215e0b04"
         },
         {
           "file": "games/playable2_20260927020828_y5a1vt/game.config.it.json",
@@ -629,7 +629,7 @@
         },
         {
           "file": "games/playable2_20260927020828_y5a1vt/ui-batch2-layout.it.js",
-          "sha256": "098af3089b9b11040feefe7b1d9b82226e68d30b238d61792bbd0a8803120114"
+          "sha256": "9554cfa76388314b123468dd3c31bee55a9c720b19419bf6ced13b300eb210c4"
         },
         {
           "file": "games/playable2_20260927020828_y5a1vt/bundle.it.js",
@@ -909,7 +909,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020825_lnwh1h/game.html",
-          "sha256": "a6513d0623083e5a72465d8ac7df87b0c2b51a4c3238f7e58b7f694f65666564"
+          "sha256": "d9b98fe09208c4d90938c67436ab48bd2f84a0ae2fe13c72d7563e97dbb97dcf"
         },
         {
           "file": "games/playable2_20260927020825_lnwh1h/game.config.json",
@@ -933,7 +933,7 @@
         },
         {
           "file": "games/playable2_20260927020825_lnwh1h/bundle.js",
-          "sha256": "ec7119ff6bcfcf7d622c45c0b5d66aa06e0013769556590201f1b3810b1dea71"
+          "sha256": "f7558f2d9fd6961f76d0121f2a248d1e14aece6209d3604d3d6847441669a490"
         },
         {
           "file": "games/playable2_20260927020825_lnwh1h/sand-guide.js",
@@ -977,7 +977,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020825_lnwh1h/game.it.html",
-          "sha256": "43d430d47b4ddecdb75b38f5fc2d09bb21ab6f203873a3f6daef22d21a458b37"
+          "sha256": "7ef72c0ad72f7c4300cbcfd167e5fb4931037250510f5dda1e2890127e9fecf7"
         },
         {
           "file": "games/playable2_20260927020825_lnwh1h/game.config.it.json",
@@ -1005,7 +1005,7 @@
         },
         {
           "file": "games/playable2_20260927020825_lnwh1h/bundle.it.js",
-          "sha256": "8e29d0a66dcf3f9759f39578030dbb062c74c3787289f768e86497dd19d3cb2c"
+          "sha256": "26ee2de2a379a411327fe255d49cfc57fcc4491f9fedf9f5b3e4e14cdc4f98be"
         },
         {
           "file": "games/playable2_20260927020825_lnwh1h/sand-guide.it.js",
@@ -1410,7 +1410,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260928030211_tdjer2/game.html",
-          "sha256": "438b59a5b0d16743948ae6b8e127de47760f9053b41f162f7bd70cdc975a7833"
+          "sha256": "00ceda492328fc48d47f7b379123dabaec4f1c729311ef3bdeed7289c1ab6fd0"
         },
         {
           "file": "games/playable2_20260928030211_tdjer2/game.config.json",
@@ -1426,7 +1426,7 @@
         },
         {
           "file": "games/playable2_20260928030211_tdjer2/bundle.js",
-          "sha256": "6466e39310a04356bc1c5a7be433c9dfa843230e19f02aca59718c5b8d1e79c0"
+          "sha256": "8710c38074a99aa1c9d34bcc44b01efd254478434e5e71892ca7b989a4e0080c"
         },
         {
           "file": "games/playable2_20260928030211_tdjer2/guide-breathing.js",
@@ -1453,7 +1453,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260928030211_tdjer2/game.it.html",
-          "sha256": "4943a657424d9bc58c4def8c04fa1f6d43125a5df82e3706259bd0d971f8c284"
+          "sha256": "518df1a9c8366a80d971ee71ecd6c8a44e77290819515b04c0f3b219c47f2441"
         },
         {
           "file": "games/playable2_20260928030211_tdjer2/game.config.it.json",
@@ -1473,7 +1473,7 @@
         },
         {
           "file": "games/playable2_20260928030211_tdjer2/bundle.it.js",
-          "sha256": "55f98d41b2c9bc9358b40f11df6fb1d0f8bfe3bfb9dc518e655df7d4ff5a773c"
+          "sha256": "e24b90db53bafd45e49d559c35b721654f6006c1c8760ec4f30396d15b876c09"
         },
         {
           "file": "games/playable2_20260928030211_tdjer2/guide-breathing.it.js",
