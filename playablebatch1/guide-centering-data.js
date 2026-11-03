@@ -245,12 +245,12 @@
   [
     75,
     "eh_feed_your_friend_20261020",
-    "Below the mouth target"
+    "User follow-up: upper-quarter CTA at 26%, visible above the feed preview artwork"
   ],
   [
     76,
     "eh_hair_shave_20261020",
-    "Below the face/shaver working area"
+    "User follow-up: upper-quarter CTA at 26%, visible above the feed preview artwork"
   ],
   [
     77,
@@ -260,7 +260,7 @@
   [
     78,
     "eh_makeover_20261020",
-    "Below the face/tool contact zones"
+    "User follow-up: upper-quarter CTA at 26%, visible above the feed preview artwork"
   ]
 ];
   for(const [number,id,exception]of rows){

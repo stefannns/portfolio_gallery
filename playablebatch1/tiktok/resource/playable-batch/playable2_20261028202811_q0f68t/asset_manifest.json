@@ -7,11 +7,11 @@
   "entry": "dist/game.html",
   "source_kind": "editable-current-react-source",
   "files": {
-    "App.jsx": "3e68414fb60bf92cb9eb5a53aa5f4a81aed334b3b5dc807cda8af0beed2a07f4",
+    "App.jsx": "021afc7f0c727ff6c1bf0d65e53b0d2ae553fc289f70f0974588f9f9e63c3b1f",
     "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
     "dist/game.html": "cd1d24ff22d758bc2bba5e77215c1f263edcc7209ac55d8d2852bbb4ba9bac85",
-    "dist/bundle.js": "412e6f9ed7ce17c5ddfc8966b814f288efaa93e0a9843f3467c1ce9594054c5a",
-    "dist/game.config.json": "a7e74001e913c682ba648f0f15d35fe7180d70a4410ac56eaa659d3be0dcf135"
+    "dist/bundle.js": "04b996d844b03db6a352813dfeb87dac994eb9bf84a002fb3b3548374cb8c850",
+    "dist/game.config.json": "6c9cf107fba50bf73b4e1b5446d6cb31edfb5728666bcb4098901fec6f122f17"
   },
   "assets": [
     {
@@ -57,6 +57,150 @@
       ],
       "bytes": 31386,
       "sha256": "a0c77acd13d345cfd4b7554d90276ec9d66ded63bde8f3289d64a9ff42ddbbfc"
+    },
+    {
+      "path": "dist/assets/memory-sets/day_balloon.webp",
+      "ids": [
+        "DAY_BALLOON"
+      ],
+      "bytes": 25344,
+      "sha256": "4b05c4c51bd28bf78bccb5e27e7cd5fd5a3fc9413432e5af09ccf2bbc163980d"
+    },
+    {
+      "path": "dist/assets/memory-sets/day_bicycle.webp",
+      "ids": [
+        "DAY_BICYCLE"
+      ],
+      "bytes": 103184,
+      "sha256": "6f86b6fe22ad5ebe38053b9c2900c4489e080a61f3ed70522a4e251addd7bfa8"
+    },
+    {
+      "path": "dist/assets/memory-sets/day_ferris.webp",
+      "ids": [
+        "DAY_FERRIS"
+      ],
+      "bytes": 62628,
+      "sha256": "cb6b897d02497c463f1226b6194e41f6add315330bab7d2a4e8a556b400a0a87"
+    },
+    {
+      "path": "dist/assets/memory-sets/day_flowers.webp",
+      "ids": [
+        "DAY_FLOWERS"
+      ],
+      "bytes": 87926,
+      "sha256": "0db2bbe8ffee884ef5db1f6497b742830ffd243602dab11223e5ad0034c44a89"
+    },
+    {
+      "path": "dist/assets/memory-sets/day_frisbee.webp",
+      "ids": [
+        "DAY_FRISBEE"
+      ],
+      "bytes": 79884,
+      "sha256": "965390505749ad68831162dcaaae9df388a364a687b02426a971dd91192f80a2"
+    },
+    {
+      "path": "dist/assets/memory-sets/day_ice_cream.webp",
+      "ids": [
+        "DAY_ICE_CREAM"
+      ],
+      "bytes": 49980,
+      "sha256": "e199662953e449ba763791e5d6f586bd4c472ea6e7edd0df872fb2bbfc3b33b2"
+    },
+    {
+      "path": "dist/assets/memory-sets/day_kayak.webp",
+      "ids": [
+        "DAY_KAYAK"
+      ],
+      "bytes": 68636,
+      "sha256": "51e40f96bc9695f7baef7928f1b39000e91c8bbe3770df420f80406f136279d1"
+    },
+    {
+      "path": "dist/assets/memory-sets/day_tram.webp",
+      "ids": [
+        "DAY_TRAM"
+      ],
+      "bytes": 85618,
+      "sha256": "336b89f76fbb273fcdcb87515c779ca90a0fa38edf52c81cab3ddb6344b1b377"
+    },
+    {
+      "path": "dist/assets/memory-sets/day_violin.webp",
+      "ids": [
+        "DAY_VIOLIN"
+      ],
+      "bytes": 63716,
+      "sha256": "b4e2149e69e9be4e6f28671e772574f81ef1a5f04e6095f180d53ef7c1c92d89"
+    },
+    {
+      "path": "dist/assets/memory-sets/home_book.webp",
+      "ids": [
+        "HOME_BOOK"
+      ],
+      "bytes": 62922,
+      "sha256": "7d43adbd3b0ec54977483388ce500c0518db81dcc28be881c4a541fb5cea2f73"
+    },
+    {
+      "path": "dist/assets/memory-sets/home_cake.webp",
+      "ids": [
+        "HOME_CAKE"
+      ],
+      "bytes": 54098,
+      "sha256": "94790e5c82ffc661fb2073cd53ed09220cc277f227c68316bb51afc7de810522"
+    },
+    {
+      "path": "dist/assets/memory-sets/home_duck.webp",
+      "ids": [
+        "HOME_DUCK"
+      ],
+      "bytes": 47692,
+      "sha256": "c46d7ab0dc4e281a8e7d981ff561ea3c11d965d507aea213a867112b27a88f81"
+    },
+    {
+      "path": "dist/assets/memory-sets/home_fish.webp",
+      "ids": [
+        "HOME_FISH"
+      ],
+      "bytes": 49346,
+      "sha256": "506fb31cf43f06d0228a75d4b8b1ddaf3e6148abc565640f81055f5908df65e9"
+    },
+    {
+      "path": "dist/assets/memory-sets/home_guitar.webp",
+      "ids": [
+        "HOME_GUITAR"
+      ],
+      "bytes": 71480,
+      "sha256": "b0904fb090c0517eca92b5f1c68d84671827df000753b25c1318f16bed74adc3"
+    },
+    {
+      "path": "dist/assets/memory-sets/home_kettle.webp",
+      "ids": [
+        "HOME_KETTLE"
+      ],
+      "bytes": 42434,
+      "sha256": "5d680b032a038b1bd740f27a5fc77810e73f62a17e1520ec3ea3f62fb0790df8"
+    },
+    {
+      "path": "dist/assets/memory-sets/home_pancakes.webp",
+      "ids": [
+        "HOME_PANCAKES"
+      ],
+      "bytes": 59576,
+      "sha256": "834528109e442584becf05654bd7ad802991d3117ec9bbf030290cd742aff8e8"
+    },
+    {
+      "path": "dist/assets/memory-sets/home_rabbit.webp",
+      "ids": [
+        "HOME_RABBIT"
+      ],
+      "bytes": 55748,
+      "sha256": "1b4ba774e1079ed454eba263c5743ea64d1cc7c4fd0485e791210dd5f29132d1"
+    },
+    {
+      "path": "dist/assets/memory-sets/home_yarn.webp",
+      "ids": [
+        "HOME_YARN"
+      ],
+      "bytes": 105620,
+      "sha256": "37a354cd46e223a77a169d99425bb30f4f61a332128b854cb87b559aff42fb8c"
     },
     {
       "path": "dist/assets/office_chair.webp",

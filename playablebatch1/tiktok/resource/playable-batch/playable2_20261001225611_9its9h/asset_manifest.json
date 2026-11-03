@@ -7,10 +7,10 @@
   "entry": "dist/game.html",
   "source_kind": "rebuildable-current-runtime-source",
   "files": {
-    "App.jsx": "9372a59e7b1ba1aa0b9c0bb5bf172eaf03d0cdf6588160daff512a4235afbe96",
+    "App.jsx": "1f82ccd7c9c5eac264f39c7a412f675f4ab7df2608262ea575b817e947a1e428",
     "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
-    "dist/game.html": "4c8121dcbf1cea85c10a7f0f598429fa0f597558c3d0c600ad1f6d70e23615e4",
-    "dist/bundle.js": "72d8489136aed8a3c5757afb562e73d0552102ff4452a1c284180092785280e1",
+    "dist/game.html": "7bdf2fcaa01fe0bb3906a0084963062a05b8b738d097469a579a194674ad59ee",
+    "dist/bundle.js": "775eb1ad487a091a8283a59acc2edcfaaef21378a925030377636fd0f5bf74c6",
     "dist/game.config.json": "2af5c33317258c7919a5d9b11f8705bee324dd60ec4f16e33a3c26d7bfa9965b"
   },
   "assets": [
@@ -33,6 +33,30 @@
       "ids": [],
       "bytes": 18880,
       "sha256": "4650e661683335ff42987353137525ee47444acff82525f647beb9d82b534216"
+    },
+    {
+      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
+      "ids": [],
+      "bytes": 37004,
+      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+    },
+    {
+      "path": "dist/assets/fonts/bangers/OFL.txt",
+      "ids": [],
+      "bytes": 4388,
+      "sha256": "c36ad22ae5daf9bb19fa6decb3d9ec51cb9dc5b89c04c630aebe34ef26fb962e"
+    },
+    {
+      "path": "dist/assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "ids": [],
+      "bytes": 37464,
+      "sha256": "487694c955a01a6b9e0985b4839ebe6f5406770db551ea163799ee02deb7d3a4"
+    },
+    {
+      "path": "dist/assets/fonts/dynapuff/OFL.txt",
+      "ids": [],
+      "bytes": 4390,
+      "sha256": "15d6a0e2b087184b78a3bf740995d2c8afc8f855d4f65342907e166e31e959c6"
     },
     {
       "path": "dist/assets/obj_enemy.svg",

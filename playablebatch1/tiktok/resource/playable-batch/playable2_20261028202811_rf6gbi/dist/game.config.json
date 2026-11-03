@@ -65,8 +65,8 @@
     {
       "id": "DRAW_HINT",
       "label": "Drawing hint",
-      "value": "Draw a closed shape",
-      "default": "Draw a closed shape",
+      "value": "Draw a shape",
+      "default": "Draw a shape",
       "max_length": 20
     }
   ],

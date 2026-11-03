@@ -174,7 +174,7 @@ html[data-feed-background] .feed-first-action{animation-play-state:paused}
 <script id="playable-cta-breathing-20261030">
 /* Decorative CTA breathing only. No positions, inputs, clocks or game state. */
 (()=>{
- const selectors=[],copy=new Set([].map(s=>s.replace(/\s+/g,' ').trim().toLowerCase()));
+ const selectors=["#feedback"],copy=new Set([].map(s=>s.replace(/\s+/g,' ').trim().toLowerCase()));
  const motion=window.matchMedia('(prefers-reduced-motion: reduce)'),running=new Map();let queued=false,visible=true;
  const action=/^(?:(?:tap|drag|hold|swipe|draw|use|press|click|release|brush|pull|touch|pinch|rub|move|trace)\b|spray\s*[→-]|tocca\b|trascina\b|tieni\b|scorri\b|disegna\b|premi\b|点击|轻触|滑动|按住|拖动|长按|双击)/i;
  function scan(){
@@ -186,6 +186,9 @@ html[data-feed-background] .feed-first-action{animation-play-state:paused}
    const text=(el.textContent||'').replace(/\s+/g,' ').trim();
    if(text.length>=5&&text.length<=140&&(copy.has(text.toLowerCase())||(!selectors.length&&action.test(text))))targets.add(el);
   }
+  // Only the instruction breathes; stopwatch outcomes remain steady.
+  for(const el of targets)if(el.id==='feedback'&&(el.textContent||'').trim()!=='PLAY, then STOP at the target')targets.delete(el);
+  for(const [el,a]of running)if(!targets.has(el)){a.cancel();running.delete(el);}
   for(const el of targets){
    if(running.has(el)||typeof el.animate!=='function')continue;
    if([...targets].some(child=>child!==el&&el.contains(child)))continue;

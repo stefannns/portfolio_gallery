@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <script data-playable-feed-gate="v1">
 // Active only inside the feed reviewer. Ordinary standalone games are unchanged.
 (() => {
@@ -76,13 +77,13 @@ html[data-feed-background] .feed-first-action{animation-play-state:paused}
       };
     })();
   </script>
-  <script src="./bundle.js?countdown=c56e40292bba"></script>
+  <script src="./bundle.js?ui=c56e40292bba"></script>
 <script defer src="./feed-entry-motion.js?v=feed-first-20261008-1" data-subject="#root [role=&quot;button&quot;]"></script>
 <!-- CTA_BREATHING_START -->
 <script id="playable-cta-breathing-20261030">
 /* Decorative CTA breathing only. No positions, inputs, clocks or game state. */
 (()=>{
- const selectors=[],copy=new Set([].map(s=>s.replace(/\s+/g,' ').trim().toLowerCase()));
+ const selectors=["#root footer"],copy=new Set([].map(s=>s.replace(/\s+/g,' ').trim().toLowerCase()));
  const motion=window.matchMedia('(prefers-reduced-motion: reduce)'),running=new Map();let queued=false,visible=true;
  const action=/^(?:(?:tap|drag|hold|swipe|draw|use|press|click|release|brush|pull|touch|pinch|rub|move|trace)\b|spray\s*[→-]|tocca\b|trascina\b|tieni\b|scorri\b|disegna\b|premi\b|点击|轻触|滑动|按住|拖动|长按|双击)/i;
  function scan(){

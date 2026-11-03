@@ -150,6 +150,114 @@
       "label": "Houseplant",
       "path": "./assets/plant.webp",
       "replaceable": true
+    },
+    {
+      "id": "DAY_BICYCLE",
+      "label": "Red bicycle",
+      "path": "./assets/memory-sets/day_bicycle.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_FRISBEE",
+      "label": "Frisbee dog",
+      "path": "./assets/memory-sets/day_frisbee.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_VIOLIN",
+      "label": "Street violinist",
+      "path": "./assets/memory-sets/day_violin.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_ICE_CREAM",
+      "label": "Ice cream cone",
+      "path": "./assets/memory-sets/day_ice_cream.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_TRAM",
+      "label": "Yellow tram",
+      "path": "./assets/memory-sets/day_tram.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_KAYAK",
+      "label": "Yellow kayak",
+      "path": "./assets/memory-sets/day_kayak.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_BALLOON",
+      "label": "Rainbow balloon",
+      "path": "./assets/memory-sets/day_balloon.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_FLOWERS",
+      "label": "Flower stall",
+      "path": "./assets/memory-sets/day_flowers.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_FERRIS",
+      "label": "Ferris wheel",
+      "path": "./assets/memory-sets/day_ferris.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_RABBIT",
+      "label": "Pet rabbit",
+      "path": "./assets/memory-sets/home_rabbit.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_PANCAKES",
+      "label": "Blueberry pancakes",
+      "path": "./assets/memory-sets/home_pancakes.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_YARN",
+      "label": "Knitting yarn",
+      "path": "./assets/memory-sets/home_yarn.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_KETTLE",
+      "label": "Red tea kettle",
+      "path": "./assets/memory-sets/home_kettle.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_GUITAR",
+      "label": "Blue guitar",
+      "path": "./assets/memory-sets/home_guitar.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_CAKE",
+      "label": "Strawberry cake",
+      "path": "./assets/memory-sets/home_cake.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_BOOK",
+      "label": "Rainy-day book",
+      "path": "./assets/memory-sets/home_book.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_FISH",
+      "label": "Goldfish",
+      "path": "./assets/memory-sets/home_fish.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_DUCK",
+      "label": "Rubber duck",
+      "path": "./assets/memory-sets/home_duck.webp",
+      "replaceable": true
     }
   ],
   "config_version": "2.0",

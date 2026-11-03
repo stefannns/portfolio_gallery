@@ -7,10 +7,10 @@
   "entry": "dist/game.html",
   "source_kind": "editable-current-react-source",
   "files": {
-    "App.jsx": "a123649c32cd2b66739d6097adc6a26db0fdb399f31944560478f6b91b2b063d",
+    "App.jsx": "c2131b3421315a15fd088033284e52e853b1894e5353599af521970d93cfd4b2",
     "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
     "dist/game.html": "c7163d51a81e2a32581c0e3d9af6959b1c7c952c109b2b0193168a1b47f04de1",
-    "dist/bundle.js": "61880ebf3342d25d020fef4f006a95029467a6d776a753708f8da55ea125825d",
+    "dist/bundle.js": "087c743a21c2db5d45cd01f50e56b41d287683919fdd965ebc6684718639e3cd",
     "dist/game.config.json": "1066655193e73207cd8efac2b22ab739ad98271c2f6c1ca66f58a854db560503"
   },
   "assets": [

@@ -10,7 +10,7 @@
 <script id="playable-cta-breathing-20261030">
 /* Decorative CTA breathing only. No positions, inputs, clocks or game state. */
 (()=>{
- const selectors=[],copy=new Set(["Spray → Scrub → Rinse"].map(s=>s.replace(/\s+/g,' ').trim().toLowerCase()));
+ const selectors=[],copy=new Set(["Spray → Scrub → Rinse → Dry"].map(s=>s.replace(/\s+/g,' ').trim().toLowerCase()));
  const motion=window.matchMedia('(prefers-reduced-motion: reduce)'),running=new Map();let queued=false,visible=true;
  const action=/^(?:(?:tap|drag|hold|swipe|draw|use|press|click|release|brush|pull|touch|pinch|rub|move|trace)\b|spray\s*[→-]|tocca\b|trascina\b|tieni\b|scorri\b|disegna\b|premi\b|点击|轻触|滑动|按住|拖动|长按|双击)/i;
  function scan(){

@@ -72,8 +72,8 @@
     {
       "id": "GUIDE",
       "label": "玩法引导",
-      "value": "Spray → Scrub → Rinse",
-      "default": "Spray → Scrub → Rinse",
+      "value": "Spray → Scrub → Rinse → Dry",
+      "default": "Spray → Scrub → Rinse → Dry",
       "max_length": 32
     },
     {

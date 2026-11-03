@@ -69,25 +69,25 @@
     {
       "id": "PLAYER_CAR",
       "label": "Player Car",
-      "path": "./assets/char_player.webp",
+      "path": "./assets/player-overhead-v2.webp",
       "replaceable": true
     },
     {
       "id": "COP_LEFT",
       "label": "Police Car (Left)",
-      "path": "./assets/char_cop_r.webp",
+      "path": "./assets/police-overhead-v2.webp",
       "replaceable": true
     },
     {
       "id": "COP_RIGHT",
       "label": "Police Car (Right)",
-      "path": "./assets/char_cop_r.webp",
+      "path": "./assets/police-overhead-v2.webp",
       "replaceable": true
     },
     {
       "id": "GOAL_AREA",
       "label": "Goal Area",
-      "path": "./assets/bg_goal.svg",
+      "path": "./assets/goal-overhead-v2.svg",
       "replaceable": true
     }
   ],

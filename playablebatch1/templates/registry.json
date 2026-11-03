@@ -909,7 +909,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020825_lnwh1h/game.html",
-          "sha256": "18d4987e202a8e91203b63883de47b3eea40e98d2eb7c49cc0c48868a6ea61c6"
+          "sha256": "35d8f88d5a77c5549e6609f5283eea4716a5d98a46dc230bf7bc820bf1bb7b5c"
         },
         {
           "file": "games/playable2_20260927020825_lnwh1h/game.config.json",
@@ -933,7 +933,7 @@
         },
         {
           "file": "games/playable2_20260927020825_lnwh1h/bundle.js",
-          "sha256": "09fa0259f63b7cd309f20e0b3601a5cbed7e8af1b28b0230323bcdca95232097"
+          "sha256": "838cc170c6979a71e0205b317ca1cedfe676c03c8e1af4c9928a566ca01e56ee"
         },
         {
           "file": "games/playable2_20260927020825_lnwh1h/sand-guide.js",
@@ -977,7 +977,7 @@
       "inputs": [
         {
           "file": "games/playable2_20260927020825_lnwh1h/game.it.html",
-          "sha256": "2ccba3d5e5695680607c94e05d9fd5c7ae692981136b0cd052db8282e7615a05"
+          "sha256": "9765fbb15fd1a52cd355c0c5843b8cb7b43ecd4e6168cf888816dff3ed8b83bc"
         },
         {
           "file": "games/playable2_20260927020825_lnwh1h/game.config.it.json",
@@ -1005,7 +1005,7 @@
         },
         {
           "file": "games/playable2_20260927020825_lnwh1h/bundle.it.js",
-          "sha256": "7d719229758bc4b217d8d61c7314fc67c1e2bb7acec2355ead3e9a210a19edfa"
+          "sha256": "493881e11cdbdec5252e62b7f7893946080496ce0df5e58bf90b7252d9bf21c4"
         },
         {
           "file": "games/playable2_20260927020825_lnwh1h/sand-guide.it.js",

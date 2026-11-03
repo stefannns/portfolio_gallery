@@ -7,13 +7,29 @@
   "entry": "dist/game.html",
   "source_kind": "editable-current-react-source",
   "files": {
-    "App.jsx": "c3d61faddcc6a7cea0278d769d2565af91cdcfee79ee39b4302588f72f3dfd3d",
+    "App.jsx": "895fd2b6c7a057954ca4151a7bb82ceba9a958c0cafe4c50a9f3c46aad2a2f4b",
     "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
     "dist/game.html": "f815a17cdef4e1428755f8a4def199af6adce855e97ed657d978c0f8f8909d94",
-    "dist/bundle.js": "8631efe18f393afd1fcd729cbca6d3ac9754fdfec147d4699e889878c4d977e1",
-    "dist/game.config.json": "0b0ded08383afa4bc27fa9904101e78e8959042318184a5568c09a38cb7cbcb2"
+    "dist/bundle.js": "76e6f99ae42e0d601ce8ba5a55af2055af9acc819cac0972b5e0e77eb879baaa",
+    "dist/game.config.json": "524849112a44b3cd171ec965df36a4770141683e843d60213e11f516f093331f"
   },
   "assets": [
+    {
+      "path": "dist/assets/background-imagegen-v2.webp",
+      "ids": [
+        "BACKGROUND_MAIN"
+      ],
+      "bytes": 10042,
+      "sha256": "11083939ece2583cafa163b2dbb2cb4f27e725f320b8788d88ac59716d84395c"
+    },
+    {
+      "path": "dist/assets/character-imagegen-v2.webp",
+      "ids": [
+        "CHARACTER_MAIN"
+      ],
+      "bytes": 82744,
+      "sha256": "fb7cc51fc8a8e0a4efde787c615bffacbfbe8f1a7070958681f87c4bb3185c6d"
+    },
     {
       "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
       "ids": [],
@@ -31,14 +47,6 @@
       "ids": [],
       "bytes": 51212,
       "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
-    },
-    {
-      "path": "dist/assets/minimal-room.svg",
-      "ids": [
-        "BACKGROUND_MAIN"
-      ],
-      "bytes": 270,
-      "sha256": "37cffaab11996ee1a90911e4ad46bfab2511335e1c8eedfb577ddfdaf45a428d"
     },
     {
       "path": "dist/assets/sfx_boom_hit.mp3",
@@ -77,148 +85,140 @@
       "sha256": "01578fddd7022cdab38793c533aac259c152634ab762fc727967b3bb863a2ce7"
     },
     {
-      "path": "dist/assets/stickman-minimal.svg",
-      "ids": [
-        "CHARACTER_MAIN"
-      ],
-      "bytes": 412,
-      "sha256": "6f1597cc47ecfbc1fd37284f9578d9a463237f8d94e25115cdee1bcf00bccb32"
-    },
-    {
-      "path": "dist/assets/weapons/admin.svg",
+      "path": "dist/assets/weapons/admin-imagegen-v2.webp",
       "ids": [
         "TOOL_ADMIN"
       ],
-      "bytes": 542,
-      "sha256": "9934b4d6dddaa14e1253249bfdccc0f3ec27fa1f6be436ece919911a09fa67a0"
+      "bytes": 20312,
+      "sha256": "900db25390bcf17d8cc7ba6847bbc4c2813838329d4d12b4a615c9239c188d44"
     },
     {
-      "path": "dist/assets/weapons/atomic.svg",
+      "path": "dist/assets/weapons/atomic-imagegen-v2.webp",
       "ids": [
         "TOOL_ATOMIC"
       ],
-      "bytes": 608,
-      "sha256": "7aac52db789ce1bd798ba7330666dfeea09d3675fc1cd4ae9e77d338805db86c"
+      "bytes": 20590,
+      "sha256": "4d394304f12dfd50fb8d72d44727b5d3a208d9c977017217fc284a89378786ad"
     },
     {
-      "path": "dist/assets/weapons/auto.svg",
+      "path": "dist/assets/weapons/auto-imagegen-v2.webp",
       "ids": [
         "TOOL_AUTO"
       ],
-      "bytes": 396,
-      "sha256": "a1ad445867a8e9c47973f1dbc95e2adfad656dbf81a8251b06edb25dd6b22936"
+      "bytes": 25694,
+      "sha256": "52d2f32583e0213e85b17828e6007af8869983d35acc402e9832a6f29e97d95a"
     },
     {
-      "path": "dist/assets/weapons/axe.svg",
+      "path": "dist/assets/weapons/axe-imagegen-v2.webp",
       "ids": [
         "TOOL_AXE"
       ],
-      "bytes": 426,
-      "sha256": "40856aebaa4a387212b49021dcccf318eb02776d322238ee9c84fab8c26f87e3"
+      "bytes": 16254,
+      "sha256": "19c00a45a50161edb667f623f0c92f71c3d8bbc564633c3575812caff0d72312"
     },
     {
-      "path": "dist/assets/weapons/bat.svg",
+      "path": "dist/assets/weapons/bat-imagegen-v2.webp",
       "ids": [
         "TOOL_BAT"
       ],
-      "bytes": 401,
-      "sha256": "f11ac744f2ade1adbc0b72c957af9e6cf4d712a4df2ea3690d96c21f99dd1809"
+      "bytes": 15622,
+      "sha256": "40f52d5df299adc9fa57351464db0fb61c5963e3a7fa0be89bd0661fba0c7fe1"
     },
     {
-      "path": "dist/assets/weapons/blackhole.svg",
+      "path": "dist/assets/weapons/blackhole-imagegen-v2.webp",
       "ids": [
         "TOOL_BLACKHOLE"
       ],
-      "bytes": 474,
-      "sha256": "90d956fd7cc010ea95ad2f0d4d258c9cc19b84ca5ea1229c6669f25931794e0e"
+      "bytes": 23458,
+      "sha256": "cd1c9cde14c0d5c452e363e0d0aa5f31b3ef9991c4133171c6f5df7caec0db83"
     },
     {
-      "path": "dist/assets/weapons/bomb.svg",
+      "path": "dist/assets/weapons/bomb-imagegen-v2.webp",
       "ids": [
         "TOOL_BOMB"
       ],
-      "bytes": 539,
-      "sha256": "84d93060b82c6aa27987fde7bd07456b4c314dcc1acf480c6de5c81aac1c1da0"
+      "bytes": 20422,
+      "sha256": "38f646384a2ad7d9a11f10321241dfaf99813f7086d810fa1777db43faf71759"
     },
     {
-      "path": "dist/assets/weapons/chainsaw.svg",
+      "path": "dist/assets/weapons/chainsaw-imagegen-v2.webp",
       "ids": [
         "TOOL_CHAINSAW"
       ],
-      "bytes": 490,
-      "sha256": "d7b7edda5f4a0dda98e0ebf2136f66c9d9f6f8dfb5397a2b250593fbbc7c646a"
+      "bytes": 22728,
+      "sha256": "6b3baff112553e29e80b61826bc1e9829d5cef0021c2065dad1f0f554cbe951d"
     },
     {
-      "path": "dist/assets/weapons/comet.svg",
+      "path": "dist/assets/weapons/comet-imagegen-v2.webp",
       "ids": [
         "TOOL_COMET"
       ],
-      "bytes": 420,
-      "sha256": "5aafd78f00d117ee9369162042cc25653f5c2e54eaef5f711f0c91bc07334b81"
+      "bytes": 20954,
+      "sha256": "08a009932fb6eb833539909e539bd933b25c00c511a94c47e00544bc96f50d53"
     },
     {
-      "path": "dist/assets/weapons/fist.svg",
+      "path": "dist/assets/weapons/fist-imagegen-v2.webp",
       "ids": [
         "TOOL_FIST"
       ],
-      "bytes": 502,
-      "sha256": "d64854494bff47a442bd3533b7275a5eff3e13b2a2fd550f6baa6ca911984557"
+      "bytes": 24320,
+      "sha256": "dd883c8df774045582094935ebbee54f598c2b349a6d622ca8e8b3338d9474fb"
     },
     {
-      "path": "dist/assets/weapons/galaxy.svg",
+      "path": "dist/assets/weapons/galaxy-imagegen-v2.webp",
       "ids": [
         "TOOL_GALAXY"
       ],
-      "bytes": 548,
-      "sha256": "15c91e1b601f96c8e0d21a1be51e02dd2e7e55f8cd531c5173814c0fa600de75"
+      "bytes": 26882,
+      "sha256": "b22f9b2471441c9b4ce117c3e15b7f564c0e2431c212416fb1dd147ed3e8542c"
     },
     {
-      "path": "dist/assets/weapons/katana.svg",
+      "path": "dist/assets/weapons/katana-imagegen-v2.webp",
       "ids": [
         "TOOL_KATANA"
       ],
-      "bytes": 448,
-      "sha256": "43ed3d8b5e376bba127b8792112cee7108aef06e12f850bb7613df3faf577a47"
+      "bytes": 11500,
+      "sha256": "3d2d95bade8ff91b30b6a5615eaa87d0585d1575de4cd651c02bdc32157ea4f4"
     },
     {
-      "path": "dist/assets/weapons/laser.svg",
+      "path": "dist/assets/weapons/laser-imagegen-v2.webp",
       "ids": [
         "TOOL_LASER"
       ],
-      "bytes": 438,
-      "sha256": "ae8710d2d177fec8d313052dde3930d415a28e433f4596aa4bf0ba523f194ac2"
+      "bytes": 12508,
+      "sha256": "ff5edb0c852ed0b8cd74e5bc50279a60564032f9336fb9ce3b5792b446fb9991"
     },
     {
-      "path": "dist/assets/weapons/plasma.svg",
+      "path": "dist/assets/weapons/plasma-imagegen-v2.webp",
       "ids": [
         "TOOL_PLASMA"
       ],
-      "bytes": 529,
-      "sha256": "af46dfa67f3f7700600bbb65175df924ce076018cca081adf9c7d27b0deac5b5"
+      "bytes": 27408,
+      "sha256": "f4ad8f9b0a81394d740adb8c6e09e29996ad22179dab21bfd730488ac4c0bf35"
     },
     {
-      "path": "dist/assets/weapons/rocket.svg",
+      "path": "dist/assets/weapons/rocket-imagegen-v2.webp",
       "ids": [
         "TOOL_ROCKET"
       ],
-      "bytes": 500,
-      "sha256": "d809602b567001db536f030ce860c3995538ec2e53c94cfb762eab22fa21de41"
+      "bytes": 19556,
+      "sha256": "8816adb07d1a8578444f335656a008504b9bbdf85918a0b8c0aa34102173a431"
     },
     {
-      "path": "dist/assets/weapons/sledge.svg",
+      "path": "dist/assets/weapons/sledge-imagegen-v2.webp",
       "ids": [
         "TOOL_SLEDGE"
       ],
-      "bytes": 420,
-      "sha256": "c75f0357da09880d1e9c9cc2fc6b8002dfb774e19eab653c5d62bd28fd2ee8ce"
+      "bytes": 15636,
+      "sha256": "da5132e2f0e6455f8487842cb188c5a5b71e54cc20064c53a635201c39d4f17c"
     },
     {
-      "path": "dist/assets/weapons/ufo.svg",
+      "path": "dist/assets/weapons/ufo-imagegen-v2.webp",
       "ids": [
         "TOOL_UFO"
       ],
-      "bytes": 590,
-      "sha256": "c90cecb927d1c17d86fdd10c6e80ede2cb5c60497d0fee1bd3cf927d0ba7f72c"
+      "bytes": 21556,
+      "sha256": "4865215e3afb71b3c3fdf2586a7e72fdd8f9a6b70323a49baea0fca87f6990a8"
     }
   ]
 }

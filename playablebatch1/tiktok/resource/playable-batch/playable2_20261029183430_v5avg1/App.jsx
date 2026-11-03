@@ -1,9 +1,145 @@
+
+/* BATCH2_IDLE_20261102 */
+/* Game-owned, silent demonstration clock. Never dispatches gameplay input. */
+(() => {
+  'use strict';
+  if (window.PlayableIdlePreview) return;
+  const query = new URLSearchParams(location.search);
+  const hosted = query.get('feedReview') === '1' || query.get('host') === 'fyp';
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  let preview = hosted, elapsed = 0, last = performance.now();
+  const listeners = new Set();
+  const sync = () => {
+    const html = document.documentElement;
+    html.dataset.batch2Idle = String(preview);
+    html.dataset.batch2IdlePaused = String(document.hidden);
+    html.dataset.batch2IdleReduced = String(reduced.matches);
+    if (!preview) for (const node of document.querySelectorAll('[data-idle-preview]')) node.dataset.idlePreview='off';
+    last = performance.now();
+    for (const fn of listeners) fn(preview && !document.hidden);
+  };
+  const clock = () => {
+    const now = performance.now();
+    if (preview && !document.hidden && !reduced.matches) elapsed += Math.min(64, Math.max(0, now - last));
+    last = now;
+    return reduced.matches ? 1600 : elapsed;
+  };
+  const clamp = (n, a = 0, b = 1) => Math.max(a, Math.min(b, n));
+  const ease = t => (t = clamp(t), t * t * (3 - 2 * t));
+  const trace = (ctx, points, progress = 1) => {
+    if (!points.length) return;
+    const distances = points.slice(1).map((p, i) => Math.hypot(p.x - points[i].x, p.y - points[i].y));
+    let left = distances.reduce((a, b) => a + b, 0) * clamp(progress);
+    ctx.beginPath(); ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+      const p = points[i - 1], q = points[i], d = distances[i - 1];
+      const t = Math.min(1, left / Math.max(.01, d));
+      ctx.lineTo(p.x + (q.x - p.x) * t, p.y + (q.y - p.y) * t);
+      left -= d; if (left <= 0) break;
+    }
+    ctx.stroke();
+  };
+  const onPath = (points, progress) => {
+    const lengths = points.slice(1).map((p, i) => Math.hypot(p.x - points[i].x, p.y - points[i].y));
+    let distance = lengths.reduce((a, b) => a + b, 0) * clamp(progress);
+    for (let i = 1; i < points.length; i++) {
+      const a = points[i - 1], b = points[i], length = lengths[i - 1];
+      if (distance <= length || i === points.length - 1) {
+        const t = clamp(distance / Math.max(.01, length));
+        return {x:a.x+(b.x-a.x)*t, y:a.y+(b.y-a.y)*t};
+      }
+      distance -= length;
+    }
+    return points[0];
+  };
+  const stamp = (canvas, kind, phase = clock()) => {
+    if (!canvas) return;
+    canvas.dataset.idlePreview = preview ? kind : 'off';
+    canvas.dataset.idlePhase = String(Math.round(phase));
+  };
+  function ant(ctx, w, h, image) {
+    const t = clock() / 1000, p = (t % 5.4) / 5.4;
+    const cx = w*.5, cy = h*.51, rx = Math.min(w*.29, 105), ry = Math.min(h*.16, 78);
+    const path = Array.from({length:81}, (_, i) => ({x:cx+Math.cos(i/80*Math.PI*2)*rx,y:cy+Math.sin(i/80*Math.PI*2)*ry}));
+    ctx.save(); ctx.lineWidth = 5; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#242322';
+    ctx.globalAlpha = p>.88 ? (1-p)/.12 : 1;
+    trace(ctx, path, ease(p/.48));
+    const x=cx+Math.sin(t*2.1)*rx*.63, y=cy+Math.sin(t*2.8)*ry*.59;
+    ctx.translate(x,y);ctx.rotate(Math.atan2(Math.cos(t*2.8)*ry,Math.cos(t*2.1)*rx)+Math.PI/2);
+    if(image?.complete&&image.naturalWidth)ctx.drawImage(image,-17,-17,34,34);
+    else {ctx.fillStyle='#242322';for(const [y,r]of [[-7,5],[0,4],[7,6]]){ctx.beginPath();ctx.ellipse(0,y,r,r*1.2,0,0,Math.PI*2);ctx.fill();}}
+    ctx.restore();stamp(ctx.canvas,'ant-loop');
+  }
+  function army(state,w,h){
+    const t=clock()/1000;
+    const players=state.entities.filter(e=>e.team==='player'),cx=players.reduce((n,e)=>n+e.x,0)/Math.max(1,players.length),cy=players.reduce((n,e)=>n+e.y,0)/Math.max(1,players.length);
+    return {...state,particles:[],playerTarget:{x:w*(.5+Math.sin(t*.8)*.18),y:h*(.43+Math.cos(t*.8)*.04)},entities:state.entities.map((entity,i)=>({...entity,x:entity.team==='player'?w*(.5+Math.sin(t*.8)*.14)+(entity.x-cx)*.7:entity.x+Math.sin(t*1.5+i*.7)*8,y:entity.team==='player'?h*(.57+Math.cos(t*.8)*.04)+(entity.y-cy)*.7:entity.y+Math.cos(t*1.5+i*.7)*8}))};
+  }
+  function blade(ctx,w,h,top,bottom){
+    const t=clock()/1000,p=(t%5.8)/5.8,cx=w/2,cy=(top+bottom)/2;
+    const points=[[-.22,.16],[-.11,.02],[.04,.04],[.17,-.17],[.24,-.11]].map(([x,y])=>({x:cx+x*w,y:cy+y*(bottom-top)}));
+    ctx.save();ctx.strokeStyle='#303936';ctx.lineWidth=6;ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.globalAlpha=p>.9?(1-p)/.1:1;
+    if(p<.5)trace(ctx,points,ease(p/.45));
+    else {ctx.translate(cx,cy);ctx.rotate((p-.5)*Math.PI*3.4);trace(ctx,points.map(v=>({x:v.x-cx,y:v.y-cy})));ctx.fillStyle='#303936';ctx.beginPath();ctx.arc(0,0,11,0,Math.PI*2);ctx.fill();}
+    ctx.restore();stamp(ctx.canvas,'draw-and-spin-blade');
+  }
+  function roadPose(key){
+    const t=clock()/1000,offset=key==='player'?0:key==='copL'?1.3:2.2;
+    const q=t*.75-offset,x=375+Math.sin(q)*130,y=key==='player'?800:1040+(key==='copR'?60:0);
+    return{x:x+(key==='copL'?-85:key==='copR'?85:0),y:y+Math.cos(q)*28,angle:-Math.PI/2+Math.cos(q)*.18};
+  }
+  function road(ctx){
+    const p=roadPose('player');ctx.save();ctx.strokeStyle='#ffffff88';ctx.setLineDash([11,12]);ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.bezierCurveTo(p.x+100,p.y-100,340,p.y-220,420,p.y-340);ctx.stroke();ctx.restore();stamp(ctx.canvas,'escape-route');
+  }
+  function route(start,end,circles,w){
+    const nodes=[start,end];
+    for(const circle of circles)for(let i=0;i<12;i++){const a=i*Math.PI/6,r=circle.circleRadius+16;const p={x:circle.position.x+Math.cos(a)*r,y:circle.position.y+Math.sin(a)*r};if(p.x>15&&p.x<w-15)nodes.push(p);}
+    const distance=nodes.map(()=>Infinity),previous=nodes.map(()=>-1),visited=new Set();distance[0]=0;
+    const clear=(a,b)=>circles.every(c=>{const dx=b.x-a.x,dy=b.y-a.y,t=clamp(((c.position.x-a.x)*dx+(c.position.y-a.y)*dy)/Math.max(.01,dx*dx+dy*dy));return Math.hypot(a.x+dx*t-c.position.x,a.y+dy*t-c.position.y)>c.circleRadius+7;});
+    for(let pass=0;pass<nodes.length;pass++){let k=-1;for(let j=0;j<nodes.length;j++)if(!visited.has(j)&&(k<0||distance[j]<distance[k]))k=j;if(k<0||!Number.isFinite(distance[k]))break;if(k===1)break;visited.add(k);for(let j=0;j<nodes.length;j++){if(visited.has(j)||!clear(nodes[k],nodes[j]))continue;const d=distance[k]+Math.hypot(nodes[k].x-nodes[j].x,nodes[k].y-nodes[j].y);if(d<distance[j]){distance[j]=d;previous[j]=k;}}}
+    if(previous[1]<0)return[start,{x:20,y:start.y+24},{x:20,y:end.y-28},end];
+    const path=[];for(let k=1;k>=0;k=previous[k]){path.unshift(nodes[k]);if(k===0)break;}return path;
+  }
+  let sodaCache=null;
+  function soda(ctx,source,cup,cupW,cupH,bodies,w){
+    if(!source||!cup)return;const t=clock()/1000,p=t%5.6;
+    const circles=bodies.filter(b=>b.label==='obstacle'),key=JSON.stringify([source,cup,w,circles.map(c=>[c.position.x,c.position.y,c.circleRadius])]);
+    if(sodaCache?.key!==key)sodaCache={key,points:route({x:source.x,y:source.y+21},{x:cup.x,y:cup.y-cupH*.42},circles,w)};
+    const points=sodaCache.points;ctx.save();ctx.strokeStyle='#242322';ctx.lineWidth=5;ctx.lineCap='round';ctx.lineJoin='round';ctx.globalAlpha=p>5?(5.6-p)/.6:1;trace(ctx,points,ease(p/1.7));
+    if(p>1.4&&p<5){for(let i=0;i<15;i++){const q=((p-1.4)*.65-i*.067);if(q<0||q>1)continue;const at=onPath(points,q);ctx.fillStyle='#59c6b1';ctx.strokeStyle='#242322';ctx.lineWidth=1;ctx.beginPath();ctx.arc(at.x,at.y,4,0,Math.PI*2);ctx.fill();ctx.stroke();}}
+    ctx.restore();stamp(ctx.canvas,'guided-soda-route');
+  }
+  const style=document.createElement('style');style.dataset.batch2IdleStyle='';style.textContent=`
+    html[data-batch2-idle=true] .idle-memory-deck{display:block}
+    .idle-memory-deck{position:absolute;inset:0;display:none;overflow:hidden;pointer-events:none}
+    .idle-memory-deck img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;animation:idle-memory-photo 7.2s linear infinite}
+    .idle-memory-deck img:nth-child(2){animation-delay:-4.8s}.idle-memory-deck img:nth-child(3){animation-delay:-2.4s}
+    .idle-clean-tool{display:none;position:absolute;z-index:5;left:var(--idle-clean-x,25%);top:var(--idle-clean-y,54%);width:76px;height:95px;pointer-events:none;transform:translate(-50%,-35%)}
+    .idle-clean-tool>span{display:none;width:100%;height:100%}.idle-clean-tool img{width:100%;height:100%;object-fit:contain}
+    html[data-batch2-idle=true] .idle-clean-tool{display:block}
+    [data-idle-clean-tool=spray] .idle-clean-spray,[data-idle-clean-tool=brush] .idle-clean-brush,[data-idle-clean-tool=rinse] .idle-clean-rinse,[data-idle-clean-tool=vacuum] .idle-clean-vacuum{display:block}
+    html[data-batch2-idle=true] .video-window>img{visibility:hidden}
+    @keyframes idle-memory-photo{0%,29%{opacity:1;transform:scale(1)}33%,96%{opacity:0;transform:scale(1.035)}100%{opacity:1;transform:scale(1)}}
+    html[data-batch2-idle=true] .tool-swing{animation:idle-tool-hit 2.6s ease-in-out infinite!important;transform-origin:70% 75%}
+    html[data-batch2-idle=true] .target-art{animation:idle-stick-react 2.6s ease-in-out infinite!important;transform-origin:50% 75%}
+    @keyframes idle-tool-hit{0%,32%,100%{transform:translate(10px,5px) rotate(-25deg)}46%{transform:translate(-30px,-8px) rotate(-64deg)}55%,70%{transform:translate(6px,7px) rotate(-20deg)}}
+    @keyframes idle-stick-react{0%,45%,72%,100%{transform:rotate(0) scale(1)}50%{transform:translate(-4px,2px) rotate(-3deg) scale(1.025,.97)}60%{transform:rotate(1.5deg) scale(.99,1.01)}}
+    html[data-batch2-idle-paused=true] :is(.idle-memory-deck img,.tool-swing,.target-art){animation-play-state:paused!important}
+    html[data-batch2-idle-reduced=true] :is(.idle-memory-deck img,.tool-swing,.target-art){animation:none!important}
+    html[data-batch2-idle-reduced=true] .idle-memory-deck img:first-child{opacity:1}
+  `;document.head.append(style);
+  window.PlayableIdlePreview=Object.freeze({get active(){return preview&&!document.hidden;},get preview(){return preview;},get reduced(){return reduced.matches;},get seconds(){return clock()/1000;},clock,ease,clamp,stamp,trace,onPath,ant,army,blade,road,roadPose,soda,subscribe(fn){listeners.add(fn);return()=>listeners.delete(fn);}});
+  addEventListener('message',event=>{if(parent===window||event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;const next=event.data.active!==true;if(next!==preview){preview=next;elapsed=0;}sync();});
+  document.addEventListener('visibilitychange',sync);reduced.addEventListener?.('change',sync);addEventListener('pagehide',()=>{preview=false;sync();listeners.clear();},{once:true});sync();
+})();
+
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
 
 const FALLBACK_CFG = {
   GRID_COLS: 14, GRID_ROWS: 20, CLEAN_GOAL: 0.92, BRUSH_POWER: 0.22, RINSE_POWER: 0.3, VACUUM_POWER: 0.32,
-  GAME_TITLE: 'Rug Restore', GUIDE: 'Spray → Scrub → Rinse', COMPLETE: 'Satisfyingly clean!', NEXT_ITEM: 'Next item',
+  GAME_TITLE: 'Rug Restore', GUIDE: 'Spray → Scrub → Rinse → Dry', COMPLETE: 'Satisfyingly clean!', NEXT_ITEM: 'Next item',
   SPRAY: 'Spray', BRUSH: 'Scrub', RINSE: 'Rinse', VACUUM: 'Dry', CLEANED: 'CLEANED',
   RUG_MAIN: './assets/rug-overhead.webp', UPHOLSTERY_MAIN: './assets/upholstery-overhead.webp',
   TOOL_SPRAY: './assets/tool-spray.svg', TOOL_BRUSH: './assets/tool-brush.svg',
@@ -46,67 +182,86 @@ function makeGrid(cols, rows, seed = 1) {
   const cells = [];
   for (let y = 0; y < rows; y += 1) {
     for (let x = 0; x < cols; x += 1) {
-      const wave = Math.sin((x + 2) * 2.17 + seed * 0.7) * 0.12 + Math.cos((y + 1) * 1.51 + seed) * 0.1;
+      const wave = Math.sin((x + 2) * 2.17 + seed * .7) * .12 + Math.cos((y + 1) * 1.51 + seed) * .1;
       const edge = Math.min(x, cols - 1 - x, y, rows - 1 - y) / Math.min(cols, rows);
-      cells.push({
-        dirt: Math.max(0.34, Math.min(0.96, 0.66 + wave + (edge < 0.08 ? 0.12 : 0))),
-        initialDirt: Math.max(0.34, Math.min(0.96, 0.66 + wave + (edge < 0.08 ? 0.12 : 0))),
-        detergent: 0, primed: false, scrubbed: false, rinsed: 0, cleaned: false,
-        foam: 0,
-        wet: 0,
-        scrub: 0,
-        dry: 0
-      });
+      const dirt = Math.max(.6, Math.min(1, .8 + wave + (edge < .08 ? .08 : 0)));
+      cells.push({ dirt, initialDirt: dirt, detergent: 0, primed: false, scrubbed: false,
+        rinsed: 0, cleaned: false, foam: 0, wet: 0, scrub: 0, dry: 0 });
     }
   }
   return cells;
 }
 
 function clamp(value, min = 0, max = 1) { return Math.max(min, Math.min(max, value)); }
+
 function treatCell(cell, tool, amount, cfg) {
+  if (cell.cleaned || amount <= 0) return 0;
   const before = cell.dirt;
   if (tool === 'spray') {
-    cell.wet = clamp(cell.wet + .09 * amount);
-    if (!cell.cleaned) {
+    cell.wet = clamp(cell.wet + .12 * amount);
+    if (!cell.scrubbed) {
       cell.detergent = clamp(cell.detergent + .24 * amount);
-      cell.foam = clamp(cell.foam + .1 * amount);
+      cell.foam = clamp(cell.foam + .025 * amount, 0, .12);
       if (cell.detergent >= .28) cell.primed = true;
     }
   } else if (tool === 'brush') {
-    if (cell.primed && !cell.cleaned) {
+    if (cell.primed && cell.rinsed < .88) {
       cell.scrub = clamp(cell.scrub + Number(cfg.BRUSH_POWER || .22) * .7 * amount);
-      cell.foam = clamp(cell.foam + .12 * amount);
-      cell.wet = clamp(cell.wet + .025 * amount);
-      if (cell.scrub >= .62) cell.scrubbed = true;
+      cell.dirt = cell.initialDirt * (1 - clamp(cell.scrub / .62));
+      cell.foam = clamp(cell.foam + .36 * amount);
+      cell.wet = clamp(cell.wet + .06 * amount);
+      cell.rinsed = 0;
+      cell.dry = 0;
+      if (cell.scrub >= .62) { cell.scrubbed = true; cell.dirt = 0; }
     }
   } else if (tool === 'rinse') {
-    cell.wet = clamp(cell.wet + Number(cfg.RINSE_POWER || .3) * .55 * amount);
-    cell.foam = clamp(cell.foam - .3 * amount);
+    cell.wet = clamp(cell.wet + Number(cfg.RINSE_POWER || .3) * .75 * amount);
+    cell.foam = clamp(cell.foam - .34 * amount);
     if (cell.primed && cell.scrubbed) {
       cell.rinsed = clamp(cell.rinsed + Number(cfg.RINSE_POWER || .3) * .8 * amount);
-      cell.dirt = cell.initialDirt * (1 - cell.rinsed);
       if (cell.rinsed >= .88) {
-        cell.cleaned = true;
+        cell.rinsed = 1;
         cell.dirt = 0;
         cell.foam = 0;
+        cell.wet = 1;
       }
-    } else if (!cell.cleaned) {
-      // Washing away unused detergent is not a shortcut past the scrub step.
+    } else {
+      // Rinsing raw dirt or unused detergent cannot skip the scrub stage.
       cell.detergent = clamp(cell.detergent - .24 * amount);
-      if (cell.detergent < .12) {
-        cell.primed = false;
-        cell.scrub = 0;
-        cell.scrubbed = false;
-      }
+      if (cell.detergent < .12) { cell.primed = false; cell.scrub = 0; cell.scrubbed = false; }
     }
-  } else if (tool === 'vacuum') {
-    cell.wet = clamp(cell.wet - Number(cfg.VACUUM_POWER || .32) * amount);
-    if (cell.cleaned) cell.dry = clamp(cell.dry + .2 * amount);
+  } else if (tool === 'vacuum' && cell.scrubbed && cell.rinsed >= .88 && cell.foam <= .035) {
+    cell.dry = clamp(cell.dry + Number(cfg.VACUUM_POWER || .32) * .85 * amount);
+    cell.wet = 1 - cell.dry;
+    if (cell.dry >= .9) {
+      cell.cleaned = true;
+      cell.dry = 1;
+      cell.wet = cell.foam = cell.dirt = 0;
+    }
   }
   return Math.max(0, before - cell.dirt);
 }
 
-function cellIsClean(cell) { return cell.cleaned === true; }
+function cellIsClean(cell) {
+  return cell.cleaned === true && cell.rinsed >= .88 && cell.dry >= .9 && cell.wet <= .08;
+}
+
+function finishCleaningGrid(cells) {
+  // The configured completion tolerance still applies, but success shows the
+  // fully dry original artwork rather than a few leftover wet edge cells.
+  for (const cell of cells) {
+    Object.assign(cell, { dirt: 0, foam: 0, wet: 0, primed: true, scrubbed: true,
+      scrub: 1, rinsed: 1, dry: 1, cleaned: true });
+  }
+}
+
+function toolPrerequisite(cell, tool) {
+  if (!cell || cell.cleaned || tool === 'spray') return '';
+  if (tool === 'brush' && !cell.primed) return 'Spray first';
+  if (tool === 'rinse' && !cell.scrubbed) return cell.primed ? 'Scrub first' : 'Spray first';
+  if (tool === 'vacuum' && (cell.rinsed < .88 || cell.foam > .035)) return 'Rinse first';
+  return '';
+}
 
 function vibrate(style = 'light') {
   try {
@@ -115,7 +270,7 @@ function vibrate(style = 'light') {
 }
 
 function useSound() {
-  const audio = useRef({ ctx: null, gain: null, buffer: null, loadPromise: null, source: null, tone: null, noise: null });
+  const audio = useRef({ ctx: null, gain: null, buffer: null, loadPromise: null, source: null, tone: null, noise: null, brushNoise: null });
   const ensureAudio = useCallback(() => {
     const current = audio.current;
     if (!current.ctx) {
@@ -123,16 +278,15 @@ function useSound() {
       if (!AudioContextClass) return null;
       current.ctx = new AudioContextClass();
       current.gain = current.ctx.createGain();
-      current.gain.gain.value = 0.22;
+      current.gain.gain.value = .22;
       current.gain.connect(current.ctx.destination);
     }
-    if (current.ctx.state === 'suspended') current.ctx.resume();
+    if (current.ctx.state === 'suspended') current.ctx.resume().catch(() => {});
     if (!current.loadPromise) {
       current.loadPromise = fetch('./assets/sfx_tool_select.mp3')
-        .then((response) => response.arrayBuffer())
-        .then((data) => current.ctx.decodeAudioData(data))
-        .then((buffer) => { current.buffer = buffer; return buffer; })
-        .catch(() => null);
+        .then(response => response.arrayBuffer())
+        .then(data => current.ctx.decodeAudioData(data))
+        .then(buffer => { current.buffer = buffer; return buffer; }).catch(() => null);
     }
     return current;
   }, []);
@@ -140,88 +294,80 @@ function useSound() {
   const playSelect = useCallback(() => {
     const current = ensureAudio();
     if (!current) return;
-    const play = (buffer) => {
-      if (!buffer || !current.ctx || current.ctx.state !== 'running') return;
+    const play = buffer => {
+      if (!buffer || current.ctx.state !== 'running') return;
       try {
-        const source = current.ctx.createBufferSource();
-        source.buffer = buffer;
-        source.connect(current.gain);
-        source.start(0);
-        current.source = source;
-      } catch (error) { /* audio is non-blocking */ }
+        const source = current.ctx.createBufferSource();source.buffer = buffer;
+        source.connect(current.gain);source.start();current.source = source;
+        source.onended = () => source.disconnect();
+      } catch { /* Audio never blocks interaction. */ }
     };
-    if (current.buffer) play(current.buffer);
-    else current.loadPromise?.then(play);
+    if (current.buffer) play(current.buffer);else current.loadPromise?.then(play);
   }, [ensureAudio]);
 
-  const startAction = useCallback((tool) => {
+  const startAction = useCallback(tool => {
     const current = ensureAudio();
     if (!current?.ctx || current.tone) return;
-    if (tool === 'spray' || tool === 'rinse') {
-      if (!current.noise) {
-        current.noise = current.ctx.createBuffer(1, current.ctx.sampleRate * 2, current.ctx.sampleRate);
-        const data = current.noise.getChannelData(0);
-        let soft = 0;
-        for (let i = 0; i < data.length; i += 1) { soft = soft * .72 + (Math.random() * 2 - 1) * .28; data[i] = soft; }
+    const ctx = current.ctx, brush = tool === 'brush';
+    const key = brush ? 'brushNoise' : 'noise';
+    if (!current[key]) {
+      const buffer = ctx.createBuffer(1, Math.round(ctx.sampleRate * 2), ctx.sampleRate);
+      const data = buffer.getChannelData(0);let soft = 0, bristle = 0;
+      for (let i = 0; i < data.length; i += 1) {
+        const random = Math.random() * 2 - 1;
+        soft = soft * .72 + random * .28;bristle = bristle * .24 + random * .76;
+        const stroke = .55 + .45 * Math.sin(Math.PI * i / ctx.sampleRate * 3.5) ** 2;
+        data[i] = brush ? (soft * .6 + bristle * .4) * stroke : soft;
       }
-      const source = current.ctx.createBufferSource();
-      source.buffer = current.noise;
-      source.loop = true;
-      const filter = current.ctx.createBiquadFilter();
-      filter.type = tool === 'spray' ? 'bandpass' : 'lowpass';
-      filter.frequency.value = tool === 'spray' ? 3200 : 1800;
-      filter.Q.value = .55;
-      const gain = current.ctx.createGain();
-      gain.gain.setValueAtTime(.0001, current.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(tool === 'spray' ? .15 : .18, current.ctx.currentTime + .07);
-      source.connect(filter); filter.connect(gain); gain.connect(current.gain); source.start();
-      current.tone = { oscillator: source, gain };
-      return;
+      current[key] = buffer;
     }
-    const frequencies = { spray: 540, brush: 220, rinse: 390, vacuum: 125 };
-    const oscillator = current.ctx.createOscillator();
-    const gain = current.ctx.createGain();
-    oscillator.type = tool === 'vacuum' ? 'sawtooth' : 'triangle';
-    oscillator.frequency.value = frequencies[tool] || 260;
-    gain.gain.setValueAtTime(0.0001, current.ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.028, current.ctx.currentTime + 0.08);
-    oscillator.connect(gain);
-    gain.connect(current.gain);
-    oscillator.start();
-    current.tone = { oscillator, gain };
+    const source = ctx.createBufferSource(), filter = ctx.createBiquadFilter(), gain = ctx.createGain();
+    source.buffer = current[key];source.loop = true;
+    filter.type = tool === 'rinse' || tool === 'vacuum' ? 'lowpass' : 'bandpass';
+    filter.frequency.value = { spray: 3200, brush: 1750, rinse: 1800, vacuum: 780 }[tool];
+    filter.Q.value = brush ? .65 : .55;
+    gain.gain.setValueAtTime(.0001, ctx.currentTime);
+    source.connect(filter);filter.connect(gain);gain.connect(current.gain);source.start();
+    const voice = { oscillator: source, gain, filter, tool };
+    source.onended = () => { source.disconnect();filter.disconnect();gain.disconnect(); };
+    current.tone = voice;
   }, [ensureAudio]);
+
+  const moveAction = useCallback((tool, effort = .6) => {
+    const current = audio.current, voice = current.tone;
+    if (!voice || !current.ctx) return;
+    const now = current.ctx.currentTime, strength = clamp(effort);
+    const base = { spray: .18, brush: 1.05, rinse: .23, vacuum: .24 }[tool] || .2;
+    voice.gain.gain.cancelScheduledValues(now);
+    voice.gain.gain.setTargetAtTime(base * (.55 + .55 * strength), now, .018);
+    // A held but motionless brush is quiet. Repeated moves refresh one voice.
+    voice.gain.gain.setTargetAtTime(.0001, now + .13, .035);
+    if (tool === 'brush') voice.filter.frequency.setTargetAtTime(1050 + strength * 1450, now, .025);
+  }, []);
 
   const stopAction = useCallback(() => {
     const current = audio.current;
     if (!current.tone || !current.ctx) return;
-    const now = current.ctx.currentTime;
+    const voice = current.tone, now = current.ctx.currentTime;current.tone = null;
     try {
-      current.tone.gain.gain.cancelScheduledValues(now);
-      current.tone.gain.gain.setValueAtTime(Math.max(0.0001, current.tone.gain.gain.value), now);
-      current.tone.gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
-      current.tone.oscillator.stop(now + 0.07);
-    } catch (error) { /* already stopped */ }
-    current.tone = null;
+      voice.gain.gain.cancelScheduledValues(now);
+      voice.gain.gain.setTargetAtTime(.0001, now, .02);voice.oscillator.stop(now + .09);
+    } catch { /* Already stopped. */ }
   }, []);
 
   useEffect(() => () => {
-    stopAction();
-    const current = audio.current;
-    try { current.source?.stop(); } catch (error) { /* already ended */ }
-    try { current.ctx?.close(); } catch (error) { /* optional cleanup */ }
+    stopAction();const current = audio.current;
+    try { current.source?.stop();current.ctx?.close(); } catch { /* Optional cleanup. */ }
   }, [stopAction]);
-
   useEffect(() => feedSession.subscribe(active => {
     if (active) {
       if (audio.current.ctx?.state === 'suspended') audio.current.ctx.resume().catch(() => {});
-      return;
+    } else {
+      stopAction();try { audio.current.source?.stop(); } catch { /* Optional. */ }
+      audio.current.ctx?.suspend().catch(() => {});
     }
-    stopAction();
-    try { audio.current.source?.stop(); } catch (error) { /* optional */ }
-    audio.current.ctx?.suspend().catch(() => {});
   }), [stopAction]);
-
-  return { playSelect, startAction, stopAction };
+  return { playSelect, startAction, moveAction, stopAction };
 }
 
 function ToolIcon({ type, config }) {
@@ -258,6 +404,74 @@ function PostMyPlayButton() {
   return <button className="resultButton secondary" type="button" disabled={submitting} onClick={submitRecording}>{submitting ? '...' : 'Post my play'}</button>;
 }
 
+function cleaningDemoPhase(seconds) {
+  const time = seconds % 13, elapsed = Math.max(0, time - .8);
+  return { visible: time >= .8, part: Math.min(4, Math.floor(elapsed / 2.6)), sweep: clamp((elapsed % 2.6) / 2.15) };
+}
+
+function previewCleaningCell(original, index, cols, rows, demo) {
+  const x = (index % cols + .5) / cols, y = (Math.floor(index / cols) + .5) / rows;
+  if (!demo.visible || !(y > .44 && y < .65 && x > .14 && x < .86)) return original;
+  const passed = x < .2 + .6 * demo.sweep;
+  const cell = { ...original };
+  if (demo.part === 0 && !passed) return cell;
+  cell.primed = true;cell.detergent = .8;cell.wet = .45;cell.foam = .04;
+  if (demo.part > 1 || (demo.part === 1 && passed)) {
+    cell.dirt = 0;cell.scrub = 1;cell.scrubbed = true;cell.foam = 1;cell.wet = .65;
+  }
+  if (demo.part > 2 || (demo.part === 2 && passed)) {
+    cell.rinsed = 1;cell.foam = 0;cell.wet = 1;
+  }
+  if (demo.part > 3 || (demo.part === 3 && passed)) {
+    cell.cleaned = true;cell.dry = 1;cell.wet = 0;
+  }
+  return cell;
+}
+
+function paintCleaningCell(ctx, cell, index, cellW, cellH, cols) {
+  const x = (index % cols) * cellW + cellW / 2, y = Math.floor(index / cols) * cellH + cellH / 2;
+  const random = n => { const p = Math.sin(index * 53.71 + n * 17.13) * 43758.54;return p - Math.floor(p); };
+  if (cell.dirt > .03) {
+    const grime = cell.dirt, radius = Math.max(cellW, cellH) * .95;
+    const gradient = ctx.createRadialGradient(x - cellW * .1, y - cellH * .12, 0, x, y, radius);
+    gradient.addColorStop(0, `rgba(42,30,22,${grime * .84})`);
+    gradient.addColorStop(.65, `rgba(49,37,27,${grime * .62})`);
+    gradient.addColorStop(1, 'rgba(35,25,18,0)');
+    ctx.fillStyle = gradient;ctx.beginPath();ctx.ellipse(x, y, cellW * .87, cellH * .87, 0, 0, Math.PI * 2);ctx.fill();
+    for (let n = 0; n < 4; n += 1) {
+      ctx.fillStyle = `rgba(23,17,12,${grime * .34})`;
+      ctx.beginPath();ctx.ellipse(x + (random(n) - .5) * cellW, y + (random(n + 11) - .5) * cellH, .7 + random(n + 2) * 1.6, .5 + random(n + 7), .4, 0, Math.PI * 2);ctx.fill();
+    }
+  }
+  if (cell.wet > .03) {
+    const wet = ctx.createRadialGradient(x, y, 0, x, y, cellW * 1.05);
+    wet.addColorStop(0, `rgba(8,31,36,${cell.wet * .27})`);wet.addColorStop(1, 'rgba(7,25,31,0)');
+    ctx.fillStyle = wet;ctx.beginPath();ctx.ellipse(x, y, cellW, cellH * .9, -.18, 0, Math.PI * 2);ctx.fill();
+    ctx.strokeStyle = `rgba(232,252,255,${cell.wet * .31})`;ctx.lineWidth = .8;
+    ctx.beginPath();ctx.moveTo(x - cellW * .33, y - cellH * .12);ctx.quadraticCurveTo(x, y - cellH * .26, x + cellW * .32, y - cellH * .15);ctx.stroke();
+    if (cell.wet > .45 && cell.foam < .2) {
+      for (let n = 0; n < 3; n += 1) {
+        const bx = x + (random(n + 31) - .5) * cellW, by = y + (random(n + 44) - .5) * cellH;
+        ctx.fillStyle = `rgba(198,233,242,${cell.wet * .15})`;ctx.beginPath();ctx.ellipse(bx, by, 1.4, 2.4, -.25, 0, Math.PI * 2);ctx.fill();
+        ctx.strokeStyle = `rgba(248,255,255,${cell.wet * .48})`;ctx.lineWidth = .65;ctx.beginPath();ctx.ellipse(bx, by, 1.2, 2.1, -.25, 3.1, 4.8);ctx.stroke();
+      }
+    }
+  }
+  if (cell.foam > .035) {
+    const foam = cell.foam, cloud = ctx.createRadialGradient(x, y, 0, x, y, cellW * .95);
+    cloud.addColorStop(0, `rgba(250,255,252,${foam * .94})`);
+    cloud.addColorStop(.6, `rgba(240,249,245,${foam * .82})`);cloud.addColorStop(1, 'rgba(248,255,252,0)');
+    ctx.fillStyle = cloud;ctx.beginPath();ctx.ellipse(x, y, cellW * .99, cellH * .95, .12, 0, Math.PI * 2);ctx.fill();
+    for (let n = 0; n < Math.ceil(foam * 20); n += 1) {
+      const bx = x + (random(n) - .5) * cellW * 1.45, by = y + (random(n + 21) - .5) * cellH * 1.45;
+      const r = .9 + random(n + 7) * Math.min(3.5, cellW * .16);
+      ctx.fillStyle = `rgba(250,255,253,${foam * .64})`;ctx.beginPath();ctx.arc(bx, by, r, 0, Math.PI * 2);ctx.fill();
+      ctx.strokeStyle = `rgba(116,163,163,${foam * .22})`;ctx.lineWidth = .75;ctx.stroke();
+      ctx.strokeStyle = `rgba(255,255,255,${foam * .94})`;ctx.lineWidth = 1;ctx.beginPath();ctx.arc(bx - .2, by - .2, r * .72, 3.35, 4.9);ctx.stroke();
+    }
+  }
+}
+
 function App() {
   const feedActive = useFeedActive();
   const [cfg, setCfg] = useState(FALLBACK_CFG);
@@ -278,7 +492,7 @@ function App() {
   const pointerRef = useRef({ id: null, last: null, active: false });
   const sizeRef = useRef({ width: 1, height: 1, dpr: 1 });
   const progressRef = useRef(0);
-  const { playSelect, startAction, stopAction } = useSound();
+  const { playSelect, startAction, moveAction, stopAction } = useSound();
   const surface = itemIndex % 2 === 1
     ? { id: 'rug', src: cfg.RUG_MAIN, label: 'Patterned wool rug viewed directly from above' }
     : { id: 'upholstery', src: cfg.UPHOLSTERY_MAIN, label: 'Woven upholstery viewed directly from above' };
@@ -311,59 +525,29 @@ function App() {
   useEffect(() => { resetGrid(itemIndex); }, [itemIndex, resetGrid]);
 
   const drawOverlay = useCallback(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext('2d');
+    const canvas = canvasRef.current, ctx = canvas?.getContext('2d');
     if (!ctx) return;
     const { width, height, dpr } = sizeRef.current;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, width, height);
-    const cols = Number(cfg.GRID_COLS) || 14;
-    const rows = Number(cfg.GRID_ROWS) || 20;
-    const cellW = width / cols;
-    const cellH = height / rows;
-    cellsRef.current.forEach((cell, index) => {
-      const x = (index % cols) * cellW + cellW / 2;
-      const y = Math.floor(index / cols) * cellH + cellH / 2;
-      const grime = cell.dirt;
-      if (grime > 0.03) {
-        const radius = Math.max(cellW, cellH) * 0.82;
-        const gradient = ctx.createRadialGradient(x - cellW * 0.1, y - cellH * 0.12, 0, x, y, radius);
-        gradient.addColorStop(0, `rgba(30, 23, 22, ${Math.min(0.62, grime * 0.62)})`);
-        gradient.addColorStop(0.6, `rgba(39, 31, 27, ${Math.min(0.45, grime * 0.42)})`);
-        gradient.addColorStop(1, 'rgba(18, 14, 13, 0)');
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.ellipse(x, y, cellW * 0.72, cellH * 0.72, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = `rgba(16, 12, 11, ${grime * 0.18})`;
-        ctx.fillRect(x - cellW * 0.38, y - cellH * 0.12, cellW * 0.62, cellH * 0.12);
-      }
-      if (cell.wet > .03) {
-        const wet = ctx.createRadialGradient(x, y, 0, x, y, cellW * 1.1);
-        wet.addColorStop(0, `rgba(7, 20, 23, ${cell.wet * .1})`);
-        wet.addColorStop(1, 'rgba(7,20,23,0)');
-        ctx.fillStyle = wet;
-        ctx.beginPath(); ctx.ellipse(x, y, cellW * .95, cellH * .82, -.18, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = `rgba(239,252,252,${cell.wet * .16})`;
-        ctx.lineWidth = .65; ctx.beginPath();ctx.moveTo(x-cellW*.3,y-cellH*.17);ctx.quadraticCurveTo(x,y-cellH*.27,x+cellW*.32,y-cellH*.12);ctx.stroke();
-      }
-      if (cell.foam > .035) {
-        const muddy = cell.scrub > .05;
-        const cloud = ctx.createRadialGradient(x, y, 0, x, y, cellW * .66);
-        cloud.addColorStop(0, muddy ? `rgba(219,211,190,${cell.foam*.38})` : `rgba(245,251,247,${cell.foam*.34})`);
-        cloud.addColorStop(1, 'rgba(247,252,248,0)');
-        ctx.fillStyle=cloud;ctx.beginPath();ctx.ellipse(x,y,cellW*.8,cellH*.66,.12,0,Math.PI*2);ctx.fill();
-        const count=Math.ceil(cell.foam*14);
-        for(let b=0;b<count;b+=1){
-          const seed=Math.sin(index*53.71+b*17.13)*43758.54, n=seed-Math.floor(seed);
-          const seed2=Math.sin(index*23.17+b*9.93)*12435.21, m=seed2-Math.floor(seed2);
-          const bx=x+(n-.5)*cellW*1.35,by=y+(m-.5)*cellH*1.2,r=.6+((b*7+index)%9)/9*1.5;
-          ctx.fillStyle=`rgba(246,251,247,${cell.foam*.23})`;ctx.beginPath();ctx.arc(bx,by,r,0,Math.PI*2);ctx.fill();
-          ctx.strokeStyle=`rgba(247,255,254,${cell.foam*.48})`;ctx.lineWidth=.45;ctx.beginPath();ctx.arc(bx,by,r,.9,4.6);ctx.stroke();
-        }
-      }
-
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);ctx.clearRect(0, 0, width, height);
+    const cols = Number(cfg.GRID_COLS) || 14, rows = Number(cfg.GRID_ROWS) || 20;
+    const idle = window.PlayableIdlePreview, demo = cleaningDemoPhase(idle.seconds);
+    if (idle.active && stageRef.current) {
+      stageRef.current.dataset.idleCleanTool = !demo.visible || demo.part >= 4 ? 'done' : ['spray','brush','rinse','vacuum'][demo.part];
+      stageRef.current.style.setProperty('--idle-clean-x', (20 + 60 * demo.sweep) + '%');
+      stageRef.current.style.setProperty('--idle-clean-y', (54 + Math.sin(demo.sweep * Math.PI * 2) * 5) + '%');
+      idle.stamp(canvas, 'spray-scrub-rinse-dry');
+    }
+    cellsRef.current.forEach((original, index) => {
+      const cell = idle.active ? previewCleaningCell(original, index, cols, rows, demo) : original;
+      paintCleaningCell(ctx, cell, index, width / cols, height / rows, cols);
     });
+    // Counts describe the real grid, not the decorative feed demonstration.
+    canvas.dataset.dirtyCells = String(cellsRef.current.filter(c => c.dirt > .03).length);
+    canvas.dataset.foamyCells = String(cellsRef.current.filter(c => c.foam > .2).length);
+    canvas.dataset.scrubbedCells = String(cellsRef.current.filter(c => c.scrubbed).length);
+    canvas.dataset.rinsedCells = String(cellsRef.current.filter(c => c.rinsed >= .88).length);
+    canvas.dataset.driedCells = String(cellsRef.current.filter(cellIsClean).length);
+    canvas.dataset.wetCells = String(cellsRef.current.filter(c => c.wet > .2).length);
   }, [cfg]);
 
   useEffect(() => {
@@ -400,6 +584,7 @@ function App() {
     }
     if (value >= Number(cfg.CLEAN_GOAL || 0.92) && !completedRef.current) {
       completedRef.current = true;
+      finishCleaningGrid(cellsRef.current);progressRef.current=1;setProgress(1);drawOverlay();
       pointerRef.current.active = false;
       fxRef.current.lastMove = 0;
       setComplete(true);
@@ -407,7 +592,7 @@ function App() {
       vibrate('notification_success');
       console.info('[rug-restore] complete', { item: itemIndex, progress: value });
     }
-  }, [cfg, complete, itemIndex, stopAction]);
+  }, [cfg, complete, drawOverlay, itemIndex, stopAction]);
 
   const applyAt = useCallback((point, dose = 1) => {
     const cols = Number(cfg.GRID_COLS) || 14, rows = Number(cfg.GRID_ROWS) || 20;
@@ -464,6 +649,12 @@ function App() {
         impact.addColorStop(0,'rgba(248,255,255,.12)');impact.addColorStop(1,'rgba(248,255,255,0)');ctx.fillStyle=impact;ctx.beginPath();ctx.ellipse(hit.x,hit.y,25,13,.1,0,Math.PI*2);ctx.fill();
       }
     }
+    if(emitting && fx.tool==='brush'){
+      const hit={x:fx.point.x*width,y:fx.point.y*height},tilt=Math.sin(now*.035)*.13;
+      ctx.save();ctx.translate(hit.x,hit.y);ctx.rotate(tilt);ctx.lineCap='round';
+      for(let i=0;i<3;i++){ctx.strokeStyle=`rgba(249,255,251,${.44-i*.08})`;ctx.lineWidth=3.5-i*.5;ctx.beginPath();ctx.ellipse(0,0,15+i*6,6+i*3,0,.1,Math.PI*1.35);ctx.stroke();}
+      ctx.restore();
+    }
     const alive=[];
     for(const p of fx.particles){
       p.age+=dt;if(p.age>=p.life)continue;
@@ -472,6 +663,13 @@ function App() {
       if(p.kind==='mist'){
         ctx.strokeStyle=`rgba(240,252,255,${p.alpha*fade})`;ctx.lineWidth=p.radius;
         ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*.009,p.y-p.vy*.009);ctx.stroke();
+      }else if(p.kind==='foam'){
+        const r=p.radius*(1+p.age*.25);
+        ctx.fillStyle=`rgba(250,255,252,${fade*.8})`;ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.fill();
+        ctx.strokeStyle=`rgba(125,180,180,${fade*.3})`;ctx.lineWidth=.8;ctx.stroke();
+        ctx.strokeStyle=`rgba(255,255,255,${fade})`;ctx.lineWidth=1.3;ctx.beginPath();ctx.arc(p.x-.3,p.y-.4,r*.7,3.2,4.8);ctx.stroke();
+      }else if(p.kind==='air'){
+        ctx.strokeStyle=`rgba(244,255,253,${fade*.35})`;ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*.07,p.y-p.vy*.07);ctx.stroke();
       }else{
         ctx.strokeStyle=p.dirty?`rgba(120,105,76,${fade*.27})`:`rgba(206,239,246,${fade*.38})`;
         ctx.lineWidth=p.radius*1.8;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*.02,p.y-p.vy*.035);ctx.stroke();
@@ -483,26 +681,32 @@ function App() {
     if(alive.length||emitting)fx.frame=requestAnimationFrame(paintWater);
   }, []);
 
-  const animateToolEffect = useCallback((point,activeTool,removedDirt) => {
-    if(activeTool!=='spray'&&activeTool!=='rinse')return;
-    const fx=fxRef.current,{width,height}=sizeRef.current;
-    fx.point=point;fx.tool=activeTool;fx.dirt=removedDirt;fx.lastMove=performance.now();
-    const hit={x:point.x*width,y:point.y*height};
-    const origin=activeTool==='rinse'?{x:hit.x-29,y:hit.y-40}:{x:hit.x+32,y:hit.y-32};
-    const base=Math.atan2(hit.y-origin.y,hit.x-origin.x);
-    const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const count=reduced?3:activeTool==='spray'?7:10;
-    for(let i=0;i<count;i+=1){
-      if(activeTool==='spray'){
-        const a=base+(Math.random()-.5)*.64,speed=155+Math.random()*105;
-        fx.particles.push({kind:'mist',x:origin.x+(Math.random()-.5)*2,y:origin.y+(Math.random()-.5)*2,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,age:0,life:.18+Math.random()*.17,gravity:25,radius:.45+Math.random()*.65,alpha:.2+Math.random()*.25});
-      }else{
-        const a=Math.random()*Math.PI*2,r=3+Math.random()*20;
-        fx.particles.push({kind:'water',x:hit.x+Math.cos(a)*r,y:hit.y+Math.sin(a)*r*.6,vx:(Math.random()-.5)*36,vy:20+Math.random()*42,age:0,life:.28+Math.random()*.42,gravity:55,radius:.6+Math.random()*.85,dirty:removedDirt>.015&&i%3!==0});
+  const animateToolEffect = useCallback((point, activeTool, removedDirt, allowed = true) => {
+    if (!allowed) return;
+    const fx = fxRef.current, { width, height } = sizeRef.current;
+    fx.point = point;fx.tool = activeTool;fx.dirt = removedDirt;fx.lastMove = performance.now();
+    const hit = { x: point.x * width, y: point.y * height };
+    const origin = activeTool === 'rinse' ? { x: hit.x - 29, y: hit.y - 40 } : { x: hit.x + 32, y: hit.y - 32 };
+    const base = Math.atan2(hit.y - origin.y, hit.x - origin.x);
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const count = reduced ? 3 : { spray: 7, brush: 12, rinse: 10, vacuum: 5 }[activeTool];
+    for (let i = 0; i < count; i += 1) {
+      if (activeTool === 'spray') {
+        const a = base + (Math.random() - .5) * .64, speed = 155 + Math.random() * 105;
+        fx.particles.push({ kind: 'mist', x: origin.x + (Math.random() - .5) * 2, y: origin.y + (Math.random() - .5) * 2, vx: Math.cos(a) * speed, vy: Math.sin(a) * speed, age: 0, life: .18 + Math.random() * .17, gravity: 25, radius: .45 + Math.random() * .65, alpha: .2 + Math.random() * .25 });
+      } else if (activeTool === 'brush') {
+        const a = Math.random() * Math.PI * 2, r = Math.random() * 25;
+        fx.particles.push({ kind: 'foam', x: hit.x + Math.cos(a) * r, y: hit.y + Math.sin(a) * r * .65, vx: Math.cos(a) * (8 + Math.random() * 16), vy: -8 + Math.sin(a) * 13, age: 0, life: .45 + Math.random() * .65, gravity: -2, radius: 1.6 + Math.random() * 4.2 });
+      } else if (activeTool === 'vacuum') {
+        const a = Math.random() * Math.PI * 2;
+        fx.particles.push({ kind: 'air', x: hit.x + (Math.random() - .5) * 28, y: hit.y + (Math.random() - .5) * 18, vx: Math.cos(a) * 35, vy: -20 + Math.sin(a) * 17, age: 0, life: .22 + Math.random() * .2, gravity: 0, radius: .8 });
+      } else {
+        const a = Math.random() * Math.PI * 2, r = 3 + Math.random() * 20;
+        fx.particles.push({ kind: 'water', x: hit.x + Math.cos(a) * r, y: hit.y + Math.sin(a) * r * .6, vx: (Math.random() - .5) * 36, vy: 20 + Math.random() * 42, age: 0, life: .28 + Math.random() * .42, gravity: 55, radius: .6 + Math.random() * .85, dirty: false });
       }
     }
-    if(fx.particles.length>240)fx.particles.splice(0,fx.particles.length-240);
-    if(!fx.frame){fx.lastTime=performance.now();fx.frame=requestAnimationFrame(drawEffects);}
+    if (fx.particles.length > 260) fx.particles.splice(0, fx.particles.length - 260);
+    if (!fx.frame) { fx.lastTime = performance.now();fx.frame = requestAnimationFrame(drawEffects); }
   }, [drawEffects]);
 
   const endStroke = useCallback((event) => {
@@ -539,12 +743,13 @@ function App() {
     }
     const cols=Number(cfg.GRID_COLS)||14,rows=Number(cfg.GRID_ROWS)||20;
     const center=cellsRef.current[Math.min(rows-1,Math.floor(next.y*rows))*cols+Math.min(cols-1,Math.floor(next.x*cols))];
-    const reason=center&&!center.cleaned&&tool==='brush'&&!center.primed?'Spray first':center&&!center.cleaned&&tool==='rinse'&&!center.scrubbed?(center.primed?'Scrub first':'Spray first'):'';
+    const reason=toolPrerequisite(center,tool);
     if(reason){setActionHint(reason);clearTimeout(hintTimerRef.current);hintTimerRef.current=window.setTimeout(()=>setActionHint(''),1400);}else setActionHint('');
+    moveAction(tool,clamp(Math.hypot(next.x-pointer.last.x,next.y-pointer.last.y)/.018));
     const removed=applyLine(pointer.last,next);
-    animateToolEffect(next,tool,removed);
+    animateToolEffect(next,tool,removed,!reason);
     pointer.last = next;
-  }, [animateToolEffect, applyLine, cfg, complete, hasStarted, pointFromEvent, startAction, tool]);
+  }, [animateToolEffect, applyLine, cfg, complete, hasStarted, moveAction, pointFromEvent, startAction, tool]);
 
   useEffect(() => {
     const stop = () => {
@@ -564,6 +769,7 @@ function App() {
     return () => { window.removeEventListener('blur', stop); document.removeEventListener('visibilitychange', hidden); unsubscribe(); };
   }, [stopAction]);
 
+  useEffect(()=>{let frame,last=0;const draw=now=>{if(window.PlayableIdlePreview.active&&now-last>=33){drawOverlay();last=now;}frame=requestAnimationFrame(draw);};frame=requestAnimationFrame(draw);return()=>{cancelAnimationFrame(frame);drawOverlay();};},[drawOverlay,feedActive]);
   const chooseTool = (nextTool) => {
     pointerRef.current = { id: null, last: null, active: false };
     setToolCursor(null);
@@ -594,7 +800,7 @@ function App() {
   ], [cfg]);
 
   return <div className="appShell" data-surface={surface.id} data-tool={tool} data-progress={progress.toFixed(4)}>
-    <header className="topHud" style={{ visibility: hasStarted ? 'visible' : 'hidden' }}>
+    <header className="topHud" style={{ visibility: hasStarted && !complete ? 'visible' : 'hidden' }}>
       <div className="progressPill" aria-label={`${Math.round(progress * 100)}% cleaned`}><strong>{Math.round(progress * 100)}%</strong></div>
     </header>
     <main className="playArea">
@@ -605,24 +811,18 @@ function App() {
           <canvas className="textureOverlay" ref={canvasRef} aria-hidden="true" />
           <canvas className="actionEffects" ref={effectsCanvasRef} aria-hidden="true" />
           <div className="fiberGloss" aria-hidden="true" />
+          <span className="idle-clean-tool" aria-hidden="true">{['spray','brush','rinse','vacuum'].map(type=><span key={type} className={'idle-clean-'+type}><ToolIcon type={type} config={cfg}/></span>)}</span>
           {toolCursor && !complete && <span className={`toolCursor cursor-${tool}`} aria-hidden="true" style={{ left: `${toolCursor.x * 100}%`, top: `${toolCursor.y * 100}%` }}><ToolIcon type={tool} config={cfg} /></span>}
-          {complete && <div className="resultOverlay">
-            <div className="resultCard">
-              <div className="sparkSeal"><span /><span /><span /></div>
-              <div className="resultEyebrow">{Math.round(progress * 100)}% CLEANED</div>
-              <h1>{cfg.COMPLETE}</h1>
-              <div className="resultActions">
-                <button className="resultButton primary" type="button" onClick={nextItem}>{cfg.NEXT_ITEM}</button>
-                <PostMyPlayButton />
-              </div>
-            </div>
+          {complete && <div className="completionOverlay">
+            <h1 className="completionText" role="status" aria-live="polite">{cfg.COMPLETE}</h1>
+            <button className="completionAction" type="button" onClick={nextItem}>{cfg.NEXT_ITEM}</button>
           </div>}
         </div>
       </div>
       {actionHint && !complete && <div className="toolFeedback" role="status">{actionHint}</div>}
     </main>
-    <nav className="toolDock" aria-label="Cleaning tools">
-      {tools.map((item) => <button className={`toolButton ${tool === item.id ? 'selected' : ''}`} type="button" key={item.id} onClick={() => chooseTool(item.id)} aria-label={item.label}>
+    <nav className="toolDock" aria-label="Cleaning tools" aria-hidden={complete} style={{visibility: complete ? 'hidden' : undefined}}>
+      {tools.map((item) => <button className={`toolButton ${tool === item.id ? 'selected' : ''}`} type="button" key={item.id} disabled={complete} onClick={() => chooseTool(item.id)} aria-label={item.label}>
         <span className="toolIcon"><ToolIcon type={item.id} config={cfg} /></span><span className="toolLabel">{item.label}</span>
       </button>)}
     </nav>
@@ -671,19 +871,6 @@ function App() {
       .textureOverlay { position: absolute; inset: 0; z-index: 2; display: block; pointer-events: none; }
       .fiberGloss { position: absolute; z-index: 3; inset: 0; pointer-events: none; opacity: .34; mix-blend-mode: screen; background: linear-gradient(116deg, transparent 18%, rgba(255,245,205,.1) 42%, transparent 58%), repeating-linear-gradient(173deg, rgba(255,255,255,.025) 0 1px, transparent 1px 4px); }
       .rugStage.isComplete .fiberGloss { opacity: .58; animation: cleanShimmer 2.2s ease-in-out infinite; }
-      .resultOverlay { position: absolute; z-index: 8; inset: 0; display: grid; place-items: center; padding: 18px; background: rgba(5, 26, 24, .34); backdrop-filter: blur(3px); }
-      .resultCard { width: min(88%, 310px); padding: 25px 20px 21px; border: 1px solid rgba(250, 225, 150, .5); border-radius: 22px; text-align: center; background: linear-gradient(145deg, rgba(21, 65, 59, .96), rgba(8, 34, 31, .96)); box-shadow: 0 18px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.13); animation: resultIn .45s cubic-bezier(.2,.8,.2,1) both; }
-      .sparkSeal { height: 28px; display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: 7px; }
-      .sparkSeal span { display: block; width: 5px; height: 20px; border-radius: 5px; background: #f1ce74; transform: rotate(35deg); box-shadow: 0 0 12px rgba(241,206,116,.65); }
-      .sparkSeal span:nth-child(2) { height: 28px; transform: rotate(0); }
-      .sparkSeal span:nth-child(3) { transform: rotate(-35deg); }
-      .resultEyebrow { font-size: 9px; letter-spacing: .2em; color: #e5c875; font-weight: 700; }
-      .resultCard h1 { margin: 7px 0 22px; color: #fff8df; font-family: var(--font-display); font-size: clamp(20px, 6cqi, 27px); line-height: 1.15; }
-      .resultActions { display: flex; justify-content: center; gap: 9px; flex-wrap: wrap; }
-      .resultButton { min-height: 46px; padding: 0 18px; border: 0; border-radius: 14px; cursor: pointer; font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: .02em; transition: transform .16s ease, filter .16s ease, opacity .16s ease; }
-      .resultButton:active { transform: scale(.96); }
-      .resultButton.primary { color: #19352d; background: linear-gradient(135deg, #ffe8a2, #d8ad54); box-shadow: 0 6px 18px rgba(206, 160, 66, .22); }
-      .resultButton.secondary { color: #f8eabb; border: 1px solid rgba(247, 220, 147, .35); background: rgba(255,255,255,.07); }
       .toolDock { position: relative; z-index: 5; flex: 0 0 auto; display: flex; justify-content: center; gap: clamp(6px, 2.3cqi, 14px); padding: 8px 12px max(16px, env(safe-area-inset-bottom, 0px)); background: linear-gradient(to top, rgba(5, 20, 18, .92), rgba(7, 25, 23, .68)); border-top: 1px solid rgba(218, 194, 126, .17); }
       .toolButton { position: relative; min-width: 65px; width: 18%; max-width: 88px; min-height: 74px; padding: 7px 5px 5px; border: 0; border-radius: 16px; color: rgba(243, 239, 218, .64); background: transparent; cursor: pointer; transition: background .18s ease, color .18s ease, transform .16s ease; }
       .toolButton:active { transform: scale(.95); }
@@ -695,7 +882,7 @@ function App() {
       @keyframes breathe { 0%, 100% { opacity: .56; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-2px); } }
       @keyframes resultIn { from { opacity: 0; transform: translateY(15px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
       @keyframes cleanShimmer { 0%, 100% { transform: translateX(-2%); opacity: .4; } 50% { transform: translateX(2%); opacity: .72; } }
-      @media (max-height: 620px) { .topHud { height: 56px; } .stageWrap { padding-top: 20px; padding-bottom: 8px; } .toolButton { min-height: 64px; } .toolIcon { height: 29px; width: 29px; } .toolIcon svg { width: 27px; height: 27px; } .resultCard { padding: 17px 16px 16px; } .resultCard h1 { margin-bottom: 14px; } }
+      @media (max-height: 620px) { .topHud { height: 56px; } .stageWrap { padding-top: 20px; padding-bottom: 8px; } .toolButton { min-height: 64px; } .toolIcon { height: 29px; width: 29px; } .toolIcon svg { width: 27px; height: 27px; } }
       .appShell { container-type: inline-size; }
       .stageWrap { padding-top: 48px; padding-bottom: 12px; }
       .rugStage { border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,.22), 0 0 0 1px rgba(238,210,132,.24); }
@@ -707,7 +894,7 @@ function App() {
       .toolArtwork { display: block; width: 100%; height: 100%; object-fit: contain; user-select: none; pointer-events: none; filter: drop-shadow(0 2px 2px rgba(0,0,0,.16)); }
       .toolLabel { font-size: 12px; line-height: 18px; letter-spacing: 0; }
       .toolButton.selected { color: #fff8df; background: rgba(237,203,117,.15); }
-      .toolButton:focus-visible, .resultButton:focus-visible { outline: 3px solid #94dcf4; outline-offset: 2px; }
+      .toolButton:focus-visible, .completionAction:focus-visible { outline: 3px solid #94dcf4; outline-offset: 2px; }
       .toolCursor { position: absolute; z-index: 5; width: 48px; height: 48px; margin-left: -12px; margin-top: -35px; pointer-events: none; transform: rotate(-12deg); }
       .cursor-vacuum { margin-left: -24px; margin-top: -25px; transform: none; }
 
@@ -723,10 +910,17 @@ function App() {
       .toolIcon { width:40px; height:40px; margin-bottom:2px; }
       .toolLabel { font-size:12px; line-height:18px; }
       html[data-feed-preview="true"] .toolDock { visibility:hidden; }
-      .resultButton { font-size:15px; min-height:46px; }
 
+
+      .completionOverlay { position:absolute; z-index:8; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:20px; background:transparent; animation:completionIn .24s ease-out both; }
+      .completionText { max-width:100%; margin:0; text-align:center; color:#fff; font:700 clamp(20px,6cqi,24px)/1.25 var(--font-display); overflow-wrap:anywhere; text-shadow:0 2px 5px #061b18,0 0 16px #061b18; }
+      .completionAction { min-height:44px; max-width:100%; padding:10px 20px; border:0; border-radius:999px; background:#fffaf0; color:#18352e; font:700 15px/1.4 var(--font-body); cursor:pointer; overflow-wrap:anywhere; }
+      .completionAction:active { transform:scale(.97); }
+      .completionAction:focus-visible { outline:3px solid #94dcf4; outline-offset:3px; }
+      @keyframes completionIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
 
       .actionEffects { position:absolute; inset:0; z-index:4; display:block; pointer-events:none; }
+      .cursor-brush { margin-left:-24px; margin-top:-25px; transform:rotate(-10deg); }
       .cursor-spray { margin-left:22px; margin-top:-42px; transform:rotate(-6deg); }
       .cursor-rinse { margin-left:-65px; margin-top:-62px; transform:none; }
       .toolFeedback { position:absolute; left:50%; bottom:12px; z-index:7; transform:translateX(-50%); padding:6px 12px; border-radius:999px; background:rgba(5,24,22,.9); color:#fff4d5; font:700 13px/1.3 var(--font-body); pointer-events:none; }

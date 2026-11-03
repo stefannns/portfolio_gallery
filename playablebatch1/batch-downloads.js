@@ -8,8 +8,8 @@ window.PlayableBatchDownloads = {
         "filename": "batch-1-en.zip",
         "language": "en",
         "games": 38,
-        "bytes": 40674391,
-        "sha256": "d921487fc09e86ea8fa56aa46a733908b08705c55d9d5d1cd3ed3408853757e9",
+        "bytes": 40674453,
+        "sha256": "d1e6c4c96e18271b5db9b2bd149054a3bfeb8694194b1668eafaf1ae5c8eac63",
         "members": [
           {
             "number": 1,
@@ -246,8 +246,8 @@ window.PlayableBatchDownloads = {
         "filename": "batch-1-it.zip",
         "language": "it",
         "games": 38,
-        "bytes": 40723013,
-        "sha256": "331405f4c58e204402ff4629481bca5bd0ba39948edf3d46336f8747c576f72e",
+        "bytes": 40723151,
+        "sha256": "b848c8e2696f16c717883c553289149dbd5fec4233a3c835f1fbe642c4e5f581",
         "members": [
           {
             "number": 1,
@@ -489,8 +489,8 @@ window.PlayableBatchDownloads = {
         "filename": "batch-2-en.zip",
         "language": "en",
         "games": 21,
-        "bytes": 14369012,
-        "sha256": "6f3bdc3c9dadde7a386748486db2be0a690f3fbcd54f60013ae912c307ad2573",
+        "bytes": 16407172,
+        "sha256": "738f509269c8827c7f41cd041cf5e35b0b40d70cf935d9dd34cdfc18db7c993f",
         "members": [
           {
             "number": 18,
@@ -502,13 +502,13 @@ window.PlayableBatchDownloads = {
             "number": 21,
             "taskId": "playable2_20260928023148_i47u62",
             "folder": "batch-2-en/21-playable2_20260928023148_i47u62",
-            "files": 9
+            "files": 11
           },
           {
             "number": 22,
             "taskId": "playable2_20260928023148_kiq9wu",
             "folder": "batch-2-en/22-playable2_20260928023148_kiq9wu",
-            "files": 11
+            "files": 14
           },
           {
             "number": 23,
@@ -520,7 +520,7 @@ window.PlayableBatchDownloads = {
             "number": 44,
             "taskId": "playable2_20261001225611_9its9h",
             "folder": "batch-2-en/44-playable2_20261001225611_9its9h",
-            "files": 11
+            "files": 15
           },
           {
             "number": 55,
@@ -580,7 +580,7 @@ window.PlayableBatchDownloads = {
             "number": 84,
             "taskId": "playable2_20261028202811_q0f68t",
             "folder": "batch-2-en/84-playable2_20261028202811_q0f68t",
-            "files": 21
+            "files": 39
           },
           {
             "number": 85,
