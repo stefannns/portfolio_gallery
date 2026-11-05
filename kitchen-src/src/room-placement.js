@@ -167,9 +167,10 @@ function createRoomPlacement(surfaceData, version) {
   }
 
   const definitions = version === 10 ? [
+    {id: 'dao-arena', asset: 'discovery-dao-arena-v1', label: 'Chef’s knife', width: 1.05, position: [-3.85, 1.102, .1], rotationY: Math.PI / 4, hitSize: [1.12, .25, .32], hitOffset: [0, .12, 0]},
     {id: 'seed-squad', asset: 'discovery-groceries-v2', label: 'Groceries', width: .72, position: [-2.15, ROOM_FLOOR_Y, 3.3], rotationY: 0},
     {id: 'smarttester', asset: 'discovery-smarttester-v2', label: 'Recorder', width: .52, position: [0, 1.12, -.4], rotationY: 0},
-    {id: 'h3-otome', asset: 'discovery-h3-v2', label: 'Otome notebook', width: .6, position: [0, 1.12, -2.1], rotationY: 0},
+    {id: 'h3-otome', asset: 'discovery-h3-v2', label: 'Otome notebook', width: .6, position: [-4.051628345461824, 1.102, 1.6], rotationY: 0},
     {id: 'games-computer', asset: 'discovery-computer-v2', label: 'Games computer', width: 1.1038849354, position: [3.2, 1.23, 4], rotationY: 0},
     {id: 'a-bot-can-do-better', asset: 'discovery-bot-v3', label: 'Specials chalkboard', width: 1.1, position: [3.05, ROOM_FLOOR_Y, -3.9], rotationY: 0, modelOffset: [-.1200942993, 0, 0]},
   ] : [

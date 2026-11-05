@@ -11,6 +11,8 @@ The homepage is now a playable capybara kitchen portfolio. Explore the room, ins
 - Try the sink bubbles, launch the frying pan, startle the fish beside the knives, or throw the four tomatoes at the camera. Walk into the landed fish to push it around the floor. Tomatoes do not refill during a visit. E uses the closest object in reach.
 - The game scene keeps a 16:9 landscape frame. Portrait phones show a rotation prompt.
 
+Dao Arena opens from the chef’s knife and the computer, with a public gameplay screenshot and a workbench covering enemy characters, AI 3D and rigging, weapon effects, level layout, shaders and development tools.
+
 Seed Squad has an embedded game preview and a design content library. Smarttester links to its workflow tour. Otome Story Engine (Minimax H3) includes a demo video and an English AI workflow diagram. Existing game covers and reels are retained.
 
 ## Edit and publish

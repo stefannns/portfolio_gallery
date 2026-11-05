@@ -2,6 +2,119 @@ const reels = 'https://recrjycnqclmqvbcryya.supabase.co/storage/v1/object/public
 
 export const projects = [
   {
+    id: 'dao-arena', title: 'Dao Arena', type: 'First-person talisman survival', collection: 'games',
+    image: '/images/projects/dao-arena/gameplay.webp', color: '#91b4aa', recent: true,
+    presentation: 'landscape',
+    previewAlt: 'A glowing Impact talisman in the foreground of Dao Arena’s lantern-lit palace courtyard, with the gameplay HUD.',
+    url: 'https://daoarena.vercel.app/',
+    description: 'A browser FPS set in a Daoist palace, built around throwing fulu talismans. Dash and jump through the courtyard, survive enemy waves, and shape your build with new weapons, abilities and augments.',
+    design: 'Five talisman weapons cover distinct combat roles: Flow, Cloud Pierce, Petal, Blast and Impact. Raised terraces and connected routes keep movement central, while rewards between waves let the player adapt their loadout.',
+    processTitle: 'AI production and development tools',
+    process: 'I used AI tools for code and art direction, Tripo for custom enemies and the first-person arm, and Blender to prepare rigs and animation. Dev Studio and Fulu Studio let me tune combat, waves, materials and weapon effects against live previews. The game uses Three.js, TypeScript and Rapier.',
+    galleryIntro: 'The custom models, throwing animation, arena layout and tools I built to keep iterating.',
+    gallery: [
+      {
+        "id": "dao-enemies",
+        "title": "Enemy characters",
+        "caption": "I generated custom enemies with Tripo, then prepared their rigs and animation in Blender. These models show the lantern keeper and the teleporting Red Thread Executioner.",
+        "images": [
+          {
+            "id": "dao-lantern",
+            "title": "Lantern keeper",
+            "src": "/images/projects/dao-arena/lantern-keeper.webp",
+            "width": 1400,
+            "height": 1700,
+            "presentation": "model",
+            "alt": "Tripo-generated lantern keeper in pale robes with jade trim, holding a large red lantern.",
+            "caption": "I adjusted the sleeve rig and attached lantern so the prop stayed with the character during animation."
+          },
+          {
+            "id": "dao-executioner",
+            "title": "Red Thread Executioner",
+            "src": "/images/projects/dao-arena/red-thread-executioner.webp",
+            "width": 1400,
+            "height": 1700,
+            "presentation": "model",
+            "alt": "Hooded Red Thread Executioner model with a pale mask, red bindings and a broad execution saber.",
+            "caption": "A Tripo-generated melee enemy with a hood, pale mask and execution saber. In the game, it dissolves away and reforms at a marked destination, giving the player a warning before it attacks."
+          }
+        ]
+      },
+      {
+        "id": "dao-ai-3d-rigging",
+        "title": "AI 3D and Rigging",
+        "layout": "stacked",
+        "caption": "From a Tripo-generated first-person arm to a working talisman throw: I compared hand designs, refined the rig, and timed the fingers, release and recovery.",
+        "images": [
+          {
+            "id": "dao-arm",
+            "title": "First-person arm",
+            "src": "/images/projects/dao-arena/jade-scholar-arm.webp",
+            "width": 1400,
+            "height": 1700,
+            "presentation": "model",
+            "alt": "Generated first-person arm with a dark jade sleeve, cream cuff and open hand.",
+            "caption": "I compared generated hand designs before choosing the Jade Scholar sleeve. The arm became part of the throwing rig, with the talisman placed between the fingers and timed to release from the hand."
+          },
+          {
+            "id": "dao-rigging",
+            "title": "Throwing rig",
+            "src": "/images/projects/dao-arena/hand-rigging.webp",
+            "width": 1905,
+            "height": 895,
+            "alt": "Joint-placement tool showing finger, wrist and forearm anchors on the generated first-person arm.",
+            "caption": "I used a joint-placement preview to review the finger, wrist and forearm anchors. The throw needed the fingers to open naturally, release the fulu from the right position, and recover without freezing."
+          }
+        ]
+      },
+      {
+        "id": "dao-fulu",
+        "title": "Five weapon identities",
+        "src": "/images/projects/dao-arena/five-fulu.webp",
+        "width": 1600,
+        "height": 900,
+        "alt": "Five fulu designs with distinct purple, blue, green, red and gold energy effects.",
+        "caption": "Flow, Cloud Pierce, Petal, Blast and Impact each have a distinct combat role. Generated paper textures are combined with energy strands, trails and particles built in code."
+      },
+      {
+        "id": "dao-layout",
+        "title": "Courtyard layout",
+        "src": "/images/projects/dao-arena/courtyard-layout.webp",
+        "width": 1707,
+        "height": 960,
+        "alt": "Early palace arena blockout with simple platforms, raised terraces and open movement routes.",
+        "caption": "I tested the map with simple blocks before adding the architecture. The courtyard needed room to dash and jump, raised side platforms, and clear routes between different heights."
+      },
+      {
+        "id": "dao-shaders",
+        "title": "Shader studies",
+        "src": "/images/projects/dao-arena/shader-comparison.webp",
+        "width": 1500,
+        "height": 1080,
+        "alt": "Shader comparison workspace testing rendering treatments on the same palace architecture and enemies.",
+        "caption": "I built a comparison scene to test rendering styles on the same buildings and enemies, then chose Ink contours for the world and the player’s hand. Lighting, fog and contrast were tuned for readability."
+      },
+      {
+        "id": "dao-fulu-studio",
+        "title": "Fulu Studio",
+        "src": "/images/projects/dao-arena/fulu-studio.webp",
+        "width": 1440,
+        "height": 960,
+        "alt": "Early Fulu Studio with a live 3D talisman preview and controls for paper, ink and energy effects.",
+        "caption": "An early version of Fulu Studio, a tool I built to tune each weapon’s paper, ink and energy effects against a live 3D preview."
+      },
+      {
+        "id": "dao-waves",
+        "title": "Wave editor",
+        "src": "/images/projects/dao-arena/wave-editor.webp",
+        "width": 1600,
+        "height": 798,
+        "alt": "Custom Dev Studio wave editor showing enemy composition and progression controls beside the playable arena.",
+        "caption": "I built Dev Studio to adjust enemy sets, wave progression, stats, scene placement and visual settings without needing a code change for every tweak. The wave editor keeps the arena visible while I work."
+      }
+    ],
+  },
+  {
     id: 'seed-squad', title: 'Seed Squad', type: 'Garden defense', collection: 'games',
     image: '/images/seed-squad.webp', color: '#b6d2a0', recent: true,
     url: 'https://farmtd.vercel.app/', embedUrl: 'https://farmtd.vercel.app/',
@@ -117,6 +230,12 @@ export const projects = [
 // The computer has an editorial order independent of the room and older galleries.
 export const computerProjectIds = [
   'seed-squad', 'smarttester', 'h3-otome', 'a-bot-can-do-better',
+  'recurve', 'assassin', 'niflheim', 'toad-defense',
+];
+
+// Dao Arena belongs to the original kitchen; the pond test keeps its own set.
+export const originalKitchenProjectIds = [
+  'seed-squad', 'smarttester', 'h3-otome', 'a-bot-can-do-better', 'dao-arena',
   'recurve', 'assassin', 'niflheim', 'toad-defense',
 ];
 

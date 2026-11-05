@@ -38,10 +38,10 @@ for (const [name, file] of [['surfaceV7', 'room-v7-surfaces.json'], ['surfaceV10
 const {getRoomPlacement} = await import(`data:text/javascript;base64,${Buffer.from(placementSource).toString('base64')}`);
 const room = getRoomPlacement(10);
 const publishedLayout = JSON.parse(await readFile(new URL('../src/room-v10-layout.json', import.meta.url), 'utf8'));
-const expectedIds = ['seed-squad', 'smarttester', 'h3-otome', 'games-computer', 'a-bot-can-do-better'];
-assert.deepEqual(room.ROOM_ITEMS.map(item => item.id), expectedIds, 'The current room contains the five retained project objects');
+const expectedIds = ['dao-arena', 'seed-squad', 'smarttester', 'h3-otome', 'games-computer', 'a-bot-can-do-better'];
+assert.deepEqual(room.ROOM_ITEMS.map(item => item.id), expectedIds, 'The current room contains all six project objects');
 assert.equal(publishedLayout.version, 1, 'Published layout uses the supported data version');
-assert.deepEqual(publishedLayout.items.map(item => item.id), expectedIds, 'Published positions cover every project object');
+assert.deepEqual(publishedLayout.items.map(item => item.id).sort(), [...expectedIds].sort(), 'Published positions cover every project object');
 for (const expected of publishedLayout.items) {
   const actual = room.ROOM_ITEMS.find(item => item.id === expected.id);
   for (let axis = 0; axis < 3; axis++) {

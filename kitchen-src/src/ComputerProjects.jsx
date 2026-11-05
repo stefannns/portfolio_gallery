@@ -45,6 +45,8 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
   const heading = typeof title === 'string' && title.trim() ? title.trim() : single ? selected.title : 'Capybara’s computer';
   const video = selected.moreVideos?.some(clip => clip.url === reel) ? reel : selected.video || selected.moreVideos?.[0]?.url;
   const videoProject = Boolean(video && !selected.embedUrl && !selected.previewUrl);
+  const landscapeProject = selected.presentation === 'landscape';
+  const wideProject = videoProject || landscapeProject;
   const advance = useRef(null);
   advance.current = () => {
     if (!nextProject) return;
@@ -134,11 +136,11 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
   const projectCopy = (
     <div className="computer-projects__copy">
       <section className="computer-projects__story-note">
-        {!videoProject && <><p className="computer-projects__type">{selected.type}</p>
+        {!wideProject && <><p className="computer-projects__type">{selected.type}</p>
         <h2 id={projectTitleId} className={selected.logo ? 'computer-projects__branded-title' : undefined}>{selected.logo && <img className="computer-projects__brand-mark" src={selected.logo} alt="" aria-hidden="true" width="40" height="40"/>}{selected.title}</h2></>}
         <p className="computer-projects__description">{selected.description}</p>
         {(selected.url || selected.github) && <div className="computer-projects__links">
-          {selected.url && <a href={selected.url} target="_blank" rel="noopener noreferrer">{selected.embedUrl ? 'Open game in a new tab ↗' : selected.collection === 'games' ? 'Play the game' : selected.id === 'smarttester' ? 'Open Smarttester' : 'Open project'}</a>}
+          {selected.url && <a className={selected.collection === 'games' && !selected.embedUrl ? 'computer-projects__play-link' : undefined} href={selected.url} target="_blank" rel="noopener noreferrer">{selected.collection === 'games' && !selected.embedUrl && <svg aria-hidden="true" viewBox="0 0 20 20" focusable="false"><path d="M6 3.5 16 10 6 16.5Z"/></svg>}{selected.embedUrl ? 'Open game in a new tab ↗' : selected.collection === 'games' ? 'Play the game' : selected.id === 'smarttester' ? 'Open Smarttester' : 'Open project'}</a>}
           {selected.github && <a href={selected.github} target="_blank" rel="noopener noreferrer">Source on GitHub</a>}
         </div>}
       </section>
@@ -188,8 +190,8 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
           </button>)}
         </nav>}
 
-        <article className={`computer-projects__detail${videoProject ? ' computer-projects__detail--video' : ''}${selected.previewAspectRatio ? ' computer-projects__detail--capture' : ''}${selected.embedUrl ? ' computer-projects__detail--embed' : ''}${selected.gallery?.length ? ' computer-projects__detail--gallery' : ''}`} ref={detail} id={detailId} tabIndex={-1} aria-labelledby={videoProject && single ? titleId : projectTitleId}>
-          {videoProject && !single && <div className="computer-projects__video-heading">
+        <article className={`computer-projects__detail${videoProject ? ' computer-projects__detail--video' : ''}${landscapeProject ? ' computer-projects__detail--landscape' : ''}${selected.previewAspectRatio ? ' computer-projects__detail--capture' : ''}${selected.embedUrl ? ' computer-projects__detail--embed' : ''}${selected.gallery?.length ? ' computer-projects__detail--gallery' : ''}`} ref={detail} id={detailId} tabIndex={-1} aria-labelledby={wideProject && single ? titleId : projectTitleId}>
+          {wideProject && !single && <div className="computer-projects__video-heading">
             <p className="computer-projects__type">{selected.type}</p>
             <h2 id={projectTitleId}>{selected.title}</h2>
           </div>}
@@ -197,7 +199,7 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
           <div className={`computer-projects__media-column${selected.embedUrl ? ' computer-projects__media-column--embed' : ''}`}>
             {selected.embedUrl ? <ProjectGameEmbed key={selected.id} project={selected}/>
               : videoProject ? <ProjectVideo key={`${selected.id}-${video}`} src={video} poster={selected.image} label={`${selected.title} gameplay`} aspectRatio={selected.videoAspectRatio} onPlaybackChange={onVideoPlaybackChange}/>
-              : <div className={`computer-projects__media${selected.previewAspectRatio ? ' computer-projects__media--capture' : ''}`} style={selected.previewAspectRatio ? {'--project-image-ratio': selected.previewAspectRatio} : undefined}>
+              : <div className={`computer-projects__media${selected.previewAspectRatio ? ' computer-projects__media--capture' : ''}${landscapeProject ? ' computer-projects__media--landscape' : ''}`} style={selected.previewAspectRatio ? {'--project-image-ratio': selected.previewAspectRatio} : undefined}>
                 <img src={selected.previewImage || selected.image} alt={selected.previewAlt || `${selected.title} project cover`} style={{objectPosition: selected.imagePosition || 'center'}}/>
               </div>}
             {selected.previewUrl && <a className="computer-projects__preview-link" href={selected.previewUrl} target="_blank" rel="noopener noreferrer">{selected.previewLabel || 'Explore'} ↗</a>}

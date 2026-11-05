@@ -15,27 +15,12 @@ import {getLandedFishCollider, recoverFishOverlap} from './fish-ground-collision
 import {resolveFishPush} from './fish-ground-pushing.js';
 import {resolveCabinetArmClearance} from './cabinet-arm-clearance.js';
 import {attachRoomMovementInput} from './room-movement-input.js';
+import {loadRoomLayout as loadLayout, persistRoomLayout as persistLayout} from './room-layout-storage.js';
 import {useTaskOutlineIgnore} from './TaskOutline.jsx';
 
 const up = new THREE.Vector3(0, 1, 0);
 const NO_TOYS = Object.freeze([]);
 const canInspectItem = isNearRoomTarget;
-
-function loadLayout(storageKey, sanitizeRoomPlacements) {
-  try {
-    const saved = JSON.parse(localStorage.getItem(storageKey));
-    const items = saved?.version >= 2 ? saved.items : saved?.items?.filter(item => item.id !== 'h3-otome');
-    return sanitizeRoomPlacements(items);
-  }
-  catch {return sanitizeRoomPlacements(null);}
-}
-
-function persistLayout(storageKey, items) {
-  try {
-    localStorage.setItem(storageKey, JSON.stringify({version: 2, items: items.map(({id, position, rotationY}) => ({id, position, rotationY}))}));
-    return true;
-  } catch {return false;}
-}
 
 function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus, onActivate, onError, editable, objective, highlighted, hovered, reducedMotion}) {
   const ignorePointerTarget = useTaskOutlineIgnore();
@@ -70,8 +55,8 @@ function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus,
     onPointerOut={() => onHover(null, item.id)}>
     <group name={`room-item-model-${item.id}`} position={item.modelOffset || [0, 0, 0]}><RestaurantModel entry={entry} dimensions={[item.width, item.width, item.width]} rotationY={0} uniform objective={objective} highlighted={highlighted || hovered} reducedMotion={reducedMotion} onError={onError}/></group>
     {/* Invisible pointer targets make small items easy to grab without changing their art. */}
-    <mesh ref={ignorePointerTarget} position={[0, item.width * .3, 0]}>
-      <boxGeometry args={[Math.max(.62, item.width), Math.max(.45, item.width * .65), Math.max(.62, item.width)]}/>
+    <mesh ref={ignorePointerTarget} position={item.hitOffset || [0, item.width * .3, 0]}>
+      <boxGeometry args={item.hitSize || [Math.max(.62, item.width), Math.max(.45, item.width * .65), Math.max(.62, item.width)]}/>
       <meshBasicMaterial transparent opacity={0} depthWrite={false} colorWrite={false}/>
     </mesh>
     {objective && <Html center calculatePosition={markerPosition} style={{pointerEvents: 'none'}} zIndexRange={[8, 1]}>
@@ -85,7 +70,7 @@ function MovableItem({item, entry, register, onStart, onHover, onNudge, onFocus,
   </group>;
 }
 
-export default function RoomArrangement({roomVersion = 10, controls, rootRef, titlePhysics, resetToken, onStatus, onHover, onReady, onError, onOpenComputer, onOpenProject, onSelection, actionsRef, objectiveId = '', onToyUse, onTomatoSplat, onFirstMove, onWelcomeMove, onInspectTarget, onWelcomeAnchor, welcomeActive = false, reducedMotion = false, paused = false, editable = false, fixedCamera = true}) {
+export default function RoomArrangement({roomVersion = 10, layoutMigrations, controls, rootRef, titlePhysics, resetToken, onStatus, onHover, onReady, onError, onOpenComputer, onOpenProject, onSelection, actionsRef, objectiveId = '', onToyUse, onTomatoSplat, onFirstMove, onWelcomeMove, onInspectTarget, onWelcomeAnchor, welcomeActive = false, reducedMotion = false, paused = false, editable = false, fixedCamera = true}) {
   const ignoreWalkFloor = useTaskOutlineIgnore();
   const {
     CAPYBARA_HEIGHT, PLAYER_START, PLAYER_SPEED, PLAYER_RADIUS, ROOM_FLOOR_Y, ROOM_BOUNDS, ROOM_ITEMS,
@@ -101,7 +86,7 @@ export default function RoomArrangement({roomVersion = 10, controls, rootRef, ti
   const storageKey = `stefan-sushi-room-v${roomVersion}-layout`;
   const saveLayout = useCallback(items => persistLayout(storageKey, items), [storageKey]);
   const {camera, gl, invalidate} = useThree();
-  const [placements, setPlacements] = useState(() => loadLayout(storageKey, sanitizeRoomPlacements));
+  const [placements, setPlacements] = useState(() => loadLayout(storageKey, sanitizeRoomPlacements, layoutMigrations));
   const [assets, setAssets] = useState(null);
   const [characterReady, setCharacterReady] = useState(false);
   const [highlightId, setHighlightId] = useState('');

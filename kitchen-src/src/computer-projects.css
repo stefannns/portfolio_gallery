@@ -176,3 +176,18 @@
 }
 
 .computer-projects__detail:focus{outline:none}
+
+/* Full player screenshots lead the project; notes sit together underneath. */
+.computer-projects .computer-projects__detail--landscape{grid-template-columns:minmax(0,1fr);gap:22px}
+.computer-projects__detail--landscape>.computer-projects__media-column,.computer-projects__detail--landscape>.computer-projects__copy{grid-column:1 / -1;width:100%}
+.computer-projects__detail--landscape .computer-projects__media--landscape{aspect-ratio:auto;max-width:none;max-height:none;background:#1d252c}
+.computer-projects__media--landscape>img{position:relative;inset:auto;width:100%;height:auto;object-fit:contain}
+.computer-projects__detail--landscape .computer-projects__story-note{padding:20px 24px 18px}
+.computer-projects__detail--landscape .computer-projects__description{max-width:100ch}
+.computer-projects__detail--landscape .computer-projects__links{margin-top:8px}
+
+/* The game launch is the primary action on game project notes. */
+.computer-projects .computer-projects__links a.computer-projects__play-link{justify-content:center;gap:11px;min-width:190px;min-height:58px;padding:13px 25px;border:1px solid #465239;border-radius:5px 7px 5px 4px;background:#5c6a49;box-shadow:0 3px 0 #404c32;color:#fffbed;font-family:var(--hand);font-size:20px;font-weight:400;line-height:1.3;text-decoration:none}
+.computer-projects .computer-projects__links a.computer-projects__play-link:hover{background:#4d5d3e;color:#fffbed}
+.computer-projects__play-link svg{display:block;flex:0 0 19px;width:19px;height:19px;fill:currentColor}
+@media(orientation:landscape) and (max-height:520px){.computer-projects .computer-projects__links a.computer-projects__play-link{min-width:174px;min-height:50px;padding:10px 20px;font-size:18px}}

@@ -17,7 +17,7 @@ import RoomLighting from './RoomLighting.jsx';
 import RoomLightingPanel from './RoomLightingPanel.jsx';
 import {ROOM_LIGHTING_DEFAULTS, loadRoomLightingSettings, saveRoomLightingSettings, sanitizeRoomLightingSettings} from './room-lighting-settings.js';
 import {kitchenTracks} from './music-tracks.js';
-import {projects, computerProjectIds} from './projects.js';
+import {projects, computerProjectIds, originalKitchenProjectIds} from './projects.js';
 import './room-fonts.css';
 import './room-review.css';
 import './room-lighting-preview.css';
@@ -354,7 +354,7 @@ export default function RoomReview() {
           <RoomLighting settings={lighting} compact={touchMode || compactViewport}/>
           <Suspense fallback={null}><FurnishedRoom entry={entry} rotation={view.modelRotation} onLoaded={loaded}/></Suspense>
           {ROOM_VERSION === 10 && TITLE_STYLE !== 'none' && <Suspense fallback={null}><KitchenTitle variant={TITLE_STYLE} physicsRef={titlePhysics} rootRef={rootRef}/></Suspense>}
-          {INTERACTIVE_ROOM && info && <RoomArrangement key={ROOM_VERSION} roomVersion={ROOM_VERSION} controls={controls} rootRef={rootRef} titlePhysics={titlePhysics} resetToken={resetLayoutToken} onStatus={setArrangementStatus} onHover={setHoveredItem} onReady={objectsLoaded} onError={failed} onFirstMove={firstMove} onWelcomeMove={dismissWelcome} onWelcomeAnchor={welcomePositioned} welcomeActive={introducing || welcomeExiting} onInspectTarget={inspectionChanged} objectiveId={objectiveId} onToyUse={usedToy} onTomatoSplat={splatTomato} reducedMotion={reducedMotion} onOpenComputer={openComputer} onOpenProject={openProject} onSelection={setSelectedItem} actionsRef={arrangementActions} paused={interactionPaused} editable={arranging} fixedCamera/>}
+          {INTERACTIVE_ROOM && info && <RoomArrangement key={ROOM_VERSION} roomVersion={ROOM_VERSION} layoutMigrations={manifest?.gameplay?.layoutMigrations} controls={controls} rootRef={rootRef} titlePhysics={titlePhysics} resetToken={resetLayoutToken} onStatus={setArrangementStatus} onHover={setHoveredItem} onReady={objectsLoaded} onError={failed} onFirstMove={firstMove} onWelcomeMove={dismissWelcome} onWelcomeAnchor={welcomePositioned} welcomeActive={introducing || welcomeExiting} onInspectTarget={inspectionChanged} objectiveId={objectiveId} onToyUse={usedToy} onTomatoSplat={splatTomato} reducedMotion={reducedMotion} onOpenComputer={openComputer} onOpenProject={openProject} onSelection={setSelectedItem} actionsRef={arrangementActions} paused={interactionPaused} editable={arranging} fixedCamera/>}
           <OrbitControls ref={controls} enabled={!INTERACTIVE_ROOM && !modalOpen} makeDefault enableRotate={!INTERACTIVE_ROOM} enableZoom={!INTERACTIVE_ROOM} enableDamping={!INTERACTIVE_ROOM && !reducedMotion} dampingFactor={.08} enablePan={false} minPolarAngle={.05} maxPolarAngle={Math.PI / 2 - .02}/>
           <FitRoomCamera controls={controls} info={info} view={view}/>
           </TaskOutline>
@@ -376,7 +376,7 @@ export default function RoomReview() {
       </div>
     </footer>}
     {LIGHTING_PREVIEW && gameReady && <div hidden={modalOpen}><RoomLightingPanel settings={lightingSettings} onChange={changeLighting} onReset={() => changeLighting({...ROOM_LIGHTING_DEFAULTS, exposure: view.exposure})}/></div>}
-    {modalOpen && <ComputerProjects key={activeProject || 'games-computer'} onClose={closeProject} onVideoPlaybackChange={setVideoPlaying} projectIds={activeProject ? [activeProject] : computerProjectIds} projectId={activeProject || undefined} title={activeProject ? projects.find(project => project.id === activeProject)?.title : undefined}/>}
+    {modalOpen && <ComputerProjects key={activeProject || 'games-computer'} onClose={closeProject} onVideoPlaybackChange={setVideoPlaying} projectIds={activeProject ? [activeProject] : ROOM_VERSION === 10 ? originalKitchenProjectIds : computerProjectIds} projectId={activeProject || undefined} title={activeProject ? projects.find(project => project.id === activeProject)?.title : undefined}/>}
   </main>
     {!sceneReady && <RoomLoading error={phase === 'error'} status={phase === 'ready' ? 'Setting out the projects…' : 'Getting everything ready for you.'} onRetry={retry}/>}
     {landscapeBlocked && <section className="room-rotate" role="status" aria-live="polite">

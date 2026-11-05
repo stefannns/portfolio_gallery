@@ -91,6 +91,17 @@
         0
       ],
       "status": "success"
+    },
+    "discovery-dao-arena-v1": {
+      "url": "/models/tripo/kitchen-project-knife-v1.glb",
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "status": "success",
+      "provider": "Tripo",
+      "task_id": "613718af-f79d-48dc-9920-554028c54831"
     }
   }
 }

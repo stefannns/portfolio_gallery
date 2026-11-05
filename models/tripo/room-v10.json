@@ -3,7 +3,7 @@
   "model_version": "v3.1-20260211",
   "assets": {
     "sushi-room-v10": {
-      "url": "/models/tripo/sushi-room-v14-clean.glb",
+      "url": "/models/tripo/sushi-room-v15-clean.glb",
       "rotation": [
         0,
         0,
@@ -49,6 +49,16 @@
             "Removed the remaining irregular countertop back edge at the left wall and fitted a clean ivory joint."
           ],
           "preservation": "Aligned floor, cabinet materials, fixtures, room bounds and original placement coordinates retained."
+        },
+        "stoveFinishCleanup": {
+          "version": 15,
+          "source": "sushi-room-v14-clean.glb",
+          "changes": [
+            "Unified stove surround and adjoining cabinet materials with the approved warm wood and ivory finishes.",
+            "Made the charcoal stovetop boundary continuous, removing pale and textured slivers.",
+            "Replaced ragged stove-to-counter joins with three straight, level ivory joints."
+          ],
+          "preservation": "Room bounds, normalization, saved object placements, stove controls, burner geometry, sink, faucet, cabinets and gameplay support heights preserved."
         }
       },
       "normalizationBounds": {
@@ -78,5 +88,32 @@
     "fieldOfView": 38,
     "framePadding": 1.16,
     "exposure": 0.82
+  },
+  "gameplay": {
+    "layoutMigrations": [
+      {
+        "id": "original-notebook-knife-spacing-v2",
+        "items": [
+          {
+            "id": "h3-otome",
+            "position": [
+              -4.051628345461824,
+              1.101999981880188,
+              1.6
+            ],
+            "rotationY": 0
+          },
+          {
+            "id": "dao-arena",
+            "position": [
+              -3.85,
+              1.101999981880188,
+              0.1
+            ],
+            "rotationY": 0.7853981633974483
+          }
+        ]
+      }
+    ]
   }
 }
