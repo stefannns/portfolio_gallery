@@ -197,7 +197,7 @@ button:focus-visible { outline: 3px solid #3c8ddd; outline-offset: 3px; }
 const GAME_NUMBER=86;
 const POLISH_CSS="";
 
-const DEFAULTS={TRACE_CLOSE_GAP:28,TRACE_MIN_LENGTH:90,SOFT_BODY_COLUMNS:9,SOFT_BODY_ROWS:9,GRAVITY:.7,BODY_WIDTH_RATIO:.74,GUIDE_TEXT:'Trace around the cat',RESET_LABEL:'Reset',CONFIRM_LABEL:'Make squishy',RESET_SHAPE_LABEL:'Reset shape',CHOOSE_LABEL:'Choose image',PICKER_TITLE:'Choose an image',BACK_LABEL:'Back',HAMSTER_HONEY:'./assets/cat-phone-rug.webp',HAMSTER_CARAMEL:'./assets/cat-phone-sofa.webp',HAMSTER_SILVER:'./assets/cat-phone-window.webp'};
+const DEFAULTS={TRACE_CLOSE_GAP:28,TRACE_MIN_LENGTH:90,SOFT_BODY_COLUMNS:9,SOFT_BODY_ROWS:9,GRAVITY:.7,BODY_WIDTH_RATIO:.8,GUIDE_TEXT:'Trace around the cat',RESET_LABEL:'Reset',CONFIRM_LABEL:'Make squishy',RESET_SHAPE_LABEL:'Reset shape',CHOOSE_LABEL:'Choose image',PICKER_TITLE:'Choose an image',BACK_LABEL:'Back',HAMSTER_HONEY:'./assets/cat-phone-rug.webp',HAMSTER_CARAMEL:'./assets/cat-phone-sofa.webp',HAMSTER_SILVER:'./assets/cat-phone-window.webp'};
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const polygonArea=points=>Math.abs(points.reduce((sum,p,i)=>{const q=points[(i+1)%points.length];return sum+p.u*q.v-q.u*p.v;},0))/2;
@@ -207,6 +207,24 @@ function imageFit(width,height,image){
   const w=image.width*scale,h=image.height*scale;
   return {x:(width-w)/2,y:(height-h)/2,width:w,height:h};
 }
+
+// Follow the default photo's ears, rounded body, paws and tail in photo space.
+// These points are only an idle demonstration, never a player's cut selection.
+const CAT_PREVIEW_CONTOUR=[
+  [.363,.055],[.358,.104],[.36,.153],[.347,.196],[.325,.236],[.31,.28],
+  [.305,.321],[.272,.367],[.24,.431],[.218,.51],[.215,.602],[.23,.674],
+  [.269,.736],[.3,.771],[.293,.793],[.295,.818],[.309,.835],[.337,.839],
+  [.357,.833],[.369,.813],[.381,.79],[.43,.802],[.482,.807],[.519,.811],
+  [.516,.839],[.53,.855],[.557,.858],[.575,.844],[.584,.816],[.609,.798],
+  [.637,.795],[.659,.776],[.679,.749],[.735,.715],[.769,.67],[.806,.664],
+  [.853,.675],[.885,.682],[.907,.681],[.924,.67],[.928,.652],[.917,.631],
+  [.891,.614],[.852,.603],[.813,.597],[.779,.598],[.777,.529],[.762,.46],
+  [.737,.392],[.702,.341],[.655,.31],[.633,.288],[.644,.242],[.645,.202],
+  [.642,.172],[.657,.127],[.655,.108],[.645,.097],[.625,.103],[.596,.121],
+  [.567,.147],[.53,.137],[.491,.126],[.455,.131],[.427,.118],[.399,.082],
+  [.377,.062],[.363,.055]
+];
+const catPreviewOutline=fit=>CAT_PREVIEW_CONTOUR.map(([u,v])=>({x:fit.x+u*fit.width,y:fit.y+v*fit.height}));
 
 function cleanOutline(points){
   const clean=points.filter((p,i)=>!i||Math.hypot(p.u-points[i-1].u,p.v-points[i-1].v)>.0015).map(p=>({...p}));
@@ -352,19 +370,21 @@ function pillowGeometry(cut){
   return geometry;
 }
 
-function softDragOffset(x,y,limit=145){
+function softDragOffset(x,y,limit=300){
   const length=Math.hypot(x,y);if(length<1e-8)return{x:0,y:0};
-  const scale=limit*Math.tanh(length/limit)/length;return{x:x*scale,y:y*scale};
+  // Follow the pointer directly through the normal range; soften only the far edge.
+  const free=limit*.6,reach=length<=free?length:free+(limit-free)*Math.tanh((length-free)/(limit-free));
+  const scale=reach/length;return{x:x*scale,y:y*scale};
 }
 function advanceDrag(drag,dt){
-  const alpha=1-Math.exp(-dt/12);
+  const alpha=1-Math.exp(-dt/4);
   drag.offset.x+=(drag.target.x-drag.offset.x)*alpha;drag.offset.y+=(drag.target.y-drag.offset.y)*alpha;
   drag.joints.forEach((joint,i)=>{joint.pointA.x=drag.starts[i].x+drag.offset.x;joint.pointA.y=drag.starts[i].y+drag.offset.y;});
 }
 function stepSoftCage(cage,drags){
   const step=1000/120;
   for(const drag of drags.values())advanceDrag(drag,step);
-  cage.bodies.forEach((body,i)=>{const origin=cage.rest[i],dx=origin.x-body.position.x,dy=origin.y-body.position.y,length=Math.hypot(dx,dy),returnForce=.000035*(1+Math.max(0,length-160)**2/10000);Matter.Body.applyForce(body,body.position,{x:dx*body.mass*returnForce,y:dy*body.mass*returnForce});});
+  cage.bodies.forEach((body,i)=>{const origin=cage.rest[i],dx=origin.x-body.position.x,dy=origin.y-body.position.y,length=Math.hypot(dx,dy),returnForce=.000052*(1+Math.max(0,length-160)**2/10000);Matter.Body.applyForce(body,body.position,{x:dx*body.mass*returnForce,y:dy*body.mass*returnForce});});
   Matter.Engine.update(cage.engine,step);
 }
 
@@ -373,8 +393,8 @@ function makeCage(cut,cfg){
   const width=(cut.width+.2)*unit,height=(cut.height+.2)*unit,left=-width/2,top=-height/2;
   const engine=Matter.Engine.create({positionIterations:6,constraintIterations:4});engine.gravity.y=cfg.GRAVITY;engine.gravity.scale=.00001;
   const bodies=[],links=[];
-  for(let y=0;y<rows;y++)for(let x=0;x<columns;x++)bodies.push(Matter.Bodies.circle(left+x*width/(columns-1),top+y*height/(rows-1),2,{frictionAir:.075,collisionFilter:{group:-1},inertia:Infinity}));
-  const join=(i,j,stiffness)=>links.push(Matter.Constraint.create({bodyA:bodies[i],bodyB:bodies[j],stiffness,damping:.12}));
+  for(let y=0;y<rows;y++)for(let x=0;x<columns;x++)bodies.push(Matter.Bodies.circle(left+x*width/(columns-1),top+y*height/(rows-1),2,{frictionAir:.022,collisionFilter:{group:-1},inertia:Infinity}));
+  const join=(i,j,stiffness)=>links.push(Matter.Constraint.create({bodyA:bodies[i],bodyB:bodies[j],stiffness,damping:.035}));
   for(let y=0;y<rows;y++)for(let x=0;x<columns;x++){
     const i=y*columns+x;if(x<columns-1)join(i,i+1,.32);if(y<rows-1)join(i,i+columns,.32);
     if(x<columns-1&&y<rows-1){join(i,i+columns+1,.16);join(i+1,i+columns,.16);}
@@ -413,7 +433,7 @@ function makeSafeDeformer(geometry,cage){
   const poses=cage.bodies.map(body=>({...body.position}));
   const reset=()=>cage.bodies.forEach((body,i)=>{poses[i].x=body.position.x;poses[i].y=body.position.y;});
   return {rest,reset,apply(deltaMs=Infinity){
-    const alpha=Number.isFinite(deltaMs)?1-Math.exp(-Math.max(0,deltaMs)/18):1;
+    const alpha=Number.isFinite(deltaMs)?1-Math.exp(-Math.max(0,deltaMs)/6):1;
     cage.bodies.forEach((body,i)=>{poses[i].x+=(body.position.x-poses[i].x)*alpha;poses[i].y+=(body.position.y-poses[i].y)*alpha;});
     let tx=0,ty=0;for(const p of poses){tx+=p.x;ty+=p.y;}tx/=cage.bodies.length;ty/=cage.bodies.length;
     let a=0,b=0,c=0,d=0;poses.forEach((position,i)=>{const p=cage.rest[i];a+=(position.x-tx)*p.x/x2;b+=(position.x-tx)*p.y/y2;c+=(position.y-ty)*p.x/x2;d+=(position.y-ty)*p.y/y2;});
@@ -425,7 +445,9 @@ function makeSafeDeformer(geometry,cage){
     const l1=clamp((s00+s11+disc)/2,.68,1.35),l2=clamp((s00+s11-disc)/2,.68,1.35);
     const q00=ct*ct*l1+st*st*l2,q11=st*st*l1+ct*ct*l2,q01=ct*st*(l1-l2);
     a=co*q00-si*q01;b=co*q01-si*q11;c=si*q00+co*q01;d=si*q01+co*q11;
-    const maxMove=Math.min(cage.width,cage.height)*.16,move=Math.hypot(tx,ty);if(move>maxMove){tx*=maxMove/move;ty*=maxMove/move;}
+    // Give the toy room to travel, with a gradual edge rather than an abrupt stop.
+    const maxMove=Math.min(cage.width,cage.height)*.6;
+    tx=maxMove*Math.tanh(tx/maxMove);ty=maxMove*Math.tanh(ty/maxMove);
     samples.forEach((sample,i)=>{
       let px=0,py=0;sample.ids.forEach((id,j)=>{px+=poses[id].x*sample.weights[j];py+=poses[id].y*sample.weights[j];});
       const x=coords[i*2]*cage.unit,y=-coords[i*2+1]*cage.unit,bx=(a*x+b*y+tx)/cage.unit,by=-(c*x+d*y+ty)/cage.unit;
@@ -483,8 +505,8 @@ function App(){
     const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
     const fit=imageFit(width,height,photo);ctx.drawImage(photo,fit.x,fit.y,fit.width,fit.height);
     if(window.PlayableIdlePreview.active){
-      const idle=window.PlayableIdlePreview,p=idle.seconds%4.7,outline=Array.from({length:81},(_,i)=>{const a=-Math.PI/2+i/80*Math.PI*2;return{x:fit.x+fit.width*(.5+Math.cos(a)*.36),y:fit.y+fit.height*(.53+Math.sin(a)*.39)};});
-      ctx.save();ctx.strokeStyle='#d5f8ba';ctx.lineWidth=3;ctx.lineCap='round';ctx.lineJoin='round';ctx.shadowColor='#0008';ctx.shadowBlur=4;ctx.globalAlpha=p>3.9?(4.7-p)/.8:1;idle.trace(ctx,outline,idle.ease(p/2.8));ctx.restore();idle.stamp(canvas,'trace-photo-outline');return;}
+      const idle=window.PlayableIdlePreview,p=idle.seconds%5.3,outline=catPreviewOutline(fit);
+      ctx.save();ctx.strokeStyle='#d5f8ba';ctx.lineWidth=3;ctx.lineCap='round';ctx.lineJoin='round';ctx.shadowColor='#0008';ctx.shadowBlur=4;ctx.globalAlpha=p>4.5?(5.3-p)/.8:1;idle.trace(ctx,outline,idle.ease(p/3.1));ctx.restore();idle.stamp(canvas,'trace-cat-silhouette');return;}
     const list=points.current;canvas.dataset.traceClosed=String(closed.current);canvas.dataset.tracePoints=String(list.length);canvas.dataset.traceArea=polygonArea(list).toFixed(5);canvas.dataset.traceCrossings=String(selfIntersects(list));if(!list.length)return;
     const mapped=list.map(p=>({x:fit.x+p.u*fit.width,y:fit.y+p.v*fit.height}));
     ctx.save();ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=3;ctx.strokeStyle=closed.current?'#d5f8ba':'#f3d292';ctx.shadowColor='#0009';ctx.shadowBlur=5;ctx.beginPath();mapped.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));if(closed.current)ctx.closePath();ctx.stroke();
@@ -560,7 +582,7 @@ function App(){
       cage.bodies.forEach((body,i)=>{Matter.Body.setPosition(body,cage.rest[i]);Matter.Body.setVelocity(body,{x:0,y:0});body.force.x=0;body.force.y=0;});deformer.reset();this.peakDisplacement=0;this.dragCount=0;this.accumulator=0;this.lastTime=performance.now();this.normalsElapsed=Infinity;
     }};
     world.current=state;
-    const resize=()=>{const rect=canvas.getBoundingClientRect();renderer.setSize(rect.width,rect.height,false);const aspect=rect.width/Math.max(1,rect.height);const h=Math.max(cut.height+1.0,(cut.width+.2)/(aspect*clamp(cfg.BODY_WIDTH_RATIO,.55,.86)));camera.left=-h*aspect/2;camera.right=h*aspect/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix();};
+    const resize=()=>{const rect=canvas.getBoundingClientRect();renderer.setSize(rect.width,rect.height,false);const aspect=rect.width/Math.max(1,rect.height),usableHeight=Math.max(rect.height*.5,rect.height-196);const h=Math.max((cut.height+1.0)*rect.height/usableHeight,(cut.width+.2)/(aspect*clamp(cfg.BODY_WIDTH_RATIO,.55,.86)));camera.left=-h*aspect/2;camera.right=h*aspect/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix();};
     const observer=new ResizeObserver(resize);observer.observe(canvas);resize();let raf=0;
     const frame=time=>{
       raf=requestAnimationFrame(frame);const frameMs=clamp(time-state.lastTime,0,50);state.lastTime=time;
@@ -589,7 +611,7 @@ function App(){
     const hit=rayFor(event);if(!hit)return;const intersections=hit.ray.intersectObject(hit.w.mesh);if(!intersections.length)return;
     event.preventDefault();event.stopPropagation();
     const {w}=hit;w.group.updateMatrixWorld(true);const inverse=w.group.matrixWorld.clone().invert(),worldPoint=intersections[0].point,local=w.group.worldToLocal(worldPoint.clone()),anchor={x:local.x*w.cage.unit,y:-local.y*w.cage.unit};
-    const closest=w.cage.bodies.map(body=>({body,d:distance(body.position,anchor)})).sort((a,b)=>a.d-b.d).slice(0,4),joints=closest.map(({body})=>Matter.Constraint.create({bodyB:body,pointA:{...body.position},stiffness:.22,damping:.16}));
+    const closest=w.cage.bodies.map(body=>({body,d:distance(body.position,anchor)})).sort((a,b)=>a.d-b.d).slice(0,4),joints=closest.map(({body})=>Matter.Constraint.create({bodyB:body,pointA:{...body.position},stiffness:.42,damping:.1}));
     Matter.Composite.add(w.cage.engine.world,joints);const normal=w.camera.getWorldDirection(new THREE.Vector3());
     w.drags.set(event.pointerId,{joints,anchor,starts:closest.map(({body})=>({...body.position})),plane:new THREE.Plane().setFromNormalAndCoplanarPoint(normal,worldPoint),inverse,target:{x:0,y:0},offset:{x:0,y:0},start:{x:event.clientX,y:event.clientY},moved:false,last:{x:local.x,y:local.y}});
     try{event.currentTarget.setPointerCapture(event.pointerId);}catch{}setGuide(false);setError('');
@@ -630,7 +652,7 @@ const CSS=`
 @font-face{font-family:Poppins;src:url('./assets/fonts/poppins/Poppins-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
 *{box-sizing:border-box}html,body,#root{margin:0;width:100%;height:100%;overflow:hidden}body{background:#050607;color:#faf7ef;font-family:Poppins,system-ui,sans-serif;-webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer;border:0;touch-action:manipulation}button:disabled{cursor:default}
 .photo-toy{position:relative;width:100%;height:100%;overflow:hidden;background:#050607;container-type:size}.file-input{display:none}
-.toy-guide{position:absolute;z-index:3;left:30px;right:30px;top:24%;transform:translateY(-50%);text-align:center;font-size:18px;line-height:1.3;font-weight:700;pointer-events:none;animation:batchBreathe 2.6s ease-in-out infinite}.photo-zone{position:absolute;left:30px;right:30px;top:31%;bottom:116px}.photo-zone canvas{display:block;width:100%;height:100%;touch-action:none;user-select:none}.phase-active .photo-zone{top:110px;background:radial-gradient(ellipse at 50% 70%,#1e2026 0%,#0d0f13 45%,#050607 76%)}.phase-active .toy-guide{top:62px}
-.toy-controls{position:absolute;display:flex;align-items:center;justify-content:center;gap:8px;left:30px;right:30px;bottom:50px;min-height:46px}.utility{display:flex;align-items:center;justify-content:center;gap:5px;min-height:46px;padding:0 10px;border-radius:24px;background:#191b1f;color:#eeeae2;border:1px solid #37383c;font-size:12px;white-space:nowrap}.utility svg{width:18px;height:18px;stroke:#f4d292;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.make-button{min-height:46px;min-width:94px;padding:0 17px;border-radius:24px;background:#f3d292;color:#27231c;font-size:14px;font-weight:700;white-space:nowrap}.make-button:disabled{opacity:.35}.phase-active .utility{width:46px;min-width:46px;padding:0}.phase-active .utility span{display:none}.phase-active .make-button{flex:1;min-width:120px}.utility:active,.make-button:not(:disabled):active{transform:scale(.96)}.toy-error{position:absolute;z-index:4;left:30px;right:30px;bottom:106px;text-align:center;color:#ffd9b0;font-size:14px;line-height:1.35;background:#101216e8;padding:8px 10px;border-radius:10px}.load-state{position:absolute;inset:0;display:grid;place-items:center;background:#080a0de8;font-size:15px}
-[data-feed-preview=true] .toy-controls{visibility:hidden}@media(max-width:440px){.utility{width:46px;min-width:46px;padding:0}.utility span{display:none}.toy-controls{gap:12px}.make-button{flex:1;min-width:90px}}@media(max-height:520px){.phase-active .photo-zone{top:90px}.phase-active .toy-guide{top:53px}.photo-zone{bottom:110px}}`;
+.toy-guide{position:absolute;z-index:3;left:30px;right:30px;top:12%;transform:translateY(-50%);text-align:center;font-size:18px;line-height:1.3;font-weight:700;pointer-events:none;animation:batchBreathe 2.6s ease-in-out infinite}.photo-zone{position:absolute;left:8px;right:8px;top:19%;bottom:106px}.photo-zone canvas{display:block;width:100%;height:100%;touch-action:none;user-select:none}.phase-active .photo-zone{inset:0;background:radial-gradient(ellipse at 50% 70%,#1e2026 0%,#0d0f13 45%,#050607 76%)}.phase-active .toy-guide{top:62px}
+.toy-controls{position:absolute;z-index:4;display:flex;align-items:center;justify-content:center;gap:8px;left:30px;right:30px;bottom:50px;min-height:46px}.utility{display:flex;align-items:center;justify-content:center;gap:5px;min-height:46px;padding:0 10px;border-radius:24px;background:#191b1f;color:#eeeae2;border:1px solid #37383c;font-size:12px;white-space:nowrap}.utility svg{width:18px;height:18px;stroke:#f4d292;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.make-button{min-height:46px;min-width:94px;padding:0 17px;border-radius:24px;background:#f3d292;color:#27231c;font-size:14px;font-weight:700;white-space:nowrap}.make-button:disabled{opacity:.35}.phase-active .utility{width:46px;min-width:46px;padding:0}.phase-active .utility span{display:none}.phase-active .make-button{flex:1;min-width:120px}.utility:active,.make-button:not(:disabled):active{transform:scale(.96)}.toy-error{position:absolute;z-index:4;left:30px;right:30px;bottom:106px;text-align:center;color:#ffd9b0;font-size:14px;line-height:1.35;background:#101216e8;padding:8px 10px;border-radius:10px}.load-state{position:absolute;inset:0;display:grid;place-items:center;background:#080a0de8;font-size:15px}
+[data-feed-preview=true] .toy-controls{visibility:hidden}[data-feed-preview=true] .toy-guide{top:17%}[data-feed-preview=true] .photo-zone{top:22%;bottom:18%}@media(max-width:440px){.utility{width:46px;min-width:46px;padding:0}.utility span{display:none}.toy-controls{gap:12px}.make-button{flex:1;min-width:90px}}@media(max-height:520px){.phase-active .photo-zone{inset:0}.phase-active .toy-guide{top:53px}.photo-zone{bottom:106px}}`;
 createRoot(document.getElementById('root')).render(<App/>);

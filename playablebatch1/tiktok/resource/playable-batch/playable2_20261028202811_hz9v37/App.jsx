@@ -729,7 +729,7 @@ function App() {
             <h1 data-testid="headline">{paper.headline}</h1>
             <div className="paper-photo"><img src={paper.image} alt="The photographed town square" /></div>
             <p className="paper-caption" data-testid="story-caption">{paper.caption}</p><div className="paper-meta"><span>{paper.place} · {paper.section}</span><span>{photoCount.toString().padStart(2, '0')}</span></div>
-            <button type="button" className="paper-close" data-testid="close-paper" onPointerDown={ensureAudio} onClick={() => { playSound('event'); modalRef.current = false; setPaper(null); }}>Return to the square</button>
+            <button type="button" className="paper-close" data-testid="close-paper" onClick={() => { modalRef.current = false; setPaper(null); }}>Return to the square</button>
           </article>
         </div>
       )}
@@ -945,3 +945,8 @@ button { font: inherit; color: inherit; }
 function StyledApp() { return <><style>{styles}</style><App /></>; }
 
 createRoot(document.getElementById('root')).render(<><StyledApp/><BatchPolish/></>);
+
+/* FEEDBACK_20261103_79 */
+(()=>{const style=document.createElement("style");style.textContent="@font-face{font-family:SpecialElite;src:url('./assets/fonts/special-elite/SpecialElite-Regular.ttf') format('truetype');font-display:swap}.observer-app{--font-display:SpecialElite,'Courier New',monospace;--font-body:SpecialElite,'Courier New',monospace;--font-mono:SpecialElite,'Courier New',monospace}.newspaper,.recap-sheet{position:relative;background-color:#efeeea;background-image:linear-gradient(#efcf7624,#efcf7624),url('./assets/worn-newsprint-gray-v4.webp');background-size:100% 100%;border:1px solid #92928c;border-top:7px double #252525;border-bottom:4px double #252525;box-shadow:inset 0 0 24px #30303018,3px 6px 18px #1113;padding:20px 18px 17px;color:#252525;transform:rotate(-.4deg)}.paper-kicker{display:block;text-align:center;font:400 11px SpecialElite,monospace;letter-spacing:.17em;color:#444444}.paper-rule{border-top:3px double #252525;margin:10px 0 15px}.newspaper h1,.recap-sheet h2{font-family:SpecialElite,monospace;font-size:clamp(24px,6.8vw,31px);font-weight:400;line-height:1.1;letter-spacing:-.04em;text-align:center;text-transform:uppercase;text-shadow:.3px .3px #25252565}.paper-photo{border:5px solid #deded8;outline:1px solid #565656;background:#d9d9d4;filter:grayscale(1) contrast(1.22)}.paper-meta{font-family:SpecialElite,monospace;color:#555555;letter-spacing:0;border-bottom:1px solid #777777;padding-bottom:12px;margin-bottom:14px}.paper-close,.primary-action,.secondary-action{font-family:SpecialElite,monospace;background:#252525;color:#f4f4ef;border:1px solid #252525;border-radius:0;box-shadow:2px 2px 0 #999994}.secondary-action{background:transparent;color:#252525}.recap-count{color:#252525}.history p{line-height:1.3}";document.body.append(style);})();
+
+(()=>{const style=document.createElement("style");style.textContent=".observer-app .guide,.observer-app .stats,.newspaper .paper-caption{font-family:SpecialElite,monospace}.newspaper .paper-caption{line-height:1.45;font-size:14px;color:#363636}";document.body.append(style);})();

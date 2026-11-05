@@ -18,3 +18,10 @@
 /* Explicit CTA pulse; centering overrides must not suppress the motion. */
 @keyframes eh-guide-breathe{0%,100%{opacity:1}50%{opacity:.6}}
 html[data-batch2-idle-paused="true"] #guide{animation-play-state:paused}
+
+/* 76: Keep the completed portrait in place, with a quiet caption and a sketched star on the photo. */
+@font-face{font-family:FreshLook;src:url('./assets/fonts/DynaPuff-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+.hair-shave #result{display:flex;align-items:center;justify-content:center;gap:9px;bottom:calc(122px * var(--ui));text-shadow:0 1px 4px #0007;animation:shaveFinishIn .3s ease-out both}
+.hair-shave #resultTitle{font-family:FreshLook,Poppins,sans-serif;font-weight:600;font-size:calc(26px * var(--ui));letter-spacing:0;line-height:1.3}
+.hair-shave #resultSub:empty{display:none}
+@keyframes shaveFinishIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}

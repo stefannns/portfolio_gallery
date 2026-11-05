@@ -74,10 +74,10 @@
       "id": "SPEED_STEP",
       "kind": "number",
       "label": "Rally speed step",
-      "value": 22,
-      "default": 22,
+      "value": 44,
+      "default": 44,
       "min": 4,
-      "max": 35,
+      "max": 60,
       "step": 1
     }
   ],

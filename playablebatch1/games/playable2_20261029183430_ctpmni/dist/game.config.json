@@ -307,13 +307,13 @@
   "images": [
     {
       "id": "CHARACTER_MAIN",
-      "label": "Cartoon stickman target",
+      "label": "Illustrated stickman character",
       "path": "./assets/character-imagegen-v2.webp",
       "replaceable": true
     },
     {
       "id": "BACKGROUND_MAIN",
-      "label": "Training workshop backdrop",
+      "label": "Paper training room texture",
       "path": "./assets/background-imagegen-v2.webp",
       "replaceable": true
     },

@@ -162,9 +162,9 @@ const CSS = `
 
 * { box-sizing: border-box; }
 html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
-body { background: #f4f0e8; color: #282b2c; -webkit-tap-highlight-color: transparent; }
+body { background: #f1f6ff; color: #282b2c; -webkit-tap-highlight-color: transparent; }
 button { font: inherit; }
-.app-shell { width: 100%; height: 100%; min-height: 0; overflow: clip; position: relative; background: #f4f0e8; font-family: var(--font-body); }
+.app-shell { width: 100%; height: 100%; min-height: 0; overflow: clip; position: relative; background: #f1f6ff; font-family: var(--font-body); }
 .canvas { width: 100%; height: 100%; min-height: 0; display: flex; flex-direction: column; position: relative; }
 .topline { flex: 0 0 auto; height: 58px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 3; }
 .wordmark { color: #303536; letter-spacing: .22em; font-family: var(--font-display); font-weight: 700; font-size: 13px; text-transform: uppercase; opacity: .78; }
@@ -179,11 +179,11 @@ button { font: inherit; }
 .hud-item.right { text-align: right; }
 .hud-value { display: block; font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1; letter-spacing: -.04em; }
 .hud-label { display: block; margin-top: 5px; font-family: var(--font-body); font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: #8d928b; }
-.pause-control { position: absolute; z-index: 8; right: 22px; bottom: 20px; width: 46px; height: 46px; border: 1px solid rgba(48,53,54,.18); border-radius: 50%; background: rgba(244,240,232,.72); color: #303536; display: grid; place-items: center; cursor: pointer; box-shadow: 0 5px 16px rgba(48,53,54,.06); backdrop-filter: blur(8px); }
+.pause-control { position: absolute; z-index: 8; right: 22px; bottom: 20px; width: 46px; height: 46px; border: 1px solid rgba(48,53,54,.18); border-radius: 50%; background: rgba(241,246,255,.88); color: #303536; display: grid; place-items: center; cursor: pointer; box-shadow: 0 5px 16px rgba(48,53,54,.06); backdrop-filter: blur(8px); }
 .pause-control:active { transform: scale(.94); }
 .pause-control svg { width: 18px; height: 18px; }
 .status-note { position: absolute; z-index: 5; left: 50%; bottom: 22px; transform: translateX(-50%); color: #78817a; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; pointer-events: none; }
-.result-layer { position: absolute; z-index: 12; inset: 0; display: flex; align-items: center; justify-content: center; padding: 70px 24px 44px; background: rgba(244,240,232,.72); }
+.result-layer { position: absolute; z-index: 12; inset: 0; display: flex; align-items: center; justify-content: center; padding: 70px 24px 44px; background: rgba(241,246,255,.88); }
 .result-card { width: min(100%, 350px); text-align: center; color: #303536; }
 .result-kicker { font-family: var(--font-body); font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: #8b938a; margin-bottom: 11px; }
 .result-title { font-family: var(--font-display); font-size: 25px; line-height: 1.1; font-weight: 700; margin: 0 0 25px; }
@@ -198,7 +198,7 @@ button { font: inherit; }
 .unlocks-label { color: #8b938a; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 11px; }
 .swatches { display: flex; justify-content: center; gap: 9px; flex-wrap: wrap; }
 .swatch { width: 27px; height: 27px; padding: 0; border-radius: 50%; border: 2px solid transparent; cursor: pointer; position: relative; }
-.swatch.selected { border-color: #303536; box-shadow: 0 0 0 2px #f4f0e8; }
+.swatch.selected { border-color: #303536; box-shadow: 0 0 0 2px #f1f6ff; }
 .swatch.locked { opacity: .2; cursor: default; }
 .swatch span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 @media (max-height: 620px) { .topline { height: 42px; } .intro-guide { top: 15px; } .result-layer { padding-top: 40px; } .result-title { margin-bottom: 17px; } .unlocks { margin-top: 17px; } }
@@ -221,6 +221,7 @@ button { font: inherit; }
 `;
 
 const DEFAULT_CFG = {
+  BG_PAPER: './assets/yellow-paper-dots-v3.svg',
   ORBIT_SPEED: 0.0018,
   FLIGHT_MS: 560,
   TARGET_RADIUS: 52,
@@ -243,24 +244,16 @@ const DEFAULT_CFG = {
 };
 
 const PALETTES = {
-  charcoal: { name: 'charcoal', ink: '#303536', planet: '#d8d9d1', planetHi: '#ecebe2', sage: '#91a893', faint: '#c4c9bf' },
-  sage: { name: 'sage', ink: '#3c5148', planet: '#cddbd0', planetHi: '#eaf0e7', sage: '#718f79', faint: '#b4c7b5' },
-  ivory: { name: 'ivory', ink: '#625c4f', planet: '#e9e3d4', planetHi: '#faf7ed', sage: '#9ba68c', faint: '#d9d2c3' },
-  'matte gold': { name: 'matte gold', ink: '#514637', planet: '#e4d4b4', planetHi: '#f6edda', sage: '#aa9971', faint: '#d4c4a0' },
-  'slate blue': { name: 'slate blue', ink: '#354651', planet: '#cbd5d7', planetHi: '#e8eeee', sage: '#809ba3', faint: '#b9c5c8' },
-  'powder pink': { name: 'powder pink', ink: '#5d4650', planet: '#e4ced2', planetHi: '#f6e8e9', sage: '#aa8991', faint: '#d4babe' },
-  'soft peach': { name: 'soft peach', ink: '#5f493e', planet: '#ecd3c2', planetHi: '#fae9dd', sage: '#b28e7c', faint: '#d9b9a7' },
-  'pale lilac': { name: 'pale lilac', ink: '#514b62', planet: '#d8d2e4', planetHi: '#f0ecf5', sage: '#968db0', faint: '#c5bfd5' },
+ charcoal:{name:'charcoal',ink:'#20211f',planet:'#fffdf5',planetHi:'#fffdf5',sage:'#3c9758',faint:'#20211f'},
+ sage:{name:'sage',ink:'#16756e',planet:'#9fe2cd',planetHi:'#edfff5',sage:'#19bb78',faint:'#acd8d1'},
+ ivory:{name:'ivory',ink:'#3375bd',planet:'#c3e3ff',planetHi:'#f2fbff',sage:'#20bc7d',faint:'#bfd5ee'},
+ 'matte gold':{name:'matte gold',ink:'#d37821',planet:'#ffd28b',planetHi:'#fff3d8',sage:'#24ba7f',faint:'#ebce9e'},
+ 'slate blue':{name:'slate blue',ink:'#3c5be5',planet:'#b7c9ff',planetHi:'#edf3ff',sage:'#20bf84',faint:'#bdc9ec'},
+ 'powder pink':{name:'powder pink',ink:'#ce5982',planet:'#ffbfd6',planetHi:'#fff1f6',sage:'#25b983',faint:'#e9bed2'},
+ 'soft peach':{name:'soft peach',ink:'#d86e48',planet:'#ffd2b5',planetHi:'#fff3e8',sage:'#20be85',faint:'#edc8b3'},
+ 'pale lilac':{name:'pale lilac',ink:'#8454d9',planet:'#d6beff',planetHi:'#f7efff',sage:'#27be85',faint:'#d3c0ed'}
 };
 const UNLOCKS = ['charcoal', 'sage', 'ivory', 'matte gold', 'slate blue', 'powder pink', 'soft peach', 'pale lilac'];
-const SOUND_FILES = {
-  launch: './assets/sfx_launch.mp3',
-  catch: './assets/sfx_catch.mp3',
-  perfect: './assets/sfx_perfect.mp3',
-  miss: './assets/sfx_miss.mp3',
-  click: './assets/sfx_click.mp3',
-};
-
 function safeNumber(value, fallback) {
   return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
 }
@@ -274,6 +267,7 @@ function flattenConfig(data) {
   const next = { ...DEFAULT_CFG };
   (data?.tweaks || []).forEach((item) => { next[item.id] = safeNumber(item.value, next[item.id]); });
   (data?.texts || []).forEach((item) => { next[item.id] = typeof item.value === 'string' ? item.value : next[item.id]; });
+  (data?.images || []).forEach((item) => { if (typeof item.path === 'string') next[item.id] = item.path; });
   return next;
 }
 
@@ -457,26 +451,8 @@ function App() {
     const audio = audioRef.current;
     const ctx = ensureAudio();
     if (!ctx) return;
-    const src = SOUND_FILES[kind];
-    if (!src) return;
-    let bufferPromise = audio.buffers.get(src);
-    if (!bufferPromise) {
-      bufferPromise = fetch(src)
-        .then((response) => response.arrayBuffer())
-        .then((arrayBuffer) => ctx.decodeAudioData(arrayBuffer))
-        .catch(() => null);
-      audio.buffers.set(src, bufferPromise);
-    }
-    const resumePromise = ctx.state === 'suspended' ? ctx.resume().catch(() => {}) : Promise.resolve();
-    Promise.all([bufferPromise, resumePromise]).then(([buffer]) => {
-      if (!buffer || audio.ctx !== ctx || ctx.state !== 'running' || !feedSession.active) return;
-      const source = ctx.createBufferSource();
-      source.buffer = buffer;
-      source.connect(audio.gain);
-      audio.sources.add(source);
-      source.onended = () => audio.sources.delete(source);
-      source.start(0);
-    }).catch(() => {});
+    const now=ctx.currentTime,osc=ctx.createOscillator(),gain=ctx.createGain(),miss=kind==='miss';
+    const duration=miss?.18:kind==='launch'?.10:.075;osc.type='sine';osc.frequency.setValueAtTime(miss?165:kind==='catch'?640:kind==='launch'?380:500,now);osc.frequency.exponentialRampToValueAtTime(miss?78:kind==='launch'?760:370,now+duration);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(miss?.3:.36,now+.005);gain.gain.exponentialRampToValueAtTime(.0001,now+duration);osc.connect(gain);gain.connect(audio.gain);audio.sources.add(osc);osc.start(now);osc.stop(now+duration+.015);osc.onended=()=>{audio.sources.delete(osc);osc.disconnect();gain.disconnect();};
   }, [ensureAudio]);
 
   const targetLayout = useCallback((index) => {
@@ -676,12 +652,12 @@ function App() {
   }, [games, score]);
 
   const stageStatusText = status === 'paused' ? cfg.PAUSED_LABEL : (lastResult === 'miss' && status === 'over' ? cfg.MISS_LABEL : '');
-  const background = palette.planetHi;
+  const background = '#ffd34d';
 
   return (
     <>
       <style>{CSS}</style>
-      <main className="app-shell" style={{ background }}>
+      <main className="app-shell" style={{ background, backgroundImage: `url("${cfg.BG_PAPER}")`, backgroundSize: 'cover', '--paper-image': `url("${cfg.BG_PAPER}")` }}>
         <div className="canvas">
           <div className="topline"><div className="wordmark">{cfg.GAME_TITLE}</div></div>
           <div className="stage-area">
@@ -700,35 +676,23 @@ function App() {
                 </div>
               )}
               <svg className="orbit-svg" viewBox="0 -72 400 650" role="img" aria-label={cfg.GAME_TITLE}>
-                <defs>
-                  <radialGradient id="planetGlow" cx="35%" cy="28%">
-                    <stop offset="0" stopColor={palette.planetHi} />
-                    <stop offset="1" stopColor={palette.planet} />
-                  </radialGradient>
-                  <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="8" /></filter>
-                </defs>
-                <circle cx={currentOrbit.x} cy={currentOrbit.y} r={currentOrbit.r + 18} fill="none" stroke={palette.faint} strokeWidth="1" strokeDasharray="2 10" opacity=".32" />
-                <circle cx={currentOrbit.x} cy={currentOrbit.y} r={currentOrbit.r} fill="none" stroke={palette.ink} strokeWidth="1.2" strokeDasharray="2 8" opacity=".42" />
+                <circle cx={currentOrbit.x} cy={currentOrbit.y} r={currentOrbit.r} fill="none" stroke={palette.ink} strokeWidth="2.3" opacity=".72" />
                 <g ref={launchGuideRef} style={{opacity:0}} data-testid="launch-sweet-guide" pointerEvents="none" aria-hidden="true">
                   {launchHints.map((hint, index) => <g key={index}>
-                    <path d={hint.path} fill="none" stroke="#79a980" strokeWidth="16" opacity=".18" strokeLinecap="butt" />
-                    <path data-testid="launch-sweet-strip" d={hint.path} fill="none" stroke="#79a980" strokeWidth="3" opacity=".95" strokeLinecap="butt" />
+                    <path d={hint.path} fill="none" stroke={palette.sage} strokeWidth="15" opacity=".18" strokeLinecap="butt" />
+                    <path data-testid="launch-sweet-strip" d={hint.path} fill="none" stroke={palette.sage} strokeWidth="5.5" opacity=".98" strokeLinecap="butt" />
                   </g>)}
                 </g>
-                <circle cx={currentOrbit.x} cy={currentOrbit.y} r="34" fill={palette.ink} opacity=".05" filter="url(#softShadow)" />
-                <circle cx={currentOrbit.x} cy={currentOrbit.y} r="32" fill="url(#planetGlow)" stroke={palette.planet} strokeWidth="1" />
-                <ellipse cx={currentOrbit.x - 10} cy={currentOrbit.y - 10} rx="15" ry="9" fill={palette.planetHi} opacity=".38" />
-                <circle cx={layout.x} cy={layout.y} r={layout.orbit} fill="none" stroke={palette.ink} strokeWidth="1.2" strokeDasharray="2 8" opacity=".42" />
-                <circle cx={layout.x} cy={layout.y} r="26" fill={palette.planet} opacity=".18" />
-                <circle cx={layout.x} cy={layout.y} r="23" fill={palette.planet} stroke={palette.planetHi} strokeWidth="1" />
-                <ellipse cx={layout.x - 6} cy={layout.y - 7} rx="10" ry="6" fill={palette.planetHi} opacity=".56" />
+                <circle cx={currentOrbit.x + 3} cy={currentOrbit.y + 5} r="32" fill={palette.ink} opacity=".13" />
+                <circle cx={currentOrbit.x} cy={currentOrbit.y} r="32" fill={palette.planet} stroke={palette.ink} strokeWidth="3" />
+                <circle cx={layout.x} cy={layout.y} r={layout.orbit} fill="none" stroke={palette.ink} strokeWidth="2.3" opacity=".72" />
+                <circle cx={layout.x + 3} cy={layout.y + 5} r="23" fill={palette.ink} opacity=".13" />
+                <circle cx={layout.x} cy={layout.y} r="23" fill={palette.planet} stroke={palette.ink} strokeWidth="3" />
                 <g ref={playerRef}>
-                  <line ref={(el) => { trailRefs.current[0] = el; }} stroke={palette.sage} strokeWidth="2.6" strokeLinecap="round" />
-                  <line ref={(el) => { trailRefs.current[1] = el; }} stroke={palette.sage} strokeWidth="1.8" strokeLinecap="round" />
-                  <line ref={(el) => { trailRefs.current[2] = el; }} stroke={palette.sage} strokeWidth="1.1" strokeLinecap="round" />
-                  <circle r="9" fill={palette.sage} opacity=".18" />
-                  <circle r="5.5" fill={palette.ink} />
-                  <circle cx="-1.5" cy="-1.7" r="1.5" fill={palette.planetHi} opacity=".8" />
+                  <line ref={(el) => { trailRefs.current[0] = el; }} stroke={palette.ink} strokeWidth="2.6" strokeLinecap="round" />
+                  <line ref={(el) => { trailRefs.current[1] = el; }} stroke={palette.ink} strokeWidth="1.8" strokeLinecap="round" />
+                  <line ref={(el) => { trailRefs.current[2] = el; }} stroke={palette.ink} strokeWidth="1.1" strokeLinecap="round" />
+                  <circle r="6.2" fill="#fffdf5" stroke={palette.ink} strokeWidth="2.3" />
                 </g>
                 {catchPulse && <circle cx={currentOrbit.x} cy={currentOrbit.y} r="30" fill="none" stroke={palette.sage} strokeWidth="2" opacity=".55" className="pulse-ring" />}
               </svg>
@@ -752,14 +716,7 @@ function App() {
                   <button type="button" className="retry-button" onClick={resetGame}>{cfg.PLAY_AGAIN}</button>
                   <PostMyPlayButton />
                 </div>
-                <div className="unlocks">
-                  <div className="unlocks-label">{cfg.UNLOCKED_LABEL}</div>
-                  <div className="swatches">
-                    {UNLOCKS.map((name) => (
-                      <button key={name} type="button" className={`swatch${unlocked[name] ? '' : ' locked'}${paletteName === name ? ' selected' : ''}`} style={{ background: PALETTES[name].sage }} disabled={!unlocked[name]} onClick={() => { if (!unlocked[name]) return; playCue('click'); setPaletteName(name); }} aria-label={name} title={name}><span>{name}</span></button>
-                    ))}
-                  </div>
-                </div>
+
               </div>
             </div>
           )}
@@ -770,3 +727,25 @@ function App() {
 }
 
 createRoot(document.getElementById('root')).render(<App />);
+
+/* FEEDBACK_20261103_88B */
+(()=>{const style=document.createElement('style');style.textContent=`
+@font-face{font-family:DynaPuff;src:url('./assets/fonts/dynapuff/DynaPuff-SemiBold.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+:root{--font-display:DynaPuff,Poppins,sans-serif;--font-body:DynaPuff,Poppins,sans-serif}
+body,.app-shell{background-color:#ffd34d;color:#20211f}
+.app-shell{user-select:none;-webkit-user-select:none;font-weight:600}
+.intro-guide{color:#20211f;font-weight:600}
+.hud-item,.hud-label,.result-card,.result-kicker,.result-label,.status-note{color:#20211f}
+.hud-value{display:inline-block;position:relative;min-width:64px;padding:3px 10px 5px;border:2.5px solid #20211f;border-radius:2px;background:#ffd34d;font-size:44px;font-weight:600;line-height:1.05;box-shadow:2px 4px 0 #20211f26}
+.hud-value::after{content:'';position:absolute;left:0;right:0;top:50%;border-top:1px solid #20211f66;pointer-events:none}
+.hud-label{font-size:11px;font-weight:600;letter-spacing:.04em;margin-top:7px}
+.pause-control{background:#20211f;color:#fffdf5;border:2.5px solid #20211f;box-shadow:2px 4px 0 #20211f26;backdrop-filter:none}
+.pause-control svg{width:21px;height:21px}
+.result-layer{background-color:#ffd34df5;background-image:var(--paper-image);background-size:cover;backdrop-filter:none}
+.result-title{font-weight:600}
+.result-kicker,.result-label{font-weight:600;letter-spacing:.05em}
+.result-number{display:inline-block;min-width:100px;padding:7px 16px 10px;font-size:56px;font-weight:600;letter-spacing:0;border:3px solid #20211f;border-radius:2px;background:#fffdf5;box-shadow:3px 5px 0 #20211f26}
+.retry-button{border:2.5px solid #20211f;border-radius:6px;background:#ffd34d;color:#20211f;font-weight:600;font-size:18px;box-shadow:3px 5px 0 #20211f33}
+.retry-button:active{transform:translate(2px,3px);box-shadow:1px 2px 0 #20211f33}
+.retry-button:focus-visible,.pause-control:focus-visible{outline:3px solid #20211f;outline-offset:4px}
+`;document.body.append(style);})();

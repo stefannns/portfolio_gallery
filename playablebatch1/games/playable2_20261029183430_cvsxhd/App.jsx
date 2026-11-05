@@ -146,15 +146,54 @@ const fallbackConfig = {
   MATCH_POINTS: 5,
   BALL_SPEED: 0.38,
   AI_SPEED: 0.24,
+  AI_MISS_CHANCE: 0.22,
+  AI_REACTION_MS: 140,
+  BALL_ACCEL_PER_SECOND: 0.012,
+  BALL_ACCEL_PER_HIT: 0.025,
+  BALL_MAX_MULTIPLIER: 2.1,
   PADDLE_WIDTH: 86,
   BALL_SIZE: 16,
   SCORE_PAUSE_MS: 650,
-  GUIDE_TEXT: '2 players · Drag your half',
-  YOU_WIN: 'Red wins',
-  YOU_LOSE: 'Blue wins',
+  GUIDE_TEXT: 'Drag to play against the computer',
+  YOU_WIN: 'You win!',
+  YOU_LOSE: 'Computer wins',
   FINAL_SCORE: 'Final score',
   PLAY_AGAIN: 'Play again',
 };
+
+function pongMatchSpeed(cfg,pace){
+  const factor=Math.min(Math.max(1,Number(cfg.BALL_MAX_MULTIPLIER)||2.1),1+pace.elapsed/1000*Math.max(0,Number(cfg.BALL_ACCEL_PER_SECOND)||0)+pace.hits*Math.max(0,Number(cfg.BALL_ACCEL_PER_HIT)||0));
+  return Math.max(.05,Number(cfg.BALL_SPEED)||.38)*Math.hypot(1,.42)*factor;
+}
+function setPongSpeed(ball,speed){
+  const length=Math.hypot(ball.vx,ball.vy)||1,vertical=Math.sign(ball.vy)||1;
+  ball.vx=Math.max(-speed*.8,Math.min(speed*.8,ball.vx/length*speed));
+  ball.vy=vertical*Math.sqrt(Math.max(0,speed*speed-ball.vx*ball.vx));
+}
+function reflectPongX(x,width,radius){
+  const span=Math.max(1,width-radius*2),period=span*2,at=((x-radius)%period+period)%period;
+  return radius+(at>span?period-at:at);
+}
+function planBotReturn(ball,blue,width,height,cfg,random=Math.random){
+  const radius=cfg.BALL_SIZE/2,half=cfg.PADDLE_WIDTH/2,px=ball.x/100*width,py=ball.y/100*height;
+  const travel=Math.max(0,(height*.12+7+radius-py)/Math.min(-.001,ball.vy));
+  const landing=reflectPongX(px+ball.vx*travel,width,radius),miss=random()<Math.max(0,Math.min(1,Number(cfg.AI_MISS_CHANCE)||0));
+  let error=(random()-.5)*half*.38;
+  if(miss){
+    let side=Math.sign(blue-landing)||(random()<.5?-1:1),distance=half+radius+18+random()*22;
+    if(Math.abs(Math.max(half,Math.min(width-half,landing+side*distance))-landing)<half+radius+8)side*=-1;
+    error=side*distance;
+  }
+  return{incoming:true,targetX:Math.max(half,Math.min(width-half,landing+error)),wait:Math.max(0,Number(cfg.AI_REACTION_MS)||0)*(.75+random()*.5),miss};
+}
+function movePongBot(bot,ball,paddles,width,height,cfg,elapsed,random=Math.random){
+  const half=cfg.PADDLE_WIDTH/2,current=paddles.blue/100*width;
+  if(ball.vy<0){if(!bot.incoming)Object.assign(bot,planBotReturn(ball,current,width,height,cfg,random));}
+  else Object.assign(bot,{incoming:false,targetX:width/2,wait:0,miss:false});
+  bot.wait=Math.max(0,bot.wait-elapsed);if(bot.wait>0)return;
+  const delta=bot.targetX-current,limit=Math.max(0,Number(cfg.AI_SPEED)||0)*elapsed*(ball.vy<0?1:.65),step=Math.min(limit,Math.abs(delta)*(1-Math.exp(-elapsed/55)));
+  paddles.blue=Math.max(half,Math.min(width-half,current+Math.sign(delta)*step))/width*100;
+}
 
 const audioState = {
   context: null,
@@ -320,6 +359,8 @@ function App() {
   const scoreRef = useRef([0, 0]);
   const paddleRef = useRef({ red: 50, blue: 50 });
   const ballRef = useRef({ x: 50, y: 50, vx: 0, vy: 0 });
+  const botRef=useRef({incoming:false,targetX:0,wait:0,miss:false});
+  const paceRef=useRef({elapsed:0,hits:0});
   const dragsRef = useRef(new Map());
   const redPaddleEl = useRef(null);
   const bluePaddleEl = useRef(null);
@@ -346,10 +387,11 @@ function App() {
 
   const applyPositions = useCallback(() => {
     const idle=window.PlayableIdlePreview,t=idle.seconds,preview=idle.active,x=50+Math.sin(t*.95)*24;
-    const ball=preview?{x,y:12+76*(1-Math.abs(1-(t/1.6)%2))}:ballRef.current;
+    const ball=preview?{x,y:12+53*(1-Math.abs(1-(t/1.6)%2))}:ballRef.current;
     const paddle=preview?{red:x,blue:50+Math.sin((t-.2)*.95)*24}:paddleRef.current;
-    if(preview)idle.stamp(courtRef.current,'two-player-rally');
+    if(preview)idle.stamp(courtRef.current,'computer-rally');
     if (redPaddleEl.current) redPaddleEl.current.style.left = `${paddle.red}%`;
+    if (redPaddleEl.current) redPaddleEl.current.style.top = preview ? '65%' : '88%';
     if (bluePaddleEl.current) bluePaddleEl.current.style.left = `${paddle.blue}%`;
     if (ballEl.current) {
       ballEl.current.style.left = `${ball.x}%`;
@@ -360,6 +402,7 @@ function App() {
   const resetObjects = useCallback((resetPaddles = true) => {
     if (resetPaddles) paddleRef.current = { red: 50, blue: 50 };
     ballRef.current = { x: 50, y: 50, vx: 0, vy: 0 };
+    botRef.current={incoming:false,targetX:0,wait:0,miss:false};
     applyPositions();
   }, [applyPositions]);
 
@@ -367,9 +410,10 @@ function App() {
     const direction = Math.random() > 0.5 ? 1 : -1;
     const vertical = Math.random() > 0.5 ? 1 : -1;
     ballRef.current = { x: 50, y: 50, vx: direction * cfg.BALL_SPEED * 0.42, vy: vertical * cfg.BALL_SPEED };
+    setPongSpeed(ballRef.current,pongMatchSpeed(cfg,paceRef.current));
     activeRef.current = true;
     applyPositions();
-  }, [applyPositions, cfg.BALL_SPEED]);
+  }, [applyPositions, cfg]);
 
   const finishMatch = useCallback((playerWon) => {
     activeRef.current = false;
@@ -416,12 +460,16 @@ function App() {
       const paddles = paddleRef.current;
       const ballRadius = cfg.BALL_SIZE / 2;
       const paddleHalf = cfg.PADDLE_WIDTH / 2;
-      const redY = height * 0.88;
-      const blueY = height * 0.12;
+      const redY = height * 0.88,blueY = height * 0.12;
+      // Short substeps keep fast shots from passing through a paddle.
+      const steps=Math.max(1,Math.ceil(elapsed/8)),dt=elapsed/steps;
+      for(let step=0;step<steps&&activeRef.current&&!gameOverRef.current;step++){
+      paceRef.current.elapsed+=dt;setPongSpeed(ball,pongMatchSpeed(cfg,paceRef.current));
+      movePongBot(botRef.current,ball,paddles,width,height,cfg,dt);
       const px = (ball.x / 100) * width;
       const py = (ball.y / 100) * height;
-      let nextX = px + ball.vx * elapsed;
-      let nextY = py + ball.vy * elapsed;
+      let nextX = px + ball.vx * dt;
+      let nextY = py + ball.vy * dt;
       const wallLeft = ballRadius;
       const wallRight = width - ballRadius;
       if (nextX <= wallLeft || nextX >= wallRight) {
@@ -437,18 +485,19 @@ function App() {
       const hitBlue = ball.vy < 0 && nextY - ballRadius <= blueY + paddleHeight / 2 && nextY + ballRadius >= blueY - paddleHeight / 2 && Math.abs(nextX - blueX) <= paddleHalf + ballRadius;
       if (hitRed) {
         nextY = redY - paddleHeight / 2 - ballRadius;
-        ball.vy = -Math.abs(ball.vy) * 1.015;
+        ball.vy = -Math.abs(ball.vy);
+        paceRef.current.hits++;
         ball.vx += ((nextX - redX) / paddleHalf) * 0.045;
         playBeep('hit');
         vibrate('light');
       } else if (hitBlue) {
         nextY = blueY + paddleHeight / 2 + ballRadius;
-        ball.vy = Math.abs(ball.vy) * 1.015;
+        ball.vy = Math.abs(ball.vy);
+        paceRef.current.hits++;
         ball.vx += ((nextX - blueX) / paddleHalf) * 0.045;
         playBeep('hit');
       }
-      const maxSpeed = cfg.BALL_SPEED * 1.35;
-      ball.vx = Math.max(-maxSpeed, Math.min(maxSpeed, ball.vx));
+      setPongSpeed(ball,pongMatchSpeed(cfg,paceRef.current));
       ball.x = (nextX / width) * 100;
       ball.y = (nextY / height) * 100;
       if (nextY < -ballRadius) {
@@ -456,10 +505,11 @@ function App() {
       } else if (nextY > height + ballRadius) {
         registerPoint(false);
       }
+      }
     }
     applyPositions();
     frameRef.current = window.requestAnimationFrame(tick);
-  }, [applyPositions, cfg.BALL_SIZE, cfg.BALL_SPEED, cfg.PADDLE_WIDTH, registerPoint]);
+  }, [applyPositions, cfg, registerPoint]);
 
   useEffect(() => {
     if (!ready) return undefined;
@@ -483,8 +533,8 @@ function App() {
   const beginInteraction = useCallback((event) => {
     if (!ready || !feedSession.active || gameOverRef.current || (event.pointerType === 'mouse' && event.button !== 0)) return;
     const bounds = courtRef.current.getBoundingClientRect();
-    const side = event.clientY < bounds.top + bounds.height / 2 ? 'blue' : 'red';
-    // Each finger owns its original half until release, even across the net.
+    const side = 'red';
+    // A single drag controls the lower human paddle anywhere on the court.
     if ([...dragsRef.current.values()].some(drag => drag.side === side)) return;
     event.preventDefault();
     unlockAudio();
@@ -533,6 +583,7 @@ function App() {
     gameOverRef.current = false;
     startedRef.current = false;
     dragsRef.current.clear();
+    paceRef.current={elapsed:0,hits:0};
     scoreRef.current = [0, 0];
     setScore([0, 0]);
     setGameOver(false);
@@ -555,7 +606,7 @@ function App() {
         ref={courtRef}
         className={`court ${started ? 'is-playing' : 'is-ready'} ${roundPulse ? 'point-pulse' : ''}`}
         data-testid="court"
-        aria-label="Two-player Pong court. Blue controls the upper half; red controls the lower half."
+        aria-label="Single player Pong against the computer. Drag to move the lower red paddle."
         onPointerDown={beginInteraction}
         onPointerMove={moveInteraction}
         onPointerUp={endInteraction}
@@ -565,8 +616,8 @@ function App() {
         <div className="court-line court-line-vertical" />
         <div className="court-line court-line-horizontal" />
         <div className="net" aria-hidden="true" />
-        <div ref={bluePaddleEl} className="paddle paddle-blue" style={{ width: cfg.PADDLE_WIDTH }} aria-label="Blue player paddle" />
-        <div ref={redPaddleEl} className="paddle paddle-red" style={{ width: cfg.PADDLE_WIDTH }} aria-label="Red player paddle" />
+        <div ref={bluePaddleEl} className="paddle paddle-blue" style={{ width: cfg.PADDLE_WIDTH }} aria-label="Computer paddle" />
+        <div ref={redPaddleEl} className="paddle paddle-red" style={{ width: cfg.PADDLE_WIDTH }} aria-label="Your paddle" />
         <div ref={ballEl} className="ball" style={{ width: cfg.BALL_SIZE, height: cfg.BALL_SIZE }} aria-label="Ball" />
         {guideVisible && !gameOver && <div className="guide">{cfg.GUIDE_TEXT}</div>}
         {started && !gameOver && (
@@ -674,3 +725,6 @@ function Root() {
 }
 
 createRoot(document.getElementById('root')).render(<Root />);
+
+/* FEEDBACK_20261103_90 */
+(()=>{const style=document.createElement("style");style.textContent=".scoreboard{top:30px;left:50%;right:auto;transform:translateX(-50%);gap:13px}.result-overlay{padding:28px}.result-card{transform:none;width:min(100%,330px)}.guide{top:26%}.result-mark{box-shadow:none}";document.body.append(style);})();

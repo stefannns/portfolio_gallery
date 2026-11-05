@@ -7,11 +7,11 @@
   "entry": "dist/game.html",
   "source_kind": "editable-current-react-source",
   "files": {
-    "App.jsx": "021afc7f0c727ff6c1bf0d65e53b0d2ae553fc289f70f0974588f9f9e63c3b1f",
+    "App.jsx": "803f403977fda0a4bf6127a6334cd21e25f200a8883f6263735c064c47df96e6",
     "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
     "dist/game.html": "cd1d24ff22d758bc2bba5e77215c1f263edcc7209ac55d8d2852bbb4ba9bac85",
-    "dist/bundle.js": "04b996d844b03db6a352813dfeb87dac994eb9bf84a002fb3b3548374cb8c850",
-    "dist/game.config.json": "6c9cf107fba50bf73b4e1b5446d6cb31edfb5728666bcb4098901fec6f122f17"
+    "dist/bundle.js": "087f3abc86eb76be2a6e9c7d7f77dcd37f0cf3f2bba3b79d31151529835613c1",
+    "dist/game.config.json": "f515e6013f1b42c1c063428cc7c7bfb5fdbc13f76a981697890e636daf629921"
   },
   "assets": [
     {
@@ -49,6 +49,20 @@
       "ids": [],
       "bytes": 51212,
       "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+    },
+    {
+      "path": "dist/assets/friend-profile-v1.webp",
+      "ids": [
+        "PROFILE_PHOTO"
+      ],
+      "bytes": 14956,
+      "sha256": "6fd295a238ef3e941c1397673f57757280384a93c1d58d345f128c1cf1fbf923"
+    },
+    {
+      "path": "dist/assets/img_user_avatar_default_3x.png",
+      "ids": [],
+      "bytes": 3884,
+      "sha256": "608acd85b73b47fd66d80686c6b1b606c1dba1486567734e09a6f87bda650dad"
     },
     {
       "path": "dist/assets/laughing_baby.webp",

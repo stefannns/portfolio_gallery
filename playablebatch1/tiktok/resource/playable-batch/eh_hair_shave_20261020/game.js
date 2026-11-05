@@ -138,9 +138,18 @@ window.createGame=function(R){
  const{ctx:c,spec:s}=R,a=s.assets,m=new Shaving(s.settings);let buzz=null,resultAge=0;
  const preset=Math.round(R.clamp(s.settings.preset,0,2)),result=a.results[preset];
  const regions=s.photoRegions;
+ const shaverWidth=()=>Math.min(R.w*.34,R.h*.19);
  const icon=document.createElement('img');icon.src=R.images[a.switch].src;icon.alt='';icon.width=22;icon.height=22;document.querySelector('#direction svg').replaceWith(icon);
  function box(){const p=R.cover(a.original),b=regions[preset];return{x:p.x+b.x*p.w,y:p.y+b.y*p.h,w:b.w*p.w,h:b.h*p.h};}
  function portrait(){R.photo(a.original);const p=R.cover(a.original),b=box();c.save();c.beginPath();for(const strip of m.strokes){if(strip.orientation===0)c.rect(b.x+(strip.position-strip.width/2)*b.w,b.y,strip.width*b.w,b.h*strip.progress);else c.rect(b.x,b.y+(strip.position-strip.width/2)*b.h,b.w*strip.progress,strip.width*b.h);}c.clip();c.drawImage(R.images[result],p.x,p.y,p.w,p.h);c.restore();}
+ function drawResultStar(){
+  const unit=Math.min(R.w/390,R.h/598);
+  c.save();c.translate(R.w*.17,R.h*.30);c.scale(unit,unit);c.rotate(-.12);
+  c.globalAlpha=R.reduced?1:R.ease(Math.min(1,resultAge/.3));
+  c.strokeStyle='#fff9e9';c.lineWidth=2.3;c.lineCap='round';c.lineJoin='round';c.shadowColor='#25282b70';c.shadowBlur=2;
+  c.beginPath();c.moveTo(-2,-20);c.quadraticCurveTo(2,-13,6,-6);c.lineTo(21,-7);c.quadraticCurveTo(15,0,10,4);c.lineTo(14,20);c.quadraticCurveTo(6,16,-1,11);c.lineTo(-16,21);c.quadraticCurveTo(-13,10,-12,4);c.lineTo(-23,-6);c.quadraticCurveTo(-14,-5,-8,-6);c.lineTo(-2,-20);c.stroke();
+  c.restore();
+ }
  function reset(){R.stop(buzz);m.reset();resultAge=0;R.result('');R.guide(R.config.texts.find(t=>t.id==='GUIDE')?.value||'Tap to shave a strip');R.setDirection(s.settings.orientation===2,()=>{if(m.switch()){R.tone();R.announce(m.orientation?'Horizontal shave':'Vertical shave');icon.style.transform=`rotate(${m.orientation*90}deg)`;}});icon.style.transform=`rotate(${m.orientation*90}deg)`;R.setAction('Shave one strip');document.getElementById('play').disabled=false;}
  return{reset,state:()=>({state:m.state,mode:m.mode,left:m.left,orientation:m.orientation,strokes:m.strokes.map(x=>({...x}))}),isPlaying:()=>m.state==='playing'||m.state==='delay'||m.state==='flash',pause(){R.stop(buzz);buzz=null;},resume(){if(m.mode==='shave'&&m.state==='playing')buzz=R.sound('SHAVE',.22,true);},
  action(){if(m.tap()){R.guide('',false);R.announce(m.left+' shaves left');}},
@@ -149,11 +158,11 @@ window.createGame=function(R){
  draw(t){if(window.PlayableIdlePreview.active){
  R.photo(a.original);const time=window.PlayableIdlePreview.seconds,p=time%4.8,b=box(),cut=R.ease(R.clamp((p-.65)/2,0,1)),frame=R.cover(a.original),x=b.x+b.w*.5,y=b.y+b.h*cut;
  c.save();c.beginPath();c.rect(x-b.w*.19,b.y,b.w*.38,b.h*cut);c.clip();c.drawImage(R.images[result],frame.x,frame.y,frame.w,frame.h);c.restore();
- R.sprite(a.buzzer,x,y,Math.min(R.w*.18,R.h*.10),null,0,p>3.8?R.clamp((4.7-p)/.9,0,1):1,{x:.5,y:.96});
+ R.sprite(a.buzzer,x,y,shaverWidth(),null,0,p>3.8?R.clamp((4.7-p)/.9,0,1):1,{x:.5,y:.96});
  window.PlayableIdlePreview.stamp(R.canvas,'shaver-strip');return;}
- portrait();if(m.state==='result'){const p=R.ease(Math.min(1,resultAge/.3));c.save();c.fillStyle='#16191b';c.globalAlpha=.3*p;c.fillRect(0,0,R.w,R.h);c.restore();const frame=R.images[a.frame],w=R.w*.98,h=w*frame.height/frame.width,x=R.w/2,y=Math.min(R.h*.43,h*.52+10),left=x-w/2,top=y-h/2;const hole={x:left+w*.135,y:top+h*.108,w:w*.73,h:h*.655};c.save();c.beginPath();c.rect(hole.x,hole.y,hole.w,hole.h);c.clip();const scale=Math.max(hole.w/R.w,hole.h/(R.h*.67)),face=R.point(a.original,s.face);c.translate(hole.x+hole.w/2-face.x*scale,hole.y+hole.h/2-face.y*scale);c.scale(scale,scale);portrait();c.restore();R.sprite(a.frame,x,y,w,h,0,p);return;}
+ portrait();if(m.state==='result'){drawResultStar();return;}
  const b=box(),cut=m.mode==='shave'?m.progress:0,x=m.orientation===0?b.x+m.position*b.w:b.x+b.w*cut,y=m.orientation===0?b.y+b.h*cut:b.y+m.position*b.h;
- if(['waiting','playing'].includes(m.state)){c.save();c.strokeStyle='#fff';c.lineWidth=1.5;c.setLineDash([4,5]);c.globalAlpha=.7;c.beginPath();if(m.orientation===0){c.moveTo(x,b.y);c.lineTo(x,b.y+b.h);}else{c.moveTo(b.x,y);c.lineTo(b.x+b.w,y);}c.stroke();c.restore();const size=Math.min(R.w*.18,R.h*.10);R.sprite(a.buzzer,x,y,size,null,m.orientation?-Math.PI/2:0,1,{x:.5,y:.96});}
+ if(['waiting','playing'].includes(m.state)){c.save();c.strokeStyle='#fff';c.lineWidth=1.5;c.setLineDash([4,5]);c.globalAlpha=.7;c.beginPath();if(m.orientation===0){c.moveTo(x,b.y);c.lineTo(x,b.y+b.h);}else{c.moveTo(b.x,y);c.lineTo(b.x+b.w,y);}c.stroke();c.restore();const size=shaverWidth();R.sprite(a.buzzer,x,y,size,null,m.orientation?-Math.PI/2:0,1,{x:.5,y:.96});}
  if(m.state==='flash'){// Retain the supplied animation, with limited opacity rather than a full-screen white blast.
  c.save();c.globalAlpha=.32;R.frame(a.flash,m.age,s.settings.flashDuration,R.w/2,R.h/2,R.w,R.h);c.restore();}
  }

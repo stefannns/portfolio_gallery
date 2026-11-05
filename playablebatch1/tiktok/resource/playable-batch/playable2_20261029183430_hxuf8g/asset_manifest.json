@@ -7,11 +7,11 @@
   "entry": "dist/game.html",
   "source_kind": "editable-current-react-source",
   "files": {
-    "App.jsx": "aad8fb75d724c92e78fc859dd6331bcfb1408f5c8e365e1db75f6b5df49514a8",
+    "App.jsx": "1f7f8db2737b9bcd3dae3cb68f06b3513c3279ea35d7151159f5093862e00712",
     "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
     "dist/game.html": "3af6ad2c71c978ebbc4918cb3826fdce0b179b87bd1fb6e3e7ef672ee47a9c8e",
-    "dist/bundle.js": "3adb58d97623f4a73d004c19ba7fd78f21a7be76a4ac591d786a3e0f4e3f6d8c",
-    "dist/game.config.json": "53d84011f620c66ed08d0f71588dc165774d5a3eacc101c69c19d39ef3c306d5"
+    "dist/bundle.js": "305a0feead9c6fff72a219ae8c9bf29f3604509ff0fa1233a281cf673109d1cf",
+    "dist/game.config.json": "aad8747ce8c996f179ddabb48486bfdc8169deb8da86f7a4a11b720e32a974d4"
   },
   "assets": [
     {
@@ -25,24 +25,6 @@
       "ids": [],
       "bytes": 51212,
       "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
-    },
-    {
-      "path": "dist/assets/sfx_game_over.mp3",
-      "ids": [],
-      "bytes": 21605,
-      "sha256": "19b52628dbec7c8b7b9e5a2eee43c95a9dfd471e802f72a923057bb6bf12664c"
-    },
-    {
-      "path": "dist/assets/sfx_reset.mp3",
-      "ids": [],
-      "bytes": 29765,
-      "sha256": "d7a7ac5e555f7d0dd31b2da31b67b1e909433f66bc46b8222186c96ef93eccb1"
-    },
-    {
-      "path": "dist/assets/sfx_tick.mp3",
-      "ids": [],
-      "bytes": 45209,
-      "sha256": "73fe883896294317daeb7c5395fb437c5c6b96cf9b250f6e360891d284352e4e"
     }
   ]
 }

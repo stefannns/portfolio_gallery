@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "audiowide",
+  "style_anchor": "Minimal neon survival arcade on near-black gridded ground. Bright cyan orb and tapered blue trail, solid red falling circles and rounded blocks, dashed locked laser warnings and short red beams with a pale core. All scene artwork is drawn procedurally in Canvas; no host UI is embedded.",
+  "assets": [
+    {
+      "path": "assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled Audiowide display font for the existing neon interface.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_collision.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Short original collision impact sound for the end of a run.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_near_miss.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Short quiet near-pass tick synchronized with the near-miss label.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_replay.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Short original replay confirmation sound.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}

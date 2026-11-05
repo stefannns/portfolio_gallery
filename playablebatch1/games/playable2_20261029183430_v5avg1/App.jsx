@@ -142,8 +142,8 @@ const FALLBACK_CFG = {
   GAME_TITLE: 'Rug Restore', GUIDE: 'Spray → Scrub → Rinse → Dry', COMPLETE: 'Satisfyingly clean!', NEXT_ITEM: 'Next item',
   SPRAY: 'Spray', BRUSH: 'Scrub', RINSE: 'Rinse', VACUUM: 'Dry', CLEANED: 'CLEANED',
   RUG_MAIN: './assets/rug-overhead.webp', UPHOLSTERY_MAIN: './assets/upholstery-overhead.webp',
-  TOOL_SPRAY: './assets/tool-spray.svg', TOOL_BRUSH: './assets/tool-brush.svg',
-  TOOL_RINSE: './assets/tool-rinse.svg', TOOL_DRY: './assets/tool-dry.svg'
+  TOOL_SPRAY: './assets/tool-spray-photo-v1.webp', TOOL_BRUSH: './assets/tool-brush-photo-v1.webp',
+  TOOL_RINSE: './assets/tool-rinse-photo-v1.webp', TOOL_DRY: './assets/tool-dry-photo-v1.webp'
 };
 
 const feedSession = (() => {
@@ -244,6 +244,16 @@ function treatCell(cell, tool, amount, cfg) {
 
 function cellIsClean(cell) {
   return cell.cleaned === true && cell.rinsed >= .88 && cell.dry >= .9 && cell.wet <= .08;
+}
+
+function cellCleaningProgress(cell) {
+  if (cellIsClean(cell)) return 1;
+  // Each step contributes one quarter, including valid work within that step.
+  const sprayed = cell.primed ? 1 : clamp(cell.detergent / .28);
+  const scrubbed = cell.primed ? (cell.scrubbed ? 1 : clamp(cell.scrub / .62)) : 0;
+  const rinsed = cell.scrubbed ? clamp(cell.rinsed / .88) : 0;
+  const dried = cell.scrubbed && cell.rinsed >= .88 && cell.foam <= .035 ? clamp(cell.dry / .9) : 0;
+  return (sprayed + scrubbed + rinsed + dried) / 4;
 }
 
 function finishCleaningGrid(cells) {
@@ -577,12 +587,14 @@ function App() {
 
   const updateProgress = useCallback(() => {
     const cleanCount = cellsRef.current.filter(cellIsClean).length;
-    const value = cellsRef.current.length ? cleanCount / cellsRef.current.length : 0;
+    const cellCount = cellsRef.current.length;
+    const value = cellCount ? cellsRef.current.reduce((sum, cell) => sum + cellCleaningProgress(cell), 0) / cellCount : 0;
+    const finishedCoverage = cellCount ? cleanCount / cellCount : 0;
     if (Math.abs(value - progressRef.current) > 0.002 || value >= 1) {
       progressRef.current = value;
       setProgress(value);
     }
-    if (value >= Number(cfg.CLEAN_GOAL || 0.92) && !completedRef.current) {
+    if (finishedCoverage >= Number(cfg.CLEAN_GOAL || 0.92) && !completedRef.current) {
       completedRef.current = true;
       finishCleaningGrid(cellsRef.current);progressRef.current=1;setProgress(1);drawOverlay();
       pointerRef.current.active = false;
@@ -590,7 +602,7 @@ function App() {
       setComplete(true);
       stopAction();
       vibrate('notification_success');
-      console.info('[rug-restore] complete', { item: itemIndex, progress: value });
+      console.info('[rug-restore] complete', { item: itemIndex, progress: 1 });
     }
   }, [cfg, complete, drawOverlay, itemIndex, stopAction]);
 
@@ -798,10 +810,11 @@ function App() {
   const tools = useMemo(() => [
     { id: 'spray', label: cfg.SPRAY }, { id: 'brush', label: cfg.BRUSH }, { id: 'rinse', label: cfg.RINSE }, { id: 'vacuum', label: cfg.VACUUM }
   ], [cfg]);
+  const displayedProgress = complete ? 100 : Math.min(99, Math.round(progress * 100));
 
   return <div className="appShell" data-surface={surface.id} data-tool={tool} data-progress={progress.toFixed(4)}>
     <header className="topHud" style={{ visibility: hasStarted && !complete ? 'visible' : 'hidden' }}>
-      <div className="progressPill" aria-label={`${Math.round(progress * 100)}% cleaned`}><strong>{Math.round(progress * 100)}%</strong></div>
+      <div className="progressPill" aria-label={`${displayedProgress}% complete`}><strong>{displayedProgress}%</strong></div>
     </header>
     <main className="playArea">
       {!hasStarted && <div className="guideText">{cfg.GUIDE}</div>}
@@ -930,3 +943,9 @@ function App() {
 }
 
 createRoot(document.getElementById('root')).render(<App />);
+
+/* FEEDBACK_20261103_87 */
+(()=>{const style=document.createElement("style");style.textContent=".appShell{background:#e7f5f1;color:#244b52}.appShell::before{display:none}body{background:#e7f5f1}.topHud,.brandMark,.itemMark{color:#53716f}.progressPill strong{color:#244b52}.rugStage{background:#d6e7e2;box-shadow:0 10px 24px #537f741b,0 0 0 1px #b5d3ca}.rugImage{filter:brightness(1.13) saturate(.92)}.toolDock{background:#f7fcf9;border:0}.toolButton{color:#47666a}.toolButton.selected{background:#d6eee4;color:#205c50}.toolButton.selected::before{border:1px solid #72b4a0;box-shadow:none}.toolArtwork{filter:none}.guideText{background:#fffffff2;color:#244b52;border:1px solid #d5e6df;text-shadow:none}.toolFeedback{background:#fff;color:#285c51;box-shadow:0 3px 12px #285c5122}.toolCursor{width:56px;height:56px}.completionText{color:#fff;text-shadow:0 2px 5px #234f4b,0 0 15px #234f4b}.completionAction{background:#fff;color:#285c51}";document.body.append(style);})();
+
+/* CLEAN87_LARGER_TOOLS_20261103 */
+(()=>{const style=document.createElement("style");style.textContent=".toolDock{flex-basis:142px;gap:4px;padding:4px 25px 16px}.toolButton{width:calc((100% - 12px)/4);height:122px;min-height:122px;padding:3px 1px}.toolIcon{width:min(88px,100%);height:94px;margin:0 auto 2px}.toolLabel{line-height:18px}.toolCursor{width:96px;height:96px;margin-left:-48px;margin-top:-48px;transform-origin:50% 50%}.cursor-brush{margin-left:-48px;margin-top:-48px;transform-origin:50% 50%;transform:rotate(-10deg)}.cursor-spray{margin-left:12.8px;margin-top:-52.16px;transform-origin:20% 21%;transform:rotate(-6deg)}.cursor-rinse{margin-left:-53.96px;margin-top:-102.4px;transform-origin:26% 65%;transform:none}.cursor-vacuum{margin-left:-24px;margin-top:-62.4px;transform-origin:25% 65%;transform:none}";document.body.append(style);})();

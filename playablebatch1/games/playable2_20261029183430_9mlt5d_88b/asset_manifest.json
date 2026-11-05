@@ -7,13 +7,25 @@
   "entry": "dist/game.html",
   "source_kind": "editable-current-react-source",
   "files": {
-    "App.jsx": "c173a48485e4cbab760397c10bb72fae41c7289f9723ae66aabfbb7984cc6223",
+    "App.jsx": "4c70ecf66e10dd2b546358ee6bbc8fc0add393e803461e067959e6f9046cbd3b",
     "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
     "dist/game.html": "d90b67527ddb3a8edd6f5114eb32f58593f9fa70c05d768183495f4c001ff7dc",
-    "dist/bundle.js": "62e8dca1899d89e9bb4211f8519ab9b0e4808fa7307a40957df1e47b01c30e6c",
-    "dist/game.config.json": "0841740209661a8c69a740a561ac5ffd05d50a6cabe50e6e6237ad8710c7c741"
+    "dist/bundle.js": "ffa9ace6461525e898612acae86f70ab7d349620befbde0f085016bddf714fae",
+    "dist/game.config.json": "901fa0733c105c1d0352efa799ea8ef28492102201bb246c7b364e1939b78e08"
   },
   "assets": [
+    {
+      "path": "dist/assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "ids": [],
+      "bytes": 37464,
+      "sha256": "487694c955a01a6b9e0985b4839ebe6f5406770db551ea163799ee02deb7d3a4"
+    },
+    {
+      "path": "dist/assets/fonts/dynapuff/OFL.txt",
+      "ids": [],
+      "bytes": 4390,
+      "sha256": "15d6a0e2b087184b78a3bf740995d2c8afc8f855d4f65342907e166e31e959c6"
+    },
     {
       "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
       "ids": [],
@@ -27,34 +39,12 @@
       "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
     },
     {
-      "path": "dist/assets/sfx_catch.mp3",
-      "ids": [],
-      "bytes": 3116,
-      "sha256": "1b0eea9f814c67ad746d98fce62405abf148e81aaa48018d20ef957ae569345c"
-    },
-    {
-      "path": "dist/assets/sfx_click.mp3",
-      "ids": [],
-      "bytes": 3212,
-      "sha256": "72ff4f25645d97f545f2fba9783afb582e63d8902b3a1b0eea4208953dcdf12d"
-    },
-    {
-      "path": "dist/assets/sfx_launch.mp3",
-      "ids": [],
-      "bytes": 5420,
-      "sha256": "19a2183f79695bbe4a96d37424c4890bdbeddf335c491f347d15b8d90f78bf07"
-    },
-    {
-      "path": "dist/assets/sfx_miss.mp3",
-      "ids": [],
-      "bytes": 21605,
-      "sha256": "19b52628dbec7c8b7b9e5a2eee43c95a9dfd471e802f72a923057bb6bf12664c"
-    },
-    {
-      "path": "dist/assets/sfx_perfect.mp3",
-      "ids": [],
-      "bytes": 9260,
-      "sha256": "b58b418eac362cbc96a3e79335d563f27a4460b155ac7c2918e2fa8e12d8740b"
+      "path": "dist/assets/yellow-paper-dots-v3.svg",
+      "ids": [
+        "BG_PAPER"
+      ],
+      "bytes": 598,
+      "sha256": "2af6f62e56c8fae908a9751835bcfae654775b2270dc182fc4a7f6870c86bffd"
     }
   ]
 }

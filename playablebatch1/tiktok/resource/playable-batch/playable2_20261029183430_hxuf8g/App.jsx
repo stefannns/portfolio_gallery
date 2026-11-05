@@ -145,21 +145,12 @@ const DEFAULTS = {
   BALL_RADIUS: 8,
   START_SPEED: 340,
   MAX_SPEED: 720,
-  SPEED_STEP: 22,
+  SPEED_STEP: 44,
   GUIDE: 'Drag to keep it bouncing',
   RESULT_TITLE: 'Rally over',
   FINAL_SCORE: 'Final score',
   BEST_SCORE: 'Best',
   PLAY_AGAIN: 'Play again',
-};
-
-const SOUND_FILES = {
-  // Successful paddle catch: mechanical, clean tick.
-  hit: './assets/sfx_tick.mp3',
-  // Miss / rally end: descending pixel failure cue.
-  miss: './assets/sfx_game_over.mp3',
-  // First launch and Play again reset: compact activation confirmation.
-  reset: './assets/sfx_reset.mp3',
 };
 
 const feedSession = (() => {
@@ -197,88 +188,11 @@ function vibrate(style) {
 }
 
 function useSound(setLastSound) {
-  const audioRef = useRef(null);
-  const buffersRef = useRef({});
-  const loadingRef = useRef({});
-
-  const ensureAudio = useCallback(() => {
-    if (!feedSession.active) return null;
-    if (!audioRef.current) {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContextClass) return null;
-      const context = new AudioContextClass();
-      const output = context.createGain();
-      output.gain.value = 0.22;
-      output.connect(context.destination);
-      audioRef.current = { context, output, sources: new Set() };
-    }
-    const audio = audioRef.current;
-    if (audio.context.state === 'suspended') audio.context.resume().catch(() => {});
-    return audio;
-  }, []);
-
-  const fallbackBeep = useCallback((kind) => {
-    const audio = ensureAudio();
-    if (!audio) return;
-    const { context, output, sources } = audio;
-    const now = context.currentTime;
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
-    const isError = kind === 'miss';
-    oscillator.type = isError ? 'square' : 'sine';
-    oscillator.frequency.setValueAtTime(isError ? 155 : kind === 'hit' ? 780 : 520, now);
-    if (kind === 'hit') oscillator.frequency.exponentialRampToValueAtTime(1120, now + 0.08);
-    if (kind === 'reset') oscillator.frequency.exponentialRampToValueAtTime(760, now + 0.12);
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.18, now + 0.008);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + (isError ? 0.2 : 0.15));
-    oscillator.connect(gain);
-    gain.connect(output);
-    oscillator.start(now);
-    oscillator.stop(now + (isError ? 0.21 : 0.16));
-    sources.add(oscillator);
-    oscillator.addEventListener('ended', () => sources.delete(oscillator));
-  }, [ensureAudio]);
-
-  const loadBuffer = useCallback((key, audio) => {
-    if (buffersRef.current[key]) return Promise.resolve(buffersRef.current[key]);
-    if (loadingRef.current[key]) return loadingRef.current[key];
-    const promise = fetch(SOUND_FILES[key])
-      .then((response) => { if (!response.ok) throw new Error('sound request failed'); return response.arrayBuffer(); })
-      .then((arrayBuffer) => audio.context.decodeAudioData(arrayBuffer))
-      .then((buffer) => { buffersRef.current[key] = buffer; return buffer; });
-    loadingRef.current[key] = promise;
-    return promise;
-  }, []);
-
-  const playSound = useCallback((key) => {
-    if (!feedSession.active) return;
-    const audio = ensureAudio();
-    setLastSound(key);
-    if (!audio || !SOUND_FILES[key]) return;
-    loadBuffer(key, audio).then((buffer) => {
-      if (audio.context.state === 'suspended') return audio.context.resume().then(() => buffer);
-      return buffer;
-    }).then((buffer) => {
-      if (!buffer || !feedSession.active) return;
-      const source = audio.context.createBufferSource();
-      source.buffer = buffer;
-      source.connect(audio.output);
-      audio.sources.add(source);
-      source.addEventListener('ended', () => audio.sources.delete(source));
-      source.start();
-    }).catch(() => fallbackBeep(key));
-  }, [ensureAudio, fallbackBeep, loadBuffer, setLastSound]);
-
-  useEffect(() => () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.sources.forEach((source) => { try { source.stop(); } catch (error) {} });
-    audio.sources.clear();
-    audio.context.close().catch(() => {});
-  }, []);
-
-  return playSound;
+  const audioRef=useRef(null),lastRef=useRef(0);
+  const playSound=useCallback(kind=>{if(!feedSession.active)return;const stamp=performance.now();if(kind==='hit'&&stamp-lastRef.current<65)return;lastRef.current=stamp;setLastSound(kind);
+    try{let ctx=audioRef.current;if(!ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return;ctx=audioRef.current=new C();}ctx.resume().catch(()=>{});const now=ctx.currentTime,osc=ctx.createOscillator(),gain=ctx.createGain();const miss=kind==='miss',duration=miss?.19:kind==='hit'?.075:.09;osc.type='sine';osc.frequency.setValueAtTime(miss?170:kind==='hit'?520:420,now);osc.frequency.exponentialRampToValueAtTime(miss?72:kind==='hit'?260:340,now+duration);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(miss?.085:kind==='hit'?.11:.065,now+.004);gain.gain.exponentialRampToValueAtTime(.0001,now+duration);osc.connect(gain);gain.connect(ctx.destination);osc.start(now);osc.stop(now+duration+.015);osc.onended=()=>{osc.disconnect();gain.disconnect();};}catch{}
+  },[setLastSound]);
+  useEffect(()=>()=>{audioRef.current?.close().catch(()=>{});},[]);return playSound;
 }
 
 function useRecordingSubmission(onSound) {
@@ -470,9 +384,12 @@ function App() {
       const courtLeft = cfg.BOARD_INSET;
       const courtRight = width - cfg.BOARD_INSET;
       const courtTop = 98;
-      const courtBottom = height - 50;
-      const paddleY = height - cfg.PADDLE_BOTTOM;
       const radius = cfg.BALL_RADIUS;
+      const playingPaddleY = height - cfg.PADDLE_BOTTOM - Math.min(82, height * .13);
+      const paddleY = window.PlayableIdlePreview.preview
+        ? Math.min(height * .65, playingPaddleY)
+        : playingPaddleY;
+      const courtBottom = paddleY + cfg.PADDLE_HEIGHT + 10;
 
       if (game.active && feedSession.active) {
         const steps = Math.max(1, Math.min(4, Math.ceil(dtMs / 8)));
@@ -502,7 +419,7 @@ function App() {
             vibrate('medium');
             console.log('[paddle-survival] clean catch', { score: game.score, speed: Math.round(nextSpeed) });
           }
-          if (ball.y - radius > height + 12) {
+          if (ball.y - radius > courtBottom + 12) {
             game.active = false;
             game.score = Math.max(0, game.score);
             setPhase('over');
@@ -519,8 +436,8 @@ function App() {
 
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
       context.clearRect(0, 0, width, height);
-      context.lineWidth = 1.5;
-      context.strokeStyle = 'rgba(46, 43, 39, 0.14)';
+      context.lineWidth = 3.5;
+      context.strokeStyle = '#403a34';
       roundedRect(context, courtLeft, courtTop, courtRight - courtLeft, courtBottom - courtTop, 14);
       context.stroke();
       context.strokeStyle = 'rgba(46, 43, 39, 0.08)';

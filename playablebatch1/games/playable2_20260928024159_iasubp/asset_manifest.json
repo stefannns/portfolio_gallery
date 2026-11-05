@@ -7,10 +7,10 @@
   "entry": "dist/game.html",
   "source_kind": "rebuildable-current-runtime-source",
   "files": {
-    "App.jsx": "a7a1f1be5a0cc0ee341869adff7a254d818daee2db928f0bf47aecdb822e3190",
-    "dist/bundle.js": "a7a1f1be5a0cc0ee341869adff7a254d818daee2db928f0bf47aecdb822e3190",
-    "dist/game.html": "19a5221671a5508302ab8048dfc29a5a6c2c351c9eb04eedc1ef930b44f4eab5",
-    "dist/game.config.json": "6ef291def0671a05d1b283770d4a17be656ea6f8f317eb8276b75f5084b0089e"
+    "App.jsx": "a0da8c5c38b152f845859d2e45ee85375dcff2ddb1820928ab2142846a2e175d",
+    "dist/bundle.js": "a0da8c5c38b152f845859d2e45ee85375dcff2ddb1820928ab2142846a2e175d",
+    "dist/game.html": "2895f07140cd63bb0acbac5b4c41e90029844ea4d861702c23aae20b3e194c65",
+    "dist/game.config.json": "813aad51135a70f5ac01f63a0a4e540afa941a507202d32503420fc730663f1b"
   },
   "assets": [
     {
@@ -24,9 +24,9 @@
       "sha256": "a776fcb4ceb8bdf03e2967688ebdad42680de5b91a7e62c17e718ae212d14bc4"
     },
     {
-      "path": "dist/assets/glass-ink.svg",
-      "bytes": 548,
-      "sha256": "d909a63035eee34e59227ddf7f6b4b56cad2ba0db34a786d3a0b9f75513e89d5"
+      "path": "dist/assets/glass-rim-v2.svg",
+      "bytes": 588,
+      "sha256": "cf9d8fc522fd324623e28a77780d2d1c6ffa503d549738748d40a74ca556f3ed"
     },
     {
       "path": "dist/assets/paper-grain.svg",

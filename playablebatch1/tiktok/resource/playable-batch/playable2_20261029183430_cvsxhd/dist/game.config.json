@@ -59,28 +59,78 @@
       "min": 300,
       "max": 1200,
       "step": 50
+    },
+    {
+      "id": "AI_MISS_CHANCE",
+      "kind": "number",
+      "label": "Opponent misjudgement chance",
+      "value": 0.22,
+      "default": 0.22,
+      "min": 0,
+      "max": 0.65,
+      "step": 0.01
+    },
+    {
+      "id": "AI_REACTION_MS",
+      "kind": "number",
+      "label": "Opponent reaction delay (ms)",
+      "value": 140,
+      "default": 140,
+      "min": 50,
+      "max": 400,
+      "step": 10
+    },
+    {
+      "id": "BALL_ACCEL_PER_SECOND",
+      "kind": "number",
+      "label": "Ball speed increase per active second",
+      "value": 0.012,
+      "default": 0.012,
+      "min": 0,
+      "max": 0.04,
+      "step": 0.002
+    },
+    {
+      "id": "BALL_ACCEL_PER_HIT",
+      "kind": "number",
+      "label": "Ball speed increase per return",
+      "value": 0.025,
+      "default": 0.025,
+      "min": 0,
+      "max": 0.08,
+      "step": 0.005
+    },
+    {
+      "id": "BALL_MAX_MULTIPLIER",
+      "kind": "number",
+      "label": "Maximum ball speed multiplier",
+      "value": 2.1,
+      "default": 2.1,
+      "min": 1,
+      "max": 3,
+      "step": 0.1
     }
   ],
   "texts": [
     {
       "id": "GUIDE_TEXT",
       "label": "Play guide",
-      "value": "2 players \u00b7 Drag your half",
-      "default": "2 players \u00b7 Drag your half",
+      "value": "Drag to play against the computer",
+      "default": "Drag to play against the computer",
       "max_length": 32
     },
     {
       "id": "YOU_WIN",
       "label": "Red player result",
-      "value": "Red wins",
-      "default": "Red wins",
+      "value": "You win!",
+      "default": "You win!",
       "max_length": 20
     },
     {
       "id": "YOU_LOSE",
       "label": "Blue player result",
-      "value": "Blue wins",
-      "default": "Blue wins",
+      "value": "Computer wins",
+      "default": "Computer wins",
       "max_length": 20
     },
     {

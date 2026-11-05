@@ -288,7 +288,7 @@ function rollGeometry(cfg,unwound=0){
   const remaining=Math.max(0,1-Math.max(0,Number(unwound)||0)/ROLL_PAPER_SUPPLY);
   const radius=Math.sqrt(ROLL_MIN_RADIUS**2+(ROLL_INITIAL_RADIUS**2-ROLL_MIN_RADIUS**2)*remaining);
   const cx=138,cy=298,rx=radius,ry=radius,depth=cfg.PAPER_WIDTH*1.39,slant=-17;
-  return{cx,cy,rx,ry,depth,slant,coreRadius:ROLL_CORE_RADIUS,remaining,left:cx+rx,right:cx+rx+depth,sheetTop:cy+10};
+  return{cx,cy,rx,ry,depth,slant,coreRadius:ROLL_CORE_RADIUS,remaining,left:cx+rx,right:cx+rx+depth,sheetTop:cy};
 }
 function rollHit(point,cfg,unwound=0){
   const g=rollGeometry(cfg,unwound);
@@ -297,26 +297,75 @@ function rollHit(point,cfg,unwound=0){
   const body=point.x>=g.cx&&point.x<=g.right+8&&point.y>=g.cy-g.ry+g.slant-8&&point.y<=g.sheetTop;
   return face||sheet||body;
 }
-function paintPaperRoll(ctx,cfg,phase,sway,bottom,unwound=0){
-  const g=rollGeometry(cfg,unwound),{cx,cy,rx,ry,depth,slant}=g,bx=cx+depth,by=cy+slant;
-  // The back cylinder and its shaded underside are continuous with the front
-  // face. A single white surface turns over the back into the hanging sheet.
-  ctx.fillStyle='#5c5c5c';ctx.beginPath();ctx.moveTo(cx,cy-ry);ctx.lineTo(bx,by-ry);ctx.bezierCurveTo(bx+rx*.56,by-ry,bx+rx,by-ry*.45,bx+rx,by);ctx.bezierCurveTo(bx+rx,by+ry*.55,bx+rx*.55,by+ry,bx,by+ry);ctx.lineTo(cx,cy+ry);ctx.closePath();ctx.fill();
-  ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(cx,cy-ry);ctx.lineTo(bx,by-ry);ctx.bezierCurveTo(bx+rx*.56,by-ry,bx+rx,by-ry*.45,bx+rx,by);ctx.lineTo(g.right,by+10);ctx.lineTo(g.left,cy+10);ctx.closePath();ctx.fill();
-  // Both perforations and the paper edge use the same sloping plane. The
-  // sheet deliberately continues beyond the screen, as in the reference.
-  ctx.beginPath();ctx.moveTo(g.left,g.sheetTop);ctx.lineTo(g.right,g.sheetTop+slant);ctx.bezierCurveTo(g.right+sway,bottom-90,g.right+sway,bottom-30,g.right+sway,bottom);ctx.lineTo(g.left+sway,bottom);ctx.bezierCurveTo(g.left+sway,bottom-30,g.left+sway,bottom-90,g.left,g.sheetTop);ctx.closePath();ctx.fill();
-  ctx.save();ctx.clip();ctx.strokeStyle='#969696';ctx.lineWidth=.8;ctx.setLineDash([1.5,3.5]);
-  const spacing=156,offset=((phase%spacing)+spacing)%spacing;
-  for(let y=g.sheetTop-spacing+offset;y<bottom+spacing;y+=spacing){ctx.beginPath();ctx.moveTo(g.left-3,y);ctx.lineTo(g.right+4,y+slant);ctx.stroke();}
+const PAPER_PRINT_SPACING=156,PAPER_PRINT_DENSITY=3;
+const paperPrintCache=new Map();
+function paperPrintTexture(kind,width){
+  if(!kind)return null;
+  const key=kind+':'+width.toFixed(3);if(paperPrintCache.has(key))return paperPrintCache.get(key);
+  const canvas=document.createElement('canvas');canvas.width=Math.ceil(width*PAPER_PRINT_DENSITY);canvas.height=PAPER_PRINT_SPACING*PAPER_PRINT_DENSITY;
+  const ctx=canvas.getContext('2d'),w=width*.87;ctx.scale(canvas.width/width,PAPER_PRINT_DENSITY);ctx.translate(width/2,78);ctx.lineWidth=1;
+    const tone=kind===1?'#376b55':kind===2?'#dc655c':kind===3?'#3b74b8':'#8053a1';ctx.strokeStyle=tone;ctx.fillStyle=tone;
+    if(kind===1){
+      ctx.strokeRect(-w/2,-61,w,122);ctx.strokeRect(-w/2+4,-57,w-8,114);ctx.beginPath();ctx.ellipse(0,0,w*.31,34,0,0,Math.PI*2);ctx.stroke();ctx.font='bold 28px Georgia';ctx.textAlign='center';ctx.fillText('100',0,9);ctx.font='bold 10px Georgia';ctx.fillText('100',-w/2+18,-43);ctx.fillText('100',w/2-18,50);for(let j=0;j<6;j++){ctx.beginPath();ctx.moveTo(-w/2+8,-30+j*10);ctx.lineTo(-w*.34,-30+j*10);ctx.moveTo(w*.34,-30+j*10);ctx.lineTo(w/2-8,-30+j*10);ctx.stroke();}
+    }else if(kind===2){
+      ctx.fillRect(-w/2,-60,w,27);ctx.fillStyle='#fff';ctx.font='bold 13px Arial';ctx.textAlign='center';ctx.fillText('LUCKY 7',0,-42);ctx.fillStyle='#babfc5';for(let j=0;j<6;j++){const x=-w*.27+(j%2)*w*.52,yy=-15+Math.floor(j/2)*24;ctx.fillRect(x-13,yy-9,26,18);ctx.strokeRect(x-13,yy-9,26,18);ctx.fillStyle='#7b858f';ctx.beginPath();ctx.moveTo(x-9,yy+5);ctx.lineTo(x+8,yy-5);ctx.stroke();ctx.fillStyle='#babfc5';}ctx.strokeRect(-w/2,-60,w,122);
+    }else if(kind===3){
+      ctx.setLineDash([3,3]);ctx.strokeRect(-w/2,-60,w,122);ctx.setLineDash([]);ctx.font='bold 15px Arial';ctx.textAlign='center';ctx.fillText('ADMIT ONE',0,-30);ctx.font='bold 32px Georgia';ctx.fillText('★',0,8);ctx.font='10px monospace';ctx.fillText('NO. 018247',0,40);for(let j=0;j<22;j++){ctx.fillRect(-w/2+8+j*(w-16)/22,46,j%3===0?2:1,9);}
+    }else{
+      ctx.fillStyle='#e6d5f6';ctx.fillRect(-w/2,-61,w,122);ctx.fillStyle=tone;for(let j=0;j<9;j++){let x=(j%3-1)*w*.30,yy=-39+Math.floor(j/3)*39;ctx.beginPath();ctx.arc(x,yy,9,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.moveTo(x-5,yy+1);ctx.quadraticCurveTo(x,yy+7,x+5,yy+1);ctx.stroke();ctx.fillRect(x-4,yy-3,1.5,1.5);ctx.fillRect(x+3,yy-3,1.5,1.5);}}
+
+  paperPrintCache.set(key,canvas);return canvas;
+}
+// u follows the roll axis; v measures paper length from the tangent where
+// the curved surface becomes the hanging sheet. Both use one continuous UV.
+function paperSurfacePoint(g,u,v,bottom,sway=0){
+  if(v<0){const angle=v/g.rx;return{x:g.cx+g.rx*Math.cos(angle)+u*g.depth,y:g.cy+g.ry*Math.sin(angle)+u*g.slant};}
+  const t=Math.max(0,Math.min(1,v/Math.max(1,(bottom-g.sheetTop)*.75))),bend=sway*t*t*(3-2*t);
+  return{x:g.left+u*g.depth+bend,y:g.sheetTop+v+u*g.slant};
+}
+function tracePaperSurface(ctx,g,from,to,bottom,sway){
+  const steps=Math.max(1,Math.ceil((to-from)/4)),point=(u,v)=>{const p=paperSurfacePoint(g,u,v,bottom,sway);ctx.lineTo(p.x,p.y);};
+  const start=paperSurfacePoint(g,0,from,bottom,sway);ctx.beginPath();ctx.moveTo(start.x,start.y);point(1,from);
+  for(let i=1;i<=steps;i++)point(1,from+(to-from)*i/steps);
+  point(0,to);for(let i=steps-1;i>=0;i--)point(0,from+(to-from)*i/steps);ctx.closePath();
+}
+function paintPaperPrint(ctx,g,phase,bottom,kind,from,to,sway=0){
+  const texture=paperPrintTexture(kind,g.depth);if(!texture)return;
+  const density=texture.height/PAPER_PRINT_SPACING,step=from<0?2:16;
+  // Each narrow band is sheared along the paper's width axis, rather than
+  // rotating its length axis. Curved bands also compress as they turn away.
+  for(let v=from;v<to-1e-7;){
+    let sample=((v-phase)%PAPER_PRINT_SPACING+PAPER_PRINT_SPACING)%PAPER_PRINT_SPACING;
+    if(PAPER_PRINT_SPACING-sample<1e-6)sample=0;
+    const length=Math.min(step,to-v,PAPER_PRINT_SPACING-sample),end=v+length;
+    const a=paperSurfacePoint(g,0,v,bottom,sway),d=paperSurfacePoint(g,0,end,bottom,sway),pixels=length*density;
+    ctx.save();ctx.transform(g.depth/texture.width,g.slant/texture.width,(d.x-a.x)/pixels,(d.y-a.y)/pixels,a.x,a.y);
+    ctx.drawImage(texture,0,sample*density,texture.width,pixels,0,0,texture.width,pixels+.12);ctx.restore();v=end;
+  }
+}
+function paperRollColors(printIndex){
+  const kind=printIndex%5,paper=['#ffffff','#d8f0df','#fff1d3','#e2f1ff','#eee4fa'][kind];
+  const shade=light=>'#'+paper.slice(1).match(/../g).map(channel=>Math.round(parseInt(channel,16)*light).toString(16).padStart(2,'0')).join('');
+  return {kind,paper,side:shade(.85),back:shade(.36)};
+}
+function paintPaperRoll(ctx,cfg,phase,sway,bottom,unwound=0,printIndex=0){
+  const g=rollGeometry(cfg,unwound),{cx,cy,rx,ry,depth,slant}=g,bx=cx+depth,by=cy+slant,{kind,paper,side,back}=paperRollColors(printIndex);
+  const curvedStart=-Math.PI*rx/2,sheetEnd=Math.max(0,bottom-g.sheetTop)+Math.abs(slant);
+  ctx.fillStyle=back;ctx.beginPath();ctx.moveTo(cx,cy-ry);ctx.lineTo(bx,by-ry);ctx.bezierCurveTo(bx+rx*.56,by-ry,bx+rx,by-ry*.45,bx+rx,by);ctx.bezierCurveTo(bx+rx,by+ry*.55,bx+rx*.55,by+ry,bx,by+ry);ctx.lineTo(cx,cy+ry);ctx.closePath();ctx.fill();
+  for(const [from,to] of [[curvedStart,0],[0,sheetEnd]]){
+    tracePaperSurface(ctx,g,from,to,bottom,sway);ctx.fillStyle=paper;ctx.fill();
+    if(kind){ctx.save();ctx.clip();paintPaperPrint(ctx,g,phase,bottom,kind,from,to,sway);ctx.restore();}
+  }
+  // Cut lines share the texture's UV phase and the exact same projected width.
+  ctx.save();ctx.strokeStyle='#969696';ctx.lineWidth=.8;ctx.setLineDash([1.5,3.5]);
+  const first=Math.ceil((curvedStart-phase)/PAPER_PRINT_SPACING);
+  for(let k=first;;k++){const v=phase+k*PAPER_PRINT_SPACING;if(v>sheetEnd)break;const a=paperSurfacePoint(g,0,v,bottom,sway),b=paperSurfacePoint(g,1,v,bottom,sway);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
   ctx.restore();
-  // Large gray front face, a clean black cardboard opening, no end cap or
-  // unrelated stripes. This flat silhouette supplies the apparent 3D volume.
-  ctx.fillStyle='#d9d9d9';ctx.beginPath();ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=side;ctx.beginPath();ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2);ctx.fill();
   ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(cx,cy,g.coreRadius,g.coreRadius,0,0,Math.PI*2);ctx.fill();
   return g;
 }
-function PaperCanvas({cfg,lengthRef,phaseRef,angleRef,velocityRef,dragRef,unwoundRef,cycleRef,onRollEmpty,onRollComplete}){
+function PaperCanvas({cfg,lengthRef,phaseRef,angleRef,velocityRef,dragRef,unwoundRef,cycleRef,countRef,onRollEmpty,onRollComplete}){
   const canvasRef=useRef(null),frameRef=useRef(0),lastRef=useRef(0);
   useEffect(()=>{
     const canvas=canvasRef.current,ctx=canvas.getContext('2d');let width=390,height=598,scale=1,ox=0,oy=0;
@@ -336,11 +385,11 @@ function PaperCanvas({cfg,lengthRef,phaseRef,angleRef,velocityRef,dragRef,unwoun
       const sway=reducedMotionQuery.matches?0:Math.min(2,Math.abs(velocityRef.current)*.45);
       const bottom=(height-oy)/scale+80;
       let g;
-      if(cycle.stage==='ready')g=paintPaperRoll(ctx,cfg,phaseRef.current+demoPhase,sway,bottom,preview?demoPull*75:unwoundRef.current);
+      if(cycle.stage==='ready')g=paintPaperRoll(ctx,cfg,phaseRef.current+demoPhase,sway,bottom,preview?demoPull*75:unwoundRef.current,countRef.current);
       else{
         const pose=rollCyclePose(cycle.elapsed,(height-oy)/scale,reducedMotionQuery.matches);
-        if(pose.showOld){ctx.save();ctx.globalAlpha=pose.oldAlpha;ctx.translate(138,298+pose.oldY);ctx.rotate(pose.oldAngle);ctx.translate(-138,-298);paintPaperRoll(ctx,cfg,cycle.oldPhase,0,bottom,cycle.oldUnwound);ctx.restore();}
-        if(pose.showNew){ctx.save();ctx.globalAlpha=pose.newAlpha;ctx.translate(0,pose.newY);paintPaperRoll(ctx,cfg,0,0,bottom,0);ctx.restore();}
+        if(pose.showOld){ctx.save();ctx.globalAlpha=pose.oldAlpha;ctx.translate(138,298+pose.oldY);ctx.rotate(pose.oldAngle);ctx.translate(-138,-298);paintPaperRoll(ctx,cfg,cycle.oldPhase,0,bottom,cycle.oldUnwound,countRef.current);ctx.restore();}
+        if(pose.showNew){ctx.save();ctx.globalAlpha=pose.newAlpha;ctx.translate(0,pose.newY);paintPaperRoll(ctx,cfg,0,0,bottom,0,countRef.current+1);ctx.restore();}
         g=rollGeometry(cfg,pose.showNew?0:cycle.oldUnwound);
       }
       ctx.restore();canvas.dataset.paperLeft=g.left.toFixed(2);canvas.dataset.paperRight=g.right.toFixed(2);canvas.dataset.paperTop=g.sheetTop;canvas.dataset.phase=phaseRef.current.toFixed(1);canvas.dataset.paperLength=lengthRef.current.toFixed(1);canvas.dataset.rollDiameter=(g.rx*2).toFixed(2);canvas.dataset.unwound=unwoundRef.current.toFixed(1);canvas.dataset.rollStage=cycle.stage;canvas.dataset.cycleElapsed=cycle.elapsed.toFixed(0);canvas.dataset.coastVelocity=velocityRef.current.toFixed(4);canvas.dataset.coasting=String(!preview&&!drag.active&&cycle.stage==='ready'&&velocityRef.current>0);
@@ -691,6 +740,7 @@ function App() {
         phaseRef={phaseRef}
         unwoundRef={unwoundRef}
         cycleRef={cycleRef}
+        countRef={countRef}
         onRollEmpty={onRollEmpty}
         onRollComplete={onRollComplete}
         angleRef={angleRef}

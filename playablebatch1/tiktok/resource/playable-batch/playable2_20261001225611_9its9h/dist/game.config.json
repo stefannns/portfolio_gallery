@@ -78,14 +78,14 @@
   "images": [
     {
       "id": "BG_MAIN",
-      "label": "Background",
-      "path": "./assets/bg_metal.svg",
+      "label": "Lilac paper background",
+      "path": "./assets/bg-paper-lilac-v6.svg",
       "replaceable": true
     },
     {
       "id": "TARGET_IMG",
       "label": "Obstacle Target",
-      "path": "./assets/obj_enemy.svg",
+      "path": "./assets/obj-enemy-yellow-v5.svg",
       "replaceable": true
     }
   ],

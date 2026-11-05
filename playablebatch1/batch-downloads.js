@@ -488,9 +488,9 @@ window.PlayableBatchDownloads = {
         "url": "/playablebatch1/downloads/batch-2-en.zip",
         "filename": "batch-2-en.zip",
         "language": "en",
-        "games": 21,
-        "bytes": 16407094,
-        "sha256": "c9f772eb1eb9c03a7ca3256dba40663928981b9cb1eb6b699b985c10d49101f9",
+        "games": 22,
+        "bytes": 16834177,
+        "sha256": "1c5126930492cd7fa53774728f8e456a51c12ee53675839c0def7fa8a5aa9420",
         "members": [
           {
             "number": 18,
@@ -538,7 +538,7 @@ window.PlayableBatchDownloads = {
             "number": 76,
             "taskId": "eh_hair_shave_20261020",
             "folder": "batch-2-en/76-eh_hair_shave_20261020",
-            "files": 48
+            "files": 50
           },
           {
             "number": 78,
@@ -550,7 +550,7 @@ window.PlayableBatchDownloads = {
             "number": 79,
             "taskId": "playable2_20261028202811_hz9v37",
             "folder": "batch-2-en/79-playable2_20261028202811_hz9v37",
-            "files": 11
+            "files": 13
           },
           {
             "number": 80,
@@ -580,7 +580,7 @@ window.PlayableBatchDownloads = {
             "number": 84,
             "taskId": "playable2_20261028202811_q0f68t",
             "folder": "batch-2-en/84-playable2_20261028202811_q0f68t",
-            "files": 39
+            "files": 41
           },
           {
             "number": 85,
@@ -592,7 +592,7 @@ window.PlayableBatchDownloads = {
             "number": 86,
             "taskId": "playable2_20261029183430_hxuf8g",
             "folder": "batch-2-en/86-playable2_20261029183430_hxuf8g",
-            "files": 11
+            "files": 8
           },
           {
             "number": 87,
@@ -604,7 +604,7 @@ window.PlayableBatchDownloads = {
             "number": "88b",
             "taskId": "playable2_20261029183430_9mlt5d_88b",
             "folder": "batch-2-en/88b-playable2_20261029183430_9mlt5d_88b",
-            "files": 13
+            "files": 11
           },
           {
             "number": 89,
@@ -616,6 +616,12 @@ window.PlayableBatchDownloads = {
             "number": 90,
             "taskId": "playable2_20261029183430_cvsxhd",
             "folder": "batch-2-en/90-playable2_20261029183430_cvsxhd",
+            "files": 10
+          },
+          {
+            "number": 91,
+            "taskId": "playable2_20261105004109_ifgmqt",
+            "folder": "batch-2-en/91-playable2_20261105004109_ifgmqt",
             "files": 10
           }
         ]

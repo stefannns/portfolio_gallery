@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Pocket Pong — Two Players</title><style>html,body,#root{width:100%;height:100%;margin:0;overflow:hidden}body{background:#082c24;-webkit-tap-highlight-color:transparent}</style></head><body><div id="root"></div><script src="./bundle.js"></script><!-- CTA_BREATHING_START -->
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Pocket Pong</title><style>html,body,#root{width:100%;height:100%;margin:0;overflow:hidden}body{background:#082c24;-webkit-tap-highlight-color:transparent}</style></head><body><div id="root"></div><script src="./bundle.js"></script><!-- CTA_BREATHING_START -->
 <script id="playable-cta-breathing-20261030">
 /* Decorative CTA breathing only. No positions, inputs, clocks or game state. */
 (()=>{
- const selectors=[".guide"],copy=new Set(["2 players · Drag your half"].map(s=>s.replace(/\s+/g,' ').trim().toLowerCase()));
+ const selectors=[".guide"],copy=new Set(["Drag to play against the computer"].map(s=>s.replace(/\s+/g,' ').trim().toLowerCase()));
  const motion=window.matchMedia('(prefers-reduced-motion: reduce)'),running=new Map();let queued=false,visible=true;
  const action=/^(?:(?:tap|drag|hold|swipe|draw|use|press|click|release|brush|pull|touch|pinch|rub|move|trace)\b|spray\s*[→-]|tocca\b|trascina\b|tieni\b|scorri\b|disegna\b|premi\b|点击|轻触|滑动|按住|拖动|长按|双击)/i;
  function scan(){

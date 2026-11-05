@@ -7,10 +7,10 @@
   "entry": "dist/game.html",
   "source_kind": "editable-current-react-source",
   "files": {
-    "App.jsx": "f3769eb8aba114ef9159834f9af7191bbee242e66ebac5266765b6ea53cbe418",
+    "App.jsx": "076201b78cf5195d946af953d658205d156a5272faed561e07efc5f742adfb09",
     "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
     "dist/game.html": "e139d19eee096c52c037fee7c980eab1d09a0f49c934438b697f42b0f4c16197",
-    "dist/bundle.js": "6640d9c00021bb4fd5cda1b4788e3494dba6849a57bd1475c18708abdaa47c27",
+    "dist/bundle.js": "a535a966eb2dc4c6f2cb204a569b7c08abd900a7cc4d9663332ec398ec2d9d98",
     "dist/game.config.json": "acda48e1ca02580eed263cd5df31e89753b43296eca34f6171d99858fca03ef3"
   },
   "assets": [
@@ -19,6 +19,12 @@
       "ids": [],
       "bytes": 54404,
       "sha256": "a1160f63f6d8e7ca6870bf5d9e705f36be8e19e7047b593e8001b8737c95d475"
+    },
+    {
+      "path": "dist/assets/fonts/special-elite/SpecialElite-Regular.ttf",
+      "ids": [],
+      "bytes": 166180,
+      "sha256": "a776fcb4ceb8bdf03e2967688ebdad42680de5b91a7e62c17e718ae212d14bc4"
     },
     {
       "path": "dist/assets/sfx_conflict.mp3",
@@ -43,6 +49,12 @@
       "ids": [],
       "bytes": 19505,
       "sha256": "9f0726991d0330adab0d74aa71d477a074363eaf1e2a2372a9acd4081842d448"
+    },
+    {
+      "path": "dist/assets/worn-newsprint-gray-v4.webp",
+      "ids": [],
+      "bytes": 171770,
+      "sha256": "096e208a9b628ec533e8769d6875c4d9e27e4dc2a4e23f82f0f8684e872a6d09"
     }
   ]
 }

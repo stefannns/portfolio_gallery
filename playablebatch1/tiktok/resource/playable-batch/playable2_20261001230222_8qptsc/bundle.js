@@ -225,6 +225,7 @@
       }
       .clear::before { transform: rotate(45deg); }
       .clear::after { transform: rotate(-45deg); }
+      .clear::before,.clear::after{display:none}.clear{display:grid;place-items:center}html[data-batch2-idle="true"] .palette{bottom:29%}
       .clear:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
       @media (prefers-reduced-motion: reduce) { .prompt, .swatch { transition-duration: .01ms; } }
     `;
@@ -242,7 +243,7 @@
       <main class="instrument">
         <canvas id="strings" tabindex="0" aria-label="Drag, or tap two points, to create a gently pulsing string. Or press Enter, use arrow keys to set the endpoint, then Enter to finish. Escape cancels."></canvas>
         <p class="prompt" id="prompt"></p>
-        <button class="clear" id="clear" type="button" aria-label="Clear all strings"></button>
+        <button class="clear" id="clear" type="button" aria-label="Restart instrument"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10a8 8 0 1 1 1.6 7.2M4 4v6h6"/></svg></button>
         <div class="palette" role="group" aria-label="Wave color">
           ${palettes.map((item, index) => `<button class="swatch" id="wave-${item.id}" type="button" aria-label="${item.label} waves" aria-pressed="${index === 0}" style="--swatch: rgb(${item.main.join(',')})"></button>`).join('')}
         </div>

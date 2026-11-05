@@ -66,8 +66,8 @@
     {
       "id": "BTN_REPLAY",
       "label": "New Level Button",
-      "value": "New Level",
-      "default": "New Level",
+      "value": "Play again",
+      "default": "Play again",
       "max_length": 20
     },
     {
@@ -82,7 +82,7 @@
     {
       "id": "GLASS_IMG",
       "label": "Glass Image",
-      "path": "./assets/glass-ink.svg",
+      "path": "./assets/glass-rim-v2.svg",
       "replaceable": true
     }
   ],

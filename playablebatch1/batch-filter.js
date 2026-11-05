@@ -42,28 +42,29 @@
     'eh_catch_the_hair_20261020'
   ]);
   const batch2TaskIds = Object.freeze([
-      "playable2_20260927020825_kxh9p4",
-      "playable2_20260928023148_i47u62",
-      "playable2_20260928023148_kiq9wu",
-      "playable2_20260928024159_iasubp",
-      "playable2_20261001225611_9its9h",
-      "playable2_20261001230222_8qptsc",
-      "eh_feed_your_friend_20261020",
-      "eh_hair_shave_20261020",
-      "eh_makeover_20261020",
-      "playable2_20261028202811_hz9v37",
-      "playable2_20261028202811_rf6gbi",
-      "playable2_20261028202811_dsl58j",
-      "playable2_20261028202811_gia8r5",
-      "playable2_20261028202811_5uuyhb",
-      "playable2_20261028202811_q0f68t",
-      "playable2_20261028202811_ke0xpl",
-      "playable2_20261029183430_hxuf8g",
-      "playable2_20261029183430_v5avg1",
-      "playable2_20261029183430_9mlt5d_88b",
-      "playable2_20261029183430_ctpmni",
-      "playable2_20261029183430_cvsxhd"
-  ]);
+    "playable2_20260927020825_kxh9p4",
+    "playable2_20260928023148_i47u62",
+    "playable2_20260928023148_kiq9wu",
+    "playable2_20260928024159_iasubp",
+    "playable2_20261001225611_9its9h",
+    "playable2_20261001230222_8qptsc",
+    "eh_feed_your_friend_20261020",
+    "eh_hair_shave_20261020",
+    "eh_makeover_20261020",
+    "playable2_20261028202811_hz9v37",
+    "playable2_20261028202811_rf6gbi",
+    "playable2_20261028202811_dsl58j",
+    "playable2_20261028202811_gia8r5",
+    "playable2_20261028202811_5uuyhb",
+    "playable2_20261028202811_q0f68t",
+    "playable2_20261028202811_ke0xpl",
+    "playable2_20261029183430_hxuf8g",
+    "playable2_20261029183430_v5avg1",
+    "playable2_20261029183430_9mlt5d_88b",
+    "playable2_20261029183430_ctpmni",
+    "playable2_20261029183430_cvsxhd",
+    "playable2_20261105004109_ifgmqt"
+]);
   const membership = new Set(batch1TaskIds);
   const batch2Membership = new Set(batch2TaskIds);
   const storageKey = 'playable-review-batch-v1';

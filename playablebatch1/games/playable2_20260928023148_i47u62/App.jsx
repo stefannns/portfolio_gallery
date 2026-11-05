@@ -79,10 +79,10 @@
   function blade(ctx,w,h,top,bottom){
     const t=clock()/1000,p=(t%5.8)/5.8,cx=w/2,cy=(top+bottom)/2;
     const points=[[-.22,.16],[-.11,.02],[.04,.04],[.17,-.17],[.24,-.11]].map(([x,y])=>({x:cx+x*w,y:cy+y*(bottom-top)}));
-    ctx.save();ctx.strokeStyle='#303936';ctx.lineWidth=6;ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.save();ctx.strokeStyle='#167a61';ctx.lineWidth=6;ctx.lineCap='round';ctx.lineJoin='round';
     ctx.globalAlpha=p>.9?(1-p)/.1:1;
     if(p<.5)trace(ctx,points,ease(p/.45));
-    else {ctx.translate(cx,cy);ctx.rotate((p-.5)*Math.PI*3.4);trace(ctx,points.map(v=>({x:v.x-cx,y:v.y-cy})));ctx.fillStyle='#303936';ctx.beginPath();ctx.arc(0,0,11,0,Math.PI*2);ctx.fill();}
+    else {ctx.translate(cx,cy);ctx.rotate((p-.5)*Math.PI*3.4);trace(ctx,points.map(v=>({x:v.x-cx,y:v.y-cy})));ctx.fillStyle='#167a61';ctx.beginPath();ctx.arc(0,0,11,0,Math.PI*2);ctx.fill();}
     ctx.restore();stamp(ctx.canvas,'draw-and-spin-blade');
   }
   function roadPose(key){
@@ -16913,9 +16913,9 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       --font-display: "DynaPuff", "Trebuchet MS", sans-serif;
       --font-body:    "DynaPuff", "Trebuchet MS", sans-serif;
       --font-mono:    "DynaPuff", "Trebuchet MS", sans-serif;
-      --color-bg:     #f5f4ef;
-      --color-player: #303936;
-      --color-enemy:  #b66f68;
+      --color-bg:     #e5f5d8;
+      --color-player: #167a61;
+      --color-enemy:  #ec625a;
     }
     html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; background: var(--color-bg); font-family: var(--font-body); }
     * { box-sizing: border-box; touch-action: none; user-select: none; -webkit-user-drag: none; }
@@ -17188,11 +17188,34 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       C.clearRect(0, 0, E, O);
       let R = window.PlayableIdlePreview.active ? window.PlayableIdlePreview.army(h.current,E,O) : h.current;
       window.PlayableIdlePreview.stamp(r.current,"troop-command");
-      R.playerTarget && (C.strokeStyle = "rgba(74,91,77,.35)", C.lineWidth = 2, C.beginPath(), C.arc(R.playerTarget.x, R.playerTarget.y, 14, 0, Math.PI * 2), C.stroke());
+      if (R.playerTarget) {
+        C.save();
+        C.translate(R.playerTarget.x, R.playerTarget.y);
+        C.strokeStyle = "rgba(22,122,97,.3)";
+        C.lineWidth = 2;
+        C.beginPath();
+        C.arc(0, 0, 14, 0, Math.PI * 2);
+        C.stroke();
+
+        C.fillStyle = "#167a61";
+        C.beginPath();
+        C.moveTo(0, 10);
+        C.bezierCurveTo(-2, 7, -7, 2, -7, -3);
+        C.arc(0, -3, 7, Math.PI, 0);
+        C.bezierCurveTo(7, 2, 2, 7, 0, 10);
+        C.closePath();
+        C.fill();
+
+        C.fillStyle = "#e5f5d8";
+        C.beginPath();
+        C.arc(0, -3, 2.5, 0, Math.PI * 2);
+        C.fill();
+        C.restore();
+      }
       for (let P of R.entities)
-        if (C.fillStyle = P.__neutralTroop && !P.recruited ? "#c6ccc3" : P.team === "player" ? "#303936" : "#b66f68", C.beginPath(), C.arc(P.x, P.y, P.r, 0, Math.PI * 2), C.fill(), P.__neutralTroop && !P.recruited && (C.strokeStyle = "#9da79d", C.lineWidth = 1.5, C.stroke()), false, P.hp < P.maxHp) {
+        if (C.fillStyle = P.__neutralTroop && !P.recruited ? "#b6c7bc" : P.team === "player" ? "#167a61" : "#ec625a", C.beginPath(), C.arc(P.x, P.y, P.r, 0, Math.PI * 2), C.fill(), P.__neutralTroop && !P.recruited && (C.strokeStyle = "#8da69c", C.lineWidth = 1.5, C.stroke()), false, P.hp < P.maxHp) {
           let V = P.r * 2.5, te = 3, j = P.x - V / 2, re = P.y - P.r - 6;
-          C.fillStyle = "rgba(0,0,0,0.4)", C.fillRect(j, re, V, te), C.fillStyle = P.team === "player" ? "#91a893" : "#b66f68", C.fillRect(j, re, V * (P.hp / P.maxHp), te);
+          C.fillStyle = "rgba(0,0,0,0.4)", C.fillRect(j, re, V, te), C.fillStyle = P.team === "player" ? "#43c6a0" : "#ec625a", C.fillRect(j, re, V * (P.hp / P.maxHp), te);
         }
       for (let P of R.particles)
         C.fillStyle = P.color, C.globalAlpha = Math.max(0, P.life / P.maxLife), C.beginPath(), C.arc(P.x, P.y, 2, 0, Math.PI * 2), C.fill(), C.globalAlpha = 1;
@@ -17232,7 +17255,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
         height: "100%",
         position: "relative",
         containerType: "size",
-        background: "#f5f4ef",
+        background: "#e5f5d8",
         backgroundSize: "72px 72px,54px 54px,100% 100%"
       },
       children: [
@@ -17301,7 +17324,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: "rgba(0,0,0,0.68)",
+              backgroundColor: "rgba(16,61,48,0.72)",
               backdropFilter: "blur(6px)",
               padding: "calc(40px + env(safe-area-inset-top, 0px)) 25px calc(40px + env(safe-area-inset-bottom, 0px))",
               boxSizing: "border-box"
@@ -17311,7 +17334,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                 style: {
                   width: "min(82%, 420px)",
                   padding: "clamp(24px, 7vw, 40px)",
-                  background: "#f5f4ef",
+                  background: "#e5f5d8",
                   borderRadius: "28px",
                   border: "2px solid rgba(239,68,68,.18)",
                   textAlign: "center",
@@ -17328,7 +17351,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                       display: "grid",
                       placeItems: "center",
                       background: "rgba(239,68,68,.12)",
-                      color: "#dc2626",
+                      color: "#d84348",
                       fontSize: "42px",
                       fontWeight: 900
                     },
@@ -17337,7 +17360,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                   (0, qe.jsx)("h1", {
                     style: {
                       fontFamily: "var(--font-display)",
-                      color: "#dc2626",
+                      color: "#d84348",
                       fontSize: "clamp(36px, 10vw, 48px)",
                       lineHeight: 1,
                       margin: 0
@@ -17359,7 +17382,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                 style: {
                   width: "min(82%, 420px)",
                   padding: "clamp(24px, 7vw, 40px)",
-                  background: "#f5f4ef",
+                  background: "#e5f5d8",
                   borderRadius: "28px",
                   textAlign: "center",
                   marginBottom: "32px",
@@ -17369,7 +17392,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                   (0, qe.jsx)("h1", {
                     style: {
                       fontFamily: "var(--font-display)",
-                      color: "#2d82fe",
+                      color: "#167a61",
                       fontSize: "clamp(36px, 10vw, 48px)",
                       lineHeight: 1,
                       margin: 0
@@ -17408,11 +17431,11 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                       fontSize: "18px",
                       fontWeight: "bold",
                       color: "white",
-                      backgroundColor: "#2d82fe",
+                      backgroundColor: "#167a61",
                       border: "none",
                       borderRadius: "32px",
                       cursor: "pointer",
-                      boxShadow: "0 4px 12px rgba(45,130,254,0.3)"
+                      boxShadow: "0 4px 12px rgba(22,122,97,0.22)"
                     },
                     children: t.TXT_TRY_AGAIN
                   }),
@@ -17427,12 +17450,12 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                       fontSize: "18px",
                       fontWeight: "bold",
                       color: "white",
-                      backgroundColor: "#ff2d55",
+                      backgroundColor: "#ec625a",
                       border: "none",
                       borderRadius: "32px",
                       cursor: B ? "not-allowed" : "pointer",
                       opacity: B ? 0.6 : 1,
-                      boxShadow: "0 4px 12px rgba(255,45,85,0.3)"
+                      boxShadow: "0 4px 12px rgba(236,98,90,0.22)"
                     },
                     children: t.TXT_POST
                   })
@@ -17458,7 +17481,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       })(), () => {
         r = false;
       };
-    }, []), t ? (0, qe.jsx)(SV, { cfg: t }) : (0, qe.jsx)("div", { style: { width: "100%", height: "100%", background: "#f5f4ef" } });
+    }, []), t ? (0, qe.jsx)(SV, { cfg: t }) : (0, qe.jsx)("div", { style: { width: "100%", height: "100%", background: "#e5f5d8" } });
   };
   (0, RE.createRoot)(document.getElementById("root")).render((0, qe.jsx)(TV, {}));
 })();

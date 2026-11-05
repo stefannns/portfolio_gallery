@@ -593,3 +593,6 @@ if(parent===window)return;
   if (document.readyState === 'complete') setTimeout(schedule, 300);
   else window.addEventListener('load', () => setTimeout(schedule, 300), { once: true });
 })();
+
+/* FEEDBACK_20261103_18 */
+(()=>{const style=document.createElement("style");style.textContent="html[data-batch2-idle=\"true\"] footer{visibility:hidden;pointer-events:none}";document.body.append(style);})();

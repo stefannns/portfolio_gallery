@@ -199,14 +199,16 @@ const DEFAULT_CONFIG = {
   VIDEO_STEP_MS: 900,
   SUCCESS_PAUSE_MS: 1500,
   TARGET_COUNT: 3,
-  GAME_NAME: 'Memory Drop',
-  HINT_TEXT: 'Watch, then choose',
-  WATCH_LABEL: 'WATCH',
-  PICK_LABEL: 'Select the moments you saw',
+  PROFILE_NAME: 'Ethan',
+  PROFILE_PHOTO: './assets/friend-profile-v1.webp',
+  GAME_NAME: 'Did You Watch It?',
+  HINT_TEXT: 'Watch to unlock replies',
+  WATCH_LABEL: 'A video for you',
+  PICK_LABEL: 'Select images that I sent',
   VERIFY_LABEL: 'Verify',
   REPLAY_LABEL: 'Replay',
   SUCCESS_LABEL: 'Unlocked',
-  SUCCESS_MESSAGE: 'You kept the thread.',
+  SUCCESS_MESSAGE: 'You actually watched 😂',
   FAIL_MESSAGE: 'Not quite. Try again or replay.',
   DOG_SKATE: './assets/dog_skate.webp',
   OFFICE_CHAIR: './assets/office_chair.webp',
@@ -380,9 +382,77 @@ function shuffledMemoryGrid(items,targets,seed){
   const grid=Array(items.length);answers.forEach((item,i)=>{grid[slots[i]]=item;});let index=0;return Array.from(grid,item=>item||others[index++]);
 }
 
+const DEFAULT_FRIEND_AVATAR = './assets/img_user_avatar_default_3x.png';
+
+function normalizeRuntimeFriends(data) {
+  const list = Array.isArray(data?.friends) ? data.friends : [];
+  return list.filter(friend => friend && typeof friend === 'object').map((friend, index) => ({
+    nickname: typeof friend.nickname === 'string' && friend.nickname.trim() ? friend.nickname.trim() : 'nickname' + (index + 1),
+    avatar: typeof friend.avatar === 'string' && friend.avatar.trim() ? friend.avatar : DEFAULT_FRIEND_AVATAR
+  }));
+}
+
+// SDK contract: callback-based { friends: [{ nickname, avatar }] }.
+// Keep these values only in this mounted play session, never Config or storage.
+function requestRuntimeFriends(bridge, onState) {
+  let cancelled = false, settled = false, timer;
+  const finish = (status, friends = []) => {
+    if (cancelled || settled) return;
+    settled = true;
+    clearTimeout(timer);
+    onState({ status, friends });
+  };
+  if (typeof bridge?.getFriendsInfo !== 'function') finish('demo');
+  else {
+    timer = setTimeout(() => {
+      if (cancelled || settled) return;
+      console.warn('[friends] getFriendsInfo timed out; using the default avatar.');
+      finish('error');
+    }, 3500);
+    try {
+      bridge.getFriendsInfo({
+        success(data) {
+          if (cancelled || settled) return;
+          const friends = normalizeRuntimeFriends(data);
+          finish(friends.length ? 'ready' : 'empty', friends);
+        },
+        fail() {
+          if (cancelled || settled) return;
+          console.warn('[friends] getFriendsInfo failed; using the default avatar.');
+          finish('error');
+        },
+        complete() { /* Completion alone does not contain friend data. */ }
+      });
+    } catch {
+      console.warn('[friends] getFriendsInfo unavailable; using the default avatar.');
+      finish('error');
+    }
+  }
+  return () => { cancelled = true; clearTimeout(timer); };
+}
+
+function useRuntimeFriends(active) {
+  const [state, setState] = useState({ status: 'preview', friends: [] });
+  useEffect(() => {
+    if (!active) {
+      setState({ status: 'preview', friends: [] });
+      return;
+    }
+    setState({ status: 'loading', friends: [] });
+    return requestRuntimeFriends(window.tt, setState);
+  }, [active]);
+  return state;
+}
+
+function FriendAvatar({ src }) {
+  const [failed, setFailed] = useState(false);
+  return <img src={failed ? DEFAULT_FRIEND_AVATAR : src || DEFAULT_FRIEND_AVATAR} alt="" draggable="false" referrerPolicy="no-referrer" onError={() => setFailed(true)} />;
+}
+
 function App() {
   const feedActive = useFeedActive();
   const [cfg, setCfg] = useState(DEFAULT_CONFIG);
+  const runtimeFriends = useRuntimeFriends(feedActive);
   const [phase, setPhase] = useState('video');
   const [round, setRound] = useState(1);
   const [gridSeed] = useState(()=>Math.floor(Math.random()*4294967296));
@@ -455,24 +525,32 @@ function App() {
     if (audio.ctx) audio.ctx.close().catch(() => {});
   }, []);
 
+  const [sentReply,setSentReply]=useState('');
+  const demoFriend = !feedActive || runtimeFriends.status === 'demo' || runtimeFriends.status === 'preview';
+  const friend = demoFriend
+    ? { nickname: cfg.PROFILE_NAME, avatar: cfg.PROFILE_PHOTO, source: 'demo' }
+    : runtimeFriends.friends.length
+      ? { ...runtimeFriends.friends[(round - 1) % runtimeFriends.friends.length], source: 'sdk' }
+      : { nickname: 'nickname1', avatar: DEFAULT_FRIEND_AVATAR, source: 'placeholder' };
+  const friendsReady = runtimeFriends.status !== 'preview' && runtimeFriends.status !== 'loading';
   const imageSet = MEMORY_SETS[(round - 1) % MEMORY_SETS.length];
   const targets = useMemo(() => imageSet.packs[Math.floor((round - 1) / MEMORY_SETS.length) % imageSet.packs.length].slice(0, cfg.TARGET_COUNT), [round, cfg.TARGET_COUNT, imageSet]);
   const currentMoment = targets[videoIndex] || targets[0];
   const gridItems = useMemo(()=>shuffledMemoryGrid(imageSet.items,targets,(gridSeed+Math.imul(round,1664525))>>>0),[round,targets,gridSeed,imageSet]);
 
   useEffect(() => {
-    if (phase !== 'video' || !feedActive || document.hidden) return undefined;
+    if (phase !== 'video' || !feedActive || !friendsReady || document.hidden) return undefined;
     const timer = window.setTimeout(() => {
       if (videoIndex < targets.length - 1) setVideoIndex((value) => value + 1);
       else {setHintSeen(true);setPhase('grid');}
     }, cfg.VIDEO_STEP_MS);
     return () => window.clearTimeout(timer);
-  }, [phase, videoIndex, targets.length, cfg.VIDEO_STEP_MS, feedActive]);
+  }, [phase, videoIndex, targets.length, cfg.VIDEO_STEP_MS, feedActive, friendsReady]);
 
   useEffect(()=>{
     if(!feedActive){setVideoIndex(0);setSelected(new Set());setFeedback('');setHintSeen(false);setPhase('video');}
   },[feedActive]);
-  const nextRound=()=>{setRound(value=>value+1);setVideoIndex(0);setSelected(new Set());setFeedback('');setPhase('video');};
+  const nextRound=()=>{setSentReply('');setRound(value=>value+1);setVideoIndex(0);setSelected(new Set());setFeedback('');setPhase('video');};
 
   const beginReplay = useCallback(() => {
     setHintSeen(true);
@@ -517,7 +595,7 @@ function App() {
 
   return (
     <main className="app-root">
-      <section className="game-shell" data-testid="game-shell" data-memory-set={imageSet.id} aria-label={cfg.GAME_NAME}>
+      <section className="game-shell" data-testid="game-shell" data-memory-set={imageSet.id} data-friend-source={friend.source} data-friend-status={runtimeFriends.status} aria-label={cfg.GAME_NAME}>
         <div className="ambient ambient-one" />
         <div className="ambient ambient-two" />
         <header className="topline">
@@ -528,6 +606,7 @@ function App() {
         {!hintSeen && phase !== 'success' && <p className="hint" data-testid="hint">{cfg.HINT_TEXT}</p>}
 
         <div className={`attachment ${phase}`}>
+          <div className="friend-context"><FriendAvatar key={friend.avatar} src={friend.avatar}/><div><b>{friend.nickname}</b><span>{phase==='success'?'Replies unlocked':demoFriend?'sent you a video':'Video challenge'}</span></div></div>
           <div className="attachment-top">
             <span className="attachment-kicker">ATTACHMENT</span>
             <span className="attachment-line" />
@@ -556,7 +635,7 @@ function App() {
                 <span>{cfg.PICK_LABEL}</span>
                 <b data-testid="selected-count">{selected.size}</b>
               </div>
-              <div className="memory-grid">
+              <div className="memory-grid-wrap"><div className="memory-grid">
                 {gridItems.map((item) => {
                   const active = selected.has(item.id);
                   const isTarget = targets.includes(item.id);
@@ -580,7 +659,7 @@ function App() {
                     </button>
                   );
                 })}
-              </div>
+              </div></div>
               <div className="grid-actions">
                 <button className="replay-button grid-replay" onClick={beginReplay} type="button">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 8.5A7.5 7.5 0 1 0 19.3 14" /><path d="M19 4v4.5h-4.5" /></svg>
@@ -588,7 +667,7 @@ function App() {
                 </button>
                 <button className="verify-button" data-testid="verify" onClick={verify} type="button"><span>{cfg.VERIFY_LABEL}</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4.2 4.2L19 6.5" /></svg></button>
               </div>
-              {feedback && <p className="failure-feedback" data-testid="failure-feedback">{feedback}</p>}
+              <p className="failure-feedback" data-testid="failure-feedback" role="status" aria-live="polite">{feedback}</p>
             </div>
           )}
 
@@ -596,12 +675,14 @@ function App() {
             <div className="success-stage" data-testid="success-stage">
               <div className="unlock-orbit"><span className="orbit orbit-a" /><span className="orbit orbit-b" /><div className="unlock-symbol"><svg viewBox="0 0 44 44" aria-hidden="true"><path d="M14 20v-5.2a8 8 0 0 1 16 0V20" /><rect x="10" y="19" width="24" height="18" rx="4" /><path d="m17 28 3.5 3.5L28 24" /></svg></div></div>
               <div className="success-label">{cfg.SUCCESS_LABEL}</div>
-              <p>{cfg.SUCCESS_MESSAGE}</p>
-              <button className="verify-button next-round" onClick={nextRound}>Next round</button>
+
+              <div className="friend-reply"><FriendAvatar key={friend.avatar} src={friend.avatar}/><p>{cfg.SUCCESS_MESSAGE}</p></div>
+              {sentReply?<div className="your-reply">{sentReply}</div>:<div className="quick-replies" role="group" aria-label="Quick replies"><button type="button" onClick={()=>{setSentReply('That ending 😂');playSound(SOUND_SELECT);}}>That ending 😂</button><button type="button" onClick={()=>{setSentReply('Send me more!');playSound(SOUND_SELECT);}}>Send me more!</button></div>}
+              <button className="verify-button next-round" onClick={nextRound}>Another video</button>
             </div>
           )}
         </div>
-        <footer className="bottom-note"><span className="note-dot" /> private attachment <span className="note-dot" /></footer>
+        {phase==='video'&&<div className="locked-replies"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>Watch to unlock replies</span></div>}
       </section>
     </main>
   );
@@ -719,3 +800,15 @@ function Root() {
 }
 
 createRoot(document.getElementById('root')).render(<><Root/><BatchPolish/></>);
+
+/* FEEDBACK_20261103_84 */
+(()=>{const style=document.createElement("style");style.textContent=".attachment{background:#fff}.friend-context{display:flex;align-items:center;gap:9px;flex:0 0 43px;margin-bottom:9px;color:#263b4a}.friend-context img,.friend-reply img{width:34px;height:34px;object-fit:cover;border-radius:50%;flex-shrink:0}.friend-context div{display:grid;gap:1px;min-width:0;flex:1}.friend-context b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.friend-context b{font-size:14px;line-height:1.2}.friend-context span{font-size:10px;color:#74818c}.friend-context i{width:7px;height:7px;background:#4dbb83;border-radius:50%;margin-left:auto}.attachment.video{top:19%;bottom:19%}.video-copy{padding:8px 10px}.video-copy span{font-size:15px}.hint{top:12%}.locked-replies{position:absolute;left:38px;right:38px;bottom:10%;display:flex;align-items:center;gap:10px;padding:13px 15px;border-radius:14px;background:#ffffff14;color:#bdc7cd;font-size:12px}.locked-replies svg{width:22px;height:22px}.attachment.grid{top:87px;bottom:94px;height:auto;max-height:none;transform:none;padding:10px}.grid-heading{min-height:49px;font-size:15px;padding:9px 12px}.memory-grid{width:min(100%,max(150px,calc(100cqh - 312px)))}.attachment.success{top:24%;bottom:18%;padding:18px}.success-stage{justify-content:center}.success-stage .unlock-orbit{display:none}.success-label{font-size:23px;margin:4px 0 16px}.friend-reply{display:flex;gap:8px;align-items:center;margin:0 0 16px;width:100%}.friend-reply p{margin:0;padding:12px 14px;background:#edf2f5;border-radius:3px 14px 14px;font-size:14px;color:#2b4150}.reply-compose{display:flex;align-items:center;gap:8px;border:1px solid #d1dce3;border-radius:24px;padding:4px 5px 4px 12px;width:100%;margin-bottom:15px}.reply-compose input{font:14px var(--font-body);min-width:0;width:100%;border:0;background:transparent;outline:none;color:#25394b;user-select:text}.reply-compose button{border:0;border-radius:50%;width:34px;height:34px;background:#1479e7;color:#fff;font-size:23px;flex-shrink:0}.reply-compose button:disabled{opacity:.4}.your-reply{align-self:flex-end;text-align:left;padding:11px 14px;border-radius:14px 3px 14px 14px;background:#1479e7;color:#fff;font-size:14px;max-width:92%;overflow-wrap:anywhere;margin-bottom:16px}.next-round{margin:auto auto 0!important;font-size:13px;min-height:42px}.attachment.success .friend-context{display:none}[data-feed-preview=true] .attachment.video{top:31%;bottom:28%;left:12%;right:12%;padding:11px}[data-feed-preview=true] .hint{top:26%}[data-feed-preview=true] .locked-replies{left:17%;right:17%;bottom:22%;background:transparent;justify-content:center;padding:0;font-size:11px}[data-feed-preview=true] .friend-context{flex-basis:34px;margin-bottom:7px}[data-feed-preview=true] .video-window img{object-fit:cover}.video-window img{object-fit:cover}@media(max-height:540px){.attachment.video{top:20%;bottom:20%}.attachment.grid{top:60px;bottom:80px}.memory-grid{width:min(100%,max(145px,calc(100cqh - 280px)))}.friend-context{flex-basis:35px}.locked-replies{bottom:8%}}";document.body.append(style);})();
+
+/* FEEDBACK_20261103_84_CHAT */
+(()=>{const style=document.createElement("style");style.textContent=".video-window img{object-fit:contain!important;background:#f1f5f3}.attachment.success{top:32%;bottom:auto;height:auto;padding:0 8px;background:transparent;box-shadow:none}.success-label{color:#edf5fb;font-size:24px;margin-bottom:22px}.friend-reply{justify-content:flex-start}.reply-compose{background:#fff}.success-stage{flex:0 0 auto;gap:0}.next-round{margin:20px auto 0!important}.friend-reply p{font-size:14px}[data-feed-preview=true] .video-window img{object-fit:contain!important}";document.body.append(style);})();
+
+/* FEEDBACK_20261103_84_QUICK_REPLY */
+(()=>{const style=document.createElement("style");style.textContent=".quick-replies{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin:0 0 12px}.quick-replies button{flex:1 1 110px;min-height:44px;border:1px solid #5f9ae3;background:#ecf4ff;color:#225b9e;border-radius:20px;padding:10px 12px;font:600 13px var(--font-body);cursor:pointer}.quick-replies button:active{transform:scale(.97)}";document.body.append(style);})();
+
+/* MEMORY84_SELECTION_FLOW_20261103 */
+(()=>{const style=document.createElement("style");style.textContent="\n.attachment.grid{top:74px;bottom:50px;height:auto;max-height:none;transform:none;padding:12px;display:flex;flex-direction:column;overflow:hidden}\n.attachment.grid .friend-context{flex:0 0 auto;min-height:38px;margin:0 0 8px}\n.attachment.grid .grid-stage{display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;gap:8px;flex:1;min-height:0;padding:0}\n.attachment.grid .grid-heading{margin:0;padding:10px 12px;min-height:44px;border-radius:8px;gap:12px;font:700 16px/1.3 var(--font-body)}\n.attachment.grid .grid-heading>span{min-width:0;flex:1;overflow-wrap:anywhere}\n.attachment.grid .grid-heading b{flex-shrink:0;min-width:28px;height:26px;color:#fff;background:#ffffff24;border:0}\n.memory-grid-wrap{display:grid;place-items:center;container-type:size;min-width:0;min-height:0;overflow:hidden}\n.attachment.grid .memory-grid{width:min(100cqw,100cqh);height:min(100cqw,100cqh);max-width:100%;max-height:100%;min-height:0;aspect-ratio:1;gap:6px;margin:0;flex:initial}\n.attachment.grid .grid-actions{margin:0;padding:0;gap:10px;min-height:44px}\n.attachment.grid .grid-replay,.attachment.grid .verify-button{min-height:44px;margin:0}\n.attachment.grid .failure-feedback{min-height:18px;margin:0;font-size:13px;line-height:18px;color:#9c4b3d}\n";document.body.append(style);})();

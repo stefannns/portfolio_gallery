@@ -54,7 +54,7 @@
       "id": "BODY_WIDTH_RATIO",
       "kind": "number",
       "label": "Body width ratio",
-      "value": 0.74,
+      "value": 0.8,
       "default": 0.74,
       "min": 0.55,
       "max": 0.86,

@@ -7,11 +7,11 @@
   "entry": "dist/game.html",
   "source_kind": "editable-current-react-source",
   "files": {
-    "App.jsx": "0ed52e1be94723b55a79557aad11ad41abff2f16a9a3a0a5d991b9ff38cbbce6",
+    "App.jsx": "36dfe12902ff2552e6a920100af1c92136fb94988937411480839e635f33330a",
     "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
     "dist/game.html": "c7790055cf72982c15b76e10e52851978441eeb87f72ba40e536e8e8b2394354",
-    "dist/bundle.js": "1d2f353063b2a0a38a28721e47d75eccc97437b5837229f2222b78cff7ee9790",
-    "dist/game.config.json": "0c7e97e0c764679b67bb277eb76f66362b61a0231f131509422aa3f1c7f8a837"
+    "dist/bundle.js": "56544f599da4a3dfdcd77062c4b7b53dca1dc120b5c17b0c07d42dd4296e6f1a",
+    "dist/game.config.json": "01b59e3273564132bc9d9c7335bf33cecd62e84bf87cb858f01cb85f2dc3e38e"
   },
   "assets": [
     {
@@ -41,36 +41,36 @@
       "sha256": "72ff4f25645d97f545f2fba9783afb582e63d8902b3a1b0eea4208953dcdf12d"
     },
     {
-      "path": "dist/assets/tool-brush.svg",
+      "path": "dist/assets/tool-brush-photo-v1.webp",
       "ids": [
         "TOOL_BRUSH"
       ],
-      "bytes": 909,
-      "sha256": "4b3963c071352d11c4b1c2cad3f419ba7b4efd132fff84c945578776fe679431"
+      "bytes": 14760,
+      "sha256": "039ee6f49083e451fc7202e22d79817f7fa49b3bb8512ca3fb156c1869e39529"
     },
     {
-      "path": "dist/assets/tool-dry.svg",
+      "path": "dist/assets/tool-dry-photo-v1.webp",
       "ids": [
         "TOOL_DRY"
       ],
-      "bytes": 853,
-      "sha256": "7d0676178da48d1afd62d166d93cf8c188117e45090d4e7fc00aaf87bfb5b799"
+      "bytes": 9792,
+      "sha256": "30841211d5fff0989feba83c51d924aea36ea1d15627109bcbe62add7ee8ba77"
     },
     {
-      "path": "dist/assets/tool-rinse.svg",
+      "path": "dist/assets/tool-rinse-photo-v1.webp",
       "ids": [
         "TOOL_RINSE"
       ],
-      "bytes": 959,
-      "sha256": "d56b9b3ad76b033369c2d09dfdeb7b1db82e263c27f953649711dd2d1ae1d4a1"
+      "bytes": 11836,
+      "sha256": "063329ca59967fe8e2f84dad1d89edcbe0b6600e91026de9708784247edda93a"
     },
     {
-      "path": "dist/assets/tool-spray.svg",
+      "path": "dist/assets/tool-spray-photo-v1.webp",
       "ids": [
         "TOOL_SPRAY"
       ],
-      "bytes": 942,
-      "sha256": "fa0a725bf774dedb47221a69080d74fa29dbf78c1be90bc87a5fa21741d8a8b1"
+      "bytes": 7870,
+      "sha256": "c8b56c432ef26484a27b37be4ddccacaa608775853d644072ecb6c87df69ae22"
     },
     {
       "path": "dist/assets/upholstery-overhead.webp",

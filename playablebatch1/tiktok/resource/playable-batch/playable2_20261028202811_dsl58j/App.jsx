@@ -409,7 +409,7 @@ function App(){
     // A fixed, desaturated metal dispenser. Only the stem is allowed to
     // continue beyond the top edge, as it does on the reference machine.
     const dispenser=new THREE.Group(),metal=new THREE.MeshStandardMaterial({color:0x647a72,roughness:.65,metalness:.15}),outlet=top+NOZZLE_GAP;
-    const stem=new THREE.Mesh(new THREE.CylinderGeometry(.17,.17,5.5,32),metal);stem.position.y=outlet+2.96;
+    const stem=new THREE.Mesh(new THREE.CylinderGeometry(.17,.17,1,32),metal);stem.scale.y=5.5;stem.position.y=outlet+2.96;
     const collar=new THREE.Mesh(new THREE.CylinderGeometry(.35,.35,.12,48),metal);collar.position.y=outlet+.25;
     const neck=new THREE.Mesh(new THREE.CylinderGeometry(.29,.29,.24,48),metal);neck.position.y=outlet+.11;
     const lip=new THREE.Mesh(new THREE.TorusGeometry(.294,.014,8,48),new THREE.MeshStandardMaterial({color:0x7b9188,roughness:.7}));lip.rotation.x=Math.PI/2;lip.position.y=outlet+.012;dispenser.add(stem,collar,neck,lip);scene.add(dispenser);
@@ -463,9 +463,12 @@ function App(){
       if(cw&&ch){
         const zoom=Math.min(result?1.75:preview?1.3:1.12,(camera.right-camera.left)*(cw-36)/cw/Math.max(.1,2*Math.max(Math.abs(left),Math.abs(right))),(camera.top-camera.bottom)*(ch-34)/ch/Math.max(.1,upper-lower));
         camera.zoom+=(zoom-camera.zoom)*(reducedMotionQuery.matches?1:1-Math.exp(-elapsed/220));camera.zoom=Math.min(camera.zoom,zoom*1.02);camera.updateProjectionMatrix();
-        const center=(upper+lower)/2+(result?0:.18),shift=center-camera.position.dot(viewUp);camera.position.addScaledVector(viewUp,shift*(reducedMotionQuery.matches?1:1-Math.exp(-elapsed/180)));camera.updateMatrixWorld(true);
+        const center=(upper+lower)/2+(result?0:preview?.18:.44),shift=center-camera.position.dot(viewUp);camera.position.addScaledVector(viewUp,shift*(reducedMotionQuery.matches?1:1-Math.exp(-elapsed/180)));camera.updateMatrixWorld(true);
         const half=(camera.top-camera.bottom)/camera.zoom/2,margin=12/ch*half*2,current=camera.position.dot(viewUp),actualCenter=Math.max(upper-half+margin,Math.min(lower+half-margin,current));camera.position.addScaledVector(viewUp,actualCenter-current);camera.updateMatrixWorld(true);canvas.dataset.sceneTopPx=((half-upper+actualCenter)/(half*2)*ch).toFixed(1);canvas.dataset.sceneBottomPx=((half-lower+actualCenter)/(half*2)*ch).toFixed(1);
       }
+      // Keep the pipe connected beyond the viewport as the camera fits the growing swirl.
+      const stemBottom=outlet+.21,screenTop=camera.position.dot(viewUp)+camera.top/camera.zoom;
+      const stemLength=Math.max(5.5,(screenTop+.6)/viewUp.y-stemBottom);stem.scale.y=stemLength;stem.position.y=stemBottom+stemLength/2;
       w.drawCount++;canvas.dataset.creamPoints=String(w.points.length);canvas.dataset.coneFill='none';canvas.dataset.holding=String(w.holding);canvas.dataset.previewSwirl=String(preview);canvas.dataset.coneX=w.cone.x.toFixed(4);canvas.dataset.coneZ=w.cone.z.toFixed(4);canvas.dataset.coneY=w.cone.y.toFixed(4);canvas.dataset.nozzleX='0';canvas.dataset.nozzleZ='0';canvas.dataset.height=measured.toFixed(2);canvas.dataset.interaction='move-cone';canvas.dataset.creamRadius=String(CREAM_RADIUS);canvas.dataset.ridgeCount='6';canvas.dataset.settledPoints=String(w.points.filter(p=>p.settled).length);canvas.dataset.fallingPoints=String(w.pending.length+w.drops.length);canvas.dataset.spilledPoints=String(w.spilledVolume.toFixed(5));canvas.dataset.firstLandingMs=String(w.firstLandingMs??'');canvas.dataset.generatedVolume=w.generatedVolume.toFixed(5);canvas.dataset.landedVolume=w.landedVolume.toFixed(5);canvas.dataset.motionState=w.moving?'moving':'still';
       renderer.render(scene,camera);
     };raf=requestAnimationFrame(frame);
@@ -507,3 +510,6 @@ function App(){
   </main>;
 }
 createRoot(document.getElementById('root')).render(<><App/><BatchPolish/></>);
+
+/* FEEDBACK_20261103_81 */
+(()=>{const style=document.createElement("style");style.textContent=".serve-art{top:0;bottom:116px}.serve-hud{top:24px;right:24px;bottom:auto;z-index:3;color:#334e49}.serve-controls{left:auto;right:12px;bottom:8px;width:174px;height:174px;display:grid;place-items:center;border:0;border-radius:0;background:transparent}.swirl-pad{width:174px;height:174px;background:#e9ede14d;border:1px solid #bdcbb655;box-shadow:none}.serve-guide{position:fixed;top:36%;left:24px;right:24px;font-size:18px;color:#334e49}.serve-flavors{top:46%;left:18px}.serve-hud b{font-size:28px}.serve-hud span{font-size:19px}[data-feed-preview=true] .serve-art{top:145px;bottom:102px}[data-feed-preview=true] .serve-controls{display:contents}[data-feed-preview=true] .serve-guide{top:26%;font-size:20px}.softserve-app[data-phase=result] .serve-art{top:24px;bottom:215px}@media(max-height:540px){.serve-art{top:0;bottom:100px}.serve-controls{right:5px;bottom:2px;width:150px;height:150px}.swirl-pad{width:150px;height:150px}.serve-guide{top:36%}}";document.body.append(style);})();

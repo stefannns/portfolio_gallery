@@ -124,8 +124,8 @@
     html[data-batch2-idle=true] .tool-swing{animation:idle-tool-hit 2.6s ease-in-out infinite!important;transform-origin:var(--weapon-grip-x) var(--weapon-grip-y)}
     html[data-batch2-idle=true] .tool-swing[data-strike-motion=jab]{animation-name:idle-tool-jab!important}
     html[data-batch2-idle=true] .target-art{animation:idle-stick-react 2.6s ease-in-out infinite!important;transform-origin:50% 75%}
-    @keyframes idle-tool-hit{0%,25%,100%{transform:rotate(58deg)}34%{transform:rotate(82deg)}46%{transform:rotate(0deg)}52%{transform:rotate(-12deg)}72%{transform:rotate(58deg)}}
-    @keyframes idle-tool-jab{0%,32%,100%{transform:translateX(18px)}46%{transform:translateX(0)}55%{transform:translateX(6px)}72%{transform:translateX(18px)}}
+    @keyframes idle-tool-hit{0%,25%,100%{transform:rotate(58deg);opacity:0;visibility:hidden}30%,68%{opacity:1;visibility:visible}34%{transform:rotate(82deg)}46%{transform:rotate(0deg)}52%{transform:rotate(-12deg)}72%{transform:rotate(58deg);opacity:0;visibility:hidden}}
+    @keyframes idle-tool-jab{0%,32%,100%{transform:translateX(18px);opacity:0;visibility:hidden}36%,68%{opacity:1;visibility:visible}46%{transform:translateX(0)}55%{transform:translateX(6px)}72%{transform:translateX(18px);opacity:0;visibility:hidden}}
     @keyframes idle-stick-react{0%,45%,72%,100%{transform:rotate(0) scale(1)}50%{transform:translate(-4px,2px) rotate(-3deg) scale(1.025,.97)}60%{transform:rotate(1.5deg) scale(.99,1.01)}}
     html[data-batch2-idle-paused=true] :is(.idle-memory-deck img,.tool-swing,.target-art){animation-play-state:paused!important}
     html[data-batch2-idle-reduced=true] :is(.idle-memory-deck img,.tool-swing,.target-art){animation:none!important}
@@ -326,12 +326,14 @@ function App() {
   const [effects, setEffects] = useState([]);
   const [feedback, setFeedback] = useState('');
   const [hitPulse, setHitPulse] = useState(0);
+  const [weaponVisible, setWeaponVisible] = useState(false);
   const [clearPulse, setClearPulse] = useState(0);
   const gameRef = useRef(game);
   const sessionStartedRef = useRef(false);
   const cfgRef = useRef(cfg);
   const levelTimer = useRef(null);
   const feedbackTimer = useRef(null);
+  const weaponTimer = useRef(null);
   const audioRef = useRef({ ctx: null, gain: null, buffers: {}, loading: {}, sources: new Set() });
 
   useEffect(() => { gameRef.current = game; }, [game]);
@@ -441,6 +443,9 @@ function App() {
     }));
     setEffects(prev => [...prev.slice(-3), { id: token, damage, accent: tool.accent || '#ff4d6d', sparks }]);
     setHitPulse(token);
+    setWeaponVisible(true);
+    if (weaponTimer.current) clearTimeout(weaponTimer.current);
+    weaponTimer.current = setTimeout(() => setWeaponVisible(false), 300);
     setTimeout(() => setEffects(prev => prev.filter(item => item.id !== token)), 680);
   }, []);
 
@@ -499,6 +504,7 @@ function App() {
   useEffect(() => () => {
     if (levelTimer.current) clearTimeout(levelTimer.current);
     if (feedbackTimer.current) clearTimeout(feedbackTimer.current);
+    if (weaponTimer.current) clearTimeout(weaponTimer.current);
     audioRef.current.sources.forEach(source => { try { source.stop(); } catch (e) {} });
     if (audioRef.current.ctx) { try { audioRef.current.ctx.close(); } catch (e) {} }
   }, []);
@@ -739,9 +745,9 @@ function App() {
         .figure-button::after { content:''; position:absolute; z-index:-1; bottom:0; left:21%; width:58%; height:12px; border-radius:50%; background:rgba(37,38,39,.12); filter:blur(4px); pointer-events:none; }
         .target-art.is-defeated { opacity:.38; transform:rotate(8deg) scale(.94); filter:grayscale(.35); }
         .weapon-art { display:block; width:100%; height:100%; object-fit:contain; pointer-events:none; user-select:none; }
-        .tool-swing { width:80px; height:80px; right:auto; left:calc(50% + var(--weapon-reach) - var(--weapon-grip-x)); top:calc(43% - var(--weapon-grip-y)); transform-origin:var(--weapon-grip-x) var(--weapon-grip-y); transform:rotate(58deg); transition:none; filter:drop-shadow(0 3px 1px rgba(24,48,58,.12)); }
+        .tool-swing { width:80px; height:80px; right:auto; left:calc(50% + var(--weapon-reach) - var(--weapon-grip-x)); top:calc(43% - var(--weapon-grip-y)); transform-origin:var(--weapon-grip-x) var(--weapon-grip-y); transform:rotate(58deg); transition:none; opacity:0; visibility:hidden; filter:drop-shadow(0 3px 1px rgba(24,48,58,.12)); }
         .tool-swing .weapon-art { transform:rotate(var(--weapon-art-angle)); transform-origin:var(--weapon-grip-x) var(--weapon-grip-y); }
-        .tool-swing.is-hit { animation:weaponHeadSwing .3s ease-out; }
+        .tool-swing.is-hit { opacity:1; visibility:visible; animation:weaponHeadSwing .3s ease-out; }
         .tool-swing[data-strike-motion=jab] { transform:translateX(18px); }
         .tool-swing[data-strike-motion=jab].is-hit { animation:weaponPointJab .26s ease-out; }
         @keyframes weaponHeadSwing { 0% { transform:rotate(58deg); } 25% { transform:rotate(82deg); } 48% { transform:rotate(0deg); } 60% { transform:rotate(-12deg); } 100% { transform:rotate(58deg); } }
@@ -784,7 +790,7 @@ function App() {
                 <StickFigure pulse={hitPulse} defeated={game.defeated} src={cfg.CHARACTER_MAIN} />
               </button>
             </div>
-            <div key={hitPulse} className={`tool-swing ${hitPulse > 0 ? 'is-hit' : ''}`} data-weapon={currentTool.id} data-strike-motion={strikePose.motion} style={{ color: currentTool.accent, ...strikePose.style }}><ToolGlyph id={currentTool.id} config={cfg} /></div>
+            <div key={hitPulse} className={`tool-swing ${weaponVisible ? 'is-hit' : ''}`} data-weapon={currentTool.id} data-strike-motion={strikePose.motion} style={{ color: currentTool.accent, ...strikePose.style }}><ToolGlyph id={currentTool.id} config={cfg} /></div>
             {effects.map(effect => (
               <div className="impact" key={effect.id} style={{ '--impact-color': effect.accent }}>
                 <div className="damage">-{formatShort(effect.damage)}</div>
@@ -834,3 +840,6 @@ function App() {
 }
 
 createRoot(document.getElementById('root')).render(<App />);
+
+/* FEEDBACK_20261103_89: original neutral palette with newer artwork. */
+(()=>{const style=document.createElement("style");style.textContent=".room{background-color:#f5f5f2;background-blend-mode:luminosity}.character-art{filter:none}";document.body.append(style);})();
