@@ -3,21 +3,11 @@
     {
       "id": "VIDEO_STEP_MS",
       "kind": "number",
-      "label": "Video moment duration",
-      "value": 900,
-      "default": 900,
+      "label": "Time per photo",
+      "value": 1200,
+      "default": 1200,
       "min": 500,
       "max": 1800,
-      "step": 100
-    },
-    {
-      "id": "SUCCESS_PAUSE_MS",
-      "kind": "number",
-      "label": "Success reveal duration",
-      "value": 1500,
-      "default": 1500,
-      "min": 800,
-      "max": 3000,
       "step": 100
     },
     {
@@ -42,22 +32,22 @@
     {
       "id": "HINT_TEXT",
       "label": "First-use hint",
-      "value": "Watch to unlock replies",
-      "default": "Watch to unlock replies",
+      "value": "Watch, then choose",
+      "default": "Watch, then choose",
       "max_length": 32
     },
     {
       "id": "WATCH_LABEL",
       "label": "Video label",
-      "value": "A video for you",
-      "default": "A video for you",
+      "value": "Memorize",
+      "default": "Memorize",
       "max_length": 12
     },
     {
       "id": "PICK_LABEL",
       "label": "Grid label",
-      "value": "Select images that I sent",
-      "default": "Select images that I sent",
+      "value": "Select the images you saw",
+      "default": "Select the images you saw",
       "max_length": 40
     },
     {
@@ -77,199 +67,186 @@
     {
       "id": "SUCCESS_LABEL",
       "label": "Success label",
-      "value": "Unlocked",
-      "default": "Unlocked",
+      "value": "Verified",
+      "default": "Verified",
       "max_length": 20
     },
     {
       "id": "SUCCESS_MESSAGE",
       "label": "Success message",
-      "value": "You actually watched 😂",
-      "default": "You actually watched 😂",
+      "value": "All images matched.",
+      "default": "All images matched.",
       "max_length": 40
     },
     {
       "id": "FAIL_MESSAGE",
       "label": "Try again message",
-      "value": "Not quite. Try again or replay.",
-      "default": "Not quite. Try again or replay.",
+      "value": "Some images don’t match. Try again.",
+      "default": "Some images don’t match. Try again.",
       "max_length": 48
-    },
-    {
-      "id": "PROFILE_NAME",
-      "label": "Demo friend name",
-      "value": "Ethan",
-      "default": "Ethan",
-      "max_length": 24
     }
   ],
   "images": [
     {
-      "id": "DOG_SKATE",
-      "label": "Skateboard dog",
-      "path": "./assets/dog_skate.webp",
-      "replaceable": true
-    },
-    {
-      "id": "OFFICE_CHAIR",
-      "label": "Wobbling office chair",
-      "path": "./assets/office_chair.webp",
-      "replaceable": true
-    },
-    {
-      "id": "LAUGHING_BABY",
-      "label": "Laughing baby",
-      "path": "./assets/laughing_baby.webp",
-      "replaceable": true
-    },
-    {
       "id": "CAT",
-      "label": "Orange cat",
+      "label": "Gray kitten, photo 1",
       "path": "./assets/cat.webp",
       "replaceable": true
     },
     {
+      "id": "CAT_LOOKALIKE_1",
+      "label": "Gray kitten, photo 2",
+      "path": "./assets/lookalikes/cat-1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CAT_LOOKALIKE_2",
+      "label": "Gray kitten, photo 3",
+      "path": "./assets/lookalikes/cat-2.webp",
+      "replaceable": true
+    },
+    {
       "id": "RAMEN",
-      "label": "Ramen bowl",
+      "label": "Ramen bowl, photo 1",
       "path": "./assets/ramen.webp",
       "replaceable": true
     },
     {
+      "id": "RAMEN_LOOKALIKE_1",
+      "label": "Ramen bowl, photo 2",
+      "path": "./assets/lookalikes/ramen-1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "RAMEN_LOOKALIKE_2",
+      "label": "Ramen bowl, photo 3",
+      "path": "./assets/lookalikes/ramen-2.webp",
+      "replaceable": true
+    },
+    {
       "id": "SUNSET",
-      "label": "Sunset hills",
+      "label": "Beach sunset, photo 1",
       "path": "./assets/sunset.webp",
       "replaceable": true
     },
     {
-      "id": "COFFEE",
-      "label": "Coffee cup",
-      "path": "./assets/coffee.webp",
+      "id": "SUNSET_LOOKALIKE_1",
+      "label": "Beach sunset, photo 2",
+      "path": "./assets/lookalikes/sunset-1.webp",
       "replaceable": true
     },
     {
-      "id": "TACO",
-      "label": "Taco",
-      "path": "./assets/taco.webp",
-      "replaceable": true
-    },
-    {
-      "id": "PLANT",
-      "label": "Houseplant",
-      "path": "./assets/plant.webp",
+      "id": "SUNSET_LOOKALIKE_2",
+      "label": "Beach sunset, photo 3",
+      "path": "./assets/lookalikes/sunset-2.webp",
       "replaceable": true
     },
     {
       "id": "DAY_BICYCLE",
-      "label": "Red bicycle",
+      "label": "Red bicycle, photo 1",
       "path": "./assets/memory-sets/day_bicycle.webp",
       "replaceable": true
     },
     {
-      "id": "DAY_FRISBEE",
-      "label": "Frisbee dog",
-      "path": "./assets/memory-sets/day_frisbee.webp",
+      "id": "DAY_BICYCLE_LOOKALIKE_1",
+      "label": "Red bicycle, photo 2",
+      "path": "./assets/lookalikes/day_bicycle-1.webp",
       "replaceable": true
     },
     {
-      "id": "DAY_VIOLIN",
-      "label": "Street violinist",
-      "path": "./assets/memory-sets/day_violin.webp",
-      "replaceable": true
-    },
-    {
-      "id": "DAY_ICE_CREAM",
-      "label": "Ice cream cone",
-      "path": "./assets/memory-sets/day_ice_cream.webp",
+      "id": "DAY_BICYCLE_LOOKALIKE_2",
+      "label": "Red bicycle, photo 3",
+      "path": "./assets/lookalikes/day_bicycle-2.webp",
       "replaceable": true
     },
     {
       "id": "DAY_TRAM",
-      "label": "Yellow tram",
+      "label": "Yellow tram, photo 1",
       "path": "./assets/memory-sets/day_tram.webp",
       "replaceable": true
     },
     {
-      "id": "DAY_KAYAK",
-      "label": "Yellow kayak",
-      "path": "./assets/memory-sets/day_kayak.webp",
+      "id": "DAY_TRAM_LOOKALIKE_1",
+      "label": "Yellow tram, photo 2",
+      "path": "./assets/lookalikes/day_tram-1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_TRAM_LOOKALIKE_2",
+      "label": "Yellow tram, photo 3",
+      "path": "./assets/lookalikes/day_tram-2.webp",
       "replaceable": true
     },
     {
       "id": "DAY_BALLOON",
-      "label": "Rainbow balloon",
+      "label": "Rainbow balloon, photo 1",
       "path": "./assets/memory-sets/day_balloon.webp",
       "replaceable": true
     },
     {
-      "id": "DAY_FLOWERS",
-      "label": "Flower stall",
-      "path": "./assets/memory-sets/day_flowers.webp",
+      "id": "DAY_BALLOON_LOOKALIKE_1",
+      "label": "Rainbow balloon, photo 2",
+      "path": "./assets/lookalikes/day_balloon-1.webp",
       "replaceable": true
     },
     {
-      "id": "DAY_FERRIS",
-      "label": "Ferris wheel",
-      "path": "./assets/memory-sets/day_ferris.webp",
+      "id": "DAY_BALLOON_LOOKALIKE_2",
+      "label": "Rainbow balloon, photo 3",
+      "path": "./assets/lookalikes/day_balloon-2.webp",
       "replaceable": true
     },
     {
       "id": "HOME_RABBIT",
-      "label": "Pet rabbit",
+      "label": "Lop rabbit, photo 1",
       "path": "./assets/memory-sets/home_rabbit.webp",
       "replaceable": true
     },
     {
+      "id": "HOME_RABBIT_LOOKALIKE_1",
+      "label": "Lop rabbit, photo 2",
+      "path": "./assets/lookalikes/home_rabbit-1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_RABBIT_LOOKALIKE_2",
+      "label": "Lop rabbit, photo 3",
+      "path": "./assets/lookalikes/home_rabbit-2.webp",
+      "replaceable": true
+    },
+    {
       "id": "HOME_PANCAKES",
-      "label": "Blueberry pancakes",
+      "label": "Blueberry pancakes, photo 1",
       "path": "./assets/memory-sets/home_pancakes.webp",
       "replaceable": true
     },
     {
-      "id": "HOME_YARN",
-      "label": "Knitting yarn",
-      "path": "./assets/memory-sets/home_yarn.webp",
+      "id": "HOME_PANCAKES_LOOKALIKE_1",
+      "label": "Blueberry pancakes, photo 2",
+      "path": "./assets/lookalikes/home_pancakes-1.webp",
       "replaceable": true
     },
     {
-      "id": "HOME_KETTLE",
-      "label": "Red tea kettle",
-      "path": "./assets/memory-sets/home_kettle.webp",
+      "id": "HOME_PANCAKES_LOOKALIKE_2",
+      "label": "Blueberry pancakes, photo 3",
+      "path": "./assets/lookalikes/home_pancakes-2.webp",
       "replaceable": true
     },
     {
       "id": "HOME_GUITAR",
-      "label": "Blue guitar",
+      "label": "Blue guitar, photo 1",
       "path": "./assets/memory-sets/home_guitar.webp",
       "replaceable": true
     },
     {
-      "id": "HOME_CAKE",
-      "label": "Strawberry cake",
-      "path": "./assets/memory-sets/home_cake.webp",
+      "id": "HOME_GUITAR_LOOKALIKE_1",
+      "label": "Blue guitar, photo 2",
+      "path": "./assets/lookalikes/home_guitar-1.webp",
       "replaceable": true
     },
     {
-      "id": "HOME_BOOK",
-      "label": "Rainy-day book",
-      "path": "./assets/memory-sets/home_book.webp",
-      "replaceable": true
-    },
-    {
-      "id": "HOME_FISH",
-      "label": "Goldfish",
-      "path": "./assets/memory-sets/home_fish.webp",
-      "replaceable": true
-    },
-    {
-      "id": "HOME_DUCK",
-      "label": "Rubber duck",
-      "path": "./assets/memory-sets/home_duck.webp",
-      "replaceable": true
-    },
-    {
-      "id": "PROFILE_PHOTO",
-      "label": "Default demo friend profile photo",
-      "path": "./assets/friend-profile-v1.webp",
+      "id": "HOME_GUITAR_LOOKALIKE_2",
+      "label": "Blue guitar, photo 3",
+      "path": "./assets/lookalikes/home_guitar-2.webp",
       "replaceable": true
     }
   ],

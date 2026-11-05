@@ -7,11 +7,11 @@
   "entry": "dist/game.html",
   "source_kind": "editable-current-react-source",
   "files": {
-    "App.jsx": "803f403977fda0a4bf6127a6334cd21e25f200a8883f6263735c064c47df96e6",
+    "App.jsx": "67f030f7a181d832da926ef861840647ed21372236434bf128f26c7a4bff9ba2",
     "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
     "dist/game.html": "cd1d24ff22d758bc2bba5e77215c1f263edcc7209ac55d8d2852bbb4ba9bac85",
-    "dist/bundle.js": "087f3abc86eb76be2a6e9c7d7f77dcd37f0cf3f2bba3b79d31151529835613c1",
-    "dist/game.config.json": "f515e6013f1b42c1c063428cc7c7bfb5fdbc13f76a981697890e636daf629921"
+    "dist/bundle.js": "9d4ed99ecf2c03938a689ea40eb1f6e8e8246ccfac60a15af58b6ef663509e2b",
+    "dist/game.config.json": "1fcd030f4b33d6f0eaa45b022d4a98c4049dfe48fde069070fc9018afe09f7d3"
   },
   "assets": [
     {
@@ -21,22 +21,6 @@
       ],
       "bytes": 45792,
       "sha256": "6f20c803e47cee7a5aed10c05ffbad34e02897722afc1e2988a86c449a02b96d"
-    },
-    {
-      "path": "dist/assets/coffee.webp",
-      "ids": [
-        "COFFEE"
-      ],
-      "bytes": 48484,
-      "sha256": "7ac524f17214dc5e8bb9c8e6ae7407446ce1cbd2587eccc5f6cde18f381dbdf6"
-    },
-    {
-      "path": "dist/assets/dog_skate.webp",
-      "ids": [
-        "DOG_SKATE"
-      ],
-      "bytes": 58210,
-      "sha256": "dea77ba7cf9de72b9317fe9c45a6636f5fdb5394aefd5d10a77f8ee47b0cb5ee"
     },
     {
       "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
@@ -51,26 +35,148 @@
       "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
     },
     {
-      "path": "dist/assets/friend-profile-v1.webp",
+      "path": "dist/assets/lookalikes/cat-1.webp",
       "ids": [
-        "PROFILE_PHOTO"
+        "CAT_LOOKALIKE_1"
       ],
-      "bytes": 14956,
-      "sha256": "6fd295a238ef3e941c1397673f57757280384a93c1d58d345f128c1cf1fbf923"
+      "bytes": 24368,
+      "sha256": "b8edbe63d643f8f676db695271601ed000f01c0ef9ef6333c2027d82cdef8794"
     },
     {
-      "path": "dist/assets/img_user_avatar_default_3x.png",
-      "ids": [],
-      "bytes": 3884,
-      "sha256": "608acd85b73b47fd66d80686c6b1b606c1dba1486567734e09a6f87bda650dad"
+      "path": "dist/assets/lookalikes/cat-2.webp",
+      "ids": [
+        "CAT_LOOKALIKE_2"
+      ],
+      "bytes": 25212,
+      "sha256": "3ee74802e8c45d1dd0502654b4b1054461502bf8bb544054e30f8b0314a8f1da"
     },
     {
-      "path": "dist/assets/laughing_baby.webp",
+      "path": "dist/assets/lookalikes/day_balloon-1.webp",
       "ids": [
-        "LAUGHING_BABY"
+        "DAY_BALLOON_LOOKALIKE_1"
       ],
-      "bytes": 31386,
-      "sha256": "a0c77acd13d345cfd4b7554d90276ec9d66ded63bde8f3289d64a9ff42ddbbfc"
+      "bytes": 20388,
+      "sha256": "770823d8f7bd73ae9c0fcaebc7cc13a9b81046d86693626dcc5c8b9c480f4ff3"
+    },
+    {
+      "path": "dist/assets/lookalikes/day_balloon-2.webp",
+      "ids": [
+        "DAY_BALLOON_LOOKALIKE_2"
+      ],
+      "bytes": 24596,
+      "sha256": "1952cd514f92a61aebdb2af2acf87d474c87322e68dc46055e8a8f4d3b8c8f25"
+    },
+    {
+      "path": "dist/assets/lookalikes/day_bicycle-1.webp",
+      "ids": [
+        "DAY_BICYCLE_LOOKALIKE_1"
+      ],
+      "bytes": 63536,
+      "sha256": "771e28e37bb7511e5bc9cd5fbc136806bd28b9de734a3e0a832e60ec966356db"
+    },
+    {
+      "path": "dist/assets/lookalikes/day_bicycle-2.webp",
+      "ids": [
+        "DAY_BICYCLE_LOOKALIKE_2"
+      ],
+      "bytes": 63582,
+      "sha256": "063789fb8c38b29430ba7da02645e91adcaeb816b1aa46ed75fd61486e6287e2"
+    },
+    {
+      "path": "dist/assets/lookalikes/day_tram-1.webp",
+      "ids": [
+        "DAY_TRAM_LOOKALIKE_1"
+      ],
+      "bytes": 55912,
+      "sha256": "3627f80c8a95a818b7e9b31b774c40250217db8b76b7a700b7d3889a93a9069e"
+    },
+    {
+      "path": "dist/assets/lookalikes/day_tram-2.webp",
+      "ids": [
+        "DAY_TRAM_LOOKALIKE_2"
+      ],
+      "bytes": 56412,
+      "sha256": "f96930f264854780afe51a4f1ada0e63a3d0881d7b22e394a1146931aa8365f0"
+    },
+    {
+      "path": "dist/assets/lookalikes/home_guitar-1.webp",
+      "ids": [
+        "HOME_GUITAR_LOOKALIKE_1"
+      ],
+      "bytes": 39510,
+      "sha256": "c29aa02d4e5c23f6d86ebc5d8bbd0cef78b210dc5e49084ea478edb581ae623b"
+    },
+    {
+      "path": "dist/assets/lookalikes/home_guitar-2.webp",
+      "ids": [
+        "HOME_GUITAR_LOOKALIKE_2"
+      ],
+      "bytes": 38630,
+      "sha256": "e5b1f51f35a31ed539ab2a4dcd317563c5f5ad6a0220c539231cd8eb6226323b"
+    },
+    {
+      "path": "dist/assets/lookalikes/home_pancakes-1.webp",
+      "ids": [
+        "HOME_PANCAKES_LOOKALIKE_1"
+      ],
+      "bytes": 36298,
+      "sha256": "77b07d3be52c6ad0cdbbcffdb6f1e6931a7e4abdd61a838a6aca6fce8a75304c"
+    },
+    {
+      "path": "dist/assets/lookalikes/home_pancakes-2.webp",
+      "ids": [
+        "HOME_PANCAKES_LOOKALIKE_2"
+      ],
+      "bytes": 38318,
+      "sha256": "792e862c4ec9fa2eb3438038541280219cebbd727d78eeaedaff686d33fdb1d4"
+    },
+    {
+      "path": "dist/assets/lookalikes/home_rabbit-1.webp",
+      "ids": [
+        "HOME_RABBIT_LOOKALIKE_1"
+      ],
+      "bytes": 39116,
+      "sha256": "cde3184d19c50e26519feba035ea1e3c30031bcad120b826f8bfbdfc3533a14a"
+    },
+    {
+      "path": "dist/assets/lookalikes/home_rabbit-2.webp",
+      "ids": [
+        "HOME_RABBIT_LOOKALIKE_2"
+      ],
+      "bytes": 38382,
+      "sha256": "ef699aef2c9a999f2f221fe573c47ed96122b0877939cb09fc27bb5d45adf2bb"
+    },
+    {
+      "path": "dist/assets/lookalikes/ramen-1.webp",
+      "ids": [
+        "RAMEN_LOOKALIKE_1"
+      ],
+      "bytes": 46862,
+      "sha256": "4795b1ff7f5a816e2660fbbf28461bd413d5e0310329f454c57c29d1b2456683"
+    },
+    {
+      "path": "dist/assets/lookalikes/ramen-2.webp",
+      "ids": [
+        "RAMEN_LOOKALIKE_2"
+      ],
+      "bytes": 49278,
+      "sha256": "87487966f460e9c2241a919bd83fdf71e9ee8b1d0704dfc0643173134011a091"
+    },
+    {
+      "path": "dist/assets/lookalikes/sunset-1.webp",
+      "ids": [
+        "SUNSET_LOOKALIKE_1"
+      ],
+      "bytes": 26062,
+      "sha256": "26cb413dafb6ee4fb85abbdf5bf4e10a8a413da37b686ec4cafc0d715bb9bea5"
+    },
+    {
+      "path": "dist/assets/lookalikes/sunset-2.webp",
+      "ids": [
+        "SUNSET_LOOKALIKE_2"
+      ],
+      "bytes": 21420,
+      "sha256": "280e06fd87ae5eff3cfa139c60345273c781f9a0d72bff3620a5ba10d5a7aa77"
     },
     {
       "path": "dist/assets/memory-sets/day_balloon.webp",
@@ -89,46 +195,6 @@
       "sha256": "6f86b6fe22ad5ebe38053b9c2900c4489e080a61f3ed70522a4e251addd7bfa8"
     },
     {
-      "path": "dist/assets/memory-sets/day_ferris.webp",
-      "ids": [
-        "DAY_FERRIS"
-      ],
-      "bytes": 62628,
-      "sha256": "cb6b897d02497c463f1226b6194e41f6add315330bab7d2a4e8a556b400a0a87"
-    },
-    {
-      "path": "dist/assets/memory-sets/day_flowers.webp",
-      "ids": [
-        "DAY_FLOWERS"
-      ],
-      "bytes": 87926,
-      "sha256": "0db2bbe8ffee884ef5db1f6497b742830ffd243602dab11223e5ad0034c44a89"
-    },
-    {
-      "path": "dist/assets/memory-sets/day_frisbee.webp",
-      "ids": [
-        "DAY_FRISBEE"
-      ],
-      "bytes": 79884,
-      "sha256": "965390505749ad68831162dcaaae9df388a364a687b02426a971dd91192f80a2"
-    },
-    {
-      "path": "dist/assets/memory-sets/day_ice_cream.webp",
-      "ids": [
-        "DAY_ICE_CREAM"
-      ],
-      "bytes": 49980,
-      "sha256": "e199662953e449ba763791e5d6f586bd4c472ea6e7edd0df872fb2bbfc3b33b2"
-    },
-    {
-      "path": "dist/assets/memory-sets/day_kayak.webp",
-      "ids": [
-        "DAY_KAYAK"
-      ],
-      "bytes": 68636,
-      "sha256": "51e40f96bc9695f7baef7928f1b39000e91c8bbe3770df420f80406f136279d1"
-    },
-    {
       "path": "dist/assets/memory-sets/day_tram.webp",
       "ids": [
         "DAY_TRAM"
@@ -137,60 +203,12 @@
       "sha256": "336b89f76fbb273fcdcb87515c779ca90a0fa38edf52c81cab3ddb6344b1b377"
     },
     {
-      "path": "dist/assets/memory-sets/day_violin.webp",
-      "ids": [
-        "DAY_VIOLIN"
-      ],
-      "bytes": 63716,
-      "sha256": "b4e2149e69e9be4e6f28671e772574f81ef1a5f04e6095f180d53ef7c1c92d89"
-    },
-    {
-      "path": "dist/assets/memory-sets/home_book.webp",
-      "ids": [
-        "HOME_BOOK"
-      ],
-      "bytes": 62922,
-      "sha256": "7d43adbd3b0ec54977483388ce500c0518db81dcc28be881c4a541fb5cea2f73"
-    },
-    {
-      "path": "dist/assets/memory-sets/home_cake.webp",
-      "ids": [
-        "HOME_CAKE"
-      ],
-      "bytes": 54098,
-      "sha256": "94790e5c82ffc661fb2073cd53ed09220cc277f227c68316bb51afc7de810522"
-    },
-    {
-      "path": "dist/assets/memory-sets/home_duck.webp",
-      "ids": [
-        "HOME_DUCK"
-      ],
-      "bytes": 47692,
-      "sha256": "c46d7ab0dc4e281a8e7d981ff561ea3c11d965d507aea213a867112b27a88f81"
-    },
-    {
-      "path": "dist/assets/memory-sets/home_fish.webp",
-      "ids": [
-        "HOME_FISH"
-      ],
-      "bytes": 49346,
-      "sha256": "506fb31cf43f06d0228a75d4b8b1ddaf3e6148abc565640f81055f5908df65e9"
-    },
-    {
       "path": "dist/assets/memory-sets/home_guitar.webp",
       "ids": [
         "HOME_GUITAR"
       ],
       "bytes": 71480,
       "sha256": "b0904fb090c0517eca92b5f1c68d84671827df000753b25c1318f16bed74adc3"
-    },
-    {
-      "path": "dist/assets/memory-sets/home_kettle.webp",
-      "ids": [
-        "HOME_KETTLE"
-      ],
-      "bytes": 42434,
-      "sha256": "5d680b032a038b1bd740f27a5fc77810e73f62a17e1520ec3ea3f62fb0790df8"
     },
     {
       "path": "dist/assets/memory-sets/home_pancakes.webp",
@@ -207,30 +225,6 @@
       ],
       "bytes": 55748,
       "sha256": "1b4ba774e1079ed454eba263c5743ea64d1cc7c4fd0485e791210dd5f29132d1"
-    },
-    {
-      "path": "dist/assets/memory-sets/home_yarn.webp",
-      "ids": [
-        "HOME_YARN"
-      ],
-      "bytes": 105620,
-      "sha256": "37a354cd46e223a77a169d99425bb30f4f61a332128b854cb87b559aff42fb8c"
-    },
-    {
-      "path": "dist/assets/office_chair.webp",
-      "ids": [
-        "OFFICE_CHAIR"
-      ],
-      "bytes": 40658,
-      "sha256": "13ff0154fd8470ce95b263f43dd3848b48f9b3904e0eccf029f6140f130b6199"
-    },
-    {
-      "path": "dist/assets/plant.webp",
-      "ids": [
-        "PLANT"
-      ],
-      "bytes": 46168,
-      "sha256": "53248779042d6f1ae804010bd7f268957f2396756a8a4f5f923b21068befdbb1"
     },
     {
       "path": "dist/assets/ramen.webp",
@@ -271,14 +265,6 @@
       ],
       "bytes": 38650,
       "sha256": "2f935ea76fbbfdc6ac98493fd23b3ad78383a46c50a309b866b36e803f88fa15"
-    },
-    {
-      "path": "dist/assets/taco.webp",
-      "ids": [
-        "TACO"
-      ],
-      "bytes": 62864,
-      "sha256": "0c8f57a18bc41aecd6da759ec211a6202acc3b813192b35d7bde326086b384ff"
     }
   ]
 }

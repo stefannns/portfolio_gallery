@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" shape-rendering="crispEdges">
+  <title>Escape</title>
+  <path fill="#37604b" d="M8 6h32v2h3v3h2v26h-2v3h-3v2H8v-2H5v-3H3V11h2V8h3Z"/>
+  <path fill="#e7f2d6" d="M9 8h30v2h3v3h1v23h-2v3h-3v1H10v-1H7v-3H5V13h2v-3h2Z"/>
+  <path fill="#c8ddbd" d="M7 36h34v3h-3v1H10v-1H7Z"/>
+  <path fill="#255640" d="M13 12h22v14H15v4h-2Z"/>
+  <path fill="#fff9e7" d="M15 14h18v10H15Z"/>
+  <path fill="#255640" d="M15 14h6v5h-6zM27 14h6v5h-6zM21 19h6v5h-6z"/>
+  <path fill="#255640" d="M12 32h3v1h-2v1h2v1h-2v1h2v1h-3zM16 32h3v1h-2v1h2v3h-3v-1h2v-1h-2zM20 32h3v1h-2v3h2v1h-3zM24 33h1v-1h1v1h1v4h-1v-2h-1v2h-1zM28 32h3v3h-2v2h-1zm1 1v1h1v-1zM32 32h3v1h-2v1h2v1h-2v1h2v1h-3z" fill-rule="evenodd"/>
+</svg>

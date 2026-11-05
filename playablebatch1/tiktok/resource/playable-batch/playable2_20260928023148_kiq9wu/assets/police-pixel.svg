@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="40" viewBox="0 0 20 40" shape-rendering="crispEdges">
+  <!-- Front faces the top of the sprite, with a stepped nose and bright headlights. -->
+  <path fill="#222631" d="M6 2h8v1h2v2h1v4h1v7h-1v13h1v7h-1v3H3v-3H2v-7h1V16H2V9h1V5h1V3h2Z"/>
+  <path fill="#374654" d="M6 3h8v2h2v9h1v3h-1v13h1v6h-1v2H4v-2H3v-6h1V17H3v-3h1V5h2Z"/>
+  <path fill="#f6efdb" d="M5 7h10v6H5zM4 18h12v10H4z"/>
+  <path fill="#b9c4c8" d="M13 8h2v5h-2zM13 23h3v5h-3z"/>
+  <path fill="#1e3548" d="M6 12h8v2h1v4H5v-4h1zM6 28h8v4H6z"/>
+  <path fill="#7398a9" d="M6 13h8v2H6zM7 28h6v1H7z"/>
+  <path fill="#253142" d="M3 20h14v4H3zM7 4h6v2H7z"/>
+  <path fill="#fa625c" d="M4 20h5v3H4z"/>
+  <path fill="#62b9ff" d="M11 20h5v3h-5z"/>
+  <path fill="#ffe3a0" d="M4 5h3v3H4zM13 5h3v3h-3z"/>
+  <path fill="#fc6b58" d="M4 35h4v2H4zM12 35h4v2h-4z"/>
+  <path fill="#98a0a8" d="M9 36h2v1H9z"/>
+</svg>
