@@ -1,0 +1,94 @@
+{
+  "tweaks": [
+    {
+      "id": "TARGET_SCORE",
+      "kind": "number",
+      "label": "Target Score",
+      "value": 3,
+      "default": 3,
+      "min": 1,
+      "max": 10,
+      "step": 1
+    },
+    {
+      "id": "MIN_DELAY",
+      "kind": "number",
+      "label": "Min Delay (s)",
+      "value": 2,
+      "default": 2,
+      "min": 1,
+      "max": 5,
+      "step": 0.5
+    },
+    {
+      "id": "MAX_DELAY",
+      "kind": "number",
+      "label": "Max Delay (s)",
+      "value": 5,
+      "default": 5,
+      "min": 3,
+      "max": 10,
+      "step": 0.5
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "DUELLO DI TOCCHI",
+      "default": "DUELLO DI TOCCHI",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_START",
+      "label": "Start Button",
+      "value": "INIZIA",
+      "default": "INIZIA",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "RIGIOCA",
+      "default": "RIGIOCA",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_WAIT",
+      "label": "Wait Text",
+      "value": "ASPETTA…",
+      "default": "ASPETTA…",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_FIRE",
+      "label": "Fire Text",
+      "value": "TOCCA ORA!",
+      "default": "TOCCA ORA!",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_FAULT",
+      "label": "Fault Text",
+      "value": "TROPPO PRESTO!",
+      "default": "TROPPO PRESTO!",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_WIN",
+      "label": "Win Text",
+      "value": "BEL COLPO!",
+      "default": "BEL COLPO!",
+      "max_length": 15
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

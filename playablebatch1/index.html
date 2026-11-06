@@ -60,6 +60,7 @@
 <link rel="stylesheet" href="/playablebatch1/batch-filter.css?v=stable-batches-20261021-1">
 <script src="/playablebatch1/italian-games.js?v=italian38-d4e50dc64050"></script>
 <script src="/playablebatch1/review-language.js?v=italian-20261021-2"></script>
+<script src="/playablebatch1/browser-play.js?v=1"></script>
 <script src="/playablebatch1/game-download-ui.js?v=standard-templates-20261027-1"></script>
 <link rel="stylesheet" href="/playablebatch1/batch-download.css?v=20261030-1">
 </head>
@@ -84,7 +85,7 @@
     <div class="stage" id="stage"><div class="preview-fit" id="preview-fit" hidden aria-hidden="true"><div class="phone" id="phone"><iframe id="frame" src="about:blank" title="Inactive package preview" sandbox="allow-scripts allow-same-origin allow-pointer-lock"></iframe></div></div></div>
   </div>
 </aside>
-<aside class="panel review-details" aria-labelledby="review-details-heading"><header class="review-details-head"><h2 id="review-details-heading">Review</h2></header><div id="review-content" class="review-content" data-review-content><p class="preview-sub" id="preview-sub"></p><div class="actions"><a id="open" class="action secondary" target="_blank" rel="noopener">Open in new tab</a><a id="reference" class="action secondary" target="_blank" rel="noopener noreferrer">Original reference</a><a id="download" class="action secondary" hidden>Download ZIP</a></div></div></aside>
+<aside class="panel review-details" aria-labelledby="review-details-heading"><header class="review-details-head"><h2 id="review-details-heading">Review</h2></header><div id="review-content" class="review-content" data-review-content><p class="preview-sub" id="preview-sub"></p><div class="actions"><a id="open" class="action secondary" target="_blank" rel="noopener">Open in new tab</a><a id="open-browser" class="action secondary" target="_blank" rel="noopener">Open in new tab (browser)</a><a id="reference" class="action secondary" target="_blank" rel="noopener noreferrer">Original reference</a><a id="download" class="action secondary" hidden>Download ZIP</a></div></div></aside>
   </main>
 </div>
 <dialog id="review-drawer" class="review-drawer" aria-labelledby="review-drawer-heading"><header class="review-details-head"><h2 id="review-drawer-heading">Review</h2><button class="review-drawer-close" type="button">Close</button></header><div class="review-drawer-body"></div></dialog>
@@ -190,7 +191,7 @@ function select(game, options = {}) {
   fypLink.title = individualFyp ? game.name + ' · FYP' : 'Creature Sandbox + Draw Face';
   $('preview-sub').textContent = game.taskId + ' · ' + (game.sheetRow ? 'Spreadsheet row ' + game.sheetRow : game.sourceLabel);
   if (options.preview !== false) window.PlayableFypMode?.select(game);
-  $('open').href = fypSource(game);
+  reflectOpenLinks(game);
   $('reference').hidden = !game.referenceUrl;
   $('reference').href = game.referenceUrl || '';
   $('reference').setAttribute('aria-label', 'Open original reference for ' + game.number + '. ' + game.name);
@@ -223,8 +224,12 @@ function updateCommentBadge(taskId) {
   badge.classList.toggle('has-comments', typeof count === 'number' && count > 0);
   row.setAttribute('aria-label', 'Preview ' + game.number + '. ' + game.name + ', ' + badge.textContent);
 }
+function reflectOpenLinks(game) {
+  $('open').href = fypSource(game);
+  $('open-browser').href = window.PlayableBrowser.urlFor(game, window.PlayableReviewLocale?.language);
+}
 function render() {
-  if (current) $('open').href = fypSource(current);
+  if (current) reflectOpenLinks(current);
   const visible = visibleGames(), batchSize = batchModel.filterGames(games, {batch: selectedBatch}).length;
   $('count').textContent = (search.value.trim() ? visible.length + ' of ' + batchSize : visible.length) + ' games';
   const counts = {all: games.length, batch1: batchModel.filterGames(games, {batch: 'batch1'}).length, batch2: batchModel.filterGames(games, {batch: 'batch2'}).length, other: batchModel.filterGames(games, {batch: 'other'}).length};
@@ -257,7 +262,7 @@ batchControl.addEventListener('change', () => {
 const linkedGame = games.find(game => game.taskId === location.hash.slice(1) || game.base === location.hash.slice(1));
 render(); select(linkedGame || poolGames()[0] || games[0], {reveal: !!linkedGame, allowPoolChange: !!linkedGame});
 window.PlayableReviewLibrary = { games, previewSource, fypSource, viewport: phoneViewport, fitPhone, fitPreview, getCurrent: () => current, getVisibleGames: visibleGames, getPoolGames: poolGames, getFilter: filterState, select, suspend: () => { frame.src = 'about:blank'; }, resume: () => window.PlayableFypMode?.restart() };
-window.addEventListener('playable-review-language-change', () => { if(current) $('open').href = fypSource(current); });
+window.addEventListener('playable-review-language-change', () => { if (current) reflectOpenLinks(current); });
 window.addEventListener('hashchange', () => {
   const game = games.find(item => item.taskId === location.hash.slice(1) || item.base === location.hash.slice(1));
   if (game && game.taskId !== current?.taskId) select(game, {reveal: true, allowPoolChange: true});

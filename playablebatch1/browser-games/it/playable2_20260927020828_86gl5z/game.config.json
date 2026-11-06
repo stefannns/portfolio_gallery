@@ -1,0 +1,98 @@
+{
+  "tweaks": [
+    {
+      "id": "MATCH_THRESHOLD",
+      "kind": "number",
+      "label": "匹配成功阈值(%)",
+      "value": 90,
+      "default": 90,
+      "min": 50,
+      "max": 100,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "TXT_LEVEL",
+      "label": "关卡文案",
+      "value": "LIVELLO",
+      "default": "LIVELLO",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_TARGET",
+      "label": "目标颜色文案",
+      "value": "Colore da ottenere",
+      "default": "Colore da ottenere",
+      "max_length": 25
+    },
+    {
+      "id": "TXT_MATCH",
+      "label": "匹配进度文案",
+      "value": "Corrispondenza",
+      "default": "Corrispondenza",
+      "max_length": 15
+    },
+    {
+      "id": "TXT_SUCCESS_MSG",
+      "label": "过关提示语",
+      "value": "Colore perfetto!",
+      "default": "Colore perfetto!",
+      "max_length": 30
+    },
+    {
+      "id": "TXT_NEXT",
+      "label": "下一关按钮",
+      "value": "Prossimo livello",
+      "default": "Prossimo livello",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_POST",
+      "label": "投稿按钮",
+      "value": "Condividi",
+      "default": "Condividi",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "IMG_TUBE_RED",
+      "label": "红色颜料管",
+      "path": "./assets/tube_red.webp",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_TUBE_YELLOW",
+      "label": "黄色颜料管",
+      "path": "./assets/tube_yellow.webp",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_TUBE_BLUE",
+      "label": "蓝色颜料管",
+      "path": "./assets/tube_blue.webp",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_TUBE_WHITE",
+      "label": "白色颜料管",
+      "path": "./assets/tube_white.webp",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_TUBE_BLACK",
+      "label": "黑色颜料管",
+      "path": "./assets/tube_black.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

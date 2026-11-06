@@ -1,0 +1,74 @@
+{
+  "tweaks": [
+    {
+      "id": "MAX_OXYGEN",
+      "kind": "number",
+      "label": "Max Oxygen (ms)",
+      "value": 45000,
+      "default": 45000,
+      "min": 10000,
+      "max": 120000,
+      "step": 1000
+    }
+  ],
+  "texts": [
+    {
+      "id": "INSTRUCTION_MAIN",
+      "label": "Instruction Title",
+      "value": "Tieni premuto per immergerti",
+      "default": "Tieni premuto per immergerti",
+      "max_length": 30
+    },
+    {
+      "id": "INSTRUCTION_SUB",
+      "label": "Instruction Subtitle",
+      "value": "Fai un bel respiro",
+      "default": "Fai un bel respiro",
+      "max_length": 50
+    },
+    {
+      "id": "RESULT_TITLE",
+      "label": "Result Title",
+      "value": "Tempo in immersione",
+      "default": "Tempo in immersione",
+      "max_length": 30
+    },
+    {
+      "id": "RESULT_DESC_NORMAL",
+      "label": "Result Desc (Normal)",
+      "value": "Sei tornato a respirare!",
+      "default": "Sei tornato a respirare!",
+      "max_length": 40
+    },
+    {
+      "id": "RESULT_DESC_O2",
+      "label": "Result Desc (Out of O2)",
+      "value": "Ossigeno esaurito!",
+      "default": "Ossigeno esaurito!",
+      "max_length": 40
+    },
+    {
+      "id": "BTN_REPLAY",
+      "label": "Replay Button",
+      "value": "Riprova",
+      "default": "Riprova",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "ICON_MASK",
+      "label": "Snorkel Mask Icon",
+      "path": "./assets/icon_mask.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

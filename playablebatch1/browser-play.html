@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Playable browser preview</title>
+  <link rel="stylesheet" href="./browser-play.css">
+</head>
+<body>
+  <main id="browser-player" aria-label="Playable browser preview">
+    <p id="browser-message" role="status">Loading game…</p>
+    <div id="browser-fit" hidden>
+      <iframe id="browser-game" title="Game" allow="camera; microphone; fullscreen"
+        sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-downloads"></iframe>
+    </div>
+  </main>
+  <script src="./browser-games.js"></script>
+  <script src="./browser-play.js"></script>
+</body>
+</html>
