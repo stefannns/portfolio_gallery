@@ -387,12 +387,17 @@ function App() {
 
   const applyPositions = useCallback(() => {
     const idle=window.PlayableIdlePreview,t=idle.seconds,preview=idle.active,x=50+Math.sin(t*.95)*24;
-    const ball=preview?{x,y:12+53*(1-Math.abs(1-(t/1.6)%2))}:ballRef.current;
+    const previewBlue = 20;
+    const previewRed = 72;
+    const ballInset = 100 * 15 / Math.max(1, courtRef.current?.clientHeight || 598);
+    const travel = 1 - Math.abs(1 - (t / 1.6) % 2);
+    const ball = preview ? { x, y: previewBlue + ballInset + (previewRed - previewBlue - 2 * ballInset) * travel } : ballRef.current;
     const paddle=preview?{red:x,blue:50+Math.sin((t-.2)*.95)*24}:paddleRef.current;
     if(preview)idle.stamp(courtRef.current,'computer-rally');
     if (redPaddleEl.current) redPaddleEl.current.style.left = `${paddle.red}%`;
-    if (redPaddleEl.current) redPaddleEl.current.style.top = preview ? '65%' : '88%';
+    if (redPaddleEl.current) redPaddleEl.current.style.top = preview ? `${previewRed}%` : '88%';
     if (bluePaddleEl.current) bluePaddleEl.current.style.left = `${paddle.blue}%`;
+    if (bluePaddleEl.current) bluePaddleEl.current.style.top = preview ? `${previewBlue}%` : '12%';
     if (ballEl.current) {
       ballEl.current.style.left = `${ball.x}%`;
       ballEl.current.style.top = `${ball.y}%`;

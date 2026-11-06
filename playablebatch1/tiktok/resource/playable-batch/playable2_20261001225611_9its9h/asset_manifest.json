@@ -7,10 +7,10 @@
   "entry": "dist/game.html",
   "source_kind": "rebuildable-current-runtime-source",
   "files": {
-    "App.jsx": "4d8404afd2126704df2998fabc2bf08db9cc168519e42a9fbab5c86497369eea",
+    "App.jsx": "5262926c4b8a7921f3449cb4c1967c16bb8547fb307ba1c727fe2c1fa51748cb",
     "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
     "dist/game.html": "7bdf2fcaa01fe0bb3906a0084963062a05b8b738d097469a579a194674ad59ee",
-    "dist/bundle.js": "c9cf4810c3d1d7f874e1de9d11b4d5706cffd2cdc4be6333348cf1769d6e32d4",
+    "dist/bundle.js": "69a5abf978d80501dfdc8a4c32d7810fad0a1aae20dd8cedbd276c900115abbe",
     "dist/game.config.json": "bbeb06c00799b47eba0289ebdef82a569f675de7ec8a9e724a301471f4733354"
   },
   "assets": [
@@ -26,7 +26,7 @@
         "BG_MAIN"
       ],
       "bytes": 588,
-      "sha256": "78ff5dabe427bef971ba445982c2ebc8b73a09b1702ed6dd2ac5ccd641a5a637"
+      "sha256": "042e20b9ecc0faa3712bdee16a041d73928abc9cb9e3842a893e1f7afb2169bc"
     },
     {
       "path": "dist/assets/fonts/audiowide/Audiowide-Regular.woff2",

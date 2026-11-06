@@ -202,10 +202,11 @@ const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const polygonArea=points=>Math.abs(points.reduce((sum,p,i)=>{const q=points[(i+1)%points.length];return sum+p.u*q.v-q.u*p.v;},0))/2;
 
-function imageFit(width,height,image){
-  const scale=Math.min(width*.98/image.width,height*.98/image.height);
-  const w=image.width*scale,h=image.height*scale;
-  return {x:(width-w)/2,y:(height-h)/2,width:w,height:h};
+function imageFit(width, height, image, focusX = .5) {
+  const scale = Math.max(width / image.width, height / image.height);
+  const w = image.width * scale;
+  const h = image.height * scale;
+  return { x: clamp(width / 2 - w * focusX, width - w, 0), y: (height - h) / 2, width: w, height: h };
 }
 
 // Follow the default photo's ears, rounded body, paws and tail in photo space.
@@ -376,14 +377,67 @@ function softDragOffset(x,y,limit=300){
   const free=limit*.6,reach=length<=free?length:free+(limit-free)*Math.tanh((length-free)/(limit-free));
   const scale=reach/length;return{x:x*scale,y:y*scale};
 }
-function advanceDrag(drag,dt){
+function advanceDrag(cage,drag,dt,pinching){
   const alpha=1-Math.exp(-dt/4);
   drag.offset.x+=(drag.target.x-drag.offset.x)*alpha;drag.offset.y+=(drag.target.y-drag.offset.y)*alpha;
-  drag.joints.forEach((joint,i)=>{joint.pointA.x=drag.starts[i].x+drag.offset.x;joint.pointA.y=drag.starts[i].y+drag.offset.y;});
+  // Let the whole toy travel separately so a hard pull can't collapse the cage.
+  const localOffset = softDragOffset(drag.offset.x, drag.offset.y, Math.min(cage.width, cage.height) * (pinching ? .08 : .16));
+  drag.joints.forEach((joint, i) => {
+    const start = drag.starts[i];
+    // Pull the contact points inward around the grip, even on a stationary press.
+    joint.pointA.x = start.x + localOffset.x + (drag.anchor.x - start.x) * .24;
+    joint.pointA.y = start.y + localOffset.y + (drag.anchor.y - start.y) * .24;
+  });
 }
+function stepDragShape(cage, drags, seconds) {
+  let targetXX = 0, targetXY = 0, moveX = 0, moveY = 0;
+  const pinching = drags.size === 2;
+  for (const { offset, anchor } of drags.values()) {
+    moveX += offset.x;
+    moveY += offset.y;
+    if (pinching) continue;
+    const length = Math.hypot(offset.x, offset.y);
+    if (length < 1e-6) continue;
+    // Stretch along a pull. Pushing an edge toward the center compresses
+    // along that same axis and makes the toy bulge across it.
+    const x = offset.x / length, y = -offset.y / length;
+    const gripX = anchor.x * 2 / cage.width, gripY = -anchor.y * 2 / cage.height;
+    const edge = clamp((Math.hypot(gripX, gripY) - .28) / .46, 0, 1);
+    const push = clamp(-(x * gripX + y * gripY) / .55, 0, 1) * edge;
+    const amount = .35 * Math.tanh(length / (Math.max(cage.width, cage.height) * .28)) * (1 - 2 * push);
+    targetXX += amount * (x * x - y * y);
+    targetXY += amount * (2 * x * y);
+  }
+  const grips = Math.max(1, drags.size);
+  if (pinching) {
+    const [first, second] = drags.values();
+    const dx = second.position.x - first.position.x;
+    const dy = first.position.y - second.position.y;
+    const distance = Math.hypot(dx, dy);
+    const { x: startX, y: startY } = second.pinchStart;
+    const startDistance = Math.hypot(startX, startY);
+    const sensitivity = Math.max(startDistance, Math.min(cage.width, cage.height) * .38);
+    const amount = .35 * Math.tanh((distance - startDistance) / (sensitivity * .65));
+    // Keep the original axis when the fingertips are nearly on top of each other.
+    const angle = distance > cage.unit * .08 ? Math.atan2(dy, dx) : Math.atan2(startY, startX);
+    targetXX = amount * Math.cos(2 * angle);
+    targetXY = amount * Math.sin(2 * angle);
+  }
+  const shape = cage.dragShape;
+  const travel = softDragOffset(moveX * .55 / grips, moveY * .55 / grips, Math.min(cage.width, cage.height) * .43);
+  const follow = 1 - Math.exp(-32 * seconds);
+  shape.moveX += (travel.x - shape.moveX) * follow;
+  shape.moveY += (travel.y - shape.moveY) * follow;
+  shape.velocityXX += (480 * (targetXX - shape.xx) - 24 * shape.velocityXX) * seconds;
+  shape.velocityXY += (480 * (targetXY - shape.xy) - 24 * shape.velocityXY) * seconds;
+  shape.xx += shape.velocityXX * seconds;
+  shape.xy += shape.velocityXY * seconds;
+}
+
 function stepSoftCage(cage,drags){
   const step=1000/120;
-  for(const drag of drags.values())advanceDrag(drag,step);
+  for(const drag of drags.values())advanceDrag(cage,drag,step,drags.size === 2);
+  stepDragShape(cage, drags, step / 1000);
   cage.bodies.forEach((body,i)=>{const origin=cage.rest[i],dx=origin.x-body.position.x,dy=origin.y-body.position.y,length=Math.hypot(dx,dy),returnForce=.000052*(1+Math.max(0,length-160)**2/10000);Matter.Body.applyForce(body,body.position,{x:dx*body.mass*returnForce,y:dy*body.mass*returnForce});});
   Matter.Engine.update(cage.engine,step);
 }
@@ -393,14 +447,15 @@ function makeCage(cut,cfg){
   const width=(cut.width+.2)*unit,height=(cut.height+.2)*unit,left=-width/2,top=-height/2;
   const engine=Matter.Engine.create({positionIterations:6,constraintIterations:4});engine.gravity.y=cfg.GRAVITY;engine.gravity.scale=.00001;
   const bodies=[],links=[];
-  for(let y=0;y<rows;y++)for(let x=0;x<columns;x++)bodies.push(Matter.Bodies.circle(left+x*width/(columns-1),top+y*height/(rows-1),2,{frictionAir:.022,collisionFilter:{group:-1},inertia:Infinity}));
+  for(let y=0;y<rows;y++)for(let x=0;x<columns;x++)bodies.push(Matter.Bodies.circle(left+x*width/(columns-1),top+y*height/(rows-1),2,{frictionAir:.014,collisionFilter:{group:-1},inertia:Infinity}));
   const join=(i,j,stiffness)=>links.push(Matter.Constraint.create({bodyA:bodies[i],bodyB:bodies[j],stiffness,damping:.035}));
   for(let y=0;y<rows;y++)for(let x=0;x<columns;x++){
-    const i=y*columns+x;if(x<columns-1)join(i,i+1,.32);if(y<rows-1)join(i,i+columns,.32);
+    const i=y*columns+x;if(x<columns-1)join(i,i+1,.26);if(y<rows-1)join(i,i+columns,.26);
     if(x<columns-1&&y<rows-1){join(i,i+columns+1,.16);join(i+1,i+columns,.16);}
   }
   Matter.Composite.add(engine.world,[...bodies,...links]);
-  return {engine,bodies,rest:bodies.map(b=>({...b.position})),columns,rows,width,height,left,top,unit};
+  const dragShape = {xx:0, xy:0, velocityXX:0, velocityXY:0, moveX:0, moveY:0};
+  return {engine,bodies,rest:bodies.map(b=>({...b.position})),columns,rows,width,height,left,top,unit,dragShape};
 }
 
 function sampleCage(cage,x,y){
@@ -431,7 +486,13 @@ function makeSafeDeformer(geometry,cage){
   // Filter the small simulation cage, then reapply the full safety bound.
   // The rendered vertices are never blended after the non-folding safeguard.
   const poses=cage.bodies.map(body=>({...body.position}));
-  const reset=()=>cage.bodies.forEach((body,i)=>{poses[i].x=body.position.x;poses[i].y=body.position.y;});
+  const reset = () => {
+    cage.bodies.forEach((body, i) => {
+      poses[i].x = body.position.x;
+      poses[i].y = body.position.y;
+    });
+    Object.assign(cage.dragShape, {xx:0, xy:0, velocityXX:0, velocityXY:0, moveX:0, moveY:0});
+  };
   return {rest,reset,apply(deltaMs=Infinity){
     const alpha=Number.isFinite(deltaMs)?1-Math.exp(-Math.max(0,deltaMs)/6):1;
     cage.bodies.forEach((body,i)=>{poses[i].x+=(body.position.x-poses[i].x)*alpha;poses[i].y+=(body.position.y-poses[i].y)*alpha;});
@@ -447,7 +508,9 @@ function makeSafeDeformer(geometry,cage){
     a=co*q00-si*q01;b=co*q01-si*q11;c=si*q00+co*q01;d=si*q01+co*q11;
     // Give the toy room to travel, with a gradual edge rather than an abrupt stop.
     const maxMove=Math.min(cage.width,cage.height)*.6;
-    tx=maxMove*Math.tanh(tx/maxMove);ty=maxMove*Math.tanh(ty/maxMove);
+    const movement = softDragOffset(tx, ty, maxMove);
+    tx = movement.x;
+    ty = movement.y;
     samples.forEach((sample,i)=>{
       let px=0,py=0;sample.ids.forEach((id,j)=>{px+=poses[id].x*sample.weights[j];py+=poses[id].y*sample.weights[j];});
       const x=coords[i*2]*cage.unit,y=-coords[i*2+1]*cage.unit,bx=(a*x+b*y+tx)/cage.unit,by=-(c*x+d*y+ty)/cage.unit;
@@ -458,11 +521,23 @@ function makeSafeDeformer(geometry,cage){
       const p=faces[i]*2,q=faces[i+1]*2,r=faces[i+2]*2,ux=residual[q]-residual[p],uy=residual[r]-residual[p],vx=residual[q+1]-residual[p+1],vy=residual[r+1]-residual[p+1];
       gradient=Math.max(gradient,Math.hypot(ux*faces[i+3]+uy*faces[i+5],ux*faces[i+4]+uy*faces[i+6],vx*faces[i+3]+vy*faces[i+5],vx*faces[i+4]+vy*faces[i+6]));
     }
-    const minStretch=Math.min(l1,l2),limit=.48*minStretch,blend=Math.min(1,limit/Math.max(gradient,1e-12)),depthScale=clamp(1/(l1*l2),.85,1.45);
+    const minStretch=Math.min(l1,l2),limit=.48*minStretch,blend=Math.min(1,limit/Math.max(gradient,1e-12));
+    const shape = cage.dragShape, magnitude = Math.hypot(shape.xx, shape.xy);
+    const strength = Math.min(.38, magnitude);
+    const gain = magnitude > 0 ? strength / magnitude : 0;
+    const xx = shape.xx * gain, xy = shape.xy * gain;
+    const centerX = tx / cage.unit, centerY = -ty / cage.unit;
+    const moveX = shape.moveX / cage.unit, moveY = -shape.moveY / cage.unit;
+    const depthScale = clamp(1 / (l1 * l2 * (1 - strength * strength)), .85, 1.55);
     let maximum=0;
     visible.forEach((id,i)=>{
       const x=base[id*2]+residual[id*2]*blend,y=base[id*2+1]+residual[id*2+1]*blend;
-      maximum=Math.max(maximum,Math.hypot(x-rest[i*3],y-rest[i*3+1]));source.setXYZ(i,x,y,rest[i*3+2]*depthScale);
+      // Stretch the vertices around the moving center after the cage safety
+      // pass. The added transform has positive scales (1 ± strength).
+      const dx = x - centerX, dy = y - centerY;
+      const stretchedX = x + xx * dx + xy * dy + moveX, stretchedY = y + xy * dx - xx * dy + moveY;
+      maximum=Math.max(maximum,Math.hypot(stretchedX-rest[i*3],stretchedY-rest[i*3+1]));
+      source.setXYZ(i,stretchedX,stretchedY,rest[i*3+2]*depthScale);
     });
     source.needsUpdate=true;
     return {maximum,blend,gradientBound:gradient*blend,minStretch,depthScale};
@@ -503,7 +578,7 @@ function App(){
     const rect=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2),width=rect.width,height=rect.height;
     canvas.width=Math.max(1,Math.round(width*dpr));canvas.height=Math.max(1,Math.round(height*dpr));
     const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
-    const fit=imageFit(width,height,photo);ctx.drawImage(photo,fit.x,fit.y,fit.width,fit.height);
+    const fit=imageFit(width,height,photo,uploaded ? .5 : .57);ctx.drawImage(photo,fit.x,fit.y,fit.width,fit.height);
     if(window.PlayableIdlePreview.active){
       const idle=window.PlayableIdlePreview,p=idle.seconds%5.3,outline=catPreviewOutline(fit);
       ctx.save();ctx.strokeStyle='#d5f8ba';ctx.lineWidth=3;ctx.lineCap='round';ctx.lineJoin='round';ctx.shadowColor='#0008';ctx.shadowBlur=4;ctx.globalAlpha=p>4.5?(5.3-p)/.8:1;idle.trace(ctx,outline,idle.ease(p/3.1));ctx.restore();idle.stamp(canvas,'trace-cat-silhouette');return;}
@@ -512,18 +587,26 @@ function App(){
     ctx.save();ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=3;ctx.strokeStyle=closed.current?'#d5f8ba':'#f3d292';ctx.shadowColor='#0009';ctx.shadowBlur=5;ctx.beginPath();mapped.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));if(closed.current)ctx.closePath();ctx.stroke();
     if(mapped.length>2){ctx.closePath();ctx.fillStyle='#f3d29222';ctx.fill();}
     ctx.shadowBlur=0;ctx.fillStyle=closed.current?'#d5f8ba':'#f3d292';ctx.beginPath();ctx.arc(mapped[0].x,mapped[0].y,5,0,Math.PI*2);ctx.fill();ctx.restore();
-  },[photoVersion]);
+  },[photoVersion,uploaded]);
   useEffect(()=>{if(phase!=='trace'||!traceRef.current)return;const observer=new ResizeObserver(redraw);observer.observe(traceRef.current);redraw();return()=>observer.disconnect();},[phase,redraw]);
   useEffect(()=>{if(phase!=='trace'||feedActive)return;let frame,last=0;const draw=now=>{if(window.PlayableIdlePreview.active&&now-last>=33){redraw();last=now;}frame=requestAnimationFrame(draw);};frame=requestAnimationFrame(draw);return()=>{cancelAnimationFrame(frame);redraw();};},[phase,feedActive,redraw]);
   const localPhotoPoint=event=>{
     const canvas=traceRef.current,photo=photoRef.current;if(!canvas||!photo)return null;
-    const rect=canvas.getBoundingClientRect(),fit=imageFit(rect.width,rect.height,photo),x=event.clientX-rect.left,y=event.clientY-rect.top;
-    return {u:clamp((x-fit.x)/fit.width,0,1),v:clamp((y-fit.y)/fit.height,0,1),inside:x>=fit.x&&x<=fit.x+fit.width&&y>=fit.y&&y<=fit.y+fit.height,fit};
+    const rect = canvas.getBoundingClientRect();
+    const fit = imageFit(rect.width, rect.height, photo, uploaded ? .5 : .57);
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    return {
+      u: clamp((clamp(x, 0, rect.width) - fit.x) / fit.width, 0, 1),
+      v: clamp((clamp(y, 0, rect.height) - fit.y) / fit.height, 0, 1),
+      inside: x >= 0 && x <= rect.width && y >= 0 && y <= rect.height,
+      fit
+    };
   };
   const traceValid=(outline=points.current)=>{
     const list=cleanOutline(outline);if(list.length<3||polygonArea(list)<.004)return false;
     const rect=traceRef.current?.getBoundingClientRect(),photo=photoRef.current;if(!rect||!photo)return false;
-    const fit=imageFit(rect.width,rect.height,photo),length=list.slice(1).reduce((sum,p,i)=>sum+Math.hypot((p.u-list[i].u)*fit.width,(p.v-list[i].v)*fit.height),0);
+    const fit=imageFit(rect.width,rect.height,photo,uploaded ? .5 : .57),length=list.slice(1).reduce((sum,p,i)=>sum+Math.hypot((p.u-list[i].u)*fit.width,(p.v-list[i].v)*fit.height),0);
     return length>=cfg.TRACE_MIN_LENGTH;
   };
   const finishOutline=()=>{
@@ -606,25 +689,81 @@ function App(){
   const rayFor=event=>{
     const w=world.current;if(!w)return null;const rect=canvasRef.current.getBoundingClientRect(),pointer=new THREE.Vector2((event.clientX-rect.left)/rect.width*2-1,-(event.clientY-rect.top)/rect.height*2+1),ray=new THREE.Raycaster();ray.setFromCamera(pointer,w.camera);return {w,ray};
   };
-  const squishDown=event=>{
-    if(!activeRef.current||(event.pointerType==='mouse'&&event.button!==0)||world.current?.drags.has(event.pointerId))return;
-    const hit=rayFor(event);if(!hit)return;const intersections=hit.ray.intersectObject(hit.w.mesh);if(!intersections.length)return;
-    event.preventDefault();event.stopPropagation();
-    const {w}=hit;w.group.updateMatrixWorld(true);const inverse=w.group.matrixWorld.clone().invert(),worldPoint=intersections[0].point,local=w.group.worldToLocal(worldPoint.clone()),anchor={x:local.x*w.cage.unit,y:-local.y*w.cage.unit};
-    const closest=w.cage.bodies.map(body=>({body,d:distance(body.position,anchor)})).sort((a,b)=>a.d-b.d).slice(0,4),joints=closest.map(({body})=>Matter.Constraint.create({bodyB:body,pointA:{...body.position},stiffness:.42,damping:.1}));
-    Matter.Composite.add(w.cage.engine.world,joints);const normal=w.camera.getWorldDirection(new THREE.Vector3());
-    w.drags.set(event.pointerId,{joints,anchor,starts:closest.map(({body})=>({...body.position})),plane:new THREE.Plane().setFromNormalAndCoplanarPoint(normal,worldPoint),inverse,target:{x:0,y:0},offset:{x:0,y:0},start:{x:event.clientX,y:event.clientY},moved:false,last:{x:local.x,y:local.y}});
-    try{event.currentTarget.setPointerCapture(event.pointerId);}catch{}setGuide(false);setError('');
+  const squishDown = event => {
+    if (!activeRef.current || (event.pointerType === 'mouse' && event.button !== 0)) return;
+    const hit = rayFor(event);
+    if (!hit) return;
+    const { w, ray } = hit;
+    if (w.drags.has(event.pointerId) || w.drags.size >= 2) return;
+    const first = w.drags.values().next().value;
+    if (first && (event.pointerType !== 'touch' || first.pointerType !== 'touch')) return;
+
+    const worldPoint = ray.intersectObject(w.mesh)[0]?.point;
+    if (!worldPoint && !first) return;
+    // Project both contacts onto the first grip's plane for a shared distance.
+    const plane = first?.plane ?? new THREE.Plane().setFromNormalAndCoplanarPoint(
+      w.camera.getWorldDirection(new THREE.Vector3()), worldPoint,
+    );
+    const point = ray.ray.intersectPlane(plane, new THREE.Vector3());
+    if (!point) return;
+    event.preventDefault();
+    event.stopPropagation();
+    w.group.updateMatrixWorld(true);
+    const inverse = w.group.matrixWorld.clone().invert();
+    point.applyMatrix4(inverse);
+    const origin = { x: point.x * w.cage.unit, y: -point.y * w.cage.unit };
+    const anchor = { x: origin.x - w.cage.dragShape.moveX, y: origin.y - w.cage.dragShape.moveY };
+    const closest = worldPoint ? w.cage.bodies
+      .map(body => ({ body, d: distance(body.position, anchor) }))
+      .sort((a, b) => a.d - b.d).slice(0, 4) : [];
+    const joints = closest.map(({ body }) => Matter.Constraint.create({
+      bodyB: body, pointA: { ...body.position }, stiffness: .42, damping: .1,
+    }));
+    Matter.Composite.add(w.cage.engine.world, joints);
+    w.drags.set(event.pointerId, {
+      joints, anchor, origin, plane, inverse, pointerType: event.pointerType, position: origin,
+      pinchStart: first ? { x: origin.x - first.position.x, y: first.position.y - origin.y } : null,
+      starts: closest.map(({ body }) => ({ ...body.position })),
+      target: { x: 0, y: 0 }, offset: { x: 0, y: 0 },
+      start: { x: event.clientX, y: event.clientY }, moved: false,
+    });
+    try { event.currentTarget.setPointerCapture(event.pointerId); } catch {}
+    setGuide(false);
+    setError('');
   };
-  const squishMove=event=>{
-    const hit=rayFor(event),drag=hit?.w.drags.get(event.pointerId);if(!drag)return;
-    const point=new THREE.Vector3();if(!hit.ray.ray.intersectPlane(drag.plane,point))return;
-    event.preventDefault();event.stopPropagation();point.applyMatrix4(drag.inverse);drag.last={x:point.x,y:point.y};
-    drag.target=softDragOffset(point.x*hit.w.cage.unit-drag.anchor.x,-point.y*hit.w.cage.unit-drag.anchor.y);
-    if(Math.hypot(event.clientX-drag.start.x,event.clientY-drag.start.y)>6)drag.moved=true;
+  const squishMove = event => {
+    const hit = rayFor(event), drag = hit?.w.drags.get(event.pointerId);
+    if (!drag) return;
+    const point = hit.ray.ray.intersectPlane(drag.plane, new THREE.Vector3());
+    if (!point) return;
+    event.preventDefault();
+    event.stopPropagation();
+    point.applyMatrix4(drag.inverse);
+    drag.position = { x: point.x * hit.w.cage.unit, y: -point.y * hit.w.cage.unit };
+    drag.target = softDragOffset(drag.position.x - drag.origin.x, drag.position.y - drag.origin.y);
+    if (Math.hypot(event.clientX - drag.start.x, event.clientY - drag.start.y) > 6) drag.moved = true;
   };
   const squishEnd=event=>{
-    const w=world.current,drag=w?.drags.get(event.pointerId);if(!drag)return;drag.joints.forEach(j=>Matter.Composite.remove(w.cage.engine.world,j));w.drags.delete(event.pointerId);event.preventDefault();event.stopPropagation();try{if(event.currentTarget.hasPointerCapture(event.pointerId))event.currentTarget.releasePointerCapture(event.pointerId);}catch{}if(drag.moved&&event.type==='pointerup'){w.dragCount++;sound('squish');}
+    const w = world.current;
+    const drag = w?.drags.get(event.pointerId);
+    if (!drag) return;
+    const released = event.type === 'pointerup';
+    const recoil = softDragOffset(-drag.offset.x * .09, -drag.offset.y * .09, 10);
+    for (const joint of drag.joints) {
+      Matter.Composite.remove(w.cage.engine.world, joint);
+      if (released && drag.moved) {
+        const body = joint.bodyB;
+        Matter.Body.setVelocity(body, { x: recoil.x + body.velocity.x * .25, y: recoil.y + body.velocity.y * .25 });
+      }
+    }
+    w.drags.delete(event.pointerId);
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    if (released) {
+      w.dragCount++;
+      if (!w.drags.size) sound('squish');
+    }
   };
   const reset=()=>{sound('tap');if(phase==='active')world.current?.reset();else{clearTrace();redraw();}};
   const traceAgain=()=>{sound('tap');setPhase('trace');clearTrace();};
@@ -632,9 +771,9 @@ function App(){
   const uploadIcon=<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15v5h14v-5M12 16V4m-4 4 4-4 4 4"/></svg>;
   return <main className={'photo-toy phase-'+phase} data-stage={phase} data-photo-source={uploaded?'uploaded':'sample'}>
     <input ref={fileRef} className="file-input" tabIndex={-1} aria-hidden="true" type="file" accept="image/*" aria-label="Upload an image" onChange={receiveFile}/>
-    {guide&&<div className="toy-guide">{phase==='active'?'Press and drag to squish':uploaded?'Trace around your subject':cfg.GUIDE_TEXT}</div>}
+    {guide&&<div className="toy-guide">{phase==='active'?'Drag or pinch to squish':uploaded?'Trace around your subject':cfg.GUIDE_TEXT}</div>}
     <div className="photo-zone">
-      {phase==='trace'?<canvas key="trace" ref={traceRef} aria-label="Draw or tap an outline around your subject" onPointerDown={traceDown} onPointerMove={traceMove} onPointerUp={traceEnd} onPointerCancel={traceEnd} onLostPointerCapture={traceEnd}/>:<canvas key="3d" ref={canvasRef} aria-label="3D photo squishy. Press and drag to deform it." onPointerDown={squishDown} onPointerMove={squishMove} onPointerUp={squishEnd} onPointerCancel={squishEnd} onLostPointerCapture={squishEnd}/>}
+      {phase==='trace'?<canvas key="trace" ref={traceRef} aria-label="Draw or tap an outline around your subject" onPointerDown={traceDown} onPointerMove={traceMove} onPointerUp={traceEnd} onPointerCancel={traceEnd} onLostPointerCapture={traceEnd}/>:<canvas key="3d" ref={canvasRef} aria-label="3D photo squishy. Drag, pinch, or spread two fingers to deform it." onPointerDown={squishDown} onPointerMove={squishMove} onPointerUp={squishEnd} onPointerCancel={squishEnd} onLostPointerCapture={squishEnd}/>}
       {loading&&<span className="load-state" role="status">Opening photo…</span>}
     </div>
     {error&&<div className="toy-error" role="alert">{error}</div>}
@@ -652,7 +791,7 @@ const CSS=`
 @font-face{font-family:Poppins;src:url('./assets/fonts/poppins/Poppins-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
 *{box-sizing:border-box}html,body,#root{margin:0;width:100%;height:100%;overflow:hidden}body{background:#050607;color:#faf7ef;font-family:Poppins,system-ui,sans-serif;-webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer;border:0;touch-action:manipulation}button:disabled{cursor:default}
 .photo-toy{position:relative;width:100%;height:100%;overflow:hidden;background:#050607;container-type:size}.file-input{display:none}
-.toy-guide{position:absolute;z-index:3;left:30px;right:30px;top:12%;transform:translateY(-50%);text-align:center;font-size:18px;line-height:1.3;font-weight:700;pointer-events:none;animation:batchBreathe 2.6s ease-in-out infinite}.photo-zone{position:absolute;left:8px;right:8px;top:19%;bottom:106px}.photo-zone canvas{display:block;width:100%;height:100%;touch-action:none;user-select:none}.phase-active .photo-zone{inset:0;background:radial-gradient(ellipse at 50% 70%,#1e2026 0%,#0d0f13 45%,#050607 76%)}.phase-active .toy-guide{top:62px}
+.toy-guide{position:absolute;z-index:3;left:30px;right:30px;top:12%;transform:translateY(-50%);text-align:center;font-size:18px;line-height:1.3;font-weight:700;pointer-events:none;animation:batchBreathe 2.6s ease-in-out infinite}.photo-zone{position:absolute;inset:0}.photo-zone canvas{display:block;width:100%;height:100%;touch-action:none;user-select:none}.phase-active .photo-zone{inset:0;background:radial-gradient(ellipse at 50% 70%,#1e2026 0%,#0d0f13 45%,#050607 76%)}.phase-trace .toy-guide{color:#fff;text-shadow:0 1px 3px #000,0 2px 12px #000}.phase-active .toy-guide{top:62px}
 .toy-controls{position:absolute;z-index:4;display:flex;align-items:center;justify-content:center;gap:8px;left:30px;right:30px;bottom:50px;min-height:46px}.utility{display:flex;align-items:center;justify-content:center;gap:5px;min-height:46px;padding:0 10px;border-radius:24px;background:#191b1f;color:#eeeae2;border:1px solid #37383c;font-size:12px;white-space:nowrap}.utility svg{width:18px;height:18px;stroke:#f4d292;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.make-button{min-height:46px;min-width:94px;padding:0 17px;border-radius:24px;background:#f3d292;color:#27231c;font-size:14px;font-weight:700;white-space:nowrap}.make-button:disabled{opacity:.35}.phase-active .utility{width:46px;min-width:46px;padding:0}.phase-active .utility span{display:none}.phase-active .make-button{flex:1;min-width:120px}.utility:active,.make-button:not(:disabled):active{transform:scale(.96)}.toy-error{position:absolute;z-index:4;left:30px;right:30px;bottom:106px;text-align:center;color:#ffd9b0;font-size:14px;line-height:1.35;background:#101216e8;padding:8px 10px;border-radius:10px}.load-state{position:absolute;inset:0;display:grid;place-items:center;background:#080a0de8;font-size:15px}
-[data-feed-preview=true] .toy-controls{visibility:hidden}[data-feed-preview=true] .toy-guide{top:17%}[data-feed-preview=true] .photo-zone{top:22%;bottom:18%}@media(max-width:440px){.utility{width:46px;min-width:46px;padding:0}.utility span{display:none}.toy-controls{gap:12px}.make-button{flex:1;min-width:90px}}@media(max-height:520px){.phase-active .photo-zone{inset:0}.phase-active .toy-guide{top:53px}.photo-zone{bottom:106px}}`;
+[data-feed-preview=true] .toy-controls{visibility:hidden}[data-feed-preview=true] .toy-guide{top:17%}@media(max-width:440px){.utility{width:46px;min-width:46px;padding:0}.utility span{display:none}.toy-controls{gap:12px}.make-button{flex:1;min-width:90px}}@media(max-height:520px){.phase-active .photo-zone{inset:0}.phase-active .toy-guide{top:53px}}`;
 createRoot(document.getElementById('root')).render(<App/>);

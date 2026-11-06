@@ -489,8 +489,8 @@ window.PlayableBatchDownloads = {
         "filename": "batch-2-en.zip",
         "language": "en",
         "games": 22,
-        "bytes": 16455619,
-        "sha256": "694483b1e219b3a6bb59b2cbc4b11ea199ea095e001d7e31887265258091da41",
+        "bytes": 16058819,
+        "sha256": "4a277dd535ae830d44ca1a6623e06d3ef88fff829a80e539980c6e17b5ca6775",
         "members": [
           {
             "number": 18,
@@ -610,7 +610,7 @@ window.PlayableBatchDownloads = {
             "number": 89,
             "taskId": "playable2_20261029183430_ctpmni",
             "folder": "batch-2-en/89-playable2_20261029183430_ctpmni",
-            "files": 34
+            "files": 30
           },
           {
             "number": 90,

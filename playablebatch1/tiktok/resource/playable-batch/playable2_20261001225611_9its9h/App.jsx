@@ -75,10 +75,27 @@
     const players=state.entities.filter(e=>e.team==='player'),cx=players.reduce((n,e)=>n+e.x,0)/Math.max(1,players.length),cy=players.reduce((n,e)=>n+e.y,0)/Math.max(1,players.length);
     return {...state,particles:[],playerTarget:{x:w*(.5+Math.sin(t*.8)*.18),y:h*(.43+Math.cos(t*.8)*.04)},entities:state.entities.map((entity,i)=>({...entity,x:entity.team==='player'?w*(.5+Math.sin(t*.8)*.14)+(entity.x-cx)*.7:entity.x+Math.sin(t*1.5+i*.7)*8,y:entity.team==='player'?h*(.57+Math.cos(t*.8)*.04)+(entity.y-cy)*.7:entity.y+Math.cos(t*1.5+i*.7)*8}))};
   }
-  function blade(ctx,w,h,top,bottom){
-    const t=clock()/1000,p=(t%5.4)/5.4,cx=w/2,cy=h*.64;
-    const points=[[0,0],[.07,-.04],[.04,-.11],[.16,-.23],[.12,-.26]].map(([x,y])=>({x:cx+x*w,y:cy+y*h}));
-    ctx.save();ctx.strokeStyle='#242322';ctx.lineWidth=7;ctx.lineCap='round';ctx.lineJoin='round';ctx.globalAlpha=p>.9?(1-p)/.1:1;trace(ctx,points,ease(p/.6));ctx.restore();stamp(ctx.canvas,'draw-blade-only');
+  function blade(ctx, width, top, bottom) {
+    const progress = (clock() % 5400) / 5400;
+    const scale = Math.min(width * .45, (bottom - top) * .78);
+    const centerX = width / 2;
+    const centerY = (top + bottom) / 2;
+    const outline = [
+      [-.07, .50], [-.07, .21], [-.25, .21], [-.25, .12],
+      [-.105, .12], [-.105, -.32], [0, -.50], [.105, -.32],
+      [.105, .12], [.25, .12], [.25, .21], [.07, .21],
+      [.07, .50], [-.07, .50],
+    ].map(([x, y]) => ({ x: centerX + x * scale, y: centerY + y * scale }));
+
+    ctx.save();
+    ctx.strokeStyle = '#242322';
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.globalAlpha = progress > .9 ? (1 - progress) / .1 : 1;
+    trace(ctx, outline, reduced.matches ? 1 : ease(progress / .62));
+    ctx.restore();
+    stamp(ctx.canvas, 'draw-blade-only');
   }
   function roadPose(key){
     const t=clock()/1000,offset=key==='player'?0:key==='copL'?1.3:2.2;
@@ -13227,22 +13244,21 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       }, S = (i) => {
         d = requestAnimationFrame(S);
         let t = g.current, s = t.lastFrame ? Math.min((i - t.lastFrame) / 1e3, 0.04) : 0;
-        t.lastFrame = i, t.time += s * 1e3, e.setTransform(t.dpr, 0, 0, t.dpr, 0, 0), e.clearRect(0, 0, t.w, t.h), t.bg ? e.drawImage(t.bg, 0, 0, t.w, t.h) : (e.fillStyle = "#a289cf", e.fillRect(0, 0, t.w, t.h)), e.strokeStyle = "rgba(115,126,117,0)", e.lineWidth = 1;
+        t.lastFrame = i, t.time += s * 1e3, e.setTransform(t.dpr, 0, 0, t.dpr, 0, 0), e.clearRect(0, 0, t.w, t.h), t.bg ? e.drawImage(t.bg, 0, 0, t.w, t.h) : (e.fillStyle = "#dbd0ee", e.fillRect(0, 0, t.w, t.h)), e.strokeStyle = "rgba(115,126,117,0)", e.lineWidth = 1;
         for (let o = 0; o < t.w; o += 32) e.beginPath(), e.moveTo(o, 0), e.lineTo(o, t.h), e.stroke();
         for (let o = 0; o < t.h; o += 32) e.beginPath(), e.moveTo(0, o), e.lineTo(t.w, o), e.stroke();
         if (t.mode === "drawing") {
-          let o = t.h * .34, m = t.h * .71;
+          const o = t.h * .32, m = t.h * .78;
           e.fillStyle = "#fff8df", e.strokeStyle = "#242322", e.lineWidth = 2, e.beginPath(), e.roundRect(30, o, t.w - 60, m - o, 18), e.fill(), e.stroke(), e.setLineDash([7, 8]), e.strokeStyle = "rgba(36,35,34,.18)", e.beginPath(), e.moveTo(t.w / 2, o + 22), e.lineTo(t.w / 2, m - 22), e.stroke(), e.setLineDash([]), t.raw.length > 1 && (e.beginPath(), t.raw.forEach((u, f) => f ? e.lineTo(u.x, u.y) : e.moveTo(u.x, u.y)), e.lineCap = "round", e.lineJoin = "round", e.shadowColor = "#242322", e.shadowBlur = 0, e.strokeStyle = "#242322", e.lineWidth = 6, e.stroke());
+          if (window.PlayableIdlePreview.active) window.PlayableIdlePreview.blade(e, t.w, o, m);
         }
-        if(t.mode==="drawing"&&window.PlayableIdlePreview.active)window.PlayableIdlePreview.blade(e,t.w,t.h,t.h*.34,t.h*.71);
         if (t.mode === "playing" || t.mode === "over" || t.mode === "won") {
           if (t.mode === "playing") {
             t.time >= t.nextSpawn && (x(t), t.nextSpawn = t.time + Math.max(640, Number(M.SPAWN_INTERVAL) || 1e3)), t.hero.invulnerable = Math.max(0, t.hero.invulnerable - s);
             let h = Math.atan2(Math.sin(t.facing - t.aim), Math.cos(t.facing - t.aim));
             t.aim += on(h, -s * 8, s * 8), t.swing += s * 13.2;
           }
-          let o = t.swing, m = Math.cos(o), u = Math.sin(o), f = t.blade.map((h) => ({ x: t.hero.x + h.x * m - h.y * u, y: t.hero.y + h.x * u + h.y * m })), l = N(t);
-          e.strokeStyle = "rgba(36,35,34,.24)", e.lineWidth = 2, e.strokeRect(l.left - 8, l.top - 14, l.right - l.left + 16, l.bottom - l.top + 28);
+          let o = t.swing, m = Math.cos(o), u = Math.sin(o), f = t.blade.map((h) => ({ x: t.hero.x + h.x * m - h.y * u, y: t.hero.y + h.x * u + h.y * m }));
           for (let h = t.enemies.length - 1; h >= 0; h--) {
             let n = t.enemies[h];
             if (n.hitCooldown = Math.max(0, (n.hitCooldown || 0) - s), n.flash = Math.max(0, (n.flash || 0) - s), t.mode === "playing") {
@@ -13300,7 +13316,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       };
     }, [M]), ue.default.createElement("div", { className: "game-shell" }, ue.default.createElement("style", null, `
       @font-face{font-family:DynaPuff;src:url('./assets/fonts/dynapuff/DynaPuff-SemiBold.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
-      html,body,#root{margin:0;width:100%;height:100%;overflow:hidden;background:#a289cf;touch-action:none;overscroll-behavior:none}
+      html,body,#root{margin:0;width:100%;height:100%;overflow:hidden;background:#dbd0ee;touch-action:none;overscroll-behavior:none}
        :root{--ui-unit:min(0.2564102564vw,0.1672240803vh)}
       *{box-sizing:border-box}button{font:inherit}.game-shell{position:relative;width:100%;height:100%;overflow:hidden;color:#242322;font-family:DynaPuff,sans-serif;font-weight:600;letter-spacing:.005em}
       canvas{display:block;width:100%;height:100%;touch-action:none}
@@ -13311,7 +13327,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       .instruction{top:calc(26% - 8px)}.bottom{bottom:calc(50 * var(--ui-unit) + env(safe-area-inset-bottom))}
       button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 
-      .panel{position:absolute;inset:0;z-index:4;background:rgba(162,137,207,.94);display:flex;align-items:center;justify-content:center;padding:calc(30 * var(--ui-unit) + env(safe-area-inset-top)) calc(30 * var(--ui-unit)) calc(50 * var(--ui-unit) + env(safe-area-inset-bottom))}
+      .panel{position:absolute;inset:0;z-index:4;background:rgba(219,208,238,.94);display:flex;align-items:center;justify-content:center;padding:calc(30 * var(--ui-unit) + env(safe-area-inset-top)) calc(30 * var(--ui-unit)) calc(50 * var(--ui-unit) + env(safe-area-inset-bottom))}
       .card{color:#242322;text-align:center;width:100%;max-width:340px;padding:28px 20px;border:2px solid #242322;border-radius:18px;background:#fff8df;box-shadow:none}
       .card h1{font-weight:600;margin:0 0 16px;font-size:calc(24 * var(--ui-unit));color:#242322;line-height:1.15}.card p{margin:0 0 24px;font:600 18px/1.4 DynaPuff,sans-serif}.card button{min-height:52px;min-width:190px;border:2px solid #242322;border-radius:12px;color:#242322;background:#d8eb61;padding:11px 20px;font-size:17px;cursor:pointer}.card button:active{filter:brightness(.8)}.card button.secondary{margin-top:12px;background:#ee94ac;color:#242322}.card button:disabled{opacity:.55}
     
@@ -13421,4 +13437,4 @@ tone/build/esm/core/Tone.js:
 */
 
 /* FEEDBACK_20261103_44 */
-(()=>{const style=document.createElement("style");style.textContent=".instruction{top:26%;font-size:clamp(17px,4.5vw,20px)}.card button{background:#d8eb61;color:#242322;border-color:#242322}.card button.secondary{background:#ee94ac}.card{background:#fff8df}.panel{background:rgba(162,137,207,.94)}";document.body.append(style);})();
+(()=>{const style=document.createElement("style");style.textContent=".instruction{top:26%;font-size:clamp(17px,4.5vw,20px)}.card button{background:#d8eb61;color:#242322;border-color:#242322}.card button.secondary{background:#ee94ac}.card{background:#fff8df}";document.body.append(style);})();

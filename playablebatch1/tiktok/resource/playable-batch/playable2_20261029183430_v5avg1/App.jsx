@@ -382,7 +382,25 @@ function useSound() {
 
 function ToolIcon({ type, config }) {
   const id = { spray: 'TOOL_SPRAY', brush: 'TOOL_BRUSH', rinse: 'TOOL_RINSE', vacuum: 'TOOL_DRY' }[type];
-  return <img className="toolArtwork" src={config[id]} alt="" aria-hidden="true" draggable="false" />;
+  return <ToolArtwork key={config[id]} type={type} src={config[id]} />;
+}
+
+const TOOL_OUTLINES = {
+  spray: 'M19 16h15l4 4v4H19zM23 24v15c0 2 2 3 5 3h3c2 0 3-1 3-3V24M23 12h10v4H23zM16 12h7M37 11l5-3M40 16l6-1',
+  brush: 'M10 31l20-20c2-2 5-2 7 0l1 1c2 2 2 5 0 7L18 38c-2 2-6 2-8 0s-2-5 0-7zM27 14l7 7M13 34l-3 7M18 31l-3 8M23 27l-3 9',
+  rinse: 'M9 16h18l4 4v5H18l-9-5zM27 20l8-6 5 3-9 9M37 27c0 4-4 6-4 9a4 4 0 0 0 8 0c0-3-4-5-4-9z',
+  vacuum: 'M9 34h12l5-10h13l3 10H9zM26 24V13h8l3 5M13 34v5M36 34v5M18 20h8'
+};
+
+function ToolArtwork({ type, src }) {
+  const [failed, setFailed] = useState(false);
+  if (src && !failed) {
+    return <img className="toolArtwork" src={src} alt="" aria-hidden="true" draggable="false" onError={() => setFailed(true)} />;
+  }
+  return <svg className="toolArtwork" viewBox="0 0 48 48" aria-hidden="true"
+    fill="none" stroke="#315b5a" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d={TOOL_OUTLINES[type]} />
+  </svg>;
 }
 
 function PostMyPlayButton() {

@@ -298,14 +298,291 @@ function rollHit(point,cfg,unwound=0){
   return face||sheet||body;
 }
 const PAPER_PRINT_SPACING=156,PAPER_PRINT_DENSITY=3;
+const PAPER_STYLES = [
+  { id: 'plain', paper: '#ffffff' },
+  { id: 'banknote', paper: '#d8f0df', ink: '#376b55' },
+  { id: 'scratch-card', paper: '#fff1d3', ink: '#dc655c' },
+  { id: 'ticket', paper: '#e2f1ff', ink: '#3b74b8' },
+  { id: 'smileys', paper: '#eee4fa', ink: '#8053a1' },
+  { id: 'airmail', paper: '#faf1df', ink: '#345d86', draw: drawAirmail },
+  { id: 'gingham', paper: '#fff0f2', ink: '#bd3657', draw: drawGingham },
+  { id: 'bakery', paper: '#f1e5f7', sections: 3, draw: drawBakery },
+  { id: 'cat-paws', paper: '#fbe1d8', ink: '#9a534e', sections: 3, draw: drawCatPaws },
+  { id: 'ghosts', paper: '#a58aba', sections: 3, draw: drawGhosts }
+];
+
+function drawAirmail(ctx, width) {
+  const stampWidth = width * .58;
+  ctx.save();
+  ctx.translate(0, 17);
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 10px sans-serif';
+  ctx.fillText('AIR MAIL', 0, -51, width);
+  ctx.setLineDash([1.5, 2]);
+  ctx.strokeRect(-stampWidth / 2, -40, stampWidth, 55);
+  ctx.setLineDash([]);
+  ctx.strokeRect(-stampWidth / 2 + 4, -36, stampWidth - 8, 47);
+  ctx.beginPath();
+  ctx.ellipse(0, -12, stampWidth * .3, 17, 0, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(-11, -13);
+  ctx.lineTo(12, -19);
+  ctx.lineTo(3, -2);
+  ctx.lineTo(-1, -9);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(-1, -9);
+  ctx.lineTo(12, -19);
+  ctx.stroke();
+  ctx.restore();
+  for (const edge of [-1, 1]) {
+    for (let stripe = 0; stripe < 8; stripe++) {
+      ctx.fillStyle = stripe % 2 ? '#c84947' : '#345d86';
+      ctx.save();
+      ctx.translate(edge * width * .46, stripe * 16 - 57);
+      ctx.rotate(.45);
+      ctx.fillRect(-2, -4, 4, 8);
+      ctx.restore();
+    }
+  }
+}
+
+function drawGingham(ctx, width) {
+  const cell = width / 6;
+  ctx.globalAlpha = .26;
+  for (let col = 0; col < 6; col += 2) ctx.fillRect(-width / 2 + col * cell, -65, cell, 130);
+  for (let row = 0; row < 10; row += 2) ctx.fillRect(-width / 2, -65 + row * 13, width, 13);
+  ctx.globalAlpha = 1;
+  ctx.strokeRect(-width / 2, -65, width, 130);
+}
+
+// A three-sheet tile gives the scattered motifs room to vary as the roll turns.
+function drawPaperMotifs(ctx, width, motifs) {
+  const fit = Math.min(1, width / 87);
+  for (const [paint, x, y, angle, size] of motifs) {
+    ctx.save();
+    ctx.translate(x * width, y);
+    ctx.rotate(angle);
+    ctx.scale(fit * size, fit * size);
+    paint(ctx);
+    ctx.restore();
+  }
+}
+
+function paintCroissant(ctx) {
+  ctx.fillStyle = '#efb15e';
+  ctx.strokeStyle = '#8c492f';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(-19, 7);
+  ctx.bezierCurveTo(-20, -4, -11, -13, 0, -12);
+  ctx.bezierCurveTo(11, -13, 20, -4, 19, 7);
+  ctx.quadraticCurveTo(16, 12, 9, 4);
+  ctx.quadraticCurveTo(0, -2, -9, 4);
+  ctx.quadraticCurveTo(-16, 12, -19, 7);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.strokeStyle = '#b46d36';
+  ctx.lineWidth = 1.25;
+  ctx.beginPath();
+  ctx.moveTo(-11, -8);
+  ctx.quadraticCurveTo(-12, -1, -9, 4);
+  ctx.moveTo(-4, -12);
+  ctx.quadraticCurveTo(-6, -5, -4, 1);
+  ctx.moveTo(5, -12);
+  ctx.quadraticCurveTo(7, -6, 5, 1);
+  ctx.moveTo(12, -7);
+  ctx.quadraticCurveTo(14, -1, 9, 4);
+  ctx.stroke();
+}
+
+function paintPretzel(ctx) {
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  ctx.moveTo(-8, 2);
+  ctx.bezierCurveTo(9, -15, 15, -15, 16, -3);
+  ctx.bezierCurveTo(18, 14, -18, 14, -16, -3);
+  ctx.bezierCurveTo(-15, -15, -9, -15, 8, 2);
+  ctx.strokeStyle = '#88452e';
+  ctx.lineWidth = 6.5;
+  ctx.stroke();
+  ctx.strokeStyle = '#c87c47';
+  ctx.lineWidth = 4;
+  ctx.stroke();
+
+  ctx.strokeStyle = '#fff0c8';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(-12, -7);
+  ctx.lineTo(-11, -8);
+  ctx.moveTo(12, -8);
+  ctx.lineTo(13, -7);
+  ctx.moveTo(1, 8);
+  ctx.lineTo(3, 8);
+  ctx.moveTo(-10, 6);
+  ctx.lineTo(-9, 7);
+  ctx.stroke();
+}
+
+function paintCrumbs(ctx) {
+  ctx.fillStyle = '#b97648';
+  ctx.fillRect(-6, -1, 3, 2);
+  ctx.fillRect(0, 4, 2, 2);
+  ctx.fillRect(4, -4, 2, 3);
+}
+
+function drawBakery(ctx, width) {
+  drawPaperMotifs(ctx, width, [
+    [paintCroissant, -.15, -55, -.48, .94],
+    [paintCrumbs, .31, -44, .7, .9],
+    [paintPretzel, .20, -11, .45, .78],
+    [paintCrumbs, -.32, 8, -.4, 1.12],
+    [paintCroissant, -.10, 36, .44, 1.06],
+    [paintPretzel, .24, 75, -.62, .82],
+    [paintCroissant, -.19, 106, -.17, .79],
+    [paintCrumbs, .32, 121, .3, .85],
+    [paintPretzel, .05, 151, .16, 1.02],
+    [paintCrumbs, -.32, 170, -.5, 1],
+    [paintCroissant, .16, 196, .60, 1],
+    [paintPretzel, -.23, 232, -.32, .79],
+    [paintCrumbs, .26, 248, .56, 1],
+    [paintCroissant, -.02, 277, -.22, 1.08],
+    [paintCrumbs, -.30, 307, .6, 1.05],
+    [paintPretzel, .23, 330, .54, .81],
+    [paintCroissant, -.21, 364, -.41, .82],
+  ]);
+}
+
+function paintCatPaw(ctx) {
+  const toes = [
+    [-12, -4, 3.4, 4.5, -.5],
+    [-5, -10, 3.5, 4.8, -.2],
+    [4.5, -10.5, 3.5, 4.8, .18],
+    [12, -5, 3.4, 4.5, .52],
+  ];
+  for (const toe of toes) {
+    ctx.beginPath();
+    ctx.ellipse(...toe, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.beginPath();
+  ctx.moveTo(0, -3);
+  ctx.bezierCurveTo(-5, -3, -6, 2, -10, 6);
+  ctx.bezierCurveTo(-13, 10, -9, 15, -4, 13);
+  ctx.quadraticCurveTo(0, 11, 4, 13);
+  ctx.bezierCurveTo(9, 15, 13, 10, 10, 6);
+  ctx.bezierCurveTo(6, 2, 5, -3, 0, -3);
+  ctx.fill();
+}
+
+function drawCatPaws(ctx, width) {
+  drawPaperMotifs(ctx, width, [
+    [paintCatPaw, -.19, -56, -.41, .92],
+    [paintCatPaw, .21, -30, .35, .73],
+    [paintCatPaw, -.27, -3, -.17, .81],
+    [paintCatPaw, .04, 27, .18, 1.06],
+    [paintCatPaw, .25, 61, .49, .79],
+    [paintCatPaw, -.22, 77, -.35, .68],
+    [paintCatPaw, -.07, 108, -.56, .95],
+    [paintCatPaw, .26, 136, .28, .89],
+    [paintCatPaw, -.21, 161, -.24, .83],
+    [paintCatPaw, .11, 191, .35, 1],
+    [paintCatPaw, -.24, 219, -.55, .76],
+    [paintCatPaw, .22, 239, .51, .89],
+    [paintCatPaw, -.04, 270, -.15, .99],
+    [paintCatPaw, -.25, 304, -.31, .73],
+    [paintCatPaw, .26, 320, .34, .85],
+    [paintCatPaw, .01, 358, .07, 1.04],
+  ]);
+}
+
+function paintGhost(ctx) {
+  ctx.fillStyle = '#fffaf4';
+  ctx.strokeStyle = '#564565';
+  ctx.lineWidth = 1.3;
+  ctx.beginPath();
+  ctx.moveTo(-13, 9);
+  ctx.lineTo(-12, -2);
+  ctx.bezierCurveTo(-11, -18, 11, -18, 12, -2);
+  ctx.quadraticCurveTo(13, 5, 16, 9);
+  ctx.quadraticCurveTo(13, 14, 8, 9);
+  ctx.quadraticCurveTo(4, 15, 0, 10);
+  ctx.quadraticCurveTo(-4, 15, -7, 10);
+  ctx.quadraticCurveTo(-14, 15, -13, 9);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = '#efafb9';
+  ctx.beginPath();
+  ctx.ellipse(-6.5, 1, 2.2, 1.4, 0, 0, Math.PI * 2);
+  ctx.moveTo(10.7, 1);
+  ctx.ellipse(8.5, 1, 2.2, 1.4, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#564565';
+  ctx.beginPath();
+  ctx.ellipse(-3, -4, 1.5, 2.3, 0, 0, Math.PI * 2);
+  ctx.moveTo(6.5, -4);
+  ctx.ellipse(5, -4, 1.5, 2.3, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(-.5, .5);
+  ctx.quadraticCurveTo(1, 3, 2.5, .5);
+  ctx.stroke();
+}
+
+function paintSpark(ctx) {
+  ctx.fillStyle = '#f4d79c';
+  ctx.beginPath();
+  ctx.moveTo(0, -6);
+  ctx.quadraticCurveTo(1, -1, 5, 0);
+  ctx.quadraticCurveTo(1, 1, 0, 6);
+  ctx.quadraticCurveTo(-1, 1, -5, 0);
+  ctx.quadraticCurveTo(-1, -1, 0, -6);
+  ctx.fill();
+}
+
+function drawGhosts(ctx, width) {
+  drawPaperMotifs(ctx, width, [
+    [paintGhost, -.18, -56, -.38, .98],
+    [paintSpark, .32, -55, .2, 1.04],
+    [paintGhost, .22, -16, .34, .75],
+    [paintSpark, -.30, -9, .45, .76],
+    [paintGhost, -.08, 28, -.14, 1.13],
+    [paintSpark, .34, 45, -.3, .88],
+    [paintGhost, -.24, 78, -.21, .82],
+    [paintGhost, .21, 111, .48, .88],
+    [paintSpark, -.28, 123, .1, 1.05],
+    [paintGhost, -.06, 152, -.38, 1.05],
+    [paintSpark, .28, 173, -.2, .8],
+    [paintGhost, .19, 199, .22, 1],
+    [paintGhost, -.24, 231, -.49, .77],
+    [paintSpark, .27, 241, .38, 1.04],
+    [paintGhost, -.03, 274, .14, 1.16],
+    [paintSpark, -.30, 308, -.2, .82],
+    [paintGhost, .20, 323, .35, .92],
+    [paintGhost, -.21, 365, -.24, .81],
+    [paintSpark, .31, 370, .1, .95],
+  ]);
+}
+
 const paperPrintCache=new Map();
 function paperPrintTexture(kind,width){
   if(!kind)return null;
   const key=kind+':'+width.toFixed(3);if(paperPrintCache.has(key))return paperPrintCache.get(key);
-  const canvas=document.createElement('canvas');canvas.width=Math.ceil(width*PAPER_PRINT_DENSITY);canvas.height=PAPER_PRINT_SPACING*PAPER_PRINT_DENSITY;
+  const { ink: tone, draw, sections = 1 } = PAPER_STYLES[kind];
+  const canvas=document.createElement('canvas');canvas.width=Math.ceil(width*PAPER_PRINT_DENSITY);canvas.height=sections*PAPER_PRINT_SPACING*PAPER_PRINT_DENSITY;
   const ctx=canvas.getContext('2d'),w=width*.87;ctx.scale(canvas.width/width,PAPER_PRINT_DENSITY);ctx.translate(width/2,78);ctx.lineWidth=1;
-    const tone=kind===1?'#376b55':kind===2?'#dc655c':kind===3?'#3b74b8':'#8053a1';ctx.strokeStyle=tone;ctx.fillStyle=tone;
-    if(kind===1){
+    if(tone) ctx.strokeStyle=ctx.fillStyle=tone;
+    if(draw){
+      draw(ctx, w, sections);
+    }else if(kind===1){
       ctx.strokeRect(-w/2,-61,w,122);ctx.strokeRect(-w/2+4,-57,w-8,114);ctx.beginPath();ctx.ellipse(0,0,w*.31,34,0,0,Math.PI*2);ctx.stroke();ctx.font='bold 28px Georgia';ctx.textAlign='center';ctx.fillText('100',0,9);ctx.font='bold 10px Georgia';ctx.fillText('100',-w/2+18,-43);ctx.fillText('100',w/2-18,50);for(let j=0;j<6;j++){ctx.beginPath();ctx.moveTo(-w/2+8,-30+j*10);ctx.lineTo(-w*.34,-30+j*10);ctx.moveTo(w*.34,-30+j*10);ctx.lineTo(w/2-8,-30+j*10);ctx.stroke();}
     }else if(kind===2){
       ctx.fillRect(-w/2,-60,w,27);ctx.fillStyle='#fff';ctx.font='bold 13px Arial';ctx.textAlign='center';ctx.fillText('LUCKY 7',0,-42);ctx.fillStyle='#babfc5';for(let j=0;j<6;j++){const x=-w*.27+(j%2)*w*.52,yy=-15+Math.floor(j/2)*24;ctx.fillRect(x-13,yy-9,26,18);ctx.strokeRect(x-13,yy-9,26,18);ctx.fillStyle='#7b858f';ctx.beginPath();ctx.moveTo(x-9,yy+5);ctx.lineTo(x+8,yy-5);ctx.stroke();ctx.fillStyle='#babfc5';}ctx.strokeRect(-w/2,-60,w,122);
@@ -331,20 +608,20 @@ function tracePaperSurface(ctx,g,from,to,bottom,sway){
 }
 function paintPaperPrint(ctx,g,phase,bottom,kind,from,to,sway=0){
   const texture=paperPrintTexture(kind,g.depth);if(!texture)return;
-  const density=texture.height/PAPER_PRINT_SPACING,step=from<0?2:16;
+  const density=PAPER_PRINT_DENSITY, repeatLength=texture.height/density, step=from<0?2:16;
   // Each narrow band is sheared along the paper's width axis, rather than
   // rotating its length axis. Curved bands also compress as they turn away.
   for(let v=from;v<to-1e-7;){
-    let sample=((v-phase)%PAPER_PRINT_SPACING+PAPER_PRINT_SPACING)%PAPER_PRINT_SPACING;
-    if(PAPER_PRINT_SPACING-sample<1e-6)sample=0;
-    const length=Math.min(step,to-v,PAPER_PRINT_SPACING-sample),end=v+length;
+    let sample=((v-phase)%repeatLength+repeatLength)%repeatLength;
+    if(repeatLength-sample<1e-6)sample=0;
+    const length=Math.min(step,to-v,repeatLength-sample),end=v+length;
     const a=paperSurfacePoint(g,0,v,bottom,sway),d=paperSurfacePoint(g,0,end,bottom,sway),pixels=length*density;
     ctx.save();ctx.transform(g.depth/texture.width,g.slant/texture.width,(d.x-a.x)/pixels,(d.y-a.y)/pixels,a.x,a.y);
     ctx.drawImage(texture,0,sample*density,texture.width,pixels,0,0,texture.width,pixels+.12);ctx.restore();v=end;
   }
 }
 function paperRollColors(printIndex){
-  const kind=printIndex%5,paper=['#ffffff','#d8f0df','#fff1d3','#e2f1ff','#eee4fa'][kind];
+  const kind=printIndex%PAPER_STYLES.length,paper=PAPER_STYLES[kind].paper;
   const shade=light=>'#'+paper.slice(1).match(/../g).map(channel=>Math.round(parseInt(channel,16)*light).toString(16).padStart(2,'0')).join('');
   return {kind,paper,side:shade(.85),back:shade(.36)};
 }
@@ -392,7 +669,10 @@ function PaperCanvas({cfg,lengthRef,phaseRef,angleRef,velocityRef,dragRef,unwoun
         if(pose.showNew){ctx.save();ctx.globalAlpha=pose.newAlpha;ctx.translate(0,pose.newY);paintPaperRoll(ctx,cfg,0,0,bottom,0,countRef.current+1);ctx.restore();}
         g=rollGeometry(cfg,pose.showNew?0:cycle.oldUnwound);
       }
-      ctx.restore();canvas.dataset.paperLeft=g.left.toFixed(2);canvas.dataset.paperRight=g.right.toFixed(2);canvas.dataset.paperTop=g.sheetTop;canvas.dataset.phase=phaseRef.current.toFixed(1);canvas.dataset.paperLength=lengthRef.current.toFixed(1);canvas.dataset.rollDiameter=(g.rx*2).toFixed(2);canvas.dataset.unwound=unwoundRef.current.toFixed(1);canvas.dataset.rollStage=cycle.stage;canvas.dataset.cycleElapsed=cycle.elapsed.toFixed(0);canvas.dataset.coastVelocity=velocityRef.current.toFixed(4);canvas.dataset.coasting=String(!preview&&!drag.active&&cycle.stage==='ready'&&velocityRef.current>0);
+      ctx.restore();
+      const visibleIndex = countRef.current + (cycle.stage === 'enter' ? 1 : 0);
+      canvas.dataset.paperPrint = PAPER_STYLES[visibleIndex % PAPER_STYLES.length].id;
+      canvas.dataset.paperLeft=g.left.toFixed(2);canvas.dataset.paperRight=g.right.toFixed(2);canvas.dataset.paperTop=g.sheetTop;canvas.dataset.phase=phaseRef.current.toFixed(1);canvas.dataset.paperLength=lengthRef.current.toFixed(1);canvas.dataset.rollDiameter=(g.rx*2).toFixed(2);canvas.dataset.unwound=unwoundRef.current.toFixed(1);canvas.dataset.rollStage=cycle.stage;canvas.dataset.cycleElapsed=cycle.elapsed.toFixed(0);canvas.dataset.coastVelocity=velocityRef.current.toFixed(4);canvas.dataset.coasting=String(!preview&&!drag.active&&cycle.stage==='ready'&&velocityRef.current>0);
     };frameRef.current=requestAnimationFrame(draw);
     return()=>{cancelAnimationFrame(frameRef.current);observer.disconnect();};
   },[cfg,lengthRef,phaseRef,angleRef,velocityRef,dragRef,unwoundRef,cycleRef,onRollEmpty,onRollComplete]);

@@ -306,117 +306,105 @@
   ],
   "images": [
     {
-      "id": "CHARACTER_MAIN",
-      "label": "Illustrated stickman character",
-      "path": "./assets/character-imagegen-v2.webp",
-      "replaceable": true
-    },
-    {
-      "id": "BACKGROUND_MAIN",
-      "label": "Paper training room texture",
-      "path": "./assets/background-imagegen-v2.webp",
-      "replaceable": true
-    },
-    {
       "id": "TOOL_FIST",
       "label": "FIST artwork",
-      "path": "./assets/weapons/fist-imagegen-v2.webp",
+      "path": "./assets/arsenal/fist-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_BAT",
       "label": "WOODEN BAT artwork",
-      "path": "./assets/weapons/bat-imagegen-v2.webp",
+      "path": "./assets/arsenal/bat-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_KATANA",
       "label": "KATANA artwork",
-      "path": "./assets/weapons/katana-imagegen-v2.webp",
+      "path": "./assets/arsenal/katana-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_SLEDGE",
       "label": "SLEDGEHAMMER artwork",
-      "path": "./assets/weapons/sledge-imagegen-v2.webp",
+      "path": "./assets/arsenal/sledge-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_LASER",
       "label": "LASER SWORD artwork",
-      "path": "./assets/weapons/laser-imagegen-v2.webp",
+      "path": "./assets/arsenal/laser-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_CHAINSAW",
       "label": "CHAINSAW artwork",
-      "path": "./assets/weapons/chainsaw-imagegen-v2.webp",
+      "path": "./assets/arsenal/chainsaw-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_ROCKET",
       "label": "ROCKET artwork",
-      "path": "./assets/weapons/rocket-imagegen-v2.webp",
+      "path": "./assets/arsenal/rocket-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_AXE",
       "label": "FIRE AXE artwork",
-      "path": "./assets/weapons/axe-imagegen-v2.webp",
+      "path": "./assets/arsenal/axe-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_BOMB",
       "label": "BOMB artwork",
-      "path": "./assets/weapons/bomb-imagegen-v2.webp",
+      "path": "./assets/arsenal/bomb-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_UFO",
       "label": "UFO BLASTER artwork",
-      "path": "./assets/weapons/ufo-imagegen-v2.webp",
+      "path": "./assets/arsenal/ufo-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_COMET",
       "label": "COMET artwork",
-      "path": "./assets/weapons/comet-imagegen-v2.webp",
+      "path": "./assets/arsenal/comet-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_ATOMIC",
       "label": "ATOMIC BOMB artwork",
-      "path": "./assets/weapons/atomic-imagegen-v2.webp",
+      "path": "./assets/arsenal/atomic-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_PLASMA",
       "label": "PLASMA CANNON artwork",
-      "path": "./assets/weapons/plasma-imagegen-v2.webp",
+      "path": "./assets/arsenal/plasma-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_BLACKHOLE",
       "label": "BLACK HOLE artwork",
-      "path": "./assets/weapons/blackhole-imagegen-v2.webp",
+      "path": "./assets/arsenal/blackhole-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_GALAXY",
       "label": "GALAXY artwork",
-      "path": "./assets/weapons/galaxy-imagegen-v2.webp",
+      "path": "./assets/arsenal/galaxy-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_ADMIN",
       "label": "Admin hammer artwork",
-      "path": "./assets/weapons/admin-imagegen-v2.webp",
+      "path": "./assets/arsenal/admin-ink.webp",
       "replaceable": true
     },
     {
       "id": "TOOL_AUTO",
       "label": "Auto attack artwork",
-      "path": "./assets/weapons/auto-imagegen-v2.webp",
+      "path": "./assets/arsenal/auto-ink.webp",
       "replaceable": true
     }
   ],

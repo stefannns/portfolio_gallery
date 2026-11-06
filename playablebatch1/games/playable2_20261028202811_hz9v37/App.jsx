@@ -193,7 +193,7 @@ button:focus-visible { outline: 3px solid #3c8ddd; outline-offset: 3px; }
 `;
 
 const GAME_NUMBER=79;
-const POLISH_CSS=BASE_CSS+".brand,.bottom-hint{display:none}.topline{top:30px;left:30px;right:30px;justify-content:center}.stats{font:700 28px/1 system-ui,sans-serif;color:#292d2b}.stats-dot{display:none}.guide{top:24%;left:30px;right:30px;transform:translateY(-50%);font:700 18px/1.3 system-ui,sans-serif;color:#2f3631;letter-spacing:0;animation:batchBreathe 2.5s ease-in-out infinite}.viewfinder{width:82%;height:42%;box-shadow:none;background:transparent;border-color:rgba(40,45,42,.25)}.zoom-readout{top:8px;right:8px;border-radius:24px;padding:0 3px;background:#fbfaf3ee;gap:1px}.zoom-readout button{min-width:44px;min-height:44px;font-size:22px}.zoom-readout span{min-width:36px;text-align:center}.shutter{background:#303a35;border-color:#fffdf3}.reset-control{left:30px;bottom:50px;min-height:44px;border-radius:24px;padding:0 15px;font-size:14px;background:#fdfcf5e6;border:1px solid #c9cec2;color:#354239}.tension-wrap{top:72px;right:30px;width:86px}.tension-caption{font-size:10px}.newspaper,.recap-sheet{background:#fffef6;color:#2c352e;border-color:#788374;box-shadow:4px 7px 0 #2e39241c;max-height:88%;width:100%;padding:20px}.newspaper h1{font:700 clamp(23px,6vw,29px)/1.08 Georgia,serif}.paper-close,.primary-action{background:#354a40;border-color:#354a40;min-height:46px;border-radius:3px}.secondary-action{min-height:46px}.recap-count{color:#354a40}.paper-photo{border:3px solid #e8eade}.paper-backdrop,.recap-backdrop{padding:30px}.recap-label,.recap-grid span{font-size:12px;letter-spacing:0;text-transform:none}[data-feed-preview=true] .stats,[data-feed-preview=true] .tension-wrap,[data-feed-preview=true] .reset-control,[data-feed-preview=true] .zoom-readout,[data-feed-preview=true] .shutter{visibility:hidden}"+".observer-app{container-type:size}.newspaper{max-height:100%;padding:18px}.newspaper h1{font-size:26px;line-height:1.06}.newspaper .paper-photo{height:26cqh;min-height:100px;max-height:170px;aspect-ratio:auto}.newspaper .paper-photo img{object-fit:contain}.newspaper .paper-caption{font-size:14px;line-height:1.4;margin:10px 0}.newspaper .paper-meta{font-size:9px;margin:8px 0 12px}.newspaper .paper-rule{margin:6px 0 10px}.town-canvas{touch-action:none;cursor:grab}.town-canvas:active{cursor:grabbing}.paper-caption{font:400 15px/1.45 system-ui,sans-serif;margin:14px 0;color:#3c443c}.paper-meta{gap:14px;align-items:start;line-height:1.4;letter-spacing:.02em}.paper-meta>span:first-child{max-width:85%}.paper-photo{aspect-ratio:1.28}.newspaper{transform:rotate(-.5deg)}.paper-kicker{font:700 12px/1.3 system-ui,sans-serif;letter-spacing:.17em}.paper-close{width:100%;font:600 15px/1.25 system-ui,sans-serif}.guide{background:#faf8eeeb;border-radius:24px;padding:10px 14px;left:50%;right:auto;white-space:nowrap;transform:translate(-50%,-50%)}@media(max-width:350px){.guide{font-size:16px;padding:10px 12px}.newspaper{padding:15px}.paper-caption{font-size:14px}}";
+const POLISH_CSS=BASE_CSS+".brand,.bottom-hint{display:none}.topline{top:30px;left:30px;right:30px;justify-content:center}.stats{font:700 28px/1 system-ui,sans-serif;color:#292d2b}.stats-dot{display:none}.guide{top:24%;left:30px;right:30px;transform:translateY(-50%);font:700 18px/1.3 system-ui,sans-serif;color:#2f3631;letter-spacing:0;animation:batchBreathe 2.5s ease-in-out infinite}.viewfinder{width:82%;height:42%;box-shadow:none;background:transparent;border-color:rgba(40,45,42,.25)}.zoom-readout{top:8px;right:8px;border-radius:24px;padding:0 3px;background:#fbfaf3ee;gap:1px}.zoom-readout button{min-width:44px;min-height:44px;font-size:22px}.zoom-readout span{min-width:36px;text-align:center}.shutter{background:#303a35;border-color:#fffdf3}.reset-control{left:30px;bottom:50px;min-height:44px;border-radius:24px;padding:0 15px;font-size:14px;background:#fdfcf5e6;border:1px solid #c9cec2;color:#354239}.tension-wrap{top:72px;right:30px;width:86px}.tension-caption{font-size:10px}.newspaper,.recap-sheet{background:#fffef6;color:#2c352e;border-color:#788374;box-shadow:4px 7px 0 #2e39241c;max-height:88%;width:100%;padding:20px}.newspaper h1{font:700 clamp(23px,6vw,29px)/1.08 Georgia,serif}.paper-close,.primary-action{background:#354a40;border-color:#354a40;min-height:46px;border-radius:3px}.secondary-action{min-height:46px}.recap-count{color:#354a40}.paper-backdrop,.recap-backdrop{padding:30px}.recap-label,.recap-grid span{font-size:12px;letter-spacing:0;text-transform:none}[data-feed-preview=true] .stats,[data-feed-preview=true] .tension-wrap,[data-feed-preview=true] .reset-control,[data-feed-preview=true] .zoom-readout,[data-feed-preview=true] .shutter{visibility:hidden}"+".observer-app{container-type:size}.town-canvas{touch-action:none;cursor:grab}.town-canvas:active{cursor:grabbing}.guide{background:#faf8eeeb;border-radius:24px;padding:10px 14px;left:50%;right:auto;white-space:nowrap;transform:translate(-50%,-50%)}@media(max-width:350px){.guide{font-size:16px;padding:10px 12px}.newspaper{padding:15px}.paper-caption{font-size:14px}}";
 const CAMERA_CONTROLS_CSS=`
 .observer-app{--finder-center:54cqh;--finder-height:max(120px,min(42cqh,calc(92cqh - 256px)));--finder-controls-gap:16px}
 .observer-app .viewfinder{top:var(--finder-center);height:var(--finder-height)}
@@ -262,15 +262,15 @@ const TOWN_SPOTS = [
   { x: 390, y: 1030, place: 'West Garden', kinds: ['music', 'dance', 'friendly'], offset: 1, count: 2 },
 ];
 const STORIES = {
-  fight: { category: 'conflict', priority: 100, section: 'BREAKING / LOCAL', headline: 'Fight breaks out in the square', caption: 'Two neighbors trade shoves as a heated argument turns into a scuffle.' },
-  friendly: { category: 'friendly', priority: 40, section: 'PEOPLE / COMMUNITY', headline: 'A small act of friendship', caption: 'Two neighbors stop for a cheerful greeting and a high five.' },
-  kindness: { category: 'friendly', priority: 65, section: 'PEOPLE / COMMUNITY', headline: 'A helping hand makes the day', caption: 'A passerby helps gather a neighbor’s scattered shopping.' },
-  music: { category: 'friendly', priority: 55, section: 'ARTS / STREET LIFE', headline: 'Street musician draws a crowd', caption: 'An impromptu guitar performance turns the pavement into a tiny stage.' },
-  dance: { category: 'friendly', priority: 50, section: 'ARTS / STREET LIFE', headline: 'Neighbors dance in the street', caption: 'A spontaneous dance gives the afternoon a lighter rhythm.' },
-  splash: { category: 'calm', priority: 75, section: 'LOCAL / LITTLE DRAMAS', headline: 'A splash catches a passerby', caption: 'Water sprays from the fountain, leaving a passing neighbor dripping.' },
-  trip: { category: 'calm', priority: 80, section: 'LOCAL / LITTLE DRAMAS', headline: 'A stumble stops the afternoon', caption: 'A walker loses their footing while a nearby neighbor rushes to help.' },
-  juggle: { category: 'friendly', priority: 60, section: 'ARTS / STREET LIFE', headline: 'Market performer steals the show', caption: 'Flying fruit and quick hands bring a little spectacle to the market.' },
-  soccer: { category: 'friendly', priority: 58, section: 'SPORT / AROUND TOWN', headline: 'A friendly kickabout in the park', caption: 'Two locals trade passes in a lively game on the grass.' },
+  fight: { category: 'conflict', priority: 100, headline: 'Fight breaks out in the square', caption: 'Two neighbors trade shoves as a heated argument turns into a scuffle.' },
+  friendly: { category: 'friendly', priority: 40, headline: 'A small act of friendship', caption: 'Two neighbors stop for a cheerful greeting and a high five.' },
+  kindness: { category: 'friendly', priority: 65, headline: 'A helping hand makes the day', caption: 'A passerby helps gather a neighbor’s scattered shopping.' },
+  music: { category: 'friendly', priority: 55, headline: 'Street musician draws a crowd', caption: 'An impromptu guitar performance turns the pavement into a tiny stage.' },
+  dance: { category: 'friendly', priority: 50, headline: 'Neighbors dance in the street', caption: 'A spontaneous dance gives the afternoon a lighter rhythm.' },
+  splash: { category: 'calm', priority: 75, headline: 'A splash catches a passerby', caption: 'Water sprays from the fountain, leaving a passing neighbor dripping.' },
+  trip: { category: 'calm', priority: 80, headline: 'A stumble stops the afternoon', caption: 'A walker loses their footing while a nearby neighbor rushes to help.' },
+  juggle: { category: 'friendly', priority: 60, headline: 'Market performer steals the show', caption: 'Flying fruit and quick hands bring a little spectacle to the market.' },
+  soccer: { category: 'friendly', priority: 58, headline: 'A friendly kickabout in the park', caption: 'Two locals trade passes in a lively game on the grass.' },
 };
 
 function sceneScale(width, height, zoom) {
@@ -346,7 +346,7 @@ function storyForCrop(sim, bounds) {
     return { ...STORIES[ev.kind], kind: ev.kind, place: ev.place };
   }
   const people = sim.residents.filter(inside).length;
-  return { kind: 'calm', category: 'calm', section: 'LOCAL / DAILY LIFE', place: 'Around town', headline: people ? 'An ordinary moment, worth a look' : 'A quiet corner of the town', caption: people ? 'Life carries on between the bigger stories. This frame catches a quieter moment.' : 'For a moment, the streets belong to the open square and the afternoon light.' };
+  return { kind: 'calm', category: 'calm', place: 'Around town', headline: people ? 'An ordinary moment, worth a look' : 'A quiet corner of the town', caption: people ? 'Life carries on between the bigger stories. This frame catches a quieter moment.' : 'For a moment, the streets belong to the open square and the afternoon light.' };
 }
 
 
@@ -724,11 +724,9 @@ function App() {
       {paper && !recap && (
         <div className="paper-backdrop" data-testid="newspaper">
           <article className="newspaper" data-story-kind={paper.kind}>
-            <div className="paper-kicker">THE DAILY SQUARE</div>
-            <div className="paper-rule" />
             <h1 data-testid="headline">{paper.headline}</h1>
             <div className="paper-photo"><img src={paper.image} alt="The photographed town square" /></div>
-            <p className="paper-caption" data-testid="story-caption">{paper.caption}</p><div className="paper-meta"><span>{paper.place} · {paper.section}</span><span>{photoCount.toString().padStart(2, '0')}</span></div>
+            <p className="paper-caption" data-testid="story-caption">{paper.caption}</p>
             <button type="button" className="paper-close" data-testid="close-paper" onClick={() => { modalRef.current = false; setPaper(null); }}>Return to the square</button>
           </article>
         </div>
@@ -936,17 +934,103 @@ button { font: inherit; color: inherit; }
 .reset-icon { width: 14px; height: 14px; border: 1.5px solid #766655; border-right-color: transparent; border-radius: 50%; position: relative; }.reset-icon:after { content: ''; position: absolute; right: -2px; top: -2px; border-left: 4px solid #766655; border-top: 3px solid transparent; border-bottom: 3px solid transparent; }
 .paper-backdrop, .recap-backdrop { position: absolute; z-index: 10; inset: 0; display: grid; place-items: center; padding: 22px; background: rgba(58,48,40,.35); }
 .newspaper, .recap-sheet { width: min(88%, 370px); max-height: 92%; overflow: auto; background: #f4eddd; border: 1px solid #b5a690; box-shadow: 5px 7px 0 rgba(64,49,38,.13); padding: 20px 18px 17px; color: #443b34; transform: rotate(-.7deg); }
-.paper-kicker { font-family: var(--font-display); font-size: 11px; letter-spacing: .2em; color: #856b58; }.paper-rule { border-top: 2px solid #584b41; margin: 8px 0 12px; }
-.newspaper h1, .recap-sheet h2 { margin: 0 0 12px; font-family: var(--font-display); font-size: clamp(24px, 7vw, 33px); line-height: 1.03; font-weight: 400; letter-spacing: -.02em; }.paper-photo { width: 100%; aspect-ratio: 1.28; background: #ded2bd; overflow: hidden; border: 5px solid #e1d6c1; outline: 1px solid #a99a83; }.paper-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }.paper-meta { display: flex; justify-content: space-between; margin: 10px 0 15px; font-family: var(--font-mono); color: #7d6958; font-size: 10px; letter-spacing: .09em; }
+.paper-kicker { font-family: var(--font-display); font-size: 11px; letter-spacing: .2em; color: #856b58; }
+.newspaper h1, .recap-sheet h2 { margin: 0 0 12px; font-family: var(--font-display); font-size: clamp(24px, 7vw, 33px); line-height: 1.03; font-weight: 400; letter-spacing: -.02em; }
 .paper-close, .primary-action, .secondary-action { min-height: 42px; padding: 9px 15px; border: 1px solid #8d7561; cursor: pointer; font-family: var(--font-display); font-size: 16px; }.paper-close, .primary-action { background: #aa604e; color: #fff6e7; }.secondary-action { background: transparent; color: #665548; }.recap-sheet { transform: rotate(.4deg); text-align: center; }.recap-sheet h2 { margin-top: 14px; font-size: 29px; }.recap-count { margin-top: 5px; font-family: var(--font-display); font-size: 56px; line-height: 1; color: #aa604e; }.recap-label { color: #796a5c; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; }.recap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin: 22px 0 17px; border-top: 1px solid #c7b8a1; border-bottom: 1px solid #c7b8a1; padding: 12px 0; }.recap-grid div { display: flex; flex-direction: column; gap: 3px; }.recap-grid b { font-family: var(--font-display); font-size: 23px; font-weight: 400; }.recap-grid span { font-size: 10px; color: #806e5d; line-height: 1.1; }.history { text-align: left; margin: 13px 0 17px; padding-top: 2px; }.history > span { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #806e5d; }.history p { margin: 7px 0 0; font-family: var(--font-display); font-size: 14px; line-height: 1.15; }.recap-actions { display: grid; gap: 8px; }
 @media (max-height: 600px) { .viewfinder { height: min(43%, 260px); } .guide { top: 13%; } .bottom-hint { display: none; } .newspaper, .recap-sheet { max-height: 88%; padding-top: 14px; } }
 `;
 
+const printStyles = `
+@font-face {
+  font-family: SpecialElite;
+  src: url('./assets/fonts/special-elite/SpecialElite-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+.observer-app {
+  --font-display: SpecialElite, 'Courier New', monospace;
+  --font-body: SpecialElite, 'Courier New', monospace;
+  --font-mono: SpecialElite, 'Courier New', monospace;
+}
+.observer-app .guide, .observer-app .stats { font-family: SpecialElite, monospace; }
+.newspaper, .recap-sheet {
+  position: relative;
+  background-color: #efefef;
+  background-image: url('./assets/worn-newsprint-gray-v4.webp');
+  background-size: 100% 100%;
+  border: 1px solid #929292;
+  border-top: 7px double #252525;
+  border-bottom: 4px double #252525;
+  box-shadow: inset 0 0 24px #30303018, 3px 6px 18px #1113;
+  padding: 20px 18px 17px;
+  color: #252525;
+  transform: rotate(-.4deg);
+}
+.recap-sheet {
+  background-image: linear-gradient(#efcf7624, #efcf7624), url('./assets/worn-newsprint-gray-v4.webp');
+}
+.recap-sheet .paper-kicker {
+  text-align: center;
+  font: 400 11px SpecialElite, monospace;
+  letter-spacing: .17em;
+  color: #444;
+}
+.recap-sheet h2 {
+  font: 400 clamp(24px, 6.8vw, 31px)/1.1 SpecialElite, monospace;
+  letter-spacing: -.04em;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: .3px .3px #25252565;
+}
+.newspaper {
+  max-height: 100%;
+  text-align: center;
+  background-color: ${TOWN_GRASS};
+  background-image: linear-gradient(${TOWN_GRASS}b8, ${TOWN_GRASS}b8), url('./assets/worn-newsprint-gray-v4.webp');
+}
+.newspaper h1 {
+  margin: 0 0 14px;
+  font: 900 clamp(24px, 7.3vw, 34px)/1.03 Georgia, 'Times New Roman', serif;
+  letter-spacing: -.025em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  text-shadow: .4px .4px #25252565;
+}
+.newspaper .paper-photo img {
+  display: block;
+  margin: 0 auto;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(33cqh, 240px);
+  border: 5px solid #252525;
+  background: ${TOWN_GRASS};
+}
+.newspaper .paper-caption {
+  margin: 14px 0 16px;
+  font: 400 16px/1.35 SpecialElite, 'Courier New', monospace;
+  color: #303030;
+}
+.paper-close, .primary-action, .secondary-action {
+  font-family: SpecialElite, monospace;
+  background: #252525;
+  color: #f4f4f4;
+  border: 1px solid #252525;
+  border-radius: 0;
+  box-shadow: 2px 2px 0 #999;
+}
+.paper-close { width: 100%; font-size: 16px; }
+.secondary-action { background: transparent; color: #252525; }
+.recap-count { color: #252525; }
+.history p { line-height: 1.3; }
+@media (max-height: 490px) {
+  .paper-backdrop { padding-block: 24px; }
+  .newspaper { padding-block: 13px; }
+  .newspaper h1 { margin-bottom: 10px; }
+  .newspaper .paper-photo img { max-height: 26cqh; }
+  .newspaper .paper-caption { margin-block: 10px; }
+}
+`;
+
 function StyledApp() { return <><style>{styles}</style><App /></>; }
 
-createRoot(document.getElementById('root')).render(<><StyledApp/><BatchPolish/></>);
-
-/* FEEDBACK_20261103_79 */
-(()=>{const style=document.createElement("style");style.textContent="@font-face{font-family:SpecialElite;src:url('./assets/fonts/special-elite/SpecialElite-Regular.ttf') format('truetype');font-display:swap}.observer-app{--font-display:SpecialElite,'Courier New',monospace;--font-body:SpecialElite,'Courier New',monospace;--font-mono:SpecialElite,'Courier New',monospace}.newspaper,.recap-sheet{position:relative;background-color:#efeeea;background-image:linear-gradient(#efcf7624,#efcf7624),url('./assets/worn-newsprint-gray-v4.webp');background-size:100% 100%;border:1px solid #92928c;border-top:7px double #252525;border-bottom:4px double #252525;box-shadow:inset 0 0 24px #30303018,3px 6px 18px #1113;padding:20px 18px 17px;color:#252525;transform:rotate(-.4deg)}.paper-kicker{display:block;text-align:center;font:400 11px SpecialElite,monospace;letter-spacing:.17em;color:#444444}.paper-rule{border-top:3px double #252525;margin:10px 0 15px}.newspaper h1,.recap-sheet h2{font-family:SpecialElite,monospace;font-size:clamp(24px,6.8vw,31px);font-weight:400;line-height:1.1;letter-spacing:-.04em;text-align:center;text-transform:uppercase;text-shadow:.3px .3px #25252565}.paper-photo{border:5px solid #deded8;outline:1px solid #565656;background:#d9d9d4;filter:grayscale(1) contrast(1.22)}.paper-meta{font-family:SpecialElite,monospace;color:#555555;letter-spacing:0;border-bottom:1px solid #777777;padding-bottom:12px;margin-bottom:14px}.paper-close,.primary-action,.secondary-action{font-family:SpecialElite,monospace;background:#252525;color:#f4f4ef;border:1px solid #252525;border-radius:0;box-shadow:2px 2px 0 #999994}.secondary-action{background:transparent;color:#252525}.recap-count{color:#252525}.history p{line-height:1.3}";document.body.append(style);})();
-
-(()=>{const style=document.createElement("style");style.textContent=".observer-app .guide,.observer-app .stats,.newspaper .paper-caption{font-family:SpecialElite,monospace}.newspaper .paper-caption{line-height:1.45;font-size:14px;color:#363636}";document.body.append(style);})();
+createRoot(document.getElementById('root')).render(<><StyledApp/><BatchPolish/><style>{printStyles}</style></>);
