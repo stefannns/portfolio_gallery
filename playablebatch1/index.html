@@ -60,7 +60,7 @@
 <link rel="stylesheet" href="/playablebatch1/batch-filter.css?v=stable-batches-20261021-1">
 <script src="/playablebatch1/italian-games.js?v=italian38-d4e50dc64050"></script>
 <script src="/playablebatch1/review-language.js?v=italian-20261021-2"></script>
-<script src="/playablebatch1/browser-play.js?v=1"></script>
+<script src="/playablebatch1/browser-play.js?v=fyp-1"></script>
 <script src="/playablebatch1/game-download-ui.js?v=standard-templates-20261027-1"></script>
 <link rel="stylesheet" href="/playablebatch1/batch-download.css?v=20261030-1">
 </head>
@@ -225,8 +225,9 @@ function updateCommentBadge(taskId) {
   row.setAttribute('aria-label', 'Preview ' + game.number + '. ' + game.name + ', ' + badge.textContent);
 }
 function reflectOpenLinks(game) {
-  $('open').href = fypSource(game);
-  $('open-browser').href = window.PlayableBrowser.urlFor(game, window.PlayableReviewLocale?.language);
+  const feedUrl = fypSource(game);
+  $('open').href = feedUrl;
+  $('open-browser').href = window.PlayableBrowser.urlFor(game, feedUrl, selectedBatch !== 'all');
 }
 function render() {
   if (current) reflectOpenLinks(current);

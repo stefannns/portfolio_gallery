@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Playable browser preview</title>
-  <link rel="stylesheet" href="./browser-play.css">
+  <title>Playable · For You</title>
+  <link rel="stylesheet" href="./browser-play.css?v=fyp-1">
 </head>
 <body>
-  <main id="browser-player" aria-label="Playable browser preview">
-    <p id="browser-message" role="status">Loading game…</p>
+  <main id="browser-player" aria-label="Playable For You feed">
+    <p id="browser-message" role="status">Loading For You…</p>
     <div id="browser-fit" hidden>
-      <iframe id="browser-game" title="Game" allow="camera; microphone; fullscreen"
-        sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-downloads"></iframe>
+      <iframe id="browser-feed" title="Playable For You feed"
+        data-feed-runtime="/app/home"
+        allow="camera; microphone; autoplay; fullscreen"></iframe>
     </div>
   </main>
-  <script src="./browser-games.js"></script>
-  <script src="./browser-play.js"></script>
+  <script src="./browser-play.js?v=fyp-1"></script>
 </body>
 </html>
