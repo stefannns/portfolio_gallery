@@ -1,0 +1,116 @@
+{
+  "tweaks": [
+    {
+      "id": "TRIES_BASE",
+      "kind": "number",
+      "label": "Base Tries",
+      "value": 6,
+      "default": 6,
+      "min": 3,
+      "max": 10,
+      "step": 1
+    },
+    {
+      "id": "PEELER_SPEED",
+      "kind": "number",
+      "label": "Peeler Speed",
+      "value": 0.08,
+      "default": 0.08,
+      "min": 0.02,
+      "max": 0.2,
+      "step": 0.01
+    },
+    {
+      "id": "DROP_SPEED",
+      "kind": "number",
+      "label": "Drop Speed",
+      "value": 0.3,
+      "default": 0.3,
+      "min": 0.1,
+      "max": 1,
+      "step": 0.05
+    },
+    {
+      "id": "PEEL_WIDTH",
+      "kind": "number",
+      "label": "Peel Width",
+      "value": 46.8,
+      "default": 46.8,
+      "min": 20,
+      "max": 80,
+      "step": 4
+    }
+  ],
+  "texts": [
+    {
+      "id": "TXT_PERFECT",
+      "label": "Perfect Peel Text",
+      "value": "Sbucciatura perfetta",
+      "default": "Sbucciatura perfetta",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_FAIL_TITLE",
+      "label": "Fail Title",
+      "value": "TENTATIVI FINITI!",
+      "default": "TENTATIVI FINITI!",
+      "max_length": 20
+    },
+    {
+      "id": "TXT_FAIL_DESC",
+      "label": "Fail Desc",
+      "value": "Sbuccia tutto in 5 tentativi.",
+      "default": "Sbuccia tutto in 5 tentativi.",
+      "max_length": 60
+    },
+    {
+      "id": "TXT_CLEAR_TITLE",
+      "label": "Clear Title",
+      "value": "SFIDA COMPLETATA!",
+      "default": "SFIDA COMPLETATA!",
+      "max_length": 30
+    },
+    {
+      "id": "TXT_CLEAR_DESC",
+      "label": "Clear Desc",
+      "value": "Hai sbucciato la patata alla perfezione!",
+      "default": "Hai sbucciato la patata alla perfezione!",
+      "max_length": 60
+    },
+    {
+      "id": "TXT_POST",
+      "label": "Post Button Text",
+      "value": "Condividi",
+      "default": "Condividi",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "PEELER_IMG",
+      "label": "Peeler Sprite",
+      "path": "./assets/peeler.webp",
+      "replaceable": true
+    },
+    {
+      "id": "POTATO_UNPEELED",
+      "label": "Unpeeled Potato",
+      "path": "./assets/potato_unpeeled_v2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "POTATO_PEELED",
+      "label": "Peeled Potato",
+      "path": "./assets/potato_peeled_v2.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

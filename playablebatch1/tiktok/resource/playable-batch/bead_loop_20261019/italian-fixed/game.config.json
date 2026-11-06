@@ -1,0 +1,27 @@
+{
+  "config_version": "2.0",
+  "tweaks": [],
+  "texts": [
+    {
+      "id": "HINT_TEXT",
+      "label": "Spin instruction",
+      "value": "Trascina le perline per farle girare",
+      "default": "Trascina le perline per farle girare",
+      "max_length": 40
+    }
+  ],
+  "images": [
+    {
+      "id": "CAT_TEXTURE",
+      "label": "Cat bead texture",
+      "path": "assets/textures/tabby-face.jpg"
+    }
+  ],
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

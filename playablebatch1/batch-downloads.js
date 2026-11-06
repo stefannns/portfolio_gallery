@@ -243,239 +243,239 @@ window.PlayableBatchDownloads = {
       },
       "it": {
         "url": "/playablebatch1/downloads/batch-1-it.zip",
-        "filename": "batch-1-it.zip",
+        "filename": "batch_1_italian_fixed.zip",
         "language": "it",
         "games": 38,
-        "bytes": 40723151,
-        "sha256": "b848c8e2696f16c717883c553289149dbd5fec4233a3c835f1fbe642c4e5f581",
+        "bytes": 36452508,
+        "sha256": "0cfe7b6b177f819f5f7f9285d42dcd51c731908da15fb067e4b578e316b11d90",
         "members": [
           {
             "number": 1,
             "taskId": "playable2_20260924214501_peqvrc",
-            "folder": "batch-1-it/01-playable2_20260924214501_peqvrc_game",
+            "folder": "batch_1_italian_fixed/01-playable2_20260924214501_peqvrc",
             "files": 7
           },
           {
             "number": 2,
             "taskId": "playable_20260924213804_34rslj",
-            "folder": "batch-1-it/02-draw_face",
+            "folder": "batch_1_italian_fixed/02-playable_20260924213804_34rslj",
             "files": 8
           },
           {
             "number": 3,
             "taskId": "playable2_20260927020828_5pmrhn",
-            "folder": "batch-1-it/03-playable2_20260927020828_5pmrhn",
+            "folder": "batch_1_italian_fixed/03-playable2_20260927020828_5pmrhn",
             "files": 8
           },
           {
             "number": 6,
             "taskId": "playable2_20260927020828_oumj12",
-            "folder": "batch-1-it/06-playable2_20260927020828_oumj12",
+            "folder": "batch_1_italian_fixed/06-playable2_20260927020828_oumj12",
             "files": 8
           },
           {
             "number": 9,
             "taskId": "playable2_20260927020828_86gl5z",
-            "folder": "batch-1-it/09-playable2_20260927020828_86gl5z",
+            "folder": "batch_1_italian_fixed/09-playable2_20260927020828_86gl5z",
             "files": 12
           },
           {
             "number": 10,
             "taskId": "playable2_20260927020828_y5a1vt",
-            "folder": "batch-1-it/10-playable2_20260927020828_y5a1vt",
+            "folder": "batch_1_italian_fixed/10-playable2_20260927020828_y5a1vt",
             "files": 9
           },
           {
             "number": 14,
             "taskId": "playable2_20260927020825_hjn7q5",
-            "folder": "batch-1-it/14-playable2_20260927020825_hjn7q5",
+            "folder": "batch_1_italian_fixed/14-playable2_20260927020825_hjn7q5",
             "files": 9
           },
           {
             "number": 15,
             "taskId": "playable2_20260927020825_n4r34c",
-            "folder": "batch-1-it/15-playable2_20260927020825_n4r34c",
+            "folder": "batch_1_italian_fixed/15-playable2_20260927020825_n4r34c",
             "files": 8
           },
           {
             "number": 16,
             "taskId": "playable2_20260927020825_lnwh1h",
-            "folder": "batch-1-it/16-playable2_20260927020825_lnwh1h",
+            "folder": "batch_1_italian_fixed/16-playable2_20260927020825_lnwh1h",
             "files": 8
           },
           {
             "number": 17,
             "taskId": "playable2_20260927020825_ufhwuj",
-            "folder": "batch-1-it/17-playable2_20260927020825_ufhwuj",
-            "files": 10
+            "folder": "batch_1_italian_fixed/17-playable2_20260927020825_ufhwuj",
+            "files": 9
           },
           {
             "number": 19,
             "taskId": "playable2_20260927021136_x3i163",
-            "folder": "batch-1-it/19-playable2_20260927021136_x3i163",
-            "files": 6
+            "folder": "batch_1_italian_fixed/19-playable2_20260927021136_x3i163",
+            "files": 8
           },
           {
             "number": 24,
             "taskId": "playable2_20260928024549_3bsc4d",
-            "folder": "batch-1-it/24-playable2_20260928024549_3bsc4d",
-            "files": 9
+            "folder": "batch_1_italian_fixed/24-playable2_20260928024549_3bsc4d",
+            "files": 10
           },
           {
             "number": 31,
             "taskId": "playable2_20260928030211_tdjer2",
-            "folder": "batch-1-it/31-playable2_20260928030211_tdjer2",
+            "folder": "batch_1_italian_fixed/31-playable2_20260928030211_tdjer2",
             "files": 7
           },
           {
             "number": 32,
             "taskId": "playable2_20260928030642_uthymy",
-            "folder": "batch-1-it/32-playable2_20260928030642_uthymy",
+            "folder": "batch_1_italian_fixed/32-playable2_20260928030642_uthymy",
             "files": 10
           },
           {
             "number": 33,
             "taskId": "playable2_20260928030932_n6urd6",
-            "folder": "batch-1-it/33-playable2_20260928030932_n6urd6",
+            "folder": "batch_1_italian_fixed/33-playable2_20260928030932_n6urd6",
             "files": 8
           },
           {
             "number": 35,
             "taskId": "playable2_20260928031559_rckaf4",
-            "folder": "batch-1-it/35-playable2_20260928031559_rckaf4",
+            "folder": "batch_1_italian_fixed/35-playable2_20260928031559_rckaf4",
             "files": 9
           },
           {
             "number": 36,
             "taskId": "playable2_20260928031734_t68did",
-            "folder": "batch-1-it/36-playable2_20260928031734_t68did",
+            "folder": "batch_1_italian_fixed/36-playable2_20260928031734_t68did",
             "files": 8
           },
           {
             "number": 40,
             "taskId": "playable2_20261001225611_zgfls0",
-            "folder": "batch-1-it/40-playable2_20261001225611_zgfls0",
+            "folder": "batch_1_italian_fixed/40-playable2_20261001225611_zgfls0",
             "files": 8
           },
           {
             "number": 41,
             "taskId": "playable2_20261001225611_23t98b",
-            "folder": "batch-1-it/41-playable2_20261001225611_23t98b",
-            "files": 7
+            "folder": "batch_1_italian_fixed/41-playable2_20261001225611_23t98b",
+            "files": 9
           },
           {
             "number": 45,
             "taskId": "playable2_20261001225821_af5uee",
-            "folder": "batch-1-it/45-playable2_20261001225821_af5uee",
+            "folder": "batch_1_italian_fixed/45-playable2_20261001225821_af5uee",
             "files": 10
           },
           {
             "number": 47,
             "taskId": "playable2_20261001225842_2d0kul",
-            "folder": "batch-1-it/47-playable2_20261001225842_2d0kul",
+            "folder": "batch_1_italian_fixed/47-playable2_20261001225842_2d0kul",
             "files": 8
           },
           {
             "number": 51,
             "taskId": "playable2_20261001230052_xrken6b",
-            "folder": "batch-1-it/51-playable2_20261001230052_xrken6_57b",
-            "files": 13
+            "folder": "batch_1_italian_fixed/51-playable2_20261001230052_xrken6b",
+            "files": 11
           },
           {
             "number": 53,
             "taskId": "playable2_20261001230122_0sowkn",
-            "folder": "batch-1-it/53-playable2_20261001230122_0sowkn",
+            "folder": "batch_1_italian_fixed/53-playable2_20261001230122_0sowkn",
             "files": 10
           },
           {
             "number": 57,
             "taskId": "playable2_20261001230352_h4uxll",
-            "folder": "batch-1-it/57-playable2_20261001230352_h4uxll",
-            "files": 7
+            "folder": "batch_1_italian_fixed/57-playable2_20261001230352_h4uxll",
+            "files": 9
           },
           {
             "number": 58,
             "taskId": "playable2_20261001230412_o52e38",
-            "folder": "batch-1-it/58-playable2_20261001230412_o52e38",
+            "folder": "batch_1_italian_fixed/58-playable2_20261001230412_o52e38",
             "files": 9
           },
           {
             "number": 61,
             "taskId": "playable2_20261013020955_2hyyml",
-            "folder": "batch-1-it/61-playable2_20261013020955_2hyyml",
+            "folder": "batch_1_italian_fixed/61-playable2_20261013020955_2hyyml",
             "files": 13
           },
           {
             "number": 62,
             "taskId": "playable2_20261013021144_kzqdfu",
-            "folder": "batch-1-it/62-playable2_20261013021144_kzqdfu",
+            "folder": "batch_1_italian_fixed/62-playable2_20261013021144_kzqdfu",
             "files": 24
           },
           {
             "number": 63,
             "taskId": "01_petme_9gw00a_game",
-            "folder": "batch-1-it/63-01_petme_9gw00a_game",
-            "files": 14
+            "folder": "batch_1_italian_fixed/63-01_petme_9gw00a_game",
+            "files": 13
           },
           {
             "number": 64,
             "taskId": "playable_20260727203355_w1cgvm",
-            "folder": "batch-1-it/64-playable_20260727203355_w1cgvm_game",
-            "files": 14
+            "folder": "batch_1_italian_fixed/64-playable_20260727203355_w1cgvm",
+            "files": 13
           },
           {
             "number": 65,
             "taskId": "05c_timemachine_male_black_wall",
-            "folder": "batch-1-it/65-05c_timemachine_male_black_wall",
-            "files": 23
+            "folder": "batch_1_italian_fixed/65-05c_timemachine_male_black_wall",
+            "files": 22
           },
           {
             "number": 66,
             "taskId": "mianbao",
-            "folder": "batch-1-it/66-mianbao",
-            "files": 14
+            "folder": "batch_1_italian_fixed/66-mianbao",
+            "files": 13
           },
           {
             "number": 67,
             "taskId": "playable_20260807211217_q9i9d6",
-            "folder": "batch-1-it/67-playable_20260807211217_q9i9d6",
-            "files": 16
+            "folder": "batch_1_italian_fixed/67-playable_20260807211217_q9i9d6",
+            "files": 15
           },
           {
             "number": 68,
             "taskId": "06a_coloring_game_final",
-            "folder": "batch-1-it/68-06a_coloring_game_final",
-            "files": 11
+            "folder": "batch_1_italian_fixed/68-06a_coloring_game_final",
+            "files": 10
           },
           {
             "number": 69,
             "taskId": "02e_pickalook_p8xys3_game",
-            "folder": "batch-1-it/69-02e_pickalook_p8xys3_game",
-            "files": 11
+            "folder": "batch_1_italian_fixed/69-02e_pickalook_p8xys3_game",
+            "files": 10
           },
           {
             "number": 70,
             "taskId": "playable_20261015220925_0pn002",
-            "folder": "batch-1-it/70-playable_20261015220925_0pn002_game",
-            "files": 12
+            "folder": "batch_1_italian_fixed/70-playable_20261015220925_0pn002",
+            "files": 11
           },
           {
             "number": 71,
             "taskId": "bead_loop_20261019",
-            "folder": "batch-1-it/71-bead_loop_20261019",
-            "files": 10
+            "folder": "batch_1_italian_fixed/71-bead_loop_20261019",
+            "files": 8
           },
           {
             "number": 72,
             "taskId": "height_together_20261019",
-            "folder": "batch-1-it/72-height_together_20261019",
-            "files": 9
+            "folder": "batch_1_italian_fixed/72-height_together_20261019",
+            "files": 7
           },
           {
             "number": 77,
             "taskId": "eh_catch_the_hair_20261020",
-            "folder": "batch-1-it/77-eh_catch_the_hair_20261020",
-            "files": 16
+            "folder": "batch_1_italian_fixed/77-eh_catch_the_hair_20261020",
+            "files": 15
           }
         ]
       }
