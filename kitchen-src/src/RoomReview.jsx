@@ -328,6 +328,23 @@ export default function RoomReview() {
   <div className="room-scene-backdrop" style={{background: lighting.background, filter: `saturate(${lighting.saturation})`}}/>
   <main inert={landscapeBlocked ? true : undefined} ref={rootRef} onClickCapture={introducing ? dismissWelcome : undefined} className={`room-review ${INTERACTIVE_ROOM ? 'room-review--interactive room-review--game' : ''} ${arranging ? 'room-review--arrange' : ''} ${touchMode ? 'room-review--touch' : ''} room-review--color-graded`} style={{background: 'transparent', '--room-scene-saturation': lighting.saturation}} data-room-version={ROOM_VERSION} data-room-status={phase} data-game-phase={introducing ? 'welcome' : 'explore'} data-has-moved={hasMoved} data-room-url={entry?.url || ''} data-room-scale={info?.scalar || ''} data-selected-item={selectedItem?.id || ''} data-selected-rotation-y={selectedItem?.rotationY ?? ''} data-active-project={activeProject || ''} data-computer-open={computerOpen} data-project-video-playing={videoPlaying} data-arranging={arranging} data-camera-locked={INTERACTIVE_ROOM} data-landscape-only={INTERACTIVE_ROOM}>
     {!INTERACTIVE_ROOM && <header className="room-review__header"><h1>Sushi bar — room study</h1><a href="/">Back to kitchen</a></header>}
+    {INTERACTIVE_ROOM && gameReady && !arranging && !modalOpen && <nav className="room-contact-links" aria-label="Contact">
+      <a href="mailto:stefansun19@outlook.com" aria-label="Email stefansun19@outlook.com">
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <rect x="2.5" y="4.5" width="15" height="11" rx="2"/>
+          <path d="m3.5 6 6.5 5 6.5-5"/>
+        </svg>
+        <span className="room-contact-links__address">stefansun19@outlook.com</span>
+        <span className="room-contact-links__short">Email</span>
+      </a>
+      <a href="https://www.linkedin.com/in/stefan-sun-71030032b/" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <rect x="2.5" y="2.5" width="15" height="15" rx="2.5"/>
+          <path d="M6.5 9v4.5m0-7v.1M10 13.5V9m0 2a2 2 0 1 1 4 0v2.5"/>
+        </svg>
+        LinkedIn
+      </a>
+    </nav>}
     {INTERACTIVE_ROOM && <div className="room-hud-layer">
       {gameReady && !arranging && !touchMode && !compactViewport && <KitchenMusicPlayer tracks={kitchenTracks} ducked={videoPlaying}/>}
       {gameReady && !arranging && !modalOpen && <RoomTasks vegetablesViewed={vegetablesViewed} recorderViewed={recorderViewed} computerViewed={computerViewed}/>}
