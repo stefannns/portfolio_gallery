@@ -299,16 +299,16 @@ function rollHit(point,cfg,unwound=0){
 }
 const PAPER_PRINT_SPACING=156,PAPER_PRINT_DENSITY=3;
 const PAPER_STYLES = [
-  { id: 'plain', paper: '#ffffff' },
-  { id: 'banknote', paper: '#d8f0df', ink: '#376b55' },
-  { id: 'scratch-card', paper: '#fff1d3', ink: '#dc655c' },
-  { id: 'ticket', paper: '#e2f1ff', ink: '#3b74b8' },
-  { id: 'smileys', paper: '#eee4fa', ink: '#8053a1' },
-  { id: 'airmail', paper: '#faf1df', ink: '#345d86', draw: drawAirmail },
-  { id: 'gingham', paper: '#fff0f2', ink: '#bd3657', draw: drawGingham },
-  { id: 'bakery', paper: '#f1e5f7', sections: 3, draw: drawBakery },
-  { id: 'cat-paws', paper: '#fbe1d8', ink: '#9a534e', sections: 3, draw: drawCatPaws },
-  { id: 'ghosts', paper: '#a58aba', sections: 3, draw: drawGhosts }
+  { id: 'plain', name: 'Plain White', paper: '#ffffff' },
+  { id: 'banknote', name: 'Banknote', paper: '#d8f0df', ink: '#376b55' },
+  { id: 'scratch-card', name: 'Scratch Card', paper: '#fff1d3', ink: '#dc655c' },
+  { id: 'ticket', name: 'Ticket', paper: '#e2f1ff', ink: '#3b74b8' },
+  { id: 'smileys', name: 'Smileys', paper: '#eee4fa', ink: '#8053a1' },
+  { id: 'airmail', name: 'Airmail', paper: '#faf1df', ink: '#345d86', draw: drawAirmail },
+  { id: 'gingham', name: 'Picnic Gingham', paper: '#fff0f2', ink: '#bd3657', draw: drawGingham },
+  { id: 'bakery', name: 'Midnight Bakery', paper: '#f1e5f7', sections: 3, draw: drawBakery },
+  { id: 'cat-paws', name: 'Cat Paws', paper: '#fbe1d8', ink: '#9a534e', sections: 3, draw: drawCatPaws },
+  { id: 'ghosts', name: 'Ghost Party', paper: '#a58aba', sections: 3, draw: drawGhosts }
 ];
 
 function drawAirmail(ctx, width) {
@@ -642,7 +642,101 @@ function paintPaperRoll(ctx,cfg,phase,sway,bottom,unwound=0,printIndex=0){
   ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(cx,cy,g.coreRadius,g.coreRadius,0,0,Math.PI*2);ctx.fill();
   return g;
 }
-function PaperCanvas({cfg,lengthRef,phaseRef,angleRef,velocityRef,dragRef,unwoundRef,cycleRef,countRef,onRollEmpty,onRollComplete}){
+const PAPER_PROGRESS_KEY = 'paper-roll-patterns-v3';
+const rollsPerFinish = tier => 2 ** tier;
+const upgradeCost = tier => tier * rollsPerFinish(tier - 1);
+const rollsToSpend = ({ count, spent }) => count - spent;
+const rollLabel = count => count === 1 ? '1 roll' : `${count.toLocaleString()} rolls`;
+
+function readPaperProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PAPER_PROGRESS_KEY));
+    if (Number.isSafeInteger(saved?.count) && saved.count >= 0) {
+      const requested = Number.isInteger(saved.unlocked) ? saved.unlocked : 0;
+      const unlocked = Math.max(0, Math.min(requested, PAPER_STYLES.length - 1));
+      const spent = Number.isSafeInteger(saved.spent) ? Math.max(0, Math.min(saved.spent, saved.count)) : 0;
+      const index = PAPER_STYLES.findIndex(style => style.id === saved.equipped);
+      return { count: saved.count, spent, unlocked, equipped: index > 0 && index <= unlocked ? index : 0 };
+    }
+  } catch { /* The shop works for the session when browser storage is unavailable. */ }
+  return { count: 0, spent: 0, unlocked: 0, equipped: 0 };
+}
+
+function PatternSwatch({ index }) {
+  const canvasRef = useRef(null);
+  useEffect(() => {
+    const ctx = canvasRef.current.getContext('2d');
+    ctx.fillStyle = PAPER_STYLES[index].paper;
+    ctx.fillRect(0, 0, 88, 88);
+    const texture = paperPrintTexture(index, 88);
+    if (texture) {
+      const section = PAPER_PRINT_SPACING * PAPER_PRINT_DENSITY;
+      ctx.drawImage(texture, 0, section * .16, texture.width, section * .68, 0, 0, 88, 88);
+    }
+  }, [index]);
+  return <canvas ref={canvasRef} className="pattern-swatch" width="88" height="88" aria-hidden="true" />;
+}
+
+function PatternShop({ progress, onChoose, onClose }) {
+  const closeRef = useRef(null);
+  const balance = rollsToSpend(progress);
+  useEffect(() => { closeRef.current?.focus(); }, []);
+
+  const onKeyDown = (event) => {
+    if (event.key === 'Escape') onClose();
+    if (event.key !== 'Tab') return;
+    const buttons = Array.from(event.currentTarget.querySelectorAll('button:not(:disabled)'));
+    const first = buttons[0], last = buttons[buttons.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last?.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first?.focus();
+    }
+  };
+
+  return (
+    <div className="pattern-backdrop" onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
+      <section className="pattern-panel" role="dialog" aria-modal="true" aria-labelledby="pattern-title" onKeyDown={onKeyDown}>
+        <header className="pattern-header">
+          <div>
+            <h1 id="pattern-title">Paper shop</h1>
+            <p aria-live="polite">{rollLabel(balance)} to spend</p>
+          </div>
+          <button ref={closeRef} className="pattern-close" aria-label="Close paper shop" onClick={onClose}>×</button>
+        </header>
+        <p className="pattern-note">Earn {rollLabel(rollsPerFinish(progress.unlocked))} per finish. Switching prints keeps your boost.</p>
+        <ul className="pattern-list">
+          {PAPER_STYLES.map((style, index) => {
+            const owned = index <= progress.unlocked;
+            const equipped = index === progress.equipped;
+            const next = index === progress.unlocked + 1;
+            const price = upgradeCost(index);
+            const canBuy = next && balance >= price;
+            const label = equipped ? 'In use' : owned ? 'Use' : canBuy ? `Buy · ${rollLabel(price)}` : rollLabel(price);
+            return (
+              <li className="pattern-row" key={style.id}>
+                <PatternSwatch index={index} />
+                <span className="pattern-name">
+                  {style.name}
+                  {!owned && <small className="pattern-rate">×{rollsPerFinish(index)} earnings</small>}
+                </span>
+                <button type="button" className={canBuy ? 'pattern-buy' : ''} disabled={equipped || (!owned && !canBuy)}
+                  aria-label={`${style.name}, ${label}`} onClick={() => {
+                    onChoose(index);
+                    closeRef.current?.focus({ preventScroll: true });
+                  }}>{label}</button>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    </div>
+  );
+}
+
+function PaperCanvas({cfg,lengthRef,phaseRef,angleRef,velocityRef,dragRef,unwoundRef,cycleRef,progressRef,onRollEmpty,onRollComplete}){
   const canvasRef=useRef(null),frameRef=useRef(0),lastRef=useRef(0);
   useEffect(()=>{
     const canvas=canvasRef.current,ctx=canvas.getContext('2d');let width=390,height=598,scale=1,ox=0,oy=0;
@@ -662,26 +756,52 @@ function PaperCanvas({cfg,lengthRef,phaseRef,angleRef,velocityRef,dragRef,unwoun
       const sway=reducedMotionQuery.matches?0:Math.min(2,Math.abs(velocityRef.current)*.45);
       const bottom=(height-oy)/scale+80;
       let g;
-      if(cycle.stage==='ready')g=paintPaperRoll(ctx,cfg,phaseRef.current+demoPhase,sway,bottom,preview?demoPull*75:unwoundRef.current,countRef.current);
+      const patternIndex = progressRef.current.equipped;
+      if(cycle.stage==='ready')g=paintPaperRoll(ctx,cfg,phaseRef.current+demoPhase,sway,bottom,preview?demoPull*75:unwoundRef.current,patternIndex);
       else{
         const pose=rollCyclePose(cycle.elapsed,(height-oy)/scale,reducedMotionQuery.matches);
-        if(pose.showOld){ctx.save();ctx.globalAlpha=pose.oldAlpha;ctx.translate(138,298+pose.oldY);ctx.rotate(pose.oldAngle);ctx.translate(-138,-298);paintPaperRoll(ctx,cfg,cycle.oldPhase,0,bottom,cycle.oldUnwound,countRef.current);ctx.restore();}
-        if(pose.showNew){ctx.save();ctx.globalAlpha=pose.newAlpha;ctx.translate(0,pose.newY);paintPaperRoll(ctx,cfg,0,0,bottom,0,countRef.current+1);ctx.restore();}
+        if(pose.showOld){ctx.save();ctx.globalAlpha=pose.oldAlpha;ctx.translate(138,298+pose.oldY);ctx.rotate(pose.oldAngle);ctx.translate(-138,-298);paintPaperRoll(ctx,cfg,cycle.oldPhase,0,bottom,cycle.oldUnwound,patternIndex);ctx.restore();}
+        if(pose.showNew){ctx.save();ctx.globalAlpha=pose.newAlpha;ctx.translate(0,pose.newY);paintPaperRoll(ctx,cfg,0,0,bottom,0,patternIndex);ctx.restore();}
         g=rollGeometry(cfg,pose.showNew?0:cycle.oldUnwound);
       }
       ctx.restore();
-      const visibleIndex = countRef.current + (cycle.stage === 'enter' ? 1 : 0);
-      canvas.dataset.paperPrint = PAPER_STYLES[visibleIndex % PAPER_STYLES.length].id;
+      canvas.dataset.paperPrint = PAPER_STYLES[patternIndex].id;
       canvas.dataset.paperLeft=g.left.toFixed(2);canvas.dataset.paperRight=g.right.toFixed(2);canvas.dataset.paperTop=g.sheetTop;canvas.dataset.phase=phaseRef.current.toFixed(1);canvas.dataset.paperLength=lengthRef.current.toFixed(1);canvas.dataset.rollDiameter=(g.rx*2).toFixed(2);canvas.dataset.unwound=unwoundRef.current.toFixed(1);canvas.dataset.rollStage=cycle.stage;canvas.dataset.cycleElapsed=cycle.elapsed.toFixed(0);canvas.dataset.coastVelocity=velocityRef.current.toFixed(4);canvas.dataset.coasting=String(!preview&&!drag.active&&cycle.stage==='ready'&&velocityRef.current>0);
     };frameRef.current=requestAnimationFrame(draw);
     return()=>{cancelAnimationFrame(frameRef.current);observer.disconnect();};
-  },[cfg,lengthRef,phaseRef,angleRef,velocityRef,dragRef,unwoundRef,cycleRef,onRollEmpty,onRollComplete]);
+  },[cfg,lengthRef,phaseRef,angleRef,velocityRef,dragRef,unwoundRef,cycleRef,progressRef,onRollEmpty,onRollComplete]);
   return <canvas ref={canvasRef} className="paper-canvas" aria-label="Perspective paper roll with a hanging perforated sheet"/>;
 }
 
 function App() {
   const [cfg, setCfg] = useState(FALLBACK_CFG);
-  const [count, setCount] = useState(0);
+  const [progress, setProgress] = useState(readPaperProgress);
+  const progressRef = useRef(progress);
+  const [shopOpen, setShopOpen] = useState(false);
+  const shopButton = useRef(null);
+  const saveProgress = useCallback((next) => {
+    progressRef.current = next;
+    setProgress(next);
+    try {
+      localStorage.setItem(PAPER_PROGRESS_KEY, JSON.stringify({
+        ...next, equipped: PAPER_STYLES[next.equipped].id,
+      }));
+    } catch { /* Browser storage may be unavailable in the host. */ }
+  }, []);
+  const choosePattern = (index) => {
+    const current = progressRef.current;
+    if (index <= current.unlocked) {
+      saveProgress({ ...current, equipped: index });
+      return;
+    }
+    const price = upgradeCost(index);
+    if (index !== current.unlocked + 1 || rollsToSpend(current) < price) return;
+    saveProgress({ ...current, spent: current.spent + price, unlocked: index, equipped: index });
+  };
+  const closeShop = () => {
+    setShopOpen(false);
+    requestAnimationFrame(() => shopButton.current?.focus());
+  };
   const [hintVisible, setHintVisible] = useState(true);
   const [dragging, setDragging] = useState(false);
   const lengthRef = useRef(FALLBACK_CFG.INITIAL_PAPER_LENGTH);
@@ -693,8 +813,7 @@ function App() {
   const velocityRef = useRef(0);
   const dragRef = useRef({ active: false, pointerId: null, lastY: 0, lastTime: 0, total: 0, valid: false });
   const active=useFeedActive();
-  useEffect(()=>{if(!active){dragRef.current.active=false;dragRef.current.pointerId=null;velocityRef.current=0;setDragging(false);}},[active]);
-  const countRef = useRef(0);
+  useEffect(()=>{if(!active){setShopOpen(false);dragRef.current.active=false;dragRef.current.pointerId=null;velocityRef.current=0;setDragging(false);}},[active]);
   const hintRef = useRef(true);
   const audioRef = useRef({ ctx: null, master: null, buffer: null, loadPromise: null, sources: new Set() });
 
@@ -718,7 +837,7 @@ function App() {
       window.__audioLog = window.__audioLog || [];
       window.__paperGame = {
         getState: () => ({
-          count: countRef.current,
+          count: progressRef.current.count,
           paperLength: lengthRef.current,
           phase: phaseRef.current,
           unwoundLength: unwoundRef.current,
@@ -827,9 +946,11 @@ function App() {
 
   const onRollComplete = useCallback(() => {
     lengthRef.current=cfg.INITIAL_PAPER_LENGTH;phaseRef.current=0;unwoundRef.current=0;angleRef.current=0;velocityRef.current=0;
-    countRef.current+=1;setCount(countRef.current);vibrate('medium');
+    const current = progressRef.current;
+    saveProgress({ ...current, count: current.count + rollsPerFinish(current.unlocked) });
+    vibrate('medium');
     try{const audio=ensureAudio();if(audio.ctx?.state==='running'&&audio.master){const ctx=audio.ctx,now=ctx.currentTime,osc=ctx.createOscillator(),gain=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(620,now);osc.frequency.exponentialRampToValueAtTime(880,now+.10);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.08,now+.015);gain.gain.exponentialRampToValueAtTime(.0001,now+.17);osc.connect(gain);gain.connect(audio.master);osc.start(now);osc.stop(now+.18);osc.onended=()=>{osc.disconnect();gain.disconnect();};}}catch{}
-  },[cfg.INITIAL_PAPER_LENGTH,ensureAudio]);
+  },[cfg.INITIAL_PAPER_LENGTH,ensureAudio,saveProgress]);
 
   const getScenePoint = useCallback((event) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -841,7 +962,7 @@ function App() {
   }, []);
 
   const handlePointerDown = useCallback((event) => {
-    if(!feedSession.active||cycleRef.current.stage!=='ready'||event.isPrimary===false||event.button>0||dragRef.current.active)return;
+    if(shopOpen||!feedSession.active||cycleRef.current.stage!=='ready'||event.isPrimary===false||event.button>0||dragRef.current.active)return;
     const point = getScenePoint(event);
     if(!rollHit(point,cfg,unwoundRef.current))return;
     event.preventDefault();event.stopPropagation();
@@ -851,7 +972,7 @@ function App() {
     velocityRef.current=0;
     ensureAudio();
     setDragging(true);
-  }, [cfg, ensureAudio, getScenePoint]);
+  }, [cfg, ensureAudio, getScenePoint, shopOpen]);
 
   const handlePointerMove = useCallback((event) => {
     const drag = dragRef.current;
@@ -898,9 +1019,7 @@ function App() {
     cycleRef.current={stage:'ready',elapsed:0,oldUnwound:0,oldPhase:0};
     angleRef.current = 0;
     velocityRef.current = 0;
-    countRef.current = 0;
     hintRef.current = true;
-    setCount(0);
     setHintVisible(true);
     setDragging(false);
     playResetSound();
@@ -909,7 +1028,7 @@ function App() {
   }, [cfg.INITIAL_PAPER_LENGTH, playResetSound]);
 
   return (
-    <main className="paper-stage" data-pull-count={count} data-dragging={dragging}>
+    <main className="paper-stage" data-pull-count={progress.count} data-dragging={dragging} data-shop-open={shopOpen}>
       <style>{`
         @font-face {
           font-family: 'Poppins';
@@ -965,8 +1084,10 @@ function App() {
           color: #f3f3ef;
           font: 700 28px/1 var(--font-display);
           letter-spacing: 0.04em;
+          text-align: center;
           pointer-events: none;
         }
+        .counter-rate { display: block; margin-top: 6px; color: #ffd274; font: 700 12px/1.2 var(--font-body); letter-spacing: 0; }
         .hint {
           position: absolute;
           z-index: 2;
@@ -1010,6 +1131,44 @@ function App() {
         .reset-button:active { transform: scale(0.94); }
         .reset-button svg { width: 20px; height: 20px; display: block; }
         .reset-button path { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        .paper-stage[data-shop-open="true"] { touch-action: auto; }
+        .pattern-open {
+          position: absolute; z-index: 4; left: 30px; bottom: 50px;
+          width: 46px; height: 46px; display: grid; place-items: center; padding: 0;
+          border: 1px solid #ddd9cf; border-radius: 50%; background: #f8f6ef; color: #222;
+          cursor: pointer; touch-action: manipulation;
+        }
+        .pattern-open svg { width: 23px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+        .pattern-ready { position: absolute; top: 0; right: 0; width: 11px; height: 11px; border-radius: 50%; background: #ffd274; border: 2px solid #161616; }
+        [data-feed-preview="true"] .pattern-open { visibility: hidden; }
+        .pattern-backdrop {
+          position: absolute; z-index: 6; inset: 0; display: grid; grid-template-rows: minmax(0, 1fr); place-items: center;
+          padding: 30px; background: #0009;
+        }
+        .pattern-panel {
+          display: flex; flex-direction: column; width: min(100%, 356px); max-height: 100%;
+          padding: 16px 14px 12px; box-sizing: border-box; overflow: hidden;
+          border: 1px solid #49443b; border-radius: 22px; background: #1b1a17; color: #faf6ed;
+        }
+        .pattern-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+        .pattern-header h1 { margin: 0; font-size: 23px; }
+        .pattern-header p, .pattern-note { margin: 3px 0 0; color: #d6cdbc; font-size: 12px; }
+        .pattern-note { margin: 10px 0; }
+        .pattern-list { display: grid; gap: 6px; min-height: 0; margin: 0; padding: 0 4px 0 0; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; list-style: none; }
+        .pattern-row {
+          display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: center; gap: 9px;
+          padding: 5px 7px; border-radius: 11px; background: #2a2823;
+        }
+        .pattern-swatch { width: 40px; height: 40px; border-radius: 7px; }
+        .pattern-name { font-size: 13px; font-weight: 700; overflow-wrap: anywhere; }
+        .pattern-rate { display: block; margin-top: 2px; color: #ffd274; font-size: 11px; }
+        .pattern-close, .pattern-row button {
+          min-height: 44px; padding: 0 9px; border: 0; border-radius: 9px;
+          background: #efebe0; color: #201e19; font: 700 11px/1.15 var(--font-body); cursor: pointer;
+        }
+        .pattern-close { min-width: 44px; padding: 0; font-size: 21px; }
+        .pattern-row button:disabled { background: #3d3931; color: #d6cdbc; cursor: default; }
+        .pattern-row .pattern-buy { background: #ffd274; }
         @media (prefers-reduced-motion: reduce) {
           .hint { transition: none; }
         }
@@ -1020,16 +1179,33 @@ function App() {
         phaseRef={phaseRef}
         unwoundRef={unwoundRef}
         cycleRef={cycleRef}
-        countRef={countRef}
+        progressRef={progressRef}
         onRollEmpty={onRollEmpty}
         onRollComplete={onRollComplete}
         angleRef={angleRef}
         velocityRef={velocityRef}
         dragRef={dragRef}
       />
-      <div className="counter" aria-live="polite">{count}</div>
+      <div className="counter" role="status" aria-label="Total rolls earned">
+        {progress.count.toLocaleString()}
+        <small className="counter-rate">{rollsPerFinish(progress.unlocked)}× per roll</small>
+      </div>
+      <button className="pattern-open" type="button" ref={shopButton} aria-label="Open paper shop" aria-haspopup="dialog"
+        aria-expanded={shopOpen} tabIndex={shopOpen ? -1 : 0} onClick={() => {
+          const pointerId = dragRef.current.pointerId;
+          const layer = gestureRef.current;
+          if (pointerId !== null && layer?.hasPointerCapture(pointerId)) layer.releasePointerCapture(pointerId);
+          velocityRef.current = 0;
+          setShopOpen(true);
+        }}>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 4h3l2.3 10.5h10.3L21 7H7"/><circle cx="10" cy="19" r="1.2"/><circle cx="17" cy="19" r="1.2"/>
+        </svg>
+        {progress.unlocked < PAPER_STYLES.length - 1 && rollsToSpend(progress) >= upgradeCost(progress.unlocked + 1) &&
+          <span className="pattern-ready" aria-hidden="true" />}
+      </button>
       <div className={hintVisible ? 'hint' : 'hint is-hidden'}>{cfg.HINT_TEXT}</div>
-      <button className="reset-button" type="button" aria-label={cfg.RESET_LABEL} onClick={reset}>
+      <button className="reset-button" type="button" aria-label={cfg.RESET_LABEL} tabIndex={shopOpen ? -1 : 0} onClick={reset}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M5 8.5A8 8 0 1 1 6.8 17" />
           <path d="M5 4.8v3.8h3.8" />
@@ -1044,6 +1220,7 @@ function App() {
         onPointerCancel={finishPointer}
         onLostPointerCapture={finishPointer}
       />
+      {shopOpen && <PatternShop progress={progress} onChoose={choosePattern} onClose={closeShop} />}
       <style>{`.gesture-layer { position:absolute; inset:0; z-index:1; touch-action:none; } .gesture-layer.is-dragging { cursor: grabbing; } .reset-button { z-index:4; } .counter, .hint { z-index:2; }`}</style>
     </main>
   );

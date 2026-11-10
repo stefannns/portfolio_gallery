@@ -237,6 +237,7 @@ const SOUND_PATHS = {
   friendly: './assets/sfx_friendly.mp3',
   // environmental feedback when the photographed social state is tense.
   conflict: './assets/sfx_conflict.mp3',
+  music: './assets/music_town.mp3',
 };
 
 function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
@@ -421,7 +422,7 @@ function App() {
         audio.gain.connect(audio.ctx.destination);
       } catch (e) { return null; }
     }
-    try { if (audio.ctx.state === 'suspended') audio.ctx.resume(); } catch (e) { /* optional */ }
+    try { if (audio.ctx.state === 'suspended') audio.ctx.resume().catch(() => {}); } catch (e) { /* optional */ }
     Object.entries(SOUND_PATHS).forEach(([key, path]) => {
       if (!audio.loading[key] && !audio.buffers[key]) {
         audio.loading[key] = fetch(path)
@@ -433,6 +434,47 @@ function App() {
     });
     return audio;
   }, []);
+
+  useEffect(() => {
+    if (!active) return;
+    const audio = audioRef.current;
+    const { ctx } = audio;
+    if (!ctx) return;
+
+    let music;
+    let generation = 0;
+    const syncMusic = (enabled) => {
+      const request = ++generation;
+      if (!enabled) {
+        if (!music) return;
+        const now = ctx.currentTime;
+        music.gain.gain.setTargetAtTime(0, now, .045);
+        music.source.stop(now + .22);
+        music = null;
+        return;
+      }
+      if (music) return;
+
+      const ready = audio.buffers.music ?? audio.loading.music;
+      Promise.resolve(ready).then((buffer) => {
+        if (request !== generation || !buffer || ctx.state === 'closed') return;
+        const source = ctx.createBufferSource();
+        const gain = ctx.createGain();
+        source.buffer = buffer;
+        source.loop = true;
+        gain.gain.value = 0;
+        source.connect(gain);
+        gain.connect(audio.gain);
+        gain.gain.setTargetAtTime(.24, ctx.currentTime, .2);
+        source.onended = () => { source.disconnect(); gain.disconnect(); };
+        source.start();
+        music = { source, gain };
+      }).catch(() => { /* music is optional */ });
+    };
+    syncMusic(feedSession.active);
+    const unsubscribe = feedSession.subscribe(syncMusic);
+    return () => { unsubscribe(); syncMusic(false); };
+  }, [active]);
 
   const playSound = useCallback((key) => {
     const audio = ensureAudio();

@@ -489,8 +489,8 @@ window.PlayableBatchDownloads = {
         "filename": "batch-2-en.zip",
         "language": "en",
         "games": 27,
-        "bytes": 18407369,
-        "sha256": "b03e617ccc0bda52c0113ca583c79a9e19d1af1b920a0f53009ef942142206e6",
+        "bytes": 18535691,
+        "sha256": "af2a155efbf443ae25b1fb9b76ce832a100ee1eadee1a06f9af36de8151b7029",
         "members": [
           {
             "number": 18,
@@ -550,7 +550,7 @@ window.PlayableBatchDownloads = {
             "number": 79,
             "taskId": "playable2_20261028202811_hz9v37",
             "folder": "batch-2-en/79-playable2_20261028202811_hz9v37",
-            "files": 13
+            "files": 14
           },
           {
             "number": 80,
@@ -574,7 +574,7 @@ window.PlayableBatchDownloads = {
             "number": 83,
             "taskId": "playable2_20261028202811_5uuyhb",
             "folder": "batch-2-en/83-playable2_20261028202811_5uuyhb",
-            "files": 10
+            "files": 11
           },
           {
             "number": 84,

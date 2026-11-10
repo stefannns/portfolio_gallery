@@ -7,10 +7,10 @@
   "entry": "dist/game.html",
   "source_kind": "editable-current-react-source",
   "files": {
-    "App.jsx": "e505d14d45e99f47f0178740853fd25fdf2fcaf9cc3d1c64db92ebadcae47de1",
+    "App.jsx": "de53d36a86054299b6b3d5591b02d1f847de495e4352a8ecda7855f0fe5057c5",
     "check.js": "2023a27e5a1a728052ee4f2273283c4f06550ccef265e96c7ff41479ffd62240",
     "dist/game.html": "e139d19eee096c52c037fee7c980eab1d09a0f49c934438b697f42b0f4c16197",
-    "dist/bundle.js": "32640c5ea853dc48882e04c7046fb7d140ff2138f006334b01efc5518f28941f",
+    "dist/bundle.js": "059c0a999704e1abe9d82bc3c1a3b200aa21bef0f6d5334415cd95f54dbc2358",
     "dist/game.config.json": "acda48e1ca02580eed263cd5df31e89753b43296eca34f6171d99858fca03ef3"
   },
   "assets": [
@@ -55,6 +55,12 @@
       "ids": [],
       "bytes": 171770,
       "sha256": "096e208a9b628ec533e8769d6875c4d9e27e4dc2a4e23f82f0f8684e872a6d09"
+    },
+    {
+      "path": "dist/assets/music_town.mp3",
+      "ids": [],
+      "bytes": 128488,
+      "sha256": "6979ad6865d5b5aa06bba21f262485377e918c0dd0752a3a524497ac298dafa8"
     }
   ]
 }

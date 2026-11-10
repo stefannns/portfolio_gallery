@@ -211,9 +211,34 @@ function App(){
   const canvasRef=useRef(null),layers=useRef(null),pointer=useRef(null),clock=useRef({value:0,last:0}),cfgRef=useRef(cfg),brushRef=useRef(2),activeRef=useRef(active),audio=useRef(null),samples=useRef(new Map());
   cfgRef.current=cfg;activeRef.current=active;brushRef.current=brush;
   useEffect(()=>{let alive=true;fetch('./game.config.json').then(r=>r.json()).then(raw=>{if(alive)setCfg({...DEFAULTS,...Object.fromEntries([...raw.texts,...raw.tweaks].map(x=>[x.id,x.value]))});}).catch(()=>{});return()=>{alive=false;};},[]);
-  const sound=kind=>{
-    if(!activeRef.current)return;
-    try{if(!audio.current)audio.current=new(window.AudioContext||window.webkitAudioContext)();const ctx=audio.current;ctx.resume().catch(()=>{});const path=kind==='clear'?'./assets/sfx_paper_clear.mp3':'./assets/sfx_paper_tap.mp3';let sample=samples.current.get(path);if(!sample){sample=fetch(path).then(r=>r.arrayBuffer()).then(b=>ctx.decodeAudioData(b)).catch(()=>null);samples.current.set(path,sample);}sample.then(buffer=>{if(!buffer||ctx.state!=='running'||!activeRef.current)return;const src=ctx.createBufferSource(),gain=ctx.createGain();gain.gain.value=.14;src.buffer=buffer;src.connect(gain);gain.connect(ctx.destination);src.start();src.onended=()=>{src.disconnect();gain.disconnect();};});}catch{}
+  const sound = (kind) => {
+    if (!feedSession.active) return;
+    try {
+      if (!audio.current) audio.current = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = audio.current;
+      if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+      const path = {
+        clear: './assets/sfx_paper_clear.mp3',
+        tap: './assets/sfx_paper_tap.mp3',
+        brush: './assets/sfx_paper_brush.mp3',
+      }[kind];
+      let sample = samples.current.get(path);
+      if (!sample) {
+        sample = fetch(path).then(r => r.arrayBuffer()).then(b => ctx.decodeAudioData(b)).catch(() => null);
+        samples.current.set(path, sample);
+      }
+      sample.then((buffer) => {
+        if (!buffer || ctx.state !== 'running' || !feedSession.active) return;
+        const src = ctx.createBufferSource();
+        const gain = ctx.createGain();
+        gain.gain.value = kind === 'brush' ? .24 : .14;
+        src.buffer = buffer;
+        src.connect(gain);
+        gain.connect(ctx.destination);
+        src.onended = () => { src.disconnect(); gain.disconnect(); };
+        src.start();
+      });
+    } catch { /* Sound is optional. */ }
   };
   useEffect(()=>()=>{try{audio.current?.close();}catch{}},[]);
   useEffect(()=>{clock.current.last=performance.now();pointer.current=null;},[active]);
@@ -281,11 +306,32 @@ function App(){
 
   const pointFor=event=>{const rect=canvasRef.current.getBoundingClientRect();return {x:clamp((event.clientX-rect.left)/rect.width,0,1),y:clamp((event.clientY-rect.top)/rect.height,0,1)};};
   const start=event=>{
-    if(!activeRef.current||event.isPrimary===false||(event.pointerType==='mouse'&&event.button!==0))return;
-    const p=pointFor(event),width=canvasRef.current.getBoundingClientRect().width,size=Number(cfgRef.current['BRUSH_'+(brushRef.current+1)])||14,r=size*1.7/width;
-    pointer.current={id:event.pointerId,last:p,r,lastStamp:clock.current.value};paintSegment(p,p,r,clock.current.value);setGuide(false);sound('tap');event.currentTarget.setPointerCapture(event.pointerId);
+    if (!activeRef.current || pointer.current || event.isPrimary === false ||
+        (event.pointerType === 'mouse' && event.button !== 0)) return;
+    const point = pointFor(event);
+    const width = canvasRef.current.getBoundingClientRect().width;
+    const size = Number(cfgRef.current['BRUSH_' + (brushRef.current + 1)]) || 14;
+    const radius = size * 1.7 / width;
+    const now = clock.current.value;
+    pointer.current = { id: event.pointerId, last: point, r: radius, lastStamp: now };
+    paintSegment(point, point, radius, now);
+    setGuide(false);
+    event.currentTarget.setPointerCapture(event.pointerId);
+    sound('brush');
   };
-  const move=event=>{const pen=pointer.current;if(!pen||pen.id!==event.pointerId)return;const p=pointFor(event),l=layers.current;if(!l||Math.hypot((p.x-pen.last.x)*l.width,(p.y-pen.last.y)*l.height)<1)return;paintSegment(pen.last,p,pen.r,clock.current.value);pen.last=p;pen.lastStamp=clock.current.value;};
+  const move = (event) => {
+    const pen = pointer.current;
+    if (!pen || pen.id !== event.pointerId) return;
+    const point = pointFor(event);
+    const layer = layers.current;
+    if (!layer) return;
+    const distance = Math.hypot((point.x - pen.last.x) * layer.width, (point.y - pen.last.y) * layer.height);
+    if (distance < 1) return;
+    const now = clock.current.value;
+    paintSegment(pen.last, point, pen.r, now);
+    pen.last = point;
+    pen.lastStamp = now;
+  };
   const end=event=>{if(pointer.current?.id===event.pointerId)pointer.current=null;};
   const clear=()=>{if(layers.current)layers.current.glyphs.forEach(g=>{g.until=0;});pointer.current=null;setGuide(true);sound('clear');};
   return <main className="word-reveal" aria-label={cfg.GAME_TITLE}>

@@ -960,10 +960,27 @@ function App() {
   </div>;
 }
 
-createRoot(document.getElementById('root')).render(<App />);
-
-/* FEEDBACK_20261103_87 */
-(()=>{const style=document.createElement("style");style.textContent=".appShell{background:#e7f5f1;color:#244b52}.appShell::before{display:none}body{background:#e7f5f1}.topHud,.brandMark,.itemMark{color:#53716f}.progressPill strong{color:#244b52}.rugStage{background:#d6e7e2;box-shadow:0 10px 24px #537f741b,0 0 0 1px #b5d3ca}.rugImage{filter:brightness(1.13) saturate(.92)}.toolDock{background:#f7fcf9;border:0}.toolButton{color:#47666a}.toolButton.selected{background:#d6eee4;color:#205c50}.toolButton.selected::before{border:1px solid #72b4a0;box-shadow:none}.toolArtwork{filter:none}.guideText{background:#fffffff2;color:#244b52;border:1px solid #d5e6df;text-shadow:none}.toolFeedback{background:#fff;color:#285c51;box-shadow:0 3px 12px #285c5122}.toolCursor{width:56px;height:56px}.completionText{color:#fff;text-shadow:0 2px 5px #234f4b,0 0 15px #234f4b}.completionAction{background:#fff;color:#285c51}";document.body.append(style);})();
+/* White DIY work surface and tool tray. */
+const lightTheme = `
+  body, .appShell { background: #fff; }
+  .appShell { color: #292929; }
+  .appShell::before { display: none; }
+  .topHud, .brandMark, .itemMark, .progressPill strong { color: #292929; }
+  .rugStage { background: #f2f2f0; box-shadow: 0 8px 24px #00000014, 0 0 0 1px #e5e5e3; }
+  .rugImage { filter: brightness(1.13) saturate(.92); }
+  .toolDock { background: #fff; border: 0; }
+  .toolButton { background: #f5f5f3; color: #333; }
+  .toolButton.selected { background: #ffdf84; color: #252525; }
+  .toolButton.selected::before { border: 1px solid #edc364; box-shadow: none; }
+  .toolArtwork { filter: none; }
+  .guideText { background: #fffffff2; color: #292929; border: 1px solid #e1e1df; text-shadow: none; }
+  .toolFeedback { background: #fff; color: #333; box-shadow: 0 3px 12px #0002; }
+  .completionText { color: #fff; text-shadow: 0 2px 5px #252525, 0 0 15px #252525; }
+  .completionAction { background: #ffdf84; color: #252525; }
+  .toolButton:focus-visible, .completionAction:focus-visible { outline-color: #655326; }
+`;
 
 /* CLEAN87_LARGER_TOOLS_20261103 */
-(()=>{const style=document.createElement("style");style.textContent=".toolDock{flex-basis:142px;gap:4px;padding:4px 25px 16px}.toolButton{width:calc((100% - 12px)/4);height:122px;min-height:122px;padding:3px 1px}.toolIcon{width:min(88px,100%);height:94px;margin:0 auto 2px}.toolLabel{line-height:18px}.toolCursor{width:96px;height:96px;margin-left:-48px;margin-top:-48px;transform-origin:50% 50%}.cursor-brush{margin-left:-48px;margin-top:-48px;transform-origin:50% 50%;transform:rotate(-10deg)}.cursor-spray{margin-left:12.8px;margin-top:-52.16px;transform-origin:20% 21%;transform:rotate(-6deg)}.cursor-rinse{margin-left:-53.96px;margin-top:-102.4px;transform-origin:26% 65%;transform:none}.cursor-vacuum{margin-left:-24px;margin-top:-62.4px;transform-origin:25% 65%;transform:none}";document.body.append(style);})();
+(()=>{const style=document.createElement("style");style.textContent=".toolDock{flex-basis:132px;gap:4px;padding:4px 25px 16px}.toolButton{width:calc((100% - 12px)/4);height:112px;min-height:112px;padding:3px 1px}.toolIcon{width:min(88px,100%);height:86px;margin:0 auto 2px}.toolLabel{line-height:18px}.toolCursor{width:96px;height:96px;margin-left:-48px;margin-top:-48px;transform-origin:50% 50%}.cursor-brush{margin-left:-48px;margin-top:-48px;transform-origin:50% 50%;transform:rotate(-10deg)}.cursor-spray{margin-left:12.8px;margin-top:-52.16px;transform-origin:20% 21%;transform:rotate(-6deg)}.cursor-rinse{margin-left:-53.96px;margin-top:-102.4px;transform-origin:26% 65%;transform:none}.cursor-vacuum{margin-left:-24px;margin-top:-62.4px;transform-origin:25% 65%;transform:none}";document.body.append(style);})();
+
+createRoot(document.getElementById('root')).render(<><App /><style>{lightTheme}</style></>);
