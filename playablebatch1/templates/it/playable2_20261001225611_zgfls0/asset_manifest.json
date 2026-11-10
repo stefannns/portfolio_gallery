@@ -1,29 +1,31 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20261001225611_zgfls0",
-  "number": 40,
-  "name": "Pixel Sandbox",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "A pixel material sandbox with fine discrete particles and a large interactive canvas. Preserve the existing simulation colors, material behavior, compact tools and gameplay-faithful idle demonstration.",
   "assets": [
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
-      "ids": [],
-      "bytes": 50616,
-      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
-      "ids": [],
-      "bytes": 51212,
-      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "21b00232d2fb4fbb921126bba50596e0fd0ce9160f1f2715fbe7d3f8543bb491",
-    "dist/bundle.js": "21b00232d2fb4fbb921126bba50596e0fd0ce9160f1f2715fbe7d3f8543bb491",
-    "dist/game.html": "6e3039db55577b7007633791290e561d779f752bbf1714c7aeee2c8c9e5262f7",
-    "dist/game.config.json": "7c7626ba950b882e48180deae97b100af599ca71a916abab277faa0c9ac03f87"
-  }
+  ]
 }

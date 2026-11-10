@@ -1,59 +1,67 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable_20261015220925_0pn002",
-  "number": 70,
-  "name": "Ironing Fuse Beads",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "bangers",
+  "style_anchor": "A fuse bead toy that reveals the same duck design after ironing. Preserve the current bead grid, fused pixel image, enlarged top-down iron and soft realistic steam.",
   "assets": [
     {
-      "path": "dist/assets/bg_bead.webp",
-      "ids": [
-        "BG_BEAD"
-      ],
-      "bytes": 226770,
-      "sha256": "29d844a9b9337fb78cd56228c9ec43c2481fd0785ad7dc71873cadae9d0346fa"
+      "path": "assets/bg_bead.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A fuse bead toy that reveals the same duck design after ironing. Preserve the current bead grid, fused pixel image, enlarged top-down iron and soft realistic steam. Asset requirement: Unfused bead rendering of the duck design. Keep the grid aligned with the fused result image.",
+      "description": "Unfused bead rendering of the duck design. Keep the grid aligned with the fused result image.",
+      "aspect_ratio": "1:1",
+      "size_tier": "full",
+      "recommended_size": "1254x1254",
+      "width": 1254,
+      "height": 1254,
+      "ok": true
     },
     {
-      "path": "dist/assets/bg_pixel.webp",
-      "ids": [
-        "BG_PIXEL"
-      ],
-      "bytes": 146460,
-      "sha256": "c3ad75f98d8276a5bf51e8bd424fbc98b6ed65675e9cd988a96ac325208e115d"
+      "path": "assets/bg_pixel.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A fuse bead toy that reveals the same duck design after ironing. Preserve the current bead grid, fused pixel image, enlarged top-down iron and soft realistic steam. Asset requirement: Fused duck result matching the unfused bead grid. Preserve the design and registration during ironing.",
+      "description": "Fused duck result matching the unfused bead grid. Preserve the design and registration during ironing.",
+      "aspect_ratio": "1:1",
+      "size_tier": "full",
+      "recommended_size": "1254x1254",
+      "width": 1254,
+      "height": 1254,
+      "ok": true
     },
     {
-      "path": "dist/assets/cursor_iron.webp",
-      "ids": [
-        "CURSOR_IRON"
-      ],
-      "bytes": 106694,
-      "sha256": "22d36a62385e61eea555ee6fbed571c8886f270e462d4ba0ddad6e969f16d992"
+      "path": "assets/cursor_iron.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A fuse bead toy that reveals the same duck design after ironing. Preserve the current bead grid, fused pixel image, enlarged top-down iron and soft realistic steam. Asset requirement: Existing Iron Cursor artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Iron Cursor artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1:1",
+      "size_tier": "small",
+      "recommended_size": "1254x1254",
+      "width": 1254,
+      "height": 1254,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
-      "ids": [],
-      "bytes": 37004,
-      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Bangers Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/ui/NunitoSans.woff",
-      "ids": [],
-      "bytes": 261628,
-      "sha256": "e9456519e92dcb6c5857cad504f67c93203e86e81714510f341c72ace8e2313f"
-    },
-    {
-      "path": "dist/assets/fonts/ui/OFL.txt",
-      "ids": [],
-      "bytes": 4393,
-      "sha256": "efbb0c9e864cef973982d9a17567e6be5c3d1759695574586f3f18c7ecca064b"
+      "path": "assets/fonts/ui/NunitoSans.woff",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled NunitoSans font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "256ca8b329a635bca0f04be6818cf48c41bde05653c8f423a56b7338bf4bacbf",
-    "dist/bundle.js": "256ca8b329a635bca0f04be6818cf48c41bde05653c8f423a56b7338bf4bacbf",
-    "dist/game.html": "333e350f9929f550b47e51106a01a08f1ba7a0428511dfb4d1e35488a8cff460",
-    "dist/game.config.json": "8c113dd52c87b256bb8deda1272b5720a17cff48403ede9f699a81aa9cebfd95"
-  }
+  ]
 }

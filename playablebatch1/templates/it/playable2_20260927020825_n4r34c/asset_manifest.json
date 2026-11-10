@@ -1,29 +1,31 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20260927020825_n4r34c",
-  "number": 15,
-  "name": "Orbital Circle",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "A circle tracing challenge with a large central play area and minimal instructional text. Preserve the current circular geometry, drawing feedback and restrained interface.",
   "assets": [
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
-      "ids": [],
-      "bytes": 50616,
-      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
-      "ids": [],
-      "bytes": 51212,
-      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "d7412ab0aa433c4457ba028d0682b320e43d937a5e03381b8e9ba9d5c792b065",
-    "dist/bundle.js": "d7412ab0aa433c4457ba028d0682b320e43d937a5e03381b8e9ba9d5c792b065",
-    "dist/game.html": "a12a7cd3cb65803ee7ee4caebefdb03015351c03c63dd2460c733618b92e5968",
-    "dist/game.config.json": "12b3dfc6b0720ae8013c4ca0c243d54c1cd66d70e80a299948ef80683dc05f97"
-  }
+  ]
 }

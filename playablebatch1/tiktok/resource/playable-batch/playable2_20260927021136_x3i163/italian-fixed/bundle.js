@@ -845,6 +845,7 @@ html[data-meeting-game="17"] .meeting-synth-result>div{color:#334c65!important}
 html[data-meeting-game="17"] .meeting-synth-result h2{text-shadow:none!important}
 html[data-meeting-game="17"][data-meeting-fyp="preview"] canvas{--synth-safe-bottom:140px}
 html[data-meeting-game="17"][data-meeting-fyp="preview"] .synth-score{visibility:hidden}
+html[data-meeting-game="19"] .meeting-cube-heading{position:absolute!important;inset:0 0 auto!important;box-sizing:border-box!important;width:100%!important;background:transparent!important;pointer-events:none!important} html[data-meeting-game="19"] .meeting-cube-heading button{pointer-events:auto!important} html:root:root:root .meeting-cube-board{margin-top:0!important}
 html[data-meeting-game="19"] .meeting-cube-heading>div>p{position:absolute;top:108px;left:30px;right:30px;text-align:center!important;margin:0!important;font-size:18px!important;line-height:1.4!important;z-index:12}
 html[data-meeting-game="19"] button[aria-label="Ricomincia con i cubi"]{width:44px!important;height:44px!important;background:transparent!important;box-shadow:none!important;border:1.5px solid #65708c!important;color:#65708c}
 html[data-meeting-game="19"] button[aria-label="Ricomincia con i cubi"] svg{stroke:currentColor!important;stroke-width:1.8}

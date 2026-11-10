@@ -1,43 +1,31 @@
 {
-  "manifest_version": 1,
-  "task_id": "bead_loop_20261019",
-  "number": 71,
-  "name": "Bead Loop",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "system_safe",
+  "style_anchor": "A three-dimensional vertical loop of spherical beads on a light background. Preserve the current material choices, camera-facing cat texture, soft lighting and compact material strip.",
   "assets": [
     {
-      "path": "dist/assets/fonts/DMSans.woff",
-      "ids": [],
-      "bytes": 109300,
-      "sha256": "28882e64586b903638e580b0782fe44b00ada28963745ea21b0aed4381b4ab1e"
+      "path": "assets/fonts/DMSans.woff",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled DMSans font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/OFL.txt",
-      "ids": [],
-      "bytes": 4482,
-      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1"
-    },
-    {
-      "path": "dist/assets/licenses/THREE-LICENSE.txt",
-      "ids": [],
-      "bytes": 1081,
-      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
-    },
-    {
-      "path": "dist/assets/textures/tabby-face.jpg",
-      "ids": [
-        "CAT_TEXTURE"
-      ],
-      "bytes": 375730,
-      "sha256": "af624d878bd8fe828b0119ad0cad3ce4b2abad40411e55371700ca89aaf37800"
+      "path": "assets/textures/tabby-face.jpg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A three-dimensional vertical loop of spherical beads on a light background. Preserve the current material choices, camera-facing cat texture, soft lighting and compact material strip. Asset requirement: Square tabby cat face photograph mapped to the front of the spherical beads. Keep the face centered and facing the viewer.",
+      "description": "Square tabby cat face photograph mapped to the front of the spherical beads. Keep the face centered and facing the viewer.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "768x768",
+      "width": 768,
+      "height": 768,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "e4b8a6206243338aeb006eeac6624bb16f94923445d6b9f7a57b748026230d60",
-    "dist/bundle.js": "e4b8a6206243338aeb006eeac6624bb16f94923445d6b9f7a57b748026230d60",
-    "dist/game.html": "21e544a451aefbaf30c7fd85830b9d57b292f2e98a118c29c485736798743e23",
-    "dist/game.config.json": "adedef2ae39173ddbb1f0f55d780c1fcb600f3521886a5a3a2689456c6dec58e"
-  }
+  ]
 }

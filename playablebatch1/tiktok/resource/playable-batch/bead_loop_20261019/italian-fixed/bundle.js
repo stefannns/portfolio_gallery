@@ -4724,9 +4724,9 @@ button{font:inherit;color:inherit;cursor:pointer}button:focus-visible,#stage:foc
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important}}
 
 /* User override 2026-10-21: favor visual center, not a fixed upper band. */
-html:root:root:root #game#game#game p#guide{position:fixed!important;top:23%!important;bottom:auto!important;left:50%!important;right:auto!important;width:max-content!important;max-width:calc(100vw - 60px)!important;min-height:0!important;margin:0!important;text-align:center!important;translate:-50% -50%!important;transform:none!important;pointer-events:none!important;z-index:25!important;overflow-wrap:anywhere}
-html:root:root:root #game #stage{margin-top:clamp(0px,calc(16vh - 44px),60px);margin-bottom:0}
-html:root:root:root #game[data-feed-preview="true"] #stage{top:25%;bottom:27%;margin-top:0;margin-bottom:0}
+html:root:root:root #game#game#game p#guide{position:fixed!important;top:15%!important;bottom:auto!important;left:50%!important;right:auto!important;width:max-content!important;max-width:calc(100vw - 60px)!important;min-height:0!important;margin:0!important;text-align:center!important;translate:-50% -50%!important;transform:none!important;pointer-events:none!important;z-index:25!important;overflow-wrap:anywhere}
+html:root:root:root #game #stage{margin-top:clamp(0px,calc(16vh - 44px),60px);margin-bottom:0;transform:translateY(-4.5vh)}
+html:root:root:root #game[data-feed-preview="true"] #stage{top:19%;bottom:33%;margin-top:0;margin-bottom:0;transform:none}
 html:root:root:root #game#game#game p#guide{background:rgba(255,253,248,.94);color:#293c34;padding:6px 12px;border-radius:999px}
 
 /* Existing guide text only; position, opacity lifecycle and hit regions remain game-owned. */

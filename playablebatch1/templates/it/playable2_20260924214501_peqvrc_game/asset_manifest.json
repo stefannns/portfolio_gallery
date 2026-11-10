@@ -1,23 +1,19 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20260924214501_peqvrc",
-  "number": 1,
-  "name": "Dual Tap Duel",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "bangers",
+  "style_anchor": "A two-sided reaction duel with red and blue play fields, bold comic lettering, large score numerals and brief timing feedback. Keep the current split composition and contrasting player colors.",
   "assets": [
     {
-      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
-      "ids": [],
-      "bytes": 37004,
-      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Bangers Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "aadf352aa0f8e088ba1460d7c181fcea02901959f351e82a62d965c7bb728406",
-    "dist/bundle.js": "aadf352aa0f8e088ba1460d7c181fcea02901959f351e82a62d965c7bb728406",
-    "dist/game.html": "04abbe642bbe461fac5aa293f3ca24f494264842ed58cd32e583a7c8d2a99873",
-    "dist/game.config.json": "fc2ec132e667796c5309fac17a44d08253a9cd93bcb4633a6f8ffa1374e6d71e"
-  }
+  ]
 }

@@ -1,59 +1,91 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20261013020955_2hyyml",
-  "number": 61,
-  "name": "Time Camera",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "system_safe",
+  "style_anchor": "A time-travel camera interface with front-facing photographic camera devices for different eras. Preserve the current year dial, era labels, circular camera button and technical typography.",
   "assets": [
     {
-      "path": "dist/assets/devices/antique-camera-front-20261026.webp",
-      "ids": [],
-      "bytes": 52396,
-      "sha256": "418e3b0035aaca0ce74162f6768323afc0e9404a3d2b169fa4c0a2e744ea8e30"
+      "path": "assets/devices/antique-camera-front-20261026.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A time-travel camera interface with front-facing photographic camera devices for different eras. Preserve the current year dial, era labels, circular camera button and technical typography. Asset requirement: Existing antique camera front 20261026 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing antique camera front 20261026 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "512x512",
+      "width": 512,
+      "height": 512,
+      "ok": true
     },
     {
-      "path": "dist/assets/devices/camera-phone-front-20261026.webp",
-      "ids": [],
-      "bytes": 21360,
-      "sha256": "e23bf53f8e7f4b4e77fec1c02a638f33773d4bdaa15a0758635be5f0eba52ee2"
+      "path": "assets/devices/camera-phone-front-20261026.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A time-travel camera interface with front-facing photographic camera devices for different eras. Preserve the current year dial, era labels, circular camera button and technical typography. Asset requirement: Existing camera phone front 20261026 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing camera phone front 20261026 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "512x512",
+      "width": 512,
+      "height": 512,
+      "ok": true
     },
     {
-      "path": "dist/assets/devices/ccd-camera-front-20261026.webp",
-      "ids": [],
-      "bytes": 32414,
-      "sha256": "6b72e503eb281402d531402b2bc8852eef4aae4f8639015844a8537301b34a2f"
+      "path": "assets/devices/ccd-camera-front-20261026.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A time-travel camera interface with front-facing photographic camera devices for different eras. Preserve the current year dial, era labels, circular camera button and technical typography. Asset requirement: Existing ccd camera front 20261026 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing ccd camera front 20261026 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "512x512",
+      "width": 512,
+      "height": 512,
+      "ok": true
     },
     {
-      "path": "dist/assets/devices/film-camera-front-20261026.webp",
-      "ids": [],
-      "bytes": 49062,
-      "sha256": "4dde4ddbcee00c2b388a9f4dae45c39764a74ff994606484e6469a76ffaaf958"
+      "path": "assets/devices/film-camera-front-20261026.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A time-travel camera interface with front-facing photographic camera devices for different eras. Preserve the current year dial, era labels, circular camera button and technical typography. Asset requirement: Existing film camera front 20261026 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing film camera front 20261026 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "512x512",
+      "width": 512,
+      "height": 512,
+      "ok": true
     },
     {
-      "path": "dist/assets/devices/smartphone-front-20261026.webp",
-      "ids": [],
-      "bytes": 13258,
-      "sha256": "3b7c59d16949fa589bc59720dd5a9caaa128f15ca622b3852dd08dba9b4b0c56"
+      "path": "assets/devices/smartphone-front-20261026.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A time-travel camera interface with front-facing photographic camera devices for different eras. Preserve the current year dial, era labels, circular camera button and technical typography. Asset requirement: Existing smartphone front 20261026 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing smartphone front 20261026 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "512x512",
+      "width": 512,
+      "height": 512,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/ui/DMSans.woff",
-      "ids": [],
-      "bytes": 109300,
-      "sha256": "28882e64586b903638e580b0782fe44b00ada28963745ea21b0aed4381b4ab1e"
+      "path": "assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Audiowide Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/ui/OFL.txt",
-      "ids": [],
-      "bytes": 4482,
-      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1"
+      "path": "assets/fonts/ui/DMSans.woff",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled DMSans font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "7654eb4ecfd7c6ba2f4d63f0816cc09a773f451ef99c664c19a4ca3f63b4c09e",
-    "dist/bundle.js": "7654eb4ecfd7c6ba2f4d63f0816cc09a773f451ef99c664c19a4ca3f63b4c09e",
-    "dist/game.html": "5ca29e4f1f74ae52fe99a572d65e0ce825763774b8a98f877a164488488d78c7",
-    "dist/game.config.json": "2cb053e23d912eb5ab5a81507fb718b29847570618ae6d26ae7311ce4c1c552a"
-  }
+  ]
 }

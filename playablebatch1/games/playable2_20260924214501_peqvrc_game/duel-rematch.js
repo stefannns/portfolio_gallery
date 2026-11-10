@@ -68,7 +68,7 @@
       z-index: 5;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
+      touch-action: none;
     }
     .tap-duel__hitbox--red { top: 0; }
     .tap-duel__hitbox--blue { bottom: 0; }
@@ -323,7 +323,12 @@
   }
 
   function bindHitbox(hitbox, player) {
-    hitbox.addEventListener("click", event => press(player, hitbox, event));
+    hitbox.addEventListener("pointerdown", event => {
+      if (event.pointerType !== "mouse" || event.button === 0) press(player, hitbox, event);
+    });
+    hitbox.addEventListener("click", event => {
+      if (event.detail === 0) press(player, hitbox, event);
+    });
   }
 
   bindHitbox(redHitbox, "p1");
