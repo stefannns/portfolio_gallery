@@ -63,7 +63,12 @@
     "playable2_20261029183430_9mlt5d_88b",
     "playable2_20261029183430_ctpmni",
     "playable2_20261029183430_cvsxhd",
-    "playable2_20261105004109_ifgmqt"
+    "playable2_20261105004109_ifgmqt",
+    "playable2_20261106233254_un2vyl",
+    "playable2_20261106233254_5hr2uj",
+    "playable2_20261106233254_pa6hu0",
+    "playable2_20261106233254_599qyk",
+    "playable2_20261106233254_j7lmui"
 ]);
   const membership = new Set(batch1TaskIds);
   const batch2Membership = new Set(batch2TaskIds);

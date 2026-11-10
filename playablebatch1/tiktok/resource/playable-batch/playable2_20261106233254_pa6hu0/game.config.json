@@ -1,0 +1,54 @@
+{
+  "tweaks": [
+    {
+      "id": "GRID_SIZE",
+      "kind": "number",
+      "label": "Grid size",
+      "value": 17,
+      "default": 17,
+      "min": 7,
+      "max": 21,
+      "step": 2
+    },
+    {
+      "id": "MAX_HEIGHT",
+      "kind": "number",
+      "label": "Maximum height",
+      "value": 4,
+      "default": 4,
+      "min": 1,
+      "max": 6,
+      "step": 1
+    },
+    {
+      "id": "BRUSH_SIZE",
+      "kind": "number",
+      "label": "Brush size",
+      "value": 1,
+      "default": 1,
+      "min": 1,
+      "max": 3,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "HINT",
+      "label": "Instruction",
+      "value": "Drag to build land",
+      "default": "Drag to build land",
+      "max_length": 30
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "112333418876238734",
+    "version_id": "112333418880449376",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

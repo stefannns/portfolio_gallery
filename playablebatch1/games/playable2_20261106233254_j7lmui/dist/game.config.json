@@ -1,0 +1,85 @@
+{
+  "tweaks": [
+    {
+      "id": "WAIT_TIME",
+      "kind": "number",
+      "label": "Wait time",
+      "value": 1.55,
+      "default": 1.55,
+      "min": 0.5,
+      "max": 5,
+      "step": 0.1
+    },
+    {
+      "id": "WINDUP_TIME",
+      "kind": "number",
+      "label": "Windup time",
+      "value": 0.65,
+      "default": 0.65,
+      "min": 0.3,
+      "max": 2,
+      "step": 0.1
+    },
+    {
+      "id": "LUNGE_TIME",
+      "kind": "number",
+      "label": "Lunge time",
+      "value": 0.48,
+      "default": 0.48,
+      "min": 0.3,
+      "max": 1.5,
+      "step": 0.05
+    },
+    {
+      "id": "DRAG_SENSITIVITY",
+      "kind": "number",
+      "label": "Drag sensitivity",
+      "value": 0.011,
+      "default": 0.011,
+      "min": 0.005,
+      "max": 0.03,
+      "step": 0.001
+    }
+  ],
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Guide",
+      "value": "Drag to dodge!",
+      "default": "Drag to dodge!",
+      "max_length": 30
+    },
+    {
+      "id": "CAUGHT",
+      "label": "Result",
+      "value": "Caught!",
+      "default": "Caught!",
+      "max_length": 20
+    },
+    {
+      "id": "BEST",
+      "label": "Best label",
+      "value": "BEST",
+      "default": "BEST",
+      "max_length": 20
+    },
+    {
+      "id": "AGAIN",
+      "label": "Replay",
+      "value": "Play again",
+      "default": "Play again",
+      "max_length": 20
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "112333418888744316",
+    "version_id": "112333418888785867",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

@@ -208,7 +208,7 @@ function makeLaser(w, h, orb, index, cfg, preview = false) {
   };
 }
 
-function unlockLaserAudio(ref) {
+function unlockGameAudio(ref) {
   try {
     if (!ref.current) {
       const Context = window.AudioContext || window.webkitAudioContext;
@@ -223,19 +223,68 @@ function unlockLaserAudio(ref) {
   } catch { /* Device audio is optional. */ }
 }
 
-function playLaserCue(audio) {
+const MUSIC_GAIN = .12;
+
+function setRunMusic(audio, enabled) {
+  if (!audio || audio.musicWanted === enabled) return;
+  const { context } = audio;
+  audio.musicWanted = enabled;
+  if (!enabled) {
+    const music = audio.music;
+    if (!music) return;
+    audio.music = null;
+    const now = context.currentTime;
+    music.level.cancelScheduledValues(now);
+    music.level.setTargetAtTime(0, now, .024);
+    music.source.stop(now + .12);
+    return;
+  }
+
+  audio.musicBuffer ??= fetch('./assets/music_neon_dodge.mp3')
+    .then(response => response.arrayBuffer())
+    .then(bytes => context.decodeAudioData(bytes))
+    .catch(() => null);
+  audio.musicBuffer.then(buffer => {
+    if (!buffer || !audio.musicWanted || audio.music || context.state === 'closed') return;
+    const source = context.createBufferSource();
+    const gain = context.createGain();
+    source.buffer = buffer;
+    source.loop = true;
+    gain.gain.value = 0;
+    source.connect(gain);
+    gain.connect(context.destination);
+    gain.gain.setTargetAtTime(MUSIC_GAIN, context.currentTime, .045);
+    source.onended = () => { source.disconnect(); gain.disconnect(); };
+    source.start();
+    audio.music = { source, level: gain.gain };
+  }).catch(() => { /* Music is optional. */ });
+}
+
+const GAME_CUES = {
+  warning: { start: 440, end: 550, duration: .16, peak: .18, type: 'sine' },
+  laser: { start: 670, end: 155, duration: .15, peak: .21, type: 'triangle' },
+};
+
+function playGameCue(audio, name) {
   if (!audio || audio.context.state !== 'running') return;
+  const cue = GAME_CUES[name];
   try {
     const { context, master } = audio, now = context.currentTime;
+    const musicLevel = audio.music?.level;
+    if (musicLevel) {
+      musicLevel.cancelScheduledValues(now);
+      musicLevel.setTargetAtTime(MUSIC_GAIN * .24, now, .012);
+      musicLevel.setTargetAtTime(MUSIC_GAIN, now + cue.duration, .09);
+    }
     const oscillator = context.createOscillator(), gain = context.createGain();
-    oscillator.type = 'sawtooth';
-    oscillator.frequency.setValueAtTime(950, now);
-    oscillator.frequency.exponentialRampToValueAtTime(150, now + .11);
+    oscillator.type = cue.type;
+    oscillator.frequency.setValueAtTime(cue.start, now);
+    oscillator.frequency.exponentialRampToValueAtTime(cue.end, now + cue.duration * .85);
     gain.gain.setValueAtTime(.0001, now);
-    gain.gain.exponentialRampToValueAtTime(.2, now + .008);
-    gain.gain.exponentialRampToValueAtTime(.0001, now + .13);
+    gain.gain.exponentialRampToValueAtTime(cue.peak, now + .025);
+    gain.gain.exponentialRampToValueAtTime(.0001, now + cue.duration);
     oscillator.connect(gain); gain.connect(master);
-    oscillator.start(now); oscillator.stop(now + .15);
+    oscillator.start(now); oscillator.stop(now + cue.duration);
     oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
   } catch { /* Keep visual timing independent of audio. */ }
 }
@@ -266,10 +315,15 @@ function App() {
   const gameRef = useRef(null);
   const phaseRef = useRef('idle');
   const cfgRef = useRef(cfg);
-  const laserAudioRef = useRef(null);
+  const gameAudioRef = useRef(null);
   const pausedRef = useRef(document.hidden);
   const hostActiveRef = useRef(true);
   const reducedMotionRef = useRef(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  const syncRunMusic = useCallback(() => {
+    setRunMusic(gameAudioRef.current, phaseRef.current === 'running' &&
+      hostActiveRef.current && !pausedRef.current);
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -343,11 +397,12 @@ function App() {
     }
     lastFrameRef.current = 0;
     phaseRef.current = startNow ? 'running' : 'idle';
+    syncRunMusic();
     setPhase(startNow ? 'running' : 'idle');
     setResult(null);
     setLive({ elapsed: 0, score: 0 });
     if (window.SFX && window.SFX.reset) window.SFX.reset();
-  }, []);
+  }, [syncRunMusic]);
 
   useEffect(() => {
     resizeCanvas();
@@ -357,6 +412,7 @@ function App() {
     if (wrapRef.current) resizeObserver.observe(wrapRef.current);
     const onVisibility = () => {
       pausedRef.current = document.hidden;
+      syncRunMusic();
       lastFrameRef.current = 0;
       if (gameRef.current) { gameRef.current.drag = false; gameRef.current.pointerId = null; }
     };
@@ -365,6 +421,7 @@ function App() {
     const onHost = (event) => {
       if (event.source !== window.parent || event.origin !== location.origin || event.data?.type !== 'playable-active') return;
       hostActiveRef.current = event.data.active === true;
+      syncRunMusic();
       lastFrameRef.current = 0;
       if (!hostActiveRef.current && gameRef.current) { gameRef.current.drag = false; gameRef.current.pointerId = null; }
     };
@@ -379,9 +436,12 @@ function App() {
       document.removeEventListener('visibilitychange', onVisibility);
       media.removeEventListener?.('change', onMotion);
       cancelAnimationFrame(rafRef.current);
-      laserAudioRef.current?.context.close().catch(() => {});
+      const audio = gameAudioRef.current;
+      setRunMusic(audio, false);
+      audio?.context.close().catch(() => {});
+      gameAudioRef.current = null;
     };
-  }, [resizeCanvas, resetGame]);
+  }, [resizeCanvas, resetGame, syncRunMusic]);
 
   const pointerPosition = (event) => {
     const rect = canvasRef.current.getBoundingClientRect();
@@ -399,7 +459,7 @@ function App() {
     let g = gameRef.current;
     if (!g || g.pointerId !== null || phaseRef.current === 'over') return;
     event.preventDefault();
-    unlockLaserAudio(laserAudioRef);
+    unlockGameAudio(gameAudioRef);
     if (phaseRef.current === 'idle') {
       const position = { x: g.orb.x, y: g.orb.y };
       resetGame(true);
@@ -438,7 +498,7 @@ function App() {
     const moves = { ArrowLeft: [-32, 0], ArrowRight: [32, 0], ArrowUp: [0, -32], ArrowDown: [0, 32] };
     if (!moves[event.key] && event.key !== ' ' && event.key !== 'Enter') return;
     if (phaseRef.current === 'over') return;
-    event.preventDefault(); unlockLaserAudio(laserAudioRef);
+    event.preventDefault(); unlockGameAudio(gameAudioRef);
     if (phaseRef.current === 'idle') resetGame(true);
     const g = gameRef.current, { w, h } = dimsRef.current;
     const move = moves[event.key] || [0, 0];
@@ -449,6 +509,7 @@ function App() {
   const finishGame = (g) => {
     if (phaseRef.current !== 'running') return;
     phaseRef.current = 'over';
+    syncRunMusic();
     g.drag = false; g.pointerId = null; g.hitFlash = 230; g.nearNotice = null;
     const final = { elapsed: g.elapsed, score: g.score, near: g.near };
     setResult(final);
@@ -630,6 +691,7 @@ function App() {
       }
       if (g.elapsed >= g.nextLaserAt && !hasLaser && g.elapsed - g.lastGateAt > 3200 && g.obstacles.length < Number(c.MAX_OBSTACLES)) {
         g.obstacles.push(makeLaser(w, h, g.orb, g.spawnIndex++, c));
+        playGameCue(gameAudioRef.current, 'warning');
         g.nextLaserAt = g.elapsed + Math.max(4800, Number(c.LASER_INTERVAL_MS) - g.elapsed * .035);
       }
       const ease = 1 - Math.exp(-dt / 42);
@@ -661,7 +723,7 @@ function App() {
           o.age += dt;
           if (!o.fired && laserStage(o) === 'active') {
             o.fired = true;
-            if (phaseRef.current === 'running') playLaserCue(laserAudioRef.current);
+            if (phaseRef.current === 'running') playGameCue(gameAudioRef.current, 'laser');
           }
         } else {
           o.x += o.vx * seconds; o.y += o.vy * seconds; o.angle += o.spin * seconds;
@@ -711,7 +773,7 @@ function App() {
     }
     drawScene(g.demoElapsed + g.elapsed);
     rafRef.current = requestAnimationFrame(tick);
-  }, []);
+  }, [syncRunMusic]);
 
   useEffect(() => {
     rafRef.current = requestAnimationFrame(tick);

@@ -1,0 +1,154 @@
+{
+  "tweaks": [
+    {
+      "id": "MAX_HEALTH",
+      "kind": "number",
+      "label": "Health",
+      "value": 100,
+      "default": 100,
+      "min": 20,
+      "max": 200,
+      "step": 10
+    },
+    {
+      "id": "MAX_STAMINA",
+      "kind": "number",
+      "label": "Stamina",
+      "value": 100,
+      "default": 100,
+      "min": 40,
+      "max": 200,
+      "step": 10
+    },
+    {
+      "id": "PLAYER_DAMAGE",
+      "kind": "number",
+      "label": "Player damage",
+      "value": 25,
+      "default": 25,
+      "min": 5,
+      "max": 100,
+      "step": 5
+    },
+    {
+      "id": "AI_DAMAGE",
+      "kind": "number",
+      "label": "Opponent damage",
+      "value": 34,
+      "default": 34,
+      "min": 5,
+      "max": 100,
+      "step": 5
+    },
+    {
+      "id": "ATTACK_RANGE",
+      "kind": "number",
+      "label": "Attack range",
+      "value": 1.75,
+      "default": 1.75,
+      "min": 1,
+      "max": 3,
+      "step": 0.05
+    },
+    {
+      "id": "MOVE_SPEED",
+      "kind": "number",
+      "label": "Movement speed",
+      "value": 2.8,
+      "default": 2.8,
+      "min": 1,
+      "max": 5,
+      "step": 0.1
+    }
+  ],
+  "texts": [
+    {
+      "id": "DRAW_HINT",
+      "label": "Drawing hint",
+      "value": "Draw your fighter",
+      "default": "Draw your fighter",
+      "max_length": 30
+    },
+    {
+      "id": "BATTLE_HINT",
+      "label": "Battle hint",
+      "value": "Move, guard, attack",
+      "default": "Move, guard, attack",
+      "max_length": 30
+    },
+    {
+      "id": "UNDO",
+      "label": "Undo",
+      "value": "Undo",
+      "default": "Undo",
+      "max_length": 20
+    },
+    {
+      "id": "CLEAR",
+      "label": "Clear",
+      "value": "Clear",
+      "default": "Clear",
+      "max_length": 20
+    },
+    {
+      "id": "FIGHT",
+      "label": "Fight",
+      "value": "Fight",
+      "default": "Fight",
+      "max_length": 20
+    },
+    {
+      "id": "GUARD",
+      "label": "Guard",
+      "value": "Guard",
+      "default": "Guard",
+      "max_length": 20
+    },
+    {
+      "id": "ATTACK",
+      "label": "Attack",
+      "value": "Attack",
+      "default": "Attack",
+      "max_length": 20
+    },
+    {
+      "id": "WIN",
+      "label": "Win",
+      "value": "You win",
+      "default": "You win",
+      "max_length": 25
+    },
+    {
+      "id": "LOSE",
+      "label": "Lose",
+      "value": "Knocked out",
+      "default": "Knocked out",
+      "max_length": 25
+    },
+    {
+      "id": "REPLAY",
+      "label": "Replay",
+      "value": "Play again",
+      "default": "Play again",
+      "max_length": 20
+    },
+    {
+      "id": "EDIT",
+      "label": "Edit",
+      "value": "Edit fighter",
+      "default": "Edit fighter",
+      "max_length": 20
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "112333418872032316",
+    "version_id": "112333418871938216",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "Coastal miniature diorama with flat pine-green controls, procedural terrain and local action audio.",
+  "assets": [
+    {
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Poppins-Bold",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Poppins-Regular",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_click.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "sfx click",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_leaves.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "sfx leaves",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_plop.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "sfx plop",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/icons/island-toolkit-mono-v2.png",
+      "produced_by": "imagegen",
+      "produced_prompt": "Create one square 4 by 4 icon atlas for Island Sculptor, a quiet mobile landscape-building game. Exactly sixteen distinct simple FLAT 2D symbols in ONE solid dark pine ink color (#345347), on a genuinely transparent canvas. No other color, white fills, gradients, texture, 3D, bevel, shadow, borders around cells, scenery, text, letters, labels, decoration, or frames. Look like clean vector toolbar glyphs: rounded line caps, clear negative space, and the same medium-bold stroke weight on every icon. Every icon must be recognizable at 22 CSS px. Give each cell equal size, generous clean gutters (at least 16% of each cell on every edge), one centered symbol, consistent optical weight. Use exact order left to right, top to bottom:\nRow 1: an upward arrow over a single terrain layer or diamond, a downward arrow over the same terrain layer or diamond, a two-leaf sprout, a four-point sparkle.\nRow 2: an outlined eye with a single round pupil, three horizontally arranged filled dots, an undo arrow with the arrowhead on the left, a mirrored redo arrow with the arrowhead on the right.\nRow 3: plus, minus, a simple pine tree silhouette with a short trunk, a rounded three-lobed bush silhouette.\nRow 4: a simple five-petal flower with a short stem, two overlapping rounded angular rocks, a fan-shaped scallop shell with three short interior ribs, a five-armed sea star silhouette.\nKeep the empty parts fully transparent. Keep the icons calm and crisp, with the clarity of a professional navigation icon set.",
+      "description": "Transparent 4 × 4 atlas with single-color tool, history, zoom and prop symbols.",
+      "aspect_ratio": "1:1",
+      "size_tier": "small",
+      "recommended_size": "320x320",
+      "width": 320,
+      "height": 320,
+      "ok": true
+    },
+    {
+      "path": "assets/models/quaternius-tree1.glb",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Tree 1 from Quaternius Stylized Nature MegaKit, CC0 1.0. Web optimized GLB from https://github.com/anshaneja5/skyline-run/blob/main/public/assets/models/tree1.glb. Original pack: https://quaternius.com/packs/stylizednaturemegakit.html",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/models/quaternius-tree2.glb",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Tree 2 from Quaternius Stylized Nature MegaKit, CC0 1.0. Web optimized GLB from https://github.com/anshaneja5/skyline-run/blob/main/public/assets/models/tree2.glb. Original pack: https://quaternius.com/packs/stylizednaturemegakit.html",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/models/quaternius-tree3.glb",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Tree 3 from Quaternius Stylized Nature MegaKit, CC0 1.0. Web optimized GLB from https://github.com/anshaneja5/skyline-run/blob/main/public/assets/models/tree3.glb. Original pack: https://quaternius.com/packs/stylizednaturemegakit.html",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}

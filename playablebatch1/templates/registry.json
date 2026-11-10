@@ -1964,7 +1964,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261001225611_zgfls0/game.html",
-          "sha256": "d39b8a90b119c6437222df20d624173a94bee99e659d5409c0d3263074aa28ba"
+          "sha256": "0c8ebb210a2d827962dd3d537806539c0f79e93ccb396a89adad89324a1ca91e"
         },
         {
           "file": "games/playable2_20261001225611_zgfls0/game.config.json",
@@ -1984,7 +1984,7 @@
         },
         {
           "file": "games/playable2_20261001225611_zgfls0/bundle.js",
-          "sha256": "8ef9d013ea5c735dfe2e51fc34f1bc3c3c5918d43a552ee5e9d10aa1b2827151"
+          "sha256": "3401e3eadcdc77119cba17a4ec918fa168c9af40c29f6c44f89069d9f5edb7cd"
         },
         {
           "file": "games/playable2_20261001225611_zgfls0/guide-breathing.js",
@@ -2892,7 +2892,7 @@
       "inputs": [
         {
           "file": "games/playable2_20261013020955_2hyyml/game.html",
-          "sha256": "90d470abc3807eead35b243c516e65149b35e00af5241fcfc4712f59c9c17a54"
+          "sha256": "75de8a9a961c252e23f499f196619796b6fc2f3703aef1f792d5a90b572fc9d0"
         },
         {
           "file": "games/playable2_20261013020955_2hyyml/game.config.json",
@@ -2904,7 +2904,7 @@
         },
         {
           "file": "games/playable2_20261013020955_2hyyml/bundle.js",
-          "sha256": "8f1ae675bf320756990c595b98edbae88197c587eb0edafa034850e0ae9aae91"
+          "sha256": "1c45f9ca263e73dc6a8f21394e69a2ba899e6e3adb5251cb11889a25635d5419"
         },
         {
           "file": "games/playable2_20261013020955_2hyyml/guide-breathing.js",

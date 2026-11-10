@@ -50,6 +50,18 @@
       "width": 0,
       "height": 0,
       "ok": true
+    },
+    {
+      "path": "assets/music_neon_dodge.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Original 156 BPM electronic gameplay loop with synth bass, drums, and lead stabs.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
   ]
 }

@@ -8,8 +8,8 @@ window.PlayableBatchDownloads = {
         "filename": "batch-1-en.zip",
         "language": "en",
         "games": 38,
-        "bytes": 40674453,
-        "sha256": "d1e6c4c96e18271b5db9b2bd149054a3bfeb8694194b1668eafaf1ae5c8eac63",
+        "bytes": 40675014,
+        "sha256": "2c6f43e6492831505aa11067982ed05fc1ffb54ef08510c7937fb7c61aa8274c",
         "members": [
           {
             "number": 1,
@@ -246,8 +246,8 @@ window.PlayableBatchDownloads = {
         "filename": "batch_1_italian_fixed.zip",
         "language": "it",
         "games": 38,
-        "bytes": 36452508,
-        "sha256": "0cfe7b6b177f819f5f7f9285d42dcd51c731908da15fb067e4b578e316b11d90",
+        "bytes": 36468715,
+        "sha256": "78087212a55ee384b665116f2886964f07534d9a567d8b26fef71b24374d3bc5",
         "members": [
           {
             "number": 1,
@@ -488,9 +488,9 @@ window.PlayableBatchDownloads = {
         "url": "/playablebatch1/downloads/batch-2-en.zip",
         "filename": "batch-2-en.zip",
         "language": "en",
-        "games": 22,
-        "bytes": 16058819,
-        "sha256": "4a277dd535ae830d44ca1a6623e06d3ef88fff829a80e539980c6e17b5ca6775",
+        "games": 27,
+        "bytes": 18407369,
+        "sha256": "b03e617ccc0bda52c0113ca583c79a9e19d1af1b920a0f53009ef942142206e6",
         "members": [
           {
             "number": 18,
@@ -604,7 +604,7 @@ window.PlayableBatchDownloads = {
             "number": "88b",
             "taskId": "playable2_20261029183430_9mlt5d_88b",
             "folder": "batch-2-en/88b-playable2_20261029183430_9mlt5d_88b",
-            "files": 11
+            "files": 8
           },
           {
             "number": 89,
@@ -622,6 +622,36 @@ window.PlayableBatchDownloads = {
             "number": 91,
             "taskId": "playable2_20261105004109_ifgmqt",
             "folder": "batch-2-en/91-playable2_20261105004109_ifgmqt",
+            "files": 11
+          },
+          {
+            "number": 92,
+            "taskId": "playable2_20261106233254_un2vyl",
+            "folder": "batch-2-en/92-playable2_20261106233254_un2vyl",
+            "files": 11
+          },
+          {
+            "number": 93,
+            "taskId": "playable2_20261106233254_5hr2uj",
+            "folder": "batch-2-en/93-playable2_20261106233254_5hr2uj",
+            "files": 17
+          },
+          {
+            "number": 94,
+            "taskId": "playable2_20261106233254_pa6hu0",
+            "folder": "batch-2-en/94-playable2_20261106233254_pa6hu0",
+            "files": 15
+          },
+          {
+            "number": 95,
+            "taskId": "playable2_20261106233254_599qyk",
+            "folder": "batch-2-en/95-playable2_20261106233254_599qyk",
+            "files": 14
+          },
+          {
+            "number": 96,
+            "taskId": "playable2_20261106233254_j7lmui",
+            "folder": "batch-2-en/96-playable2_20261106233254_j7lmui",
             "files": 10
           }
         ]

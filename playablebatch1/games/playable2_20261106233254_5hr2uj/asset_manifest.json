@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "bangers",
+  "style_anchor": "Doodle Fighters original artwork, local fonts and action audio.",
+  "assets": [
+    {
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bangers-Regular",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_block.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "sfx block",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_click.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "sfx click",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_draw.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "sfx draw",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_footstep.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "sfx footstep",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_guard.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "sfx guard",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_hit.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "sfx hit",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_punch.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "sfx punch",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_result.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "sfx result",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_step.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "sfx step",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_swoosh.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "sfx swoosh",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}

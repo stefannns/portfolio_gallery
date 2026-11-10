@@ -1,0 +1,144 @@
+{
+  "tweaks": [
+    {
+      "id": "RUN_LENGTH",
+      "kind": "number",
+      "label": "Run length (world units)",
+      "value": 435,
+      "default": 435,
+      "min": 100,
+      "max": 650,
+      "step": 5
+    },
+    {
+      "id": "CRUISE_SPEED",
+      "kind": "number",
+      "label": "Speed (world units per second)",
+      "value": 28,
+      "default": 28,
+      "min": 10,
+      "max": 35,
+      "step": 1
+    },
+    {
+      "id": "BRAKE_SPEED",
+      "kind": "number",
+      "label": "Braking speed (world units per second)",
+      "value": 9,
+      "default": 9,
+      "min": 5,
+      "max": 15,
+      "step": 1
+    },
+    {
+      "id": "GATE_POINTS",
+      "kind": "number",
+      "label": "Clean gate points",
+      "value": 100,
+      "default": 100,
+      "min": 10,
+      "max": 500,
+      "step": 10
+    },
+    {
+      "id": "MISS_PENALTY",
+      "kind": "number",
+      "label": "Missed gate penalty",
+      "value": 30,
+      "default": 30,
+      "min": 0,
+      "max": 100,
+      "step": 5
+    }
+  ],
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Opening guide",
+      "value": "Drag to carve",
+      "default": "Drag to carve",
+      "max_length": 30
+    },
+    {
+      "id": "BRAKE",
+      "label": "Brake button",
+      "value": "Brake",
+      "default": "Brake",
+      "max_length": 12
+    },
+    {
+      "id": "FINISH",
+      "label": "Finish heading",
+      "value": "Run complete",
+      "default": "Run complete",
+      "max_length": 25
+    },
+    {
+      "id": "TIME",
+      "label": "Result time",
+      "value": "Time",
+      "default": "Time",
+      "max_length": 12
+    },
+    {
+      "id": "POINTS",
+      "label": "Result points",
+      "value": "Points",
+      "default": "Points",
+      "max_length": 12
+    },
+    {
+      "id": "BEST",
+      "label": "Best times",
+      "value": "Personal best",
+      "default": "Personal best",
+      "max_length": 25
+    },
+    {
+      "id": "REPLAY",
+      "label": "Replay",
+      "value": "Run again",
+      "default": "Run again",
+      "max_length": 20
+    },
+    {
+      "id": "BLUE",
+      "label": "Blue route",
+      "value": "Blue Run",
+      "default": "Blue Run",
+      "max_length": 15
+    },
+    {
+      "id": "BLACK",
+      "label": "Black route",
+      "value": "Black Run",
+      "default": "Black Run",
+      "max_length": 15
+    },
+    {
+      "id": "CLEAN",
+      "label": "Clean gate",
+      "value": "Clean!",
+      "default": "Clean!",
+      "max_length": 15
+    },
+    {
+      "id": "MISSED",
+      "label": "Missed gate",
+      "value": "Missed",
+      "default": "Missed",
+      "max_length": 15
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "112333418863614193",
+    "version_id": "112333418863563862",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}
