@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Skybridge Siege</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=Lilita+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css?v=13">
+  <script type="importmap">{ "imports": { "three": "./vendor/three.module.js" } }</script>
+</head>
+<body>
+  <canvas id="game" aria-label="First-person view of the duelling floor"></canvas>
+  <canvas id="hands" aria-hidden="true"></canvas>
+  <div id="flash" aria-hidden="true"></div>
+
+  <div id="hud" hidden>
+    <div class="corner">
+      <button id="mute" class="icon-button" aria-label="Sound on" title="Sound (M)"><img class="icon on" src="./assets/icons/sound-on.png" alt="" data-fallback="♪"><img class="icon off" src="./assets/icons/sound-off.png" alt="" data-fallback="♪"></button>
+      <button id="stop" class="icon-button" aria-label="Leave duel" title="Leave (Esc)"><img class="icon" src="./assets/icons/leave.png" alt="" data-fallback="✕"></button>
+    </div>
+
+    <div id="foe" class="foe">
+      <div class="foe-name">The Hex Warden</div>
+      <div class="bar foe-bar"><i id="foe-fill"></i></div>
+      <div id="foe-state" class="caption" role="status"></div>
+    </div>
+
+    <div id="you" class="you">
+      <div class="you-name">You</div>
+      <div class="bar you-bar"><i id="you-fill"></i></div>
+    </div>
+
+    <div id="prompt" class="prompt" role="status" aria-live="polite" data-tone="neutral"></div>
+
+    <!-- The spells: each card darkens and refills while it recharges. -->
+    <ol id="spells" class="spells" aria-label="Spells">
+      <li id="spell-throw" class="spell"><img class="icon" src="./assets/icons/fireball.png" alt="" data-fallback="✊"><b>Fireball</b><span>Fist, snap open</span></li>
+      <li id="spell-water" class="spell"><img class="icon" src="./assets/icons/water.png" alt="" data-fallback="💧"><b>Water Ball</b><span>Draw ( ) downward</span></li>
+      <li id="spell-shield" class="spell"><img class="icon" src="./assets/icons/shield.png" alt="" data-fallback="🖐"><b>Shield</b><span>Flat palms to the screen</span></li>
+      <li id="spell-skyfall" class="spell"><img class="icon" src="./assets/icons/skyfall.png" alt="" data-fallback="⚡"><b>Skyfall</b><span>Fists up, slam</span></li>
+      <li id="spell-dodge" class="spell"><img class="icon" src="./assets/icons/dodge.png" alt="" data-fallback="👋"><b>Dodge</b><span>One hand out, other still</span></li>
+    </ol>
+
+    <!-- The camera and hand tracking, top left; D adds the tracking readouts. -->
+    <aside id="preview" class="preview" hidden>
+      <div class="preview-label">You</div>
+      <div class="preview-frame">
+        <video id="video" autoplay playsinline muted aria-label="Mirrored camera with hand tracking"></video>
+        <canvas id="preview-canvas" aria-hidden="true"></canvas>
+      </div>
+      <pre id="pose-readout" class="readout"></pre>
+      <div id="debug-detail" class="readout"></div>
+    </aside>
+  </div>
+
+  <section id="title" class="screen title">
+    <div class="title-panel">
+      <h1 class="logo"><img src="./assets/art/ui-logo-skybridge.png?v=2" alt="Skybridge Siege"><span class="logo-sub">A duel cast by hand</span></h1>
+      <ol class="moves">
+        <li><img class="icon move-icon" src="./assets/icons/fireball.png" alt="" data-fallback="✊"><b>Fireball</b><span>Hold a tight fist, snap it open</span></li>
+        <li><img class="icon move-icon" src="./assets/icons/water.png" alt="" data-fallback="💧"><b>Water Ball</b><span>Both hands draw ( ) downward. Soaks him: he slows down</span></li>
+        <li><img class="icon move-icon" src="./assets/icons/shield.png" alt="" data-fallback="🖐"><b>Shield</b><span>Flat palms to the screen</span></li>
+        <li><img class="icon move-icon" src="./assets/icons/skyfall.png" alt="" data-fallback="⚡"><b>Skyfall</b><span>Fists up, slam down</span></li>
+        <li><img class="icon move-icon" src="./assets/icons/dodge.png" alt="" data-fallback="👋"><b>Dodge</b><span>One hand out, other still</span></li>
+      </ol>
+      <div class="actions">
+        <button id="start-camera" class="primary">Start camera</button>
+        <button id="start-keyboard" class="ghost">Keyboard</button>
+        <button id="calibrate" class="ghost">Calibrate</button>
+      </div>
+      <p id="calibration-status" class="fineprint" hidden>Fitted to your moves. <button id="calibration-reset" class="text-button">Reset</button></p>
+      <p id="title-message" class="message" role="alert"></p>
+      <p class="fineprint">Camera video stays on this device. Sit an arm's length away, both hands in view.<br>Keyboard: hold and release Space to throw, W shield, Q skyfall, E water, ← → dodge.</p>
+    </div>
+  </section>
+
+  <section id="calibrate-screen" class="screen calibrate" hidden>
+    <div class="calibrate-panel">
+      <div id="cal-steps">
+        <p id="cal-count" class="cal-count"></p>
+        <h2 id="cal-title" class="cal-title"></h2>
+        <p id="cal-say" class="cal-say"></p>
+        <div class="cal-progress" aria-hidden="true"><div id="cal-bar"></div></div>
+        <p id="cal-tally" class="cal-tally"></p>
+        <p id="cal-message" class="message" role="status" aria-live="polite"></p>
+        <div class="actions">
+          <button id="cal-redo" class="ghost">Redo step</button>
+          <button id="cal-skip" class="ghost">Skip step</button>
+          <button id="cal-cancel" class="ghost">Cancel</button>
+        </div>
+      </div>
+      <div id="cal-summary" hidden>
+        <h2 class="cal-title">Fitted to you</h2>
+        <p class="cal-say">Saved on this device. Skipped steps keep their defaults.</p>
+        <table class="cal-table"><thead><tr><th>Setting</th><th>Default</th><th>Yours</th></tr></thead><tbody id="cal-rows"></tbody></table>
+        <div class="actions">
+          <button id="cal-save" class="primary">Save and play</button>
+          <button id="cal-discard" class="ghost">Discard</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="end" class="screen end" hidden>
+    <div class="end-panel">
+      <h2><img class="victory-art" src="./assets/art/ui-victory.png" alt="Victory"><img class="defeat-art" src="./assets/art/ui-defeat.png" alt="Defeat"></h2>
+      <p id="end-stats" class="end-stats"></p>
+      <p id="end-hint" class="end-hint"></p>
+      <div class="actions">
+        <button id="again" class="primary">Duel again</button>
+        <button id="leave" class="ghost">Leave duel</button>
+      </div>
+    </div>
+  </section>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

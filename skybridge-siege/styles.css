@@ -1,0 +1,224 @@
+/* Comic book, like the paintings: cream paper, thick ink outlines, hard offset shadows, halftone
+   dots, magenta brick and brass. Nothing soft or glassy. */
+:root {
+  --ink: #201714;
+  --cream: #fbe2b4;
+  --paper: #fff1d2;
+  --peach: #f7c48e;
+  --brass: #f2b324;
+  --brass-dark: #b97a12;
+  --magenta: #d61f6b;
+  --brick: #a3174f;
+  --night: #173a46;
+  --ember: #ff7a2a;
+  --ward: #7fe6ff;
+  --hex: #e04fd0;
+  --storm: #cfe6ff;
+  --drop: 4px 4px 0 var(--ink);
+  --outline: -2px -2px 0 var(--ink), 2px -2px 0 var(--ink), -2px 2px 0 var(--ink), 2px 2px 0 var(--ink), 0 -2px 0 var(--ink), 0 2px 0 var(--ink), -2px 0 0 var(--ink), 2px 0 0 var(--ink);
+  --dots: radial-gradient(circle, rgba(32, 23, 20, .16) 1.3px, transparent 1.6px) 0 0 / 7px 7px;
+  --display: 'Lilita One', 'Arial Rounded MT Bold', 'Avenir Next', system-ui, sans-serif;
+  --body: 'Alegreya Sans', 'Avenir Next', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html, body { height: 100%; margin: 0; overflow: hidden; background: var(--night); color: var(--ink); font: 17px/1.3 var(--body); }
+
+#game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+#hands { position: fixed; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+
+button { font: 20px var(--display); color: var(--ink); cursor: pointer; border: 3px solid var(--ink); border-radius: 12px; min-height: 48px; padding: 0 22px; box-shadow: var(--drop); }
+button:focus-visible { outline: 3px solid var(--ward); outline-offset: 3px; }
+button:active:not(:disabled) { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+button:disabled { opacity: .6; cursor: progress; }
+.primary { background: var(--brass) var(--dots); }
+.primary:hover:not(:disabled) { background-color: #ffc944; }
+.ghost { background: var(--cream); }
+.ghost:hover:not(:disabled) { background: var(--paper); }
+
+/* Damage and block flashes: a hard-edged frame, like an inked panel, not a soft glow. */
+#flash { position: fixed; inset: 0; pointer-events: none; opacity: 0; }
+#flash.show { animation: flash .46s steps(4, end); }
+#flash.hex { background: radial-gradient(ellipse at center, transparent 76%, var(--hex) 77%); }
+#flash.storm { background: rgba(207, 230, 255, .3); }
+#flash.ward { background: radial-gradient(ellipse at center, transparent 84%, var(--ward) 85%); }
+@keyframes flash { from { opacity: 1; } to { opacity: 0; } }
+
+/* HUD: the Warden's banner, your bar and the callouts. ------------------------------------ */
+#hud { position: fixed; inset: 0; pointer-events: none; }
+#hud:not([hidden]) { animation: hud-in .45s 1.35s both; } /* once the camera has rolled down onto the bridge */
+@keyframes hud-in { from { opacity: 0; } to { opacity: 1; } }
+#hud button { pointer-events: auto; }
+
+.corner { position: absolute; top: 14px; right: 14px; display: flex; gap: 8px; }
+.icon-button { width: 52px; min-height: 52px; padding: 2px; border-radius: 50%; font-size: 20px; line-height: 1; background: var(--cream); display: grid; place-items: center; }
+.icon-button .icon { width: 100%; height: 100%; }
+#mute .off, #mute.off .on { display: none; }
+#mute.off .off { display: block; }
+
+/* The icons (assets/icons, from tools/build-icons.mjs); an emoji stands in until one exists. */
+.icon { display: block; object-fit: contain; }
+.icon-fallback { display: grid; place-items: center; font-size: 28px; line-height: 1; }
+
+/* A chunky inked bar with a halftone fill and a highlight stripe, like the paintings' brass. */
+.bar { display: block; position: relative; height: 22px; background: var(--paper); border: 3px solid var(--ink); border-radius: 999px; box-shadow: var(--drop); overflow: hidden; }
+.bar i { position: absolute; inset: 0 auto 0 0; width: 100%; border-right: 3px solid var(--ink); transition: width .25s steps(5, end); }
+.bar i::after { content: ''; position: absolute; left: 8px; right: 8px; top: 3px; height: 4px; border-radius: 4px; background: rgba(255, 255, 255, .55); }
+.bar i[style*='width: 0'] { border-right: 0; }
+
+.foe { position: absolute; top: 12px; left: 50%; width: min(520px, 46vw); transform: translateX(-50%); text-align: center; }
+.foe-name { display: inline-block; position: relative; z-index: 1; margin-bottom: -6px; padding: 2px 18px 4px; font: 24px/1 var(--display); color: var(--paper); background: var(--brick) var(--dots); border: 3px solid var(--ink); border-radius: 8px; box-shadow: var(--drop); transform: rotate(-2deg); }
+.foe-bar { height: 28px; }
+.foe-bar i { background: var(--magenta) var(--dots); }
+.foe.warded .foe-bar i { background-color: var(--paper); }
+.foe.warded .foe-bar { border-color: var(--ink); box-shadow: var(--drop), 0 0 0 4px var(--ward); }
+
+.caption { display: inline-block; margin-top: 10px; padding: 2px 12px 3px; font: 17px var(--display); background: var(--cream); border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); transform: rotate(1.5deg); }
+.caption:empty { display: none; }
+.foe.charging .caption { background: var(--hex); color: var(--paper); }
+.foe.soaked .caption { background: var(--ward) var(--dots); color: var(--ink); }
+.foe.soaked .foe-bar i { background-color: #4aa8e0; }
+
+.you { position: absolute; left: 18px; bottom: 18px; width: min(300px, 34vw); }
+.you-name { display: inline-block; position: relative; z-index: 1; margin: 0 0 -6px 10px; padding: 1px 14px 3px; font: 20px/1 var(--display); background: var(--brass) var(--dots); border: 3px solid var(--ink); border-radius: 8px; box-shadow: 3px 3px 0 var(--ink); transform: rotate(-3deg); }
+.you-bar { height: 26px; }
+.you-bar i { background: #4fc26a var(--dots); }
+.you.low .you-bar i { background-color: var(--ember); animation: low .5s steps(2, end) infinite; }
+@keyframes low { to { filter: brightness(1.25); } }
+.you.shielding .you-bar { box-shadow: var(--drop), 0 0 0 5px var(--ward); }
+
+/* Callouts: a tilted comic caption; danger is a jagged burst. */
+.prompt { position: absolute; left: 50%; top: 60%; width: max-content; max-width: min(720px, 90vw); padding: 6px 20px 8px; background: var(--cream) var(--dots); border: 3px solid var(--ink); border-radius: 4px; box-shadow: 5px 5px 0 var(--ink); transform: translateX(-50%) rotate(-1.5deg); text-align: center; font: 30px/1.1 var(--display); }
+.prompt:empty { display: none; }
+.prompt[data-tone='fire'] { background-color: #ffb066; }
+.prompt[data-tone='ward'] { background-color: var(--ward); }
+.prompt[data-tone='hex'] { background-color: var(--hex); color: var(--paper); text-shadow: 2px 2px 0 var(--ink); }
+.prompt[data-tone='alarm'] { padding: 30px 54px; border: 0; border-radius: 0; box-shadow: none; color: var(--paper); font-size: 36px; text-shadow: var(--outline);
+  background: var(--magenta) var(--dots);
+  clip-path: polygon(0% 22%, 9% 30%, 6% 4%, 21% 20%, 30% 0%, 39% 18%, 52% 2%, 59% 20%, 72% 3%, 75% 23%, 94% 8%, 89% 33%, 100% 40%, 91% 55%, 99% 74%, 84% 72%, 88% 98%, 70% 81%, 60% 100%, 50% 82%, 37% 98%, 31% 79%, 13% 95%, 15% 72%, 1% 70%, 9% 52%);
+  animation: alarm .17s steps(2, end) infinite alternate; }
+/* Unstoppable: an orange-red burst with a black-and-yellow hazard rim, unlike any other call. */
+.prompt[data-tone='unstoppable'] { padding: 30px 58px; border: 0; border-radius: 0; box-shadow: none; color: var(--paper); font-size: 38px; text-shadow: var(--outline);
+  background: radial-gradient(circle, rgba(32, 23, 20, .25) 1.3px, transparent 1.6px) 0 0 / 7px 7px, linear-gradient(#ff5a1a, #d4160f);
+  clip-path: polygon(0% 22%, 9% 30%, 6% 4%, 21% 20%, 30% 0%, 39% 18%, 52% 2%, 59% 20%, 72% 3%, 75% 23%, 94% 8%, 89% 33%, 100% 40%, 91% 55%, 99% 74%, 84% 72%, 88% 98%, 70% 81%, 60% 100%, 50% 82%, 37% 98%, 31% 79%, 13% 95%, 15% 72%, 1% 70%, 9% 52%);
+  animation: alarm .12s steps(2, end) infinite alternate; }
+.prompt[data-tone='unstoppable-safe'] { background: var(--ward) var(--dots); border-color: var(--ink); }
+.foe.unstoppable .caption { background: #e8261a; color: var(--paper); text-shadow: 2px 2px 0 var(--ink); border-color: var(--ink); animation: alarm-cap .2s steps(2, end) infinite alternate; }
+.foe.unstoppable .foe-name { background-color: #e8261a; }
+@keyframes alarm-cap { from { transform: rotate(1.5deg) scale(1); } to { transform: rotate(-1deg) scale(1.08); } }
+@keyframes alarm { from { transform: translateX(-50%) rotate(-2deg) scale(1); } to { transform: translateX(-50%) rotate(1deg) scale(1.06); } }
+
+/* The spell list down the right: icon cards that dim and refill while recharging. */
+.spells { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; width: 172px; }
+/* A spell board: a plaque in the painting's own materials. A brass frame (ink, brass, ink) round
+   a cream face with a faint halftone dot texture and crimson shade at its foot; the icon on a
+   round teal medallion with a brass rim; the name in crimson. */
+.spell, .moves li {
+  --plaque: var(--dots),
+    radial-gradient(circle, rgba(163, 23, 79, .2) 1.2px, transparent 1.6px) 0 100% / 6px 6px repeat-x,
+    linear-gradient(#fff4d8, var(--cream) 55%, #f3cf98);
+  background: var(--plaque);
+  border: 3px solid var(--ink);
+  box-shadow: inset 0 0 0 3px var(--brass), inset 0 0 0 5px var(--ink), inset 0 6px 0 5px rgba(255, 255, 255, .35), 4px 4px 0 var(--ink);
+}
+.spell { --ready: 1; position: relative; display: grid; grid-template-columns: 50px 1fr; grid-template-rows: auto auto; column-gap: 9px; align-items: center; padding: 9px 12px 9px 9px; border-radius: 9px; overflow: hidden; transition: transform .12s steps(2, end); }
+.spell:nth-child(odd) { transform: rotate(-1deg); }
+.spell:nth-child(even) { transform: rotate(1deg); }
+/* The medallion: teal, brass rim, ink outline, the icon set in it. */
+.spell .icon, .moves .icon { box-sizing: border-box; border-radius: 50%; padding: 5px; background: radial-gradient(circle at 35% 30%, #2f6f7d, var(--night) 70%); border: 3px solid var(--brass); box-shadow: 0 0 0 2.5px var(--ink), 2px 3px 0 2px var(--ink); }
+.spell .icon { grid-row: span 2; width: 48px; height: 48px; }
+.spell b { font: 17px/1 var(--display); color: var(--brick); text-shadow: 1px 1px 0 var(--paper); align-self: end; }
+.spell span { font-size: 12.5px; font-weight: 700; line-height: 1.1; align-self: start; }
+/* Recharging: a dark wash that drains away as the spell comes back. */
+.spell::after { content: ''; position: absolute; inset: 0; background: rgba(23, 58, 70, .55); transform: scaleY(calc(1 - var(--ready))); transform-origin: top; pointer-events: none; }
+.spell.cooling .icon { filter: grayscale(.8); }
+.spell.ready-pop { animation: ready .3s steps(3, end); }
+@keyframes ready { 50% { transform: scale(1.1) rotate(-2deg); filter: brightness(1.15); } }
+.spell.active { transform: scale(1.06) rotate(-1.5deg); box-shadow: inset 0 0 0 3px #ffd75e, inset 0 0 0 5px var(--ink), 0 0 0 4px #ffd75e, 4px 4px 0 4px var(--ink); }
+#spell-shield.active, #spell-water.active { box-shadow: inset 0 0 0 3px var(--ward), inset 0 0 0 5px var(--ink), 0 0 0 4px var(--ward), 4px 4px 0 4px var(--ink); }
+
+/* The camera window, top left: a tilted comic panel with the mirrored camera and both hands'
+   tracking drawn over it. */
+.preview { position: absolute; top: 16px; left: 16px; width: clamp(170px, 19vw, 300px); transform: rotate(-1.5deg); }
+.preview-label { position: absolute; z-index: 1; top: -8px; left: 10px; padding: 0 10px 2px; font: 15px/1.2 var(--display); background: var(--brass) var(--dots); border: 3px solid var(--ink); border-radius: 6px; box-shadow: 2px 2px 0 var(--ink); transform: rotate(-3deg); }
+.preview-frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border: 4px solid var(--ink); border-radius: 8px; background: var(--night); box-shadow: 5px 5px 0 var(--ink), inset 0 0 0 3px var(--cream); }
+.preview video, .preview canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.preview video { transform: scaleX(-1); filter: saturate(.85) contrast(1.05); }
+.readout { display: none; margin: 6px 0 0; padding: 5px 7px; font: 12px/1.35 ui-monospace, 'SF Mono', Menlo, monospace; background: var(--cream); border: 2px solid var(--ink); white-space: pre; transform: rotate(1.5deg); }
+.preview.debug .readout { display: block; }
+
+/* Screens ---------------------------------------------------------------------------------- */
+.screen { position: fixed; inset: 0; display: flex; }
+.title { align-items: center; justify-content: center; padding: 16px; }
+.title-panel { width: min(900px, 100%); max-height: 100%; overflow-y: auto; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 6px 4px; }
+
+.logo { margin: 0 0 18px; display: flex; flex-direction: column; align-items: center; line-height: 1; }
+.logo img { display: block; width: min(560px, 80vw); max-height: 38vh; object-fit: contain; filter: drop-shadow(6px 7px 0 rgba(32, 23, 20, .55)); }
+.logo img + .logo-sub { margin-top: -4px; }
+.logo-top { font: clamp(64px, 11vw, 132px)/.9 var(--display); color: var(--brass); letter-spacing: 1px; transform: rotate(-3deg);
+  text-shadow: 0 -4px 0 var(--ink), 4px 0 0 var(--ink), -4px 0 0 var(--ink), 0 4px 0 var(--ink), 4px 4px 0 var(--ink), -4px 4px 0 var(--ink), 4px -4px 0 var(--ink), -4px -4px 0 var(--ink), 9px 10px 0 var(--magenta), 12px 13px 0 var(--ink); }
+.logo-sub { margin-top: 14px; padding: 3px 18px 5px; font: clamp(18px, 2.2vw, 24px) var(--display); color: var(--paper); background: var(--brick) var(--dots); border: 3px solid var(--ink); box-shadow: var(--drop); transform: rotate(1.5deg); }
+
+.moves { list-style: none; padding: 0; margin: 0 0 18px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; width: 100%; }
+.moves li { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 14px 10px 14px; border-radius: 9px; }
+.moves li:nth-child(odd) { transform: rotate(-1.5deg); }
+.moves li:nth-child(even) { transform: rotate(1.5deg); }
+.move-icon { width: 62px; height: 62px; font-size: 32px; margin-bottom: 3px; }
+.moves b { font: 20px/1.1 var(--display); color: var(--brick); text-shadow: 1px 1px 0 var(--paper); }
+.moves span:last-child { font-size: 14.5px; font-weight: 700; line-height: 1.15; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.message { min-height: 20px; margin: 10px 0 2px; font: 17px var(--display); color: var(--paper); text-shadow: var(--outline); }
+.message:empty { min-height: 0; }
+.message.error { color: #ffd0c8; }
+.fineprint { margin: 6px 0 0; padding: 4px 12px; font-size: 14px; font-weight: 700; background: rgba(251, 226, 180, .92); border: 2px solid var(--ink); border-radius: 6px; }
+.text-button { min-height: 0; padding: 0; border: 0; box-shadow: none; background: none; color: var(--brick); font: inherit; text-decoration: underline; cursor: pointer; }
+
+/* Calibration: a comic panel at the side, so the scene and your inked hands stay in view. */
+.calibrate { align-items: center; pointer-events: none; padding: 16px; }
+.calibrate-panel { pointer-events: auto; width: min(420px, 100%); max-height: 100%; overflow-y: auto; padding: 18px 22px 20px; background: var(--cream) var(--dots); border: 4px solid var(--ink); border-radius: 8px; box-shadow: 6px 6px 0 var(--ink); }
+.cal-count { margin: 0; font: 16px var(--display); color: var(--brick); }
+.cal-title { margin: 2px 0 6px; font: 34px/1.05 var(--display); }
+.cal-say { margin: 0 0 12px; font-size: 17px; font-weight: 500; }
+.cal-progress { height: 20px; border: 3px solid var(--ink); border-radius: 999px; background: var(--paper); overflow: hidden; box-shadow: 3px 3px 0 var(--ink); }
+#cal-bar { height: 100%; width: 0; background: var(--brass) var(--dots); transition: width .12s linear; }
+.cal-tally { margin: 8px 0 0; font: 20px var(--display); }
+.calibrate .message { color: var(--brick); text-shadow: none; }
+.calibrate .actions { justify-content: flex-start; margin-top: 8px; }
+.calibrate button { min-height: 40px; font-size: 17px; padding: 0 14px; }
+.cal-table { width: 100%; border-collapse: collapse; margin: 0 0 14px; font-size: 15px; }
+.cal-table th { text-align: left; font: 14px var(--display); color: var(--brick); padding: 4px 6px; border-bottom: 3px solid var(--ink); }
+.cal-table td { padding: 4px 6px; border-bottom: 1px solid rgba(32, 23, 20, .3); }
+.cal-table td:last-child { font-weight: 700; }
+body.calibrating .foe, body.calibrating .you, body.calibrating .prompt, body.calibrating .spells { display: none !important; }
+
+.end { align-items: center; justify-content: center; background: rgba(23, 58, 70, .5); }
+.end-panel { width: min(720px, calc(100% - 32px)); text-align: center; }
+.end-panel h2 { margin: 0; }
+.end-panel h2 img { display: none; width: 100%; }
+.end[data-result='victory'] .victory-art, .end[data-result='defeat'] .defeat-art { display: block; }
+.end-stats { display: inline-block; font-size: 18px; font-weight: 700; background: var(--cream) var(--dots); border: 3px solid var(--ink); border-radius: 6px; box-shadow: var(--drop); padding: 6px 14px; margin: 4px 0 10px; transform: rotate(-1deg); }
+.end-hint { font: 20px var(--display); color: var(--paper); text-shadow: var(--outline); margin: 0 0 14px; }
+
+@media (max-width: 760px) {
+  .moves { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .moves li:last-child { grid-column: span 2; }
+  .foe { width: 70vw; top: 64px; }
+  .spells { width: 54px; right: 8px; }
+  .preview { width: 34vw; }
+  .spell { grid-template-columns: 40px; padding: 4px; }
+  .spell b, .spell span { display: none; }
+  .spell .icon { width: 40px; height: 40px; }
+  .you { width: 46vw; }
+  .prompt { font-size: 22px; top: 56%; }
+  .prompt[data-tone='alarm'] { font-size: 26px; padding: 22px 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prompt[data-tone='alarm'], .prompt[data-tone='unstoppable'], .foe.unstoppable .caption, .you.low .you-bar i, #hud:not([hidden]) { animation: none; }
+  #flash.show { animation-duration: .2s; }
+}
+/* While calibrating, the panel sits on the left, so the camera window moves to the right. */
+body.calibrating .preview { left: auto; right: 16px; transform: rotate(1.5deg); }

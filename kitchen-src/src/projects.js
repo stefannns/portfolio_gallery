@@ -225,17 +225,25 @@ export const projects = [
     design: 'A short drawing challenge sets up the anticipation and surprise of the bot’s response.',
     process: 'Gemini interprets the drawing and generates the roast. The player’s own work becomes the material for the joke.',
   },
+  {
+    id: 'skybridge-siege', title: 'Skybridge Siege', type: 'Gesture-controlled spellcasting', collection: 'games',
+    image: '/images/projects/skybridge-siege/gameplay.webp', color: '#dfa872', recent: true,
+    url: '/skybridge-siege/',
+    video: '/videos/skybridge-siege-demo.mp4', videoAspectRatio: '16 / 9',
+    previewAlt: 'First-person spellcasting against the Hex Warden on a castle bridge, with hand tracking and a fireball.',
+    description: 'A gesture-controlled spellcasting duel against the Hex Warden. Cast fireballs, raise a shield and dodge incoming attacks on a castle bridge.',
+  },
 ];
 
 // The computer has an editorial order independent of the room and older galleries.
 export const computerProjectIds = [
-  'seed-squad', 'smarttester', 'h3-otome', 'a-bot-can-do-better',
+  'seed-squad', 'smarttester', 'h3-otome', 'a-bot-can-do-better', 'skybridge-siege',
   'recurve', 'assassin', 'niflheim', 'toad-defense',
 ];
 
 // Dao Arena belongs to the original kitchen; the pond test keeps its own set.
 export const originalKitchenProjectIds = [
-  'seed-squad', 'smarttester', 'h3-otome', 'a-bot-can-do-better', 'dao-arena',
+  'seed-squad', 'smarttester', 'h3-otome', 'a-bot-can-do-better', 'dao-arena', 'skybridge-siege',
   'recurve', 'assassin', 'niflheim', 'toad-defense',
 ];
 

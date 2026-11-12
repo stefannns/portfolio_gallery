@@ -38,6 +38,10 @@ kitchen-src/public/
 
 # Supplied H3 Otome portfolio demo, served with the website.
 !/videos/h3-otome-demo.mp4
+!/videos/skybridge-siege-demo.mp4
+
+# Skybridge Siege uses these animation clips during play.
+!/skybridge-siege/assets/**/*.mp4
 
 # Required runtime files in checked-in downloadable templates.
 !/playablebatch1/templates/**/dist/
