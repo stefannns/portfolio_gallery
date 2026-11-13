@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "dynapuff",
+  "style_anchor": "Preserve the current Pink ASMR Book artwork, colors, typography, and mobile gameplay layout.",
+  "assets": [
+    {
+      "path": "assets/audio/bubble-wrap-pop-399334.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing bubble wrap pop 399334 audio asset. Preserve the current playback role and volume treatment.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/audio/fidget-spinner-400683.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing fidget spinner 400683 audio asset. Preserve the current playback role and volume treatment.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/bg_cover.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing bg cover artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "56:75",
+      "size_tier": "full",
+      "recommended_size": "896x1200",
+      "width": 896,
+      "height": 1200,
+      "ok": true
+    },
+    {
+      "path": "assets/book-cover-transparent-v2.png",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Cover Background artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1084:1451",
+      "size_tier": "medium",
+      "recommended_size": "1084x1451",
+      "width": 1084,
+      "height": 1451,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled DynaPuff SemiBold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/img_spinner.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Spinner Image artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "1024x1024",
+      "width": 1024,
+      "height": 1024,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v2/pink-sand.webp",
+      "produced_by": "imagegen",
+      "produced_prompt": "Overhead fine pink kinetic sand surface",
+      "description": "Overhead fine pink kinetic sand surface",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v2/pink-spinner.webp",
+      "produced_by": "imagegen",
+      "produced_prompt": "Transparent three-lobed pink fidget spinner",
+      "description": "Transparent three-lobed pink fidget spinner",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v2/bubble-wrap.webp",
+      "produced_by": "imagegen",
+      "produced_prompt": "Transparent realistic inflated and popped plastic bubble wrap sprites, overhead, soft pink",
+      "description": "Inflated and popped bubble-wrap sprites",
+      "aspect_ratio": "2:1",
+      "size_tier": "medium",
+      "recommended_size": "",
+      "width": 1774,
+      "height": 887,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v2/bubble-sheet-v3.webp",
+      "produced_by": "imagegen",
+      "produced_prompt": "Complete 5-column 7-row inflated transparent bubble wrap sheet, overhead realism; remove tabletop and preserve translucent clear plastic film",
+      "description": "Single connected transparent bubble-wrap sheet with 35 round inflated bubbles",
+      "aspect_ratio": "5:7",
+      "width": 700,
+      "height": 980,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v2/pink-spinner-symmetric.svg",
+      "produced_by": "code_native",
+      "produced_prompt": "An exactly threefold symmetric pink fidget spinner: the same bearing lobe repeated at 120 degrees around a precisely centered circular hub; transparent background.",
+      "description": "Mathematically identical three-lobe spinner with centered bearings and pivot.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "360x360",
+      "width": 360,
+      "height": 360,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v2/pink-spinner-photo-v4.webp",
+      "produced_by": "imagegen",
+      "produced_prompt": "Use case: product-mockup. Asset type: one photorealistic fidget-spinner sprite for a mobile ASMR game. Create a realistic blush-pink classic THREE-ARM fidget spinner, photographed strictly straight down, face-on orthographic with zero perspective or tilt. Genuine transparent RGBA background, no surface, hand, text, logo, watermark or cast shadow. Precisely balanced threefold rotational symmetry: three identical rounded lobes evenly spaced exactly 120 degrees, one lobe straight up, two down-left and down-right. Each lobe has one identical concentric polished stainless-steel bearing, circular and perfectly face-on, with dark inset race. Soft pastel pink molded plastic body with convincing satin material, subtle fine texture, softly beveled edges and gentle realistic highlights. Round pink finger cap exactly at the true rotation center; cap center must be EXACTLY at the center of the square image. Make all three arms equal length and width. Symmetrical diffuse overhead studio lighting. Crisp object silhouette, sharp detail, no motion blur. Entire spinner fits within the central 82 percent of the square with generous transparent padding on every side. This is an actual photographed-looking physical toy, not a drawing, vector illustration, icon, or 3D cartoon. Deliver a single complete spinner, not a sprite sheet or multiple objects.",
+      "description": "ImageGen overhead pink fidget spinner. App.jsx masks the center out of the rotating image and displays the same photographed cap as a separate stationary circular layer.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "640x640",
+      "width": 640,
+      "height": 640,
+      "ok": true
+    }
+  ]
+}

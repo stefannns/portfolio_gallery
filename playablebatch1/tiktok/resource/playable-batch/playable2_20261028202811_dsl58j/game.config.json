@@ -1,0 +1,147 @@
+{
+  "tweaks": [
+    {
+      "id": "WORLD_WIDTH",
+      "kind": "number",
+      "label": "物理世界宽度",
+      "value": 360,
+      "default": 360,
+      "min": 320,
+      "max": 420,
+      "step": 1
+    },
+    {
+      "id": "WORLD_HEIGHT",
+      "kind": "number",
+      "label": "物理世界高度",
+      "value": 780,
+      "default": 780,
+      "min": 680,
+      "max": 900,
+      "step": 1
+    },
+    {
+      "id": "GRAVITY",
+      "kind": "number",
+      "label": "软冰淇淋重力",
+      "value": 1,
+      "default": 1,
+      "min": 0.6,
+      "max": 1.4,
+      "step": 0.05
+    },
+    {
+      "id": "DROP_INTERVAL_MS",
+      "kind": "number",
+      "label": "挤出间隔",
+      "value": 92,
+      "default": 92,
+      "min": 60,
+      "max": 150,
+      "step": 1
+    },
+    {
+      "id": "MAX_SEGMENTS",
+      "kind": "number",
+      "label": "本轮最大挤出段数",
+      "value": 42,
+      "default": 42,
+      "min": 24,
+      "max": 64,
+      "step": 1
+    },
+    {
+      "id": "CONE_TOP_Y",
+      "kind": "number",
+      "label": "甜筒开口高度",
+      "value": 360,
+      "default": 360,
+      "min": 300,
+      "max": 460,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_HINT",
+      "label": "开始提示",
+      "value": "Hold and swirl",
+      "default": "Hold and swirl",
+      "max_length": 28
+    },
+    {
+      "id": "HEIGHT_LABEL",
+      "label": "高度单位",
+      "value": "cm",
+      "default": "cm",
+      "max_length": 4
+    },
+    {
+      "id": "VANILLA",
+      "label": "香草",
+      "value": "Vanilla",
+      "default": "Vanilla",
+      "max_length": 12
+    },
+    {
+      "id": "CHOCOLATE",
+      "label": "巧克力",
+      "value": "Chocolate",
+      "default": "Chocolate",
+      "max_length": 12
+    },
+    {
+      "id": "STRAWBERRY",
+      "label": "草莓",
+      "value": "Strawberry",
+      "default": "Strawberry",
+      "max_length": 12
+    },
+    {
+      "id": "RESULT_TITLE",
+      "label": "结算标题",
+      "value": "Complete!",
+      "default": "Complete!",
+      "max_length": 20
+    },
+    {
+      "id": "RESULT_HEIGHT",
+      "label": "结算高度",
+      "value": "Final height",
+      "default": "Final height",
+      "max_length": 20
+    },
+    {
+      "id": "PLAY_AGAIN",
+      "label": "再来一次",
+      "value": "Play again",
+      "default": "Play again",
+      "max_length": 20
+    },
+    {
+      "id": "POST_PLAY",
+      "label": "投稿",
+      "value": "Post my play",
+      "default": "Post my play",
+      "max_length": 20
+    },
+    {
+      "id": "BEST_LABEL",
+      "label": "个人最佳文案",
+      "value": "Personal best",
+      "default": "Personal best",
+      "max_length": 24
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109025442484510187",
+    "version_id": "109025442484511583",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

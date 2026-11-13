@@ -13,7 +13,7 @@
     button.disabled = !archive;
     label.textContent = item ? 'Download ' + item.label : 'Download batch';
     if (!archive) {
-      button.title = 'Select Batch 1 or Batch 2 to download all its games';
+      button.title = 'Select Batch 1, Batch 2, or Batch 3 to download all its games';
       button.setAttribute('aria-label', button.title);
       return;
     }
@@ -24,7 +24,9 @@
   button.addEventListener('click', () => {
     if (!selectedArchive || button.disabled) return;
     const link = document.createElement('a');
-    const archiveUrl = button.dataset.downloadBase ? new URL(selectedArchive.filename, new URL(button.dataset.downloadBase, location.href)).href : selectedArchive.url;
+    const archiveUrl = button.dataset.downloadBase && selectedArchive.localUrl
+      ? new URL(selectedArchive.localUrl, location.href).href
+      : button.dataset.downloadBase ? new URL(selectedArchive.filename, new URL(button.dataset.downloadBase, location.href)).href : selectedArchive.url;
     link.href = archiveUrl + '?v=' + selectedArchive.sha256.slice(0, 16);
     link.download = selectedArchive.filename;
     document.body.append(link);

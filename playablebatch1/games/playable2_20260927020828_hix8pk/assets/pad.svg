@@ -1,3 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90" role="img" aria-label="Blue circular bounce pad">
-  <circle cx="45" cy="45" r="45" fill="#5DAEFF"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90" role="img" aria-label="Blue bounce pad with glowing open hand"><defs><filter id="hand-glow" x="-35%" y="-30%" width="170%" height="160%"><feGaussianBlur in="SourceGraphic" stdDeviation="1.6" result="glow"/><feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="45" cy="45" r="45" fill="#5DAEFF"/><g fill="#c6f5ff" filter="url(#hand-glow)" transform="translate(4 0)"><rect x="26" y="28" width="8" height="30" rx="4"/><rect x="36" y="17" width="8" height="40" rx="4"/><rect x="46" y="21" width="8" height="36" rx="4"/><rect x="56" y="30" width="8" height="30" rx="4"/><rect x="26" y="44" width="38" height="31" rx="14"/><path d="M32 69L18 53a5 5 0 0 1 7-7l15 14Z"/></g></svg>

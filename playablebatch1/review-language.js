@@ -6,7 +6,7 @@
   const supported=game=>!!game&&Object.hasOwn(versions,game.taskId);
   function source(game,value){
     if(language!=='it'||!supported(game))return value;
-    const url=new URL(value,location.href);url.pathname=url.pathname.replace(/\.html$/,'.it.html');
+    const entry=versions[game.taskId].entry;const url=new URL(entry||value,location.href);if(!entry)url.pathname=url.pathname.replace(/\.html$/,'.it.html');
     url.searchParams.set('lang','it');url.searchParams.set('localeVersion',versions[game.taskId].revision);return url.href;
   }
   function reflect(game=window.PlayableReviewLibrary?.getCurrent()){

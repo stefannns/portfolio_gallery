@@ -99,6 +99,54 @@
       "label": "Ladder Texture",
       "path": "./assets/pixel-ladder-segment-v1.webp",
       "replaceable": true
+    },
+    {
+      "id": "CHAR_CLIMBER_IDLE",
+      "label": "Pixel Climber idle",
+      "path": "./assets/climber-v2/idle.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CHAR_CLIMBER_CLIMB0",
+      "label": "Pixel Climber climb0",
+      "path": "./assets/climber-v2/climb0.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CHAR_CLIMBER_CLIMB1",
+      "label": "Pixel Climber climb1",
+      "path": "./assets/climber-v2/climb1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CHAR_CLIMBER_CLIMB2",
+      "label": "Pixel Climber climb2",
+      "path": "./assets/climber-v2/climb2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CHAR_CLIMBER_CLIMB3",
+      "label": "Pixel Climber climb3",
+      "path": "./assets/climber-v2/climb3.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CHAR_CLIMBER_WALK0",
+      "label": "Pixel Climber walk0",
+      "path": "./assets/climber-v2/walk0.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CHAR_CLIMBER_WALK1",
+      "label": "Pixel Climber walk1",
+      "path": "./assets/climber-v2/walk1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CHAR_CLIMBER_FALL",
+      "label": "Pixel Climber fall",
+      "path": "./assets/climber-v2/fall.webp",
+      "replaceable": true
     }
   ],
   "config_version": "2.0",

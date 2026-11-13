@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 694" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#c9f0fa"/><stop offset=".57" stop-color="#e9f8e4"/><stop offset="1" stop-color="#fff5dc"/></linearGradient>
+    <linearGradient id="field" x2="0" y2="1"><stop stop-color="#a7d989"/><stop offset="1" stop-color="#6cb966"/></linearGradient>
+    <radialGradient id="sun"><stop stop-color="#fff8be" stop-opacity=".92"/><stop offset="1" stop-color="#fff8be" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="390" height="694" fill="url(#sky)"/>
+  <circle cx="292" cy="137" r="92" fill="url(#sun)"/><circle cx="292" cy="137" r="31" fill="#fff6bf" opacity=".82"/>
+  <g fill="#fff" opacity=".76"><ellipse cx="65" cy="159" rx="52" ry="15"/><ellipse cx="107" cy="162" rx="36" ry="12"/><ellipse cx="307" cy="225" rx="41" ry="12"/><ellipse cx="338" cy="228" rx="31" ry="9"/></g>
+  <path d="M0 451Q74 402 162 454T390 444V694H0Z" fill="#c8e9aa"/>
+  <path d="M0 507Q92 461 180 509T390 485V694H0Z" fill="url(#field)"/>
+  <path d="M0 565Q103 529 206 568T390 551V694H0Z" fill="#87ca73" opacity=".58"/>
+  <g fill="#f9eab4" opacity=".55"><circle cx="32" cy="500" r="2"/><circle cx="345" cy="475" r="2"/><circle cx="238" cy="539" r="1.7"/><circle cx="84" cy="592" r="2"/><circle cx="320" cy="629" r="1.8"/></g>
+</svg>

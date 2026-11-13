@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "bangers",
+  "style_anchor": "Preserve the current Infinite Age Guesser artwork, colors, typography, and mobile gameplay layout.",
+  "assets": [
+    {
+      "path": "assets/char_adult.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Character 3 (Adult) artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "576:653",
+      "size_tier": "medium",
+      "recommended_size": "576x653",
+      "width": 576,
+      "height": 653,
+      "ok": true
+    },
+    {
+      "path": "assets/char_baby.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Character 1 (Baby) artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "576:655",
+      "size_tier": "medium",
+      "recommended_size": "576x655",
+      "width": 576,
+      "height": 655,
+      "ok": true
+    },
+    {
+      "path": "assets/char_elder.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Character 4 (Elder) artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "192:217",
+      "size_tier": "medium",
+      "recommended_size": "576x651",
+      "width": 576,
+      "height": 651,
+      "ok": true
+    },
+    {
+      "path": "assets/char_teen.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Character 5 (Teen) artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "576:653",
+      "size_tier": "medium",
+      "recommended_size": "576x653",
+      "width": 576,
+      "height": 653,
+      "ok": true
+    },
+    {
+      "path": "assets/char_young.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Character 2 (Young) artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "192:217",
+      "size_tier": "medium",
+      "recommended_size": "576x651",
+      "width": 576,
+      "height": 651,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled Bangers Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/char_young-flush.webp",
+      "produced_by": "provided_asset",
+      "description": "Existing young portrait with unused transparent padding below the torso cropped off, so its visible lower edge meets the age panel.",
+      "width": 576,
+      "height": 629,
+      "ok": true
+    }
+  ]
+}

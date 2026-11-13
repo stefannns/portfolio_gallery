@@ -14,8 +14,8 @@
       "id": "BRUSH_SIZE",
       "kind": "number",
       "label": "Brush Size",
-      "value": 6,
-      "default": 6,
+      "value": 4,
+      "default": 4,
       "min": 2,
       "max": 16,
       "step": 1

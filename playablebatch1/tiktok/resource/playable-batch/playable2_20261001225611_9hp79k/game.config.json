@@ -79,6 +79,13 @@
       "value": "Post My Play",
       "default": "Post My Play",
       "max_length": 20
+    },
+    {
+      "id": "BTN_RESET",
+      "label": "Reset Button",
+      "value": "Reset",
+      "default": "Reset",
+      "max_length": 15
     }
   ],
   "images": [

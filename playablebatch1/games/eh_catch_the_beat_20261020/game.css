@@ -23,9 +23,10 @@ html[data-feed-preview="true"] #guide,html[data-feed-preview="true"] #photo-cont
 .editor-sheet header{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px}
 .editor-sheet h1{font-size:19px;line-height:1.4;margin:0;text-align:left;font-weight:700}.icon-button{width:44px;height:44px;display:grid;place-items:center;background:none;border:0;border-radius:100%}
 #photo-preview{height:min(28dvh,200px);min-height:100px;display:flex;align-items:center;justify-content:center;border-radius:18px;background-color:#f2ebe4;background-image:linear-gradient(45deg,#e8dfd5 25%,transparent 25%),linear-gradient(-45deg,#e8dfd5 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e8dfd5 75%),linear-gradient(-45deg,transparent 75%,#e8dfd5 75%);background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0}
-#cutout-preview{max-width:92%;max-height:92%;object-fit:contain;filter:drop-shadow(0 4px 3px #22243015)}
+#photo-crop{display:block;width:auto;height:92%;max-width:92%;touch-action:none;cursor:grab;filter:drop-shadow(0 4px 3px #22243015)}
+#photo-crop:active{cursor:grabbing}#photo-crop:focus-visible{outline:3px solid #523e3a;outline-offset:3px}
 #photo-status{font-size:14px;line-height:1.5;margin:14px 0;min-height:21px}
-#photo-options{margin:10px 0 14px}#photo-options label{font-size:13px;display:flex;gap:12px;align-items:center;white-space:nowrap}#photo-options input{width:100%;min-width:0;accent-color:#222430;min-height:32px}
+#photo-options{margin:10px 0 14px}#photo-options label{font-size:13px;display:flex;gap:12px;align-items:center;white-space:nowrap}#photo-options label+label{margin-top:4px}#photo-options input{width:100%;min-width:0;accent-color:#222430;min-height:32px}
 #apply-photo{width:100%}.privacy{font-size:11px;line-height:1.5;color:#625b58;margin:12px 0 0}
 @keyframes guide-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}

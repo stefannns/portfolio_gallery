@@ -1,0 +1,144 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Playable</title>
+<style>html,body{margin:0;width:100%;height:100%;background:#171717;color:white;font:14px system-ui;overflow:hidden}</style></head><body>
+<script>
+// Platform-only preview host. The package's own HTML, source and assets remain
+// authoritative; no screenshot, alternate artwork or game-specific cover is used.
+window.__firstFrameRequestedActive=false;
+window.addEventListener('message',event=>{
+  if(event.source===parent&&event.origin===location.origin&&event.data?.type==='playable-active')window.__firstFrameRequestedActive=event.data.active===true;
+});
+function liveFirstFrame(){
+  'use strict';
+  const win=window,clock=performance.now.bind(performance),dateNow=Date.now.bind(Date);
+  const raf=win.requestAnimationFrame.bind(win),cancelRaf=win.cancelAnimationFrame.bind(win);
+  const timeout=win.setTimeout.bind(win),clearTimer=win.clearTimeout.bind(win);
+  const frames=new Map(),timers=new Map(),images=new Set(),contexts=new Set(),pendingMedia=new Set();
+  let mode=win.__firstFrameRequestedActive?'active':'boot',sequence=1000000000,pausedAt=0,pausedTotal=0,refreshing=false;
+  let pausedAnimations=[],lastChange=clock();
+  const bootedAt=clock();
+  function now(){return(mode==='paused'?pausedAt:clock())-pausedTotal;}
+  try{Object.defineProperty(performance,'now',{configurable:true,value:now});}catch(_){}
+  Date.now=()=>dateNow()-(pausedTotal+(mode==='paused'?clock()-pausedAt:0));
+  win.requestAnimationFrame=callback=>{
+    const id=++sequence,entry={callback,native:null};frames.set(id,entry);
+    if(mode!=='paused')entry.native=raf(()=>runFrame(id));
+    return id;
+  };
+  function runFrame(id){
+    const entry=frames.get(id);if(!entry)return;entry.native=null;
+    if(mode==='paused')return;
+    frames.delete(id);entry.callback(now());
+  }
+  win.cancelAnimationFrame=id=>{const entry=frames.get(id);if(entry?.native!==null)cancelRaf(entry?.native);frames.delete(id);};
+  function scheduleTimer(id){
+    const entry=timers.get(id);if(!entry||mode==='paused')return;
+    entry.due=now()+entry.remaining;
+    entry.native=timeout(()=>{
+      if(!timers.has(id))return;entry.native=null;
+      if(mode==='paused'){entry.remaining=Math.max(0,entry.due-now());return;}
+      if(!entry.repeat)timers.delete(id);
+      try{entry.callback.apply(win,entry.args);}finally{
+        if(entry.repeat&&timers.has(id)){entry.remaining=entry.delay;scheduleTimer(id);}
+      }
+    },entry.remaining);
+  }
+  function createTimer(callback,delay,args,repeat){
+    if(typeof callback!=='function')return timeout(callback,delay,...args);
+    const id=++sequence,wait=Math.max(repeat?1:0,Number(delay)||0);
+    timers.set(id,{callback,args,repeat,delay:wait,remaining:wait,due:now()+wait,native:null});scheduleTimer(id);return id;
+  }
+  win.setTimeout=(callback,delay,...args)=>createTimer(callback,delay,args,false);
+  win.setInterval=(callback,delay,...args)=>createTimer(callback,delay,args,true);
+  win.clearTimeout=win.clearInterval=id=>{const entry=timers.get(id);if(entry?.native!==null)clearTimer(entry?.native);timers.delete(id);if(!entry)clearTimer(id);};
+  // A late image/font may refresh the paused scene once, at the same game time.
+  function refresh(){
+    lastChange=clock();if(mode!=='paused'||refreshing)return;refreshing=true;
+    raf(()=>{
+      refreshing=false;if(mode!=='paused')return;
+      const pending=[...frames];
+      for(const[id,entry]of pending){if(!frames.has(id))continue;frames.delete(id);entry.callback(now());}
+    });
+  }
+  const NativeImage=win.Image;
+  function PreviewImage(...args){const image=new NativeImage(...args);images.add(image);image.addEventListener('load',refresh);image.addEventListener('error',refresh);return image;}
+  PreviewImage.prototype=NativeImage.prototype;Object.setPrototypeOf(PreviewImage,NativeImage);win.Image=PreviewImage;
+  const NativeAudio=win.AudioContext||win.webkitAudioContext;
+  if(NativeAudio){
+    function PreviewAudio(...args){
+      const context=new NativeAudio(...args),resume=context.resume.bind(context);
+      const entry={context,resume,wanted:context.state==='running'};contexts.add(entry);
+      context.resume=()=>{entry.wanted=true;return mode==='active'?resume():Promise.resolve();};
+      if(mode!=='active')context.suspend().catch(()=>{});
+      return context;
+    }
+    PreviewAudio.prototype=NativeAudio.prototype;Object.setPrototypeOf(PreviewAudio,NativeAudio);
+    if(win.AudioContext)win.AudioContext=PreviewAudio;if(win.webkitAudioContext)win.webkitAudioContext=PreviewAudio;
+  }
+  const nativePlay=HTMLMediaElement.prototype.play,nativePause=HTMLMediaElement.prototype.pause;
+  HTMLMediaElement.prototype.play=function(){if(mode!=='active'){pendingMedia.add(this);return Promise.resolve();}return nativePlay.call(this);};
+  HTMLMediaElement.prototype.pause=function(){pendingMedia.delete(this);return nativePause.call(this);};
+  const pauseStyle=document.createElement('style');
+  pauseStyle.textContent='html[data-live-first-frame="paused"] *,html[data-live-first-frame="paused"] *::before,html[data-live-first-frame="paused"] *::after{animation-play-state:paused!important;transition-duration:0s!important}';
+  document.head.append(pauseStyle);
+  function mark(){document.documentElement.dataset.liveFirstFrame=mode;}
+  function pause(){
+    if(mode==='paused')return;
+    pausedAt=clock();mode='paused';
+    for(const entry of frames.values()){if(entry.native!==null)cancelRaf(entry.native);entry.native=null;}
+    for(const entry of timers.values()){if(entry.native!==null)clearTimer(entry.native);entry.native=null;entry.remaining=Math.max(0,entry.due-now());}
+    pausedAnimations=document.getAnimations().filter(animation=>animation.playState==='running');
+    for(const animation of pausedAnimations)animation.pause();
+    for(const entry of contexts)if(entry.context.state==='running')entry.context.suspend().catch(()=>{});
+    for(const media of document.querySelectorAll('audio,video'))if(!media.paused){pendingMedia.add(media);nativePause.call(media);}
+    mark();parent.postMessage({type:'playable-first-frame-ready'},location.origin);
+  }
+  function resume(){
+    if(mode==='active')return;
+    if(mode==='paused')pausedTotal+=clock()-pausedAt;
+    mode='active';mark();
+    for(const[id,entry]of frames)if(entry.native===null)entry.native=raf(()=>runFrame(id));
+    for(const[id,entry]of timers)if(entry.native===null)scheduleTimer(id);
+    for(const animation of pausedAnimations)if(animation.playState==='paused')animation.play();pausedAnimations=[];
+    for(const entry of contexts)if(entry.wanted)entry.resume().catch(()=>{});
+    for(const media of pendingMedia)nativePlay.call(media).catch(()=>{});pendingMedia.clear();
+  }
+  win.addEventListener('message',event=>{
+    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
+    win.__firstFrameRequestedActive=event.data.active===true;
+    if(win.__firstFrameRequestedActive)resume();else if(mode!=='boot')pause();
+  });
+  function ready(){
+    if(mode!=='boot')return;
+    const root=document.getElementById('root')||document.getElementById('game')||document.getElementById('stage');
+    const hasContent=root&&(root.childElementCount>0||root.textContent.trim().length>0);
+    const pending=[...images,...document.images].some(image=>image.src&&!image.complete);
+    const fontsPending=document.fonts?.status==='loading';
+    const elapsed=clock()-bootedAt;
+    if(hasContent&&!pending&&!fontsPending&&elapsed>=350&&clock()-lastChange>=180){
+      // Let the ready assets paint before freezing the fully rendered initial view.
+      raf(()=>raf(()=>{if(mode==='boot')pause();}));return;
+    }
+    if(elapsed>8000&&hasContent){pause();return;}
+    timeout(ready,50);
+  }
+  document.fonts?.addEventListener('loadingdone',refresh);
+  const observer=new MutationObserver(refresh);observer.observe(document,{childList:true,subtree:true});
+  mark();timeout(ready,0);
+}
+(async()=>{
+  try{
+    const path=new URLSearchParams(location.search).get('__game');
+    const source=new URL(path||'',location.origin);
+    if(!path||source.origin!==location.origin||!/^\/resource\/playable-batch\/[\w-]+\/(?:dist\/)?game\.html$/.test(source.pathname))throw new Error('Unsupported game source');
+    const response=await fetch(source.href,{cache:'no-store'});if(!response.ok)throw new Error('Game source unavailable');
+    const html=await response.text();
+    const base=source.href.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+    const setup='<base href="'+base+'"><script>('+liveFirstFrame.toString()+')();<'+'/script>';
+    // Preserve the package's own location as well as its base URI. Games that
+    // resolve assets or storage keys through location.href see the original URL.
+    history.replaceState(null,'',source.href);
+    document.open();document.write(html.replace(/<head(?:\s[^>]*)?>/i,head=>head+setup));document.close();
+  }catch(error){document.body.textContent='Could not load this game.';console.error('[live first frame]',error);}
+})();
+</script></body></html>

@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "audiowide",
+  "style_anchor": "Match retired game 26: #070b19 navy ground, #00e5ff cyan accents, Audiowide headings and controls, monospace timer, thin cyan borders and restrained translucent panels.",
+  "assets": [
+    {
+      "path": "assets/bg_main.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing bg main artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1304:2829",
+      "size_tier": "full",
+      "recommended_size": "1304x2829",
+      "width": 1304,
+      "height": 2829,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reuse the existing bundled Audiowide font from game 26 at the user’s request.",
+      "description": "Audiowide Regular used by game 26’s sci-fi UI.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}

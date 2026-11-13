@@ -65,37 +65,37 @@
     {
       "id": "CHAR_PLAYER",
       "label": "Player Car",
-      "path": "./assets/car-player-v2.webp",
+      "path": "./assets/art-v3/player.svg",
       "replaceable": true
     },
     {
       "id": "IMG_TRAFFIC_RED",
       "label": "Red Traffic Car",
-      "path": "./assets/car-traffic-red-v2.webp",
+      "path": "./assets/art-v3/red.svg",
       "replaceable": true
     },
     {
       "id": "IMG_TRAFFIC_BLUE",
       "label": "Blue Traffic Car",
-      "path": "./assets/car-traffic-blue-v2.webp",
+      "path": "./assets/art-v3/blue.svg",
       "replaceable": true
     },
     {
       "id": "IMG_TRAFFIC_PURPLE",
       "label": "Purple Traffic Car",
-      "path": "./assets/car-traffic-purple-v2.webp",
+      "path": "./assets/art-v3/purple.svg",
       "replaceable": true
     },
     {
       "id": "IMG_BACKGROUND",
-      "label": "Alpine Horizon",
-      "path": "./assets/alpine-horizon-v2.webp",
+      "label": "Mountains Only Background",
+      "path": "./assets/art-v3/mountains-only-v4.webp",
       "replaceable": true
     },
     {
       "id": "IMG_ROADSIDE",
       "label": "Roadside Pine",
-      "path": "./assets/roadside-pine-v2.webp",
+      "path": "./assets/art-v3/pine.svg",
       "replaceable": true
     }
   ],

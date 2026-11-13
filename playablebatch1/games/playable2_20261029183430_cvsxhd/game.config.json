@@ -1,0 +1,162 @@
+{
+  "tweaks": [
+    {
+      "id": "MATCH_POINTS",
+      "kind": "number",
+      "label": "Points to win",
+      "value": 5,
+      "default": 5,
+      "min": 1,
+      "max": 9,
+      "step": 1
+    },
+    {
+      "id": "BALL_SPEED",
+      "kind": "number",
+      "label": "Ball speed",
+      "value": 0.38,
+      "default": 0.38,
+      "min": 0.2,
+      "max": 0.7,
+      "step": 0.01
+    },
+    {
+      "id": "AI_SPEED",
+      "kind": "number",
+      "label": "Opponent reaction speed",
+      "value": 0.24,
+      "default": 0.24,
+      "min": 0.1,
+      "max": 0.45,
+      "step": 0.01
+    },
+    {
+      "id": "PADDLE_WIDTH",
+      "kind": "number",
+      "label": "Paddle width",
+      "value": 86,
+      "default": 86,
+      "min": 64,
+      "max": 120,
+      "step": 1
+    },
+    {
+      "id": "BALL_SIZE",
+      "kind": "number",
+      "label": "Ball size",
+      "value": 16,
+      "default": 16,
+      "min": 12,
+      "max": 22,
+      "step": 1
+    },
+    {
+      "id": "SCORE_PAUSE_MS",
+      "kind": "number",
+      "label": "Point reset pause",
+      "value": 650,
+      "default": 650,
+      "min": 300,
+      "max": 1200,
+      "step": 50
+    },
+    {
+      "id": "AI_MISS_CHANCE",
+      "kind": "number",
+      "label": "Opponent misjudgement chance",
+      "value": 0.22,
+      "default": 0.22,
+      "min": 0,
+      "max": 0.65,
+      "step": 0.01
+    },
+    {
+      "id": "AI_REACTION_MS",
+      "kind": "number",
+      "label": "Opponent reaction delay (ms)",
+      "value": 140,
+      "default": 140,
+      "min": 50,
+      "max": 400,
+      "step": 10
+    },
+    {
+      "id": "BALL_ACCEL_PER_SECOND",
+      "kind": "number",
+      "label": "Ball speed increase per active second",
+      "value": 0.012,
+      "default": 0.012,
+      "min": 0,
+      "max": 0.04,
+      "step": 0.002
+    },
+    {
+      "id": "BALL_ACCEL_PER_HIT",
+      "kind": "number",
+      "label": "Ball speed increase per return",
+      "value": 0.025,
+      "default": 0.025,
+      "min": 0,
+      "max": 0.08,
+      "step": 0.005
+    },
+    {
+      "id": "BALL_MAX_MULTIPLIER",
+      "kind": "number",
+      "label": "Maximum ball speed multiplier",
+      "value": 2.1,
+      "default": 2.1,
+      "min": 1,
+      "max": 3,
+      "step": 0.1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GUIDE_TEXT",
+      "label": "Play guide",
+      "value": "Drag to play against the computer",
+      "default": "Drag to play against the computer",
+      "max_length": 32
+    },
+    {
+      "id": "YOU_WIN",
+      "label": "Red player result",
+      "value": "You win!",
+      "default": "You win!",
+      "max_length": 20
+    },
+    {
+      "id": "YOU_LOSE",
+      "label": "Blue player result",
+      "value": "Computer wins",
+      "default": "Computer wins",
+      "max_length": 20
+    },
+    {
+      "id": "FINAL_SCORE",
+      "label": "Final score label",
+      "value": "Final score",
+      "default": "Final score",
+      "max_length": 20
+    },
+    {
+      "id": "PLAY_AGAIN",
+      "label": "Replay button",
+      "value": "Play again",
+      "default": "Play again",
+      "max_length": 20
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109359222655217773",
+    "version_id": "109359222655234699",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

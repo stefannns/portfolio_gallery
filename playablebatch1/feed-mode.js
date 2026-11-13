@@ -7,6 +7,7 @@
   const viewport=document.createElement('div');viewport.id='fyp-fit';viewport.className='fyp-viewport';viewport.hidden=true;
   viewport.innerHTML='<div id="fyp-phone" class="fyp-phone"><iframe class="fyp-frame" title="FYP game review" allow="camera; microphone; autoplay; fullscreen"></iframe><div class="fyp-error" hidden><p>Couldn’t load FYP Mode.</p><button type="button">Try again</button></div></div>';
   document.getElementById('stage').append(viewport);
+  const coverToggle=document.getElementById('cover-mode-toggle');
   const withoutIds=html=>html.replace(/\s+id="[^"]*"/g,'');
   const navigation=withoutIds(inlineControls.querySelector('.player-navigation').innerHTML);
   const language=withoutIds(inlineControls.querySelector('.player-language')?.outerHTML||'');
@@ -28,7 +29,7 @@
     for(const game of games){const option=document.createElement('option');option.value=game.taskId;option.textContent=game.number+'. '+game.name;picker.append(option);}
   }
   refreshPicker();
-  let expanded=false,selected=api.getCurrent(),ready=false,timer=null,pending=null,loadedPool='',loadedLocale='en';
+  let expanded=false,selected=api.getCurrent(),ready=false,timer=null,pending=null,loadedPool='',loadedLocale='en',coverMode=false;
   const nativeFrame=()=>expanded?full:inline;
   const send=data=>nativeFrame()?.contentWindow?.postMessage(data,origin);
   function controls(){
@@ -64,6 +65,7 @@
     loadedLocale=window.PlayableReviewLocale?.language||'en';
     const url=new URL(api.fypSource(selected));url.searchParams.set('reviewHost',location.origin);url.searchParams.set('v','fyp-only-20261029');
     url.searchParams.set('lang',loadedLocale);
+    if(coverMode)url.searchParams.set('cover','still');
     nativeFrame().src=url.href;clearTimeout(timer);
     timer=setTimeout(()=>{error.hidden=false;inlineError.hidden=false;announcement.textContent='FYP view unavailable. Use Try again to reload.';},15000);
   }
@@ -82,6 +84,14 @@
     api.select(game,{reveal:true});
   }
   function restart(){selected=api.getCurrent();stop();paint();load();}
+  coverToggle?.addEventListener('click',()=>{
+    stop();coverMode=!coverMode;selected=api.getCurrent();
+    coverToggle.setAttribute('aria-pressed',String(coverMode));
+    coverToggle.textContent=coverMode?'Animated covers':'Still covers';
+    coverToggle.title=coverMode?'Show animated FYP covers':'Show still covers in the FYP';
+    announcement.textContent=coverMode?'Showing still covers in FYP':'Showing animated FYP covers';
+    paint();load();
+  });
   for(const button of buttons('[data-step]'))button.addEventListener('click',()=>step(button.dataset.step));
   for(const button of buttons('[data-action="restart"]'))button.addEventListener('click',restart);
   trigger.addEventListener('click',()=>{

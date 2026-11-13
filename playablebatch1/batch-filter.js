@@ -73,9 +73,13 @@
   const membership = new Set(batch1TaskIds);
   const batch2Membership = new Set(batch2TaskIds);
   const storageKey = 'playable-review-batch-v1';
-  const normalizeBatch = value => ['all', 'batch1', 'batch2', 'other'].includes(value) ? value : 'all';
-  const categoryOf = game => membership.has(game?.taskId) ? 'batch1' : batch2Membership.has(game?.taskId) ? 'batch2' : 'other';
-  const matchesBatch = (game, value) => normalizeBatch(value) === 'all' || categoryOf(game) === value;
+  // Existing saved “Other” filters now refer to Batch 3.
+  const normalizeBatch = value => value === 'other' ? 'batch3' : ['all', 'batch1', 'batch2', 'batch3'].includes(value) ? value : 'all';
+  const categoryOf = game => membership.has(game?.taskId) ? 'batch1' : batch2Membership.has(game?.taskId) ? 'batch2' : 'batch3';
+  const matchesBatch = (game, value) => {
+    const batch = normalizeBatch(value);
+    return batch === 'all' || categoryOf(game) === batch;
+  };
   const matchesQuery = (game, query) => {
     const q = String(query || '').trim().toLowerCase();
     return !q || [game.name, game.spreadsheetName, game.base, game.taskId, game.spreadsheetTaskId, game.number].filter(value => value != null).join(' ').toLowerCase().includes(q);

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 693" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="night" x2="0" y2="1">
+      <stop stop-color="#071d13"/>
+      <stop offset="0.55" stop-color="#07100c"/>
+      <stop offset="1" stop-color="#010604"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop stop-color="#178f53" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#178f53" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="390" height="693" fill="url(#night)"/>
+  <ellipse cx="195" cy="230" rx="245" ry="350" fill="url(#glow)"/>
+  <g stroke="#2b6d47" stroke-opacity=".12" stroke-width="1">
+    <path d="M0 80h390M0 160h390M0 240h390M0 320h390M0 400h390M0 480h390M0 560h390M0 640h390"/>
+    <path d="M35 0v693M115 0v693M195 0v693M275 0v693M355 0v693"/>
+  </g>
+</svg>

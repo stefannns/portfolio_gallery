@@ -86,19 +86,19 @@
     {
       "id": "IMG_PLAYER",
       "label": "Player Car",
-      "path": "./assets/car_player.webp",
+      "path": "./assets/art-v3/player.svg",
       "replaceable": true
     },
     {
       "id": "IMG_PARKED",
       "label": "Parked Car",
-      "path": "./assets/car_parked.webp",
+      "path": "./assets/art-v3/parked.svg",
       "replaceable": true
     },
     {
       "id": "IMG_BG",
       "label": "Cartoon Parking Lot",
-      "path": "./assets/bg_cartoon_parking.webp",
+      "path": "./assets/art-v3/parking-lot.png",
       "replaceable": true
     }
   ],

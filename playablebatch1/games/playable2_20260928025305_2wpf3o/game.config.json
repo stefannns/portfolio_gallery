@@ -109,7 +109,7 @@
     {
       "id": "CHAR_2",
       "label": "Character 2 (Young)",
-      "path": "./assets/char_young.webp",
+      "path": "./assets/char_young-flush.webp",
       "replaceable": true
     },
     {

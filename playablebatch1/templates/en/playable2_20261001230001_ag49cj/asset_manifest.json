@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "system_safe",
+  "style_anchor": "Follow the earlier Starlit Hill vector style: midnight blue and purple gradient sky, simple moon, flat rolling hills and dark tree/people silhouettes. Separate foreground hill layers visually occlude rockets launched from behind the ridge.",
+  "assets": [
+    {
+      "path": "assets/bg_night.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing bg night artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "59:128",
+      "size_tier": "full",
+      "recommended_size": "590x1280",
+      "width": 590,
+      "height": 1280,
+      "ok": true
+    },
+    {
+      "path": "assets/firework-audio.LICENSE.txt",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing firework audio.LICENSE artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "",
+      "size_tier": "medium",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/firework-burst.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing firework burst audio asset. Preserve the current playback role and volume treatment.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/firework-rise.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing firework rise audio asset. Preserve the current playback role and volume treatment.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/night_clean.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Background Image artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "130:231",
+      "size_tier": "medium",
+      "recommended_size": "390x693",
+      "width": 390,
+      "height": 693,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v2/moonlit-hill-v2.webp",
+      "produced_by": "imagegen",
+      "produced_prompt": "Use case: stylized-concept. Asset type: full-screen portrait 9:16 background artwork for a relaxing mobile firework-launching game, Starlit Hill. Create a polished hand-painted storybook night landscape with refined, clean shapes and subtle natural painted texture. The upper 76 percent is mostly spacious deep midnight navy and indigo sky, gently fading toward a muted dusty violet horizon; sparse tiny stars and a softly luminous ivory crescent moon in the upper-right around x76%, y16%, with a restrained halo. Keep the center sky dark, uncluttered and low contrast so colorful animated fireworks will read clearly over it. Across the lower 24 percent, layered rolling hills recede into a misty blue-purple valley, a rounded grassy hill in the foreground, a graceful small leafy tree at the lower-left, and two tiny people seated together near the bottom center, viewed from behind watching the sky. Fine grass edges and a few tiny warm fireflies close to the ground, soft moonlight on the hill's rim, rich depth without excessive detail. Cozy, peaceful, sophisticated illustration rather than cute cartoon. No visible fireworks (these are animated by the game), no buildings, no text, no logos, no UI, no frame, no phone mockup. All scenery bleeds completely to the edges. The sky should occupy the majority of the image, with no large foreground objects obstructing play.",
+      "description": "ImageGen storybook moonlit sky, layered hills, leafy foreground tree and two seated watchers; quiet open sky for live fireworks.",
+      "aspect_ratio": "9:16",
+      "size_tier": "full",
+      "recommended_size": "768x1365",
+      "width": 768,
+      "height": 1365,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v2/night-sky-vector-v3.svg",
+      "produced_by": "create_svg",
+      "produced_prompt": "Return toward the original night_clean.svg vector art style and composition; split scenery into sky, distant hills, and foreground silhouettes so fireworks originate behind the hills.",
+      "description": "Night Sky; editable SVG layer.",
+      "aspect_ratio": "390:693",
+      "size_tier": "full",
+      "recommended_size": "390x693",
+      "width": 390,
+      "height": 693,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v2/distant-hills-vector-v3.svg",
+      "produced_by": "create_svg",
+      "produced_prompt": "Return toward the original night_clean.svg vector art style and composition; split scenery into sky, distant hills, and foreground silhouettes so fireworks originate behind the hills.",
+      "description": "Distant Hill Layer; editable SVG layer.",
+      "aspect_ratio": "390:693",
+      "size_tier": "full",
+      "recommended_size": "390x693",
+      "width": 390,
+      "height": 693,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v2/hill-foreground-vector-v3.svg",
+      "produced_by": "create_svg",
+      "produced_prompt": "Return toward the original night_clean.svg vector art style and composition; split scenery into sky, distant hills, and foreground silhouettes so fireworks originate behind the hills.",
+      "description": "Foreground Hill and Silhouettes; editable SVG layer.",
+      "aspect_ratio": "390:693",
+      "size_tier": "full",
+      "recommended_size": "390x693",
+      "width": 390,
+      "height": 693,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v2/night-sky-vector-v4.svg",
+      "produced_by": "create_svg",
+      "produced_prompt": "Keep the layered night scene and change the full moon to a crescent moon.",
+      "description": "Editable vector night sky with a curved crescent moon.",
+      "aspect_ratio": "390:693",
+      "size_tier": "full",
+      "recommended_size": "390x693",
+      "width": 390,
+      "height": 693,
+      "ok": true
+    }
+  ]
+}

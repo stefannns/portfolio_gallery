@@ -55,7 +55,14 @@
       "max_length": 20
     }
   ],
-  "images": [],
+  "images": [
+    {
+      "id": "BG_PAPER",
+      "label": "Yellow dotted paper",
+      "path": "./assets/yellow-paper-dots-v3.svg",
+      "replaceable": true
+    }
+  ],
   "config_version": "2.0",
   "playable": {
     "runtime_target": "h5",

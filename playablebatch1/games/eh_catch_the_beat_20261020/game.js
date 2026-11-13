@@ -13,7 +13,8 @@
   let musicBuffer=null,introBuffer=null,introSource=null,musicSource=null,audioStart=0,clockStart=0,pausedTime=0,paused=false;
   let ready=false,launching=false,finishedAt=0,lastFeedback=null,feedbackAt=-10,now=0,lastTime=0;
   let width=390,height=598,scale=1,localHead=null,headAnchor={x:.5,y:1},headScale=1;
-  let pendingHead=null,pendingAnchor=null,photoJob=0,worker=null,previewUrl=null,focusBeforeEditor=null,noticeTimer,photoTimeout;
+  let pendingPhoto=null,photoJob=0,focusBeforeEditor=null,noticeTimer,cropPointer=null;
+  let cropX=0,cropY=0;
   const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
   function announce(message){$('notice').textContent=message;$('notice').hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>$('notice').hidden=true,3500);}
   function resize(){
@@ -116,7 +117,7 @@
   }
   $('resume').addEventListener('click',resume);
   document.addEventListener('visibilitychange',()=>{if(document.hidden){pause();stopIntro();}});
-  window.addEventListener('pagehide',()=>{pause();stopMusic();stopIntro();worker?.terminate();});
+  window.addEventListener('pagehide',()=>{pause();stopMusic();stopIntro();pendingPhoto?.close?.();localHead?.close?.();});
   function showResult(){
     if(finishedAt)return;
     finishedAt=now;stopMusic();root.dataset.state='result';
@@ -186,8 +187,45 @@
   }
   requestAnimationFrame(frame);boot();
 
-  // Local photo personalization. No remote endpoint receives a selected photo.
-  function closeEditor(){photoJob++;clearTimeout(photoTimeout);if($('apply-photo').disabled){worker?.terminate();worker=null;}$('editor').hidden=true;pendingHead?.close?.();pendingHead=null;if(previewUrl){URL.revokeObjectURL(previewUrl);previewUrl=null;}focusBeforeEditor?.focus();}
+  // Local photo personalization. The user frames the face; no remote processing is used.
+  function closeEditor(){
+    photoJob++;cropPointer=null;pendingPhoto?.close?.();pendingPhoto=null;
+    $('editor').hidden=true;focusBeforeEditor?.focus();
+  }
+  function cropBounds(){
+    if(!pendingPhoto)return null;
+    const canvas=$('photo-crop'),aspect=canvas.width/canvas.height,zoom=Number($('photo-zoom').value)||1;
+    const w=Math.min(pendingPhoto.width,pendingPhoto.height*aspect)/zoom,h=w/aspect;
+    cropX=clamp(cropX,w/2,pendingPhoto.width-w/2);cropY=clamp(cropY,h/2,pendingPhoto.height-h/2);
+    return {x:cropX-w/2,y:cropY-h/2,w,h};
+  }
+  function drawCrop(canvas,showOutline=false){
+    const bounds=cropBounds();if(!bounds)return;
+    const context=canvas.getContext('2d');if(!context)return;
+    context.clearRect(0,0,canvas.width,canvas.height);context.save();context.beginPath();
+    context.ellipse(canvas.width/2,canvas.height/2,canvas.width/2-2,canvas.height/2-2,0,0,Math.PI*2);
+    context.clip();context.drawImage(pendingPhoto,bounds.x,bounds.y,bounds.w,bounds.h,0,0,canvas.width,canvas.height);context.restore();
+    if(showOutline){context.beginPath();context.ellipse(canvas.width/2,canvas.height/2,canvas.width/2-2,canvas.height/2-2,0,0,Math.PI*2);context.strokeStyle='#fff';context.lineWidth=3;context.stroke();}
+  }
+  const cropCanvas=$('photo-crop');
+  cropCanvas.addEventListener('pointerdown',event=>{
+    if(!pendingPhoto||event.button>0||cropPointer)return;
+    cropPointer={id:event.pointerId,x:event.clientX,y:event.clientY};cropCanvas.setPointerCapture(event.pointerId);event.preventDefault();
+  });
+  cropCanvas.addEventListener('pointermove',event=>{
+    if(!cropPointer||event.pointerId!==cropPointer.id)return;
+    const bounds=cropBounds(),rect=cropCanvas.getBoundingClientRect();if(!bounds||!rect.width||!rect.height)return;
+    cropX-=(event.clientX-cropPointer.x)*bounds.w/rect.width;cropY-=(event.clientY-cropPointer.y)*bounds.h/rect.height;
+    cropPointer.x=event.clientX;cropPointer.y=event.clientY;drawCrop(cropCanvas,true);event.preventDefault();
+  });
+  for(const type of ['pointerup','pointercancel','lostpointercapture'])cropCanvas.addEventListener(type,event=>{if(cropPointer?.id===event.pointerId)cropPointer=null;});
+  cropCanvas.addEventListener('keydown',event=>{
+    const bounds=cropBounds();if(!bounds)return;
+    const step=.04;if(event.key==='ArrowLeft')cropX-=bounds.w*step;else if(event.key==='ArrowRight')cropX+=bounds.w*step;
+    else if(event.key==='ArrowUp')cropY-=bounds.h*step;else if(event.key==='ArrowDown')cropY+=bounds.h*step;else return;
+    event.preventDefault();drawCrop(cropCanvas,true);
+  });
+  $('photo-zoom').addEventListener('input',()=>drawCrop(cropCanvas,true));
   $('photo-button').addEventListener('click',()=>{if(!hostActive)return;playIntro();$('photo-input').click();});
   $('editor-close').addEventListener('click',closeEditor);
   $('editor').addEventListener('click',e=>{if(e.target===$('editor'))closeEditor();});
@@ -205,35 +243,29 @@
     const file=event.target.files?.[0];event.target.value='';if(!file)return;
     if(file.size>20*1024*1024){announce('Choose a photo smaller than 20 MB.');return;}
     focusBeforeEditor=document.activeElement;$('editor').hidden=false;$('editor-close').focus();
-    $('apply-photo').disabled=true;$('photo-options').hidden=true;$('photo-status').textContent='Opening your photo…';$('cutout-preview').removeAttribute('src');$('cutout-preview').style.transform='';
+    $('apply-photo').disabled=true;$('photo-options').hidden=true;$('photo-status').textContent='Opening your photo…';
+    pendingPhoto?.close?.();pendingPhoto=null;cropCanvas.getContext('2d').clearRect(0,0,cropCanvas.width,cropCanvas.height);
     const id=++photoJob;
     try{
       const original=await createImageBitmap(file,{imageOrientation:'from-image'});
       if(id!==photoJob){original.close();return;}
-      const f=Math.min(1,768/Math.max(original.width,original.height));
+      const f=Math.min(1,1536/Math.max(original.width,original.height));
       const c=document.createElement('canvas');c.width=Math.round(original.width*f);c.height=Math.round(original.height*f);c.getContext('2d').drawImage(original,0,0,c.width,c.height);original.close();
       const bitmap=await createImageBitmap(c);
-      if(!worker){worker=new Worker('photo-worker.js');worker.onmessage=onPhotoResult;worker.onerror=()=>{worker?.terminate();worker=null;$('photo-status').textContent='Head cutout could not load. Please try again.';};}
-      clearTimeout(photoTimeout);photoTimeout=setTimeout(()=>{if(id===photoJob){worker?.terminate();worker=null;photoJob++;$('photo-status').textContent='Cutout took too long. Try a smaller portrait.';}},30000);
-      worker.postMessage({id,bitmap},[bitmap]);
+      if(id!==photoJob){bitmap.close();return;}
+      pendingPhoto=bitmap;cropX=bitmap.width/2;cropY=bitmap.height*.38;
+      $('photo-zoom').value='1.2';$('photo-size').value='1';$('photo-options').hidden=false;$('apply-photo').disabled=false;
+      $('photo-status').textContent='Drag to position your face, then adjust the zoom.';drawCrop(cropCanvas,true);
     }catch{$('photo-status').textContent='This photo could not open. Try a JPEG, PNG or WebP.';}
   });
-  async function onPhotoResult({data}){
-    if(data.id!==photoJob){data.bitmap?.close();return;}
-    if(data.error){clearTimeout(photoTimeout);$('photo-status').textContent=data.error;return;}
-    if(data.status){$('photo-status').textContent=data.status;return;}
-    if(!data.done)return;clearTimeout(photoTimeout);
-    pendingHead?.close?.();pendingHead=data.bitmap;pendingAnchor=data.anchor;
-    const c=document.createElement('canvas');c.width=data.bitmap.width;c.height=data.bitmap.height;c.getContext('2d').drawImage(data.bitmap,0,0);
-    const blob=await new Promise(resolve=>c.toBlob(resolve,'image/png'));
-    if(data.id!==photoJob)return;
-    if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=URL.createObjectURL(blob);$('cutout-preview').src=previewUrl;
-    $('photo-status').textContent='Ready to dance.';$('photo-options').hidden=false;$('photo-size').value='1';$('apply-photo').disabled=false;
-  }
-  $('photo-size').addEventListener('input',()=>{$('cutout-preview').style.transform=`scale(${$('photo-size').value})`;});
-  $('apply-photo').addEventListener('click',()=>{
-    if(!pendingHead)return;localHead?.close?.();localHead=pendingHead;pendingHead=null;headAnchor=pendingAnchor;headScale=Number($('photo-size').value);
-    $('default-button').hidden=false;$('photo-button').querySelector('span').textContent='Change photo';closeEditor();
+  $('apply-photo').addEventListener('click',async()=>{
+    if(!pendingPhoto)return;const id=photoJob;$('apply-photo').disabled=true;
+    try{
+      const cutout=document.createElement('canvas');cutout.width=cropCanvas.width;cutout.height=cropCanvas.height;drawCrop(cutout);
+      const bitmap=await createImageBitmap(cutout);if(id!==photoJob){bitmap.close();return;}
+      localHead?.close?.();localHead=bitmap;headAnchor={x:.5,y:.94};headScale=Number($('photo-size').value);
+      $('default-button').hidden=false;$('photo-button').querySelector('span').textContent='Change photo';closeEditor();
+    }catch{$('photo-status').textContent='Could not apply the photo. Please try again.';$('apply-photo').disabled=false;}
   });
   $('default-button').addEventListener('click',()=>{localHead?.close?.();localHead=null;$('default-button').hidden=true;$('photo-button').querySelector('span').textContent='Use your photo';});
 })();

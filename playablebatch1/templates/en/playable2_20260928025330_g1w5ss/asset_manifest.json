@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "dynapuff",
+  "style_anchor": "Match the approved Orbit 88b outer style: yellow dotted paper, DynaPuff 600, charcoal outlines, cream tiles and offset print shadows. Preserve the original native emoji puzzle content.",
+  "assets": [
+    {
+      "path": "assets/bg_reward_wolf.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "bg_reward_wolf.webp",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bangers-Regular.woff2",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/yellow-paper-dots-v3.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reused the approved asset from game 88b at the user’s request.",
+      "description": "The exact yellow dotted paper texture reused from approved game 88b.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reused the approved asset from game 88b at the user’s request.",
+      "description": "The exact bundled DynaPuff SemiBold font reused from approved game 88b.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}

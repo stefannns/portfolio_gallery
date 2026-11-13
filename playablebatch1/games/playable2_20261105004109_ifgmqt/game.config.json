@@ -1,0 +1,191 @@
+{
+  "tweaks": [
+    {
+      "id": "SCORE_SURVIVAL_WEIGHT",
+      "kind": "number",
+      "label": "Score per survival second",
+      "value": 10,
+      "default": 10,
+      "min": 1,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "id": "SCORE_NEAR_MISS",
+      "kind": "number",
+      "label": "Near miss score",
+      "value": 35,
+      "default": 35,
+      "min": 5,
+      "max": 200,
+      "step": 5
+    },
+    {
+      "id": "SPAWN_START_MS",
+      "kind": "number",
+      "label": "Starting spawn interval",
+      "value": 740,
+      "default": 740,
+      "min": 500,
+      "max": 2000,
+      "step": 20
+    },
+    {
+      "id": "SPAWN_MIN_MS",
+      "kind": "number",
+      "label": "Minimum spawn interval",
+      "value": 340,
+      "default": 340,
+      "min": 220,
+      "max": 800,
+      "step": 20
+    },
+    {
+      "id": "SPEED_START",
+      "kind": "number",
+      "label": "Starting obstacle speed",
+      "value": 150,
+      "default": 150,
+      "min": 40,
+      "max": 180,
+      "step": 1
+    },
+    {
+      "id": "SPEED_GROWTH",
+      "kind": "number",
+      "label": "Speed increase per second",
+      "value": 10.5,
+      "default": 10.5,
+      "min": 0,
+      "max": 20,
+      "step": 0.1
+    },
+    {
+      "id": "MAX_OBSTACLES",
+      "kind": "number",
+      "label": "Obstacle limit",
+      "value": 18,
+      "default": 18,
+      "min": 5,
+      "max": 30,
+      "step": 1
+    },
+    {
+      "id": "NEAR_DISTANCE",
+      "kind": "number",
+      "label": "Near miss distance",
+      "value": 18,
+      "default": 18,
+      "min": 10,
+      "max": 70,
+      "step": 1
+    },
+    {
+      "id": "SPEED_MAX",
+      "kind": "number",
+      "label": "Maximum falling speed",
+      "value": 450,
+      "default": 450,
+      "min": 180,
+      "max": 600,
+      "step": 10
+    },
+    {
+      "id": "TOP_SPAWN_CHANCE",
+      "kind": "number",
+      "label": "Top entry fraction",
+      "value": 0.9,
+      "default": 0.9,
+      "min": 0.75,
+      "max": 1,
+      "step": 0.01
+    },
+    {
+      "id": "WAVE_GAP",
+      "kind": "number",
+      "label": "Gap in falling rows",
+      "value": 124,
+      "default": 124,
+      "min": 100,
+      "max": 180,
+      "step": 2
+    },
+    {
+      "id": "LASER_FIRST_MS",
+      "kind": "number",
+      "label": "First laser delay (ms)",
+      "value": 6500,
+      "default": 6500,
+      "min": 3500,
+      "max": 12000,
+      "step": 100
+    },
+    {
+      "id": "LASER_INTERVAL_MS",
+      "kind": "number",
+      "label": "Laser interval (ms)",
+      "value": 7600,
+      "default": 7600,
+      "min": 5000,
+      "max": 15000,
+      "step": 100
+    },
+    {
+      "id": "LASER_WARNING_MS",
+      "kind": "number",
+      "label": "Laser warning (ms)",
+      "value": 1000,
+      "default": 1000,
+      "min": 700,
+      "max": 1600,
+      "step": 50
+    },
+    {
+      "id": "LASER_ACTIVE_MS",
+      "kind": "number",
+      "label": "Laser active time (ms)",
+      "value": 420,
+      "default": 420,
+      "min": 250,
+      "max": 700,
+      "step": 10
+    },
+    {
+      "id": "LASER_WIDTH",
+      "kind": "number",
+      "label": "Laser width",
+      "value": 14,
+      "default": 14,
+      "min": 8,
+      "max": 22,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game title",
+      "value": "Neon Dodge",
+      "default": "Neon Dodge",
+      "max_length": 20
+    },
+    {
+      "id": "GUIDE_TEXT",
+      "label": "Play guide",
+      "value": "Drag to dodge",
+      "default": "Drag to dodge",
+      "max_length": 24
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "111625820254301815",
+    "version_id": "111625820254335772",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

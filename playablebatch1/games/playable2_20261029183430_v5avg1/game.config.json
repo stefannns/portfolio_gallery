@@ -1,0 +1,177 @@
+{
+  "tweaks": [
+    {
+      "id": "GRID_COLS",
+      "kind": "number",
+      "label": "\u6e05\u6d01\u7f51\u683c\u5217\u6570",
+      "value": 14,
+      "default": 14,
+      "min": 8,
+      "max": 20,
+      "step": 1
+    },
+    {
+      "id": "GRID_ROWS",
+      "kind": "number",
+      "label": "\u6e05\u6d01\u7f51\u683c\u884c\u6570",
+      "value": 20,
+      "default": 20,
+      "min": 12,
+      "max": 28,
+      "step": 1
+    },
+    {
+      "id": "CLEAN_GOAL",
+      "kind": "number",
+      "label": "\u6e05\u6d01\u5b8c\u6210\u9608\u503c",
+      "value": 0.92,
+      "default": 0.92,
+      "min": 0.8,
+      "max": 1,
+      "step": 0.01
+    },
+    {
+      "id": "BRUSH_POWER",
+      "kind": "number",
+      "label": "\u5237\u6d17\u529b\u5ea6",
+      "value": 0.22,
+      "default": 0.22,
+      "min": 0.08,
+      "max": 0.4,
+      "step": 0.01
+    },
+    {
+      "id": "RINSE_POWER",
+      "kind": "number",
+      "label": "\u51b2\u6d17\u529b\u5ea6",
+      "value": 0.3,
+      "default": 0.3,
+      "min": 0.1,
+      "max": 0.5,
+      "step": 0.01
+    },
+    {
+      "id": "VACUUM_POWER",
+      "kind": "number",
+      "label": "\u5438\u6c34\u529b\u5ea6",
+      "value": 0.32,
+      "default": 0.32,
+      "min": 0.12,
+      "max": 0.55,
+      "step": 0.01
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "\u6e38\u620f\u6807\u9898",
+      "value": "Rug Restore",
+      "default": "Rug Restore",
+      "max_length": 20
+    },
+    {
+      "id": "GUIDE",
+      "label": "\u73a9\u6cd5\u5f15\u5bfc",
+      "value": "Spray \u2192 Scrub \u2192 Rinse \u2192 Dry",
+      "default": "Spray \u2192 Scrub \u2192 Rinse \u2192 Dry",
+      "max_length": 32
+    },
+    {
+      "id": "COMPLETE",
+      "label": "\u5b8c\u6210\u6587\u6848",
+      "value": "Satisfyingly clean!",
+      "default": "Satisfyingly clean!",
+      "max_length": 28
+    },
+    {
+      "id": "NEXT_ITEM",
+      "label": "\u4e0b\u4e00\u4ef6\u6309\u94ae",
+      "value": "Next item",
+      "default": "Next item",
+      "max_length": 20
+    },
+    {
+      "id": "SPRAY",
+      "label": "\u55b7\u96fe\u74f6",
+      "value": "Spray",
+      "default": "Spray",
+      "max_length": 12
+    },
+    {
+      "id": "BRUSH",
+      "label": "\u624b\u5237",
+      "value": "Scrub",
+      "default": "Scrub",
+      "max_length": 12
+    },
+    {
+      "id": "RINSE",
+      "label": "\u6c34\u67aa",
+      "value": "Rinse",
+      "default": "Rinse",
+      "max_length": 12
+    },
+    {
+      "id": "VACUUM",
+      "label": "\u5438\u5c18\u5668",
+      "value": "Dry",
+      "default": "Dry",
+      "max_length": 12
+    },
+    {
+      "id": "CLEANED",
+      "label": "\u8fdb\u5ea6\u6807\u7b7e",
+      "value": "CLEANED",
+      "default": "CLEANED",
+      "max_length": 12
+    }
+  ],
+  "images": [
+    {
+      "id": "RUG_MAIN",
+      "label": "Overhead patterned rug",
+      "path": "./assets/rug-overhead.webp",
+      "replaceable": true
+    },
+    {
+      "id": "UPHOLSTERY_MAIN",
+      "label": "Overhead woven upholstery",
+      "path": "./assets/upholstery-overhead.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_SPRAY",
+      "label": "Spray bottle photo",
+      "path": "./assets/tool-spray-photo-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_BRUSH",
+      "label": "Hand brush photo",
+      "path": "./assets/tool-brush-photo-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_RINSE",
+      "label": "Rinse nozzle photo",
+      "path": "./assets/tool-rinse-photo-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_DRY",
+      "label": "Fabric extractor photo",
+      "path": "./assets/tool-dry-photo-v1.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109359222638342475",
+    "version_id": "109359222638275435",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

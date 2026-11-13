@@ -1,0 +1,86 @@
+{
+  "tweaks": [
+    {
+      "id": "MAZE_SIZE",
+      "kind": "number",
+      "label": "Maze Size",
+      "value": 15,
+      "default": 15,
+      "min": 10,
+      "max": 25,
+      "step": 1
+    },
+    {
+      "id": "VISION_RADIUS",
+      "kind": "number",
+      "label": "Vision Radius",
+      "value": 18,
+      "default": 18,
+      "min": 10,
+      "max": 40,
+      "step": 1
+    },
+    {
+      "id": "MONSTER_COUNT",
+      "kind": "number",
+      "label": "Monster Count",
+      "value": 4,
+      "default": 4,
+      "min": 0,
+      "max": 10,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Title",
+      "value": "THE MAZE OF HORROR",
+      "default": "THE MAZE OF HORROR",
+      "max_length": 25
+    },
+    {
+      "id": "SUB_TITLE",
+      "label": "Subtitle",
+      "value": "Find the exit before you get lost",
+      "default": "Find the exit before you get lost",
+      "max_length": 40
+    },
+    {
+      "id": "MSG_WIN",
+      "label": "Win Message",
+      "value": "YOU ESCAPED!",
+      "default": "YOU ESCAPED!",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "PLAY AGAIN",
+      "default": "PLAY AGAIN",
+      "max_length": 15
+    }
+  ],
+  "images": [
+    {
+      "id": "CHAR_PLAYER",
+      "label": "Player Icon",
+      "path": "./assets/char_player.webp",
+      "replaceable": true
+    },
+    {
+      "id": "ICON_MONSTER",
+      "label": "Monster Icon",
+      "path": "./assets/icon_monster.svg",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {
+      "path": "assets/balls-v2/baseball.webp",
+      "type": "image"
+    },
+    {
+      "path": "assets/balls-v2/soccer.webp",
+      "type": "image"
+    },
+    {
+      "path": "assets/balls-v2/tennis.webp",
+      "type": "image"
+    },
+    {
+      "path": "assets/balls-v2/basketball.webp",
+      "type": "image"
+    },
+    {
+      "path": "assets/balls-v2/volleyball.webp",
+      "type": "image"
+    }
+  ]
+}

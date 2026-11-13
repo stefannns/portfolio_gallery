@@ -39,6 +39,16 @@
       "min": 10,
       "max": 1000,
       "step": 10
+    },
+    {
+      "id": "COST_RAINBOW",
+      "kind": "number",
+      "label": "Rainbow Brush Unlock Cost",
+      "value": 75,
+      "default": 75,
+      "min": 10,
+      "max": 500,
+      "step": 5
     }
   ],
   "texts": [
@@ -97,6 +107,13 @@
       "value": "Higher Value",
       "default": "Higher Value",
       "max_length": 20
+    },
+    {
+      "id": "TXT_UPGRADE_RAINBOW",
+      "label": "Rainbow Upgrade Text",
+      "value": "Rainbow Brush",
+      "default": "Rainbow Brush",
+      "max_length": 25
     }
   ],
   "images": [

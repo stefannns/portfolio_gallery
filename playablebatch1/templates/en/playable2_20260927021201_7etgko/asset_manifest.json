@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "bangers",
+  "style_anchor": "Preserve the current Like If You Hate Bugs artwork, colors, typography, and mobile gameplay layout.",
+  "assets": [
+    {
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled Bangers Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/img_avatar.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Author Avatar artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "1024x1024",
+      "width": 1024,
+      "height": 1024,
+      "ok": true
+    },
+    {
+      "path": "assets/img_boss.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing img boss artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "1024x1024",
+      "width": 1024,
+      "height": 1024,
+      "ok": true
+    },
+    {
+      "path": "assets/img_bug_boss.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing img bug boss artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "240x240",
+      "width": 240,
+      "height": 240,
+      "ok": true
+    },
+    {
+      "path": "assets/img_bug_cartoon_v2.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Bug Boss Character artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "512x512",
+      "width": 512,
+      "height": 512,
+      "ok": true
+    },
+    {
+      "path": "assets/img_feed_main.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing img feed main artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "1024x1024",
+      "width": 1024,
+      "height": 1024,
+      "ok": true
+    },
+    {
+      "path": "assets/img_meme_spawn.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Spawn Meme Effect artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "43:24",
+      "size_tier": "medium",
+      "recommended_size": "1376x768",
+      "width": 1376,
+      "height": 768,
+      "ok": true
+    },
+    {
+      "path": "assets/img_meme_win.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Victory Meme Effect artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "89:50",
+      "size_tier": "medium",
+      "recommended_size": "2848x1600",
+      "width": 2848,
+      "height": 1600,
+      "ok": true
+    },
+    {
+      "path": "assets/bug-v3/cockroach-body.webp",
+      "produced_by": "imagegen",
+      "produced_prompt": "Use case: scientific-educational. Asset type: photorealistic dorsal insect body cutout for a mobile game with separately animated procedural legs. Create ONE realistic adult reddish-brown cockroach central BODY ONLY, photographed strictly straight down from overhead orthographic view. Head points exactly to top of image, abdomen points down. Anatomical oval elongated abdomen with two closed leathery chestnut wing covers, fine longitudinal veins and central seam, rounded dark warm brown pronotum shield and small tucked-under head. Natural fine chitin texture, subtle satin highlights from soft overhead light, realistic dark amber edges. Entire body sharply focused and bilaterally symmetrical. Important: NO legs, NO antennae, NO side appendages, NO cast shadow, NO background, NO surface, NO text. These parts will be added and animated separately by code. Body centered vertically, fills about 75% image height, body is about 2.2 times taller than wide. Genuine transparent RGBA background, clean alpha silhouette.",
+      "description": "Realistic overhead cockroach chitin body. Six jointed procedural legs and sweeping antennae are drawn and animated in App.jsx.",
+      "aspect_ratio": "256:521",
+      "size_tier": "small",
+      "recommended_size": "256x521",
+      "width": 256,
+      "height": 521,
+      "ok": true
+    }
+  ]
+}

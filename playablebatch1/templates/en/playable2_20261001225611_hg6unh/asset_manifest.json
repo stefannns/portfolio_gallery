@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "audiowide",
+  "style_anchor": "Preserve the current Rolling Physics artwork, colors, typography, and mobile gameplay layout.",
+  "assets": [
+    {
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/image_1.png",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing image 1 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "59:128",
+      "size_tier": "full",
+      "recommended_size": "590x1280",
+      "width": 590,
+      "height": 1280,
+      "ok": true
+    },
+    {
+      "path": "assets/rolling_backdrop.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Background artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "130:231",
+      "size_tier": "medium",
+      "recommended_size": "390x693",
+      "width": 390,
+      "height": 693,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "produced_by": "provided_asset",
+      "description": "Bundled Audiowide font used consistently for all instructions, controls, options, and canvas joint numbers.",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}

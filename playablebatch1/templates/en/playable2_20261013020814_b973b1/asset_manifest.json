@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "Preserve the current Precision Parking artwork, colors, typography, and mobile gameplay layout.",
+  "assets": [
+    {
+      "path": "assets/bg_cartoon_parking.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Cartoon Parking Lot artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "2:3",
+      "size_tier": "full",
+      "recommended_size": "800x1200",
+      "width": 800,
+      "height": 1200,
+      "ok": true
+    },
+    {
+      "path": "assets/car_parked.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Parked Car artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "50:89",
+      "size_tier": "medium",
+      "recommended_size": "1600x2848",
+      "width": 1600,
+      "height": 2848,
+      "ok": true
+    },
+    {
+      "path": "assets/car_player.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Player Car artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "50:89",
+      "size_tier": "medium",
+      "recommended_size": "1600x2848",
+      "width": 1600,
+      "height": 2848,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v3/parked.svg",
+      "produced_by": "imagegen",
+      "produced_prompt": "Original cartoon overhead parking artwork",
+      "description": "parked",
+      "aspect_ratio": "",
+      "size_tier": "medium",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v3/player.svg",
+      "produced_by": "imagegen",
+      "produced_prompt": "Original cartoon overhead parking artwork",
+      "description": "player",
+      "aspect_ratio": "",
+      "size_tier": "medium",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v3/parking-lot.png",
+      "produced_by": "imagegen",
+      "produced_prompt": "Original cartoon overhead parking artwork",
+      "description": "parking-lot",
+      "aspect_ratio": "",
+      "size_tier": "medium",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}

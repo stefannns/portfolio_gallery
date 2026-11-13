@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 693" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#080d2c"/><stop offset=".58" stop-color="#321a52"/><stop offset="1" stop-color="#18182f"/></linearGradient>
+    <radialGradient id="horizon"><stop stop-color="#bb4c91" stop-opacity=".28"/><stop offset="1" stop-color="#bb4c91" stop-opacity="0"/></radialGradient>
+    <radialGradient id="moonlight"><stop stop-color="#fff8da" stop-opacity=".10"/><stop offset="1" stop-color="#fff8da" stop-opacity="0"/></radialGradient>
+    <mask id="moon-crescent" maskUnits="userSpaceOnUse" x="260" y="79" width="66" height="66">
+      <circle cx="293" cy="112" r="29" fill="white"/>
+      <circle cx="282" cy="102" r="27" fill="black"/>
+    </mask>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h390v693H0z"/>
+  <ellipse cx="195" cy="445" rx="290" ry="230" fill="url(#horizon)"/>
+  <circle cx="293" cy="112" r="69" fill="url(#moonlight)"/>
+  <circle cx="293" cy="112" r="29" fill="#f7ebcb" mask="url(#moon-crescent)"/>
+  <g fill="#fff3d9" opacity=".78"><circle cx="40" cy="82" r="1.2"/><circle cx="93" cy="134" r="1"/><circle cx="182" cy="78" r="1.5"/><circle cx="345" cy="122" r="1.1"/><circle cx="305" cy="221" r="1"/><circle cx="48" cy="292" r="1.1"/><circle cx="143" cy="248" r=".9"/><circle cx="251" cy="164" r="1.1"/><circle cx="368" cy="323" r="1"/><circle cx="107" cy="372" r=".9"/><circle cx="221" cy="318" r="1"/><circle cx="30" cy="473" r=".9"/><circle cx="349" cy="450" r="1.1"/></g>
+  <g stroke="#fff3d9" stroke-width="1.2" stroke-linecap="round" opacity=".7"><path d="M70 206v5m-2.5-2.5h5M331 338v5m-2.5-2.5h5"/></g>
+</svg>

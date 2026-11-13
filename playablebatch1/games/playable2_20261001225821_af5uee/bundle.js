@@ -215,6 +215,15 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 	}
 `;Hl(Cv,wT);var Nee=[1557/44100,1617/44100,1491/44100,1422/44100,1277/44100,1356/44100,1188/44100,1116/44100];var Iee=[1687/25e3,1601/25e3,2053/25e3,2251/25e3];var Ss=class t extends V{constructor(){let e=N(t.getDefaults(),arguments,["solo"]);super(e),this.name="Solo",this.input=this.output=new H({context:this.context}),t._allSolos.has(this.context)||t._allSolos.set(this.context,new Set),t._allSolos.get(this.context).add(this),this.solo=e.solo}static getDefaults(){return Object.assign(V.getDefaults(),{solo:!1})}get solo(){return this._isSoloed()}set solo(e){e?this._addSolo():this._removeSolo(),t._allSolos.get(this.context).forEach(r=>r._updateSolo())}get muted(){return this.input.gain.value===0}_addSolo(){t._soloed.has(this.context)||t._soloed.set(this.context,new Set),t._soloed.get(this.context).add(this)}_removeSolo(){t._soloed.has(this.context)&&t._soloed.get(this.context).delete(this)}_isSoloed(){return t._soloed.has(this.context)&&t._soloed.get(this.context).has(this)}_noSolos(){return!t._soloed.has(this.context)||t._soloed.has(this.context)&&t._soloed.get(this.context).size===0}_updateSolo(){this._isSoloed()?this.input.gain.value=1:this._noSolos()?this.input.gain.value=1:this.input.gain.value=0}dispose(){return super.dispose(),t._allSolos.get(this.context).delete(this),this._removeSolo(),this}};Ss._allSolos=new Map;Ss._soloed=new Map;var Kl=class t extends V{constructor(){let e=N(t.getDefaults(),arguments,["pan","volume"]);super(e),this.name="PanVol",this._panner=this.input=new ji({context:this.context,pan:e.pan,channelCount:e.channelCount}),this.pan=this._panner.pan,this._volume=this.output=new or({context:this.context,volume:e.volume}),this.volume=this._volume.volume,this._panner.connect(this._volume),this.mute=e.mute,q(this,["pan","volume"])}static getDefaults(){return Object.assign(V.getDefaults(),{mute:!1,pan:0,volume:0,channelCount:1})}get mute(){return this._volume.mute}set mute(e){this._volume.mute=e}dispose(){return super.dispose(),this._panner.dispose(),this.pan.dispose(),this._volume.dispose(),this.volume.dispose(),this}};var fh=class t extends V{constructor(){let e=N(t.getDefaults(),arguments,["volume","pan"]);super(e),this.name="Channel",this._solo=this.input=new Ss({solo:e.solo,context:this.context}),this._panVol=this.output=new Kl({context:this.context,pan:e.pan,volume:e.volume,mute:e.mute,channelCount:e.channelCount}),this.pan=this._panVol.pan,this.volume=this._panVol.volume,this._solo.connect(this._panVol),q(this,["pan","volume"])}static getDefaults(){return Object.assign(V.getDefaults(),{pan:0,volume:0,mute:!1,solo:!1,channelCount:1})}get solo(){return this._solo.solo}set solo(e){this._solo.solo=e}get muted(){return this._solo.muted||this.mute}get mute(){return this._panVol.mute}set mute(e){this._panVol.mute=e}_getBus(e){return t.buses.has(e)||t.buses.set(e,new H({context:this.context})),t.buses.get(e)}send(e,r=0){let n=this._getBus(e),o=new H({context:this.context,units:"decibels",gain:r});return this.connect(o),o.connect(n),o}receive(e){return this._getBus(e).connect(this),this}dispose(){return super.dispose(),this._panVol.dispose(),this.pan.dispose(),this.volume.dispose(),this._solo.dispose(),this}};fh.buses=new Map;var yse=Ve().transport;var vse=Ve().destination,wse=Ve().destination;var Sse=Ve().listener;var Tse=Ve().draw;var Ase=Ve();var dh=Math.PI*2,ET=(t,e,r)=>Math.max(e,Math.min(r,t)),bT=t=>{let e={};for(let r of t.tweaks||[])e[r.id]=r.value;for(let r of t.texts||[])e[r.id]=r.value;for(let r of t.images||[])e[r.id]=r.path;for(let r of t.mentions||[])e[r.id]=r.path||r.value;for(let r of t.motions||[])r.base_path&&(e[r.id]=r.base_path),r.frame_count!=null&&(e[r.id+"_COUNT"]=r.frame_count);return e};
 
+function paintLiveStress(canvas, level) {
+  const shell = canvas?.parentElement;
+  const percent = Math.max(0, Math.min(1, level)) * 100;
+  const label = shell?.querySelector('.stress-value');
+  if (label?.firstChild) label.firstChild.nodeValue = String(Math.round(percent));
+  const fill = shell?.querySelector('.fill.stress');
+  if (fill) fill.style.width = percent + '%';
+}
+
 function DT() {
   let t = (0, J.useRef)(null),
     e = (0, J.useRef)({
@@ -350,6 +359,7 @@ function DT() {
         (w.lastScrape = 0),
         l(0),
         c(0),
+        paintLiveStress(t.current, 0),
         m("ready"));
     },
     y = () => {
@@ -538,16 +548,9 @@ function DT() {
                   });
               }
             } else k.stress = Math.max(0, k.stress - E * 0.4);
-            (l((K) =>
-              Math.abs(K - Math.round((k.progress / 5) * 100)) >= 1
-                ? Math.round((k.progress / 5) * 100)
-                : K,
-            ),
-              c((K) =>
-                Math.abs(K - Math.round(k.stress * 100)) >= 1
-                  ? Math.round(k.stress * 100)
-                  : K,
-              ),
+            (paintLiveStress(w, k.stress),
+              l(Math.round((k.progress / 5) * 100)),
+              c(Math.round(k.stress * 100)),
               k.progress >= 5
                 ? ((k.holding = !1),
                   m("won"),

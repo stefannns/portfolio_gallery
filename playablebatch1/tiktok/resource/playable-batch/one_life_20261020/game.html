@@ -61,4 +61,103 @@
 
 </script>
 <!-- CTA_BREATHING_END -->
+<script data-batch3-game="73">
+/* Batch 3 entry polish. Preview covers are still images in the feed. */
+(() => {
+  'use strict';
+  const number = Number(document.currentScript?.dataset.batch3Game);
+  const isFeed = new URLSearchParams(location.search).get('feedReview') === '1' && window.parent !== window;
+  const root = document.documentElement;
+  root.toggleAttribute('data-batch3-preview', isFeed);
+  const configurations = {
+    12: {text: 'Tap to pop the bubbles', top: '80px', color: '#a2355a', action: 'bubble'},
+    20: {text: 'Tap the bug', top: '32%', color: '#fff', action: 'bug'},
+    27: {text: 'Guess their age', top: '10.5%', color: '#fff', action: 'age'},
+    37: {text: 'Tap to add balls', top: '24%', color: '#fff', action: 'add-ball'},
+    39: {text: 'Tap squares to find the animal', top: '22%', color: '#29202e', action: 'cell'},
+    49: {text: 'Guess the hidden code', top: '40%', color: '#fff', action: 'digit'},
+    60: {text: 'Steer into the parking spot', top: '34%', color: '#fff', action: 'drive'},
+  };
+  const previewCSS = {
+    8: 'html[data-batch3-preview] #root button {visibility:hidden!important}',
+    11: 'html[data-batch3-preview] .screen-container div:has(>button.btn-option){transform:translateY(-8vh) scale(.84);transform-origin:center center}',
+    13: 'html[data-batch3-preview] #root button {visibility:hidden!important}',
+    25: 'html[data-batch3-preview] #root button {visibility:hidden!important}',
+    27: 'html[data-batch3-preview] .age-controls {transform:translateY(-16vh) scale(.9);transform-origin:bottom center}',
+    30: 'html[data-batch3-preview] .btn-control {visibility:hidden!important}',
+    34: 'html[data-batch3-preview] #root button {visibility:hidden!important}',
+    37: 'html[data-batch3-preview] #root button {bottom:34%!important}',
+    38: 'html[data-batch3-preview] .pendulum-actions {visibility:hidden!important}',
+    39: 'html[data-batch3-preview] [aria-label="8 by 8 animal search map"] {transform:scale(.84);transform-origin:center top}',
+    43: 'html[data-batch3-preview] .meme-controls {visibility:hidden!important}',
+    48: 'html[data-batch3-preview] #root button {visibility:hidden!important}',
+    49: 'html[data-batch3-preview] #root button {visibility:hidden!important}',
+    52: 'html[data-batch3-preview] .fate-wheel-wrap {transform:scale(.84)}',
+    54: 'html[data-batch3-preview] .control {visibility:hidden!important}',
+    56: 'html[data-batch3-preview] .drive-controls {visibility:hidden!important}',
+    60: 'html[data-batch3-preview] #root div:has(>div>button[aria-label="Steer left"]) {visibility:hidden!important}',
+    73: 'html[data-batch3-preview] #opening .opening-heading p {animation:b3-breathe 2.4s ease-in-out infinite}',
+    74: 'html[data-batch3-preview] #photo-controls {visibility:hidden!important}',
+  };
+  const sharedCSS = `
+    .b3-guide{position:fixed;left:30px;right:30px;z-index:120;margin:0;text-align:center;
+      font:700 18px/1.3 var(--font-display,system-ui,sans-serif);pointer-events:none;
+      text-shadow:0 1px 3px rgba(0,0,0,.25);animation:b3-breathe 2.4s ease-in-out infinite}
+    @keyframes b3-breathe{0%,100%{opacity:1}50%{opacity:.68}}
+    html[data-b3-hidden] .b3-guide,html[data-b3-hidden] #opening .opening-heading p{animation-play-state:paused!important}
+    @media(prefers-reduced-motion:reduce){.b3-guide,html[data-batch3-preview] #opening .opening-heading p{animation:none!important}}
+    ${previewCSS[number] || ''}
+  `;
+  const style = document.createElement('style');
+  style.setAttribute('data-batch3-polish', '');
+  style.textContent = sharedCSS;
+  document.head.append(style);
+  let guide, dismissed = false;
+  const config = configurations[number];
+  function mountGuide() {
+    if (!config || guide || dismissed) return;
+    guide = document.createElement('p'); guide.className = 'b3-guide';
+    guide.textContent = config.text; guide.style.top = config.top; guide.style.color = config.color;
+    document.body.append(guide);
+  }
+  function meaningful(event) {
+    const target = event.target;
+    if (!(target instanceof Element)) return false;
+    if (config?.action === 'bug') return !!target.closest('#root div[tabindex="0"]');
+    if (config?.action === 'bubble') {
+      if (target.closest('#root div[tabindex="0"],#root canvas')) return true;
+      const tab = target.closest('button');
+      return !!tab && /^(Sand Art|Spinner)$/.test(tab.textContent.trim());
+    }
+    if (config?.action === 'age') return !!target.closest('input[type="range"],button.guess');
+    const button = target.closest('button');
+    if (!button || button.disabled) return false;
+    if (config?.action === 'add-ball') return button.textContent.trim() === 'Add Ball';
+    if (config?.action === 'cell') return /^Check cell \d+$/.test(button.getAttribute('aria-label') || '');
+    if (config?.action === 'digit') return /^\d$/.test(button.textContent.trim());
+    if (config?.action === 'drive') return /^(Steer left|Steer right|Drive forward|Reverse)$/.test(button.getAttribute('aria-label') || '');
+    return false;
+  }
+  function dismissOnAction(event) {
+    if (root.hasAttribute('data-batch3-preview')) return;
+    if (meaningful(event)) { dismissed = true; guide?.remove(); guide = null; }
+  }
+  document.addEventListener('pointerdown', dismissOnAction, true);
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') dismissOnAction(event);
+  }, true);
+  window.addEventListener('message', event => {
+    if (!isFeed || event.source !== parent || event.origin !== location.origin || event.data?.type !== 'playable-active') return;
+    root.toggleAttribute('data-batch3-preview', event.data.active !== true);
+  });
+  document.addEventListener('visibilitychange', () => {
+    root.toggleAttribute('data-b3-hidden', document.hidden);
+  });
+  const observer = new MutationObserver(mountGuide);
+  const start = () => { mountGuide(); observer.observe(document.getElementById('root') || document.body, {childList:true,subtree:true}); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, {once:true}); else start();
+  window.addEventListener('pagehide', () => { observer.disconnect(); }, {once:true});
+})();
+
+</script>
 </body></html>

@@ -1,0 +1,195 @@
+{
+  "tweaks": [
+    {
+      "id": "BRUSH_1",
+      "kind": "number",
+      "label": "Brush size one",
+      "value": 7,
+      "default": 7,
+      "min": 4,
+      "max": 32,
+      "step": 1
+    },
+    {
+      "id": "BRUSH_2",
+      "kind": "number",
+      "label": "Brush size two",
+      "value": 10,
+      "default": 10,
+      "min": 4,
+      "max": 32,
+      "step": 1
+    },
+    {
+      "id": "BRUSH_3",
+      "kind": "number",
+      "label": "Brush size three",
+      "value": 14,
+      "default": 14,
+      "min": 4,
+      "max": 32,
+      "step": 1
+    },
+    {
+      "id": "BRUSH_4",
+      "kind": "number",
+      "label": "Brush size four",
+      "value": 20,
+      "default": 20,
+      "min": 4,
+      "max": 32,
+      "step": 1
+    },
+    {
+      "id": "BRUSH_5",
+      "kind": "number",
+      "label": "Brush size five",
+      "value": 27,
+      "default": 27,
+      "min": 4,
+      "max": 32,
+      "step": 1
+    },
+    {
+      "id": "INK_FADE_MS",
+      "kind": "number",
+      "label": "Cover recovery time",
+      "value": 3000,
+      "default": 3000,
+      "min": 2500,
+      "max": 12000,
+      "step": 100
+    },
+    {
+      "id": "INK_STEP",
+      "kind": "number",
+      "label": "Word spacing",
+      "value": 15,
+      "default": 15,
+      "min": 6,
+      "max": 30,
+      "step": 1
+    },
+    {
+      "id": "ACCENT_RATE",
+      "kind": "number",
+      "label": "Accent rhythm",
+      "value": 6,
+      "default": 6,
+      "min": 3,
+      "max": 12,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Title",
+      "value": "Text Sketchpad",
+      "default": "Text Sketchpad",
+      "max_length": 30
+    },
+    {
+      "id": "DRAW_HINT",
+      "label": "Drawing hint",
+      "value": "Brush to reveal the words",
+      "default": "Brush to reveal the words",
+      "max_length": 30
+    },
+    {
+      "id": "CLEAR_CANVAS",
+      "label": "Clear canvas label",
+      "value": "Clear canvas",
+      "default": "Clear canvas",
+      "max_length": 30
+    },
+    {
+      "id": "BRUSH_LABEL_1",
+      "label": "Fine brush label",
+      "value": "Fine reveal brush",
+      "default": "Fine reveal brush",
+      "max_length": 30
+    },
+    {
+      "id": "BRUSH_LABEL_2",
+      "label": "Small brush label",
+      "value": "Small reveal brush",
+      "default": "Small reveal brush",
+      "max_length": 30
+    },
+    {
+      "id": "BRUSH_LABEL_3",
+      "label": "Medium brush label",
+      "value": "Medium reveal brush",
+      "default": "Medium reveal brush",
+      "max_length": 30
+    },
+    {
+      "id": "BRUSH_LABEL_4",
+      "label": "Large brush label",
+      "value": "Large reveal brush",
+      "default": "Large reveal brush",
+      "max_length": 30
+    },
+    {
+      "id": "BRUSH_LABEL_5",
+      "label": "Wide brush label",
+      "value": "Wide reveal brush",
+      "default": "Wide reveal brush",
+      "max_length": 30
+    },
+    {
+      "id": "POEM_1",
+      "label": "Poem line one",
+      "value": "make room for the quiet",
+      "default": "make room for the quiet",
+      "max_length": 40
+    },
+    {
+      "id": "POEM_2",
+      "label": "Poem line two",
+      "value": "a small light becomes a path",
+      "default": "a small light becomes a path",
+      "max_length": 40
+    },
+    {
+      "id": "POEM_3",
+      "label": "Poem line three",
+      "value": "hold this moment gently",
+      "default": "hold this moment gently",
+      "max_length": 40
+    },
+    {
+      "id": "POEM_4",
+      "label": "Poem line four",
+      "value": "the hand remembers the sky",
+      "default": "the hand remembers the sky",
+      "max_length": 40
+    },
+    {
+      "id": "POEM_5",
+      "label": "Poem line five",
+      "value": "begin again in soft motion",
+      "default": "begin again in soft motion",
+      "max_length": 40
+    },
+    {
+      "id": "POEM_6",
+      "label": "Poem line six",
+      "value": "what fades still leaves a trace",
+      "default": "what fades still leaves a trace",
+      "max_length": 40
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109025442493025995",
+    "version_id": "109025442492874407",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

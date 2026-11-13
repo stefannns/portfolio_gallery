@@ -1,0 +1,144 @@
+{
+  "tweaks": [
+    {
+      "id": "INITIAL_TIME",
+      "kind": "number",
+      "label": "Initial Time (s)",
+      "value": 30,
+      "default": 30,
+      "min": 10,
+      "max": 60,
+      "step": 1
+    },
+    {
+      "id": "MAX_TIME",
+      "kind": "number",
+      "label": "Max Time Limit",
+      "value": 60,
+      "default": 60,
+      "min": 20,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "id": "BONUS_TIME",
+      "kind": "number",
+      "label": "Bonus Time per Find",
+      "value": 2,
+      "default": 2,
+      "min": 1,
+      "max": 5,
+      "step": 1
+    },
+    {
+      "id": "PENALTY_TIME",
+      "kind": "number",
+      "label": "Penalty Time on Mistake",
+      "value": 3,
+      "default": 3,
+      "min": 1,
+      "max": 10,
+      "step": 1
+    },
+    {
+      "id": "SCORE_PER_FIND",
+      "kind": "number",
+      "label": "Score per Find",
+      "value": 10,
+      "default": 10,
+      "min": 1,
+      "max": 50,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "Find the Animal",
+      "default": "Find the Animal",
+      "max_length": 15
+    },
+    {
+      "id": "TEXT_DESC",
+      "label": "Description",
+      "value": "Tap the hidden animal's cell using hot-and-cold clues.",
+      "default": "Tap the hidden animal's cell using hot-and-cold clues.",
+      "max_length": 60
+    },
+    {
+      "id": "BTN_START",
+      "label": "Start Button",
+      "value": "START",
+      "default": "START",
+      "max_length": 15
+    },
+    {
+      "id": "TEXT_TIME",
+      "label": "Time Label",
+      "value": "TIME",
+      "default": "TIME",
+      "max_length": 10
+    },
+    {
+      "id": "TEXT_TARGET",
+      "label": "Target Label",
+      "value": "FIND",
+      "default": "FIND",
+      "max_length": 10
+    },
+    {
+      "id": "TEXT_SCORE",
+      "label": "Score Label",
+      "value": "SCORE",
+      "default": "SCORE",
+      "max_length": 10
+    },
+    {
+      "id": "TEXT_GAMEOVER",
+      "label": "Game Over Title",
+      "value": "Time's Up!",
+      "default": "Time's Up!",
+      "max_length": 20
+    },
+    {
+      "id": "TEXT_FINAL_SCORE",
+      "label": "Final Score Label",
+      "value": "Final Score",
+      "default": "Final Score",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "Play Again",
+      "default": "Play Again",
+      "max_length": 15
+    },
+    {
+      "id": "BTN_POST",
+      "label": "Post Play Button",
+      "value": "Post my play",
+      "default": "Post my play",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Main Background",
+      "path": "./assets/bg_main.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99278216757715177",
+    "version_id": "99278216757734252",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

@@ -1,0 +1,263 @@
+{
+  "tweaks": [
+    {
+      "id": "VIDEO_STEP_MS",
+      "kind": "number",
+      "label": "Time per photo",
+      "value": 1200,
+      "default": 1200,
+      "min": 500,
+      "max": 1800,
+      "step": 100
+    },
+    {
+      "id": "TARGET_COUNT",
+      "kind": "number",
+      "label": "Memories per round",
+      "value": 3,
+      "default": 3,
+      "min": 3,
+      "max": 4,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_NAME",
+      "label": "Game name",
+      "value": "Did You Watch It?",
+      "default": "Did You Watch It?",
+      "max_length": 20
+    },
+    {
+      "id": "HINT_TEXT",
+      "label": "First-use hint",
+      "value": "Watch, then choose",
+      "default": "Watch, then choose",
+      "max_length": 32
+    },
+    {
+      "id": "WATCH_LABEL",
+      "label": "Video label",
+      "value": "Memorize",
+      "default": "Memorize",
+      "max_length": 12
+    },
+    {
+      "id": "PICK_LABEL",
+      "label": "Grid label",
+      "value": "Select the images you saw",
+      "default": "Select the images you saw",
+      "max_length": 40
+    },
+    {
+      "id": "VERIFY_LABEL",
+      "label": "Verify button",
+      "value": "Verify",
+      "default": "Verify",
+      "max_length": 12
+    },
+    {
+      "id": "REPLAY_LABEL",
+      "label": "Replay button",
+      "value": "Replay",
+      "default": "Replay",
+      "max_length": 12
+    },
+    {
+      "id": "SUCCESS_LABEL",
+      "label": "Success label",
+      "value": "Verified",
+      "default": "Verified",
+      "max_length": 20
+    },
+    {
+      "id": "SUCCESS_MESSAGE",
+      "label": "Success message",
+      "value": "All images matched.",
+      "default": "All images matched.",
+      "max_length": 40
+    },
+    {
+      "id": "FAIL_MESSAGE",
+      "label": "Try again message",
+      "value": "Some images don’t match. Try again.",
+      "default": "Some images don’t match. Try again.",
+      "max_length": 48
+    }
+  ],
+  "images": [
+    {
+      "id": "CAT",
+      "label": "Gray kitten, photo 1",
+      "path": "./assets/cat.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CAT_LOOKALIKE_1",
+      "label": "Gray kitten, photo 2",
+      "path": "./assets/lookalikes/cat-1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CAT_LOOKALIKE_2",
+      "label": "Gray kitten, photo 3",
+      "path": "./assets/lookalikes/cat-2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "RAMEN",
+      "label": "Ramen bowl, photo 1",
+      "path": "./assets/ramen.webp",
+      "replaceable": true
+    },
+    {
+      "id": "RAMEN_LOOKALIKE_1",
+      "label": "Ramen bowl, photo 2",
+      "path": "./assets/lookalikes/ramen-1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "RAMEN_LOOKALIKE_2",
+      "label": "Ramen bowl, photo 3",
+      "path": "./assets/lookalikes/ramen-2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "SUNSET",
+      "label": "Beach sunset, photo 1",
+      "path": "./assets/sunset.webp",
+      "replaceable": true
+    },
+    {
+      "id": "SUNSET_LOOKALIKE_1",
+      "label": "Beach sunset, photo 2",
+      "path": "./assets/lookalikes/sunset-1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "SUNSET_LOOKALIKE_2",
+      "label": "Beach sunset, photo 3",
+      "path": "./assets/lookalikes/sunset-2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_BICYCLE",
+      "label": "Red bicycle, photo 1",
+      "path": "./assets/memory-sets/day_bicycle.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_BICYCLE_LOOKALIKE_1",
+      "label": "Red bicycle, photo 2",
+      "path": "./assets/lookalikes/day_bicycle-1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_BICYCLE_LOOKALIKE_2",
+      "label": "Red bicycle, photo 3",
+      "path": "./assets/lookalikes/day_bicycle-2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_TRAM",
+      "label": "Yellow tram, photo 1",
+      "path": "./assets/memory-sets/day_tram.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_TRAM_LOOKALIKE_1",
+      "label": "Yellow tram, photo 2",
+      "path": "./assets/lookalikes/day_tram-1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_TRAM_LOOKALIKE_2",
+      "label": "Yellow tram, photo 3",
+      "path": "./assets/lookalikes/day_tram-2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_BALLOON",
+      "label": "Rainbow balloon, photo 1",
+      "path": "./assets/memory-sets/day_balloon.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_BALLOON_LOOKALIKE_1",
+      "label": "Rainbow balloon, photo 2",
+      "path": "./assets/lookalikes/day_balloon-1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DAY_BALLOON_LOOKALIKE_2",
+      "label": "Rainbow balloon, photo 3",
+      "path": "./assets/lookalikes/day_balloon-2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_RABBIT",
+      "label": "Lop rabbit, photo 1",
+      "path": "./assets/memory-sets/home_rabbit.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_RABBIT_LOOKALIKE_1",
+      "label": "Lop rabbit, photo 2",
+      "path": "./assets/lookalikes/home_rabbit-1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_RABBIT_LOOKALIKE_2",
+      "label": "Lop rabbit, photo 3",
+      "path": "./assets/lookalikes/home_rabbit-2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_PANCAKES",
+      "label": "Blueberry pancakes, photo 1",
+      "path": "./assets/memory-sets/home_pancakes.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_PANCAKES_LOOKALIKE_1",
+      "label": "Blueberry pancakes, photo 2",
+      "path": "./assets/lookalikes/home_pancakes-1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_PANCAKES_LOOKALIKE_2",
+      "label": "Blueberry pancakes, photo 3",
+      "path": "./assets/lookalikes/home_pancakes-2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_GUITAR",
+      "label": "Blue guitar, photo 1",
+      "path": "./assets/memory-sets/home_guitar.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_GUITAR_LOOKALIKE_1",
+      "label": "Blue guitar, photo 2",
+      "path": "./assets/lookalikes/home_guitar-1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "HOME_GUITAR_LOOKALIKE_2",
+      "label": "Blue guitar, photo 3",
+      "path": "./assets/lookalikes/home_guitar-2.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109025442497227683",
+    "version_id": "109025442497066965",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

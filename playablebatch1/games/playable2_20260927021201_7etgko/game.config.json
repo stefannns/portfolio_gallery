@@ -82,13 +82,13 @@
     {
       "id": "IMG_FEED_MAIN",
       "label": "Feed Main Image",
-      "path": "./assets/img_bug_cartoon_v2.webp",
+      "path": "./assets/bug-v3/cockroach-body.webp",
       "replaceable": true
     },
     {
       "id": "IMG_BOSS",
       "label": "Bug Boss Character",
-      "path": "./assets/img_bug_cartoon_v2.webp",
+      "path": "./assets/bug-v3/cockroach-body.webp",
       "replaceable": true
     },
     {

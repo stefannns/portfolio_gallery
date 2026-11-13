@@ -1,0 +1,20 @@
+// Platform runner: the page is already open and sized by the host.
+module.exports = async function(page, ctx = {}) {
+  const fs = require('fs'), path = require('path');
+  const out = path.resolve(ctx.workDir || process.cwd(), '.preview');
+  fs.mkdirSync(out, {recursive:true});
+  const errors=[];const onError=error=>errors.push(String(error));page.on('pageerror',onError);
+  await page.waitForSelector('#root',{timeout:6000});await page.waitForTimeout(700);
+  await page.screenshot({path:path.join(out,'initial.png')});
+  const target = page.locator("canvas").first();
+  await target.waitFor({state:'visible',timeout:6000});
+  const box=await target.boundingBox();if(!box)throw Error('Gameplay target has no bounds');
+  let x=box.x+box.width*.5,y=box.y+box.height*.65;
+  x=box.x+box.width*.42;y=box.y+box.height*.48;
+  await page.mouse.move(x,y);await page.mouse.down();
+  for(let i=1;i<=16;i++){const a=i*Math.PI*2/16;await page.mouse.move(x+30*Math.cos(a)-30,y+30*Math.sin(a),{steps:2});}
+  await page.mouse.up();
+  await page.waitForTimeout(500);await page.screenshot({path:path.join(out,'gameplay.png')});
+  page.off('pageerror',onError);if(errors.length)throw Error(errors.join('\n'));
+  return {ok:true,screenshots:['.preview/initial.png','.preview/gameplay.png']};
+};

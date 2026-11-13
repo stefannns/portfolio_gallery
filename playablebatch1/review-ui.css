@@ -46,11 +46,13 @@ h1 { font-size:clamp(26px,3vw,38px);letter-spacing:-.045em;margin:7px 0 8px; }
 .player-control:disabled { color:#889287;opacity:.45;cursor:default;background:transparent; }
 .player-controls { max-width:600px; }
 .player-mode-and-language { display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-left:auto;min-width:0; }
+.cover-mode-toggle { white-space:nowrap;background:#edf3ea;color:#31563c; }
+.cover-mode-toggle[aria-pressed="true"] { background:#31563c;color:#fff; }
 .player-language { display:flex;align-items:center; }
 .player-language select { min-height:44px;max-width:122px;padding:8px 26px 8px 10px;border:1px solid var(--review-line);border-radius:8px;background:var(--review-surface);color:var(--review-ink);font:inherit;font-size:13px;font-weight:600;cursor:pointer; }
 .language-note { flex-basis:100%;text-align:right;font-size:11px;color:#657269; }
 .language-note[hidden] { display:none; }
-@media(max-width:570px) { .player-controls { flex-wrap:wrap!important; } .player-mode-and-language { gap:6px; } .player-language select { max-width:110px;font-size:12px; } }
+@media(max-width:570px) { .player-controls { flex-wrap:wrap!important; } .player-mode-and-language { gap:4px; } .player-mode-label { display:none; } .cover-mode-toggle { min-width:0;padding:6px;font-size:11px; } .player-language select { max-width:84px;font-size:12px; } }
 .visually-hidden { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
 .actions { padding-top:2px;border-top:1px solid #edf1e9; }
 .actions .action { min-height:44px;background:transparent;border:0;color:#546853;font-weight:550; }
@@ -105,3 +107,4 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible { 
 
 /* One review mode; the label is informational, not a toggle. */
 .player-mode-label { display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;border-radius:8px;background:#eaf0e6;color:#294f3d;font-size:13px;font-weight:700; }
+.player-shell>.player-controls .player-mode-label { display:none; }

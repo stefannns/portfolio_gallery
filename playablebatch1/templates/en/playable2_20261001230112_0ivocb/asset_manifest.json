@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "bangers",
+  "style_anchor": "Preserve the current How Strong Are You? artwork, colors, typography, and mobile gameplay layout.",
+  "assets": [
+    {
+      "path": "assets/destiny_clean.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Main Background artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "130:231",
+      "size_tier": "medium",
+      "recommended_size": "390x693",
+      "width": 390,
+      "height": 693,
+      "ok": true
+    },
+    {
+      "path": "assets/destiny_emblem.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Destiny Emblem artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "88x88",
+      "width": 88,
+      "height": 88,
+      "ok": true
+    },
+    {
+      "path": "assets/destiny_title.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing destiny title artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "3:1",
+      "size_tier": "medium",
+      "recommended_size": "300x100",
+      "width": 300,
+      "height": 100,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled Bangers Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/image_1.png",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing image 1 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "59:128",
+      "size_tier": "full",
+      "recommended_size": "590x1280",
+      "width": 590,
+      "height": 1280,
+      "ok": true
+    },
+    {
+      "path": "assets/title.png",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing title artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1598:2309",
+      "size_tier": "medium",
+      "recommended_size": "1598x2309",
+      "width": 1598,
+      "height": 2309,
+      "ok": true
+    }
+  ]
+}

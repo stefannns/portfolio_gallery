@@ -60,8 +60,20 @@
   "images": [
     {
       "id": "BG_IMAGE",
-      "label": "Background Image",
-      "path": "./assets/night_clean.svg",
+      "label": "Night Sky",
+      "path": "./assets/art-v2/night-sky-vector-v4.svg",
+      "replaceable": true
+    },
+    {
+      "id": "BG_HILLS",
+      "label": "Distant Hill Layer",
+      "path": "./assets/art-v2/distant-hills-vector-v3.svg",
+      "replaceable": true
+    },
+    {
+      "id": "BG_FOREGROUND",
+      "label": "Foreground Hill and Silhouettes",
+      "path": "./assets/art-v2/hill-foreground-vector-v3.svg",
       "replaceable": true
     }
   ],

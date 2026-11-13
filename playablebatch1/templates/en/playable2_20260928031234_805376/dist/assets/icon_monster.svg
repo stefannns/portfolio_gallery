@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 190" role="img" aria-label="Maze monster">
+  <defs>
+    <radialGradient id="fur" cx="45%" cy="30%" r="70%">
+      <stop stop-color="#804d9c"/>
+      <stop offset="1" stop-color="#2c1745"/>
+    </radialGradient>
+  </defs>
+  <path d="M26 72 13 30 53 45Q80 27 107 45l40-15-13 42q14 25 9 66l-15 32-19-13-20 20-14-13-23 12-20-21-17 11-9-38q-5-36 20-56Z" fill="url(#fur)" stroke="#130d26" stroke-width="7" stroke-linejoin="round"/>
+  <path d="m35 79 36 6-17 20-18-5Zm90 0-36 6 17 20 18-5Z" fill="#ff435d" stroke="#271326" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M55 125q25 19 50 0l-8 22-14-6-9 8-10-9-12 5Z" fill="#110c1b" stroke="#110c1b" stroke-width="4"/>
+  <path d="m59 127 7 10 5-5m18-1 5 6 7-10" fill="none" stroke="#f8eeef" stroke-width="5" stroke-linecap="round"/>
+</svg>

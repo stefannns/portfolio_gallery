@@ -1,0 +1,63 @@
+{
+  "tweaks": [],
+  "texts": [
+    {
+      "id": "TITLE",
+      "label": "Game Title",
+      "value": "Cerchio orbitale",
+      "default": "Cerchio orbitale",
+      "max_length": 25
+    },
+    {
+      "id": "GUIDE_TEXT",
+      "label": "Guide Text",
+      "value": "Disegna un cerchio perfetto",
+      "default": "Disegna un cerchio perfetto",
+      "max_length": 60
+    },
+    {
+      "id": "BTN_RETRY",
+      "label": "Retry Button",
+      "value": "Riprova",
+      "default": "Riprova",
+      "max_length": 20
+    },
+    {
+      "id": "SCORE_PERFECT",
+      "label": "Perfect Comment",
+      "value": "Perfetto",
+      "default": "Perfetto",
+      "max_length": 20
+    },
+    {
+      "id": "SCORE_GOOD",
+      "label": "Good Comment",
+      "value": "Bene",
+      "default": "Bene",
+      "max_length": 20
+    },
+    {
+      "id": "SCORE_AGAIN",
+      "label": "Try Again Comment",
+      "value": "Riprova",
+      "default": "Riprova",
+      "max_length": 20
+    },
+    {
+      "id": "SCORE_SHORT",
+      "label": "Too Short Comment",
+      "value": "Troppo breve",
+      "default": "Troppo breve",
+      "max_length": 20
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

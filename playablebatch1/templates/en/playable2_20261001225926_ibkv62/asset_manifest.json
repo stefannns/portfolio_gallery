@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "audiowide",
+  "style_anchor": "Preserve the current Mandala artwork, colors, typography, and mobile gameplay layout.",
+  "assets": [
+    {
+      "path": "assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled Audiowide Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}

@@ -43,7 +43,7 @@
     {
       "id": "CAR_SPEED",
       "kind": "number",
-      "label": "Car Speed",
+      "label": "Skateboard Speed",
       "value": 400,
       "default": 400,
       "min": 200,
@@ -153,49 +153,49 @@
     {
       "id": "BG_STREET",
       "label": "Street Background",
-      "path": "./assets/bg_street.webp",
+      "path": "./assets/pixel/street.png",
       "replaceable": true
     },
     {
       "id": "CHAR_HOBO_IDLE",
       "label": "Hobo Idle",
-      "path": "./assets/char_hobo_idle_v2.webp",
+      "path": "./assets/pixel/idle.svg",
       "replaceable": true
     },
     {
       "id": "CHAR_HOBO_BEG",
       "label": "Hobo Begging",
-      "path": "./assets/char_hobo_beg_v2.webp",
+      "path": "./assets/pixel/beg.svg",
       "replaceable": true
     },
     {
       "id": "CHAR_HOBO_JUMP",
       "label": "Hobo Jumping",
-      "path": "./assets/char_hobo_jump_v2.webp",
+      "path": "./assets/pixel/jump.svg",
       "replaceable": true
     },
     {
       "id": "CHAR_HOBO_PUNCH",
       "label": "Hobo Punching",
-      "path": "./assets/char_hobo_punch_v2.webp",
+      "path": "./assets/pixel/punch.svg",
       "replaceable": true
     },
     {
       "id": "CHAR_PED",
       "label": "Pedestrian",
-      "path": "./assets/char_pedestrian_v2.webp",
+      "path": "./assets/pixel/pedestrian.svg",
       "replaceable": true
     },
     {
       "id": "OBJ_CAR",
-      "label": "Car",
-      "path": "./assets/obj_car.webp",
+      "label": "Skateboard",
+      "path": "./assets/pixel/skateboard-v2.webp",
       "replaceable": true
     },
     {
       "id": "ICON_COIN",
       "label": "Coin Icon",
-      "path": "./assets/icon_coin.webp",
+      "path": "./assets/pixel/coin.svg",
       "replaceable": true
     }
   ],

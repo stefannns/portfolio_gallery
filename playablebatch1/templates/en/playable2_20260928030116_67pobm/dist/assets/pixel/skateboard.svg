@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 24" shape-rendering="crispEdges" aria-label="Pixel skateboard">
+  <path d="M1 4h4v3h62V4h4v6h-4v3H5v-3H1z" fill="#302e3b"/>
+  <path d="M3 4h3v3h60V4h3v4h-4v2H7V8H3z" fill="#62c6c1"/>
+  <path d="M7 10h58v3H7z" fill="#f2c578"/>
+  <path d="M9 7h54v2H9z" fill="#337f85"/>
+  <path d="M30 7h12v2H30z" fill="#f28e65"/>
+  <path d="M13 13h9v4h-9zm37 0h9v4h-9z" fill="#a9afb0"/>
+  <path d="M11 16h13v5H11zm2-2h9v9h-9zm35 2h13v5H48zm2-2h9v9h-9z" fill="#302e3b"/>
+  <path d="M14 16h7v5h-7zm37 0h7v5h-7z" fill="#f6dba2"/>
+  <path d="M16 17h3v3h-3zm37 0h3v3h-3z" fill="#8b7463"/>
+  <path d="M5 4h2v2H5zm60 0h2v2h-2z" fill="#b8ebe0"/>
+</svg>

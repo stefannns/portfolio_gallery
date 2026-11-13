@@ -1,0 +1,371 @@
+{
+  "tweaks": [
+    {
+      "id": "FLIGHT_MS",
+      "kind": "number",
+      "label": "Flight duration (ms)",
+      "value": 120,
+      "default": 120,
+      "min": 80,
+      "max": 500,
+      "step": 10
+    },
+    {
+      "id": "PAUSE_MS",
+      "kind": "number",
+      "label": "Result pause (ms)",
+      "value": 250,
+      "default": 250,
+      "min": 150,
+      "max": 1500,
+      "step": 50
+    },
+    {
+      "id": "REVERSE_INTERVAL_MS",
+      "kind": "number",
+      "label": "Direction interval (ms)",
+      "value": 3500,
+      "default": 3500,
+      "min": 1500,
+      "max": 10000,
+      "step": 100
+    },
+    {
+      "id": "REVERSE_FROM_LEVEL",
+      "kind": "number",
+      "label": "First reversing level",
+      "value": 7,
+      "default": 7,
+      "min": 1,
+      "max": 15,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_1_PINS",
+      "kind": "number",
+      "label": "Level 1 pins",
+      "value": 6,
+      "default": 6,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_2_PINS",
+      "kind": "number",
+      "label": "Level 2 pins",
+      "value": 6,
+      "default": 6,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_3_PINS",
+      "kind": "number",
+      "label": "Level 3 pins",
+      "value": 6,
+      "default": 6,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_4_PINS",
+      "kind": "number",
+      "label": "Level 4 pins",
+      "value": 6,
+      "default": 6,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_5_PINS",
+      "kind": "number",
+      "label": "Level 5 pins",
+      "value": 7,
+      "default": 7,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_6_PINS",
+      "kind": "number",
+      "label": "Level 6 pins",
+      "value": 7,
+      "default": 7,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_7_PINS",
+      "kind": "number",
+      "label": "Level 7 pins",
+      "value": 7,
+      "default": 7,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_8_PINS",
+      "kind": "number",
+      "label": "Level 8 pins",
+      "value": 7,
+      "default": 7,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_9_PINS",
+      "kind": "number",
+      "label": "Level 9 pins",
+      "value": 7,
+      "default": 7,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_10_PINS",
+      "kind": "number",
+      "label": "Level 10 pins",
+      "value": 7,
+      "default": 7,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_11_PINS",
+      "kind": "number",
+      "label": "Level 11 pins",
+      "value": 7,
+      "default": 7,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_12_PINS",
+      "kind": "number",
+      "label": "Level 12 pins",
+      "value": 8,
+      "default": 8,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_13_PINS",
+      "kind": "number",
+      "label": "Level 13 pins",
+      "value": 8,
+      "default": 8,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_14_PINS",
+      "kind": "number",
+      "label": "Level 14 pins",
+      "value": 8,
+      "default": 8,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_15_PINS",
+      "kind": "number",
+      "label": "Level 15 pins",
+      "value": 8,
+      "default": 8,
+      "min": 1,
+      "max": 12,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_1_SPEED",
+      "kind": "number",
+      "label": "Level 1 speed (degrees/s)",
+      "value": 84,
+      "default": 84,
+      "min": 10,
+      "max": 150,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_2_SPEED",
+      "kind": "number",
+      "label": "Level 2 speed (degrees/s)",
+      "value": 88,
+      "default": 88,
+      "min": 10,
+      "max": 150,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_3_SPEED",
+      "kind": "number",
+      "label": "Level 3 speed (degrees/s)",
+      "value": 92,
+      "default": 92,
+      "min": 10,
+      "max": 150,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_4_SPEED",
+      "kind": "number",
+      "label": "Level 4 speed (degrees/s)",
+      "value": 96,
+      "default": 96,
+      "min": 10,
+      "max": 150,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_5_SPEED",
+      "kind": "number",
+      "label": "Level 5 speed (degrees/s)",
+      "value": 101,
+      "default": 101,
+      "min": 10,
+      "max": 150,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_6_SPEED",
+      "kind": "number",
+      "label": "Level 6 speed (degrees/s)",
+      "value": 106,
+      "default": 106,
+      "min": 10,
+      "max": 150,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_7_SPEED",
+      "kind": "number",
+      "label": "Level 7 speed (degrees/s)",
+      "value": 111,
+      "default": 111,
+      "min": 10,
+      "max": 150,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_8_SPEED",
+      "kind": "number",
+      "label": "Level 8 speed (degrees/s)",
+      "value": 116,
+      "default": 116,
+      "min": 10,
+      "max": 150,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_9_SPEED",
+      "kind": "number",
+      "label": "Level 9 speed (degrees/s)",
+      "value": 121,
+      "default": 121,
+      "min": 10,
+      "max": 150,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_10_SPEED",
+      "kind": "number",
+      "label": "Level 10 speed (degrees/s)",
+      "value": 126,
+      "default": 126,
+      "min": 10,
+      "max": 150,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_11_SPEED",
+      "kind": "number",
+      "label": "Level 11 speed (degrees/s)",
+      "value": 131,
+      "default": 131,
+      "min": 10,
+      "max": 150,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_12_SPEED",
+      "kind": "number",
+      "label": "Level 12 speed (degrees/s)",
+      "value": 136,
+      "default": 136,
+      "min": 10,
+      "max": 150,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_13_SPEED",
+      "kind": "number",
+      "label": "Level 13 speed (degrees/s)",
+      "value": 141,
+      "default": 141,
+      "min": 10,
+      "max": 150,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_14_SPEED",
+      "kind": "number",
+      "label": "Level 14 speed (degrees/s)",
+      "value": 146,
+      "default": 146,
+      "min": 10,
+      "max": 150,
+      "step": 1
+    },
+    {
+      "id": "LEVEL_15_SPEED",
+      "kind": "number",
+      "label": "Level 15 speed (degrees/s)",
+      "value": 150,
+      "default": 150,
+      "min": 10,
+      "max": 150,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Instruction",
+      "value": "Tap to pin the wheel",
+      "default": "Tap to pin the wheel",
+      "max_length": 40
+    },
+    {
+      "id": "LEVELS",
+      "label": "Level picker",
+      "value": "Levels",
+      "default": "Levels",
+      "max_length": 20
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "112333418880417396",
+    "version_id": "112333418880400029",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}
