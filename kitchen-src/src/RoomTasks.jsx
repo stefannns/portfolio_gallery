@@ -1,10 +1,11 @@
 import React from 'react';
 import './room-tasks.css';
 
-export default function RoomTasks({vegetablesViewed = false, recorderViewed = false, computerViewed = false}) {
+export default function RoomTasks({vegetablesViewed = false, recorderViewed = false, computerViewed = false, knifeViewed = false, includeKnife = false}) {
   const tasks = [
     {id: 'vegetables', label: 'Look at the vegetables bag', complete: !!vegetablesViewed},
     {id: 'recorder', label: 'Look at the recorder', complete: !!recorderViewed},
+    ...(includeKnife ? [{id: 'knife', label: 'Look at the chef’s knife', complete: !!knifeViewed}] : []),
     {id: 'computer', label: 'Explore the computer', complete: !!computerViewed},
   ];
   const completed = tasks.filter(task => task.complete).length;

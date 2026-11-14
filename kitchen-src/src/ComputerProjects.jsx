@@ -190,7 +190,7 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
           </button>)}
         </nav>}
 
-        <article className={`computer-projects__detail${videoProject ? ' computer-projects__detail--video' : ''}${landscapeProject ? ' computer-projects__detail--landscape' : ''}${selected.previewAspectRatio ? ' computer-projects__detail--capture' : ''}${selected.embedUrl ? ' computer-projects__detail--embed' : ''}${selected.gallery?.length ? ' computer-projects__detail--gallery' : ''}`} ref={detail} id={detailId} tabIndex={-1} aria-labelledby={wideProject && single ? titleId : projectTitleId}>
+        <article className={`computer-projects__detail${videoProject ? ' computer-projects__detail--video' : ''}${landscapeProject ? ' computer-projects__detail--landscape' : ''}${selected.previewAspectRatio ? ' computer-projects__detail--capture' : ''}${selected.embedUrl ? ' computer-projects__detail--embed' : ''}${selected.gallery?.length ? ' computer-projects__detail--gallery' : ''}`} ref={detail} id={detailId} data-project={selected.id} tabIndex={-1} aria-labelledby={wideProject && single ? titleId : projectTitleId}>
           {wideProject && !single && <div className="computer-projects__video-heading">
             <p className="computer-projects__type">{selected.type}</p>
             <h2 id={projectTitleId}>{selected.title}</h2>

@@ -232,18 +232,20 @@ export const projects = [
     video: '/videos/skybridge-siege-demo.mp4', videoAspectRatio: '16 / 9',
     previewAlt: 'First-person spellcasting against the Hex Warden on a castle bridge, with hand tracking and a fireball.',
     description: 'A gesture-controlled spellcasting duel against the Hex Warden. Cast fireballs, raise a shield and dodge incoming attacks on a castle bridge.',
+    processTitle: 'AI animation',
+    process: 'I used MiniMax H3 to create the character and spell animations in Skybridge Siege.',
   },
 ];
 
 // The computer has an editorial order independent of the room and older galleries.
 export const computerProjectIds = [
-  'seed-squad', 'smarttester', 'h3-otome', 'a-bot-can-do-better', 'skybridge-siege',
+  'seed-squad', 'smarttester', 'a-bot-can-do-better', 'skybridge-siege', 'h3-otome',
   'recurve', 'assassin', 'niflheim', 'toad-defense',
 ];
 
 // Dao Arena belongs to the original kitchen; the pond test keeps its own set.
 export const originalKitchenProjectIds = [
-  'seed-squad', 'smarttester', 'h3-otome', 'a-bot-can-do-better', 'dao-arena', 'skybridge-siege',
+  'seed-squad', 'smarttester', 'a-bot-can-do-better', 'dao-arena', 'skybridge-siege', 'h3-otome',
   'recurve', 'assassin', 'niflheim', 'toad-defense',
 ];
 
