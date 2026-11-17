@@ -4,282 +4,366 @@
     {
       "id": "GAME_TITLE",
       "label": "Game Title",
-      "value": "are you dumb",
-      "default": "are you dumb",
-      "max_length": 30
+      "value": "Better Together",
+      "default": "Better Together",
+      "max_length": 35
     },
     {
       "id": "START_BTN",
       "label": "Start Button",
-      "value": "Start Test",
-      "default": "Start Test",
-      "max_length": 15
+      "value": "Start together",
+      "default": "Start together",
+      "max_length": 34
     },
     {
       "id": "HUD_QUESTION",
       "label": "HUD Question Label",
-      "value": "Question",
-      "default": "Question",
-      "max_length": 15
+      "value": "Round",
+      "default": "Round",
+      "max_length": 25
     },
     {
       "id": "HUD_SCORE",
       "label": "HUD Score Label",
-      "value": "Score",
-      "default": "Score",
-      "max_length": 10
+      "value": "Matches",
+      "default": "Matches",
+      "max_length": 27
     },
     {
       "id": "Q1_TEXT",
       "label": "Q1 Text",
-      "value": "Some months have 31 days, others have 30 days. How many have 28 days?",
-      "default": "Some months have 31 days, others have 30 days. How many have 28 days?",
+      "value": "Your ideal Friday night together?",
+      "default": "Your ideal Friday night together?",
       "max_length": 150
     },
     {
       "id": "Q1_O0",
       "label": "Q1 Option 1",
-      "value": "1",
-      "default": "1",
-      "max_length": 30
+      "value": "Stay in & cook",
+      "default": "Stay in & cook",
+      "max_length": 34
     },
     {
       "id": "Q1_O1",
       "label": "Q1 Option 2",
-      "value": "6",
-      "default": "6",
+      "value": "Go dancing",
+      "default": "Go dancing",
       "max_length": 30
     },
     {
       "id": "Q1_O2",
       "label": "Q1 Option 3",
-      "value": "12",
-      "default": "12",
-      "max_length": 30
+      "value": "A long walk",
+      "default": "A long walk",
+      "max_length": 31
     },
     {
       "id": "Q1_O3",
       "label": "Q1 Option 4",
-      "value": "Depends on leap year",
-      "default": "Depends on leap year",
-      "max_length": 30
-    },
-    {
-      "id": "Q1_A",
-      "label": "Q1 Correct Index (0-3)",
-      "value": "2",
-      "default": "2",
-      "max_length": 1
+      "value": "Surprise me",
+      "default": "Surprise me",
+      "max_length": 31
     },
     {
       "id": "Q1_EXP",
       "label": "Q1 Explanation",
-      "value": "All 12 months have at least 28 days!",
-      "default": "All 12 months have at least 28 days!",
+      "value": "Your next date could borrow a little from both picks.",
+      "default": "Your next date could borrow a little from both picks.",
       "max_length": 100
     },
     {
       "id": "Q2_TEXT",
       "label": "Q2 Text",
-      "value": "What has a head and a tail, but no body?",
-      "default": "What has a head and a tail, but no body?",
+      "value": "What are you sharing on date night?",
+      "default": "What are you sharing on date night?",
       "max_length": 150
     },
     {
       "id": "Q2_O0",
       "label": "Q2 Option 1",
-      "value": "A snake",
-      "default": "A snake",
+      "value": "Pizza",
+      "default": "Pizza",
       "max_length": 30
     },
     {
       "id": "Q2_O1",
       "label": "Q2 Option 2",
-      "value": "A coin",
-      "default": "A coin",
+      "value": "Ice cream",
+      "default": "Ice cream",
       "max_length": 30
     },
     {
       "id": "Q2_O2",
       "label": "Q2 Option 3",
-      "value": "A comet",
-      "default": "A comet",
+      "value": "Sushi",
+      "default": "Sushi",
       "max_length": 30
     },
     {
       "id": "Q2_O3",
       "label": "Q2 Option 4",
-      "value": "A river",
-      "default": "A river",
+      "value": "Popcorn",
+      "default": "Popcorn",
       "max_length": 30
-    },
-    {
-      "id": "Q2_A",
-      "label": "Q2 Correct Index (0-3)",
-      "value": "1",
-      "default": "1",
-      "max_length": 1
     },
     {
       "id": "Q2_EXP",
       "label": "Q2 Explanation",
-      "value": "A coin has a 'heads' side and a 'tails' side.",
-      "default": "A coin has a 'heads' side and a 'tails' side.",
+      "value": "There is always room for two favorite snacks.",
+      "default": "There is always room for two favorite snacks.",
       "max_length": 100
     },
     {
       "id": "Q3_TEXT",
       "label": "Q3 Text",
-      "value": "If you are running in a race and you pass the person in second place, what place are you in?",
-      "default": "If you are running in a race and you pass the person in second place, what place are you in?",
+      "value": "A little love looks like…",
+      "default": "A little love looks like…",
       "max_length": 150
     },
     {
       "id": "Q3_O0",
       "label": "Q3 Option 1",
-      "value": "First place",
-      "default": "First place",
-      "max_length": 30
+      "value": "A helping hand",
+      "default": "A helping hand",
+      "max_length": 34
     },
     {
       "id": "Q3_O1",
       "label": "Q3 Option 2",
-      "value": "Second place",
-      "default": "Second place",
-      "max_length": 30
+      "value": "A handwritten note",
+      "default": "A handwritten note",
+      "max_length": 38
     },
     {
       "id": "Q3_O2",
       "label": "Q3 Option 3",
-      "value": "Third place",
-      "default": "Third place",
+      "value": "A long hug",
+      "default": "A long hug",
       "max_length": 30
     },
     {
       "id": "Q3_O3",
       "label": "Q3 Option 4",
-      "value": "Last place",
-      "default": "Last place",
-      "max_length": 30
-    },
-    {
-      "id": "Q3_A",
-      "label": "Q3 Correct Index (0-3)",
-      "value": "1",
-      "default": "1",
-      "max_length": 1
+      "value": "Time together",
+      "default": "Time together",
+      "max_length": 33
     },
     {
       "id": "Q3_EXP",
       "label": "Q3 Explanation",
-      "value": "You took their spot, so now you are in second place.",
-      "default": "You took their spot, so now you are in second place.",
+      "value": "Different ways of caring can make a lovely team.",
+      "default": "Different ways of caring can make a lovely team.",
       "max_length": 100
     },
     {
       "id": "Q4_TEXT",
       "label": "Q4 Text",
-      "value": "What has keys but can't open locks?",
-      "default": "What has keys but can't open locks?",
+      "value": "Pick your next little adventure.",
+      "default": "Pick your next little adventure.",
       "max_length": 150
     },
     {
       "id": "Q4_O0",
       "label": "Q4 Option 1",
-      "value": "A piano",
-      "default": "A piano",
-      "max_length": 30
+      "value": "A road trip",
+      "default": "A road trip",
+      "max_length": 31
     },
     {
       "id": "Q4_O1",
       "label": "Q4 Option 2",
-      "value": "A treasure chest",
-      "default": "A treasure chest",
-      "max_length": 30
+      "value": "A beach afternoon",
+      "default": "A beach afternoon",
+      "max_length": 37
     },
     {
       "id": "Q4_O2",
       "label": "Q4 Option 3",
-      "value": "A map",
-      "default": "A map",
-      "max_length": 30
+      "value": "Museums & coffee",
+      "default": "Museums & coffee",
+      "max_length": 36
     },
     {
       "id": "Q4_O3",
       "label": "Q4 Option 4",
-      "value": "A door",
-      "default": "A door",
-      "max_length": 30
-    },
-    {
-      "id": "Q4_A",
-      "label": "Q4 Correct Index (0-3)",
-      "value": "0",
-      "default": "0",
-      "max_length": 1
+      "value": "A cabin getaway",
+      "default": "A cabin getaway",
+      "max_length": 35
     },
     {
       "id": "Q4_EXP",
       "label": "Q4 Explanation",
-      "value": "A piano has musical keys, but no physical locks.",
-      "default": "A piano has musical keys, but no physical locks.",
+      "value": "Keep both ideas. You have two adventures to look forward to.",
+      "default": "Keep both ideas. You have two adventures to look forward to.",
       "max_length": 100
     },
     {
       "id": "FB_CORRECT",
       "label": "Feedback Correct Text",
-      "value": "Correct!",
-      "default": "Correct!",
-      "max_length": 15
+      "value": "Same wavelength!",
+      "default": "Same wavelength!",
+      "max_length": 36
     },
     {
       "id": "FB_WRONG",
       "label": "Feedback Wrong Text",
-      "value": "Wrong!",
-      "default": "Wrong!",
-      "max_length": 15
+      "value": "Two good tastes!",
+      "default": "Two good tastes!",
+      "max_length": 36
     },
     {
       "id": "BTN_NEXT",
       "label": "Next Button",
-      "value": "Next",
-      "default": "Next",
-      "max_length": 10
+      "value": "Next question",
+      "default": "Next question",
+      "max_length": 33
     },
     {
       "id": "RES_TITLE",
       "label": "Result Title",
-      "value": "Test Complete!",
-      "default": "Test Complete!",
-      "max_length": 25
+      "value": "Your couple mix",
+      "default": "Your couple mix",
+      "max_length": 35
     },
     {
       "id": "RES_PERFECT",
       "label": "Result Perfect Comment",
-      "value": "Wow, you're actually smart!",
-      "default": "Wow, you're actually smart!",
+      "value": "Two minds, one wavelength.",
+      "default": "Two minds, one wavelength.",
       "max_length": 50
     },
     {
       "id": "RES_NORMAL",
       "label": "Result Normal Comment",
-      "value": "Well... at least you tried.",
-      "default": "Well... at least you tried.",
-      "max_length": 50
+      "value": "Different tastes. Still a good team.",
+      "default": "Different tastes. Still a good team.",
+      "max_length": 56
     },
     {
       "id": "RESTART_BTN",
       "label": "Restart Button",
-      "value": "Restart Test",
-      "default": "Restart Test",
-      "max_length": 20
+      "value": "Play together again",
+      "default": "Play together again",
+      "max_length": 39
     },
     {
       "id": "POST_BTN",
       "label": "Post My Play Button",
       "value": "Post My Play",
       "default": "Post My Play",
-      "max_length": 20
+      "max_length": 32
+    },
+    {
+      "id": "TURN_ONE",
+      "label": "Turn One",
+      "max_length": 120,
+      "value": "Partner 1 · choose secretly",
+      "default": "Partner 1 · choose secretly"
+    },
+    {
+      "id": "TURN_TWO",
+      "label": "Turn Two",
+      "max_length": 120,
+      "value": "Partner 2 · your turn",
+      "default": "Partner 2 · your turn"
+    },
+    {
+      "id": "TURN_GUIDE",
+      "label": "Turn Guide",
+      "max_length": 120,
+      "value": "Pick one, then pass the phone",
+      "default": "Pick one, then pass the phone"
+    },
+    {
+      "id": "TURN_TWO_GUIDE",
+      "label": "Turn Two Guide",
+      "max_length": 120,
+      "value": "Pick what feels most like you",
+      "default": "Pick what feels most like you"
+    },
+    {
+      "id": "HANDOFF_TITLE",
+      "label": "Handoff Title",
+      "max_length": 120,
+      "value": "Pass the phone",
+      "default": "Pass the phone"
+    },
+    {
+      "id": "HANDOFF_COPY",
+      "label": "Handoff Copy",
+      "max_length": 120,
+      "value": "Your partner picks next. Keep your answer a secret.",
+      "default": "Your partner picks next. Keep your answer a secret."
+    },
+    {
+      "id": "HANDOFF_BTN",
+      "label": "Handoff Btn",
+      "max_length": 120,
+      "value": "Partner 2 is ready",
+      "default": "Partner 2 is ready"
+    },
+    {
+      "id": "FIRST_PICK",
+      "label": "First Pick",
+      "max_length": 120,
+      "value": "Partner 1",
+      "default": "Partner 1"
+    },
+    {
+      "id": "SECOND_PICK",
+      "label": "Second Pick",
+      "max_length": 120,
+      "value": "Partner 2",
+      "default": "Partner 2"
+    },
+    {
+      "id": "RESULT_SAME",
+      "label": "Result Same",
+      "max_length": 120,
+      "value": "Same wavelength",
+      "default": "Same wavelength"
+    },
+    {
+      "id": "RESULT_MIX",
+      "label": "Result Mix",
+      "max_length": 120,
+      "value": "A lovely mix",
+      "default": "A lovely mix"
+    },
+    {
+      "id": "RESULT_DIFFERENT",
+      "label": "Result Different",
+      "max_length": 120,
+      "value": "Opposites attract",
+      "default": "Opposites attract"
+    },
+    {
+      "id": "RESULT_GUIDE",
+      "label": "Result Guide",
+      "max_length": 120,
+      "value": "A playful conversation starter, made for two.",
+      "default": "A playful conversation starter, made for two."
+    },
+    {
+      "id": "FINISH_BTN",
+      "label": "Finish Btn",
+      "max_length": 120,
+      "value": "See your couple mix",
+      "default": "See your couple mix"
+    },
+    {
+      "id": "RECAP_LABEL",
+      "label": "Recap Label",
+      "max_length": 120,
+      "value": "Your shared picks",
+      "default": "Your shared picks"
+    },
+    {
+      "id": "FB_SHARED_DETAIL",
+      "label": "Matching picks feedback",
+      "value": "You already have your next date idea.",
+      "default": "You already have your next date idea.",
+      "max_length": 100
     }
   ],
   "images": [],
@@ -289,6 +373,8 @@
     "h5_playstyle_type": "general_game",
     "content_locale": "en",
     "min_capability_level": 1,
-    "full_capability_level": 1
+    "full_capability_level": 1,
+    "title": "Better Together",
+    "name": "Couple Compatibility Test"
   }
 }

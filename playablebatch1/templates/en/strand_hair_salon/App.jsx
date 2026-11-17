@@ -6,25 +6,87 @@
   document.head.append(style);
   root.innerHTML=`<div class="scene"><canvas aria-label="Hair styling area"></canvas><div class="guide">Choose a tool to style</div><div class="top"><button class="reset">Reset</button><button class="brush">Brush: S</button><button class="pause">Pause</button></div><div class="palette hidden"></div><div class="tools"></div></div>`;
   const canvas=root.querySelector('canvas'),ctx=canvas.getContext('2d'),guide=root.querySelector('.guide'),palette=root.querySelector('.palette');
-  style.textContent+=`.tools{left:30px;right:30px;bottom:calc(50px + env(safe-area-inset-bottom,0px));flex-direction:column;gap:8px;align-items:center}.tool-row{display:flex;justify-content:center;gap:6px;width:100%}.tools button{min-height:42px;padding:8px 12px;font-size:clamp(12px,3.3vw,15px)}@media(max-height:520px){.tools{bottom:18px;gap:5px}.tools button{min-height:36px;padding:6px 10px}}`;
+  style.textContent+=`#root .top{top:30px;left:30px;right:30px;gap:12px;align-items:center}
+#root .top button{min-height:44px;padding:0 4px;border:0;border-radius:0;background:transparent;box-shadow:none;font:700 14px/1.3 UIBody,system-ui,sans-serif;color:#d3d3d9}
+#root .top .reset{color:#ff777b}#root .top button:active{opacity:.65}
+#root .guide{top:18%;left:30px;right:30px;width:auto;font:700 18px/1.4 UIBody,system-ui,sans-serif}
+#root .tools{left:30px;right:30px;bottom:calc(50px + env(safe-area-inset-bottom,0px));display:block;overflow:visible}
+#root .tool-scroll{width:100%;padding:4px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;touch-action:pan-x;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;user-select:none;-webkit-user-select:none}
+#root .tool-scroll::-webkit-scrollbar{display:none}
+#root .tool-row{display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-start;width:max-content;min-width:100%;gap:8px}
+#root .tool-row button{flex:none;min-height:44px;padding:9px 12px;font:700 14px/1.3 UIBody,system-ui,sans-serif;white-space:nowrap;touch-action:pan-x}
+#root .hold-tool{flex:none;display:flex}
+#root .tool-hint{position:absolute;right:4px;bottom:calc(100% + 9px);display:flex;align-items:center;gap:7px;max-width:170px;color:#d0d0d7;font:400 13px/1.4 UIBody,system-ui,sans-serif;white-space:nowrap;pointer-events:none}
+#root .tool-hint svg{width:20px;height:14px;flex:none}
+#root .tool-hint[hidden]{display:none!important}
+#root .tools>.drop{position:absolute;bottom:calc(100% + 7px);z-index:4;min-height:44px;padding:9px 12px;font:700 14px/1.3 UIBody,system-ui,sans-serif}
+`;
   const toolRows=[['Hand','Hold','Scissors','Regrow'],['Colors','Wash','Blow']];let tool='Hand',color='#fafafa',brush=0,paused=false,drag=false,last=null,active=new URLSearchParams(location.search).get('feedReview')!=='1',strands=[],held=[],fragments=[],particles=[],activePointer=null;
   palette.innerHTML='<div class="palette-head"><span>Color Picker</span><button class="done">Done</button></div><div class="color-wheel" role="slider" aria-label="Choose hair color" tabindex="0"></div><div class="brightness-label"><span>Dark</span><span>Light</span></div><input class="brightness" aria-label="Color brightness" type="range" min="0" max="100" value="100"><div class="color-preview"></div>';
   let hue=50,saturation=1,brightness=1;const wheel=palette.querySelector('.color-wheel'),brightnessSlider=palette.querySelector('.brightness'),colorPreview=palette.querySelector('.color-preview');
   function updateColor(){const c=brightness*saturation,x=c*(1-Math.abs((hue/60)%2-1)),m=brightness-c;const rgb=hue<60?[c,x,0]:hue<120?[x,c,0]:hue<180?[0,c,x]:hue<240?[0,x,c]:hue<300?[x,0,c]:[c,0,x];color=`rgb(${rgb.map(v=>Math.round((v+m)*255)).join(',')})`;colorPreview.style.background=color;}
   function chooseColor(e){const r=wheel.getBoundingClientRect(),x=(e.clientX-r.left-r.width/2)/(r.width/2),y=(e.clientY-r.top-r.height/2)/(r.height/2);hue=(Math.atan2(x,-y)*180/Math.PI+360)%360;saturation=Math.min(1,Math.hypot(x,y));updateColor();}
   wheel.addEventListener('pointerdown',e=>{wheel.setPointerCapture(e.pointerId);chooseColor(e)});wheel.addEventListener('pointermove',e=>{if(wheel.hasPointerCapture(e.pointerId))chooseColor(e)});brightnessSlider.addEventListener('input',()=>{brightness=Number(brightnessSlider.value)/100;updateColor()});palette.querySelector('.done').onclick=()=>palette.classList.add('hidden');updateColor();
-  root.querySelector('.tools').innerHTML=toolRows.map(row=>'<div class="tool-row">'+row.map(t=>{
+  root.querySelector('.tools').innerHTML='<div class="tool-scroll" role="toolbar" aria-label="Hair tools"><div class="tool-row">'+toolRows.flat().map(t=>{
     const button=`<button data-tool="${t}" class="${t===tool?'active':''}">${t}</button>`;
     return t==='Hold'?`<span class="hold-tool">${button}<button class="drop hidden" data-action="drop">Drop</button></span>`:button;
-  }).join('')+'</div>').join('');
+  }).join('')+'</div></div>';
   const dropButton=root.querySelector('.drop');
-  function anchor(s,w,h){const r=Math.min(w*.22,h*.16);s.x=.5+s.u*r/w;s.top=.48-Math.sqrt(Math.max(0,1-s.u*s.u))*r/h;}
+  const tools=root.querySelector('.tools'),toolScroll=root.querySelector('.tool-scroll');
+  toolScroll.setAttribute('aria-orientation','horizontal');
+  // Leave touch panning to the mobile browser, including drags that start on a
+  // button. Only cancel the trailing click after a swipe, never the pan itself.
+  let toolSwipe=null,swipedTool=false;
+  function trackToolSwipe(e){
+    if(!toolSwipe||e.pointerId!==toolSwipe.id)return;
+    if(Math.hypot(e.clientX-toolSwipe.x,e.clientY-toolSwipe.y)>=8||Math.abs(toolScroll.scrollLeft-toolSwipe.left)>2)toolSwipe.moved=true;
+  }
+  toolScroll.addEventListener('pointerdown',e=>{
+    if(e.button!==0||e.isPrimary===false)return;
+    swipedTool=false;toolSwipe={id:e.pointerId,x:e.clientX,y:e.clientY,left:toolScroll.scrollLeft,moved:false};
+  },{passive:true});
+  toolScroll.addEventListener('pointermove',trackToolSwipe,{passive:true});
+  window.addEventListener('pointerup',e=>{
+    if(!toolSwipe||e.pointerId!==toolSwipe.id)return;
+    trackToolSwipe(e);swipedTool=toolSwipe.moved;toolSwipe=null;
+  },{passive:true});
+  window.addEventListener('pointercancel',e=>{
+    if(toolSwipe&&e.pointerId===toolSwipe.id){swipedTool=true;toolSwipe=null;}
+  },{passive:true});
+  toolScroll.addEventListener('scroll',()=>{
+    if(toolSwipe&&Math.abs(toolScroll.scrollLeft-toolSwipe.left)>2)toolSwipe.moved=true;
+  },{passive:true});
+  toolScroll.addEventListener('click',e=>{
+    if(swipedTool&&e.detail!==0){swipedTool=false;e.preventDefault();e.stopPropagation();}
+  },true);
+  tools.append(dropButton);
+  const toolHint=document.createElement('span'),hintItalian=(new URLSearchParams(location.search).get('lang')||document.documentElement.lang||'en').toLowerCase().startsWith('it');
+  toolHint.className='tool-hint';toolHint.setAttribute('aria-label',hintItalian?'Scorri gli strumenti a sinistra o a destra':'Swipe tools left or right');
+  toolHint.innerHTML='<span>'+(hintItalian?'Scorri gli strumenti':'Swipe tools')+'</span><svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8h20M6 3 2 8l4 5M18 3l4 5-4 5"/></svg>';
+  tools.append(toolHint);
+  function updateToolScrollHint(){
+    toolHint.hidden=toolScroll.scrollWidth<=toolScroll.clientWidth+1;
+    if(!toolHint.hidden&&!dropButton.classList.contains('hidden')){
+      const hint=toolHint.getBoundingClientRect(),drop=dropButton.getBoundingClientRect();
+      if(hint.left<drop.right+8&&hint.right>drop.left-8&&hint.top<drop.bottom+4&&hint.bottom>drop.top-4)toolHint.hidden=true;
+    }
+  }
+  requestAnimationFrame(updateToolScrollHint);document.fonts?.ready?.then(updateToolScrollHint);
+  function positionDropButton(){
+    const bounds=tools.getBoundingClientRect(),hold=root.querySelector('[data-tool="Hold"]').getBoundingClientRect(),half=(dropButton.offsetWidth||64)/2;
+    dropButton.style.left=Math.max(half+4,Math.min(bounds.width-half-4,hold.left+hold.width/2-bounds.left))+'px';
+    updateToolScrollHint();
+  }
+  toolScroll.addEventListener('scroll',positionDropButton,{passive:true});
+  window.addEventListener('resize',positionDropButton);
+
+  function anchor(s,w,h){const r=Math.min(w*.22,h*.16);s.x=.5+s.u*r/w;s.top=.40-Math.sqrt(Math.max(0,1-s.u*s.u))*r/h;}
   function init(){
     const w=canvas.clientWidth||390,h=canvas.clientHeight||598;
     fragments=[];particles=[];dropButton.classList.add('hidden');
     strands=Array.from({length:170},(_,i)=>{
       const s={u:2*i/169-1,dx:0,dy:0,v:0,vy:0,held:false,curveSpan:1,dye:[],growRemaining:0,wet:0};
-      anchor(s,w,h);s.len=.73-s.top+Math.random()*.015;return s;
+      anchor(s,w,h);s.len=.65-s.top+Math.random()*.015;return s;
     });
   }
   function size(){let d=Math.min(devicePixelRatio||1,2),w=canvas.clientWidth,h=canvas.clientHeight;if(canvas.width!==w*d||canvas.height!==h*d){canvas.width=w*d;canvas.height=h*d;}ctx.setTransform(d,0,0,d,0,0);return [w,h];}
@@ -61,7 +123,7 @@
   }
   function growAll(amount=.14){for(const s of strands)s.growRemaining+=amount;}
   function draw(){
-    const [w,h]=size();ctx.clearRect(0,0,w,h);ctx.strokeStyle='#f8f8f8';ctx.lineWidth=Math.max(2,w*.006);ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.arc(w*.5,h*.48,Math.min(w*.22,h*.16),0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.moveTo(w*.16,h*.79);ctx.lineTo(w*.5,h*.70);ctx.lineTo(w*.84,h*.79);ctx.stroke();
+    const [w,h]=size();ctx.clearRect(0,0,w,h);ctx.strokeStyle='#f8f8f8';ctx.lineWidth=Math.max(2,w*.006);ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.arc(w*.5,h*.40,Math.min(w*.22,h*.16),0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.moveTo(w*.16,h*.71);ctx.lineTo(w*.5,h*.62);ctx.lineTo(w*.84,h*.71);ctx.stroke();
     for(const f of fragments){
       ctx.save();ctx.translate((f.cx+f.x)*w,(f.cy+f.y)*h);ctx.rotate(f.angle);ctx.globalAlpha=Math.min(1,Math.max(0,(2.5-f.age)*2));ctx.lineWidth=Math.max(2.7,w*.0061);
       for(let i=1;i<f.points.length;i++){const a=f.points[i-1],b=f.points[i];ctx.strokeStyle=b.color;ctx.beginPath();ctx.moveTo((a.x-f.cx)*w,(a.y-f.cy)*h);ctx.lineTo((b.x-f.cx)*w,(b.y-f.cy)*h);ctx.stroke();}ctx.restore();
@@ -197,7 +259,7 @@
       anchor(s,w,h);const hit=nearestPoint(s,p,w,h);
       if(hit.closest<=radius){const k=Math.max(.08,strandBend(s,hit.t));s.held=true;s.v=0;s.vy=0;held.push({strand:s,dx:s.dx,dy:s.dy,k});}
     }
-    if(held.length)dropButton.classList.remove('hidden');
+    if(held.length){dropButton.classList.remove('hidden');positionDropButton();}
   }
   function moveHold(p){if(!holdStart)return;for(const item of held){item.strand.dx=item.dx+(p.x-holdStart.x)/item.k;item.strand.dy=item.dy+(p.y-holdStart.y)/item.k;}}
   let holdStart=null;
@@ -226,6 +288,7 @@
     dropButton.classList.toggle('hidden',tool!=='Hold'&&!strands.some(s=>s.held));
     root.querySelectorAll('[data-tool]').forEach(x=>x.classList.toggle('active',x===b));palette.classList.toggle('hidden',tool!=='Colors');guide.classList.add('hidden');
     if(tool==='Regrow')growAll();
+    positionDropButton();
   });
   root.querySelector('.reset').onclick=()=>{endDrag();init();palette.classList.add('hidden');draw()};root.querySelector('.brush').onclick=e=>{brush=(brush+1)%3;e.currentTarget.textContent='Brush: '+['S','M','L'][brush]};root.querySelector('.pause').onclick=e=>{paused=!paused;if(paused)endDrag();e.currentTarget.textContent=paused?'Resume':'Pause'};
   document.addEventListener('visibilitychange',()=>{if(document.hidden)endDrag()});window.addEventListener('pagehide',endDrag);

@@ -61,19 +61,19 @@
     {
       "id": "BG_IMAGE",
       "label": "Night Sky",
-      "path": "./assets/art-v2/night-sky-vector-v4.svg",
+      "path": "./assets/art-v3/real-night-sky-v3.webp",
       "replaceable": true
     },
     {
       "id": "BG_HILLS",
       "label": "Distant Hill Layer",
-      "path": "./assets/art-v2/distant-hills-vector-v3.svg",
+      "path": "./assets/art-v3/real-night-sky-v3.webp",
       "replaceable": true
     },
     {
       "id": "BG_FOREGROUND",
       "label": "Foreground Hill and Silhouettes",
-      "path": "./assets/art-v2/hill-foreground-vector-v3.svg",
+      "path": "./assets/art-v3/real-night-sky-v3.webp",
       "replaceable": true
     }
   ],

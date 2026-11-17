@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "font_pack_id": "system_safe",
-  "style_anchor": "Follow the earlier Starlit Hill vector style: midnight blue and purple gradient sky, simple moon, flat rolling hills and dark tree/people silhouettes. Separate foreground hill layers visually occlude rockets launched from behind the ridge.",
+  "style_anchor": "Photoreal dark navy starry sky and taller gently rolling moonlit green hills; no baked moon/fireworks/buildings/people. Shared photograph across background and terrain masks, with a crop-aware traced skyline so interactive fireworks rise from behind the hills.",
   "assets": [
     {
       "path": "assets/bg_night.webp",
@@ -166,6 +166,42 @@
       "produced_by": "provided_asset",
       "description": "Locally bundled SpecialElite-Regular for consistent, readable UI typography.",
       "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/art-v3/real-night-sky.webp",
+      "produced_by": "imagegen",
+      "produced_prompt": "Real phone photograph of a spacious midnight sky with sparse stars, low dark wooded hill ridge and meadow. No moon, fireworks, people, buildings or text. Portrait2:3 composition.",
+      "description": "Photographic sky and perfectly aligned ridge/foreground occlusion layers.",
+      "aspect_ratio": "2:3",
+      "size_tier": "full",
+      "recommended_size": "768x1152",
+      "width": 768,
+      "height": 1152,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v3/real-night-sky-v2.webp",
+      "produced_by": "imagegen",
+      "produced_prompt": "Refine the real rural midnight photograph with slightly brighter moonlit hills, layered wooded contours and meadow; preserve the low84–87percent horizon, dark spacious starry sky, and no buildings or people.",
+      "description": "Second photographic nightscape with more visible hills; shared by background and aligned foreground occlusion masks.",
+      "aspect_ratio": "2:3",
+      "size_tier": "full",
+      "recommended_size": "768x1152",
+      "width": 768,
+      "height": 1152,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v3/real-night-sky-v3.webp",
+      "produced_by": "imagegen",
+      "produced_prompt": "Use case: precise-object-edit.\nAsset type: portrait photographic background for a fireworks game.\nInput image1 is the edit target. Preserve the existing photorealistic dark navy\nnight sky, subtle sparse stars, cool moonlit atmosphere, green wooded rolling\nhills and grassy foreground. Change only the height of the land: raise the\nexisting rolling-hill skyline so the ridge sits around77–80percent down from\nthe top of the image, instead of around84–87percent. Land should occupy roughly\nthe bottom22percent. Make the hills noticeably a little taller, with gentle\nnatural slopes and modest wooded ridges, not giant mountains. Keep the open\nsky quiet and spacious for interactive fireworks. Keep the same realistic\nphotographic detail, low-key exposure, original colors and2:3 portrait\ncomposition. Hills/meadow remain visibly green in moonlight, not silhouettes.\nNo moon, buildings, people, text, UI or fireworks baked into the image. Do not\nintroduce new objects or change the camera perspective. One refined image.\n",
+      "description": "Third photographic nightscape: taller moonlit green rolling hills, traced78.3–82.7percent ridge (~80percent center); identical center-cover photograph in all scenery layers and crop-aware skyline clipping.",
+      "aspect_ratio": "2:3",
+      "size_tier": "full",
+      "recommended_size": "768x1152",
+      "width": 768,
+      "height": 1152,
       "ok": true
     }
   ]

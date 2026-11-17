@@ -310,8 +310,74 @@ const timingProjection = new THREE.Vector3();
 const timingCameraPosition = new THREE.Vector3();
 const ACTION_DURATION=.48;
 let active = !String(new URLSearchParams(location.search).get('review') || '').startsWith('batch');
+// Short original Web Audio foley, unlocked only by a real game interaction.
+let sportAudio=null,sportMaster=null,sportNoise=null,sportAudioUnlocked=false;
+const sportSources=new Map(),sportSoundTimes=new Map();
+function unlockSportAudio(){
+ try{
+  if(!sportAudio){
+   const Context=window.AudioContext||window.webkitAudioContext;if(!Context)return;
+   sportAudio=new Context();sportMaster=sportAudio.createGain();sportMaster.gain.value=.75;sportMaster.connect(sportAudio.destination);
+   sportNoise=sportAudio.createBuffer(1,Math.ceil(sportAudio.sampleRate*.3),sportAudio.sampleRate);
+   const samples=sportNoise.getChannelData(0);let seed=41719;
+   for(let i=0;i<samples.length;i++){seed=(seed*16807)%2147483647;samples[i]=(seed/1073741823.5-1);}
+  }
+  sportAudioUnlocked=true;if(sportAudio.state==='suspended')sportAudio.resume().catch(()=>{});
+ }catch(_){/* The game remains playable without browser audio. */}
+}
+function trackSportSound(source,nodes){
+ sportSources.set(source,nodes);source.onended=()=>{sportSources.delete(source);source.disconnect();for(const node of nodes)node.disconnect();};
+}
+function sportTone(frequency,end,duration,volume=.2,type='sine',delay=0){
+ const t=sportAudio.currentTime+delay,oscillator=sportAudio.createOscillator(),gain=sportAudio.createGain();
+ oscillator.type=type;oscillator.frequency.setValueAtTime(frequency,t);oscillator.frequency.exponentialRampToValueAtTime(Math.max(30,end),t+duration);
+ gain.gain.setValueAtTime(.001,t);gain.gain.exponentialRampToValueAtTime(volume,t+.004);gain.gain.exponentialRampToValueAtTime(.001,t+duration);
+ oscillator.connect(gain);gain.connect(sportMaster);trackSportSound(oscillator,[gain]);oscillator.start(t);oscillator.stop(t+duration+.015);
+}
+function sportNoiseTap(frequency,duration,volume=.18,delay=0,filterType='lowpass'){
+ const t=sportAudio.currentTime+delay,source=sportAudio.createBufferSource(),filter=sportAudio.createBiquadFilter(),gain=sportAudio.createGain();
+ source.buffer=sportNoise;filter.type=filterType;filter.frequency.setValueAtTime(frequency,t);filter.Q.value=.7;
+ gain.gain.setValueAtTime(.001,t);gain.gain.exponentialRampToValueAtTime(volume,t+.003);gain.gain.exponentialRampToValueAtTime(.001,t+duration);
+ source.connect(filter);filter.connect(gain);gain.connect(sportMaster);trackSportSound(source,[filter,gain]);source.start(t);source.stop(t+duration+.015);
+}
+function sportSfx(event,kind=-1){
+ if(!active||document.hidden||!sportAudioUnlocked||sportAudio?.state!=='running'||sportSources.size>18)return;
+ const key=event+':'+kind,now=sportAudio.currentTime;
+ if(now-(sportSoundTimes.get(key)??-10)<.10)return;sportSoundTimes.set(key,now);
+ try{
+  if(event==='hit'){
+   if(kind===0){sportNoiseTap(5200,.055,.22);sportTone(1450,440,.045,.18,'triangle');sportTone(240,100,.09,.19);}
+   else if(kind===1){sportTone(155,55,.16,.24);sportNoiseTap(650,.075,.18);}
+   else if(kind===2){sportTone(690,230,.075,.22,'triangle');sportTone(1550,880,.055,.18);sportNoiseTap(2600,.035,.18);}
+   else if(kind===3){sportTone(240,115,.075,.18);sportNoiseTap(900,.055,.18);}
+   else if(kind===4){sportNoiseTap(2100,.085,.22);sportTone(310,105,.10,.20,'triangle');}
+  }else if(event==='bounce'){
+   if(kind===1){sportTone(115,45,.13,.20);sportNoiseTap(440,.055,.18);}
+   else if(kind===2){sportTone(610,260,.065,.19,'triangle');sportNoiseTap(1800,.035,.18);}
+  }else if(event==='target'){
+   if(kind===3){sportNoiseTap(3900,.19,.18,0,'bandpass');sportNoiseTap(2100,.12,.18,.07,'bandpass');}
+   else if(kind===1)sportNoiseTap(1400,.11,.18);
+  }else if(event==='miss'){
+   sportTone(190,85,.15,.18,'triangle');
+  }else if(event==='result'){
+   sportTone(330,295,.14,.18,'triangle');sportTone(247,220,.16,.18,'triangle',.13);sportTone(165,130,.24,.18,'triangle',.28);
+  }
+ }catch(_){/* Missing audio never interrupts the round. */}
+}
+function pauseSportAudio(){
+ for(const [source,nodes] of sportSources){try{source.stop();}catch(_){}source.disconnect();for(const node of nodes)node.disconnect();}
+ sportSources.clear();
+ sportSoundTimes.clear();sportAudio?.suspend().catch(()=>{});
+}
+function resumeSportAudio(){if(sportAudioUnlocked&&active&&!document.hidden)sportAudio?.resume().catch(()=>{});}
+game.addEventListener('pointerdown',()=>{if(active)unlockSportAudio();},{passive:true});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseSportAudio();else resumeSportAudio();});
+window.addEventListener('pagehide',()=>{pauseSportAudio();sportAudio?.close().catch(()=>{});sportAudio=null;sportAudioUnlocked=false;});
+
 const hitRingGeometry = new THREE.RingGeometry(.22, .28, 32);
 let started = active, lives = 3, score = 0, ball = null, shots = [], hitEffects = [], action = null, last = 0, feedbackTime = 0, ended = false, playTime = 0, spawnDelay = 0;
+// Court equipment belongs to the current serve, not to transient attack/return meshes.
+let courtSport=4;
 function hud() { livesEl.textContent = '● '.repeat(lives) + '○ '.repeat(3 - lives); scoreEl.textContent = score; }
 function ease(t) { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); }
 function poseAthlete(dt=0,prediction=null) {
@@ -355,14 +421,16 @@ function poseAthlete(dt=0,prediction=null) {
   }
 }
 function reset() {
+  pauseSportAudio();resumeSportAudio();
   removeBall(ball); shots.forEach(removeBall); hitEffects.forEach(effect => { scene.remove(effect.mesh); effect.mesh.material.dispose(); }); ball = null; shots = []; hitEffects = []; action = null;
-  lives = 3; score = 0; ended = false; started = active; last = 0; playTime = 0; spawnDelay = 0;
+  lives = 3; score = 0; ended = false; started = active; last = 0; playTime = 0; spawnDelay = 0;courtSport=4;
   athlete.position.set(0, 0, 6.4); torso.rotation.set(0, 0, 0);
   feedback.textContent = ''; guide.classList.remove('hidden'); result.classList.add('hidden');
   hud(); poseAthlete(); render();
 }
 function spawn() {
   const kind = Math.floor(Math.random() * kinds.length);
+  courtSport=kind;
   const item = createBall(kind);
   const lane = (Math.random() - .5) * 3.1;
   const pace=1+Math.min(score*.018,.35);
@@ -374,7 +442,7 @@ function spawn() {
   poseAthlete(0,{kind});contactFor(kind,ball.target);poseAthlete(0);
   ball.mesh.position.copy(ball.start); updateShadow(ball);
 }
-function finish() { ended = true; result.querySelector('p').textContent = `Score: ${score}`; result.classList.remove('hidden'); }
+function finish() { sportSfx('result'); ended = true; result.querySelector('p').textContent = `Score: ${score}`; result.classList.remove('hidden'); }
 function showImpact(position) {
   const material = new THREE.MeshBasicMaterial({color:0xffe8a0, transparent:true, opacity:.85, depthWrite:false, side:THREE.DoubleSide});
   const ring = new THREE.Mesh(hitRingGeometry, material); ring.position.copy(position); ring.quaternion.copy(camera.quaternion); scene.add(ring);
@@ -416,10 +484,9 @@ function updateTimingRing() {
 }
 function render() {
   resize();
-  // Keep a return's net until the ball has cleared it, then prepare the next sport.
-  const crossing=shots.find(shot=>(shot.kind===2||shot.kind===4)&&shot.mesh.position.z>NET_Z-.6);
-  const netKind=crossing?.kind??ball?.kind??action?.kind??4;
-  tennisNet.visible=netKind===2;volleyballNet.visible=netKind===4;
+  // Keep one consistent net through the entire serve and its inter-ball gap.
+  // An older return cannot replace the newly active sport's court equipment.
+  tennisNet.visible=courtSport===2;volleyballNet.visible=courtSport===4;
   renderer.render(scene,camera);updateTimingRing();
 }
 function flightVelocity(out,item,elapsed){
@@ -458,6 +525,7 @@ function tick(now) {
     if (!ball) { spawnDelay -= dt; if (spawnDelay <= 0) spawn(); }
     if (ball) {
       ball.elapsed+=dt;ball.progress=ball.elapsed/ball.duration;
+      if(ball.phase==='incoming'&&ball.bounceAt&&!ball.bounceHeard&&ball.elapsed>=ball.duration*ball.bounceAt){ball.bounceHeard=true;sportSfx('bounce',ball.kind);}
       if(ball.phase==='queued'){
         ball.queuedElapsed+=dt;const arrival=Math.min(1,ball.queuedElapsed/ball.contactDelay);
         ball.progress=ball.queuedProgress+(1-ball.queuedProgress)*arrival;
@@ -467,13 +535,14 @@ function tick(now) {
         action=action||{kind:ball.kind,elapsed:0,contactTime:HIT_TIME};action.elapsed=action.contactTime;poseAthlete(0);
         contactFor(ball.kind,contactPoint);
         const impact=ball.mesh.position.clone();game.dataset.lastImpactGap=impact.distanceTo(contactPoint).toFixed(4);game.dataset.lastHit=kinds[ball.kind].name;
-        showImpact(impact);score++;hud();feedback.textContent=kinds[ball.kind].text;feedbackTime=.7;
+        sportSfx('hit',ball.kind);showImpact(impact);score++;hud();feedback.textContent=kinds[ball.kind].text;feedbackTime=.7;
         addShot(ball,impact);ball=null;spawnDelay=.22;
-      }else if(ball.progress>1.08){removeBall(ball);ball=null;spawnDelay=.22;lives--;hud();if(lives<=0)finish();}
+      }else if(ball.progress>1.08){if(lives>1)sportSfx('miss',ball.kind);removeBall(ball);ball=null;spawnDelay=.22;lives--;hud();if(lives<=0)finish();}
       if(ball){ball.mesh.rotation.x+=dt*[13,8,18,6,4.5][ball.kind];ball.mesh.rotation.y+=dt*(ball.kind===0?4:1.4);updateShadow(ball);}
     }
     for (let i = shots.length - 1; i >= 0; i--) {
       const shot = shots[i]; if (shot.justCreated) shot.justCreated = false; else shot.elapsed += dt;
+      if(!shot.arrivalHeard&&shot.elapsed>=shot.duration){shot.arrivalHeard=true;sportSfx('target',shot.kind);}
       if(shot.kind===3&&shot.elapsed>shot.duration){
         const through=shot.elapsed-shot.duration;shot.mesh.position.copy(shot.target);shot.mesh.position.y-=1.1*through+6*through*through;
       }else flightPosition(shot.mesh.position,shot.start,shot.target,Math.min(shot.elapsed,shot.duration),shot.duration,shot.gravity);
@@ -494,14 +563,14 @@ function tick(now) {
 }
 buttons.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b || !active || ended) return;
-  guide.classList.add('hidden'); started = true;
+  unlockSportAudio();guide.classList.add('hidden'); started = true;
   if (!ball || ball.phase !== 'incoming' || ball.progress < hitWindowStart(ball.kind)) return;
   if (+b.dataset.kind === ball.kind) beginHit();
-  else { removeBall(ball); ball = null; spawnDelay = .25; lives--; hud(); feedback.textContent = 'MISS'; feedbackTime = .6; if (lives <= 0) finish(); }
+  else { if(lives>1)sportSfx('miss',ball.kind);removeBall(ball); ball = null; spawnDelay = .25; lives--; hud(); feedback.textContent = 'MISS'; feedbackTime = .6; if (lives <= 0) finish(); }
 });
-result.querySelector('button').onclick = reset;
+result.querySelector('button').onclick = ()=>{unlockSportAudio();reset();};
 window.addEventListener('message', e => {
-  if (e.source === parent && e.data?.type === 'playable-active') { active = !!e.data.active; if (active && !ended) started = true; last = 0; }
+  if (e.source === parent && e.data?.type === 'playable-active') { active = !!e.data.active; if(active)resumeSportAudio();else pauseSportAudio(); if (active && !ended) started = true; last = 0; }
 });
 window.addEventListener('resize', render); reset(); requestAnimationFrame(tick);
 

@@ -4,10 +4,10 @@
       "id": "TIME_LIMIT",
       "kind": "number",
       "label": "Questions Per Run",
-      "value": 9,
-      "default": 9,
-      "min": 5,
-      "max": 9,
+      "value": 5,
+      "default": 5,
+      "min": 4,
+      "max": 6,
       "step": 1
     },
     {

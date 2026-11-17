@@ -51,17 +51,57 @@ root.innerHTML=`<div class="etch"><canvas aria-label="Etch A Sketch drawing surf
 Shake to erase</div><button class="sensor">Enable tilt</button><button class="erase" aria-label="Erase drawing">↺</button></div>`;
 const canvas=root.querySelector('canvas'),view=canvasSize(canvas),{ctx}=view;
 let points=[],cursor={x:.5,y:.5},drawing=false,erasePulse=0,knob=0;
+
+// One softly filtered mechanical texture follows real drawing movement, never a sound per point.
+let etchFeedback=null,etchNoise=null,lastEtchMove=-Infinity;
+function stopEtchFeedback(immediate=false){
+ const sound=etchFeedback;if(!sound)return;etchFeedback=null;
+ try{
+  const now=audio.currentTime;sound.gain.gain.cancelScheduledValues(now);
+  if(immediate)sound.gain.gain.setValueAtTime(0,now);else sound.gain.gain.setTargetAtTime(0,now,.015);
+  sound.source.stop(immediate?0:now+.06);
+ }catch(_){sound.source.disconnect();sound.filter.disconnect();sound.gain.disconnect();}
+ if(immediate){sound.source.disconnect();sound.filter.disconnect();sound.gain.disconnect();}
+}
+function trackEtchMovement(distance,mode){
+ if(!audio||audio.state!=='running'||!hostActive||document.hidden||disposed)return;
+ try{
+  if(!etchNoise){etchNoise=audio.createBuffer(1,audio.sampleRate,audio.sampleRate);const data=etchNoise.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=Math.random()*2-1;}
+  if(!etchFeedback){
+   const source=audio.createBufferSource(),filter=audio.createBiquadFilter(),gain=audio.createGain();
+   source.buffer=etchNoise;source.loop=true;filter.type='bandpass';filter.Q.value=.7;gain.gain.setValueAtTime(0,audio.currentTime);
+   source.connect(filter).connect(gain).connect(audio.destination);source.start();
+   source.onended=()=>{source.disconnect();filter.disconnect();gain.disconnect();};etchFeedback={source,filter,gain,quiet:false};
+  }
+  const intensity=clamp(distance/5,0,1),now=audio.currentTime;
+  etchFeedback.filter.frequency.setTargetAtTime((mode==='tilt'?520:850)+intensity*350,now,.035);
+  etchFeedback.gain.gain.cancelScheduledValues(now);etchFeedback.gain.gain.setTargetAtTime((mode==='tilt'?.025:.035)+intensity*(mode==='tilt'?.025:.035),now,.025);
+  etchFeedback.quiet=false;lastEtchMove=performance.now();
+ }catch(_){stopEtchFeedback(true);}
+}
+function updateEtchFeedback(){
+ if(!etchFeedback)return;
+ if(!hostActive||document.hidden||audio?.state!=='running'){stopEtchFeedback(true);return;}
+ const idle=performance.now()-lastEtchMove;
+ if(idle>120&&!etchFeedback.quiet){etchFeedback.gain.gain.setTargetAtTime(0,audio.currentTime,.025);etchFeedback.quiet=true;}
+ if(idle>280)stopEtchFeedback();
+}
+function pauseEtchFeedback(){drawing=false;keys.clear();stopEtchFeedback(true);}
+listen(document,'visibilitychange',()=>{if(document.hidden)pauseEtchFeedback();});
+listen(window,'message',event=>{if(event.source===parent&&event.data?.type==='playable-active'&&event.data.active!==true)pauseEtchFeedback();});
+listen(window,'pagehide',pauseEtchFeedback,{capture:true});
+
 const motion=sensorInput({gyro:true,shake:true,onShake:erase});
-function erase(){if(!hostActive)return;points=[];erasePulse=1;hideGuide();tone(120,.18,.12,'triangle',60);root.dataset.strokes='0';}
+function erase(){if(!hostActive)return;stopEtchFeedback(true);points=[];erasePulse=1;hideGuide();tone(120,.18,.12,'triangle',60);root.dataset.strokes='0';}
 listen(root.querySelector('.erase'),'click',()=>{unlockAudio();erase();});
-const keys=new Set();listen(window,'keydown',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();keys.add(e.key);motion.start();unlockAudio();}if(e.key==='Backspace')erase();});listen(window,'keyup',e=>keys.delete(e.key));
+const keys=new Set();listen(window,'keydown',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();keys.add(e.key);motion.start();unlockAudio();}if(e.key==='Backspace'){e.preventDefault();unlockAudio();erase();}});listen(window,'keyup',e=>keys.delete(e.key));
 function area(){return{x:30,y:90,w:view.W-60,h:view.H-202};}
-function add(x,y){cursor.x=clamp(x,0,1);cursor.y=clamp(y,0,1);points.push([cursor.x,cursor.y]);if(points.length>16000)points.splice(0,4000);root.dataset.strokes=String(points.length);hideGuide();}
-listen(canvas,'pointerdown',e=>{unlockAudio();motion.start();canvas.setPointerCapture(e.pointerId);const r=canvas.getBoundingClientRect(),a=area(),x=e.clientX-r.left,y=e.clientY-r.top;if(x>a.x&&x<a.x+a.w&&y>a.y&&y<a.y+a.h){drawing=true;points.push(null);add((x-a.x)/a.w,(y-a.y)/a.h);}});
+function add(x,y,mode='pointer'){const previous={...cursor};cursor.x=clamp(x,0,1);cursor.y=clamp(y,0,1);const a=area(),distance=Math.hypot((cursor.x-previous.x)*a.w,(cursor.y-previous.y)*a.h);if(mode!=='silent'&&distance>.12)trackEtchMovement(distance,mode);points.push([cursor.x,cursor.y]);if(points.length>16000)points.splice(0,4000);root.dataset.strokes=String(points.length);hideGuide();}
+listen(canvas,'pointerdown',e=>{unlockAudio();motion.start();canvas.setPointerCapture(e.pointerId);const r=canvas.getBoundingClientRect(),a=area(),x=e.clientX-r.left,y=e.clientY-r.top;if(x>a.x&&x<a.x+a.w&&y>a.y&&y<a.y+a.h){drawing=true;points.push(null);add((x-a.x)/a.w,(y-a.y)/a.h,'silent');}});
 listen(canvas,'pointermove',e=>{if(!drawing)return;const r=canvas.getBoundingClientRect(),a=area();add((e.clientX-r.left-a.x)/a.w,(e.clientY-r.top-a.y)/a.h);});
-for(const ev of ['pointerup','pointercancel','lostpointercapture'])listen(canvas,ev,()=>drawing=false);
+for(const ev of ['pointerup','pointercancel','lostpointercapture'])listen(canvas,ev,()=>{drawing=false;stopEtchFeedback();});
 function rounded(x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.stroke();}}
-runLoop((dt)=>{const W=view.W,H=view.H,a=area();const x=motion.state.x+(keys.has('ArrowRight')?1:0)-(keys.has('ArrowLeft')?1:0),y=motion.state.y+(keys.has('ArrowDown')?1:0)-(keys.has('ArrowUp')?1:0);if(!drawing&&(Math.abs(x)+Math.abs(y)>.06)){if(!points.length)points.push([cursor.x,cursor.y]);add(cursor.x+x*dt*.42,cursor.y+y*dt*.32);knob+=dt*x*3;}
+runLoop((dt)=>{const W=view.W,H=view.H,a=area();const x=motion.state.x+(keys.has('ArrowRight')?1:0)-(keys.has('ArrowLeft')?1:0),y=motion.state.y+(keys.has('ArrowDown')?1:0)-(keys.has('ArrowUp')?1:0);if(!drawing&&(Math.abs(x)+Math.abs(y)>.06)){if(!points.length)points.push([cursor.x,cursor.y]);add(cursor.x+x*dt*.42,cursor.y+y*dt*.32,'tilt');knob+=dt*x*3;}updateEtchFeedback();
  ctx.clearRect(0,0,W,H);const bg=ctx.createRadialGradient(W*.45,H*.35,20,W*.5,H*.5,H*.7);bg.addColorStop(0,'#4e2225');bg.addColorStop(1,'#190f11');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
  ctx.shadowColor='#0009';ctx.shadowBlur=18;ctx.shadowOffsetY=8;rounded(12,27,W-24,H-41,23,'#6f0f21','#a23843');ctx.shadowBlur=0;ctx.shadowOffsetY=0;const red=ctx.createLinearGradient(0,30,W,H);red.addColorStop(0,'#ee3450');red.addColorStop(.2,'#c81735');red.addColorStop(.75,'#9e0c29');red.addColorStop(1,'#720e23');ctx.lineWidth=2;rounded(20,33,W-40,H-55,18,red,'#ee62715c');rounded(a.x-6,a.y-6,a.w+12,a.h+12,10,'#7b1126','#ef65704d');
  const screen=ctx.createLinearGradient(a.x,0,a.x+a.w,0);screen.addColorStop(0,'#cdcec1');screen.addColorStop(.5,'#d7d9cb');screen.addColorStop(1,'#c8cbbf');rounded(a.x,a.y,a.w,a.h,7,screen,'#9aab9b');ctx.save();ctx.beginPath();ctx.roundRect(a.x,a.y,a.w,a.h,7);ctx.clip();ctx.strokeStyle='#63705b08';ctx.lineWidth=3;for(let i=12;i<a.w;i+=23){ctx.beginPath();ctx.moveTo(a.x+i,a.y);ctx.lineTo(a.x+i,a.y+a.h);ctx.stroke();}ctx.strokeStyle='#850e2d';ctx.lineWidth=2.1;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();let first=true;for(const p of points){if(!p){first=true;continue;}const px=a.x+p[0]*a.w,py=a.y+p[1]*a.h;if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);}ctx.stroke();ctx.beginPath();ctx.arc(a.x+cursor.x*a.w,a.y+cursor.y*a.h,7,0,Math.PI*2);ctx.lineWidth=1.6;ctx.stroke();ctx.restore();

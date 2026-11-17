@@ -70,7 +70,7 @@ mount(`.fit{background:#fff}canvas.stage{position:absolute;z-index:3;pointer-eve
 const {ctx}=stageCanvas(),fog=$('.fog'),fg=fog.getContext('2d'),FOG_SIZE=fog.width;let roundNo=0,subject=0,prediction='',revealed=false,dragging=false,last=null,fortunes=[],glassCoverage=0,coverageDirty=false,lastCoverageCheck=-1;
 // Circle fitted to the new round glass asset; inset slightly to preserve its clear rim.
 // Artwork coordinates use640px; the image and fog remain260px at65,195.
-const GLASS={cx:317.54,cy:254.28,radius:236.5,artSize:640};
+const GLASS={cx:317.54,cy:254.28,radius:238,feather:4,artSize:640};
 function traceGlass(target){
  const s=FOG_SIZE/GLASS.artSize;target.beginPath();
  target.arc(GLASS.cx*s,GLASS.cy*s,GLASS.radius*s,0,Math.PI*2);target.closePath();
@@ -86,9 +86,13 @@ function paintFog(){
  fg.save();traceGlass(fg);fg.clip();
  const s=FOG_SIZE/GLASS.artSize,cx=GLASS.cx*s,cy=GLASS.cy*s,r=GLASS.radius*s;
  const gr=fg.createRadialGradient(cx-r*.35,cy-r*.4,r*.05,cx,cy,r*1.12);
- gr.addColorStop(0,'#eee8f0f5');gr.addColorStop(.6,'#d8d0e3ee');gr.addColorStop(1,'#aaa0bfdd');
- fg.fillStyle=gr;fg.fillRect(0,0,FOG_SIZE,FOG_SIZE);fg.fillStyle='#fff5';
- for(let i=0;i<20;i++){fg.beginPath();fg.arc(rand(10,426),rand(10,426),rand(10,50),0,Math.PI*2);fg.fill();}
+ gr.addColorStop(0,'#eee8f0');gr.addColorStop(.6,'#d8d0e3');gr.addColorStop(1,'#b5a8c9');
+ fg.fillStyle=gr;fg.fillRect(0,0,FOG_SIZE,FOG_SIZE);
+ // One continuous fog surface with a soft edge fitted inside the glass rim.
+ // Apply this only on reset; repeated masking while wiping would erode the edge.
+ const edge=fg.createRadialGradient(cx,cy,r-GLASS.feather*s,cx,cy,r);
+ edge.addColorStop(0,'#fff');edge.addColorStop(1,'#fff0');
+ fg.globalCompositeOperation='destination-in';fg.fillStyle=edge;fg.fillRect(0,0,FOG_SIZE,FOG_SIZE);
  fg.restore();
  const data=fg.getImageData(0,0,FOG_SIZE,FOG_SIZE).data;
  glassPixels.forEach((offset,i)=>{initialGlassAlpha[i]=data[offset];});

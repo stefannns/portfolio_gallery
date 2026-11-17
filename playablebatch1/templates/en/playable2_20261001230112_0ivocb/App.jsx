@@ -8,10 +8,10 @@ const DEFAULT_CONFIG = {
       "id": "TIME_LIMIT",
       "kind": "number",
       "label": "Questions Per Run",
-      "value": 9,
-      "default": 9,
-      "min": 5,
-      "max": 9,
+      "value": 5,
+      "default": 5,
+      "min": 4,
+      "max": 6,
       "step": 1
     },
     {
@@ -420,27 +420,115 @@ function FateIcon({name,size=24,crest=false,images={}}) {
   return <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{shapes[name]||shapes.compass}</svg>;
 }
 
-function FateResult({result,onRestart,actionRef,headingRef,retryText,images}) {
+function loadFateArtwork(path){
+  return new Promise(resolve=>{
+    const image=new Image();let finished=false;
+    const done=value=>{if(finished)return;finished=true;clearTimeout(timer);resolve(value);};
+    const timer=setTimeout(()=>done(null),4000);
+    image.onload=()=>done(image);image.onerror=()=>done(null);
+    try{if(new URL(path,location.href).origin!==location.origin)image.crossOrigin='anonymous';}catch(_){}
+    image.src=path;
+  });
+}
+function drawFatePaper(ctx,width,height){
+  ctx.fillStyle='#fbf7e9';ctx.fillRect(0,0,width,height);
+  const wash=ctx.createLinearGradient(0,0,width,height);wash.addColorStop(0,'#edf2e580');wash.addColorStop(1,'#fbf7e900');ctx.fillStyle=wash;ctx.fillRect(0,0,width,height);
+  ctx.fillStyle='#45634d0b';for(let y=14;y<height;y+=14)for(let x=14;x<width;x+=14){ctx.beginPath();ctx.arc(x,y,.65,0,Math.PI*2);ctx.fill();}
+  ctx.strokeStyle='#45634d55';ctx.lineWidth=1;ctx.strokeRect(26,26,width-52,height-52);
+  // Small printed leaves stay in the outer margin, never under live content.
+  for(const [x,y,turn] of [[38,38,0],[width-38,height-38,Math.PI]]){
+    ctx.save();ctx.translate(x,y);ctx.rotate(turn);ctx.strokeStyle='#6b856a88';ctx.fillStyle='#bdcfb555';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.moveTo(0,0);ctx.quadraticCurveTo(10,10,12,31);ctx.stroke();
+    for(const [a,b,angle] of [[3,8,-.7],[9,15,.6],[11,25,-.7]]){ctx.save();ctx.translate(a,b);ctx.rotate(angle);ctx.beginPath();ctx.ellipse(0,0,3,7,0,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.restore();}
+    ctx.restore();
+  }
+}
+async function renderFateCard(result,images){
+  await document.fonts?.ready;
+  const canvas=document.createElement('canvas');canvas.width=720;canvas.height=1800;
+  const ctx=canvas.getContext('2d');const ink='#253b2b',green='#45634d';
+  // Keep text on a transparent layer until the final certificate height is known.
+  function caption(copy,y,size=18){ctx.font=`600 ${size}px UIBody,Arial`;ctx.textAlign='center';ctx.fillStyle=green;ctx.fillText(copy,360,y);}
+  function paragraph(copy,y,font='26px UIBody,Arial',lineHeight=37,width=580){
+    ctx.font=font;ctx.fillStyle=ink;ctx.textAlign='center';const lines=[];let line='';
+    for(const word of String(copy).split(/\s+/)){const next=line?line+' '+word:word;if(line&&ctx.measureText(next).width>width){lines.push(line);line=word;}else line=next;}
+    if(line)lines.push(line);for(const value of lines){ctx.fillText(value,360,y);y+=lineHeight;}return y;
+  }
+  caption('THE FOREST ARCHIVE',76,17);ctx.strokeStyle='#45634d66';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(72,96);ctx.lineTo(648,96);ctx.stroke();
+  const art=FATE_CRESTS[result.archetype.icon];let crest=null;
+  if(art)crest=await loadFateArtwork(images[art.id]||art.path);
+  ctx.fillStyle='#e2e9d8';ctx.beginPath();ctx.arc(360,195,69,0,Math.PI*2);ctx.fill();ctx.strokeStyle=green;ctx.lineWidth=1.5;ctx.stroke();
+  if(crest)ctx.drawImage(crest,300,135,120,120);
+  else{ctx.fillStyle=green;ctx.font='bold 64px Georgia';ctx.textAlign='center';ctx.fillText(result.fate[0],360,218);}
+  let y=paragraph(result.fate,315,'bold 48px Georgia',56);caption(result.rank,y+7,20);y+=58;
+  y=paragraph(result.archetype.description,y,'25px UIBody,Arial',36);y+=12;
+  if(result.traits.length){caption(result.traits.join('  ·  '),y,18);y+=42;}
   const labels=['Strength','Magic','Agility','Luck'];
-  const icons=['sword','wand','agility','luck'];
-  return <section className="fate-result" aria-labelledby="fate-result-title">
-    <div className="fate-result-scroll">
+  for(let i=0;i<4;i++){
+    const x=72+(i%2)*308,sy=y+Math.floor(i/2)*104;
+    ctx.textAlign='left';ctx.fillStyle=green;ctx.font='19px UIBody,Arial';ctx.fillText(labels[i],x,sy);
+    ctx.textAlign='right';ctx.fillStyle=ink;ctx.font='bold 33px Georgia';ctx.fillText(String(result.stats[i]),x+268,sy+2);
+    ctx.fillStyle='#dce4d4';ctx.fillRect(x,sy+22,268,8);ctx.fillStyle=green;ctx.fillRect(x,sy+22,268*result.stats[i]/99,8);
+  }
+  y+=220;
+  ctx.strokeStyle='#45634d55';ctx.beginPath();ctx.moveTo(72,y-28);ctx.lineTo(648,y-28);ctx.stroke();
+  for(let i=0;i<result.details.length;i++){
+    const detail=result.details[i],x=72+(i%2)*308,sy=y+Math.floor(i/2)*76;
+    ctx.textAlign='left';ctx.fillStyle=green;ctx.font='16px UIBody,Arial';ctx.fillText(detail.label.toUpperCase(),x,sy);
+    ctx.fillStyle=ink;ctx.font='bold 23px Georgia';ctx.fillText(detail.value,x,sy+31,268);
+  }
+  y+=Math.ceil(result.details.length/2)*76+22;
+  caption('YOUR STORY',y,17);y+=39;y=paragraph(result.story,y,'24px Georgia',35);y+=32;
+  ctx.strokeStyle='#45634d55';ctx.beginPath();ctx.moveTo(72,y);ctx.lineTo(648,y);ctx.stroke();caption('A little fate. A story all your own.',y+35,16);y+=80;
+  const output=document.createElement('canvas');output.width=720;output.height=Math.ceil(y);const out=output.getContext('2d');
+  drawFatePaper(out,output.width,output.height);
+  out.drawImage(canvas,0,0);
+  return output;
+}
+function FateResult({result,onRestart,actionRef,headingRef,retryText,images}) {
+  const labels=['Strength','Magic','Agility','Luck'],icons=['sword','wand','agility','luck'];
+  const [saving,setSaving]=React.useState(false),[saveMessage,setSaveMessage]=React.useState('');
+  const saveRef=React.useRef({request:0,timer:null});
+  React.useEffect(()=>()=>{saveRef.current.request++;clearTimeout(saveRef.current.timer);},[]);
+  const save=async()=>{
+    if(saving)return;const request=++saveRef.current.request;let settled=false;setSaving(true);setSaveMessage('Preparing your card…');
+    const done=message=>{if(settled||request!==saveRef.current.request)return;settled=true;clearTimeout(saveRef.current.timer);setSaving(false);setSaveMessage(message);};
+    try{
+      const card=await renderFateCard(result,images);if(request!==saveRef.current.request)return;
+      const dataURL=card.toDataURL('image/png'),filename='my-fairytale-'+result.archetypeId;
+      if(typeof window.tt?.saveDataURL==='function'){
+        saveRef.current.timer=setTimeout(()=>done('No save confirmation. Please try again.'),15000);
+        window.tt.saveDataURL({dataURL,filename,extension:'png',saveToAlbum:'image',success(){done('Saved to your photos.');},fail(){done('Could not save. Check photo access and retry.');},complete(){if(!settled)done('No save confirmation. Please try again.');}});
+      }else{
+        const link=document.createElement('a');link.href=dataURL;link.download=filename+'.png';link.hidden=true;document.body.append(link);link.click();link.remove();done('Download started.');
+      }
+    }catch(_){done('Could not save this card. Please try again.');}
+  };
+  return <section className="fate-result" aria-labelledby="fate-result-title"> 
+    <div className="fate-result-overview">
+      <div className="fate-result-edition">THE FOREST ARCHIVE</div>
       <header className="fate-result-hero">
-        <div className="fate-result-emblem"><FateIcon name={result.archetype.icon} size={64} crest images={images}/></div>
+        <div className="fate-result-emblem"><FateIcon name={result.archetype.icon} size={50} crest images={images}/></div>
         <div><h1 id="fate-result-title" ref={headingRef} tabIndex={-1}>{result.fate}</h1><p className="fate-result-rank">{result.rank}</p></div>
       </header>
       <p className="fate-result-description">{result.archetype.description}</p>
       <div className="fate-result-traits" aria-label="Defining traits">{result.traits.map(trait=><span key={trait}>{trait}</span>)}</div>
-      <dl className="fate-result-stats">{labels.map((label,index)=><div key={label} className="fate-result-stat">
+    </div>
+    <dl className="fate-result-stats">{labels.map((label,index)=><div key={label} className="fate-result-stat">
         <dt><FateIcon name={icons[index]} size={20}/><span>{label}</span></dt><dd>{result.stats[index]}<span>/99</span></dd>
         <div className="fate-stat-track" aria-hidden="true"><span style={{width:result.stats[index]/99*100+'%'}}/></div>
       </div>)}</dl>
+    <div className="fate-result-scroll" tabIndex={0} aria-label="Character details and story">
       <dl className="fate-result-details">{result.details.map(detail=><div key={detail.label}>
         <FateIcon name={detail.icon} size={28}/><div><dt>{detail.label}</dt><dd>{detail.value}</dd></div>
       </div>)}</dl>
       <div className="fate-result-story"><h2>Your story</h2><p>{result.story}</p></div>
     </div>
-    <footer className="fate-result-footer"><button ref={actionRef} type="button" onClick={onRestart}><FateIcon name="refresh" size={20}/><span>{retryText||'Try again'}</span></button></footer>
+    <footer className="fate-result-footer">
+      <button ref={actionRef} type="button" className="fate-save" onClick={save} disabled={saving} aria-busy={saving}><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span>{saving?'Saving…':'Save card'}</span></button>
+      <button type="button" className="fate-retry" onClick={onRestart}><FateIcon name="refresh" size={18}/><span>{retryText||'Try again'}</span></button>
+      <p className="fate-save-status" role="status" aria-live="polite">{saveMessage}</p>
+    </footer>
   </section>;
 }
 
@@ -451,8 +539,8 @@ function GameIp({
   React.useEffect(() => {
     Object.values(FATE_CRESTS).forEach(artwork=>{const image=new Image();image.src=e[artwork.id]||artwork.path;});
   }, [e]);
-  const count = Pc(Math.round(Number(e.TIME_LIMIT) || 9), 5, 9);
-  const questions = React.useMemo(() => [...items, ...items2.slice(0, count - 2), options], [count]);
+  const count = Pc(Math.round(Number(e.TIME_LIMIT) || 5), 4, 6);
+  const questions = React.useMemo(() => [...items, ...['gift','ally','relic','trial'].slice(0,count-2).map(id=>items2.find(item=>item.id===id)), options], [count]);
   const [step, setStep] = React.useState(0);
   const [answers, setAnswers] = React.useState([]);
   const [rotation, setRotation] = React.useState(0);
@@ -488,7 +576,7 @@ function GameIp({
   const result = complete ? op(questions, answers, e) : null;
   const colors = ["#bbd1b0", "#365c46"];
   const reduced = !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-  const duration = reduced ? 350 : 2200;
+  const duration = reduced ? 300 : 1450;
   const random = value2 => {
     if (window.crypto?.getRandomValues) {
       const value = new Uint32Array(1);
@@ -552,7 +640,7 @@ function GameIp({
           setRotation(0);
           setSelected(null);
         }
-      }, reduced ? 180 : 520);
+      }, reduced ? 140 : 300);
     }, duration);
   };
   const slice = 360 / question.options.length;
@@ -602,62 +690,68 @@ function GameIp({
       :root{--font-display:UIBody,system-ui,sans-serif}
       *{box-sizing:border-box}
       .fate-simple{--ink:#123b2e;--ground:#eaf2e9;--hub:#bbd1b0;--font-storybook:Palatino,'Palatino Linotype','Book Antiqua',Georgia,serif;position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;padding:max(30px,env(safe-area-inset-top)) 30px max(50px,env(safe-area-inset-bottom));background-color:var(--ground);background-size:cover;background-position:center;background-repeat:no-repeat;color:var(--ink);font-family:var(--font-display);font-weight:700;overflow:hidden}
-      .fate-question{width:100%;max-width:340px;min-height:58px;margin:0;display:grid;place-items:center;font-family:inherit;font-size:25px;font-weight:600;line-height:1.25;text-align:center;text-wrap:balance;overflow-wrap:anywhere}
+      .fate-round{position:absolute;top:max(30px,env(safe-area-inset-top));left:30px;right:30px;text-align:center;font:500 13px/1.4 UIBody,Arial;color:#45634d}.fate-question{width:100%;max-width:340px;min-height:58px;margin:0;display:grid;place-items:center;font-family:inherit;font-size:25px;font-weight:600;line-height:1.25;text-align:center;text-wrap:balance;overflow-wrap:anywhere}
       .fate-wheel-wrap{position:relative;flex:none;width:min(100%,340px,calc(100svh - 210px));aspect-ratio:1;filter:none}
       .fate-wheel-tap{display:block;position:absolute;inset:0;width:100%;height:100%;min-width:48px;min-height:48px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-family:inherit;color:var(--ink)}
       .fate-wheel-tap:focus-visible{outline:3px solid var(--ink);outline-offset:7px}
       .fate-wheel-tap:active:not(:disabled) .fate-wheel-hub{filter:brightness(.97)}
       .fate-wheel-tap:disabled{cursor:wait;opacity:1}
-      .fate-wheel-face{display:block;width:100%;height:100%;overflow:visible;transition:transform 2.2s cubic-bezier(.12,.7,.08,1);transform-origin:center}
-      .fate-wheel-label{font-family:var(--font-storybook);transition:transform 2.2s cubic-bezier(.12,.7,.08,1)}
+      .fate-wheel-face{display:block;width:100%;height:100%;overflow:visible;transition:transform 1.45s cubic-bezier(.12,.7,.08,1);transform-origin:center}
+      .fate-wheel-label{font-family:var(--font-storybook);transition:transform 1.45s cubic-bezier(.12,.7,.08,1)}
       .fate-wheel-pointer{position:absolute;z-index:2;top:-10px;left:50%;width:26px;height:38px;transform:translateX(-50%);pointer-events:none;overflow:visible}
       .fate-wheel-hub{position:absolute;left:50%;top:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:64px;min-height:64px;width:25%;height:25%;transform:translate(-50%,-50%);border:2px solid #000;border-radius:50%;background:var(--hub);color:#000;box-shadow:none;font-family:var(--font-storybook);font-size:19px;font-weight:700;line-height:1;transition:filter .12s}
       .fate-wheel-hub::before{content:'';position:absolute;inset:5px;border:1px solid #0007;border-radius:50%;pointer-events:none}
       :root .fate-question{font-family:var(--font-storybook);font-weight:700;letter-spacing:.15px}
       .fate-announcement{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.fate-simple.is-complete{gap:0;flex-direction:column;justify-content:center;padding:30px 30px 50px}
-.fate-result{width:100%;max-width:370px;max-height:100%;min-height:0;display:flex;flex-direction:column;background:#fff;border:2.5px solid #000;border-radius:16px;box-shadow:none;overflow:hidden;animation:fate-card-print .22s ease-out}
-.fate-result-scroll{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:18px 18px 16px;scrollbar-width:thin;scrollbar-color:#1bc65a transparent}
-.fate-result-hero{display:flex;align-items:center;gap:14px}
-.fate-result-emblem{width:72px;height:72px;flex:none;display:grid;place-items:center;background:#bbd1b0;border:2.5px solid #000;border-radius:50%;box-shadow:none}
-.fate-result-emblem img{max-width:calc(100% - 6px);max-height:calc(100% - 6px);object-fit:contain;pointer-events:none}
-.fate-result h1{margin:0;font:600 22px/1.17 var(--font-display);text-wrap:balance;overflow-wrap:anywhere}
-.fate-result h1:focus{outline:none}
-.fate-result-rank{margin:7px 0 0;font-size:12px;line-height:1.3;color:#000}
-.fate-result-description{margin:14px 0 12px;font-weight:400;font-size:13px;line-height:1.5;text-wrap:pretty}
-.fate-result-traits{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
-.fate-result-traits span{padding:5px 8px;border:1.5px solid #000;border-radius:4px;background:#bbd1b0;font-size:11px;line-height:1.3}
-.fate-result-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px 18px;margin:0 0 17px}
-.fate-result-stat{display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px 3px;min-width:0}
-.fate-result-stat dt{display:flex;align-items:center;gap:4px;font-size:11px;line-height:1.3;min-width:0}
-.fate-result-stat svg{flex:none}
-.fate-result-stat dd{margin:0;font-size:19px;font-variant-numeric:tabular-nums;line-height:1}
-.fate-result-stat dd span{font-size:9px;margin-left:1px;color:#000}
-.fate-stat-track{grid-column:1/-1;height:7px;border:1.5px solid #000;border-radius:2px;background:#fff;overflow:hidden}
-.fate-stat-track span{display:block;height:100%;background:#bbd1b0}
-.fate-result-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px 12px;margin:0;padding:16px 0;border-top:1.5px solid #000;border-bottom:1.5px solid #000}
-.fate-result-details>div{display:flex;align-items:center;gap:7px;min-width:0}
-.fate-result-details svg{flex:none}
-.fate-result-details dt{margin:0 0 4px;font-size:10px;color:#000;line-height:1.2}
-.fate-result-details dd{margin:0;font-size:12px;line-height:1.35;overflow-wrap:anywhere}
-.fate-result-story{margin-top:15px}
-.fate-result-story h2{margin:0 0 7px;font-size:14px;font-weight:600;line-height:1.3}
-.fate-result-story p{margin:0;font-weight:400;font-size:12px;line-height:1.65;text-wrap:pretty}
-.fate-result-footer{flex:none;padding:12px 18px 16px;border-top:1.5px solid #000;background:#fff}
-.fate-result-footer button{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:44px;padding:9px 14px;border:2.5px solid #000;border-radius:6px;background:#000;color:#fff;box-shadow:none;font:700 16px/1.3 var(--font-display);touch-action:manipulation;cursor:pointer}
-.fate-result-footer button:active{transform:translate(1px,2px);box-shadow:none}
-.fate-result-footer button:focus-visible{outline:3px solid #000;outline-offset:4px}
-@keyframes fate-card-print{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
-@media(max-width:350px){.fate-result-scroll{padding:15px 14px}.fate-result-emblem{width:60px;height:60px}.fate-result-hero{gap:10px}.fate-result h1{font-size:20px}.fate-result-stats{gap:13px 10px}.fate-result-stat dt{gap:2px;font-size:10px}.fate-result-stat dd{font-size:17px}.fate-result-stat dd span{display:none}}
-@media(max-height:520px){.fate-simple.is-complete{padding-top:20px;padding-bottom:30px}}
-@media(prefers-reduced-motion:reduce){.fate-result{animation:none}}
+#root .fate-simple.is-complete{gap:0;flex-direction:column;justify-content:center;padding:30px 30px 50px}
+#root .fate-result{position:relative;isolation:isolate;width:100%;max-width:370px;max-height:100%;min-height:0;display:flex;flex-direction:column;overflow:hidden;border:1px solid #45634d88;border-radius:10px;background:radial-gradient(#45634d0c .6px,transparent .8px) 0 0/8px 8px,linear-gradient(130deg,#fbf8ec,#f0f3e6);color:#253b2b;box-shadow:0 5px 20px #142b291c;animation:fate-card-print .2s ease-out}
+#root .fate-result-overview{flex:none;padding:14px 16px 10px}
+#root .fate-result-edition{margin:0 0 8px;font:600 9px/1.3 UIBody,Arial;letter-spacing:1.8px;color:#567055}
+#root .fate-result-hero{display:grid;grid-template-columns:56px minmax(0,1fr);align-items:center;gap:12px;padding:0;text-align:left}
+#root .fate-result-emblem{width:56px;height:56px;display:grid;place-items:center;border:1px solid #45634d66;border-radius:50%;background:#e1e9d7;margin:0;outline:none;box-shadow:none}
+#root .fate-result-emblem img{display:block;width:50px;height:50px;max-width:50px;max-height:50px;object-fit:contain;pointer-events:none}
+#root .fate-result h1{margin:0;font:700 22px/1.12 Palatino,'Palatino Linotype',Georgia,serif;color:#253b2b;letter-spacing:-.2px;text-wrap:balance;overflow-wrap:anywhere}
+#root .fate-result h1:focus{outline:none}
+#root .fate-result-rank{margin:5px 0 0;font:500 12px/1.3 UIBody,Arial;color:#567055;letter-spacing:.1px}
+#root .fate-result-description{margin:9px 0 7px;font:400 12px/1.45 UIBody,Arial;text-wrap:pretty;text-align:left}
+#root .fate-result-traits{display:flex;flex-wrap:wrap;gap:5px;margin:0}
+#root .fate-result-traits span{border:1px solid #45634d33;border-radius:4px;background:#e6ecdd;padding:3px 7px;font:500 10px/1.3 UIBody,Arial;color:#36563e}
+#root .fate-result-stats{flex:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 8px;margin:0 16px 10px}
+#root .fate-result-stat{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:5px 4px;padding:7px 8px;border:1px solid #45634d22;border-radius:5px;background:#edf1e5;min-width:0}
+#root .fate-result-stat dt{display:flex;align-items:center;gap:4px;min-width:0;font:500 11px/1.3 UIBody,Arial;color:#45634d}
+#root .fate-result-stat svg{width:16px;height:16px;flex:none}
+#root .fate-result-stat dd{margin:0;font:700 22px/1 Palatino,Georgia,serif;font-variant-numeric:tabular-nums;white-space:nowrap}
+#root .fate-result-stat dd span{margin-left:1px;font:400 9px/1 UIBody,Arial;color:#6a785f}
+#root .fate-stat-track{grid-column:1/-1;height:4px;border:0;border-radius:2px;background:#d8e1d0;overflow:hidden}
+#root .fate-stat-track span{display:block;height:100%;background:#567958}
+#root .fate-result-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:10px 16px 12px;border-top:1px solid #45634d33;background:transparent;scrollbar-width:thin;scrollbar-color:#789075 transparent}
+#root .fate-result-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;margin:0;padding:0 0 10px;border:0;border-bottom:1px solid #45634d22}
+#root .fate-result-details>div{display:flex;align-items:center;gap:6px;min-width:0}
+#root .fate-result-details svg{width:23px;height:23px;flex:none}
+#root .fate-result-details dt{margin:0 0 3px;font:500 10px/1.3 UIBody,Arial;color:#6a785f}
+#root .fate-result-details dd{margin:0;font:700 12px/1.35 Palatino,Georgia,serif;overflow-wrap:anywhere}
+#root .fate-result-story{margin:10px 0 0}
+#root .fate-result-story h2{margin:0 0 5px;font:700 15px/1.3 Palatino,Georgia,serif}
+#root .fate-result-story p{margin:0;font:400 12px/1.5 UIBody,Arial;text-wrap:pretty}
+#root .fate-result-footer{position:relative;flex:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:11px 16px 12px;border-top:1px solid #45634d33;background:#f6f7eb}
+#root .fate-result-footer button{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-width:0;min-height:44px;margin:0;padding:9px 7px;border:1px solid #45634d66;border-radius:5px;box-shadow:none;font:600 14px/1.3 UIBody,Arial;white-space:normal;touch-action:manipulation;cursor:pointer}
+#root .fate-result-footer .fate-save{background:#36563e;color:#fbf7e9;border-color:#36563e}
+#root .fate-result-footer .fate-retry{background:#edf1e3;color:#36563e}
+#root .fate-result-footer button svg{flex:none;width:17px;height:17px}
+#root .fate-result-footer button:focus-visible{outline:3px solid #45634d;outline-offset:2px}
+#root .fate-result-footer button:active{transform:translateY(1px)}
+#root .fate-save-status{grid-column:1/-1;min-height:0;margin:0;text-align:center;font:400 11px/1.35 UIBody,Arial;color:#45634d}
+#root .fate-save-status:empty{display:none}
+@keyframes fate-card-print{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@media(max-width:350px){#root .fate-result-overview{padding:12px 13px 9px}#root .fate-result h1{font-size:21px}#root .fate-result-stats{margin-left:13px;margin-right:13px}#root .fate-result-stat{padding:7px 6px}#root .fate-result-stat dt{font-size:10px}#root .fate-result-stat dd{font-size:21px}#root .fate-result-stat dd span{display:none}#root .fate-result-scroll{padding-left:13px;padding-right:13px}#root .fate-result-footer{padding-left:13px;padding-right:13px}}
+@media(prefers-reduced-motion:reduce){#root .fate-result{animation:none}}
 
       @media (orientation:landscape) and (max-height:500px){.fate-simple{flex-direction:row;gap:24px;padding:30px 30px 50px}.fate-question{width:42%;max-width:280px}.fate-wheel-wrap{width:min(42vw,calc(100svh - 105px),300px)}}
       @media (prefers-reduced-motion:reduce){.fate-wheel-face,.fate-wheel-label{transition-duration:.35s}}
     `}</style>}
     <main className={'fate-simple'+(complete?' is-complete':'')} style={{backgroundImage:`url("${e.BG_MAIN || './assets/fantasy-v1/forest-paper.webp'}")`}}>
       {complete ? <FateResult result={result} onRestart={restart} actionRef={action} headingRef={resultHeading} retryText={e.BTN_RETRY} images={e}/> : <React.Fragment>
-        <h1 id="fate-question" className="fate-question">{question.id==='fate'?'What is your fate?':question.question}</h1>
+        <div className="fate-round" aria-label="Question progress">{step+1} / {questions.length}</div><h1 id="fate-question" className="fate-question">{question.id==='fate'?'What is your fate?':question.question}</h1>
         <div className="fate-wheel-wrap" key={question.id}>
           <svg className="fate-wheel-pointer" viewBox="0 0 26 38" fill="none" stroke="#000" strokeWidth="1.5" strokeLinejoin="round" aria-hidden="true"><path d="M13 2 23 10 13 35 3 10Z" fill="#bbd1b0"/><path d="M13 5v24M6 11h14M9 9l4-4 4 4" strokeWidth=".8"/></svg>
           <button ref={action} type="button" className="fate-wheel-tap" disabled={busy} aria-busy={busy} aria-label={'Spin for an answer: '+question.question} onClick={spin}>
@@ -1049,6 +1143,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App />);
 (() => {
   const uiStyle=document.createElement('style');
   uiStyle.dataset.batch3Ui='20261116';
-  uiStyle.textContent="\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Bold.woff2') format('woff2');font-weight:600 900;font-style:normal;font-display:swap}\nhtml,body,#root{font-family:UIBody,system-ui,sans-serif;-webkit-text-size-adjust:100%}\nbutton{font-family:UIBody,system-ui,sans-serif;font-size:16px;font-weight:700;line-height:1.3;min-height:44px}\nbutton:focus-visible{outline:3px solid currentColor;outline-offset:4px}\nbutton:disabled{opacity:.55}\n[hidden]{display:none!important}\n.guide{font-size:18px;line-height:1.4;text-wrap:balance}\n.hud{top:30px;left:30px;right:30px;font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums}\n.hud.center{justify-content:center}\n.bottom{bottom:50px;left:30px;right:30px;gap:10px}\n.bottom .capability{min-height:44px;padding:10px 14px;font-size:14px;line-height:1.25;white-space:normal}\n.status{font-size:13px;line-height:1.4;bottom:108px;text-wrap:balance}\n.pill{font-size:16px;line-height:1.3;min-height:44px;padding:11px 22px}\n.modal{padding:30px 30px 50px}\n.result{max-height:100%;overflow-y:auto;padding:28px 22px}\n.result h2{font-family:Playful,UIBody,sans-serif;font-size:24px;line-height:1.25;text-wrap:balance;overflow-wrap:anywhere}\n.result p{font-size:15px;line-height:1.6;overflow-wrap:anywhere}\n.result .value{line-height:1.2;overflow-wrap:anywhere}\n.smallcaps{font-size:12px;letter-spacing:1.4px;line-height:1.4}\n\n:root .fate-simple{gap:28px}\n:root .fate-question{font-size:24px;line-height:1.3}\n:root .fate-result-scroll{font-family:UIBody,system-ui,sans-serif;padding:20px 18px}\n:root .fate-result h1{font-family:UIBody,system-ui,sans-serif;font-size:24px;line-height:1.25}\n:root .fate-result-rank{font-size:14px;line-height:1.4}\n:root .fate-result-description{font-size:15px;line-height:1.6}\n:root .fate-result-traits span{font-size:12px;line-height:1.4;padding:6px 8px}\n:root .fate-result-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 14px}\n:root .fate-result-stat{grid-template-columns:1fr;gap:8px}\n:root .fate-result-stat dt{font-size:13px;line-height:1.4;gap:6px}\n:root .fate-result-stat dd{font-size:28px;line-height:1.1}\n:root .fate-result-stat dd span{font-size:12px}\n:root .fate-result-details dt{font-size:12px;line-height:1.3}\n:root .fate-result-details dd{font-size:14px;line-height:1.5}\n:root .fate-result-story h2{font-family:UIBody,system-ui,sans-serif;font-size:18px;line-height:1.3}\n:root .fate-result-story p{font-size:14px;line-height:1.7}\n:root .fate-result-footer button{font-family:UIBody,system-ui,sans-serif;font-size:16px}\n@media(max-width:350px){:root .fate-result h1{font-size:22px}:root .fate-result-stat dt{font-size:13px}:root .fate-result-stat dd{font-size:26px}}\n";
+  uiStyle.textContent="\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Bold.woff2') format('woff2');font-weight:600 900;font-style:normal;font-display:swap}\nhtml,body,#root{font-family:UIBody,system-ui,sans-serif;-webkit-text-size-adjust:100%}\nbutton{font-family:UIBody,system-ui,sans-serif;font-size:16px;font-weight:700;line-height:1.3;min-height:44px}\nbutton:focus-visible{outline:3px solid currentColor;outline-offset:4px}\nbutton:disabled{opacity:.55}\n[hidden]{display:none!important}\n.guide{font-size:18px;line-height:1.4;text-wrap:balance}\n.hud{top:30px;left:30px;right:30px;font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums}\n.hud.center{justify-content:center}\n.bottom{bottom:50px;left:30px;right:30px;gap:10px}\n.bottom .capability{min-height:44px;padding:10px 14px;font-size:14px;line-height:1.25;white-space:normal}\n.status{font-size:13px;line-height:1.4;bottom:108px;text-wrap:balance}\n.pill{font-size:16px;line-height:1.3;min-height:44px;padding:11px 22px}\n.modal{padding:30px 30px 50px}\n.result{max-height:100%;overflow-y:auto;padding:28px 22px}\n.result h2{font-family:Playful,UIBody,sans-serif;font-size:24px;line-height:1.25;text-wrap:balance;overflow-wrap:anywhere}\n.result p{font-size:15px;line-height:1.6;overflow-wrap:anywhere}\n.result .value{line-height:1.2;overflow-wrap:anywhere}\n.smallcaps{font-size:12px;letter-spacing:1.4px;line-height:1.4}\n\n:root .fate-simple{gap:28px}\n:root .fate-question{font-size:24px;line-height:1.3}\n";
   document.head.append(uiStyle);
 })();

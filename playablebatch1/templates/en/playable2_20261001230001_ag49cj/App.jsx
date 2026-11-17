@@ -56,17 +56,17 @@ const DEFAULT_CONFIG = {
   "images": [{
     "id": "BG_IMAGE",
     "label": "Background Image",
-    "path": "./assets/art-v2/night-sky-vector-v4.svg",
+    "path": "./assets/art-v3/real-night-sky-v3.webp",
     "replaceable": true
   }, {
     "id": "BG_HILLS",
     "label": "Distant Hill Layer",
-    "path": "./assets/art-v2/distant-hills-vector-v3.svg",
+    "path": "./assets/art-v3/real-night-sky-v3.webp",
     "replaceable": true
   }, {
     "id": "BG_FOREGROUND",
     "label": "Foreground Hill and Silhouettes",
-    "path": "./assets/art-v2/hill-foreground-vector-v3.svg",
+    "path": "./assets/art-v3/real-night-sky-v3.webp",
     "replaceable": true
   }],
   "config_version": "2.0",
@@ -108,6 +108,8 @@ for (const value of ['playable-inline-config', 'playable-config-inline']) {
 document.documentElement.lang = 'en';
 // The origin sits below the hill silhouettes, including when the portrait art is cropped.
 const FIREWORK_LAUNCH_Y = .92;
+// Traced skyline in photograph-relative percentages.
+const SKY_HILL_RIDGE = [[0,82.726],[2,82.552],[4,82.465],[6,82.292],[8,82.118],[10,81.944],[12,81.684],[14,81.337],[16,81.337],[18,81.771],[20,81.684],[22,81.337],[24,80.99],[26,80.99],[28,80.99],[30,81.163],[32,82.031],[34,81.771],[36,81.424],[38,81.076],[40,80.903],[42,80.729],[44,80.469],[46,80.208],[48,80.122],[50,80.035],[52,79.948],[54,79.774],[56,79.688],[58,79.601],[60,79.601],[62,79.688],[64,79.861],[66,79.948],[68,80.208],[70,80.295],[72,80.208],[74,80.122],[76,80.122],[78,80.035],[80,80.035],[82,79.948],[84,79.948],[86,79.948],[88,79.514],[90,79.08],[92,78.733],[94,78.559],[96,78.559],[98,78.385],[100,78.299]];
 function App() {
   const createElement = React.createElement;
   const [config, setConfig] = React.useState({});
@@ -115,6 +117,22 @@ function App() {
   const [hint, setHint] = React.useState(true);
   const [aiming, setAiming] = React.useState(false);
   const canvas = React.useRef(null);
+  const hillsLayer=React.useRef(null);
+  const [ridgeClip,setRidgeClip]=React.useState("polygon(0% 82.726%,2% 82.552%,4% 82.465%,6% 82.292%,8% 82.118%,10% 81.944%,12% 81.684%,14% 81.337%,16% 81.337%,18% 81.771%,20% 81.684%,22% 81.337%,24% 80.99%,26% 80.99%,28% 80.99%,30% 81.163%,32% 82.031%,34% 81.771%,36% 81.424%,38% 81.076%,40% 80.903%,42% 80.729%,44% 80.469%,46% 80.208%,48% 80.122%,50% 80.035%,52% 79.948%,54% 79.774%,56% 79.688%,58% 79.601%,60% 79.601%,62% 79.688%,64% 79.861%,66% 79.948%,68% 80.208%,70% 80.295%,72% 80.208%,74% 80.122%,76% 80.122%,78% 80.035%,80% 80.035%,82% 79.948%,84% 79.948%,86% 79.948%,88% 79.514%,90% 79.08%,92% 78.733%,94% 78.559%,96% 78.559%,98% 78.385%,100% 78.299%,100% 100%,0 100%)");
+  React.useEffect(()=>{
+    const element=hillsLayer.current;if(!element)return;
+    function alignRidge(){
+      const rect=element.getBoundingClientRect();if(!rect.width||!rect.height)return;
+      const iw=element.naturalWidth||768,ih=element.naturalHeight||1152;
+      const scale=Math.max(rect.width/iw,rect.height/ih),dx=(iw*scale-rect.width)/2,dy=(ih*scale-rect.height)/2;
+      const points=SKY_HILL_RIDGE.map(([x,y])=>`${((x/100*iw*scale-dx)/rect.width*100).toFixed(3)}% ${((y/100*ih*scale-dy)/rect.height*100).toFixed(3)}%`);
+      const clip='polygon('+points.join(',')+',100% 100%,0 100%)';
+      setRidgeClip(previous=>previous===clip?previous:clip);
+    }
+    alignRidge();element.addEventListener('load',alignRidge);window.addEventListener('resize',alignRidge);
+    const observer=typeof ResizeObserver==='function'?new ResizeObserver(alignRidge):null;observer?.observe(element);
+    return()=>{element.removeEventListener('load',alignRidge);window.removeEventListener('resize',alignRidge);observer?.disconnect();};
+  },[config.BG_HILLS]);
   const start = React.useRef(null);
   const stateRef = React.useRef(null);
   const rockets = React.useRef([]);
@@ -626,7 +644,7 @@ function App() {
     height: "100%",
     overflow: "hidden",
     boxSizing: "border-box",
-    background: `#080d2c url(${config.BG_IMAGE || "./assets/art-v2/night-sky-vector-v4.svg"}) center/cover`,
+    background: `#080d2c url(${config.BG_IMAGE || "./assets/art-v3/real-night-sky-v3.webp"}) center/cover`,
     color: "white",
     touchAction: "none",
     userSelect: "none",
@@ -639,15 +657,15 @@ function App() {
       zIndex: 1,
       touchAction: "none"
     }} aria-label={"Drag upward to preview the trajectory, then release to launch fireworks"} />}{<img
-      data-scenery-layer="distant-hills"
-      src={config.BG_HILLS || './assets/art-v2/distant-hills-vector-v3.svg'}
+      ref={hillsLayer} data-scenery-layer="distant-hills"
+      src={config.BG_HILLS || './assets/art-v3/real-night-sky-v3.webp'}
       alt="" aria-hidden="true" draggable={false}
-      style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',zIndex:2,pointerEvents:'none'}}
+      style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',objectPosition:'center',zIndex:2,pointerEvents:'none',clipPath:ridgeClip}}
     />}{<img
       data-scenery-layer="foreground-hill"
-      src={config.BG_FOREGROUND || './assets/art-v2/hill-foreground-vector-v3.svg'}
+      src={config.BG_FOREGROUND || './assets/art-v3/real-night-sky-v3.webp'}
       alt="" aria-hidden="true" draggable={false}
-      style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',zIndex:3,pointerEvents:'none'}}
+      style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',objectPosition:'center',zIndex:3,pointerEvents:'none',clipPath:'inset(92% 0 0 0)'}}
     />}{<div className={"firework-guide"} style={{
       position: "absolute",
       bottom: "calc(50 * min(.2564102564vw,.1672240803vh) + env(safe-area-inset-bottom, 0px))",

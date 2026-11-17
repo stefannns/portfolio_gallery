@@ -74,6 +74,7 @@
     'playable2_20261001230001_ag49cj', // 50
     'playable2_20261001230112_0ivocb', // 52
     'playable2_20261013020814_b973b1', // 60
+    'playable2_20261106233254_un2vyl', // 92 Alpine Skiing, restored to Batch 3.
     'strand_hair_salon', // 97
     'multi_sport_reflex', // 98
     'neon_dash', // 99

@@ -166,8 +166,83 @@ function installPrintedPaper(){
  observer?.observe(root);cleanups.push(()=>{visibility.disconnect();observer?.disconnect();});
 }
 
-mount(`body{color:#292922}.fit{background:#e6e4dc}.eyebrow{position:absolute;top:58px;width:100%;text-align:center;letter-spacing:2.5px;font-size:10px}.meme-reference{position:absolute;left:78px;top:95px;width:234px;height:165px;object-fit:cover;border:8px solid #faf9f1;box-shadow:0 2px 7px #4442;transform:rotate(-3deg)}.live{position:absolute;left:78px;top:294px;width:234px;height:160px;border:8px solid #faf9f1;box-shadow:0 2px 7px #4442;transform:rotate(2deg);background:#d2cfc4;overflow:hidden}.live canvas{width:100%;height:100%;object-fit:cover}.preview{display:none}.guide{top:272px;font-size:16px}.shutter{position:absolute;left:168px;top:480px;border:3px solid #292922;background:#fff;width:54px;height:54px;border-radius:50%;box-shadow:inset 0 0 0 5px #e6e4dc}.cam-status{bottom:122px;font-size:11px}.bottom{bottom:18px}.comparison{position:absolute;inset:80px 30px 105px;z-index:15;background:#f9f7ef;padding:22px 14px;box-shadow:0 4px 20px #0002;text-align:center}.comparison[hidden]{display:none}.comparison h2{font-size:24px;margin:12px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:24px 0}.pair canvas,.pair img{width:100%;height:205px;object-fit:cover}.pair small{display:block;text-transform:uppercase;letter-spacing:2px;font-size:9px;margin:8px}.countdown{position:absolute;top:350px;width:100%;text-align:center;z-index:12;font-size:60px;font-weight:800;color:white;text-shadow:0 2px 5px #0008}`,`<div class="eyebrow">MAKE THAT FACE</div><div class="pose-pair"><img class="meme-reference" alt="Expression to imitate" src="./assets/meme-1.webp"><div class="guide">Match the face · take a selfie</div><div class="live"><canvas class="selfie" width="400" height="400"></canvas><div class="countdown"></div></div></div><video class="preview" playsinline autoplay muted></video><div class="status cam-status">Enable your camera to take a photo</div><div class="bottom"><button class="capability cam-enable">Enable camera</button><button class="shutter" aria-label="Take photo" hidden disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h4l2-3h6l2 3h4v13H3Z"/><circle cx="12" cy="13" r="4"/></svg><span class="shutter-label">Take photo</span></button></div><section class="comparison" hidden><div class="smallcaps">Challenge complete</div><h2>Your mimic</h2><div class="pair"><div><small>Original</small><img alt="Original expression"></div><div><small>You</small><canvas width="320" height="320"></canvas></div></div><button class="pill next">Next expression</button></section><div class="flash"></div>`,'#e6e4dc');
+mount(`body{color:#292922}.fit{background:#e6e4dc}.eyebrow{position:absolute;top:58px;width:100%;text-align:center;letter-spacing:2.5px;font-size:10px}.meme-reference{position:absolute;left:78px;top:95px;width:234px;height:165px;object-fit:cover;border:8px solid #faf9f1;box-shadow:0 2px 7px #4442;transform:rotate(-3deg)}.live{position:absolute;left:78px;top:294px;width:234px;height:160px;border:8px solid #faf9f1;box-shadow:0 2px 7px #4442;transform:rotate(2deg);background:#d2cfc4;overflow:hidden}.live canvas{width:100%;height:100%;object-fit:cover}.preview{display:none}.guide{top:272px;font-size:16px}.shutter{position:absolute;left:168px;top:480px;border:3px solid #292922;background:#fff;width:54px;height:54px;border-radius:50%;box-shadow:inset 0 0 0 5px #e6e4dc}.cam-status{bottom:122px;font-size:11px}.bottom{bottom:18px}.comparison{position:absolute;inset:80px 30px 105px;z-index:15;background:#f9f7ef;padding:22px 14px;box-shadow:0 4px 20px #0002;text-align:center}.comparison[hidden]{display:none}.comparison h2{font-size:24px;margin:12px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:24px 0}.pair canvas,.pair img{width:100%;height:205px;object-fit:cover}.pair small{display:block;text-transform:uppercase;letter-spacing:2px;font-size:9px;margin:8px}.countdown{position:absolute;top:350px;width:100%;text-align:center;z-index:12;font-size:60px;font-weight:800;color:white;text-shadow:0 2px 5px #0008}`,`<div class="eyebrow">MAKE THAT FACE</div><div class="pose-pair"><img class="meme-reference" alt="Expression to imitate" src="./assets/meme-1.webp"><div class="guide">Match the face · take a selfie</div><div class="live"><canvas class="selfie" width="400" height="400"></canvas><div class="countdown"></div></div></div><video class="preview" playsinline autoplay muted></video><div class="status cam-status">Enable your camera to take a photo</div><div class="bottom"><button class="capability cam-enable">Enable camera</button><button class="shutter" aria-label="Take photo" hidden disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h4l2-3h6l2 3h4v13H3Z"/><circle cx="12" cy="13" r="4"/></svg><span class="shutter-label">Take photo</span></button></div><section class="comparison" hidden aria-labelledby="meme-result-title"><header><div class="smallcaps">Challenge complete</div><h2 id="meme-result-title">Your mimic</h2></header><div class="match-summary"><div class="match-value" data-ready="false" aria-live="polite" aria-atomic="true"><strong class="match-number">—</strong><span class="match-percent-sign">%</span></div><div class="match-label">Visual match</div></div><div class="pair"><div><small>Original</small><img alt="Original expression"></div><div><small>You</small><canvas width="320" height="320" aria-label="Your captured photo"></canvas></div></div><p class="match-method">Color · contrast · shape</p><button class="pill next">Next</button></section><div class="flash"></div>`,'#e6e4dc');
 installPrintedPaper();
+// A playful pixel-based comparison, not face identification or emotion recognition.
+function memeImageFeatures(data,width=32,height=32){
+ const count=width*height,gray=new Float64Array(count),colors=new Float64Array(12),blocks=new Float64Array(64),blockCounts=new Uint16Array(64),edges=new Float64Array(64);
+ let mean=0,squares=0;
+ for(let i=0;i<count;i++){
+  const r=data[i*4],g=data[i*4+1],b=data[i*4+2],value=.2126*r+.7152*g+.0722*b;
+  gray[i]=value;mean+=value;squares+=value*value;
+  colors[Math.min(3,r>>6)]+=1/count;colors[4+Math.min(3,g>>6)]+=1/count;colors[8+Math.min(3,b>>6)]+=1/count;
+  const x=i%width,y=Math.floor(i/width),block=Math.floor(y*8/height)*8+Math.floor(x*8/width);blocks[block]+=value;blockCounts[block]++;
+ }
+ mean/=count;const deviation=Math.sqrt(Math.max(0,squares/count-mean*mean));let blockSquares=0;
+ for(let i=0;i<64;i++){blocks[i]/=Math.max(1,blockCounts[i]);blockSquares+=(blocks[i]-mean)**2;}
+ const blockDeviation=Math.max(6,Math.sqrt(blockSquares/64));
+ for(let i=0;i<64;i++)blocks[i]=Math.max(-2.5,Math.min(2.5,(blocks[i]-mean)/blockDeviation));
+ for(let y=1;y<height-1;y++)for(let x=1;x<width-1;x++){
+  const i=y*width+x,dx=gray[i+1]-gray[i-1],dy=gray[i+width]-gray[i-width],magnitude=Math.hypot(dx,dy);
+  const angle=(Math.atan2(dy,dx)+Math.PI)%Math.PI,bin=Math.min(3,Math.floor(angle/Math.PI*4));
+  const cell=Math.floor(y*4/height)*4+Math.floor(x*4/width);edges[cell*4+bin]+=magnitude;
+ }
+ return{mean,deviation,blocks,edges,colors};
+}
+function memeVisualSimilarity(a,b){
+ const tone=Math.max(0,1-Math.abs(a.mean-b.mean)/255);let color=0;
+ for(let i=0;i<12;i++)color+=Math.min(a.colors[i],b.colors[i]);color/=3;
+ if(a.deviation<4&&b.deviation<4)return Math.round(100*(.6*tone+.4*color));
+ if(a.deviation<4||b.deviation<4)return Math.round(100*(.25*tone+.15*color));
+ let difference=0,dot=0,aa=0,bb=0;
+ for(let i=0;i<64;i++){difference+=Math.abs(a.blocks[i]-b.blocks[i]);dot+=a.edges[i]*b.edges[i];aa+=a.edges[i]**2;bb+=b.edges[i]**2;}
+ const structure=Math.max(0,1-difference/128),edge=aa&&bb?Math.min(1,dot/Math.sqrt(aa*bb)):0;
+ return Math.round(100*Math.max(0,Math.min(1,(.65*structure+.25*edge+.10*color)*(.75+.25*tone))));
+}
+function analyseMemeImage(source){
+ const canvas=document.createElement('canvas');canvas.width=canvas.height=32;
+ const context=canvas.getContext('2d',{willReadFrequently:true});
+ if(!cover(context,source,0,0,32,32))throw Error('Image not ready');
+ return memeImageFeatures(context.getImageData(0,0,32,32).data);
+}
+let memeMatchRequest=0;
+async function showMemeMatch(photo,reference){
+ const request=++memeMatchRequest,value=$('.match-value'),number=$('.match-number'),label=$('.match-label');
+ value.dataset.ready='false';number.textContent='—';label.textContent=camText('Visual match','Somiglianza visiva');delete root.dataset.matchScore;
+ try{
+  if(!reference.complete||!reference.naturalWidth){if(typeof reference.decode==='function')await reference.decode();else throw Error('Reference is still loading');}
+  const score=memeVisualSimilarity(analyseMemeImage(photo),analyseMemeImage(reference));
+  if(request!==memeMatchRequest||!taken)return;
+  number.textContent=String(score);value.dataset.ready='true';root.dataset.matchScore=String(score);
+ }catch(_){if(request===memeMatchRequest)label.textContent=camText('Visual match unavailable','Confronto non disponibile');}
+}
+function installMemeComparison(){
+ const style=document.createElement('style');
+ style.textContent=`#root .comparison{left:30px;right:30px;top:50%;bottom:auto;transform:translateY(-50%);width:auto;max-height:calc(100% - 80px);padding:18px;display:flex;flex-direction:column;align-items:stretch;gap:10px;overflow-y:auto;text-align:center}
+ #root .comparison[hidden]{display:none!important}
+ #root .comparison .smallcaps{font-size:11px;line-height:1.4;letter-spacing:1.4px}
+ #root .comparison h2{font:600 24px/1.25 Playful,UIBody,sans-serif;margin:4px 0 0;text-wrap:balance;overflow-wrap:anywhere}
+ #root .comparison .match-summary{display:flex;align-items:center;justify-content:center;gap:12px;min-height:50px}
+ #root .comparison .match-value{white-space:nowrap;font:700 46px/1 UIBody,system-ui,sans-serif;letter-spacing:-2px;font-variant-numeric:tabular-nums}
+ #root .comparison .match-percent-sign{font-size:23px;letter-spacing:0;margin-left:1px}
+ #root .comparison .match-value[data-ready="false"] .match-percent-sign{visibility:hidden}
+ #root .comparison .match-label{max-width:130px;text-align:left;font:600 14px/1.35 UIBody,system-ui,sans-serif;text-wrap:balance}
+ #root .comparison .pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin:0}
+ #root .comparison .pair>div{min-width:0}
+ #root .comparison .pair small{margin:0 0 6px;font:600 12px/1.3 UIBody,system-ui,sans-serif;letter-spacing:.5px;overflow-wrap:anywhere}
+ #root .comparison .pair img,#root .comparison .pair canvas{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover}
+ #root .comparison .match-method{margin:0;font:400 11px/1.4 UIBody,system-ui,sans-serif;color:#625c4b;text-wrap:balance}
+ #root .comparison .next{align-self:center;min-width:180px;max-width:100%;min-height:44px;margin:2px 0 0;padding:10px 20px;white-space:normal}`;
+ document.head.append(style);cleanups.push(()=>style.remove());
+ $('.comparison .smallcaps').textContent=camText('Challenge complete','Sfida completata');
+ $('.comparison h2').textContent=camText('Your mimic','La tua imitazione');
+ $('.match-label').textContent=camText('Visual match','Somiglianza visiva');
+ $('.match-method').textContent=camText('Color · contrast · shape','Colore · contrasto · forma');
+ const labels=$('.comparison .pair').querySelectorAll('small');labels[0].textContent=camText('Original','Originale');labels[1].textContent=camText('You','Tu');
+ $('.comparison .next').textContent=camText('Next','Avanti');
+}
+
+installMemeComparison();
 let expression=0,countdown=-1,taken=false;
 function syncMemeCameraControls(){
  const ready=Boolean(cameraSource()),enable=$('.cam-enable'),shutter=$('.shutter');
@@ -180,7 +255,7 @@ function syncMemeCameraControls(){
 const portraits=[image('./assets/meme-1.webp'),image('./assets/meme-2.webp'),image('./assets/meme-3.webp')];
 cameraControls();
 on($('.shutter'),'click',()=>{if(taken||countdown>=0||!cameraSource())return;gesture();countdown=3;syncMemeCameraControls();state('countdown');sound(550,.06,.12);});
-on($('.next'),'click',()=>{gesture();expression=(expression+1)%3;taken=false;$('.comparison').hidden=true;$('.meme-reference').src=assetPath(`./assets/meme-${expression+1}.webp`);syncMemeCameraControls();state('ready');});
+on($('.next'),'click',()=>{gesture();memeMatchRequest++;expression=(expression+1)%3;taken=false;$('.comparison').hidden=true;$('.meme-reference').src=assetPath(`./assets/meme-${expression+1}.webp`);syncMemeCameraControls();state('ready');});
 loop(dt=>{
  syncMemeCameraControls();
  paintCamera($('.selfie'),'#f0ede5');
@@ -188,7 +263,7 @@ loop(dt=>{
   if(!cameraSource()){countdown=-1;$('.countdown').textContent='';state('ready');return;}
   const old=Math.ceil(countdown);countdown-=dt;$('.countdown').textContent=countdown>0?Math.ceil(countdown):'';
   if(Math.ceil(countdown)<old&&countdown>0)sound(550,.05,.1);
-  if(countdown<=0){countdown=-1;const photo=takePhoto(320,320);if(!photo)return;taken=true;flash();sound(120,.08,.18,'triangle',70);$('.pair canvas').getContext('2d').drawImage(photo,0,0);$('.pair img').src=portraits[expression].src;$('.comparison').hidden=false;state('comparison');}
+  if(countdown<=0){countdown=-1;const photo=takePhoto(320,320);if(!photo)return;taken=true;flash();sound(120,.08,.18,'triangle',70);$('.pair canvas').getContext('2d').drawImage(photo,0,0);$('.pair img').src=portraits[expression].src;$('.comparison').hidden=false;showMemeMatch(photo,portraits[expression]);$('.next').focus({preventScroll:true});state('comparison');}
  }
 });state('ready');
 

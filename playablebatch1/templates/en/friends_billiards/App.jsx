@@ -69,8 +69,10 @@ loadFriends();
 mount(`.shot-power{position:absolute;top:0;left:0;width:30px;height:96px;display:grid;place-items:center;z-index:7;pointer-events:none}.power-track{position:relative;width:9px;height:56px;border:1px solid #e0d4b550;border-radius:5px;background:#d9ceb025;overflow:hidden}.power-fill{position:absolute;inset:0;background:linear-gradient(to top,#62d879 0%,#e6dc59 46%,#f5a340 72%,#f15b4f 100%);clip-path:inset(100% 0 0)}.shot-power.at-max .power-track{border-color:#f8ac9a}.fit{background:#252b26;color:#e0d4b5}.hud{font-size:18px;top:34px;font-family:Georgia,serif}.guide{top:75px;font-size:14px;color:#d2c8ac;font-weight:500}.result{background:#eee4c9;color:#363729;border:5px solid #63513a;border-radius:8px}.pill{background:#355d4d}.bottom{bottom:18px}.reset{background:transparent;color:#cdbd9b;border:1px solid #b8a47a55;border-radius:50%;width:35px;min-height:35px;font-size:21px}`,`<canvas class="stage" aria-label="Friend billiards table"></canvas><div class="hud"><span class="pocketed">0 / 6</span><span class="shots">0 / 10</span></div><div class="shot-power" role="meter" aria-label="Shot power" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><div class="power-track"><div class="power-fill"></div></div></div><div class="guide">Pull back · release to shoot</div><div class="bottom"><button class="reset" aria-label="Reset table">↻</button></div>${resultMarkup()}`,'#252b26');
 const {canvas,ctx}=stageCanvas();let balls=[],shots=0,pocketed=0,phase='ready',aim=null,moving=false,shotTime=0,pocketFlash=[],aimPointer=null,aimStart=null,aimPulled=false;
 const MIN_PULL=8,MAX_PULL=70;
-const SHOT_MIN_SPEED=104,SHOT_MAX_SPEED=806,RACK_SPACING=26.2,RACK_ROW_HEIGHT=RACK_SPACING*Math.sqrt(3)/2;
+const SHOT_MIN_SPEED=104,SHOT_CONTROL_SPEED=806,SHOT_MAX_SPEED=1050,RACK_SPACING=26.2,RACK_ROW_HEIGHT=RACK_SPACING*Math.sqrt(3)/2;
 const powerFor=distance=>clamp((distance-MIN_PULL)/(MAX_PULL-MIN_PULL),0,1);
+// Keep gentle strokes controllable; the extra force builds toward full power.
+const speedFor=power=>SHOT_MIN_SPEED+(SHOT_CONTROL_SPEED-SHOT_MIN_SPEED)*power+(SHOT_MAX_SPEED-SHOT_CONTROL_SPEED)*power**3;
 const powerMeter=$('.shot-power'),powerFill=$('.power-fill');
 // Keep force information beside the stationary cue ball, inside the felt.
 // Score nearby placements so the meter can swap sides around other balls.
@@ -106,7 +108,8 @@ function cancelAim(){
  try{if(pointer!==null&&canvas.hasPointerCapture(pointer))canvas.releasePointerCapture(pointer);}catch(_){}
 }
 // Compact visible mouths preserve the wooden rim; generous overlap capture stays forgiving.
-const POCKET_OUTER_RADIUS=18,POCKET_INNER_RADIUS=14,POCKET_CAPTURE_RADIUS=29;
+const POCKET_OUTER_RADIUS=18,POCKET_INNER_RADIUS=14,POCKET_CAPTURE_RADIUS=29,CUE_CAPTURE_RADIUS=20;
+const captureRadius=ball=>ball.cue?CUE_CAPTURE_RADIUS:POCKET_CAPTURE_RADIUS;
 const holes=[[47,126],[343,126],[47,315],[343,315],[47,504],[343,504]];
 const felt=document.createElement('canvas');felt.width=300;felt.height=380;const fc=felt.getContext('2d');fc.fillStyle='#1e5144';fc.fillRect(0,0,300,380);for(let i=0;i<18000;i++){fc.fillStyle=Math.random()<.5?'#37655128':'#112b2325';fc.fillRect(rand(0,300),rand(0,380),1,1);}
 function reset(){balls=[{x:195,y:420,vx:0,vy:0,cue:true,r:13}];let i=0;for(let row=0;row<3;row++)for(let col=0;col<=row;col++)balls.push({x:195+(col-row/2)*RACK_SPACING,y:266-row*RACK_ROW_HEIGHT,vx:0,vy:0,r:13,type:i++});shots=0;pocketed=0;phase='ready';moving=false;cancelAim();pocketFlash=[];$('.pocketed').textContent='0 / 6';$('.shots').textContent='0 / 10';state('ready');}
@@ -138,7 +141,7 @@ function finishAim(e,interrupted=false){
  // Clear identity before releasing capture: its lostcapture event and duplicate releases are inert.
  cancelAim();
  if(distance<MIN_PULL||(interrupted&&!deliberate))return;
- e.preventDefault();gesture();const speed=SHOT_MIN_SPEED+(SHOT_MAX_SPEED-SHOT_MIN_SPEED)*powerFor(distance);
+ e.preventDefault();gesture();const speed=speedFor(powerFor(distance));
  c.vx=dx/distance*speed;c.vy=dy/distance*speed;
  shots++;$('.shots').textContent=shots+' / 10';moving=true;shotTime=0;phase='playing';state('playing');updatePower();
  sound(170,.06,.19,'triangle',80);root.dataset.shots=shots;
@@ -164,7 +167,7 @@ on(canvas,'lostpointercapture',e=>{
 lifecycle.push(next=>{if(!next)cancelAim();});
 cleanups.push(cancelAim);
 on($('.reset'),'click',()=>{gesture();reset();});reset();let collisionCooldown=0;
-loop(dt=>{collisionCooldown=Math.max(0,collisionCooldown-dt);if(moving&&phase!=='result'){shotTime+=dt;const fastest=balls.reduce((m,b)=>Math.max(m,Math.hypot(b.vx,b.vy)),0),steps=Math.max(4,Math.ceil(fastest*dt/4));for(let k=0;k<steps;k++){const d=dt/steps;for(const b of [...balls]){b.x+=b.vx*d;b.y+=b.vy*d;const damp=Math.exp(-1.05*d);b.vx*=damp;b.vy*=damp;const hole=holes.find(([x,y])=>Math.hypot(b.x-x,b.y-y)<POCKET_CAPTURE_RADIUS);if(hole){pocketFlash.push({x:hole[0],y:hole[1],life:.35});balls=balls.filter(q=>q!==b);if(!b.cue){pocketed++;$('.pocketed').textContent=pocketed+' / 6';sound(220,.1,.13,'sine',90);}continue;}if(b.x<60){b.x=60;b.vx=Math.abs(b.vx)*.85;}if(b.x>330){b.x=330;b.vx=-Math.abs(b.vx)*.85;}if(b.y<138){b.y=138;b.vy=Math.abs(b.vy)*.85;}if(b.y>492){b.y=492;b.vy=-Math.abs(b.vy)*.85;}}
+loop(dt=>{collisionCooldown=Math.max(0,collisionCooldown-dt);if(moving&&phase!=='result'){shotTime+=dt;const fastest=balls.reduce((m,b)=>Math.max(m,Math.hypot(b.vx,b.vy)),0),steps=Math.max(4,Math.ceil(fastest*dt/4));for(let k=0;k<steps;k++){const d=dt/steps;for(const b of [...balls]){b.x+=b.vx*d;b.y+=b.vy*d;const damp=Math.exp(-1.05*d);b.vx*=damp;b.vy*=damp;const hole=holes.find(([x,y])=>Math.hypot(b.x-x,b.y-y)<captureRadius(b));if(hole){pocketFlash.push({x:hole[0],y:hole[1],life:.35});balls=balls.filter(q=>q!==b);if(!b.cue){pocketed++;$('.pocketed').textContent=pocketed+' / 6';sound(220,.1,.13,'sine',90);}continue;}if(b.x<60){b.x=60;b.vx=Math.abs(b.vx)*.85;}if(b.x>330){b.x=330;b.vx=-Math.abs(b.vx)*.85;}if(b.y<138){b.y=138;b.vy=Math.abs(b.vy)*.85;}if(b.y>492){b.y=492;b.vy=-Math.abs(b.vy)*.85;}}
  for(let i=0;i<balls.length;i++)for(let j=i+1;j<balls.length;j++){const a=balls[i],b=balls[j],dx=b.x-a.x,dy=b.y-a.y,dist=Math.hypot(dx,dy);if(dist>=26||dist<.001)continue;const nx=dx/dist,ny=dy/dist,over=(26-dist)/2+.01;a.x-=nx*over;a.y-=ny*over;b.x+=nx*over;b.y+=ny*over;const approach=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;if(approach<0){const impulse=-approach*.96;a.vx-=impulse*nx;a.vy-=impulse*ny;b.vx+=impulse*nx;b.vy+=impulse*ny;if(collisionCooldown===0&&Math.abs(approach)>35){sound(1100,.025,.08,'triangle');collisionCooldown=.05;}}}}
  if(shotTime>.3&&!busy()){moving=false;for(const b of balls){b.vx=0;b.vy=0;}if(pocketed===6)end(true);else if(shots>=10)end(false);else if(!cue()){const p={x:195,y:420,vx:0,vy:0,r:13,cue:true};while(balls.some(b=>Math.hypot(b.x-p.x,b.y-p.y)<30)&&p.y<480)p.y+=15;balls.push(p);}}}
  updatePower();
