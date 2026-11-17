@@ -56,7 +56,6 @@
     "playable2_20261028202811_dsl58j",
     "playable2_20261028202811_gia8r5",
     "playable2_20261028202811_5uuyhb",
-    "playable2_20261028202811_q0f68t",
     "playable2_20261028202811_ke0xpl",
     "playable2_20261029183430_hxuf8g",
     "playable2_20261029183430_v5avg1",
@@ -64,19 +63,54 @@
     "playable2_20261029183430_ctpmni",
     "playable2_20261029183430_cvsxhd",
     "playable2_20261105004109_ifgmqt",
-    "playable2_20261106233254_un2vyl",
     "playable2_20261106233254_5hr2uj",
     "playable2_20261106233254_pa6hu0",
     "playable2_20261106233254_599qyk",
     "playable2_20261106233254_j7lmui"
 ]);
+  // Batch 3 is curated explicitly; all remaining active games belong to Other.
+  const batch3TaskIds = Object.freeze([
+    'playable2_20260927021659_jfkvov', // 11
+    'playable2_20261001230001_ag49cj', // 50
+    'playable2_20261001230112_0ivocb', // 52
+    'playable2_20261013020814_b973b1', // 60
+    'strand_hair_salon', // 97
+    'multi_sport_reflex', // 98
+    'neon_dash', // 99
+    'tilt_etch_sketch',
+    'tilt_magic_eight',
+    'tilt_cat_jump',
+    'tilt_fortune_sticks',
+    'tilt_christmas_cabin',
+    'camera_meme_face',
+    'camera_photo_puzzle',
+    'camera_doodle_booth',
+    'mic_voice_flight',
+    'mic_karate_shout',
+    'mic_wake_puppy',
+    'mic_sugar_animals',
+    'mic_pixel_dino',
+    'friends_avatar_merge',
+    'friends_bubble_shooter',
+    'friends_billiards',
+    'friends_bowling',
+    'friends_whack_a_mole',
+    'friends_connect_four',
+    'friends_tic_tac_toe',
+    'friends_award_scratch',
+    'friends_tilt_pick',
+    'friends_crystal_fortune',
+    'friends_personality_quiz',
+    'meme_klondike',
+  ]);
   const membership = new Set(batch1TaskIds);
   const batch2Membership = new Set(batch2TaskIds);
+  const batch3Membership = new Set(batch3TaskIds);
   const storageKey = 'playable-review-batch-v1';
-  // Existing saved “Other” filters now refer to Batch 3.
-  const normalizeBatch = value => value === 'other' ? 'batch3' : ['all', 'batch1', 'batch2', 'batch3'].includes(value) ? value : 'all';
-  const categoryOf = game => membership.has(game?.taskId) ? 'batch1' : batch2Membership.has(game?.taskId) ? 'batch2' : 'batch3';
+  const normalizeBatch = value => ['all', 'batch1', 'batch2', 'batch3', 'other'].includes(value) ? value : 'all';
+  const categoryOf = game => membership.has(game?.taskId) ? 'batch1' : batch2Membership.has(game?.taskId) ? 'batch2' : batch3Membership.has(game?.taskId) ? 'batch3' : 'other';
   const matchesBatch = (game, value) => {
+    if (root.PlayableReviewCatalog?.removedTaskIds.includes(game?.taskId)) return false;
     const batch = normalizeBatch(value);
     return batch === 'all' || categoryOf(game) === batch;
   };
@@ -95,7 +129,7 @@
     if (index < 0) return null;
     return games[index + (direction === 'next' ? 1 : -1)] || null;
   };
-  const model = Object.freeze({batch1TaskIds, batch2TaskIds, storageKey, normalizeBatch, categoryOf, matchesBatch, matchesQuery, filterGames, reveal, neighbor});
+  const model = Object.freeze({batch1TaskIds, batch2TaskIds, batch3TaskIds, storageKey, normalizeBatch, categoryOf, matchesBatch, matchesQuery, filterGames, reveal, neighbor});
   if (typeof module === 'object' && module.exports) module.exports = model;
   else root.PlayableBatchFilter = model;
 })(typeof window === 'object' ? window : globalThis);

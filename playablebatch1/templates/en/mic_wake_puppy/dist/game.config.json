@@ -1,0 +1,36 @@
+{
+  "config_version": "2.0",
+  "playable": {
+    "name": "mic_wake_puppy",
+    "title": "Wake the Puppy",
+    "content_locale": "en",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "min_capability_level": 2,
+    "full_capability_level": 2
+  },
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Interaction guide",
+      "value": "Make some noise. Wake the puppy!",
+      "default": "Make some noise. Wake the puppy!",
+      "max_length": 100
+    }
+  ],
+  "tweaks": [],
+  "images": [
+    {
+      "id": "PUPPY_AWAKE",
+      "label": "Puppy Awake",
+      "path": "./assets/puppy-awake.webp",
+      "replaceable": true
+    },
+    {
+      "id": "PUPPY_SLEEP",
+      "label": "Puppy Sleep",
+      "path": "./assets/puppy-sleep.webp",
+      "replaceable": true
+    }
+  ]
+}

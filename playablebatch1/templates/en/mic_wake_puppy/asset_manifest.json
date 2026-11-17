@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "style": {
+    "profile": "Reference recreation; portrait FYP; static live first frame",
+    "font": "DynaPuff / Arial / Georgia according to game role",
+    "reference": "Private source videos are reference-only and are not shipped"
+  },
+  "assets": [
+    {
+      "id": "PLAYFUL_FONT",
+      "path": "assets/playful.woff2",
+      "type": "font",
+      "source": "provided",
+      "description": "Existing collection DynaPuff SemiBold display font"
+    },
+    {
+      "id": "PUPPY_AWAKE",
+      "path": "assets/puppy-awake.webp",
+      "type": "image",
+      "width": 640,
+      "height": 640,
+      "source": "generated",
+      "description": "Generated production artwork; independent of private source recording"
+    },
+    {
+      "id": "PUPPY_SLEEP",
+      "path": "assets/puppy-sleep.webp",
+      "type": "image",
+      "width": 640,
+      "height": 640,
+      "source": "generated",
+      "description": "Generated production artwork; independent of private source recording"
+    },
+    {
+      "path": "assets/ui/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Regular for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Bold for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    }
+  ]
+}

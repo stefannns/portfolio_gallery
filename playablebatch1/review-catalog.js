@@ -16,7 +16,16 @@
   const preservedNumbering = new Set(['playable2_20260928024950_5wf6st', 'playable2_20261029183430_9mlt5d']);
   function normalize(games) {
     const active = games.filter(game => !removedTaskIds.includes(game.taskId));
-    const numbered = games.filter(game => !removedTaskIds.includes(game.taskId) || preservedNumbering.has(game.taskId));
+    const suppliedIds = new Set(games.map(game => game.taskId));
+    const insertedAnchors = new Set();
+    const numbered = games.filter(game => !removedTaskIds.includes(game.taskId) || preservedNumbering.has(game.taskId)).flatMap(game => {
+      // A lettered version keeps its retired parent's number without listing the parent game.
+      if (game.variantSuffix && preservedNumbering.has(game.variantOf) && !suppliedIds.has(game.variantOf) && !insertedAnchors.has(game.variantOf)) {
+        insertedAnchors.add(game.variantOf);
+        return [{taskId: game.variantOf}, game];
+      }
+      return [game];
+    });
     const numberedIds = new Set(numbered.map(game => game.taskId));
     const isLettered = game => !!(game.variantSuffix && game.variantOf && numberedIds.has(game.variantOf));
     let nextNumber = 0;

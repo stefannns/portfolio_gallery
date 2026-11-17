@@ -192,6 +192,8 @@ document.documentElement.lang = 'en';
       playerX: 0,
       vx: 0,
       enemies: [],
+      tireTracks: [],
+      tireTrackAnchor: null,
       speed: settings(config).cruise,
       distance: 0,
       score: 0,
@@ -370,6 +372,15 @@ document.documentElement.lang = 'en';
       const activeTime = value3 * clockRatio;
       value.distance += traveled;
       value.elapsed += activeTime;
+      // Leave the rear-wheel contacts fixed on the road as the camera moves on.
+      const contact = {x:value.playerX,z:value.distance+20};
+      if (!input.brake || !value.tireTrackAnchor) value.tireTrackAnchor = contact;
+      if (input.brake && traveled > 0 && contact.z-value.tireTrackAnchor.z >= .65) {
+        const footprint = carRect(argument5,{x:value.playerX,z:20,sprite:'CHAR_PLAYER'},images).width / argument5.project(0,20).s;
+        value.tireTracks.push({from:value.tireTrackAnchor,to:contact,born:value.elapsed,spacing:footprint*.29,width:footprint*.08,intensity:.58});
+        value.tireTrackAnchor = contact;
+      }
+      value.tireTracks = value.tireTracks.filter(track=>value.elapsed-track.born<1000 && track.to.z-value.distance>Math.max(argument5.near,8));
       // Survival: 5 pts/sec. Distance: 1 pt/metre × speed / 72 km/h.
       // Accumulate fractions so scoring is independent of render frame rate.
       value.points += 5 * activeTime / 1000 + traveled * 0.5 * (value.speed / 0.04);
@@ -468,6 +479,26 @@ document.documentElement.lang = 'en';
     }
     quad(-13.8, -13.6, value.near, Infinity, '#e8dfc3');
     quad(13.6, 13.8, value.near, Infinity, '#e8dfc3');
+    // Twin rubber tracks follow the same perspective as the road, below cars/HUD.
+    context.save();
+    context.fillStyle = '#142127';
+    for (const track of argument4.tireTracks || []) {
+      const back = track.from.z-argument4.distance,front = track.to.z-argument4.distance;
+      if (back<=value.near || front<=value.near) continue;
+      const age = Math.max(0,argument4.elapsed-track.born);
+      const behind = Math.max(0,20-(front+back)/2);
+      const opacity = track.intensity*Math.max(0,1-age/1000)*Math.pow(Math.max(0,1-behind/12),1.3);
+      if (opacity<.006) continue;
+      context.globalAlpha = opacity;
+      for (const side of [-1,1]) {
+        const offset = side*track.spacing,half = track.width/2;
+        const points = [value.project(track.from.x+offset-half,back),value.project(track.to.x+offset-half,front),value.project(track.to.x+offset+half,front),value.project(track.from.x+offset+half,back)];
+        context.beginPath();context.moveTo(points[0].x,points[0].y);
+        for (let i=1;i<points.length;i++) context.lineTo(points[i].x,points[i].y);
+        context.closePath();context.fill();
+      }
+    }
+    context.restore();
     // Conifers are fixed in world space; no roadside poles.
     const scenery = [];
     const pine = images.IMG_ROADSIDE;
@@ -1059,7 +1090,8 @@ window.createPocketRacerComponent = function (React, otherValue, flatten, useSub
       const resize = () => {
         const dimensions = canvas.current;
         if (!dimensions) return;
-        const ratio = .65;
+        // Preserve the narrow road details near the horizon at native display resolution.
+        const ratio = Math.min(1.5, Math.max(1, window.devicePixelRatio || 1));
         dimensions.width = Math.max(1, Math.round(dimensions.clientWidth * ratio));
         dimensions.height = Math.max(1, Math.round(dimensions.clientHeight * ratio));
         draw();

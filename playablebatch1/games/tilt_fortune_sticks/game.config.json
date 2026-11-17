@@ -1,0 +1,65 @@
+{
+  "config_version": "2.0",
+  "playable": {
+    "name": "tilt_fortune_sticks",
+    "title": "Fortune Sticks",
+    "content_locale": "en",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "min_capability_level": 2,
+    "full_capability_level": 2
+  },
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Interaction guide",
+      "value": "Shake to reveal your fortune",
+      "default": "Shake to reveal your fortune",
+      "max_length": 60
+    }
+  ],
+  "tweaks": [
+    {
+      "id": "SHAKE_EFFORT",
+      "kind": "number",
+      "label": "Shaking effort before drawing",
+      "value": 2.45,
+      "default": 2.45,
+      "min": 1,
+      "max": 6,
+      "step": 0.05
+    }
+  ],
+  "images": [
+    {
+      "id": "BACKGROUND",
+      "label": "Shrine background",
+      "path": "./assets/shrine.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TUBE",
+      "label": "Fortune tube",
+      "path": "./assets/physical-v2/cylinder.webp",
+      "replaceable": true
+    },
+    {
+      "id": "STICK_1",
+      "label": "Individual bamboo stick 1",
+      "path": "./assets/physical-v2/stick1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "STICK_2",
+      "label": "Individual bamboo stick 2",
+      "path": "./assets/physical-v2/stick2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "STICK_3",
+      "label": "Individual bamboo stick 3",
+      "path": "./assets/physical-v2/stick3.webp",
+      "replaceable": true
+    }
+  ]
+}

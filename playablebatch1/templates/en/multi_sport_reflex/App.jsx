@@ -40,43 +40,80 @@ function post(x,z,h=2.2){box(.09,h,.09,palette.white,x,h/2,z);}
 box(50,.12,60,palette.green,0,-.15,-5);
 const stripe=mat('#73c887');for(let z=-23;z<-10;z+=2.6)box(48,.015,1.25,stripe,0,-.075,z);
 box(9,.04,21,palette.court,0,-.06,-1);
-const courtGreen=mat('#79aa82');box(8.55,.015,7.6,courtGreen,0,-.025,-4.8);
+const NET_Z=-2.05,VOLLEY_NET_TOP=3.25,TENNIS_NET_TOP=1.12;
+const courtGreen=mat('#79aa82');box(8.55,.015,16.9,courtGreen,0,-.025,NET_Z);
 function courtCircle(x,z,r){const line=new THREE.Mesh(new THREE.RingGeometry(r-.035,r+.035,64),palette.white);line.rotation.x=-Math.PI/2;line.position.set(x,.007,z);scene.add(line)}
-courtCircle(0,5.2,2.4);courtCircle(0,-4.8,1.55);
+courtCircle(0,5.2,2.4);courtCircle(0,NET_Z,1.55);
 const plate=meshPlate();function meshPlate(){const shape=new THREE.Shape();shape.moveTo(-.65,0);shape.lineTo(.65,0);shape.lineTo(.65,.35);shape.lineTo(0,.8);shape.lineTo(-.65,.35);shape.closePath();const plate=new THREE.Mesh(new THREE.ShapeGeometry(shape),palette.white);plate.rotation.x=-Math.PI/2;plate.position.set(0,.01,7.05);scene.add(plate);return plate;}
 for(const x of [-4.35,4.35])box(.075,.03,20,palette.white,x,-.02,-1);
-for(const z of [-10,-3,5,9])box(8.7,.03,.075,palette.white,0,-.02,z);
+for(const z of [-10.5,NET_Z,6.4,9])box(8.7,.03,.075,palette.white,0,-.02,z);
 box(.06,.03,20,palette.white,0,-.02,-1);
-// Tennis net and a football goal stand at the far end of the shared court.
-post(-4.4,-5,1.45);post(4.4,-5,1.45);box(8.8,.08,.07,palette.white,0,1.37,-5);
-for(let i=0;i<23;i++)box(.018,1.2,.02,palette.white,-4.2+i*.38,.68,-5);
-for(let y=.2;y<1.4;y+=.25)box(8.6,.018,.02,palette.white,0,y,-5);
-post(-2,-10,2.3);post(2,-10,2.3);box(4.1,.12,.1,palette.white,0,2.3,-10);
-for(let x=-1.8;x<2;x+=.45)box(.025,2.2,.025,palette.white,x,1.1,-10.18);
-for(let y=.25;y<2.2;y+=.3)box(3.9,.025,.025,palette.white,0,y,-10.18);
-// A centered, properly connected backboard, rim and hanging net.
-const hoopX=0, hoopZ=-11.35, rimY=3.35;
-box(.18,4.8,.18,palette.dark,hoopX,2.4,hoopZ-.8);
-box(.16,.16,1.0,palette.dark,hoopX,4.38,hoopZ-.4);
-box(2.5,1.45,.16,palette.white,hoopX,4.35,hoopZ);
-box(2.28,1.23,.02,mat('#c6e6ef'),hoopX,4.35,hoopZ+.09);
-for(const x of [-.43,.43])box(.045,.5,.025,palette.red,x,4.25,hoopZ+.105);
-for(const y of [4,4.50])box(.9,.045,.025,palette.red,0,y,hoopZ+.105);
-const rim=new THREE.Mesh(new THREE.TorusGeometry(.45,.045,8,32),palette.red);
+// Sport-specific nets share the exact center of the marked 16.9-unit court.
+// Their posts sit outside its sideline; tennis and volleyball never stack together.
+function makeCourtNet(top,bottom,paddingColor){
+ const group=new THREE.Group();group.position.z=NET_Z;scene.add(group);
+ const grid=[],ink=new THREE.LineBasicMaterial({color:'#f3f3e9',transparent:true,opacity:.68});
+ for(const x of [-4.3,4.3]){
+  mesh(group,new THREE.CylinderGeometry(.065,.075,top+.2,12),palette.white,x,(top+.2)/2,0);
+  mesh(group,new THREE.CylinderGeometry(.13,.13,.86,12),mat(paddingColor),x,.43,0);
+  mesh(group,new THREE.CylinderGeometry(.21,.24,.05,12),palette.dark,x,.005,0);
+  mesh(group,new THREE.SphereGeometry(.078,10,8),palette.white,x,top+.2,0);
+ }
+ mesh(group,new THREE.BoxGeometry(8.6,.075,.055),palette.white,0,top,0);
+ mesh(group,new THREE.BoxGeometry(8.35,.035,.035),palette.white,0,bottom,0);
+ for(let x=-4.15;x<=4.16;x+=.18)grid.push(new THREE.Vector3(x,bottom,0),new THREE.Vector3(x,top-.035,0));
+ for(let y=bottom+.13;y<top-.035;y+=.13)grid.push(new THREE.Vector3(-4.15,y,0),new THREE.Vector3(4.15,y,0));
+ group.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(grid),ink));
+ return group;
+}
+const tennisNet=makeCourtNet(TENNIS_NET_TOP,.10,'#39769a');
+const volleyballNet=makeCourtNet(VOLLEY_NET_TOP,2.20,'#397d80');
+tennisNet.visible=false;
+
+// The goal is behind the incoming-ball launch plane, so other sports cannot
+// spawn through its crossbar. A complete depth frame supports the rear/side net.
+const GOAL_Z=-11.3,goal=new THREE.Group();goal.position.z=GOAL_Z;scene.add(goal);
+const goalNetPoints=[];
+for(const x of [-2.1,2.1]){
+ equipmentRod(goal,[x,0,0],[x,2.3,0],.065,palette.white);
+ equipmentRod(goal,[x,.065,0],[x,.065,-1.15],.045,palette.white);
+ equipmentRod(goal,[x,2.3,0],[x,2.3,-1.15],.045,palette.white);
+ equipmentRod(goal,[x,0,-1.15],[x,2.3,-1.15],.045,palette.white);
+ for(let z=-.2;z> -1.16;z-=.2)goalNetPoints.push(new THREE.Vector3(x,.08,z),new THREE.Vector3(x,2.25,z));
+ for(let y=.24;y<2.25;y+=.24)goalNetPoints.push(new THREE.Vector3(x,y,0),new THREE.Vector3(x,y,-1.15));
+}
+equipmentRod(goal,[-2.1,2.3,0],[2.1,2.3,0],.065,palette.white);
+equipmentRod(goal,[-2.1,2.3,-1.15],[2.1,2.3,-1.15],.045,palette.white);
+equipmentRod(goal,[-2.1,.065,-1.15],[2.1,.065,-1.15],.045,palette.white);
+for(let x=-1.98;x<2.1;x+=.22)goalNetPoints.push(new THREE.Vector3(x,.08,-1.15),new THREE.Vector3(x,2.25,-1.15));
+for(let y=.24;y<2.25;y+=.24)goalNetPoints.push(new THREE.Vector3(-2.05,y,-1.15),new THREE.Vector3(2.05,y,-1.15));
+goal.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(goalNetPoints),new THREE.LineBasicMaterial({color:'#f5f5e8',transparent:true,opacity:.55})));
+
+// A sideline basket has real connected supports and a rim mounted inside the
+// lower backboard area, rather than floating below it or overlapping the goal.
+const hoopX=-3.1,hoopZ=-8.6,rimY=3.35;
+box(.68,.13,.78,palette.dark,hoopX,.045,hoopZ-.8);
+box(.18,4.4,.18,palette.dark,hoopX,2.2,hoopZ-.8);
+box(.16,.16,1.0,palette.dark,hoopX,4.2,hoopZ-.4);
+box(2.5,1.45,.16,palette.white,hoopX,3.9,hoopZ);
+box(2.28,1.23,.022,mat('#c6e6ef'),hoopX,3.9,hoopZ+.092);
+for(const x of [-.43,.43])box(.045,.5,.025,palette.red,hoopX+x,3.65,hoopZ+.11);
+for(const y of [3.4,3.9])box(.9,.045,.025,palette.red,hoopX,y,hoopZ+.11);
+const rim=new THREE.Mesh(new THREE.TorusGeometry(.45,.045,10,40),palette.red);
 rim.rotation.x=Math.PI/2;rim.position.set(hoopX,rimY,hoopZ+.6);scene.add(rim);
-box(.12,.12,.38,palette.red,hoopX,rimY,hoopZ+.22);
+box(.12,.12,.11,palette.red,hoopX,rimY,hoopZ+.12);
 const netMaterial=new THREE.LineBasicMaterial({color:0xeae9df,transparent:true,opacity:.9});
 const netSegments=[];
-for(let i=0;i<12;i++){
- const a=i*Math.PI*2/12,b=(i+1)*Math.PI*2/12;
+for(let i=0;i<16;i++){
+ const a=i*Math.PI*2/16,b=(i+1)*Math.PI*2/16;
  const top=new THREE.Vector3(hoopX+.44*Math.cos(a),rimY,hoopZ+.6+.44*Math.sin(a));
- const mid=new THREE.Vector3(hoopX+.34*Math.cos(a+.13),rimY-.35,hoopZ+.6+.34*Math.sin(a+.13));
- const bottom=new THREE.Vector3(hoopX+.25*Math.cos(b),rimY-.7,hoopZ+.6+.25*Math.sin(b));
+ const mid=new THREE.Vector3(hoopX+.42*Math.cos(a+.13),rimY-.35,hoopZ+.6+.42*Math.sin(a+.13));
+ const bottom=new THREE.Vector3(hoopX+.38*Math.cos(b),rimY-.7,hoopZ+.6+.38*Math.sin(b));
  netSegments.push(top,mid,mid,bottom);
 }
-for(const [r,y] of [[.34,rimY-.35],[.25,rimY-.7]])for(let i=0;i<12;i++){
- const a=i*Math.PI*2/12,b=(i+1)*Math.PI*2/12;
- netSegments.push(new THREE.Vector3(r*Math.cos(a),y,hoopZ+.6+r*Math.sin(a)),new THREE.Vector3(r*Math.cos(b),y,hoopZ+.6+r*Math.sin(b)));
+for(const [r,y] of [[.42,rimY-.35],[.38,rimY-.7]])for(let i=0;i<16;i++){
+ const a=i*Math.PI*2/16,b=(i+1)*Math.PI*2/16;
+ netSegments.push(new THREE.Vector3(hoopX+r*Math.cos(a),y,hoopZ+.6+r*Math.sin(a)),new THREE.Vector3(hoopX+r*Math.cos(b),y,hoopZ+.6+r*Math.sin(b)));
 }
 scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(netSegments),netMaterial));
 // A few distant players and spectators give the court the same populated depth as the reference.
@@ -101,16 +138,27 @@ function joint(parent, x = 0, y = 0, z = 0) {
   return result;
 }
 const torso = joint(athlete, 0, 1.35, 0);
-mesh(torso, new THREE.CylinderGeometry(.41, .50, 1.15, 12), palette.red, 0, .55, 0);
-mesh(torso, new THREE.SphereGeometry(.40, 18, 12), palette.skin, 0, 1.47, 0);
-mesh(torso, new THREE.SphereGeometry(.41, 18, 10, 0, Math.PI * 2, 0, Math.PI * .48), palette.hair, 0, 1.6, 0);
-mesh(torso, new THREE.CylinderGeometry(.41, .41, .13, 18), palette.red, 0, 1.76, 0);
-mesh(torso, new THREE.BoxGeometry(.5, .06, .23), palette.red, 0, 1.71, -.33);
+const jerseyProfile=[[.46,0],[.49,.12],[.43,.67],[.46,.91],[.34,1.05],[.22,1.15]].map(([x,y])=>new THREE.Vector2(x,y));
+mesh(torso,new THREE.LatheGeometry(jerseyProfile,20),palette.red,0,-.025,0);
+mesh(torso,new THREE.CylinderGeometry(.18,.21,.22,14),palette.skin,0,1.18,0);
+mesh(torso,new THREE.SphereGeometry(.37,24,16),palette.skin,0,1.47,0);
+mesh(torso,new THREE.SphereGeometry(.38,20,12,0,Math.PI*2,0,Math.PI*.45),palette.hair,0,1.47,0);
+mesh(torso,new THREE.SphereGeometry(.395,20,12,0,Math.PI*2,0,Math.PI*.40),palette.red,0,1.50,0);
+mesh(torso,new THREE.CylinderGeometry(.397,.397,.055,20),palette.red,0,1.62,0);
+mesh(torso,new THREE.BoxGeometry(.50,.045,.30),palette.red,0,1.63,-.35);
+for(const side of [-1,1]){
+ mesh(torso,new THREE.SphereGeometry(.095,12,10),palette.skin,side*.345,1.45,.01);
+ mesh(torso,new THREE.SphereGeometry(.025,10,8),palette.dark,side*.12,1.51,-.35);
+}
+const nose=mesh(torso,new THREE.SphereGeometry(.075,12,10),palette.skin,0,1.42,-.365);nose.scale.set(1,.8,.75);
+// Small jersey seams clarify the silhouette during turns without extra UI/text.
+for(const side of [-1,1])equipmentRod(torso,[side*.29,.20,.38],[side*.29,.75,.34],.015,palette.white);
 mesh(athlete, new THREE.CylinderGeometry(.50, .43, .42, 12), palette.pants, 0, 1.15, 0);
 
 function makeArm(side) {
   const shoulder = joint(torso, side * .46, .98, 0);
-  mesh(shoulder, new THREE.SphereGeometry(.18, 12, 8), palette.red);
+  mesh(shoulder, new THREE.SphereGeometry(.18, 14, 10), palette.red);
+  mesh(shoulder,new THREE.CylinderGeometry(.155,.145,.20,12),palette.red,0,-.09,0);
   mesh(shoulder, new THREE.CylinderGeometry(.12, .105, .45, 10), palette.skin, 0, -.25, 0);
   const elbow = joint(shoulder, 0, -.48, 0);
   mesh(elbow, new THREE.SphereGeometry(.115, 10, 8), palette.skin);
@@ -126,9 +174,11 @@ function makeLeg(side) {
   mesh(hip, new THREE.CylinderGeometry(.16, .14, .56, 10), palette.pants, 0, -.27, 0);
   const knee = joint(hip, 0, -.55, 0);
   mesh(knee, new THREE.CylinderGeometry(.12, .11, .45, 10), palette.skin, 0, -.22, 0);
-  const shoe = mesh(knee, new THREE.BoxGeometry(.27, .18, .49), palette.white, 0, -.46, -.12);
-  mesh(knee, new THREE.BoxGeometry(.28, .09, .50), palette.pants, 0, -.53, -.12);
-  const toe = joint(shoe, 0, 0, -.22);
+  const shoe=joint(knee,0,-.40,-.12);
+  const upper=mesh(shoe,new THREE.CapsuleGeometry(.135,.23,4,10),palette.white);upper.rotation.x=Math.PI/2;upper.scale.z=.60;
+  mesh(shoe,new THREE.BoxGeometry(.275,.045,.49),palette.pants,0,-.07,0);
+  for(const z of [-.10,-.02,.06])mesh(shoe,new THREE.BoxGeometry(.14,.012,.018),palette.dark,0,.075,z);
+  const toe=joint(shoe,0,0,-.235);
   return { hip, knee, toe };
 }
 const leftLeg = makeLeg(-1);
@@ -226,8 +276,12 @@ function contactFor(kind, output) {
     leftArm.wrist.getWorldPosition(tempA); rightArm.wrist.getWorldPosition(tempB);
     output.copy(tempA).add(tempB).multiplyScalar(.5);
   }
-  // Put the near surface of the ball at the hand, bat, racket or toe.
-  output.z -= ballRadii[kind] * .72;
+  // Keep the ball surface against equipment or both hands rather than
+  // embedding its center in the palms. These same points drive the flight.
+  if(kind===3||kind===4){
+    const halfSpan=tempA.distanceTo(tempB)*.5;
+    output.z-=Math.sqrt(Math.max(.01,(ballRadii[kind]+.125)**2-halfSpan*halfSpan));
+  }else output.z-=ballRadii[kind]+.045;
   return output;
 }
 function flightPosition(out,start,target,elapsed,duration,gravity,bounceAt=0,radius=0){
@@ -248,11 +302,13 @@ function flightPosition(out,start,target,elapsed,duration,gravity,bounceAt=0,rad
   }
   return out;
 }
-const HIT_TIME = .24;
-const HIT_WINDOW_START = .67;
+const HIT_TIME=.12;
+const HIT_WINDOW_STARTS=[.86,.88,.86,.87,.88];
+const STRIKE_WINDUPS=[.09,.10,.10,.12,.11];
+const hitWindowStart=kind=>HIT_WINDOW_STARTS[kind];
 const timingProjection = new THREE.Vector3();
 const timingCameraPosition = new THREE.Vector3();
-const ACTION_DURATION = .64;
+const ACTION_DURATION=.48;
 let active = !String(new URLSearchParams(location.search).get('review') || '').startsWith('batch');
 const hitRingGeometry = new THREE.RingGeometry(.22, .28, 32);
 let started = active, lives = 3, score = 0, ball = null, shots = [], hitEffects = [], action = null, last = 0, feedbackTime = 0, ended = false, playTime = 0, spawnDelay = 0;
@@ -287,14 +343,14 @@ function poseAthlete(dt=0,prediction=null) {
     leftArm.elbow.rotation.x=-.55-.65*swing;rightArm.shoulder.rotation.z=.35+.18*swing;
     racket.rotation.set(.12,0,Math.PI*.72-.3*swing);
   }else if(kind===3){ // Two-handed basketball set shot towards the hoop.
-    leftArm.shoulder.rotation.set(.3+1.65*swing,0,-.35+.55*swing);
-    rightArm.shoulder.rotation.set(.3+1.65*swing,0,.35-.55*swing);
-    leftArm.elbow.rotation.x=-.7-.7*swing;rightArm.elbow.rotation.x=-.7-.7*swing;
+    leftArm.shoulder.rotation.set(.3+2.45*swing,0,-.35+.55*swing);
+    rightArm.shoulder.rotation.set(.3+2.45*swing,0,.35-.55*swing);
+    leftArm.elbow.rotation.x=-.7+.5*swing;rightArm.elbow.rotation.x=-.7+.5*swing;
     leftLeg.knee.rotation.x=-.22*load;rightLeg.knee.rotation.x=-.22*load;
   }else if(kind===4){ // Jump and extend both hands to volley the ball.
-    leftArm.shoulder.rotation.set(.4+2.05*swing,0,-.35+.62*swing);
-    rightArm.shoulder.rotation.set(.4+2.05*swing,0,.35-.62*swing);
-    leftArm.elbow.rotation.x=-.38-.3*swing;rightArm.elbow.rotation.x=-.38-.3*swing;
+    leftArm.shoulder.rotation.set(.35+2.65*swing,0,-.35+.62*swing);
+    rightArm.shoulder.rotation.set(.35+2.65*swing,0,.35-.62*swing);
+    leftArm.elbow.rotation.x=-.38+.26*swing;rightArm.elbow.rotation.x=-.38+.26*swing;
     leftLeg.knee.rotation.x=-.3*swing;rightLeg.knee.rotation.x=-.3*swing;
   }
 }
@@ -311,7 +367,7 @@ function spawn() {
   const lane = (Math.random() - .5) * 3.1;
   const pace=1+Math.min(score*.018,.35);
   ball = {...item,kind,progress:0,elapsed:0,phase:'incoming',duration:[1.44,1.60,1.50,1.65,1.65][kind]/pace,
-    gravity:[3.8,7.6,8.6,7.4,7][kind],bounceAt:[0,.64,.67,0,0][kind],
+    gravity:[3.8,7.6,8.6,7.4,7][kind],bounceAt:[0,.64,.75,0,0][kind],
     start:new THREE.Vector3(lane,[2.4,.8,2.7,2.3,3.2][kind]+Math.random()*.15,-10.5),target:new THREE.Vector3()};
   // Aim once at the actual future strike pose. The thrown ball then follows a
   // fixed flight rather than chasing a moving wrist or pausing in mid-air.
@@ -325,9 +381,9 @@ function showImpact(position) {
   hitEffects.push({mesh:ring, elapsed:0});
 }
 function addShot(item, start) {
-  const targets = [new THREE.Vector3(-1.7, 5.2, -14), new THREE.Vector3(0, 1.0, -10), new THREE.Vector3(-1.7, 1.2, -8.7), new THREE.Vector3(hoopX, rimY + .13, hoopZ + .6), new THREE.Vector3(1.5, 1.4, -8.2)];
+  const targets = [new THREE.Vector3(-1.7, 5.2, -14), new THREE.Vector3(0, 1.0, GOAL_Z-.6), new THREE.Vector3(-1.7, 1.2, -8.7), new THREE.Vector3(hoopX, rimY + .13, hoopZ + .6), new THREE.Vector3(1.5, 1.4, -8.2)];
   const target = targets[item.kind];
-  shots.push({...item,start:start.clone(),target,elapsed:0,justCreated:true,duration:[.68,.78,.70,.90,.75][item.kind],gravity:[10,6,8,12,8][item.kind]});
+  shots.push({...item,start:start.clone(),target,elapsed:0,justCreated:true,duration:[.68,.78,.70,.90,.90][item.kind],gravity:[10,6,8,12,14][item.kind]});
 }
 function resize() {
   const w = canvas.clientWidth, h = canvas.clientHeight;
@@ -348,7 +404,7 @@ function updateTimingRing() {
     timingRing.style.display = 'none'; return;
   }
   const w=canvas.clientWidth,h=canvas.clientHeight;
-  const focus=ease((ball.progress-.28)/(HIT_WINDOW_START-.28));
+  const focus=ease((ball.progress-.28)/(hitWindowStart(ball.kind)-.28));
   const radius=ballRadii[ball.kind]*h/(2*Math.tan(THREE.MathUtils.degToRad(camera.fov/2))*(-timingCameraPosition.z));
   const diameter=2*(radius+6+52*(1-focus));
   timingRing.style.display='block';
@@ -356,13 +412,42 @@ function updateTimingRing() {
   timingRing.style.top=`${(-timingProjection.y*.5+.5)*h}px`;
   timingRing.style.width=timingRing.style.height=`${diameter}px`;
   timingRing.style.opacity=String(ease((ball.progress-.28)/.13)*(1-ease((ball.progress-1)/.08))*(.5+.5*focus));
-  timingRing.dataset.ready=String(ball.progress>=HIT_WINDOW_START && ball.progress<=1);
+  timingRing.dataset.ready=String(ball.progress>=hitWindowStart(ball.kind)&&ball.progress<=1);
 }
-function render() { resize(); renderer.render(scene, camera); updateTimingRing(); }
-function beginHit() {
-  if (!ball || ball.phase !== 'incoming' || ball.progress>1) return;
-  // Queue the swing around arrival, preserving the ball's flight and velocity.
-  ball.phase='queued';
+function render() {
+  resize();
+  // Keep a return's net until the ball has cleared it, then prepare the next sport.
+  const crossing=shots.find(shot=>(shot.kind===2||shot.kind===4)&&shot.mesh.position.z>NET_Z-.6);
+  const netKind=crossing?.kind??ball?.kind??action?.kind??4;
+  tennisNet.visible=netKind===2;volleyballNet.visible=netKind===4;
+  renderer.render(scene,camera);updateTimingRing();
+}
+function flightVelocity(out,item,elapsed){
+  out.set((item.target.x-item.start.x)/item.duration,0,(item.target.z-item.start.z)/item.duration);
+  if(item.bounceAt){
+    const first=item.duration*item.bounceAt,second=item.duration-first,floor=ballRadii[item.kind]+.035;
+    if(elapsed<=first)out.y=(floor-item.start.y+.5*item.gravity*first*first)/first-item.gravity*elapsed;
+    else out.y=(item.target.y-floor+.5*item.gravity*second*second)/second-item.gravity*(elapsed-first);
+  }else out.y=(item.target.y-item.start.y+.5*item.gravity*item.duration*item.duration)/item.duration-item.gravity*elapsed;
+  return out;
+}
+function strikeFlightPosition(out,item,u){
+  const t=Math.max(0,Math.min(1,u)),t2=t*t,t3=t2*t;
+  return out.copy(item.strikeStart).multiplyScalar(2*t3-3*t2+1)
+    .addScaledVector(item.strikeStartVelocity,(t3-2*t2+t)*item.contactDelay)
+    .addScaledVector(item.target,-2*t3+3*t2)
+    .addScaledVector(item.strikeEndVelocity,(t3-t2)*item.contactDelay);
+}
+function beginHit(){
+  if(!ball||ball.phase!=='incoming'||ball.progress>1)return;
+  // Start the attack on this click, and join the remaining approach smoothly
+  // to the actual future contact pose over a short, sport-specific windup.
+  ball.phase='queued';ball.queuedElapsed=0;ball.queuedProgress=ball.progress;
+  ball.contactDelay=Math.max(.001,Math.min(STRIKE_WINDUPS[ball.kind],ball.duration-ball.elapsed));
+  ball.strikeStart=ball.mesh.position.clone();
+  ball.strikeStartVelocity=flightVelocity(new THREE.Vector3(),ball,ball.elapsed);
+  ball.strikeEndVelocity=flightVelocity(new THREE.Vector3(),ball,ball.duration);
+  action={kind:ball.kind,elapsed:0,contactTime:ball.contactDelay};
 }
 function tick(now) {
   const dt = last ? Math.min((now - last) / 1000, .05) : 0; last = now;
@@ -373,10 +458,11 @@ function tick(now) {
     if (!ball) { spawnDelay -= dt; if (spawnDelay <= 0) spawn(); }
     if (ball) {
       ball.elapsed+=dt;ball.progress=ball.elapsed/ball.duration;
-      if(ball.phase==='queued'&&!action&&ball.duration-ball.elapsed<=HIT_TIME){
-        action={kind:ball.kind,elapsed:0,contactTime:Math.max(.04,ball.duration-ball.elapsed)};
-      }
-      flightPosition(ball.mesh.position,ball.start,ball.target,ball.phase==='queued'?Math.min(ball.elapsed,ball.duration):ball.elapsed,ball.duration,ball.gravity,ball.bounceAt,ballRadii[ball.kind]);
+      if(ball.phase==='queued'){
+        ball.queuedElapsed+=dt;const arrival=Math.min(1,ball.queuedElapsed/ball.contactDelay);
+        ball.progress=ball.queuedProgress+(1-ball.queuedProgress)*arrival;
+        strikeFlightPosition(ball.mesh.position,ball,arrival);
+      }else flightPosition(ball.mesh.position,ball.start,ball.target,ball.elapsed,ball.duration,ball.gravity,ball.bounceAt,ballRadii[ball.kind]);
       if(ball.phase==='queued'&&ball.progress>=1){
         action=action||{kind:ball.kind,elapsed:0,contactTime:HIT_TIME};action.elapsed=action.contactTime;poseAthlete(0);
         contactFor(ball.kind,contactPoint);
@@ -409,7 +495,7 @@ function tick(now) {
 buttons.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b || !active || ended) return;
   guide.classList.add('hidden'); started = true;
-  if (!ball || ball.phase !== 'incoming' || ball.progress < HIT_WINDOW_START) return;
+  if (!ball || ball.phase !== 'incoming' || ball.progress < hitWindowStart(ball.kind)) return;
   if (+b.dataset.kind === ball.kind) beginHit();
   else { removeBall(ball); ball = null; spawnDelay = .25; lives--; hud(); feedback.textContent = 'MISS'; feedbackTime = .6; if (lives <= 0) finish(); }
 });
@@ -418,3 +504,12 @@ window.addEventListener('message', e => {
   if (e.source === parent && e.data?.type === 'playable-active') { active = !!e.data.active; if (active && !ended) started = true; last = 0; }
 });
 window.addEventListener('resize', render); reset(); requestAnimationFrame(tick);
+
+// Batch 3 UI refinement — 2026-11-16
+// Local fonts and explicit per-game layout rules; no gameplay or host mutations.
+(() => {
+  const uiStyle=document.createElement('style');
+  uiStyle.dataset.batch3Ui='20261116';
+  uiStyle.textContent="\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Bold.woff2') format('woff2');font-weight:600 900;font-style:normal;font-display:swap}\nhtml,body,#root{font-family:UIBody,system-ui,sans-serif;-webkit-text-size-adjust:100%}\nbutton{font-family:UIBody,system-ui,sans-serif;font-size:16px;font-weight:700;line-height:1.3;min-height:44px}\nbutton:focus-visible{outline:3px solid currentColor;outline-offset:4px}\nbutton:disabled{opacity:.55}\n[hidden]{display:none!important}\n.guide{font-size:18px;line-height:1.4;text-wrap:balance}\n.hud{top:30px;left:30px;right:30px;font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums}\n.hud.center{justify-content:center}\n.bottom{bottom:50px;left:30px;right:30px;gap:10px}\n.bottom .capability{min-height:44px;padding:10px 14px;font-size:14px;line-height:1.25;white-space:normal}\n.status{font-size:13px;line-height:1.4;bottom:108px;text-wrap:balance}\n.pill{font-size:16px;line-height:1.3;min-height:44px;padding:11px 22px}\n.modal{padding:30px 30px 50px}\n.result{max-height:100%;overflow-y:auto;padding:28px 22px}\n.result h2{font-family:Playful,UIBody,sans-serif;font-size:24px;line-height:1.25;text-wrap:balance;overflow-wrap:anywhere}\n.result p{font-size:15px;line-height:1.6;overflow-wrap:anywhere}\n.result .value{line-height:1.2;overflow-wrap:anywhere}\n.smallcaps{font-size:12px;letter-spacing:1.4px;line-height:1.4}\n\n@font-face{font-family:UIPlay;src:url('./assets/ui/DynaPuff-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap}\n.hud{top:30px;left:30px;right:30px;font-family:UIPlay,UIBody,sans-serif;font-size:28px;font-weight:600}\n.guide{top:12.5%;left:30px;right:30px;width:auto;font-family:UIPlay,UIBody,sans-serif;font-size:18px;font-weight:600}\n.feedback{top:28%;left:30px;right:30px;width:auto;font-family:UIPlay,UIBody,sans-serif;font-size:28px;font-weight:600}\n.buttons{left:30px;right:30px;bottom:50px;gap:7px}\n.buttons button{min-width:44px;min-height:44px;max-width:60px;border:2px solid #fff;padding:4px;box-shadow:0 3px 0 #346b7e55}\n.buttons button:active{transform:translateY(2px);box-shadow:0 1px 0 #346b7e55}\n.result{padding:30px 30px 50px;font-family:UIPlay,UIBody,sans-serif;font-size:24px;text-align:center}\n.result p{font:600 44px/1.2 UIPlay,UIBody,sans-serif;margin:18px 0 26px}\n.result button{font:700 16px/1.3 UIBody,system-ui,sans-serif;min-height:48px}\n";
+  document.head.append(uiStyle);
+})();

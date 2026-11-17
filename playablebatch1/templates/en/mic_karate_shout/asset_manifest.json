@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "style": {
+    "profile": "Reference recreation; portrait FYP; static live first frame",
+    "font": "DynaPuff / Arial / Georgia according to game role",
+    "reference": "Private source videos are reference-only and are not shipped"
+  },
+  "assets": [
+    {
+      "id": "KARATE_CHOP",
+      "path": "assets/karate-chop.webp",
+      "type": "image",
+      "width": 640,
+      "height": 640,
+      "source": "generated",
+      "description": "Generated production artwork; independent of private source recording"
+    },
+    {
+      "id": "KARATE_READY",
+      "path": "assets/karate-ready.webp",
+      "type": "image",
+      "width": 640,
+      "height": 640,
+      "source": "generated",
+      "description": "Generated production artwork; independent of private source recording"
+    },
+    {
+      "id": "PLAYFUL_FONT",
+      "path": "assets/playful.woff2",
+      "type": "font",
+      "source": "provided",
+      "description": "Existing collection DynaPuff SemiBold display font"
+    },
+    {
+      "path": "assets/ui/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Regular for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Bold for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "id": "DOJO_INTERIOR_V1",
+      "path": "assets/dojo-interior-v1.webp",
+      "type": "image",
+      "width": 1024,
+      "height": 1536,
+      "source": "generated",
+      "description": "ImageGen anime/cartoon dojo interior matching the existing karate character; no characters or UI in the backdrop."
+    }
+  ]
+}

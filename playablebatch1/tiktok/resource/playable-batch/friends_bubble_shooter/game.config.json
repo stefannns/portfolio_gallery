@@ -1,0 +1,54 @@
+{
+  "config_version": "2.0",
+  "playable": {
+    "name": "friends_bubble_shooter",
+    "title": "Friend Bubble Shooter",
+    "content_locale": "en",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "min_capability_level": 2,
+    "full_capability_level": 2
+  },
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Interaction guide",
+      "value": "Aim · release · match three",
+      "default": "Aim · release · match three",
+      "max_length": 100
+    }
+  ],
+  "tweaks": [],
+  "images": [
+    {
+      "id": "FRIEND_BEAN",
+      "label": "Friend Bean",
+      "path": "./assets/friend-bean.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FRIEND_CLOUDY",
+      "label": "Friend Cloudy",
+      "path": "./assets/friend-cloudy.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FRIEND_KITTY",
+      "label": "Friend Kitty",
+      "path": "./assets/friend-kitty.webp",
+      "replaceable": false
+    },
+    {
+      "id": "FRIEND_STARRY",
+      "label": "Friend Starry",
+      "path": "./assets/friend-starry.webp",
+      "replaceable": false
+    },
+    {
+      "id": "PAPER_BACKDROP",
+      "label": "Cool blue checker paper background",
+      "path": "./assets/paper-print-v1.svg",
+      "replaceable": true
+    }
+  ]
+}

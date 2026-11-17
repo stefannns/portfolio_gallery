@@ -1,0 +1,23 @@
+{
+  "config_version": "2.0",
+  "playable": {
+    "name": "mic_pixel_dino",
+    "title": "Pixel Dino Voice Jump",
+    "content_locale": "en",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "min_capability_level": 2,
+    "full_capability_level": 2
+  },
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Interaction guide",
+      "value": "Make a sound to jump",
+      "default": "Make a sound to jump",
+      "max_length": 100
+    }
+  ],
+  "tweaks": [],
+  "images": []
+}

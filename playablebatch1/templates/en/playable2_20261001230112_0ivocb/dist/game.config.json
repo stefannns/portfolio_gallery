@@ -4,10 +4,10 @@
       "id": "TIME_LIMIT",
       "kind": "number",
       "label": "Questions Per Run",
-      "value": 10,
-      "default": 10,
+      "value": 9,
+      "default": 9,
       "min": 5,
-      "max": 10,
+      "max": 9,
       "step": 1
     },
     {
@@ -85,14 +85,62 @@
   "images": [
     {
       "id": "BG_MAIN",
-      "label": "Main Background",
-      "path": "./assets/destiny_clean.svg",
+      "label": "Fairy-tale woodland paper",
+      "path": "./assets/fantasy-v1/forest-paper.webp",
       "replaceable": true
     },
     {
       "id": "IMG_TITLE",
       "label": "Destiny Emblem",
       "path": "./assets/destiny_emblem.svg",
+      "replaceable": true
+    },
+    {
+      "id": "CREST_SHIELD",
+      "label": "Shield archetype crest",
+      "path": "./assets/fantasy-v1/crest-shield.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CREST_AXE",
+      "label": "Axe archetype crest",
+      "path": "./assets/fantasy-v1/crest-axe.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CREST_WAND",
+      "label": "Wand archetype crest",
+      "path": "./assets/fantasy-v1/crest-wand.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CREST_MASK",
+      "label": "Mask archetype crest",
+      "path": "./assets/fantasy-v1/crest-mask.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CREST_BOW",
+      "label": "Bow archetype crest",
+      "path": "./assets/fantasy-v1/crest-bow.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CREST_EYE",
+      "label": "Eye archetype crest",
+      "path": "./assets/fantasy-v1/crest-eye.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CREST_COMPASS",
+      "label": "Compass archetype crest",
+      "path": "./assets/fantasy-v1/crest-compass.webp",
+      "replaceable": true
+    },
+    {
+      "id": "CREST_CROWN",
+      "label": "Crown archetype crest",
+      "path": "./assets/fantasy-v1/crest-crown.webp",
       "replaceable": true
     }
   ],

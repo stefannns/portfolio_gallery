@@ -8,12 +8,17 @@
     const batch = window.PlayableReviewLibrary?.getFilter?.().batch || document.getElementById('batch-filter')?.value;
     const requested = window.PlayableReviewLocale?.language || 'en';
     const item = window.PlayableBatchDownloads?.[batch];
-    const archive = item?.languages?.[requested] || item?.languages?.en;
+    const available = item?.languages?.[requested] || item?.languages?.en;
+    // An older archive must never download a different pool after regrouping.
+    const pool = window.PlayableReviewLibrary?.getPoolGames?.();
+    const memberIds = new Set(available?.members?.map(member => member.taskId));
+    const matchesPool = !pool || (pool.length === memberIds.size && pool.every(game => memberIds.has(game.taskId)));
+    const archive = matchesPool ? available : null;
     selectedArchive = archive || null;
     button.disabled = !archive;
     label.textContent = item ? 'Download ' + item.label : 'Download batch';
     if (!archive) {
-      button.title = 'Select Batch 1, Batch 2, or Batch 3 to download all its games';
+      button.title = available && !matchesPool ? 'The saved archive needs rebuilding for this updated batch' : batch === 'other' ? 'No batch archive has been prepared for Other' : 'Select a batch with a current archive to download its games';
       button.setAttribute('aria-label', button.title);
       return;
     }
@@ -36,5 +41,6 @@
   window.PlayableBatchDownloadsUI = {reflect};
   window.addEventListener('playable-review-filter-change', reflect);
   window.addEventListener('playable-review-language-change', reflect);
+  window.addEventListener('DOMContentLoaded', reflect);
   reflect();
 })();

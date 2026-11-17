@@ -6,23 +6,24 @@
   document.head.append(style);
   root.innerHTML=`<div class="scene"><canvas aria-label="Hair styling area"></canvas><div class="guide">Choose a tool to style</div><div class="top"><button class="reset">Reset</button><button class="brush">Brush: S</button><button class="pause">Pause</button></div><div class="palette hidden"></div><div class="tools"></div></div>`;
   const canvas=root.querySelector('canvas'),ctx=canvas.getContext('2d'),guide=root.querySelector('.guide'),palette=root.querySelector('.palette');
-  const tools=['Hand','Hold','Scissors','Regrow','Colors'];let tool='Hand',color='#fafafa',brush=0,paused=false,drag=false,last=null,active=new URLSearchParams(location.search).get('feedReview')!=='1',strands=[],held=[],fragments=[],activePointer=null;
+  style.textContent+=`.tools{left:30px;right:30px;bottom:calc(50px + env(safe-area-inset-bottom,0px));flex-direction:column;gap:8px;align-items:center}.tool-row{display:flex;justify-content:center;gap:6px;width:100%}.tools button{min-height:42px;padding:8px 12px;font-size:clamp(12px,3.3vw,15px)}@media(max-height:520px){.tools{bottom:18px;gap:5px}.tools button{min-height:36px;padding:6px 10px}}`;
+  const toolRows=[['Hand','Hold','Scissors','Regrow'],['Colors','Wash','Blow']];let tool='Hand',color='#fafafa',brush=0,paused=false,drag=false,last=null,active=new URLSearchParams(location.search).get('feedReview')!=='1',strands=[],held=[],fragments=[],particles=[],activePointer=null;
   palette.innerHTML='<div class="palette-head"><span>Color Picker</span><button class="done">Done</button></div><div class="color-wheel" role="slider" aria-label="Choose hair color" tabindex="0"></div><div class="brightness-label"><span>Dark</span><span>Light</span></div><input class="brightness" aria-label="Color brightness" type="range" min="0" max="100" value="100"><div class="color-preview"></div>';
   let hue=50,saturation=1,brightness=1;const wheel=palette.querySelector('.color-wheel'),brightnessSlider=palette.querySelector('.brightness'),colorPreview=palette.querySelector('.color-preview');
   function updateColor(){const c=brightness*saturation,x=c*(1-Math.abs((hue/60)%2-1)),m=brightness-c;const rgb=hue<60?[c,x,0]:hue<120?[x,c,0]:hue<180?[0,c,x]:hue<240?[0,x,c]:hue<300?[x,0,c]:[c,0,x];color=`rgb(${rgb.map(v=>Math.round((v+m)*255)).join(',')})`;colorPreview.style.background=color;}
   function chooseColor(e){const r=wheel.getBoundingClientRect(),x=(e.clientX-r.left-r.width/2)/(r.width/2),y=(e.clientY-r.top-r.height/2)/(r.height/2);hue=(Math.atan2(x,-y)*180/Math.PI+360)%360;saturation=Math.min(1,Math.hypot(x,y));updateColor();}
   wheel.addEventListener('pointerdown',e=>{wheel.setPointerCapture(e.pointerId);chooseColor(e)});wheel.addEventListener('pointermove',e=>{if(wheel.hasPointerCapture(e.pointerId))chooseColor(e)});brightnessSlider.addEventListener('input',()=>{brightness=Number(brightnessSlider.value)/100;updateColor()});palette.querySelector('.done').onclick=()=>palette.classList.add('hidden');updateColor();
-  root.querySelector('.tools').innerHTML=tools.map(t=>{
+  root.querySelector('.tools').innerHTML=toolRows.map(row=>'<div class="tool-row">'+row.map(t=>{
     const button=`<button data-tool="${t}" class="${t===tool?'active':''}">${t}</button>`;
     return t==='Hold'?`<span class="hold-tool">${button}<button class="drop hidden" data-action="drop">Drop</button></span>`:button;
-  }).join('');
+  }).join('')+'</div>').join('');
   const dropButton=root.querySelector('.drop');
   function anchor(s,w,h){const r=Math.min(w*.22,h*.16);s.x=.5+s.u*r/w;s.top=.48-Math.sqrt(Math.max(0,1-s.u*s.u))*r/h;}
   function init(){
     const w=canvas.clientWidth||390,h=canvas.clientHeight||598;
-    fragments=[];dropButton.classList.add('hidden');
+    fragments=[];particles=[];dropButton.classList.add('hidden');
     strands=Array.from({length:170},(_,i)=>{
-      const s={u:2*i/169-1,dx:0,dy:0,v:0,vy:0,held:false,curveSpan:1,dye:[],growRemaining:0};
+      const s={u:2*i/169-1,dx:0,dy:0,v:0,vy:0,held:false,curveSpan:1,dye:[],growRemaining:0,wet:0};
       anchor(s,w,h);s.len=.73-s.top+Math.random()*.015;return s;
     });
   }
@@ -68,23 +69,81 @@
     for(const s of strands){
       anchor(s,w,h);ctx.lineWidth=Math.max(2.9,w*.0065);ctx.strokeStyle='#fafafa';traceStrand(s,0,1,w,h);
       for(const band of s.dye){ctx.strokeStyle=band.color;traceStrand(s,band.from/s.len,Math.min(1,band.to/s.len),w,h);}
+      if(s.wet>.01){ctx.save();ctx.globalAlpha=s.wet*.32;ctx.strokeStyle='#70c8f0';traceStrand(s,0,1,w,h);ctx.restore();}
     }
+    for(const p of particles){
+      ctx.save();ctx.globalAlpha=Math.max(0,1-p.age/p.life);ctx.lineWidth=1.4;ctx.strokeStyle=p.kind==='air'?'#f7ebd4':'#b4eaff';
+      if(p.kind==='drop'){ctx.beginPath();ctx.moveTo(p.x*w,p.y*h);ctx.lineTo((p.x-p.vx*.035)*w,(p.y-p.vy*.035)*h);ctx.stroke();}
+      else if(p.kind==='bubble'){ctx.fillStyle='#dff6ff';ctx.globalAlpha*=.75;ctx.beginPath();ctx.arc(p.x*w,p.y*h,p.r*w,0,Math.PI*2);ctx.fill();ctx.globalAlpha*=1.2;ctx.stroke();}
+      else{ctx.beginPath();ctx.moveTo(p.x*w,p.y*h);ctx.quadraticCurveTo((p.x+.025)*w,(p.y+.003)*h,(p.x+.06)*w,(p.y+.015)*h);ctx.stroke();}ctx.restore();
+    }
+    if(drag&&last&&(tool==='Wash'||tool==='Blow'))drawTool(last,w,h);
   }
+  // The tool follows the brush point; the water / air reaches the strands there.
+  function drawTool(p,w,h){
+    ctx.save();ctx.translate(p.x*w,p.y*h);ctx.lineCap='round';ctx.lineJoin='round';
+    if(tool==='Wash'){
+      ctx.translate(23,-52);ctx.rotate(.35);ctx.lineWidth=7;ctx.strokeStyle='#a8b9c6';ctx.beginPath();ctx.moveTo(0,-24);ctx.lineTo(0,-3);ctx.stroke();
+      ctx.fillStyle='#e6f3ff';ctx.strokeStyle='#7fa9c3';ctx.lineWidth=2;ctx.beginPath();ctx.roundRect(-18,-7,36,13,6);ctx.fill();ctx.stroke();ctx.fillStyle='#4d7b9a';for(let i=-12;i<=12;i+=6)ctx.fillRect(i-1,2,2,2);
+    }else{
+      ctx.translate(43,19);ctx.rotate(.35);ctx.fillStyle='#ffd59a';ctx.strokeStyle='#f5f2ec';ctx.lineWidth=2;ctx.beginPath();ctx.roundRect(-12,-14,42,28,12);ctx.fill();ctx.stroke();ctx.fillStyle='#eeeeee';ctx.fillRect(-26,-9,17,18);ctx.fillStyle='#efab77';ctx.beginPath();ctx.roundRect(8,7,12,29,5);ctx.fill();ctx.stroke();ctx.strokeStyle='#8e633e';for(let x=14;x<=24;x+=4){ctx.beginPath();ctx.moveTo(x,-7);ctx.lineTo(x,7);ctx.stroke();}
+    }ctx.restore();
+  }
+  let effectBudget=0;
+  function applyCareTool(p,dt){
+    const w=canvas.clientWidth||390,h=canvas.clientHeight||598,radius=([.055,.085,.12][brush]+(tool==='Blow'?.035:0))*w,step=dt*60;
+    let touching=false;
+    for(const s of strands){
+      const hit=nearestPoint(s,p,w,h);if(hit.closest>radius)continue;touching=true;
+      const strength=1-hit.closest/radius;
+      if(tool==='Wash'){
+        s.wet=Math.min(1,s.wet+dt*1.8*(.3+strength));
+        if(!s.held){s.v*=Math.pow(.94,step);s.vy+=.00010*strength*step;}
+      }else{
+        s.wet=Math.max(0,s.wet-dt*1.6*(.3+strength));
+        if(!s.held){s.v=Math.max(-.016,s.v-.0016*strength*step);s.vy=Math.max(-.012,s.vy-.0005*strength*step);}
+      }
+    }
+    effectBudget+=dt*(tool==='Wash'?65:25);
+    while(effectBudget>=1){
+      effectBudget-=1;
+      if(tool==='Wash'){
+        particles.push({kind:'drop',x:p.x+.055+(Math.random()-.5)*.06,y:p.y-.08,vx:-.06+(Math.random()-.5)*.08,vy:.38+Math.random()*.20,age:0,life:.55+Math.random()*.2});
+        if(touching&&Math.random()<.34)particles.push({kind:'bubble',x:p.x+(Math.random()-.5)*radius*2/w,y:p.y+(Math.random()-.5)*radius/h,vx:(Math.random()-.5)*.014,vy:-.025,age:0,life:.8+Math.random()*.7,r:.003+Math.random()*.006});
+      }else particles.push({kind:'air',x:p.x+.03,y:p.y+(Math.random()-.5)*.09,vx:-.45,vy:-.04,age:0,life:.32+Math.random()*.12});
+    }
+    if(particles.length>200)particles.splice(0,particles.length-200);
+  }
+  // One quiet, continuous texture per gesture, rather than a sound per strand.
+  let audioContext=null,careAudio=null,noiseBuffer=null;
+  function startCareAudio(){
+    if(tool!=='Wash'&&tool!=='Blow')return;
+    try{
+      audioContext??=new (window.AudioContext||window.webkitAudioContext)();audioContext.resume().catch(()=>{});
+      if(!noiseBuffer){noiseBuffer=audioContext.createBuffer(1,audioContext.sampleRate*2,audioContext.sampleRate);const samples=noiseBuffer.getChannelData(0);for(let i=0;i<samples.length;i++)samples[i]=Math.random()*2-1;}
+      stopCareAudio();const source=audioContext.createBufferSource(),filter=audioContext.createBiquadFilter(),gain=audioContext.createGain();source.buffer=noiseBuffer;source.loop=true;filter.type=tool==='Wash'?'bandpass':'lowpass';filter.frequency.value=tool==='Wash'?2800:680;filter.Q.value=.6;gain.gain.setValueAtTime(0,audioContext.currentTime);gain.gain.linearRampToValueAtTime(tool==='Wash'?.055:.075,audioContext.currentTime+.12);source.connect(filter).connect(gain).connect(audioContext.destination);source.start();careAudio={source,gain};
+    }catch{/* The visual tools remain usable when audio is unavailable. */}
+  }
+  function stopCareAudio(){if(!careAudio||!audioContext)return;const {source,gain}=careAudio;careAudio=null;gain.gain.cancelScheduledValues(audioContext.currentTime);gain.gain.setTargetAtTime(0,audioContext.currentTime,.025);try{source.stop(audioContext.currentTime+.15);}catch{}}
   let lastTick=0;
   function tick(now){
     const dt=Math.min(.034,Math.max(0,(now-(lastTick||now))/1000));lastTick=now;
     if(active&&!paused&&!document.hidden){
       const step=dt*60;
+      if(drag&&last&&(tool==='Wash'||tool==='Blow'))applyCareTool(last,dt);
       for(const s of strands){
         // A click regrows every strand; holding the selected tool continues growth.
         if(drag&&tool==='Regrow')s.growRemaining=Math.max(s.growRemaining,.02);
         if(s.growRemaining>0){const added=Math.min(s.growRemaining,.14*dt);growStrand(s,added);s.growRemaining-=added;}
+        s.wet=Math.max(0,s.wet-dt*.008);
         if(s.held)continue;
         s.v+=-s.dx*.018*step;s.v*=Math.pow(.91,step);s.dx+=s.v*step;
         s.vy+=-s.dy*.018*step;s.vy*=Math.pow(.91,step);s.dy+=s.vy*step;
       }
       for(const f of fragments){f.age+=dt;f.vy+=.9*dt;f.x+=f.vx*dt;f.y+=f.vy*dt;f.angle+=f.spin*dt;}
       fragments=fragments.filter(f=>f.age<2.5&&f.cy+f.y<1.7);
+      for(const p of particles){p.age+=dt;if(p.kind==='drop')p.vy+=.6*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;}
+      particles=particles.filter(p=>p.age<p.life);
       draw();
     }
     requestAnimationFrame(tick);
@@ -114,7 +173,7 @@
     s.v=0;s.vy=0;s.growRemaining=0;
   }
   function apply(p,prev){
-    if(tool==='Regrow')return;
+    if(tool==='Regrow'||tool==='Wash'||tool==='Blow')return;
     const w=canvas.clientWidth||390,h=canvas.clientHeight||598,radius=[.045,.075,.115][brush]*w;
     for(const s of strands){
       anchor(s,w,h);const hit=nearestPoint(s,p,w,h);if(hit.closest>radius)continue;
@@ -142,10 +201,11 @@
   }
   function moveHold(p){if(!holdStart)return;for(const item of held){item.strand.dx=item.dx+(p.x-holdStart.x)/item.k;item.strand.dy=item.dy+(p.y-holdStart.y)/item.k;}}
   let holdStart=null;
-  function endDrag(){drag=false;activePointer=null;holdStart=null;for(const item of held){item.strand.v=0;item.strand.vy=0;}held=[];}
+  function endDrag(){drag=false;activePointer=null;holdStart=null;effectBudget=0;stopCareAudio();for(const item of held){item.strand.v=0;item.strand.vy=0;}held=[];}
   canvas.addEventListener('pointerdown',e=>{
     if(!active||paused||drag||e.isPrimary===false)return;
     drag=true;activePointer=e.pointerId;canvas.setPointerCapture(e.pointerId);last=point(e);guide.classList.add('hidden');
+    startCareAudio();
     if(tool==='Hold'){holdStart=last;beginHold(last);}else apply(last,last);
   });
   canvas.addEventListener('pointermove',e=>{
@@ -168,5 +228,15 @@
     if(tool==='Regrow')growAll();
   });
   root.querySelector('.reset').onclick=()=>{endDrag();init();palette.classList.add('hidden');draw()};root.querySelector('.brush').onclick=e=>{brush=(brush+1)%3;e.currentTarget.textContent='Brush: '+['S','M','L'][brush]};root.querySelector('.pause').onclick=e=>{paused=!paused;if(paused)endDrag();e.currentTarget.textContent=paused?'Resume':'Pause'};
-  window.addEventListener('message',e=>{if(e.source===parent&&e.data?.type==='playable-active'){active=!!e.data.active;draw()}});init();draw();requestAnimationFrame(tick);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)endDrag()});window.addEventListener('pagehide',endDrag);
+  window.addEventListener('message',e=>{if(e.source===parent&&e.data?.type==='playable-active'){active=!!e.data.active;if(!active)endDrag();draw()}});init();draw();requestAnimationFrame(tick);
+})();
+
+// Batch 3 UI refinement — 2026-11-16
+// Local fonts and explicit per-game layout rules; no gameplay or host mutations.
+(() => {
+  const uiStyle=document.createElement('style');
+  uiStyle.dataset.batch3Ui='20261116';
+  uiStyle.textContent="\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Bold.woff2') format('woff2');font-weight:600 900;font-style:normal;font-display:swap}\nhtml,body,#root{font-family:UIBody,system-ui,sans-serif;-webkit-text-size-adjust:100%}\nbutton{font-family:UIBody,system-ui,sans-serif;font-size:16px;font-weight:700;line-height:1.3;min-height:44px}\nbutton:focus-visible{outline:3px solid currentColor;outline-offset:4px}\nbutton:disabled{opacity:.55}\n[hidden]{display:none!important}\n.guide{font-size:18px;line-height:1.4;text-wrap:balance}\n.hud{top:30px;left:30px;right:30px;font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums}\n.hud.center{justify-content:center}\n.bottom{bottom:50px;left:30px;right:30px;gap:10px}\n.bottom .capability{min-height:44px;padding:10px 14px;font-size:14px;line-height:1.25;white-space:normal}\n.status{font-size:13px;line-height:1.4;bottom:108px;text-wrap:balance}\n.pill{font-size:16px;line-height:1.3;min-height:44px;padding:11px 22px}\n.modal{padding:30px 30px 50px}\n.result{max-height:100%;overflow-y:auto;padding:28px 22px}\n.result h2{font-family:Playful,UIBody,sans-serif;font-size:24px;line-height:1.25;text-wrap:balance;overflow-wrap:anywhere}\n.result p{font-size:15px;line-height:1.6;overflow-wrap:anywhere}\n.result .value{line-height:1.2;overflow-wrap:anywhere}\n.smallcaps{font-size:12px;letter-spacing:1.4px;line-height:1.4}\n\n.top{top:30px;left:30px;right:30px;gap:8px}\n.top button{min-height:44px;padding:9px 13px;font:700 14px/1.3 UIBody,system-ui,sans-serif}\n.guide{top:24%;left:30px;right:30px;width:auto;font:700 18px/1.4 UIBody,system-ui,sans-serif}\n.tools button{font:700 14px/1.3 UIBody,system-ui,sans-serif;min-height:44px;padding:9px 11px}\n.tool-row{gap:6px}\n.palette{top:90px;left:30px;width:min(245px,calc(100% - 60px));font-family:UIBody,system-ui,sans-serif}\n.palette-head{font-size:16px}.palette .done{font-size:14px;min-height:40px}\n.brightness-label{font-size:13px}.drop{min-height:44px!important}\n@media(max-width:350px){.tools{left:25px;right:25px}.tools button{padding:9px 8px}.top button{padding:9px 10px}}\n";
+  document.head.append(uiStyle);
 })();

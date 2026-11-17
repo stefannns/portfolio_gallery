@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "style": {
+    "profile": "Reference recreation; portrait FYP; static live first frame",
+    "font": "DynaPuff / Arial / Georgia according to game role",
+    "reference": "Private source videos are reference-only and are not shipped"
+  },
+  "assets": [
+    {
+      "id": "PLAYFUL_FONT",
+      "path": "assets/playful.woff2",
+      "type": "font",
+      "source": "provided",
+      "description": "Existing collection DynaPuff SemiBold display font"
+    },
+    {
+      "path": "assets/ui/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Regular for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Bold for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "id": "PAPER_BACKDROP",
+      "path": "assets/paper-print-v1.svg",
+      "type": "image",
+      "width": 256,
+      "height": 256,
+      "source": "procedural",
+      "description": "Game 107: seamless flat #efd77b print paper with restrained ink dots, fibers and grain; code-native SVG."
+    }
+  ]
+}

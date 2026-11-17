@@ -1,0 +1,48 @@
+{
+  "config_version": "2.0",
+  "playable": {
+    "name": "camera_meme_face",
+    "title": "Meme Face Challenge",
+    "content_locale": "en",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "min_capability_level": 2,
+    "full_capability_level": 2
+  },
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Interaction guide",
+      "value": "Match the face · take a selfie",
+      "default": "Match the face · take a selfie",
+      "max_length": 100
+    }
+  ],
+  "tweaks": [],
+  "images": [
+    {
+      "id": "MEME_1",
+      "label": "Grumpy Cat expression target",
+      "path": "./assets/meme-1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "MEME_2",
+      "label": "Sleepy tongue-out cat expression target",
+      "path": "./assets/meme-2.webp",
+      "replaceable": true
+    },
+    {
+      "id": "MEME_3",
+      "label": "Wide-eyed surprised cat expression target",
+      "path": "./assets/meme-3.webp",
+      "replaceable": true
+    },
+    {
+      "id": "PAPER_BACKDROP",
+      "label": "Printed paper background",
+      "path": "./assets/paper-print-v1.svg",
+      "replaceable": true
+    }
+  ]
+}

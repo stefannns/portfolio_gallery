@@ -146,6 +146,27 @@
       "width": 390,
       "height": 693,
       "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Regular for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Bold for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/ui/SpecialElite-Regular.ttf",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled SpecialElite-Regular for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
     }
   ]
 }

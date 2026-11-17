@@ -8,6 +8,27 @@ window.__firstFrameRequestedActive=false;
 window.addEventListener('message',event=>{
   if(event.source===parent&&event.origin===location.origin&&event.data?.type==='playable-active')window.__firstFrameRequestedActive=event.data.active===true;
 });
+// Website-only adapter for previewing native SDK motion games in an H5 browser.
+// Production packages continue to call the actual tt APIs supplied by the app.
+function installTiltReviewBridge(){
+ if(window.tt?.startGyroscope)return;
+ const gyroListeners=new Set(),accelListeners=new Set();
+ let gyro=false,accel=false,orientationAttached=false,motionAttached=false,lastGyro=0,lastAccel=0;
+ const hasNativeMotion='DeviceOrientationEvent' in window||'DeviceMotionEvent' in window;
+ async function allow(EventType){if(EventType&&typeof EventType.requestPermission==='function'){const status=await EventType.requestPermission();if(status!=='granted')throw new Error('Motion permission declined');}}
+ function orientation(e){if(!gyro||e.beta===null)return;const now=performance.now();if(now-lastGyro<45)return;lastGyro=now;const r=Math.PI/180;for(const fn of gyroListeners)fn({pitch:(e.beta||0)*r,yaw:(e.alpha||0)*r,roll:(e.gamma||0)*r,result:0});}
+ function movement(e){if(!accel)return;const now=performance.now();if(now-lastAccel<190)return;lastAccel=now;const p=e.accelerationIncludingGravity;if(!p)return;for(const fn of accelListeners)fn({x:p.x||0,y:p.y||0,z:p.z||0});}
+ const bridge={
+  onGyroscopeChange(fn){gyroListeners.add(fn);},offGyroscopeChange(fn){gyroListeners.delete(fn);},
+  startGyroscope(options={}){allow(window.DeviceOrientationEvent).then(()=>{gyro=true;if(!orientationAttached&&hasNativeMotion){window.addEventListener('deviceorientation',orientation);orientationAttached=true;}options.success?.();}).catch(error=>options.fail?.({errMsg:error.message}));},
+  stopGyroscope(){gyro=false;window.removeEventListener('deviceorientation',orientation);orientationAttached=false;gyroListeners.clear();},
+  onAccelerometerChange(fn){accelListeners.add(fn);},offAccelerometerChange(fn){accelListeners.delete(fn);},
+  startAccelerometer(options={}){allow(window.DeviceMotionEvent).then(()=>{accel=true;if(!motionAttached&&hasNativeMotion){window.addEventListener('devicemotion',movement);motionAttached=true;}options.success?.();}).catch(error=>options.fail?.({errMsg:error.message}));},
+  stopAccelerometer(){accel=false;window.removeEventListener('devicemotion',movement);motionAttached=false;accelListeners.clear();}
+ };
+ window.tt={...window.tt,...bridge};
+}
+
 function liveFirstFrame(){
   'use strict';
   const win=window,clock=performance.now.bind(performance),dateNow=Date.now.bind(Date);
@@ -134,7 +155,8 @@ function liveFirstFrame(){
     const response=await fetch(source.href,{cache:'no-store'});if(!response.ok)throw new Error('Game source unavailable');
     const html=await response.text();
     const base=source.href.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
-    const setup='<base href="'+base+'"><script>('+liveFirstFrame.toString()+')();<'+'/script>';
+    const motionGame=/\/(tilt_etch_sketch|tilt_magic_eight|tilt_cat_jump|tilt_fortune_sticks|tilt_christmas_cabin|friends_tilt_pick)\//.test(source.pathname);
+    const setup='<base href="'+base+'"><script>'+(motionGame?'('+installTiltReviewBridge.toString()+')();':'')+'('+liveFirstFrame.toString()+')();<'+'/script>';
     // Preserve the package's own location as well as its base URI. Games that
     // resolve assets or storage keys through location.href see the original URL.
     history.replaceState(null,'',source.href);

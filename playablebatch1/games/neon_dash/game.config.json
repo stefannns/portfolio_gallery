@@ -1,1 +1,7 @@
-{"playable":{"name":"neon_dash"},"tweaks":[],"images":[]}
+{
+  "playable": {
+    "name": "neon_dash"
+  },
+  "tweaks": [],
+  "images": []
+}

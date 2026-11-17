@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "style": {
+    "profile": "Source-reference recreation; portrait FYP 390x598 baseline",
+    "font": "Arial",
+    "reference_provenance": "User-authorized video reference; source recordings kept outside package"
+  },
+  "assets": [
+    {
+      "id": "christmas-panorama",
+      "path": "assets/christmas-panorama.webp",
+      "type": "image",
+      "width": 1774,
+      "height": 887,
+      "source": "generated",
+      "generator": "built-in ImageGen",
+      "description": "Equirectangular 360 Christmas log cabin interior"
+    },
+    {
+      "path": "assets/ui/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Regular for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Bold for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    }
+  ]
+}

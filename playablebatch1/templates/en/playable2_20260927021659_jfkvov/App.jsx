@@ -685,7 +685,7 @@ function App() {
             fontSize: "32px",
             margin: "0 0 16px 0"
           }}>{config.RES_TITLE}</h2>}{<div style={{
-            fontSize: "64px",
+            fontSize: "48px",
             fontWeight: 900,
             fontFamily: "var(--font-display)",
             marginBottom: "16px"
@@ -1057,4 +1057,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App />);
   }, {
     once: true
   });
+})();
+
+// Batch 3 UI refinement — 2026-11-16
+// Local fonts and explicit per-game layout rules; no gameplay or host mutations.
+(() => {
+  const uiStyle=document.createElement('style');
+  uiStyle.dataset.batch3Ui='20261116';
+  uiStyle.textContent="\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Bold.woff2') format('woff2');font-weight:600 900;font-style:normal;font-display:swap}\nhtml,body,#root{font-family:UIBody,system-ui,sans-serif;-webkit-text-size-adjust:100%}\nbutton{font-family:UIBody,system-ui,sans-serif;font-size:16px;font-weight:700;line-height:1.3;min-height:44px}\nbutton:focus-visible{outline:3px solid currentColor;outline-offset:4px}\nbutton:disabled{opacity:.55}\n[hidden]{display:none!important}\n.guide{font-size:18px;line-height:1.4;text-wrap:balance}\n.hud{top:30px;left:30px;right:30px;font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums}\n.hud.center{justify-content:center}\n.bottom{bottom:50px;left:30px;right:30px;gap:10px}\n.bottom .capability{min-height:44px;padding:10px 14px;font-size:14px;line-height:1.25;white-space:normal}\n.status{font-size:13px;line-height:1.4;bottom:108px;text-wrap:balance}\n.pill{font-size:16px;line-height:1.3;min-height:44px;padding:11px 22px}\n.modal{padding:30px 30px 50px}\n.result{max-height:100%;overflow-y:auto;padding:28px 22px}\n.result h2{font-family:Playful,UIBody,sans-serif;font-size:24px;line-height:1.25;text-wrap:balance;overflow-wrap:anywhere}\n.result p{font-size:15px;line-height:1.6;overflow-wrap:anywhere}\n.result .value{line-height:1.2;overflow-wrap:anywhere}\n.smallcaps{font-size:12px;letter-spacing:1.4px;line-height:1.4}\n\nhtml,body,#root,button{font-family:PaperType,Georgia,serif}\n:root .screen-container h2{font-size:24px!important;line-height:1.35!important;letter-spacing:0!important}\n:root .screen-container .btn-option{font-size:18px!important;line-height:1.35!important;min-height:48px;padding:11px 16px!important}\n:root .screen-container h3{font-family:PaperType,Georgia,serif;font-size:24px;line-height:1.25}\n:root .screen-container p{font-family:PaperType,Georgia,serif;line-height:1.5}\n:root .screen-container .btn-black{min-height:48px;font-size:18px;padding:12px 22px;max-width:100%;white-space:normal}\n@media(max-height:560px){:root .screen-container .btn-option{min-height:44px;font-size:16px!important;padding:9px 14px!important}:root .screen-container h2{font-size:22px!important}}\n";
+  document.head.append(uiStyle);
 })();

@@ -20,6 +20,27 @@
     {
       "path": "assets/balls-v2/volleyball.webp",
       "type": "image"
+    },
+    {
+      "path": "assets/ui/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Regular for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Bold for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/ui/DynaPuff-SemiBold.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled DynaPuff-SemiBold for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
     }
   ]
 }

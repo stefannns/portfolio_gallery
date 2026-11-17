@@ -170,6 +170,45 @@ var items3 = [{
   icon: <GameKC />,
   label: "Stickers"
 }];
+// A resolved play() promise does not guarantee a decoded camera frame.
+function waitForDecodedCamera(video, isCurrent = () => true) {
+  return new Promise((resolve, reject) => {
+    let raf = 0, callback = 0, finished = false, sawFrame = false;
+    const hasFrameCallback = typeof video.requestVideoFrameCallback === 'function';
+    const timer = setTimeout(() => finish(new Error('CameraFrameTimeout')), 10000);
+    function finish(error) {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      cancelAnimationFrame(raf);
+      if (callback && typeof video.cancelVideoFrameCallback === 'function') video.cancelVideoFrameCallback(callback);
+      error ? reject(error) : resolve(video);
+    }
+    function check() {
+      if (finished) return;
+      if (!isCurrent()) { finish(new Error('CameraRequestCancelled')); return; }
+      if (video.error) { finish(new Error('CameraPlaybackFailed')); return; }
+      if (video.readyState >= 2 && video.videoWidth > 0 && video.videoHeight > 0 && (!hasFrameCallback || sawFrame)) {
+        finish();
+        return;
+      }
+      raf = requestAnimationFrame(check);
+    }
+    if (hasFrameCallback) callback = video.requestVideoFrameCallback(() => { sawFrame = true; });
+    check();
+  });
+}
+
+function prepareInlineCameraVideo(video) {
+  video.playsInline = true;
+  video.muted = true;
+  video.autoplay = true;
+  video.setAttribute('playsinline', '');
+  video.setAttribute('webkit-playsinline', '');
+  video.setAttribute('muted', '');
+  video.setAttribute('autoplay', '');
+}
+
 function App() {
   let [config, setConfig] = React.useState(null);
   let [currentValue, setCurrentValue] = React.useState(null);
@@ -188,6 +227,56 @@ function App() {
   let stateRef = React.useRef(new Map());
   let stateRef2 = React.useRef(null);
   let stateRef3 = React.useRef(null);
+  const cameraSession = React.useRef({id: 0, pending: false, stream: null, video: null, raf: 0});
+  const [cameraBusy, setCameraBusy] = React.useState(false);
+  const stopLiveCamera = React.useCallback(() => {
+    const session = cameraSession.current;
+    session.id++;
+    session.pending = false;
+    cancelAnimationFrame(session.raf);
+    session.raf = 0;
+    const canvas = y.current;
+    if (canvas?.__cameraRaf) cancelAnimationFrame(canvas.__cameraRaf);
+    if (canvas) {
+      canvas.__cameraVideo = null;
+      canvas.__cameraStream = null;
+      canvas.__cameraOps = [];
+      canvas.__replayOp = null;
+      canvas.__replaying = false;
+    }
+    session.stream?.getTracks().forEach(track => track.stop());
+    if (session.video) {
+      session.video.pause();
+      session.video.srcObject = null;
+      session.video.remove();
+      if (x.current === session.video) x.current = null;
+    }
+    session.video = null;
+    session.stream = null;
+  }, []);
+  React.useEffect(() => {
+    const pauseCamera = () => {
+      const live = Boolean(cameraSession.current.video || cameraSession.current.pending);
+      stopLiveCamera();
+      if (live) {
+        setCurrentValue(null);
+        setCameraBusy(false);
+        setCameraError('Camera paused. Start it again to continue.');
+      }
+    };
+    const visibility = () => { if (document.hidden) pauseCamera(); };
+    const host = event => { if (event.source === parent && event.data?.type === 'playable-active' && event.data.active !== true) pauseCamera(); };
+    document.addEventListener('visibilitychange', visibility);
+    window.addEventListener('message', host);
+    window.addEventListener('pagehide', pauseCamera);
+    return () => {
+      document.removeEventListener('visibilitychange', visibility);
+      window.removeEventListener('message', host);
+      window.removeEventListener('pagehide', pauseCamera);
+      stopLiveCamera();
+    };
+  }, [stopLiveCamera]);
+
   React.useEffect(() => {
     let value = !0;
     (async () => {
@@ -279,6 +368,9 @@ function App() {
   let handleChange = React.useCallback(value => {
     let item = value.target.files[0];
     if (!item) return;
+    stopLiveCamera();
+    setCameraBusy(false);
+    setCameraError("");
     let objectURL = URL.createObjectURL(item);
     let dimensions = new Image();
     dimensions.onload = () => {
@@ -410,102 +502,105 @@ function App() {
     stateRef3.current = point2;
   }, [size, mode, callback, config]);
   let cameraStart = async () => {
-    setCameraError("");
-    if (!navigator.mediaDevices?.getUserMedia) {
-      setCameraError("Live camera is not supported here. Import a photo instead.");
-      return;
-    }
+    if (cameraSession.current.pending) return;
+    stopLiveCamera();
+    const session = cameraSession.current, request = session.id;
+    session.pending = true;
+    setCameraBusy(true);
+    setCameraError('');
+    const isCurrent = () => request === cameraSession.current.id && !document.hidden;
     try {
-      let stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: "user",
-          width: {
-            ideal: 720
-          },
-          height: {
-            ideal: 1280
-          }
-        },
-        audio: !1
+      if (!navigator.mediaDevices?.getUserMedia) throw new Error('CameraUnsupported');
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {facingMode: {ideal: 'user'}, width: {ideal: 720}, height: {ideal: 1280}},
+        audio: false
       });
-      let video = document.createElement("video");
-      video.playsInline = !0;
-      video.muted = !0;
-      video.autoplay = !0;
+      if (!isCurrent()) { stream.getTracks().forEach(track => track.stop()); return; }
+      session.stream = stream;
+      const video = document.createElement('video');
+      prepareInlineCameraVideo(video);
+      // WebKit needs the real inline video attached to keep producing frames.
+      video.style.cssText = 'position:fixed;left:0;top:0;width:1px;height:1px;opacity:.001;pointer-events:none;z-index:-1';
+      document.body.append(video);
+      session.video = video;
       video.srcObject = stream;
-      await video.play();
-      setCurrentValue("camera");
-      setMode("push");
+      await Promise.all([Promise.resolve(video.play()), waitForDecodedCamera(video, isCurrent)]);
+      if (!isCurrent()) return;
+      for (const track of stream.getVideoTracks()) track.addEventListener('ended', () => {
+        if (request !== cameraSession.current.id) return;
+        stopLiveCamera();
+        setCurrentValue(null);
+        setCameraBusy(false);
+        setCameraError('Camera stopped. Start it again to continue.');
+      }, {once: true});
+      setMode('push');
       setItems([]);
       setItems2([]);
-      setPoint({
-        x: 0,
-        y: 0,
-        scale: 1
-      });
+      setPoint({x: 0, y: 0, scale: 1});
       x.current = video;
-      let attempts = 0;
-      let setup = () => {
-        let canvas = y.current;
-        if (!canvas) {
-          if (attempts++ < 60) {
-            requestAnimationFrame(setup);
-            return;
-          }
-          stream.getTracks().forEach(track => track.stop());
-          return;
-        }
-        let value = video.videoWidth || 480;
-        let value2 = video.videoHeight || 640;
-        let scale = Math.min(1, 640 / Math.max(value, value2));
-        canvas.width = Math.max(1, Math.round(value * scale));
-        canvas.height = Math.max(1, Math.round(value2 * scale));
-        canvas.__cameraVideo = video;
-        canvas.__cameraStream = stream;
-        canvas.__cameraOps = [];
-        canvas.__lastFrame = 0;
-        let paint = timestamp => {
-          if (!canvas.__cameraVideo) return;
-          canvas.__cameraRaf = requestAnimationFrame(paint);
-          if (timestamp - canvas.__lastFrame < 33) return;
-          canvas.__lastFrame = timestamp;
-          let context = canvas.getContext("2d", {
-            willReadFrequently: !0
-          });
-          context.save();
-          context.setTransform(-1, 0, 0, 1, canvas.width, 0);
-          context.drawImage(video, 0, 0, canvas.width, canvas.height);
-          context.restore();
-          canvas.__replaying = !0;
-          for (let point2 of canvas.__cameraOps) {
-            canvas.__replayOp = point2;
-            stateRef3.current = point2.prev;
-            callback3(point2.x, point2.y);
-          }
-          canvas.__replayOp = null;
-          canvas.__replaying = !1;
-          stateRef3.current = null;
+      setCurrentValue('camera');
+      const mountedAt = performance.now();
+      const canvas = await new Promise((resolve, reject) => {
+        const findCanvas = () => {
+          if (!isCurrent()) { reject(new Error('CameraRequestCancelled')); return; }
+          if (y.current) { resolve(y.current); return; }
+          if (performance.now() - mountedAt > 3000) { reject(new Error('CameraCanvasUnavailable')); return; }
+          requestAnimationFrame(findCanvas);
         };
-        canvas.__cameraRaf = requestAnimationFrame(paint);
+        findCanvas();
+      });
+      const scale = Math.min(1, 640 / Math.max(video.videoWidth, video.videoHeight));
+      canvas.width = Math.max(1, Math.round(video.videoWidth * scale));
+      canvas.height = Math.max(1, Math.round(video.videoHeight * scale));
+      canvas.__cameraVideo = video;
+      canvas.__cameraStream = stream;
+      canvas.__cameraOps = [];
+      canvas.__lastFrame = 0;
+      const paint = timestamp => {
+        if (!isCurrent() || canvas.__cameraVideo !== video) return;
+        session.raf = canvas.__cameraRaf = requestAnimationFrame(paint);
+        if (timestamp - canvas.__lastFrame < 33 || video.readyState < 2 || !video.videoWidth || !video.videoHeight || video.paused) return;
+        canvas.__lastFrame = timestamp;
+        const context = canvas.getContext('2d', {willReadFrequently: true});
+        if (!context) return;
+        context.save();
+        context.setTransform(-1, 0, 0, 1, canvas.width, 0);
+        try { context.drawImage(video, 0, 0, canvas.width, canvas.height); }
+        catch { return; }
+        finally { context.restore(); }
+        canvas.__replaying = true;
+        try {
+          for (const operation of canvas.__cameraOps) {
+            canvas.__replayOp = operation;
+            stateRef3.current = operation.prev;
+            callback3(operation.x, operation.y);
+          }
+        } finally {
+          canvas.__replayOp = null;
+          canvas.__replaying = false;
+          stateRef3.current = null;
+        }
       };
-      requestAnimationFrame(setup);
-    } catch {
-      setCameraError("Camera unavailable. Allow access or import a photo.");
+      session.raf = canvas.__cameraRaf = requestAnimationFrame(paint);
+      session.pending = false;
+      setCameraBusy(false);
+    } catch (error) {
+      if (request !== cameraSession.current.id) return;
+      stopLiveCamera();
+      setCurrentValue(null);
+      setCameraBusy(false);
+      setCameraError(error?.name === 'NotAllowedError'
+        ? 'Allow camera access, then try again.'
+        : error?.message === 'CameraFrameTimeout'
+          ? 'The camera did not provide a picture. Try starting it again.'
+          : 'Camera unavailable. Try again or import your own photo.');
     }
   };
   let exitEditor = () => {
-    let canvas = y.current;
-    if (canvas?.__cameraRaf) {
-      cancelAnimationFrame(canvas.__cameraRaf);
-    }
-    canvas?.__cameraStream?.getTracks().forEach(track => track.stop());
-    if (canvas) {
-      canvas.__cameraVideo = null;
-      canvas.__cameraStream = null;
-      canvas.__cameraOps = [];
-    }
+    stopLiveCamera();
     x.current = null;
     setCurrentValue(null);
+    setCameraBusy(false);
   };
   let handlePointerDown = React.useCallback(event => {
     if (event.currentTarget.setPointerCapture(event.pointerId), stateRef.current.set(event.pointerId, {
@@ -695,7 +790,7 @@ function App() {
           border: "none",
           fontFamily: "inherit",
           fontSize: "16px"
-        }} onClick={cameraStart}>{"Start Live Camera"}</button>}{cameraError && <div style={{
+        }} onClick={cameraStart} disabled={cameraBusy} aria-busy={cameraBusy}>{cameraBusy ? "Opening camera…" : "Start Live Camera"}</button>}{cameraBusy && <React.Fragment><div role="status" style={{fontSize:14,lineHeight:1.4,textAlign:"center",maxWidth:280}}>Allow camera access to start the live view.</div><button type="button" className="btn" onClick={() => {stopLiveCamera();setCameraBusy(false);setCameraError("");}}>Cancel camera</button></React.Fragment>}{cameraError && <div style={{
           maxWidth: "300px",
           padding: "0 25px",
           textAlign: "center",

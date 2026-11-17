@@ -77,17 +77,27 @@ const DEFAULT_CONFIG = {
   "images": [{
     "id": "IMG_PLAYER",
     "label": "Player Car",
-    "path": "./assets/art-v3/player.svg",
+    "path": "./assets/cartoon-v4/player-coral.webp",
     "replaceable": true
   }, {
     "id": "IMG_PARKED",
     "label": "Parked Car",
-    "path": "./assets/art-v3/parked.svg",
+    "path": "./assets/cartoon-v4/car-lavender.webp",
+    "replaceable": true
+  }, {
+    "id": "IMG_VAN",
+    "label": "Sky Blue Parked Van",
+    "path": "./assets/cartoon-v4/van-sky.webp",
+    "replaceable": true
+  }, {
+    "id": "IMG_SUV",
+    "label": "Yellow Parked SUV",
+    "path": "./assets/cartoon-v4/suv-yellow.webp",
     "replaceable": true
   }, {
     "id": "IMG_BG",
     "label": "Cartoon Parking Lot",
-    "path": "./assets/art-v3/parking-lot.png",
+    "path": "./assets/cartoon-v4/asphalt-lot.svg",
     "replaceable": true
   }],
   "config_version": "2.0",
@@ -101,7 +111,7 @@ const DEFAULT_CONFIG = {
     "full_capability_level": 1
   }
 };
-const GAME_STYLES = "\n    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }\n    body { background: #596b80; -webkit-tap-highlight-color: transparent; }\n  ";
+const GAME_STYLES = "\n    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }\n    body { background: #454c58; -webkit-tap-highlight-color: transparent; }\n  ";
 const gameStyle = document.createElement('style');
 gameStyle.textContent = GAME_STYLES;
 document.head.append(gameStyle);
@@ -245,13 +255,26 @@ function Cp(value9) {
 }
 var value = 800;
 var value2 = 1200;
-var value3 = 76;
-var value4 = 140;
-var value5 = 60;
-var value6 = 120;
+// Larger matching bays and vehicles; fewer marked spaces keep the aisle open.
+var value3 = 100;
+var value4 = 180;
+var value5 = 80;
+var value6 = 152;
+var bayPitch = 114;
+var sideBayX = 154;
+// The two control groups float over the canvas. Reserve their footprints,
+// including button shadows and a little clearance, for every level layout.
+var parkingControlZones = [
+  {x:222,y:1050,w:372,h:204,angle:0},
+  {x:678,y:961,w:192,h:382,angle:0}
+];
+function overlapsParkingControls(spot) {
+  return parkingControlZones.some(zone=>Zc(spot,zone));
+}
 function Np() {
   let items = [];
-  for (let value9 = 0; value9 < 17; value9++) {
+  // A compact five-level campaign, preserving the original opening layouts.
+  for (let value9 = 0; value9 < 5; value9++) {
     let walls = [{
       x: value / 2,
       y: -10,
@@ -291,10 +314,10 @@ function Np() {
       angle: 0
     };
     if (value9 < 5) {
-      let value10 = 3 + value9;
-      let value11 = target.x - Math.floor(value10 / 2) * (value3 + 10);
+      let value10 = Math.min(5, 3 + value9);
+      let value11 = target.x - Math.floor(value10 / 2) * bayPitch;
       for (let value12 = 0; value12 < value10; value12++) {
-        let value13 = value11 + value12 * (value3 + 10);
+        let value13 = value11 + value12 * bayPitch;
         if (value12 === Math.floor(value10 / 2)) {
           target.x = value13;
         } else {
@@ -311,10 +334,10 @@ function Np() {
       player.angle = value9 === 0 ? -0.13 : Math.PI / 2;
     } else if (value9 < 12) {
       target = {
-        x: value - 100,
-        y: 400 + (value9 - 5) * 60,
-        w: value4,
-        h: value3,
+        x: value - sideBayX,
+        y: 360 + (value9 - 5) * 50,
+        w: value3,
+        h: value4,
         angle: Math.PI / 2
       };
       parked.push({
@@ -377,6 +400,21 @@ function Np() {
         angle: Math.PI / 6
       });
     }
+    // Fill a few real parking spaces, keeping the central route and spawn clear.
+    const extraBays = [
+      {x:sideBayX,y:540,angle:-Math.PI/2},
+      {x:value-sideBayX,y:660,angle:Math.PI/2}
+    ];
+    for (const bay of extraBays) {
+      const car = {...bay,w:value5,h:value6};
+      if (Math.hypot(bay.x-player.x,bay.y-player.y)<220) continue;
+      if ([target,...parked].some(spot=>Zc({...bay,w:value3+20,h:value4+20},{...spot,w:value3+20,h:value4+20}))) continue;
+      if (walls.some(wall=>Zc({...car,w:car.w+16,h:car.h+16},wall))) continue;
+      parked.push(car);
+    }
+    parked=parked.filter(car=>!overlapsParkingControls({...car,w:value3+12,h:value4+12}));
+    while (overlapsParkingControls({...player,w:value5,h:value6})&&player.y>400) player.y-=50;
+    parked.forEach((car,index)=>{car.art=['parked','van','suv'][(index+value9)%3];});
     items.push({
       walls: walls,
       parked: parked,
@@ -387,9 +425,24 @@ function Np() {
   return items;
 }
 var value7 = Np();
-function _p(context) {
-  context.fillStyle = "#858b8e";
+const parkingGroundCache = new WeakMap();
+function _p(context, image) {
+  context.fillStyle = "#454c58";
   context.fillRect(0, 0, value, value2);
+  if (!image?.complete || !image.naturalWidth) return;
+  let painted = parkingGroundCache.get(image);
+  if (!painted) {
+    // Rasterize the static SVG/replaceable background only once, never per frame.
+    painted = document.createElement("canvas");
+    painted.width = value;painted.height = value2;
+    const brush = painted.getContext("2d");
+    brush.fillStyle = "#454c58";brush.fillRect(0,0,value,value2);
+    const scale = Math.max(value/image.naturalWidth,value2/image.naturalHeight);
+    const w = image.naturalWidth*scale,h=image.naturalHeight*scale;
+    brush.drawImage(image,(value-w)/2,(value2-h)/2,w,h);
+    parkingGroundCache.set(image,painted);
+  }
+  context.drawImage(painted,0,0);
 }
 function Xc(value9, otherValue) {
   if (!otherValue) return value9;
@@ -477,6 +530,13 @@ function Pp(value9, otherValue, point) {
 }
 var value8 = `
 @font-face {
+  font-family: 'DynaPuff';
+  src: url('./assets/fonts/dynapuff/DynaPuff-SemiBold.woff2') format('woff2');
+  font-weight: 600 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
   font-family: 'Poppins';
   src: url('./assets/fonts/poppins/Poppins-Regular.woff2') format('woff2');
   font-weight: 400;
@@ -491,11 +551,11 @@ var value8 = `
   font-display: swap;
 }
 :root {
-  --font-display: "Poppins", "PingFang SC", system-ui, sans-serif;
-  --font-body:    "Poppins", "PingFang SC", system-ui, sans-serif;
+  --font-display: "DynaPuff", "Poppins", system-ui, sans-serif;
+  --font-body:    "DynaPuff", "Poppins", system-ui, sans-serif;
   --font-mono:    ui-monospace, Menlo, monospace;
 }
-html, body, #root { width:100%; height:100%; margin:0; overflow:hidden; background-color:#1a1a24; }
+html, body, #root { width:100%; height:100%; margin:0; overflow:hidden; background-color:#454c58; }
 * { box-sizing: border-box; touch-action: none; user-select: none; -webkit-user-drag: none; }
 `;
 function App() {
@@ -561,6 +621,8 @@ function App() {
         };
         handleAction4("player", config2.IMG_PLAYER);
         handleAction4("parked", config2.IMG_PARKED);
+        handleAction4("van", config2.IMG_VAN);
+        handleAction4("suv", config2.IMG_SUV);
         handleAction4("bg", config2.IMG_BG);
       }
     })();
@@ -640,7 +702,9 @@ function App() {
       context.translate(spot.x, spot.y);
       context.rotate(spot.angle);
       context.strokeStyle = `rgba(255,255,255,${opacity})`;
-      context.lineWidth = 4;
+      context.lineWidth = 6;
+      context.lineCap = "round";
+      context.lineJoin = "round";
       context.beginPath();
       context.moveTo(-w / 2, h / 2);
       context.lineTo(-w / 2, -h / 2);
@@ -653,15 +717,19 @@ function App() {
     // leaving the central aisle clear for driving.
     const occupied = [item.target, ...item.parked];
     const addEmptyBay = (x, y, angle) => {
-      if (occupied.some(spot => Math.hypot(spot.x - x, spot.y - y) < 102)) return;
+      const bay = {x,y,angle,w:value3+12,h:value4+12};
+      if (overlapsParkingControls(bay)) return;
+      if (occupied.some(spot => Zc(bay, {...spot,w:value3+12,h:value4+12}))) return;
+      if (Zc(bay, {...item.player,w:value5+30,h:value6+30})) return;
+      if (item.walls.slice(4).some(wall => Zc(bay,wall))) return;
       drawBay({x, y, angle}, value3, value4, .68);
     };
-    for (let x = item.target.x % 86; x < value - 30; x += 86) {
-      if (x > 30) addEmptyBay(x, 240, 0);
+    for (let x = 172; x <= 628; x += bayPitch) {
+      addEmptyBay(x, 240, 0);
     }
-    for (let y = 510; y < value2 - 45; y += 86) {
-      addEmptyBay(90, y, -Math.PI / 2);
-      addEmptyBay(value - 90, y, Math.PI / 2);
+    for (let y = 540; y <= 1020; y += 120) {
+      addEmptyBay(sideBayX, y, -Math.PI / 2);
+      addEmptyBay(value - sideBayX, y, Math.PI / 2);
     }
     item.parked.forEach(car => drawBay(car, value3, value4));
     drawBay(item.target, item.target.w, item.target.h);
@@ -674,24 +742,25 @@ function App() {
     context.save();
     context.translate(item.target.x, item.target.y);
     context.rotate(item.target.angle);
-    context.strokeStyle = "#2fff5f";
-    context.lineWidth = 4;
-    context.shadowColor = "#2fff5f";
-    context.shadowBlur = 10;
+    context.strokeStyle = "#79eda6";
+    context.lineWidth = 7;
     context.strokeRect(-item.target.w / 2, -item.target.h / 2, item.target.w, item.target.h);
-    context.fillStyle = "#2fff5f";
-    context.font = 'bold 48px "Poppins", sans-serif';
+    context.fillStyle = "#c4ffd5";
+    context.font = '600 48px "DynaPuff", sans-serif';
     context.textAlign = "center";
     context.textBaseline = "middle";
     context.fillText("P", 0, 0);
     context.restore();
     let handleAction4 = (point2, otherValue, argument3) => {
-      let point3 = otherValue === "parked" ? stateRef4.current : null;
+      let z = stateRef3.current[otherValue];
+      let point3 = z && z.complete && z.naturalWidth ? {x:0,y:0,w:z.naturalWidth,h:z.naturalHeight} : null;
       let value10 = Xc(point2, point3);
       context.save();
       context.translate(point2.x, point2.y);
       context.rotate(point2.angle);
-      let z = stateRef3.current[otherValue];
+      context.shadowColor = "rgba(36,43,67,.20)";
+      context.shadowOffsetY = 5;
+      context.shadowBlur = 2;
       if (z && z.complete && z.width > 0) {
         if (point3) {
           context.drawImage(z, point3.x, point3.y, point3.w, point3.h, -value10.w / 2, -value10.h / 2, value10.w, value10.h);
@@ -707,7 +776,7 @@ function App() {
       context.restore();
     };
     item.parked.forEach(item2 => {
-      handleAction4(item2, "parked", "#5b757a");
+      handleAction4(item2, item2.art || "parked", "#a387db");
     });
     let point = stateRef6.current;
     handleAction4({
@@ -773,7 +842,9 @@ function App() {
         }
       }
       for (let value21 of item.parked) {
-        if (Zc(options2, Xc(value21, stateRef4.current))) {
+        const image = stateRef3.current[value21.art || "parked"];
+        const size = image?.naturalWidth ? {w:image.naturalWidth,h:image.naturalHeight} : stateRef4.current;
+        if (Zc(options2, Xc(value21, size))) {
           value20 = !0;
         }
       }
@@ -807,9 +878,10 @@ function App() {
     };
   }, [config, phase, count, callback2]);
   let options = {
-    background: "rgba(255,255,255,0.1)",
-    border: "2px solid rgba(255,255,255,0.4)",
-    borderRadius: "16px",
+    background: "#34445e",
+    border: "3px solid #f8faff",
+    borderRadius: "23px",
+    boxShadow: "0 5px 0 #253249",
     width: "72px",
     height: "72px",
     display: "flex",
@@ -872,8 +944,9 @@ function App() {
       zIndex: 50,
       color: "#fff"
     }}>{<h2 style={{
-        fontSize: "36px",
-        marginBottom: "40px",
+        fontSize: "24px",
+        lineHeight: 1.3,
+        marginBottom: "24px",
         textAlign: "center",
         padding: "0 20px",
         fontFamily: "var(--font-display)"
@@ -884,7 +957,7 @@ function App() {
         width: "240px"
       }}>{<button onClick={handleClick2} style={{
           padding: "16px 0",
-          fontSize: "20px",
+          fontSize: "18px",
           fontWeight: "bold",
           borderRadius: "30px",
           border: "none",
@@ -894,7 +967,7 @@ function App() {
           fontFamily: "var(--font-display)"
         }}>{label2}</button>}{value9 && <button type={"button"} disabled={x} onClick={handleClick} style={{
           padding: "16px 0",
-          fontSize: "20px",
+          fontSize: "18px",
           fontWeight: "bold",
           borderRadius: "30px",
           border: "2px solid #fff",
@@ -910,7 +983,7 @@ function App() {
     height: "100%",
     position: "relative",
     overflow: "hidden",
-    backgroundColor: "#858b8e",
+    backgroundColor: "#454c58",
     containerType: "size"
   }}>{<style>{value8}</style>}{<div style={{
       position: "absolute",
@@ -966,20 +1039,12 @@ function App() {
         display: "flex",
         gap: "12px",
         flexDirection: "column"
-      }}>{<button type={"button"} aria-label={"Drive forward"} disabled={phase !== "playing"} style={{
-          ...options,
-          background: "rgba(255, 207, 51, 0.2)",
-          borderColor: "#ffcf33"
-        }} onPointerDown={handleAction("up")} onPointerUp={handleAction2("up")} onPointerCancel={handleAction2("up")} onLostPointerCapture={handleAction2("up")} onBlur={handleAction2("up")} onKeyDown={event => {
+      }}>{<button type={"button"} aria-label={"Drive forward"} disabled={phase !== "playing"} style={options} onPointerDown={handleAction("up")} onPointerUp={handleAction2("up")} onPointerCancel={handleAction2("up")} onLostPointerCapture={handleAction2("up")} onBlur={handleAction2("up")} onKeyDown={event => {
           if (event.key === " " || event.key === "Enter") {
             event.preventDefault();
             handleAction("up")(event);
           }
-        }} onKeyUp={handleAction2("up")}>{"\u2191"}</button>}{<button type={"button"} aria-label={"Reverse"} disabled={phase !== "playing"} style={{
-          ...options,
-          background: "rgba(255, 107, 53, 0.2)",
-          borderColor: "#ff6b35"
-        }} onPointerDown={handleAction("down")} onPointerUp={handleAction2("down")} onPointerCancel={handleAction2("down")} onLostPointerCapture={handleAction2("down")} onBlur={handleAction2("down")} onKeyDown={event => {
+        }} onKeyUp={handleAction2("up")}>{"\u2191"}</button>}{<button type={"button"} aria-label={"Reverse"} disabled={phase !== "playing"} style={options} onPointerDown={handleAction("down")} onPointerUp={handleAction2("down")} onPointerCancel={handleAction2("down")} onLostPointerCapture={handleAction2("down")} onBlur={handleAction2("down")} onKeyDown={event => {
           if (event.key === " " || event.key === "Enter") {
             event.preventDefault();
             handleAction("down")(event);
@@ -987,7 +1052,7 @@ function App() {
         }} onKeyUp={handleAction2("down")}>{"\u2193"}</button>}</div>}</div>}{handleAction3()}</div> : <div style={{
     width: "100%",
     height: "100%",
-    backgroundColor: "#1a1a24"
+    backgroundColor: "#454c58"
   }} />;
 }
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
@@ -1254,4 +1319,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App />);
   }, {
     once: true
   });
+})();
+
+// Batch 3 UI refinement — 2026-11-16
+// Local fonts and explicit per-game layout rules; no gameplay or host mutations.
+(() => {
+  const uiStyle=document.createElement('style');
+  uiStyle.dataset.batch3Ui='20261116';
+  uiStyle.textContent="\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Bold.woff2') format('woff2');font-weight:600 900;font-style:normal;font-display:swap}\nhtml,body,#root{font-family:UIBody,system-ui,sans-serif;-webkit-text-size-adjust:100%}\nbutton{font-family:UIBody,system-ui,sans-serif;font-size:16px;font-weight:700;line-height:1.3;min-height:44px}\nbutton:focus-visible{outline:3px solid currentColor;outline-offset:4px}\nbutton:disabled{opacity:.55}\n[hidden]{display:none!important}\n.guide{font-size:18px;line-height:1.4;text-wrap:balance}\n.hud{top:30px;left:30px;right:30px;font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums}\n.hud.center{justify-content:center}\n.bottom{bottom:50px;left:30px;right:30px;gap:10px}\n.bottom .capability{min-height:44px;padding:10px 14px;font-size:14px;line-height:1.25;white-space:normal}\n.status{font-size:13px;line-height:1.4;bottom:108px;text-wrap:balance}\n.pill{font-size:16px;line-height:1.3;min-height:44px;padding:11px 22px}\n.modal{padding:30px 30px 50px}\n.result{max-height:100%;overflow-y:auto;padding:28px 22px}\n.result h2{font-family:Playful,UIBody,sans-serif;font-size:24px;line-height:1.25;text-wrap:balance;overflow-wrap:anywhere}\n.result p{font-size:15px;line-height:1.6;overflow-wrap:anywhere}\n.result .value{line-height:1.2;overflow-wrap:anywhere}\n.smallcaps{font-size:12px;letter-spacing:1.4px;line-height:1.4}\n\nhtml,body,#root,button{font-family:DynaPuff,UIBody,sans-serif}\nbutton[aria-label]{font-family:UIBody,system-ui,sans-serif}\n";
+  document.head.append(uiStyle);
 })();

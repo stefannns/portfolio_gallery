@@ -16,10 +16,10 @@ const DEFAULT_CONFIG = {
     "id": "PARTICLE_COUNT",
     "kind": "number",
     "label": "Explosion Particles",
-    "value": 60,
-    "default": 60,
-    "min": 20,
-    "max": 120,
+    "value": 90,
+    "default": 90,
+    "min": 40,
+    "max": 180,
     "step": 5
   }, {
     "id": "LAUNCH_SPEED",
@@ -133,16 +133,17 @@ function App() {
     closed: false
   });
   const makeParticles = (x, y, color, style, size, rect) => {
-    const baseCount = Math.max(32, Math.min(105, Number(config.PARTICLE_COUNT) || 60));
-    const value = Math.min(140, Math.round(baseCount * Math.sqrt(size)));
+    const baseCount = Math.max(48, Math.min(180, Number(config.PARTICLE_COUNT) || 90));
+    const value = Math.min(200, Math.round(baseCount * Math.sqrt(size) * 1.25));
     const force = Math.max(1, Math.min(1.35, 1 + (Number(config.EXPLOSION_FORCE) || 0.4) * 0.35));
-    const speed = Math.min(rect.width, rect.height) / 120 * size * force;
+    const speed = Math.min(rect.width, rect.height) / 120 * size * force * 1.25;
     const particles = [];
     for (let value2 = 0; value2 < value; value2++) {
       const theta = value2 / value * Math.PI * 2 - Math.PI / 2;
       let value3 = Math.cos(theta);
       let value4 = Math.sin(theta);
-      let spread = style === "ring" ? 1 : 0.35 + Math.random() * 0.65;
+      // A full outer crown with an inner ring keeps every style substantial.
+      let spread = style === "ring" ? (value2 % 4 === 0 ? 0.78 : 1) : Math.sqrt(0.24 + Math.random() * 0.76);
       if (style === "star") {
         const edge = value2 / value * 10;
         const value5 = Math.floor(edge);
@@ -153,21 +154,22 @@ function App() {
         const rNext = value5 % 2 ? 1 : 0.43;
         value3 = Math.cos(angle) * value7 * (1 - value6) + Math.cos(next) * rNext * value6;
         value4 = Math.sin(angle) * value7 * (1 - value6) + Math.sin(next) * rNext * value6;
-        spread = 1;
+        spread = value2 % 5 === 0 ? 0.64 : 1;
       }
       const willow = style === "willow";
-      const life = 0.85 + Math.random() * 0.15;
+      const life = 1 + Math.random() * 0.18;
       particles.push({
         x,
         y,
         vx: value3 * speed * spread / rect.width,
         vy: value4 * speed * spread / rect.height,
         life,
-        color: willow ? ["#ffc95e", "#ffe6a0", "#ffdc79"][value2 % 3] : value2 % 7 === 0 ? "#fff5da" : color,
-        drag: willow ? 0.983 : 0.992,
+        color: willow ? ["#ffc95e", "#ffe6a0", "#ffdc79"][value2 % 3] : value2 % 5 === 0 ? "#fff5da" : color,
+        drag: willow ? 0.982 : 0.985,
         gravity: (willow ? 0.065 : 0.025) / rect.height,
-        lifeScale: willow ? 2.2 : 1,
-        trail: willow ? [] : null,
+        lifeScale: willow ? 2.35 : 1.2,
+        trail: [],
+        trailLength: willow ? 20 : style === "star" ? 11 : 14,
         size
       });
     }
@@ -418,16 +420,16 @@ function App() {
       context.globalCompositeOperation = "lighter";
       for (let value4 = rockets.current.length - 1; value4 >= 0; value4--) {
         const item = rockets.current[value4];
-        const value5 = item.t;
         item.t = Math.min(1, item.t + value3 / item.duration);
-        const value6 = (item.x0 + (item.x1 - item.x0) * value5) * width;
-        const value7 = (item.y0 + (item.y1 - item.y0) * value5) * height;
+        const trailTime = Math.max(0, item.t - 0.12);
+        const value6 = (item.x0 + (item.x1 - item.x0) * trailTime) * width;
+        const value7 = (item.y0 + (item.y1 - item.y0) * trailTime) * height;
         const x = (item.x0 + (item.x1 - item.x0) * item.t) * width;
         const y = (item.y0 + (item.y1 - item.y0) * item.t) * height;
         context.strokeStyle = item.color;
-        context.lineWidth = 3;
+        context.lineWidth = 3.5;
         context.shadowColor = item.color;
-        context.shadowBlur = 17;
+        context.shadowBlur = 20;
         context.beginPath();
         context.moveTo(value6, value7);
         context.lineTo(x, y);
@@ -437,10 +439,16 @@ function App() {
         context.arc(x, y, 3.5, 0, Math.PI * 2);
         context.fill();
         if (item.t >= 1) {
+          // Bound density during rapid swipes rather than accumulating effects.
+          while (bursts.current.length >= 5 || bursts.current.reduce((total, burst) => total + burst.particles.length, 0) + item.particles.length > 900) bursts.current.shift();
           bursts.current.push({
             particles: item.particles,
             style: item.style,
-            size: item.size
+            size: item.size,
+            x: item.x1,
+            y: item.y1,
+            color: item.color,
+            age: 0
           });
           rockets.current.splice(value4, 1);
           playBurst();
@@ -450,13 +458,29 @@ function App() {
       const current = bursts.current;
       for (let value4 = current.length - 1; value4 >= 0; value4--) {
         const item = current[value4];
+        item.age += value3 / 1000;
+        const flash = Math.max(0, 1 - item.age / 0.24);
+        if (flash > 0) {
+          // A compact ignition core, never a full-screen white flash.
+          const radius = (12 + 18 * item.size) * (1 + item.age * 2);
+          const glow = context.createRadialGradient(item.x * width, item.y * height, 0, item.x * width, item.y * height, radius);
+          glow.addColorStop(0, "#fff8df");
+          glow.addColorStop(0.22, item.color);
+          glow.addColorStop(1, item.color + "00");
+          context.globalAlpha = flash * 0.6;
+          context.shadowBlur = 0;
+          context.fillStyle = glow;
+          context.beginPath();
+          context.arc(item.x * width, item.y * height, radius, 0, Math.PI * 2);
+          context.fill();
+        }
         for (const particle of item.particles) {
           if (particle.trail && step > 0) {
             particle.trail.push({
               x: particle.x,
               y: particle.y
             });
-            if (particle.trail.length > 10) particle.trail.shift();
+            if (particle.trail.length > particle.trailLength) particle.trail.shift();
           }
           particle.x += particle.vx * step;
           particle.y += particle.vy * step;
@@ -464,24 +488,32 @@ function App() {
           particle.vx *= drag;
           particle.vy = particle.vy * drag + particle.gravity * step;
           particle.life -= 0.012 * step / particle.lifeScale;
-          context.globalAlpha = Math.max(0, particle.life);
+          context.globalAlpha = Math.min(1, Math.max(0, particle.life));
           context.fillStyle = particle.color;
           context.strokeStyle = particle.color;
           context.shadowColor = particle.color;
-          context.shadowBlur = 8;
+          context.shadowBlur = 12;
           if (particle.trail?.length) {
-            context.globalAlpha *= 0.45;
-            context.lineWidth = 1.4 * particle.size;
+            context.globalAlpha *= item.style === "willow" ? 0.58 : 0.66;
+            context.lineWidth = 1.7 * Math.sqrt(particle.size);
             context.beginPath();
             context.moveTo(particle.trail[0].x * width, particle.trail[0].y * height);
             for (const point2 of particle.trail) context.lineTo(point2.x * width, point2.y * height);
             context.lineTo(particle.x * width, particle.y * height);
             context.stroke();
-            context.globalAlpha = Math.max(0, particle.life);
+            context.globalAlpha = Math.min(1, Math.max(0, particle.life));
           }
           context.beginPath();
-          context.arc(particle.x * width, particle.y * height, Math.max(0.8, particle.life * 2.8 * Math.sqrt(particle.size)), 0, Math.PI * 2);
+          context.arc(particle.x * width, particle.y * height, Math.max(0.7, particle.life * 3.1 * Math.sqrt(particle.size)), 0, Math.PI * 2);
           context.fill();
+          if (particle.life > 0.55) {
+            context.fillStyle = "#fff9e7";
+            context.globalAlpha *= 0.85;
+            context.shadowBlur = 0;
+            context.beginPath();
+            context.arc(particle.x * width, particle.y * height, 0.9 * Math.sqrt(particle.size), 0, Math.PI * 2);
+            context.fill();
+          }
         }
         item.particles = item.particles.filter(item2 => item2.life > 0);
         if (!item.particles.length) current.splice(value4, 1);
@@ -565,11 +597,12 @@ function App() {
     const colors = ["#fc70d2", "#fff392", "#8feeff", "#d2a2ff", "#90ffbb"];
     const color = colors[count % colors.length];
     const style = ["peony", "ring", "willow", "star"][count % 4];
-    const size = [0.68, 1, 1.3][count % 3];
+    const size = [0.9, 1.1, 1.3][count % 3];
     const rect = canvas.current.getBoundingClientRect();
     const particles = makeParticles(x, y, color, style, size, rect);
     const distance = Math.hypot((x - point2.x) * rect.width, (y - FIREWORK_LAUNCH_Y) * rect.height);
     const duration = Math.max(350, Math.min(1100, distance / (Number(config.LAUNCH_SPEED) || 1.2)));
+    if (rockets.current.length >= 6) rockets.current.shift();
     rockets.current.push({
       x0: point2.x,
       y0: FIREWORK_LAUNCH_Y,
@@ -984,4 +1017,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App />);
   }, {
     once: true
   });
+})();
+
+// Batch 3 UI refinement — 2026-11-16
+// Local fonts and explicit per-game layout rules; no gameplay or host mutations.
+(() => {
+  const uiStyle=document.createElement('style');
+  uiStyle.dataset.batch3Ui='20261116';
+  uiStyle.textContent="\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Bold.woff2') format('woff2');font-weight:600 900;font-style:normal;font-display:swap}\nhtml,body,#root{font-family:UIBody,system-ui,sans-serif;-webkit-text-size-adjust:100%}\nbutton{font-family:UIBody,system-ui,sans-serif;font-size:16px;font-weight:700;line-height:1.3;min-height:44px}\nbutton:focus-visible{outline:3px solid currentColor;outline-offset:4px}\nbutton:disabled{opacity:.55}\n[hidden]{display:none!important}\n.guide{font-size:18px;line-height:1.4;text-wrap:balance}\n.hud{top:30px;left:30px;right:30px;font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums}\n.hud.center{justify-content:center}\n.bottom{bottom:50px;left:30px;right:30px;gap:10px}\n.bottom .capability{min-height:44px;padding:10px 14px;font-size:14px;line-height:1.25;white-space:normal}\n.status{font-size:13px;line-height:1.4;bottom:108px;text-wrap:balance}\n.pill{font-size:16px;line-height:1.3;min-height:44px;padding:11px 22px}\n.modal{padding:30px 30px 50px}\n.result{max-height:100%;overflow-y:auto;padding:28px 22px}\n.result h2{font-family:Playful,UIBody,sans-serif;font-size:24px;line-height:1.25;text-wrap:balance;overflow-wrap:anywhere}\n.result p{font-size:15px;line-height:1.6;overflow-wrap:anywhere}\n.result .value{line-height:1.2;overflow-wrap:anywhere}\n.smallcaps{font-size:12px;letter-spacing:1.4px;line-height:1.4}\n\n@font-face{font-family:PaperType;src:url('./assets/ui/SpecialElite-Regular.ttf') format('truetype');font-display:swap}\nhtml,body,#root{font-family:PaperType,Georgia,serif}\n.firework-guide{font-family:PaperType,Georgia,serif!important;font-size:18px!important;font-weight:400;line-height:1.4!important;background:#10162bc9!important;border:1px solid #f2eddf42!important;padding:10px 16px!important;text-wrap:balance}\n";
+  document.head.append(uiStyle);
 })();

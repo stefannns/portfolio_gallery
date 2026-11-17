@@ -86,19 +86,31 @@
     {
       "id": "IMG_PLAYER",
       "label": "Player Car",
-      "path": "./assets/art-v3/player.svg",
+      "path": "./assets/cartoon-v4/player-coral.webp",
       "replaceable": true
     },
     {
       "id": "IMG_PARKED",
       "label": "Parked Car",
-      "path": "./assets/art-v3/parked.svg",
+      "path": "./assets/cartoon-v4/car-lavender.webp",
       "replaceable": true
     },
     {
       "id": "IMG_BG",
-      "label": "Cartoon Parking Lot",
-      "path": "./assets/art-v3/parking-lot.png",
+      "label": "Dark Cartoon Asphalt Lot",
+      "path": "./assets/cartoon-v4/asphalt-lot.svg",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_VAN",
+      "label": "Sky Blue Parked Van",
+      "path": "./assets/cartoon-v4/van-sky.webp",
+      "replaceable": true
+    },
+    {
+      "id": "IMG_SUV",
+      "label": "Yellow Parked SUV",
+      "path": "./assets/cartoon-v4/suv-yellow.webp",
       "replaceable": true
     }
   ],
