@@ -48,12 +48,12 @@ async function configure(onChange=()=>{}){
 
 addStyle(`@font-face{font-family:Bangers;src:url('./assets/Bangers-Regular.woff2')}body{background:#fbf0ce;color:#56341d}.cat-game{position:relative;width:100%;height:100%;overflow:hidden;touch-action:none}canvas{width:100%;height:100%;display:block}.cat-game .guide{color:#69422b;text-shadow:0 1px #fff;font-family:Bangers,Arial,sans-serif;font-size:23px;top:33%}.hud{position:absolute;top:27px;left:30px;right:30px;display:flex;justify-content:space-between;font:28px Bangers,Arial,sans-serif;pointer-events:none}.cat-game .sensor{background:#fff5dfcf;border-color:#c89a6d;color:#69422b;bottom:24px}.result{position:absolute;inset:0;z-index:15;display:grid;place-items:center;background:#57341e36;backdrop-filter:blur(3px)}.result[hidden]{display:none}.card{width:calc(100% - 60px);max-width:330px;text-align:center;background:#fff4d9;border:2px solid #a16a43;border-radius:18px;padding:28px 22px;box-shadow:0 6px 0 #d8b887,0 18px 45px #44281140}.card h1{font:32px Bangers;margin:0 0 12px}.height{font:58px Bangers;color:#b96932}.card p{font-size:14px}.card button{border:2px solid #8d4d29;border-radius:12px;background:#c78b58;color:#fff5de;font:22px Bangers;padding:10px 25px;box-shadow:0 3px 0 #8b4e2c}`);
 root.innerHTML=`<div class="cat-game"><canvas aria-label="Cat jumping between wooden shelves"></canvas><div class="hud"><span class="score">0m</span><span class="time">60s</span></div><div class="guide">Tilt to guide the laser</div><button class="sensor">Enable tilt</button><div class="result" hidden><div class="card"><h1>A pawsome climb!</h1><div class="height">0m</div><p>Chase a little higher?</p><button>Try again</button></div></div></div>`;
-const canvas=root.querySelector('canvas'),view=canvasSize(canvas),{ctx}=view,cat=new Image();cat.src='./assets/leaping-tabby.webp';
+const canvas=root.querySelector('canvas'),view=canvasSize(canvas),{ctx}=view,cat=new Image(),idleCat=new Image();cat.src='./assets/leaping-tabby.webp';idleCat.src='./assets/idle-tabby-v1.webp';
 const backdrop=new Image(),platformArt=new Image(),shelfCache=new Map();
 backdrop.src='./assets/storybook-v2/cozy-wall.webp';platformArt.src='./assets/storybook-v3/honey-shelf-front.webp';
 platformArt.onload=()=>shelfCache.clear();
 const scoreEl=root.querySelector('.score'),timeEl=root.querySelector('.time'),result=root.querySelector('.result');
-let roundSeconds=60,phase='ready',remaining=60,camera=0,bestHeight=0,platforms=[],catX=195,catY=400,vy=0,vx=0,laserX=195,laserY=260,initialY=400,squash=0,targetX=195,standingOn=null,keys=new Set();
+let roundSeconds=60,phase='ready',remaining=60,camera=0,bestHeight=0,platforms=[],catX=195,catY=400,vy=0,vx=0,laserX=195,laserY=260,initialY=400,squash=0,targetX=195,standingOn=null,catFacing=-1,keys=new Set();
 function H(){return view.H*390/view.W;}
 function nextShelf(previous){
  const step=(previous.step||0)+1,wide=step%3===0,center=previous.x+previous.w/2;
@@ -63,7 +63,7 @@ function nextShelf(previous){
  const nextCenter=clamp(center+direction*distance,65,325);
  return {x:nextCenter-46,y:previous.y-(wide?48+Math.random()*14:69+Math.random()*12),w:92,step};
 }
-function reset(){phase='ready';remaining=roundSeconds;camera=0;bestHeight=0;catX=195;laserX=195;initialY=H()-163;catY=initialY;vy=0;vx=0;squash=0;targetX=195;platforms=[{x:148,y:initialY+35,w:94,step:0}];standingOn=platforms[0];root.dataset.grounded='true';for(let i=1;i<60;i++)platforms.push(nextShelf(platforms[platforms.length-1]));laserY=H()*.45;result.hidden=true;scoreEl.textContent='0m';timeEl.textContent=roundSeconds+'s';root.dataset.phase=phase;root.querySelector('.guide').classList.remove('gone');}
+function reset(){phase='ready';catFacing=-1;remaining=roundSeconds;camera=0;bestHeight=0;catX=195;laserX=195;initialY=H()-163;catY=initialY;vy=0;vx=0;squash=0;targetX=195;platforms=[{x:148,y:initialY+35,w:94,step:0}];standingOn=platforms[0];root.dataset.grounded='true';for(let i=1;i<60;i++)platforms.push(nextShelf(platforms[platforms.length-1]));laserY=H()*.45;result.hidden=true;scoreEl.textContent='0m';timeEl.textContent=roundSeconds+'s';root.dataset.phase=phase;root.querySelector('.guide').classList.remove('gone');}
 const motion=sensorInput({gyro:true,onTilt:s=>{targetX=clamp(195+s.x*175,30,360);laserY=clamp(H()*.35+s.y*H()*.2,95,H()*.65);if(phase==='ready'&&(Math.abs(s.x)>.08||Math.abs(s.y)>.08))start();}});
 function laserIsAbove(){return laserY<catY-camera-6;}
 function jumpFromShelf(){
@@ -143,13 +143,36 @@ function updateCat(dt){
  root.dataset.grounded=String(!!standingOn);
  if(catY-camera>H()+90||remaining<=0)finish();
 }
+
+// Both sprites face left at rest. Remember movement direction through the low-vx dead zone.
+const idleFeet={x:293.5/570,y:451.5/454};
+const reducedIdleMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches||false;
+function drawCat(t){
+ if(vx>15)catFacing=1;else if(vx<-15)catFacing=-1;
+ ctx.save();
+ if(standingOn&&idleCat.complete&&idleCat.naturalWidth){
+  // Breathing/landing squash pivots at the paw baseline, never at the body center.
+  const breathe=phase==='playing'&&hostActive&&!reducedIdleMotion?Math.sin(t*2.5)*.009:0;
+  const landing=phase==='playing'&&squash>0?1-.06*(squash/.18):1,sy=landing*(1+breathe);
+  const scale=70/idleCat.naturalHeight;
+  ctx.translate(catX,catY-camera+35);if(catFacing>0)ctx.scale(-1,1);
+  ctx.scale(1/Math.sqrt(sy),sy);
+  ctx.drawImage(idleCat,-idleCat.naturalWidth*idleFeet.x*scale,-idleCat.naturalHeight*idleFeet.y*scale,idleCat.naturalWidth*scale,idleCat.naturalHeight*scale);
+ }else{
+  ctx.translate(catX,catY-camera);if(catFacing>0)ctx.scale(-1,1);
+  const sy=squash?.86:1+Math.min(.06,Math.abs(vy)/8000);ctx.scale(1/sy,sy);
+  if(cat.complete&&cat.naturalWidth)ctx.drawImage(cat,-47,-35,94,70);
+ }
+ ctx.restore();
+}
+
 runLoop((dt,t)=>{if(phase==='playing')updateCat(dt);
  squash=Math.max(0,squash-dt);laserX+=(targetX-laserX)*(1-Math.exp(-14*dt));ctx.save();ctx.scale(view.W/390,view.W/390);decor();for(const p of platforms)if(p.y-camera>-15&&p.y-camera<H()+15)shelf(p);
  ctx.fillStyle='#ed315b22';ctx.beginPath();ctx.arc(laserX,laserY,17,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ff316144';ctx.beginPath();ctx.arc(laserX,laserY,10,0,Math.PI*2);ctx.fill();ctx.fillStyle='#d71e42';ctx.beginPath();ctx.arc(laserX,laserY,5,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff9';ctx.beginPath();ctx.arc(laserX-1,laserY-1,1.4,0,Math.PI*2);ctx.fill();
- ctx.save();ctx.translate(catX,catY-camera);if(vx>15)ctx.scale(-1,1);const sy=squash? .86:1+Math.min(.06,Math.abs(vy)/8000);ctx.scale(1/sy,sy);if(cat.complete&&cat.naturalWidth)ctx.drawImage(cat,-47,-35,94,70);ctx.restore();ctx.restore();});
+ drawCat(t);ctx.restore();});
 
 
-configure(()=>{root.querySelector('.guide').textContent=String(setting('GUIDE',"Tilt to guide the laser"));const path=setting('CAT','./assets/leaping-tabby.webp');if(cat.getAttribute('src')!==path)cat.src=path;const wall=String(setting('BACKDROP','./assets/storybook-v2/cozy-wall.webp')),shelfPath=String(setting('PLATFORM','./assets/storybook-v3/honey-shelf-front.webp'));if(backdrop.getAttribute('src')!==wall)backdrop.src=wall;if(platformArt.getAttribute('src')!==shelfPath){shelfCache.clear();platformArt.src=shelfPath;}roundSeconds=clamp(Number(setting('ROUND_SECONDS',60))||60,20,120);if(phase==='ready'){remaining=roundSeconds;timeEl.textContent=roundSeconds+'s';}});
+configure(()=>{root.querySelector('.guide').textContent=String(setting('GUIDE',"Tilt to guide the laser"));const path=setting('CAT','./assets/leaping-tabby.webp');if(cat.getAttribute('src')!==path)cat.src=path;const idlePath=String(setting('CAT_IDLE','./assets/idle-tabby-v1.webp'));if(idleCat.getAttribute('src')!==idlePath)idleCat.src=idlePath;const wall=String(setting('BACKDROP','./assets/storybook-v2/cozy-wall.webp')),shelfPath=String(setting('PLATFORM','./assets/storybook-v3/honey-shelf-front.webp'));if(backdrop.getAttribute('src')!==wall)backdrop.src=wall;if(platformArt.getAttribute('src')!==shelfPath){shelfCache.clear();platformArt.src=shelfPath;}roundSeconds=clamp(Number(setting('ROUND_SECONDS',60))||60,20,120);if(phase==='ready'){remaining=roundSeconds;timeEl.textContent=roundSeconds+'s';}});
 
 })();
 

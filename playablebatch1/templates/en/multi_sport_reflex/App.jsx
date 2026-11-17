@@ -41,7 +41,7 @@ box(50,.12,60,palette.green,0,-.15,-5);
 const stripe=mat('#73c887');for(let z=-23;z<-10;z+=2.6)box(48,.015,1.25,stripe,0,-.075,z);
 box(9,.04,21,palette.court,0,-.06,-1);
 const NET_Z=-2.05,VOLLEY_NET_TOP=3.25,TENNIS_NET_TOP=1.12;
-const courtGreen=mat('#79aa82');box(8.55,.015,16.9,courtGreen,0,-.025,NET_Z);
+box(8.55,.015,16.9,palette.court,0,-.025,NET_Z);
 function courtCircle(x,z,r){const line=new THREE.Mesh(new THREE.RingGeometry(r-.035,r+.035,64),palette.white);line.rotation.x=-Math.PI/2;line.position.set(x,.007,z);scene.add(line)}
 courtCircle(0,5.2,2.4);courtCircle(0,NET_Z,1.55);
 const plate=meshPlate();function meshPlate(){const shape=new THREE.Shape();shape.moveTo(-.65,0);shape.lineTo(.65,0);shape.lineTo(.65,.35);shape.lineTo(0,.8);shape.lineTo(-.65,.35);shape.closePath();const plate=new THREE.Mesh(new THREE.ShapeGeometry(shape),palette.white);plate.rotation.x=-Math.PI/2;plate.position.set(0,.01,7.05);scene.add(plate);return plate;}

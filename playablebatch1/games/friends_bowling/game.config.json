@@ -13,8 +13,8 @@
     {
       "id": "GUIDE",
       "label": "Interaction guide",
-      "value": "Swipe up to bowl",
-      "default": "Swipe up to bowl",
+      "value": "Swipe forward to roll",
+      "default": "Swipe forward to roll",
       "max_length": 100
     }
   ],

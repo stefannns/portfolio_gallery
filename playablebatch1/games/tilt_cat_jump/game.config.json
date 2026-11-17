@@ -48,6 +48,12 @@
       "label": "Wooden shelf — front view",
       "path": "./assets/storybook-v3/honey-shelf-front.webp",
       "replaceable": true
+    },
+    {
+      "id": "CAT_IDLE",
+      "label": "Standing tabby — idle pose",
+      "path": "./assets/idle-tabby-v1.webp",
+      "replaceable": true
     }
   ]
 }

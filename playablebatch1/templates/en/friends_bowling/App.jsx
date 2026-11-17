@@ -70,7 +70,16 @@ loadFriends();
 
 mount(`.spin-control{position:absolute;left:30px;bottom:132px;width:64px;z-index:10;text-align:center;user-select:none}.spin-ball{position:relative;width:64px;height:64px;border:2px solid #d4dfef;border-radius:50%;background:radial-gradient(circle at 30% 25%,#7587aa,#303f65 55%,#18233e);box-shadow:0 3px 8px #0005;touch-action:none;cursor:ew-resize}.spin-ball:focus-visible{outline:3px solid #f6deb1;outline-offset:4px}.spin-ball[aria-disabled="true"]{opacity:.45;cursor:default}.spin-ball:before,.spin-ball:after{content:"";position:absolute;width:5px;height:7px;border-radius:50%;background:#17223d;top:11px;left:22px}.spin-ball:after{left:33px;top:13px}.spin-line{position:absolute;left:9px;right:9px;top:29px;height:1px;background:#d9e7fa80}.spin-dot{position:absolute;width:14px;height:14px;left:calc(50% - 7px);top:calc(50% - 7px);border-radius:50%;background:#f9edcc;box-shadow:0 1px 4px #0007;border:1px solid #fff}.spin-label{margin-top:5px;color:#f0dfbd;font:600 12px/1.3 UIBody,Arial,sans-serif;text-shadow:0 1px 3px #000}.fit{background:#28231f;color:#eee5d2}.scene{position:absolute;inset:0}.scene canvas{display:block;width:390px;height:598px;touch-action:none}.hud{font-size:23px;font-family:Georgia,serif;text-shadow:0 2px 5px #000}.guide{top:106px;font-size:16px;font-weight:500;color:#f0dfbd;text-shadow:0 1px 5px #000}.roll-note{position:absolute;left:30px;right:30px;bottom:35px;text-align:center;font-size:12px;color:#f2e4ca;text-shadow:0 1px 3px #241a10;pointer-events:none}.result{background:#efe3c9;color:#4b3e2c;border-radius:12px;border:4px solid #7f6846}.result .pill{background:#886a3c}`,`<div class="scene"></div><div class="spin-control"><div class="spin-ball" role="slider" tabindex="0" aria-label="Side spin" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Straight"><span class="spin-line"></span><span class="spin-dot"></span></div><div class="spin-label">Spin</div></div><div class="hud"><span class="frame">1 / 10</span><span class="score">0</span></div><div class="guide">Swipe up to bowl</div><div class="roll-note">First roll</div>${resultMarkup()}`,'#28231f');
 const PHYSICS_STEP=1/120,HOOK_STRENGTH=.013,PIT_START=-15.25,PIT_END=-19.7;
-let physicsAccumulator=0,sideSpin=0,rollSpin=0,spinPointer=null,aimEnd=null,ballDrop=0,ballDropVelocity=0;
+let physicsAccumulator=0,sideSpin=0,rollSpin=0,spinPointer=null,aimEnd=null,aimForward=null,ballDrop=0,ballDropVelocity=0;
+// One action-specific cue stays until the first forward roll, not a stray tap.
+let hasRolled=false;
+const rollGuide=$('.guide');rollGuide.classList.add('bowl-roll-guide');
+rollGuide.innerHTML=`<span class="bowl-guide-copy">Swipe forward to roll</span><svg class="bowl-swipe" viewBox="0 0 90 180" aria-hidden="true"><path d="M45 146V27m-12 14 12-14 12 14" fill="none" stroke="#fff9ec" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 7" opacity=".65"/><g transform="translate(23 129)"><g class="bowl-swipe-hand"><path d="M15 38 5 25c-4-6 3-10 7-5l4 5V4c0-6 8-6 8 0v14-5c0-5 7-5 7 0v5-2c0-5 7-5 7 0v4-1c0-5 7-4 7 1v11c0 7-4 11-5 17H21c0-4-3-7-6-10Z" fill="#fffdf3" stroke="#25323d" stroke-width="1.8" stroke-linejoin="round"/><path d="M24 19v10m7-11v12m7-9v10" fill="none" stroke="#25323d" stroke-width="1.1" stroke-linecap="round"/></g></g></svg>`;
+const rollGuideStyle=document.createElement('style');
+rollGuideStyle.textContent=`#root .bowl-roll-guide{top:280px;left:30px;right:30px;height:216px;display:flex;flex-direction:column;align-items:center;color:#fff9ec;font:700 18px/1.4 UIBody,system-ui,sans-serif;text-shadow:0 2px 4px #13202c,0 0 2px #13202c}#root .bowl-guide-copy{display:block;flex:none;width:100%;text-wrap:balance}#root .bowl-swipe{display:block;flex:1;width:90px;height:auto;min-height:70px;max-height:180px;margin:6px auto 0;overflow:visible;pointer-events:none}[data-bowling-active="false"] .bowl-roll-guide{animation-play-state:paused}.bowl-swipe-hand{animation:bowl-swipe-forward 1.9s ease-in-out infinite;transform-origin:center}#root .guide.gone .bowl-swipe-hand,#root[data-bowling-active="false"] .bowl-swipe-hand{animation-play-state:paused}@keyframes bowl-swipe-forward{0%,10%{opacity:0;transform:translateY(7px) scale(.94)}20%{opacity:1;transform:translateY(0) scale(1)}70%{opacity:1;transform:translateY(-89px) scale(1)}86%,100%{opacity:0;transform:translateY(-89px) scale(1)}}@media(prefers-reduced-motion:reduce){.bowl-swipe-hand{animation:none;opacity:1;transform:none}}`;
+document.head.append(rollGuideStyle);root.dataset.bowlingActive=String(active);
+lifecycle.push(next=>{root.dataset.bowlingActive=String(next);});
+function remindRoll(){if(!hasRolled&&phase!=='result')rollGuide.classList.remove('gone');}
 const scene=new THREE.Scene();scene.background=new THREE.Color('#28231f');scene.fog=new THREE.Fog('#28231f',30,55);const cam=new THREE.PerspectiveCamera(45,390/598,.1,70);cam.position.set(0,6.5,10);cam.lookAt(0,0,-6.5);const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'low-power'});renderer.setSize(390,598);renderer.setPixelRatio(Math.min(2,devicePixelRatio||1));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;$('.scene').append(renderer.domElement);
 scene.add(new THREE.HemisphereLight(0xffe8bf,0x252426,2.1));for(const z of [4,-5,-12]){const l=new THREE.PointLight(0xffe8b8,25,18,2);l.position.set(0,5,z);scene.add(l);}const key=new THREE.DirectionalLight(0xffffff,2);key.position.set(2,7,-8);key.castShadow=true;key.shadow.mapSize.set(1024,1024);key.shadow.camera.left=-5;key.shadow.camera.right=5;key.shadow.camera.top=8;key.shadow.camera.bottom=-8;scene.add(key);
 const grain=document.createElement('canvas');grain.width=512;grain.height=1024;const gx=grain.getContext('2d');gx.fillStyle='#b68d54';gx.fillRect(0,0,512,1024);for(let x=0;x<512;x+=32){gx.fillStyle=['#caa16a','#b18b56','#bc965f','#d0aa76'][Math.floor(x/32)%4];gx.fillRect(x,0,31,1024);gx.strokeStyle='#83643b38';gx.lineWidth=1;for(let j=0;j<18;j++){const xx=x+rand(0,31);gx.beginPath();gx.moveTo(xx,0);gx.bezierCurveTo(xx+rand(-3,3),300,xx+rand(-3,3),700,xx,1024);gx.stroke();}for(let y=rand(0,150);y<1024;y+=rand(150,300)){gx.fillStyle='#84623e55';gx.fillRect(x,y,31,1);}}const map=new THREE.CanvasTexture(grain);map.colorSpace=THREE.SRGBColorSpace;map.wrapT=THREE.RepeatWrapping;map.repeat.set(1,3);
@@ -110,9 +119,31 @@ friendsChanged=updateBallAvatar;updateBallAvatar();
 const rollingAxis=new THREE.Vector3(),rollingTurn=new THREE.Quaternion(),sideSpinAxis=new THREE.Vector3(0,1,0);
 const trajectoryGroup=new THREE.Group();trajectoryGroup.visible=false;scene.add(trajectoryGroup);
 const trajectoryGeometry=new THREE.BufferGeometry();
-const trajectoryMaterial=new THREE.LineDashedMaterial({color:'#fff0bd',dashSize:.16,gapSize:.12,transparent:true,opacity:.78,depthWrite:false});
-const trajectoryLine=new THREE.Line(trajectoryGeometry,trajectoryMaterial);trajectoryGroup.add(trajectoryLine);
-const contactMarker=new THREE.Mesh(new THREE.RingGeometry(.075,.095,24),new THREE.MeshBasicMaterial({color:'#fff0bd',transparent:true,opacity:.8,side:THREE.DoubleSide,depthWrite:false}));
+// Round, screen-sized dots remain readable all the way to the far pins.
+const trajectoryDotCanvas=document.createElement('canvas');trajectoryDotCanvas.width=trajectoryDotCanvas.height=32;
+const trajectoryDotBrush=trajectoryDotCanvas.getContext('2d');trajectoryDotBrush.fillStyle='#fff';trajectoryDotBrush.beginPath();trajectoryDotBrush.arc(16,16,14,0,Math.PI*2);trajectoryDotBrush.fill();
+const trajectoryDotTexture=new THREE.CanvasTexture(trajectoryDotCanvas);trajectoryDotTexture.minFilter=THREE.LinearFilter;
+const trajectoryPositions=new Float32Array(128*3);
+trajectoryGeometry.setAttribute('position',new THREE.BufferAttribute(trajectoryPositions,3).setUsage(THREE.DynamicDrawUsage));trajectoryGeometry.setDrawRange(0,0);
+const trajectoryMaterial=new THREE.PointsMaterial({color:'#ffffff',map:trajectoryDotTexture,size:6,sizeAttenuation:false,transparent:true,opacity:1,alphaTest:.08,depthWrite:false,toneMapped:false});
+const trajectoryLine=new THREE.Points(trajectoryGeometry,trajectoryMaterial);trajectoryLine.frustumCulled=false;trajectoryGroup.add(trajectoryLine);
+const projectedDotA=new THREE.Vector3(),projectedDotB=new THREE.Vector3();
+function paintTrajectoryDots(points){
+ cam.updateMatrixWorld();let count=0,nextDot=0;
+ for(let i=1;i<points.length&&count<128;i++){
+  const a=points[i-1],b=points[i];projectedDotA.copy(a).project(cam);projectedDotB.copy(b).project(cam);
+  const length=Math.hypot((projectedDotB.x-projectedDotA.x)*195,(projectedDotB.y-projectedDotA.y)*299);
+  if(length<.0001)continue;
+  while(nextDot<=length&&count<128){
+   const t=nextDot/length,index=count++*3;
+   trajectoryPositions[index]=a.x+(b.x-a.x)*t;trajectoryPositions[index+1]=a.y+(b.y-a.y)*t;trajectoryPositions[index+2]=a.z+(b.z-a.z)*t;
+   nextDot+=13;
+  }
+  nextDot-=length;
+ }
+ trajectoryGeometry.setDrawRange(0,count);trajectoryGeometry.attributes.position.needsUpdate=true;
+}
+const contactMarker=new THREE.Mesh(new THREE.RingGeometry(.075,.095,24),new THREE.MeshBasicMaterial({color:'#ffffff',transparent:true,opacity:1,side:THREE.DoubleSide,depthWrite:false}));
 contactMarker.rotation.x=-Math.PI/2;trajectoryGroup.add(contactMarker);
 function launchVelocity(start,end){
  return{x:clamp((end.x-start.x)/1800,-.09,.09),y:-clamp((start.y-end.y)/500,.19,.4)};
@@ -145,7 +176,7 @@ function updateTrajectory(end){
   x+=dx*fraction;z+=dz*fraction;points.push(new THREE.Vector3(x,.025,z));
   if(contact)break;
  }
- trajectoryGeometry.setFromPoints(points);trajectoryLine.computeLineDistances();
+ paintTrajectoryDots(points);
  contactMarker.position.set(x,.028,z);trajectoryGroup.visible=true;
 }
 function clearPins(){for(const p of pins){scene.remove(p.mesh);Matter.World.remove(engine.world,p.body);}pins=[];}
@@ -162,11 +193,11 @@ function scoreGame(){const all=[...frames,currentFrame].filter(f=>f.length);cons
 function finishRoll(){rolling=false;trajectoryGroup.visible=false;const knocked=pins.filter(p=>p.fallen).length;currentFrame.push(knocked);let frameDone=false;if(frameIndex<9)frameDone=knocked===10||currentFrame.length===2;else if(currentFrame.length===3)frameDone=true;else if(currentFrame.length===2&&currentFrame[0]+currentFrame[1]<10)frameDone=true;
  $('.score').textContent=scoreGame();const allDown=pins.every(p=>p.fallen);if(frameDone){frames.push(currentFrame);currentFrame=[];frameIndex++;if(frameIndex===10){phase='result';success();result('A full ten frames',scoreGame(),'Every pin counts.',reset);return;}rack=true;}else rack=allDown;
  settleDelay=.65;state('between-rolls');$('.roll-note').textContent=knocked===10?'Strike!':allDown?'Spare!':knocked+' pins';}
-function reset(){sideSpin=0;rollSpin=0;updateSpinUI();clearPins();frames=[];currentFrame=[];frameIndex=0;phase='ready';rack=true;settleDelay=0;freshPins();freshBall();$('.frame').textContent='1 / 10';$('.score').textContent='0';$('.roll-note').textContent='First roll';state('ready');}
+function reset(){sideSpin=0;rollSpin=0;updateSpinUI();clearPins();frames=[];currentFrame=[];frameIndex=0;phase='ready';rack=true;settleDelay=0;hasRolled=false;rollGuide.classList.remove('gone');freshPins();freshBall();$('.frame').textContent='1 / 10';$('.score').textContent='0';$('.roll-note').textContent='First roll';state('ready');}
 const surface=renderer.domElement;
 function cancelAim(){
- const pointer=aimPointer;aimStart=null;aimEnd=null;aimPointer=null;trajectoryGroup.visible=false;
- if(pointer!==null&&surface.hasPointerCapture(pointer))surface.releasePointerCapture(pointer);
+ const pointer=aimPointer;aimStart=null;aimEnd=null;aimForward=null;aimPointer=null;trajectoryGroup.visible=false;
+ try{if(pointer!==null&&surface.hasPointerCapture(pointer))surface.releasePointerCapture(pointer);}catch(_){}
 }
 function positionAim(p){aimEnd=p;Matter.Body.setPosition(ballBody,{x:clamp((p.x-195)/110,-1.15,1.15),y:2.0});}
 const spinBall=$('.spin-ball'),spinDot=$('.spin-dot');
@@ -194,22 +225,48 @@ on(spinBall,'keydown',e=>{
  if(!spinAvailable()||!['ArrowLeft','ArrowRight','Home'].includes(e.key))return;
  e.preventDefault();sideSpin=e.key==='Home'?0:clamp(sideSpin+(e.key==='ArrowLeft'?-.1:.1),-1,1);updateSpinUI();
 });
-on(surface,'pointerdown',e=>{
- if(!active||rolling||settleDelay>0||phase==='result'||aimPointer!==null||e.button!==0)return;
- const p=point(e,surface);if(p.y<280||p.y>550)return;
- gesture();aimStart=p;aimPointer=e.pointerId;positionAim(p);surface.setPointerCapture(e.pointerId);updateTrajectory(p);
-});
-on(surface,'pointermove',e=>{if(e.pointerId===aimPointer&&aimStart){const p=point(e,surface);positionAim(p);updateTrajectory(p);}});
-on(surface,'pointerup',e=>{
+const MIN_FORWARD_SWIPE=6;
+function bowlingPoint(e){
+ if(!Number.isFinite(e.clientX)||!Number.isFinite(e.clientY))return null;
+ const p=point(e,surface);return Number.isFinite(p.x)&&Number.isFinite(p.y)?p:null;
+}
+function trackForward(p){if(p&&(!aimForward||p.y<aimForward.y))aimForward=p;}
+function finishBowlingSwipe(e,interrupted=false){
  if(e.pointerId!==aimPointer||!aimStart)return;
- const p=point(e,surface),dy=aimStart.y-p.y,velocity=launchVelocity(aimStart,p);
- positionAim(p);cancelAim();if(dy<15)return;
+ if(!active||disposed||document.hidden||rolling||settleDelay>0||phase==='result'){cancelAim();return;}
+ const last=interrupted?aimEnd:(bowlingPoint(e)||aimEnd);trackForward(last);
+ // Keep the deliberate forward stroke if a finger drifts back just before lift.
+ const p=last&&aimStart.y-last.y>=MIN_FORWARD_SWIPE?last:aimForward;
+ if(!p||aimStart.y-p.y<MIN_FORWARD_SWIPE){cancelAim();remindRoll();return;}
+ const velocity=launchVelocity(aimStart,p);positionAim(p);
+ // Clear pointer ownership before releasing capture so late releases cannot fire twice.
+ cancelAim();e.preventDefault();hasRolled=true;
  Matter.Body.setVelocity(ballBody,velocity);rollSpin=sideSpin;rolling=true;rollTimer=0;phase='playing';
  $('.roll-note').textContent='';state('rolling');sound(80,.3,.12,'triangle',50);
+}
+function moveBowlingSwipe(e){
+ if(e.pointerId!==aimPointer||!aimStart)return;
+ if(!active||disposed||document.hidden||rolling||phase==='result'){cancelAim();return;}
+ if(e.pointerType==='mouse'&&e.buttons===0){finishBowlingSwipe(e,true);return;}
+ const p=bowlingPoint(e);if(!p)return;e.preventDefault();trackForward(p);positionAim(p);updateTrajectory(p);
+}
+on(surface,'pointerdown',e=>{
+ if(!active||disposed||document.hidden||rolling||settleDelay>0||phase==='result'||aimPointer!==null||e.button!==0)return;
+ const p=bowlingPoint(e);if(!p||p.y<140||p.y>598)return;
+ e.preventDefault();gesture();aimStart=p;aimForward=p;aimPointer=e.pointerId;positionAim(p);
+ try{surface.setPointerCapture(e.pointerId);}catch(_){}
+ updateTrajectory(p);
 });
-on(surface,'pointercancel',e=>{if(e.pointerId===aimPointer)cancelAim();});
-on(surface,'lostpointercapture',e=>{if(e.pointerId===aimPointer)cancelAim();});
-lifecycle.push(next=>{if(!next){cancelAim();cancelSpinPointer();}});reset();
+on(window,'pointermove',moveBowlingSwipe,{capture:true,passive:false});
+on(window,'pointerup',e=>finishBowlingSwipe(e),{capture:true,passive:false});
+on(window,'pointercancel',e=>finishBowlingSwipe(e,true),{capture:true,passive:false});
+on(surface,'lostpointercapture',e=>{
+ if(e.pointerId!==aimPointer||!aimStart)return;
+ if(!active||disposed||document.hidden||rolling||phase==='result'){cancelAim();return;}
+ try{surface.setPointerCapture(e.pointerId);if(surface.hasPointerCapture(e.pointerId))return;}catch(_){}
+ finishBowlingSwipe(e,true);
+});
+lifecycle.push(next=>{if(!next){cancelAim();cancelSpinPointer();remindRoll();}});reset();
 loop(dt=>{
  pinSound=Math.max(0,pinSound-dt);const wasRolling=rolling;
  if(phase!=='result'){
@@ -252,10 +309,10 @@ loop(dt=>{
 cleanups.push(()=>{
  Matter.Events.off(engine);Matter.World.clear(engine.world,false);Matter.Engine.clear(engine);
  renderer.dispose();map.dispose();pm.dispose();pinGeo.dispose();pinMat.dispose();ballAvatarTexture?.dispose();ball.geometry.dispose();ball.material.dispose();
- trajectoryGeometry.dispose();trajectoryMaterial.dispose();contactMarker.geometry.dispose();contactMarker.material.dispose();
+ trajectoryGeometry.dispose();trajectoryMaterial.dispose();trajectoryDotTexture.dispose();contactMarker.geometry.dispose();contactMarker.material.dispose();
 });
 
-configure(()=>{if($('.guide'))$('.guide').textContent=String(setting('GUIDE',"Position the ball \u00b7 swipe up to bowl"));});
+configure(()=>{if($('.bowl-guide-copy'))$('.bowl-guide-copy').textContent=String(setting('GUIDE',"Swipe forward to roll"));});
 })();
 
 // Batch 3 UI refinement — 2026-11-16
