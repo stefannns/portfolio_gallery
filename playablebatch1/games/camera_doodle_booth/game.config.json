@@ -13,8 +13,8 @@
     {
       "id": "GUIDE",
       "label": "Interaction guide",
-      "value": "Three poses. One little memory.",
-      "default": "Three poses. One little memory.",
+      "value": "Pose for three photos",
+      "default": "Pose for three photos",
       "max_length": 100
     }
   ],

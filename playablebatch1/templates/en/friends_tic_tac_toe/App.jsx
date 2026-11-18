@@ -54,10 +54,26 @@ async function configure(callback=()=>{}){const ctl=new AbortController(),timer=
 let friends=[{nickname:'Bean',avatar:'./assets/friend-bean.webp'},{nickname:'Kitty',avatar:'./assets/friend-kitty.webp'},{nickname:'Cloudy',avatar:'./assets/friend-cloudy.webp'},{nickname:'Starry',avatar:'./assets/friend-starry.webp'}];
 let friendsChanged=()=>{};
 function loadFriends(){
- function preload(list,host){friends=list.slice(0,24).map(f=>({nickname:String(f.nickname||'Friend'),avatar:f.avatar,image:null}));for(const f of friends){let im;try{im=host?window.tt.createImage():new Image();im.onload=()=>{f.image=im;friendsChanged();};im.onerror=()=>{f.image=null;};im.src=f.avatar;}catch(_){f.image=null;}}friendsChanged();}
+ const DEFAULT_FRIEND_AVATAR='./assets/img_user_avatar_default_3x.png';
+ function preload(list,host){
+  friends=list.slice(0,24).map((f,index)=>({nickname:typeof f.nickname==='string'&&f.nickname.trim()?f.nickname.trim():'nickname'+(index+1),avatar:typeof f.avatar==='string'&&f.avatar.trim()?f.avatar:DEFAULT_FRIEND_AVATAR,image:null}));
+  for(const f of friends){
+   function load(url,fallback=false){
+    let im;try{im=host&&typeof window.tt?.createImage==='function'?window.tt.createImage():new Image();}catch(_){im=new Image();}
+    im.onload=()=>{f.image=im;friendsChanged();};
+    im.onerror=()=>{if(!fallback&&url!==DEFAULT_FRIEND_AVATAR)load(DEFAULT_FRIEND_AVATAR,true);else{f.image=null;friendsChanged();}};
+    im.src=url;
+   }
+   load(f.avatar,f.avatar===DEFAULT_FRIEND_AVATAR);
+  }
+  friendsChanged();
+ }
  preload(friends,false);root.dataset.friends='sample';
- if(!window.tt?.getFriendsInfo||!window.tt?.createImage)return;
- window.tt.getFriendsInfo({success(data){const list=Array.isArray(data?.friends)?data.friends.filter(f=>f&&typeof f.avatar==='string'):[];if(list.length){preload(list,true);root.dataset.friends='host';}},fail(){root.dataset.friends='sample';}});
+ if(typeof window.tt?.getFriendsInfo!=='function')return;
+ window.tt.getFriendsInfo({
+  success(data){const list=Array.isArray(data?.friends)?data.friends.filter(f=>f&&typeof f==='object'):[];if(list.length){preload(list,true);root.dataset.friends='host';friendsChanged();}},
+  fail(error){root.dataset.friends='sample';console.warn('Friend profiles unavailable',error?.errMsg||error?.message||'');}
+ });
 }
 function avatar(ctx,index,x,y,r,ring='#fff'){
  const f=friends[((index%friends.length)+friends.length)%friends.length];ctx.save();ctx.shadowColor='#25212d20';ctx.shadowBlur=6;circle(ctx,x,y,r,ring);ctx.shadowBlur=0;if(f?.image)cropCircle(ctx,f.image,x,y,Math.max(1,r-2));else{circle(ctx,x,y,Math.max(1,r-2),['#efb5a9','#b3d6ce','#e3cb8f','#c6b8df'][index%4]);text(ctx,Array.from(f?.nickname||'?')[0],x,y,r*.7,'#fff');}ctx.restore();
@@ -66,14 +82,14 @@ function friendName(index){return friends[((index%friends.length)+friends.length
 function drawName(ctx,index,x,y,size=13){text(ctx,Array.from(friendName(index)).slice(0,15).join(''),x,y,size);}
 loadFriends();
 
-mount(`.fit{background:#e987b6}.guide{top:90px;font:17px Playful,Arial}.palette{position:absolute;top:28px;right:30px;width:34px;min-height:34px;background:#fff;border:3px solid #191919;box-shadow:3px 3px #191919}.palette i{display:block;width:12px;height:12px;border:2px solid #191919;border-radius:50%;margin:auto;background:#e8c347}.pill{border-radius:0;background:#fff;color:#111;border:3px solid #111;box-shadow:4px 4px #111}.turn{position:absolute;left:30px;right:30px;top:456px;text-align:center;font-weight:700;font-size:14px}.result{border:3px solid #111;box-shadow:6px 6px #111;border-radius:0;background:#fff}.result .value{font-size:30px}`,`<canvas class="stage" aria-label="Tic tac toe board"></canvas><div class="guide">Pick a square · make a row</div><button class="palette" aria-label="Change background color"><i></i></button><div class="turn">Your turn</div><div class="bottom"><button class="pill reset">New game</button></div>${resultMarkup()}`,'#e987b6');
+mount(`.fit{background:#e987b6}.guide{top:90px;font:17px Playful,Arial}.pill{border-radius:0;background:#fff;color:#111;border:3px solid #111;box-shadow:4px 4px #111}.turn{position:absolute;left:30px;right:30px;top:456px;text-align:center;font-weight:700;font-size:14px}.result{border:3px solid #111;box-shadow:6px 6px #111;border-radius:0;background:#fff}.result .value{font-size:30px}`,`<canvas class="stage" aria-label="Tic tac toe board"></canvas><div class="guide">Pick a square · make a row</div><div class="opponent-name" aria-label="Opponent"></div><div class="turn">Your turn</div><div class="bottom"><button class="pill reset">New game</button></div>${resultMarkup()}`,'#e987b6');
 
 // Backgrounds and result shading cover the host; the board keeps its authored geometry.
 function installHostSurface(kind){
  const fit=$('.fit'),modal=$('.modal');
  if(modal){modal.classList.add('host-modal');root.append(modal);}
  const surfaceStyle=document.createElement('style');
- surfaceStyle.textContent=`#root{position:relative;isolation:isolate}#root>.fit{z-index:1;background:transparent}#root .pill,#root .palette{border-color:#282723;color:#282723}#root .pill{box-shadow:3px 4px 0 #282723}#root>.host-modal{position:absolute;inset:0;z-index:30;display:block;padding:0;background:#22242c33}#root>.host-modal>.result{position:absolute;left:50%;top:calc(50% - var(--modal-shift,10px));width:320px;max-width:none;max-height:518px;overflow-y:auto;transform:translate(-50%,-50%) scale(var(--game-fit-scale,1));transform-origin:center}`;
+ surfaceStyle.textContent=`#root{position:relative;isolation:isolate}#root>.fit{z-index:1;background:transparent}#root .pill{border-color:#282723;color:#282723}#root .pill{box-shadow:3px 4px 0 #282723}#root>.host-modal{position:absolute;inset:0;z-index:30;display:block;padding:0;background:#22242c33}#root>.host-modal>.result{position:absolute;left:50%;top:calc(50% - var(--modal-shift,10px));width:320px;max-width:none;max-height:518px;overflow-y:auto;transform:translate(-50%,-50%) scale(var(--game-fit-scale,1));transform-origin:center}`;
  document.head.append(surfaceStyle);
  function refreshSurface(){
   const r=root.getBoundingClientRect(),s=Math.min(r.width/390,r.height/598),ox=(r.width-390*s)/2,oy=(r.height-598*s)/2;
@@ -96,16 +112,25 @@ function installHostSurface(kind){
  return refreshSurface;
 }
 const refreshSurface=installHostSurface('paper');
-const {canvas,ctx}=stageCanvas(),colors=['#e987b6','#efc848','#78bba7','#8b9de1'];let color=0,board=Array(9).fill(0),turn=1,phase='ready',aiWait=0;
+const {canvas,ctx}=stageCanvas();let board=Array(9).fill(0),turn=1,phase='ready',aiWait=0;
 // One board origin keeps the lifted visual grid and its tap targets aligned.
 const BOARD_X=45,BOARD_Y=143,BOARD_SIZE=300,BOARD_CELL=100;
+// The visible nickname and avatar always read the same friend slot.
+function updateOpponentName(){
+ const name=friendName(1),label=$('.opponent-name');
+ if(label){label.textContent=name;label.title=name;label.setAttribute('aria-label','Opponent: '+name);}
+ canvas.setAttribute('aria-label','Tic tac toe: You versus '+name);
+ if(turn===2&&phase!=='result')$('.turn').textContent=name+' is thinking…';
+}
+friendsChanged=updateOpponentName;updateOpponentName();
+
 const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 function winner(b){for(const line of wins)if(b[line[0]]&&line.every(i=>b[i]===b[line[0]]))return b[line[0]];return b.every(Boolean)?3:0;}
 function minimax(b,who){const w=winner(b);if(w)return w===2?10:w===1?-10:0;const values=[];for(let i=0;i<9;i++)if(!b[i]){b[i]=who;values.push(minimax(b,who===2?1:2));b[i]=0;}return who===2?Math.max(...values):Math.min(...values);}
 function check(){const w=winner(board);if(!w)return false;phase='result';if(w===1)success();else if(w===2)fail();result(w===1?'You win!':w===2?friendName(1)+' wins':'A draw',w===3?'Try again':'Three in a row','A tiny game. A proper rivalry.',reset);return true;}
 function move(i,who){if(board[i]||phase==='result')return;gesture();board[i]=who;phase='playing';sound(500-who*70,.05,.13);root.dataset.moves=board.filter(Boolean).length;if(check())return;turn=who===1?2:1;$('.turn').textContent=turn===1?'Your turn':friendName(1)+' is thinking…';if(turn===2)aiWait=.4;state('playing');}
 function reset(){board=Array(9).fill(0);turn=1;phase='ready';aiWait=0;$('.turn').textContent='Your turn';state('ready');}
-on(canvas,'pointerdown',e=>{const p=point(e);if(turn!==1||p.x<BOARD_X||p.x>=BOARD_X+BOARD_SIZE||p.y<BOARD_Y||p.y>=BOARD_Y+BOARD_SIZE)return;move(Math.floor((p.y-BOARD_Y)/BOARD_CELL)*3+Math.floor((p.x-BOARD_X)/BOARD_CELL),1);});on($('.reset'),'click',()=>{gesture();reset();});on($('.palette'),'click',()=>{color=(color+1)%colors.length;root.style.backgroundColor=colors[color];refreshSurface();});reset();loop(dt=>{if(aiWait>0){aiWait-=dt;if(aiWait<=0&&turn===2&&phase!=='result'){let best=-Infinity,choice=-1;for(const i of shuffle([...Array(9).keys()]))if(!board[i]){board[i]=2;const value=minimax(board,1);board[i]=0;if(value>best){best=value;choice=i;}}if(choice>=0)move(choice,2);}}ctx.clearRect(0,0,390,598);avatar(ctx,0,68,66,19,'#151515');avatar(ctx,1,322,66,19,'#151515');text(ctx,'YOU',108,66,11,'#242424');text(ctx,'VS',195,66,10);ctx.fillStyle='#191919';ctx.fillRect(BOARD_X+5,BOARD_Y+6,BOARD_SIZE+3,BOARD_SIZE+3);ctx.fillStyle='#fff';ctx.fillRect(BOARD_X,BOARD_Y,BOARD_SIZE,BOARD_SIZE);ctx.strokeStyle='#191919';ctx.lineWidth=3;ctx.strokeRect(BOARD_X,BOARD_Y,BOARD_SIZE,BOARD_SIZE);for(let i=1;i<3;i++){line(ctx,BOARD_X+i*BOARD_CELL,BOARD_Y,BOARD_X+i*BOARD_CELL,BOARD_Y+BOARD_SIZE,'#191919',3);line(ctx,BOARD_X,BOARD_Y+i*BOARD_CELL,BOARD_X+BOARD_SIZE,BOARD_Y+i*BOARD_CELL,'#191919',3);}board.forEach((who,i)=>{if(!who)return;const x=BOARD_X+BOARD_CELL/2+(i%3)*BOARD_CELL,y=BOARD_Y+BOARD_CELL/2+Math.floor(i/3)*BOARD_CELL;avatar(ctx,who-1,x,y,29,'#161616');text(ctx,who===1?'×':'○',x+32,y+30,18);});});
+on(canvas,'pointerdown',e=>{const p=point(e);if(turn!==1||p.x<BOARD_X||p.x>=BOARD_X+BOARD_SIZE||p.y<BOARD_Y||p.y>=BOARD_Y+BOARD_SIZE)return;move(Math.floor((p.y-BOARD_Y)/BOARD_CELL)*3+Math.floor((p.x-BOARD_X)/BOARD_CELL),1);});on($('.reset'),'click',()=>{gesture();reset();});reset();loop(dt=>{if(aiWait>0){aiWait-=dt;if(aiWait<=0&&turn===2&&phase!=='result'){let best=-Infinity,choice=-1;for(const i of shuffle([...Array(9).keys()]))if(!board[i]){board[i]=2;const value=minimax(board,1);board[i]=0;if(value>best){best=value;choice=i;}}if(choice>=0)move(choice,2);}}ctx.clearRect(0,0,390,598);avatar(ctx,0,68,66,19,'#151515');avatar(ctx,1,322,66,19,'#151515');text(ctx,'YOU',108,66,18,'#242424');text(ctx,'VS',195,66,18);ctx.fillStyle='#191919';ctx.fillRect(BOARD_X+5,BOARD_Y+6,BOARD_SIZE+3,BOARD_SIZE+3);ctx.fillStyle='#fff';ctx.fillRect(BOARD_X,BOARD_Y,BOARD_SIZE,BOARD_SIZE);ctx.strokeStyle='#191919';ctx.lineWidth=3;ctx.strokeRect(BOARD_X,BOARD_Y,BOARD_SIZE,BOARD_SIZE);for(let i=1;i<3;i++){line(ctx,BOARD_X+i*BOARD_CELL,BOARD_Y,BOARD_X+i*BOARD_CELL,BOARD_Y+BOARD_SIZE,'#191919',3);line(ctx,BOARD_X,BOARD_Y+i*BOARD_CELL,BOARD_X+BOARD_SIZE,BOARD_Y+i*BOARD_CELL,'#191919',3);}board.forEach((who,i)=>{if(!who)return;const x=BOARD_X+BOARD_CELL/2+(i%3)*BOARD_CELL,y=BOARD_Y+BOARD_CELL/2+Math.floor(i/3)*BOARD_CELL;avatar(ctx,who-1,x,y,29,'#161616');text(ctx,who===1?'×':'○',x+32,y+30,18);});});
 
 configure(()=>{if($('.guide'))$('.guide').textContent=String(setting('GUIDE',"Pick a square \u00b7 make three in a row"));});
 configure(refreshSurface);
@@ -116,6 +141,6 @@ configure(refreshSurface);
 (() => {
   const uiStyle=document.createElement('style');
   uiStyle.dataset.batch3Ui='20261116';
-  uiStyle.textContent="\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Bold.woff2') format('woff2');font-weight:600 900;font-style:normal;font-display:swap}\nhtml,body,#root{font-family:UIBody,system-ui,sans-serif;-webkit-text-size-adjust:100%}\nbutton{font-family:UIBody,system-ui,sans-serif;font-size:16px;font-weight:700;line-height:1.3;min-height:44px}\nbutton:focus-visible{outline:3px solid currentColor;outline-offset:4px}\nbutton:disabled{opacity:.55}\n[hidden]{display:none!important}\n.guide{font-size:18px;line-height:1.4;text-wrap:balance}\n.hud{top:30px;left:30px;right:30px;font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums}\n.hud.center{justify-content:center}\n.bottom{bottom:50px;left:30px;right:30px;gap:10px}\n.bottom .capability{min-height:44px;padding:10px 14px;font-size:14px;line-height:1.25;white-space:normal}\n.status{font-size:13px;line-height:1.4;bottom:108px;text-wrap:balance}\n.pill{font-size:16px;line-height:1.3;min-height:44px;padding:11px 22px}\n.modal{padding:30px 30px 50px}\n.result{max-height:100%;overflow-y:auto;padding:28px 22px}\n.result h2{font-family:Playful,UIBody,sans-serif;font-size:24px;line-height:1.25;text-wrap:balance;overflow-wrap:anywhere}\n.result p{font-size:15px;line-height:1.6;overflow-wrap:anywhere}\n.result .value{line-height:1.2;overflow-wrap:anywhere}\n.smallcaps{font-size:12px;letter-spacing:1.4px;line-height:1.4}\n\n.fit{font-family:UIBody,system-ui,sans-serif}\n.guide{font-family:Playful,UIBody,sans-serif;font-weight:600}\n.capability,.pill{font-family:UIBody,system-ui,sans-serif}\n\n.guide{font-size:18px}.palette{top:auto;bottom:66px;right:34px;width:44px;height:44px;min-height:44px;padding:0}\n.palette i{width:16px;height:16px}.turn{top:456px;font-size:14px;line-height:1.4}\n.bottom{bottom:66px}.bottom .pill{min-height:44px;font-size:16px}\n";
+  uiStyle.textContent="\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Bold.woff2') format('woff2');font-weight:600 900;font-style:normal;font-display:swap}\nhtml,body,#root{font-family:UIBody,system-ui,sans-serif;-webkit-text-size-adjust:100%}\nbutton{font-family:UIBody,system-ui,sans-serif;font-size:16px;font-weight:700;line-height:1.3;min-height:44px}\nbutton:focus-visible{outline:3px solid currentColor;outline-offset:4px}\nbutton:disabled{opacity:.55}\n[hidden]{display:none!important}\n.guide{font-size:18px;line-height:1.4;text-wrap:balance}\n.hud{top:30px;left:30px;right:30px;font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums}\n.hud.center{justify-content:center}\n.bottom{bottom:50px;left:30px;right:30px;gap:10px}\n.bottom .capability{min-height:44px;padding:10px 14px;font-size:14px;line-height:1.25;white-space:normal}\n.status{font-size:13px;line-height:1.4;bottom:108px;text-wrap:balance}\n.pill{font-size:16px;line-height:1.3;min-height:44px;padding:11px 22px}\n.modal{padding:30px 30px 50px}\n.result{max-height:100%;overflow-y:auto;padding:28px 22px}\n.result h2{font-family:Playful,UIBody,sans-serif;font-size:24px;line-height:1.25;text-wrap:balance;overflow-wrap:anywhere}\n.result p{font-size:15px;line-height:1.6;overflow-wrap:anywhere}\n.result .value{line-height:1.2;overflow-wrap:anywhere}\n.smallcaps{font-size:12px;letter-spacing:1.4px;line-height:1.4}\n\n.fit{font-family:UIBody,system-ui,sans-serif}\n.guide{font-family:Playful,UIBody,sans-serif;font-weight:600}\n.capability,.pill{font-family:UIBody,system-ui,sans-serif}\n\n.guide{font-size:20px;line-height:1.25}.opponent-name{position:absolute;top:55px;left:213px;width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right;font:600 18px/1.25 UIBody,system-ui,sans-serif;color:#242424;pointer-events:none}.turn{top:456px;font-size:14px;line-height:1.4}\n.bottom{bottom:66px}.bottom .pill{min-height:44px;font-size:16px}\n";
   document.head.append(uiStyle);
 })();

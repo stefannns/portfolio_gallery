@@ -11,11 +11,11 @@
   },
   "texts": [
     {
-      "id": "GUIDE",
-      "label": "Interaction guide",
-      "value": "Scratch to discover their award",
-      "default": "Scratch to discover their award",
-      "max_length": 100
+      "id": "TITLE",
+      "label": "Game title",
+      "value": "Friend Awards",
+      "default": "Friend Awards",
+      "max_length": 60
     }
   ],
   "tweaks": [],

@@ -57,7 +57,7 @@ function stopMic(){micStream?.getTracks().forEach(t=>t.stop());micStream=null;mi
 async function enableMic(){if(micRequested)return;micRequested=true;try{if(!navigator.mediaDevices?.getUserMedia)throw Error('No microphone');micStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:false}});if(disposed||!active||voiceControlMode==='hold'){stopMic();return;}micContext=new (window.AudioContext||window.webkitAudioContext)();await micContext.resume();const source=micContext.createMediaStreamSource(micStream);micAnalyser=micContext.createAnalyser();micAnalyser.fftSize=1024;source.connect(micAnalyser);micBuffer=new Float32Array(micAnalyser.fftSize);$('.mic-enable').textContent='Mic on';$('.mic-status').textContent='Listening · Space or hold also works';root.dataset.microphone='enabled';}catch(_){micRequested=false;$('.mic-enable').textContent='Enable microphone';$('.mic-status').textContent='Mic unavailable · hold the button to play';root.dataset.microphone='unavailable';}}
 function voice(){if(manualVoice)return .9;if(!micAnalyser||!active)return 0;micAnalyser.getFloatTimeDomainData(micBuffer);let sum=0;for(const n of micBuffer)sum+=n*n;return clamp((Math.sqrt(sum/micBuffer.length)-.012)*14,0,1);}
 function micControls(){on($('.mic-enable'),'click',()=>{unlockAudio();enableMic();});const hold=$('.voice-hold');on(hold,'pointerdown',e=>{e.preventDefault();gesture();selectVoiceControl('hold');manualVoice=true;hold.setPointerCapture(e.pointerId);});for(const type of ['pointerup','pointercancel','lostpointercapture'])on(hold,type,()=>manualVoice=false);on(window,'keydown',e=>{if(e.code==='Space'&&!e.repeat){e.preventDefault();gesture();selectVoiceControl('hold');manualVoice=true;}});on(window,'keyup',e=>{if(e.code==='Space')manualVoice=false;});lifecycle.push(next=>{if(!next){manualVoice=false;micContext?.suspend().catch(()=>{});if(micStream)for(const t of micStream.getTracks())t.enabled=false;}else{micContext?.resume().catch(()=>{});if(micStream)for(const t of micStream.getTracks())t.enabled=true;}});cleanups.push(stopMic);installVoiceControlChoice();}
-function micMarkup(action='Hold to try'){return `<div class="status mic-status">Use your voice · or hold to try</div><div class="bottom"><button class="capability mic-enable">Enable microphone</button><button class="capability voice-hold">${action}</button></div>`;}
+function micMarkup(action='Hold to try'){return `<div class="status mic-status" hidden></div><div class="bottom"><button class="capability mic-enable">Enable microphone</button><button class="capability voice-hold">${action}</button></div>`;}
 
 
 // Keep the chosen input in one centered slot; a failed/stopped microphone restores fallback.
@@ -77,7 +77,7 @@ function installVoiceControlChoice(){
   mic.hidden=voiceControlMode==='hold';hold.hidden=voiceControlMode==='voice';
   bar.classList.toggle('voice-mode-selected',Boolean(voiceControlMode));
   root.dataset.voiceControl=voiceControlMode||'choice';
-  if(voiceControlMode==='hold')status.textContent=italian?'Tieni premuto · o premi Spazio':'Hold the button · or press Space';
+  if(voiceControlMode==='hold'){status.textContent='';status.hidden=true;}
  }
  voiceChoiceRefresh=renderChoice;
  // Runs before the recording controller's capture-phase permission handler.
@@ -99,12 +99,12 @@ function installMicrophoneRecordingControl(){
  const italian=language.toLowerCase().startsWith('it');
  const copy=italian?{
   idle:'Mic spento',requesting:'Connessione…',active:'Mic attivo',paused:'Mic in pausa',
-  start:'Attiva microfono',stop:'Disattiva microfono',listening:'In ascolto · tocca per disattivare',
-  fallback:'Usa la voce o tieni premuto',unavailable:'Non disponibile · usa il pulsante'
+  start:'Attiva microfono',stop:'Disattiva microfono',listening:'',
+  fallback:'',unavailable:'Non disponibile · usa il pulsante'
  }:{
   idle:'Mic off',requesting:'Connecting…',active:'Mic on',paused:'Mic paused',
-  start:'Start microphone',stop:'Stop microphone',listening:'Listening · tap to turn off',
-  fallback:'Use your voice · or hold to try',unavailable:'Mic unavailable · hold the button to play'
+  start:'Start microphone',stop:'Stop microphone',listening:'',
+  fallback:'',unavailable:'Mic unavailable · hold the button to play'
  };
  const style=document.createElement('style');
  style.textContent='.bottom .capability.mic-enable{display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;flex:1 1 174px}.mic-enable .mic-icon{width:18px;height:18px;flex:none}.mic-enable .mic-record-dot{width:10px;height:10px;flex:none;background:currentColor;border-radius:50%}.bottom .capability.mic-enable.is-listening{background:#d94646;border-color:#d94646;color:#fff;box-shadow:0 2px 8px #bd333326}.mic-enable .mic-button-label{white-space:nowrap}';
@@ -180,7 +180,31 @@ function fullBleedStageCanvas(){
  return{canvas,ctx,bounds};
 }
 
+// One game-action guide; capability state is text only while permission/error needs it.
+function installSingleGuideStatus(kind){
+ const status=$(kind==='camera'?'.cam-status':'.mic-status');if(!status)return;
+ const italian=(new URLSearchParams(location.search).get('lang')||document.documentElement.lang||'en').toLowerCase().startsWith('it');
+ status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+ function refresh(){
+  let message='';
+  if(kind==='camera'){
+   if(['requesting','unavailable'].includes(root.dataset.camera))message=status.textContent;
+  }else{
+   const state=$('.mic-enable')?.dataset.micState||root.dataset.microphone;
+   if(state==='requesting')message=italian?'Consenti l’accesso al microfono':'Allow microphone access';
+   else if(['unavailable','error'].includes(state))message=italian?'Microfono non disponibile':'Microphone unavailable';
+  }
+  if(status.textContent!==message)status.textContent=message;
+  const hidden=!message.trim();if(status.hidden!==hidden)status.hidden=hidden;
+ }
+ const textObserver=new MutationObserver(refresh);textObserver.observe(status,{childList:true,characterData:true,subtree:true});
+ const stateObserver=new MutationObserver(refresh);stateObserver.observe(root,{attributes:true,attributeFilter:[kind==='camera'?'data-camera':'data-microphone']});
+ const button=$('.mic-enable');if(button)stateObserver.observe(button,{attributes:true,attributeFilter:['data-mic-state']});
+ refresh();cleanups.push(()=>{textObserver.disconnect();stateObserver.disconnect();});
+}
+
 mount(`.fit{background:#93c7c3}.guide{top:186px;font-family:Playful,Arial;color:#fff;text-shadow:0 2px #36776c80}.hud{color:#fff;font-family:Playful,Arial;text-shadow:0 3px #36776c80}.result{background:#fff0c8}.result h2{font-family:Playful,Arial}.result .value{color:#b46c38}.pill{background:#bc783e}.capability{color:#325b52;border-color:#59998d55}`,`<canvas class="stage" aria-label="Voice flight"></canvas><div class="hud center"><span class="score">0</span></div><div class="guide">Make a sound to fly · quiet to fall</div>${micMarkup('Hold to fly')}${resultMarkup()}`,'#93c7c3');
+installSingleGuideStatus('microphone');
 const {canvas,ctx,bounds}=fullBleedStageCanvas();let phase='ready',bird={y:300,v:0},pipes=[],flight=0,spawn=0,score=0,wing=0;
 // Generated raster artwork is loaded once. Static layers are painted only when
 // an image or the host viewport changes, not reconstructed on animation frames.

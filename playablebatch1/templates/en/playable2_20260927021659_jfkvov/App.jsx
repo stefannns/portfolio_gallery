@@ -1,4 +1,4 @@
-// Editable pre-compilation source. Four-round pass-the-phone couple test.
+// Editable pre-compilation source. One person chooses a shareable date profile.
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import * as Tone from 'tone';
@@ -11,27 +11,6 @@ const DEFAULT_CONFIG = {
       "value": "Better Together",
       "default": "Better Together",
       "max_length": 35
-    },
-    {
-      "id": "START_BTN",
-      "label": "Start Button",
-      "value": "Start together",
-      "default": "Start together",
-      "max_length": 34
-    },
-    {
-      "id": "HUD_QUESTION",
-      "label": "HUD Question Label",
-      "value": "Round",
-      "default": "Round",
-      "max_length": 25
-    },
-    {
-      "id": "HUD_SCORE",
-      "label": "HUD Score Label",
-      "value": "Matches",
-      "default": "Matches",
-      "max_length": 27
     },
     {
       "id": "Q1_TEXT",
@@ -69,13 +48,6 @@ const DEFAULT_CONFIG = {
       "max_length": 31
     },
     {
-      "id": "Q1_EXP",
-      "label": "Q1 Explanation",
-      "value": "Your next date could borrow a little from both picks.",
-      "default": "Your next date could borrow a little from both picks.",
-      "max_length": 100
-    },
-    {
       "id": "Q2_TEXT",
       "label": "Q2 Text",
       "value": "What are you sharing on date night?",
@@ -109,13 +81,6 @@ const DEFAULT_CONFIG = {
       "value": "Popcorn",
       "default": "Popcorn",
       "max_length": 30
-    },
-    {
-      "id": "Q2_EXP",
-      "label": "Q2 Explanation",
-      "value": "There is always room for two favorite snacks.",
-      "default": "There is always room for two favorite snacks.",
-      "max_length": 100
     },
     {
       "id": "Q3_TEXT",
@@ -153,13 +118,6 @@ const DEFAULT_CONFIG = {
       "max_length": 33
     },
     {
-      "id": "Q3_EXP",
-      "label": "Q3 Explanation",
-      "value": "Different ways of caring can make a lovely team.",
-      "default": "Different ways of caring can make a lovely team.",
-      "max_length": 100
-    },
-    {
       "id": "Q4_TEXT",
       "label": "Q4 Text",
       "value": "Pick your next little adventure.",
@@ -195,179 +153,193 @@ const DEFAULT_CONFIG = {
       "max_length": 35
     },
     {
-      "id": "Q4_EXP",
-      "label": "Q4 Explanation",
-      "value": "Keep both ideas. You have two adventures to look forward to.",
-      "default": "Keep both ideas. You have two adventures to look forward to.",
-      "max_length": 100
+      "id": "PROGRESS_LABEL",
+      "label": "Progress Label",
+      "value": "Question",
+      "default": "Question",
+      "max_length": 80
     },
     {
-      "id": "FB_CORRECT",
-      "label": "Feedback Correct Text",
-      "value": "Same wavelength!",
-      "default": "Same wavelength!",
-      "max_length": 36
+      "id": "Q1_LABEL",
+      "label": "Q1 Label",
+      "value": "Friday",
+      "default": "Friday",
+      "max_length": 80
     },
     {
-      "id": "FB_WRONG",
-      "label": "Feedback Wrong Text",
-      "value": "Two good tastes!",
-      "default": "Two good tastes!",
-      "max_length": 36
+      "id": "Q2_LABEL",
+      "label": "Q2 Label",
+      "value": "Snack",
+      "default": "Snack",
+      "max_length": 80
     },
     {
-      "id": "BTN_NEXT",
-      "label": "Next Button",
-      "value": "Next question",
-      "default": "Next question",
-      "max_length": 33
+      "id": "Q3_LABEL",
+      "label": "Q3 Label",
+      "value": "Little love",
+      "default": "Little love",
+      "max_length": 80
+    },
+    {
+      "id": "Q4_LABEL",
+      "label": "Q4 Label",
+      "value": "Adventure",
+      "default": "Adventure",
+      "max_length": 80
     },
     {
       "id": "RES_TITLE",
-      "label": "Result Title",
-      "value": "Your couple mix",
-      "default": "Your couple mix",
-      "max_length": 35
-    },
-    {
-      "id": "RES_PERFECT",
-      "label": "Result Perfect Comment",
-      "value": "Two minds, one wavelength.",
-      "default": "Two minds, one wavelength.",
-      "max_length": 50
-    },
-    {
-      "id": "RES_NORMAL",
-      "label": "Result Normal Comment",
-      "value": "Different tastes. Still a good team.",
-      "default": "Different tastes. Still a good team.",
-      "max_length": 56
+      "label": "Res Title",
+      "value": "My date style",
+      "default": "My date style",
+      "max_length": 80
     },
     {
       "id": "RESTART_BTN",
-      "label": "Restart Button",
-      "value": "Play together again",
-      "default": "Play together again",
-      "max_length": 39
+      "label": "Restart Btn",
+      "value": "Try again",
+      "default": "Try again",
+      "max_length": 80
     },
     {
-      "id": "POST_BTN",
-      "label": "Post My Play Button",
-      "value": "Post My Play",
-      "default": "Post My Play",
-      "max_length": 32
+      "id": "PROFILE0_TITLE",
+      "label": "Profile0 Title",
+      "value": "Cozy Romantic",
+      "default": "Cozy Romantic",
+      "max_length": 80
     },
     {
-      "id": "TURN_ONE",
-      "label": "Turn One",
-      "max_length": 120,
-      "value": "Partner 1 · choose secretly",
-      "default": "Partner 1 · choose secretly"
+      "id": "PROFILE0_DESC",
+      "label": "Profile0 Desc",
+      "value": "Good food, soft plans, and time for two.",
+      "default": "Good food, soft plans, and time for two.",
+      "max_length": 80
     },
     {
-      "id": "TURN_TWO",
-      "label": "Turn Two",
-      "max_length": 120,
-      "value": "Partner 2 · your turn",
-      "default": "Partner 2 · your turn"
+      "id": "PROFILE1_TITLE",
+      "label": "Profile1 Title",
+      "value": "Playful Adventurer",
+      "default": "Playful Adventurer",
+      "max_length": 80
     },
     {
-      "id": "TURN_GUIDE",
-      "label": "Turn Guide",
-      "max_length": 120,
-      "value": "Pick one, then pass the phone",
-      "default": "Pick one, then pass the phone"
+      "id": "PROFILE1_DESC",
+      "label": "Profile1 Desc",
+      "value": "A little laughter turns any plan into a date.",
+      "default": "A little laughter turns any plan into a date.",
+      "max_length": 80
     },
     {
-      "id": "TURN_TWO_GUIDE",
-      "label": "Turn Two Guide",
-      "max_length": 120,
-      "value": "Pick what feels most like you",
-      "default": "Pick what feels most like you"
+      "id": "PROFILE2_TITLE",
+      "label": "Profile2 Title",
+      "value": "Thoughtful Explorer",
+      "default": "Thoughtful Explorer",
+      "max_length": 80
     },
     {
-      "id": "HANDOFF_TITLE",
-      "label": "Handoff Title",
-      "max_length": 120,
-      "value": "Pass the phone",
-      "default": "Pass the phone"
+      "id": "PROFILE2_DESC",
+      "label": "Profile2 Desc",
+      "value": "Meaningful little moments are your kind of magic.",
+      "default": "Meaningful little moments are your kind of magic.",
+      "max_length": 80
     },
     {
-      "id": "HANDOFF_COPY",
-      "label": "Handoff Copy",
-      "max_length": 120,
-      "value": "Your partner picks next. Keep your answer a secret.",
-      "default": "Your partner picks next. Keep your answer a secret."
+      "id": "PROFILE3_TITLE",
+      "label": "Profile3 Title",
+      "value": "Spontaneous Spark",
+      "default": "Spontaneous Spark",
+      "max_length": 80
     },
     {
-      "id": "HANDOFF_BTN",
-      "label": "Handoff Btn",
-      "max_length": 120,
-      "value": "Partner 2 is ready",
-      "default": "Partner 2 is ready"
+      "id": "PROFILE3_DESC",
+      "label": "Profile3 Desc",
+      "value": "Leave room for an unexpected little adventure.",
+      "default": "Leave room for an unexpected little adventure.",
+      "max_length": 80
     },
     {
-      "id": "FIRST_PICK",
-      "label": "First Pick",
-      "max_length": 120,
-      "value": "Partner 1",
-      "default": "Partner 1"
+      "id": "SHARE_BTN",
+      "label": "Share Btn",
+      "value": "Share result",
+      "default": "Share result",
+      "max_length": 80
     },
     {
-      "id": "SECOND_PICK",
-      "label": "Second Pick",
-      "max_length": 120,
-      "value": "Partner 2",
-      "default": "Partner 2"
+      "id": "SHARE_INVITE",
+      "label": "Share Invite",
+      "value": "Your turn—what would you choose?",
+      "default": "Your turn—what would you choose?",
+      "max_length": 80
     },
     {
-      "id": "RESULT_SAME",
-      "label": "Result Same",
-      "max_length": 120,
-      "value": "Same wavelength",
-      "default": "Same wavelength"
+      "id": "SHARE_FALLBACK",
+      "label": "Share Fallback",
+      "value": "Copy your result or save a card to send.",
+      "default": "Copy your result or save a card to send.",
+      "max_length": 80
     },
     {
-      "id": "RESULT_MIX",
-      "label": "Result Mix",
-      "max_length": 120,
-      "value": "A lovely mix",
-      "default": "A lovely mix"
+      "id": "SHARE_SUCCESS",
+      "label": "Share Success",
+      "value": "Shared. Your partner gets the next pick.",
+      "default": "Shared. Your partner gets the next pick.",
+      "max_length": 80
     },
     {
-      "id": "RESULT_DIFFERENT",
-      "label": "Result Different",
-      "max_length": 120,
-      "value": "Opposites attract",
-      "default": "Opposites attract"
+      "id": "COPY_BTN",
+      "label": "Copy Btn",
+      "value": "Copy result",
+      "default": "Copy result",
+      "max_length": 80
     },
     {
-      "id": "RESULT_GUIDE",
-      "label": "Result Guide",
-      "max_length": 120,
-      "value": "A playful conversation starter, made for two.",
-      "default": "A playful conversation starter, made for two."
+      "id": "COPY_SUCCESS",
+      "label": "Copy Success",
+      "value": "Copied. Send it to your partner.",
+      "default": "Copied. Send it to your partner.",
+      "max_length": 80
     },
     {
-      "id": "FINISH_BTN",
-      "label": "Finish Btn",
-      "max_length": 120,
-      "value": "See your couple mix",
-      "default": "See your couple mix"
+      "id": "COPY_MANUAL",
+      "label": "Copy Manual",
+      "value": "Select and copy your result below.",
+      "default": "Select and copy your result below.",
+      "max_length": 80
     },
     {
-      "id": "RECAP_LABEL",
-      "label": "Recap Label",
-      "max_length": 120,
-      "value": "Your shared picks",
-      "default": "Your shared picks"
+      "id": "SAVE_BTN",
+      "label": "Save Btn",
+      "value": "Save card",
+      "default": "Save card",
+      "max_length": 80
     },
     {
-      "id": "FB_SHARED_DETAIL",
-      "label": "Matching picks feedback",
-      "value": "You already have your next date idea.",
-      "default": "You already have your next date idea.",
-      "max_length": 100
+      "id": "SAVE_BUSY",
+      "label": "Save Busy",
+      "value": "Saving…",
+      "default": "Saving…",
+      "max_length": 80
+    },
+    {
+      "id": "SAVE_SUCCESS",
+      "label": "Save Success",
+      "value": "Card saved to your photos.",
+      "default": "Card saved to your photos.",
+      "max_length": 80
+    },
+    {
+      "id": "SAVE_FAILURE",
+      "label": "Save Failure",
+      "value": "Could not save. You can still copy your result.",
+      "default": "Could not save. You can still copy your result.",
+      "max_length": 80
+    },
+    {
+      "id": "SAVE_DOWNLOAD",
+      "label": "Save Download",
+      "value": "Card download started.",
+      "default": "Card download started.",
+      "max_length": 80
     }
   ],
   "images": [],
@@ -377,9 +349,9 @@ const DEFAULT_CONFIG = {
     "h5_playstyle_type": "general_game",
     "content_locale": "en",
     "min_capability_level": 1,
-    "full_capability_level": 1,
+    "full_capability_level": 3,
     "title": "Better Together",
-    "name": "Couple Compatibility Test"
+    "name": "Better Together"
   }
 };
 const GAME_STYLES = `
@@ -409,6 +381,14 @@ button{font:inherit;cursor:pointer;touch-action:manipulation}button:focus-visibl
 @media(max-height:620px){.couple-main{padding-block:10px}.couple-content{gap:10px}.couple-brand{font-size:22px}.couple-question{font-size:22px;line-height:1.25}.btn-option{min-height:44px;padding:9px 12px;font-size:17px}.couple-options{gap:9px}.paper-card{padding:18px 15px;gap:13px}.paper-card p{font-size:15px}.couple-result-score{font-size:42px}}
 @media(max-width:350px){.couple-screen{padding-left:25px;padding-right:25px}.couple-brand{font-size:21px}.couple-question{font-size:22px}.btn-option{font-size:16px}.couple-pick span{font-size:15px}}
 @media(prefers-reduced-motion:reduce){.couple-guide,.couple-feedback{animation:none}.btn-option{transition:none}}
+
+.couple-hud .couple-title{font-size:22px;line-height:1.2;font-weight:400;max-width:72%;text-align:right;text-wrap:balance}
+.couple-content.solo-playing{gap:18px}.solo-playing .couple-options{margin:0}
+.solo-result{padding:18px 16px;gap:12px}.solo-result h2{font-size:24px}.solo-result .profile-copy{font-size:15px;line-height:1.4}
+.result-picks{width:100%;margin:0;text-align:left}.result-picks>div{display:grid;grid-template-columns:68px minmax(0,1fr);gap:10px;padding:8px 0;border-bottom:1px solid #28272330}.result-picks dt{font-size:11px;line-height:1.4;color:#645b50}.result-picks dd{margin:0;font-size:15px;line-height:1.3;overflow-wrap:anywhere}
+.result-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;width:100%}.result-action{min-height:44px;background:transparent;border:1px solid #28272390;border-radius:4px;padding:7px 3px;font-size:12px;line-height:1.3;color:#282723;white-space:normal;overflow-wrap:anywhere}
+.share-status{font-size:13px!important;line-height:1.4!important;color:#645b50}.copy-text{display:block;width:100%;min-height:130px;padding:10px;border:1px solid #28272370;background:#fffdf1;color:#282723;font:13px/1.5 PaperType,Georgia,serif;user-select:text;-webkit-user-select:text;resize:vertical}
+@media(max-height:620px){.solo-result{padding:16px 14px;gap:10px}.solo-result h2{font-size:23px}.result-picks>div{padding:6px 0}.couple-content.solo-playing{gap:14px}}
 `;
 const gameStyle = document.createElement('style');
 gameStyle.textContent = GAME_STYLES;
@@ -417,74 +397,107 @@ document.documentElement.lang = 'en';
 function valuesFrom(config){
  const values={};for(const group of ['texts','tweaks','images'])for(const item of config[group]||[])values[item.id]=group==='images'?item.path:item.value;return values;
 }
-function CoupleMark({single=false}){
- return <svg className={single?'hud-heart':'couple-mark'} viewBox={single?'0 0 28 28':'0 0 48 36'} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{single?<path d="M14 23C11 20 3 15 3 9a6 6 0 0 1 11-3A6 6 0 0 1 25 9c0 6-8 11-11 14Z"/>:<><path d="M18 30C14 26 3 19 3 11a8 8 0 0 1 15-4A8 8 0 0 1 32 11c0 8-10 15-14 19Z"/><path d="M31 32c-3-3-10-8-10-14a6 6 0 0 1 10-4 6 6 0 0 1 11 3c0 6-8 12-11 15Z"/></>}</svg>;
+// A playful preference profile from this person's own picks, never a compatibility score.
+function dateProfile(answers,config){
+ const weights=[0,0,0,0];
+ for(const [question,map,weight]of [[0,[0,1,2,3],3],[2,[2,2,0,0],1],[3,[3,1,2,0],2]]){
+  const pick=answers[question];if(Number.isInteger(pick)&&pick>=0&&pick<4)weights[map[pick]]+=weight;
+ }
+ let index=Number.isInteger(answers[0])?answers[0]:0;
+ for(let i=0;i<weights.length;i++)if(weights[i]>weights[index])index=i;
+ return{title:config['PROFILE'+index+'_TITLE'],detail:config['PROFILE'+index+'_DESC']};
 }
-function useRecordingSubmission(){
- const canSubmit=typeof window.tt?.playableRecordingSubmission==='function';
- const[submitting,setSubmitting]=React.useState(false);
- React.useEffect(()=>{
-  const ready=()=>setSubmitting(false),visible=()=>{if(!document.hidden)ready();};
-  window.addEventListener('pageshow',ready);document.addEventListener('visibilitychange',visible);
-  return()=>{window.removeEventListener('pageshow',ready);document.removeEventListener('visibilitychange',visible);};
- },[]);
- const submit=()=>{if(!canSubmit||submitting)return;setSubmitting(true);window.tt.playableRecordingSubmission({success(){},fail(){setSubmitting(false);},complete(){}});};
- return{canSubmit,submitting,submit};
+function resultText(config,questions,answers,profile){
+ return[config.GAME_TITLE+' — '+profile.title,profile.detail,...questions.map((q,i)=>q.label+': '+q.options[answers[i]]),config.SHARE_INVITE].join('\n');
+}
+function drawResultCard(config,questions,answers,profile){
+ const canvas=document.createElement('canvas');canvas.width=720;canvas.height=1120;const ctx=canvas.getContext('2d');
+ if(!ctx)return null;
+ const family='PaperType, Georgia, serif';
+ function lines(value,size,maxWidth){
+  ctx.font=`${size}px ${family}`;const rows=[];let line='';
+  for(const word of String(value).split(/\s+/)){const next=line?line+' '+word:word;if(ctx.measureText(next).width<=maxWidth){line=next;continue;}if(line)rows.push(line);line=word;}
+  if(line)rows.push(line);return rows;
+ }
+ const titleLines=lines(profile.title,40,570),detailLines=lines(profile.detail,25,570);
+ const pickLines=questions.map((q,i)=>lines(q.options[answers[i]],29,570));
+ const titleY=224,detailY=titleY+titleLines.length*48+12;
+ let rowY=detailY+detailLines.length*34+48;
+ const positions=pickLines.map(rows=>{const y=rowY;rowY+=30+rows.length*36+30;return y;});
+ const height=Math.max(920,rowY+142);canvas.height=height;
+ ctx.fillStyle='#eed1c4';ctx.fillRect(0,0,720,height);
+ ctx.fillStyle='#28272315';for(let y=8;y<height;y+=18)for(let x=9;x<720;x+=18){ctx.beginPath();ctx.arc(x,y,.8,0,Math.PI*2);ctx.fill();}
+ ctx.fillStyle='#fff7de';ctx.strokeStyle='#282723';ctx.lineWidth=3;ctx.beginPath();if(ctx.roundRect)ctx.roundRect(34,144,652,height-180,8);else ctx.rect(34,144,652,height-180);ctx.fill();ctx.stroke();
+ ctx.fillStyle='#282723';ctx.textAlign='center';ctx.font=`38px ${family}`;ctx.fillText(config.GAME_TITLE,360,88);
+ ctx.font=`18px ${family}`;ctx.fillStyle='#645b50';ctx.fillText(config.RES_TITLE,360,186);
+ function write(rows,x,y,size,lineHeight,align='center',color='#282723'){ctx.font=`${size}px ${family}`;ctx.textAlign=align;ctx.fillStyle=color;rows.forEach((line,i)=>ctx.fillText(line,x,y+i*lineHeight));}
+ write(titleLines,360,titleY,40,48);write(detailLines,360,detailY,25,34);
+ questions.forEach((q,i)=>{const y=positions[i];write([q.label],76,y,19,24,'left','#645b50');write(pickLines[i],76,y+37,29,36,'left');ctx.strokeStyle='#28272335';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(76,y+48+pickLines[i].length*36);ctx.lineTo(644,y+48+pickLines[i].length*36);ctx.stroke();});
+ write(lines(config.SHARE_INVITE,21,560),360,height-81,21,28);
+ return canvas;
 }
 function App(){
  const[config,setConfig]=React.useState(()=>valuesFrom(DEFAULT_CONFIG));
- const[phase,setPhase]=React.useState('playing'),[round,setRound]=React.useState(0),[turn,setTurn]=React.useState(1),[firstPick,setFirstPick]=React.useState(null),[pairs,setPairs]=React.useState([]);
- const actionLock=React.useRef(false),synth=React.useRef(null),audioReady=React.useRef(null);
- const recording=useRecordingSubmission();
+ const[phase,setPhase]=React.useState('playing'),[round,setRound]=React.useState(0),[answers,setAnswers]=React.useState([]);
+ const[notice,setNotice]=React.useState(''),[copyVisible,setCopyVisible]=React.useState(false),[sharing,setSharing]=React.useState(false),[saving,setSaving]=React.useState(false),[poster,setPoster]=React.useState('');
+ const synth=React.useRef(null),audioReady=React.useRef(null),shareFile=React.useRef(null),answerLock=React.useRef(false);
  React.useEffect(()=>{
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),1600);let mounted=true;
   (async()=>{try{const response=await fetch('./game.config.json',{signal:controller.signal});if(!response.ok)return;const data=await response.json();if(mounted)setConfig({...valuesFrom(DEFAULT_CONFIG),...valuesFrom(data)});}catch(_){}finally{clearTimeout(timer);}})();
   return()=>{mounted=false;clearTimeout(timer);controller.abort();};
  },[]);
  React.useEffect(()=>()=>{synth.current?.dispose();},[]);
- const play=React.useCallback(kind=>{
-  try{
-   if(!audioReady.current)audioReady.current=Promise.resolve(Tone.start()).then(()=>{synth.current=new Tone.Synth().toDestination();Tone.getContext().destination.volume.value=-10;}).catch(()=>{audioReady.current=null;});
-   void audioReady.current?.then(()=>{if(!synth.current)return;try{synth.current.triggerAttackRelease(kind==='match'?'C5':'C4',kind==='match'?'8n':'16n',Tone.now());}catch(_){}});
-  }catch(_){audioReady.current=null;}
+ const play=React.useCallback(()=>{
+  try{if(!audioReady.current)audioReady.current=Promise.resolve(Tone.start()).then(()=>{synth.current=new Tone.Synth().toDestination();Tone.getContext().destination.volume.value=-10;}).catch(()=>{audioReady.current=null;});void audioReady.current?.then(()=>{if(!synth.current)return;try{synth.current.triggerAttackRelease('C4','16n',Tone.now());}catch(_){}});}catch(_){audioReady.current=null;}
  },[]);
- const questions=React.useMemo(()=>Array.from({length:4},(_,i)=>{
-  const key='Q'+(i+1);return{text:config[key+'_TEXT'],options:Array.from({length:4},(_,j)=>config[key+'_O'+j]),detail:config[key+'_EXP']};
- }),[config]);
- const question=questions[round],matches=pairs.filter(pair=>pair.a===pair.b).length,latest=pairs[pairs.length-1],same=latest?.a===latest?.b;
+ const questions=React.useMemo(()=>Array.from({length:4},(_,i)=>{const key='Q'+(i+1);return{text:config[key+'_TEXT'],label:config[key+'_LABEL'],options:Array.from({length:4},(_,j)=>config[key+'_O'+j])};}),[config]);
+ const profile=React.useMemo(()=>dateProfile(answers,config),[answers,config]);
+ const shareText=React.useMemo(()=>phase==='result'?resultText(config,questions,answers,profile):'',[phase,config,questions,answers,profile]);
+ React.useEffect(()=>{
+  if(phase!=='result')return;let current=true;shareFile.current=null;
+  Promise.resolve(document.fonts?.ready).then(()=>{
+   if(!current)return;const card=drawResultCard(config,questions,answers,profile);if(!card)return;
+   try{setPoster(card.toDataURL('image/png'));card.toBlob(blob=>{if(current&&blob&&typeof File==='function')shareFile.current=new File([blob],'better-together.png',{type:'image/png'});},'image/png');}catch(_){}
+  });return()=>{current=false;};
+ },[phase,config,questions,answers,profile]);
+ React.useEffect(()=>{answerLock.current=false;},[round,phase]);
  function choose(index){
-  if(phase!=='playing'||actionLock.current||index<0||index>3)return;actionLock.current=true;
-  if(turn===1){play('tap');setFirstPick(index);setPhase('handoff');}
-  else if(firstPick!==null){const pair={a:firstPick,b:index};setPairs(previous=>[...previous,pair]);play(pair.a===pair.b?'match':'tap');setPhase('feedback');}
+  if(phase!=='playing'||answerLock.current||index<0||index>3)return;answerLock.current=true;play();
+  const next=[...answers,index];setAnswers(next);
+  if(next.length===questions.length)setPhase('result');else setRound(value=>value+1);
  }
- function ready(){if(phase!=='handoff')return;play('tap');actionLock.current=false;setTurn(2);setPhase('playing');}
- function next(){
-  if(phase!=='feedback')return;play('tap');
-  if(round===questions.length-1)setPhase('result');
-  else{actionLock.current=false;setRound(value=>value+1);setFirstPick(null);setTurn(1);setPhase('playing');}
+ function restart(){play();answerLock.current=false;setRound(0);setAnswers([]);setPhase('playing');setNotice('');setCopyVisible(false);setPoster('');shareFile.current=null;}
+ async function share(){
+  if(sharing)return;setSharing(true);setNotice('');
+  try{
+   if(typeof navigator.share!=='function'){setNotice(config.SHARE_FALLBACK);return;}
+   const payload={title:config.GAME_TITLE,text:shareText},file=shareFile.current;
+   if(file&&typeof navigator.canShare==='function'&&navigator.canShare({files:[file]}))payload.files=[file];
+   await navigator.share(payload);setNotice(config.SHARE_SUCCESS);
+  }catch(error){if(error?.name!=='AbortError')setNotice(config.SHARE_FALLBACK);}finally{setSharing(false);}
  }
- function restart(){play('tap');actionLock.current=false;setRound(0);setTurn(1);setFirstPick(null);setPairs([]);setPhase('playing');}
- const profile=matches===4?config.RESULT_SAME:matches>=2?config.RESULT_MIX:config.RESULT_DIFFERENT;
+ async function copy(){
+  setNotice('');try{if(!navigator.clipboard?.writeText)throw new Error('Copy unavailable');await navigator.clipboard.writeText(shareText);setCopyVisible(false);setNotice(config.COPY_SUCCESS);}catch(_){setCopyVisible(true);setNotice(config.COPY_MANUAL);}
+ }
+ function save(){
+  if(saving)return;let dataURL=poster;
+  try{if(!dataURL)dataURL=drawResultCard(config,questions,answers,profile)?.toDataURL('image/png');if(!dataURL)throw new Error('Card unavailable');}catch(_){setNotice(config.SAVE_FAILURE);return;}
+  if(typeof window.tt?.saveDataURL==='function'){
+   setSaving(true);try{window.tt.saveDataURL({dataURL,filename:'better_together',extension:'png',saveToAlbum:'image',success(){setNotice(config.SAVE_SUCCESS);setSaving(false);},fail(){setNotice(config.SAVE_FAILURE);setSaving(false);},complete(){setSaving(false);}});}catch(_){setSaving(false);setNotice(config.SAVE_FAILURE);}return;
+  }
+  // The documented SDK permits a normal browser download only when its native album API is absent.
+  try{const link=document.createElement('a');link.href=dataURL;link.download='better-together.png';document.body.append(link);link.click();link.remove();setNotice(config.SAVE_DOWNLOAD);}catch(_){setNotice(config.SAVE_FAILURE);}
+ }
  return <main className="couple-screen" data-phase={phase}>
-  <header className="couple-hud"><span className="hud-item" aria-label={config.HUD_QUESTION+' '+(round+1)+' / '+questions.length}><span>{round+1}/{questions.length}</span><small className="hud-label">{config.HUD_QUESTION}</small></span><span className="hud-item" aria-label={config.HUD_SCORE+' '+matches}><CoupleMark single/><span>{matches}</span></span></header>
-  <section className="couple-main"><div className="couple-content">
-   {phase==='playing'&&<>
-    <div className="couple-brand"><CoupleMark/><span>{config.GAME_TITLE}</span></div>
-    <div className="couple-turn" aria-live="polite">{turn===1?config.TURN_ONE:config.TURN_TWO}</div>
-    <h2 className="couple-question">{question.text}</h2>
-    <div className="couple-options">{question.options.map((option,index)=><button key={index} className="btn-option" onClick={()=>choose(index)}>{option}</button>)}</div>
-    <p className="couple-guide">{turn===1?config.TURN_GUIDE:config.TURN_TWO_GUIDE}</p>
-   </>}
-   {phase==='handoff'&&<section className="paper-card couple-handoff" aria-label={config.HANDOFF_TITLE}>
-    <CoupleMark/><div className="paper-kicker">{config.GAME_TITLE}</div><h2>{config.HANDOFF_TITLE}</h2><p>{config.HANDOFF_COPY}</p><button className="btn-black handoff-button" onClick={ready}>{config.HANDOFF_BTN}</button>
-   </section>}
-   {phase==='feedback'&&latest&&<section className="paper-card couple-feedback" aria-live="polite">
-    <CoupleMark/><h2>{same?config.FB_CORRECT:config.FB_WRONG}</h2>
-    <div className="couple-picks"><div className="couple-pick"><small>{config.FIRST_PICK}</small><span>{question.options[latest.a]}</span></div><div className="couple-pick"><small>{config.SECOND_PICK}</small><span>{question.options[latest.b]}</span></div></div>
-    <p>{same?config.FB_SHARED_DETAIL:question.detail}</p><button className="btn-black next-button" onClick={next}>{round===questions.length-1?config.FINISH_BTN:config.BTN_NEXT}</button>
-   </section>}
-   {phase==='result'&&<section className="paper-card couple-result" aria-live="polite">
-    <CoupleMark/><h2>{config.RES_TITLE}</h2><div className="couple-result-score">{matches} / {questions.length}<small>{config.HUD_SCORE}</small></div><div className="couple-profile">{profile}</div><p>{matches===questions.length?config.RES_PERFECT:config.RES_NORMAL}</p><p className="couple-fineprint">{config.RESULT_GUIDE}</p><button className="btn-black restart-button" onClick={restart}>{config.RESTART_BTN}</button>{recording.canSubmit&&<button className="btn-black secondary" disabled={recording.submitting} onClick={recording.submit}>{config.POST_BTN}</button>}
+  <header className="couple-hud"><span aria-label={config.PROGRESS_LABEL+' '+(round+1)+' / '+questions.length}>{round+1}/{questions.length}</span><span className="couple-title">{config.GAME_TITLE}</span></header>
+  <section className="couple-main"><div className={'couple-content'+(phase==='playing'?' solo-playing':'')}>
+   {phase==='playing'&&<><h2 className="couple-question">{questions[round].text}</h2><div className="couple-options">{questions[round].options.map((option,index)=><button key={index} className="btn-option" onClick={()=>choose(index)}>{option}</button>)}</div></>}
+   {phase==='result'&&<section className="paper-card solo-result" aria-live="polite">
+    <h2>{profile.title}</h2><p className="profile-copy">{profile.detail}</p>
+    <dl className="result-picks">{questions.map((question,index)=><div key={index}><dt>{question.label}</dt><dd>{question.options[answers[index]]}</dd></div>)}</dl>
+    <button className="btn-black share-button" disabled={sharing} onClick={share}>{config.SHARE_BTN}</button>
+    <div className="result-actions"><button className="result-action" onClick={copy}>{config.COPY_BTN}</button><button className="result-action" disabled={saving} onClick={save}>{saving?config.SAVE_BUSY:config.SAVE_BTN}</button><button className="result-action" onClick={restart}>{config.RESTART_BTN}</button></div>
+    {notice&&<p className="share-status" role="status">{notice}</p>}{copyVisible&&<textarea className="copy-text" aria-label={config.COPY_BTN} readOnly value={shareText} autoFocus onFocus={event=>event.currentTarget.select()}/>}
    </section>}
   </div></section>
  </main>;

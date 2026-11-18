@@ -13,8 +13,8 @@
     {
       "id": "GUIDE",
       "label": "Interaction guide",
-      "value": "Match the face · take a selfie",
-      "default": "Match the face · take a selfie",
+      "value": "Match the face",
+      "default": "Match the face",
       "max_length": 100
     }
   ],

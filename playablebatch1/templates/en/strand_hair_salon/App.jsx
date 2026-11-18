@@ -13,6 +13,7 @@
 #root .tools{left:30px;right:30px;bottom:calc(50px + env(safe-area-inset-bottom,0px));display:block;overflow:visible}
 #root .tool-scroll{width:100%;padding:4px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;touch-action:pan-x;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;user-select:none;-webkit-user-select:none}
 #root .tool-scroll::-webkit-scrollbar{display:none}
+#root .tool-scroll,#root .tool-scroll button{cursor:grab}#root .tool-scroll.is-dragging,#root .tool-scroll.is-dragging button{cursor:grabbing}
 #root .tool-row{display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-start;width:max-content;min-width:100%;gap:8px}
 #root .tool-row button{flex:none;min-height:44px;padding:9px 12px;font:700 14px/1.3 UIBody,system-ui,sans-serif;white-space:nowrap;touch-action:pan-x}
 #root .hold-tool{flex:none;display:flex}
@@ -34,25 +35,32 @@
   const dropButton=root.querySelector('.drop');
   const tools=root.querySelector('.tools'),toolScroll=root.querySelector('.tool-scroll');
   toolScroll.setAttribute('aria-orientation','horizontal');
-  // Leave touch panning to the mobile browser, including drags that start on a
-  // button. Only cancel the trailing click after a swipe, never the pan itself.
+  // Fingers keep native pan-x; mouse/pen press-and-drag use the same horizontal row.
+  // Capture starts only after a drag, so an ordinary tap/keyboard click still picks a tool.
   let toolSwipe=null,swipedTool=false;
   function trackToolSwipe(e){
     if(!toolSwipe||e.pointerId!==toolSwipe.id)return;
-    if(Math.hypot(e.clientX-toolSwipe.x,e.clientY-toolSwipe.y)>=8||Math.abs(toolScroll.scrollLeft-toolSwipe.left)>2)toolSwipe.moved=true;
+    const dx=e.clientX-toolSwipe.x,dy=e.clientY-toolSwipe.y;
+    if(Math.hypot(dx,dy)>=8||Math.abs(toolScroll.scrollLeft-toolSwipe.left)>2)toolSwipe.moved=true;
+    if(toolSwipe.desktop&&(toolSwipe.dragging||(Math.abs(dx)>=8&&Math.abs(dx)>=Math.abs(dy)))){
+      toolSwipe.dragging=true;toolScroll.classList.add('is-dragging');
+      if(!toolScroll.hasPointerCapture(e.pointerId))try{toolScroll.setPointerCapture(e.pointerId);}catch(_){/* Native panning remains available. */}
+      toolScroll.scrollLeft=toolSwipe.left-dx;e.preventDefault();
+    }
   }
   toolScroll.addEventListener('pointerdown',e=>{
     if(e.button!==0||e.isPrimary===false)return;
-    swipedTool=false;toolSwipe={id:e.pointerId,x:e.clientX,y:e.clientY,left:toolScroll.scrollLeft,moved:false};
+    swipedTool=false;toolSwipe={id:e.pointerId,x:e.clientX,y:e.clientY,left:toolScroll.scrollLeft,moved:false,desktop:e.pointerType==='mouse'||e.pointerType==='pen',dragging:false};
   },{passive:true});
-  toolScroll.addEventListener('pointermove',trackToolSwipe,{passive:true});
-  window.addEventListener('pointerup',e=>{
+  toolScroll.addEventListener('pointermove',trackToolSwipe,{passive:false});
+  function finishToolSwipe(e,cancelled=false){
     if(!toolSwipe||e.pointerId!==toolSwipe.id)return;
-    trackToolSwipe(e);swipedTool=toolSwipe.moved;toolSwipe=null;
-  },{passive:true});
-  window.addEventListener('pointercancel',e=>{
-    if(toolSwipe&&e.pointerId===toolSwipe.id){swipedTool=true;toolSwipe=null;}
-  },{passive:true});
+    if(!cancelled)trackToolSwipe(e);
+    swipedTool=cancelled||toolSwipe.moved;toolSwipe=null;toolScroll.classList.remove('is-dragging');
+  }
+  window.addEventListener('pointerup',e=>finishToolSwipe(e),{passive:false});
+  window.addEventListener('pointercancel',e=>finishToolSwipe(e,true),{passive:true});
+  toolScroll.addEventListener('lostpointercapture',e=>finishToolSwipe(e,true),{passive:true});
   toolScroll.addEventListener('scroll',()=>{
     if(toolSwipe&&Math.abs(toolScroll.scrollLeft-toolSwipe.left)>2)toolSwipe.moved=true;
   },{passive:true});
@@ -61,8 +69,8 @@
   },true);
   tools.append(dropButton);
   const toolHint=document.createElement('span'),hintItalian=(new URLSearchParams(location.search).get('lang')||document.documentElement.lang||'en').toLowerCase().startsWith('it');
-  toolHint.className='tool-hint';toolHint.setAttribute('aria-label',hintItalian?'Scorri gli strumenti a sinistra o a destra':'Swipe tools left or right');
-  toolHint.innerHTML='<span>'+(hintItalian?'Scorri gli strumenti':'Swipe tools')+'</span><svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8h20M6 3 2 8l4 5M18 3l4 5-4 5"/></svg>';
+  toolHint.className='tool-hint';toolHint.setAttribute('aria-label',hintItalian?'Scorri con il dito o trascina gli strumenti':'Swipe or press and drag tools left or right');
+  toolHint.innerHTML='<span>'+(hintItalian?'Scorri / trascina':'Swipe / drag tools')+'</span><svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8h20M6 3 2 8l4 5M18 3l4 5-4 5"/></svg>';
   tools.append(toolHint);
   function updateToolScrollHint(){
     toolHint.hidden=toolScroll.scrollWidth<=toolScroll.clientWidth+1;
@@ -178,7 +186,30 @@
   }
   // One quiet, continuous texture per gesture, rather than a sound per strand.
   let audioContext=null,careAudio=null,noiseBuffer=null;
+
+  let scissorSnip=null,snipNoise=null,snipPlayedThisStroke=false;
+  function stopScissorSnip(){
+    const sound=scissorSnip;if(!sound)return;scissorSnip=null;
+    try{sound.source.stop();}catch(_){}
+    sound.source.disconnect();sound.filter.disconnect();sound.gain.disconnect();
+  }
+  function playScissorSnip(){
+    if(snipPlayedThisStroke||!drag||tool!=='Scissors'||!active||paused||document.hidden||!audioContext||audioContext.state==='closed')return;
+    snipPlayedThisStroke=true;
+    try{
+      stopScissorSnip();
+      if(!snipNoise){snipNoise=audioContext.createBuffer(1,Math.floor(audioContext.sampleRate*.095),audioContext.sampleRate);const samples=snipNoise.getChannelData(0);for(let i=0;i<samples.length;i++)samples[i]=Math.random()*2-1;}
+      const source=audioContext.createBufferSource(),filter=audioContext.createBiquadFilter(),gain=audioContext.createGain(),t=audioContext.currentTime;
+      source.buffer=snipNoise;filter.type='bandpass';filter.frequency.value=2400;filter.Q.value=.8;
+      gain.gain.setValueAtTime(.001,t);gain.gain.linearRampToValueAtTime(.10,t+.003);gain.gain.exponentialRampToValueAtTime(.001,t+.027);gain.gain.linearRampToValueAtTime(.075,t+.037);gain.gain.exponentialRampToValueAtTime(.001,t+.085);
+      source.connect(filter).connect(gain).connect(audioContext.destination);scissorSnip={source,filter,gain};
+      source.onended=()=>{if(scissorSnip?.source===source)scissorSnip=null;source.disconnect();filter.disconnect();gain.disconnect();};
+      source.start(t);source.stop(t+.09);
+    }catch(_){stopScissorSnip();}
+  }
+
   function startCareAudio(){
+    if(tool==='Scissors'){try{audioContext??=new (window.AudioContext||window.webkitAudioContext)();audioContext.resume().catch(stopScissorSnip);}catch(_){}return;}
     if(tool!=='Wash'&&tool!=='Blow')return;
     try{
       audioContext??=new (window.AudioContext||window.webkitAudioContext)();audioContext.resume().catch(()=>{});
@@ -233,6 +264,7 @@
     const k=strandBend(s,cutT);s.dx*=k;s.dy*=k;s.curveSpan=(s.curveSpan||1)*cutT;s.len=newLength;
     s.dye=s.dye.filter(b=>b.from<newLength).map(b=>({...b,to:Math.min(b.to,newLength)}));
     s.v=0;s.vy=0;s.growRemaining=0;
+    playScissorSnip();
   }
   function apply(p,prev){
     if(tool==='Regrow'||tool==='Wash'||tool==='Blow')return;
@@ -267,7 +299,7 @@
   canvas.addEventListener('pointerdown',e=>{
     if(!active||paused||drag||e.isPrimary===false)return;
     drag=true;activePointer=e.pointerId;canvas.setPointerCapture(e.pointerId);last=point(e);guide.classList.add('hidden');
-    startCareAudio();
+    snipPlayedThisStroke=false;startCareAudio();
     if(tool==='Hold'){holdStart=last;beginHold(last);}else apply(last,last);
   });
   canvas.addEventListener('pointermove',e=>{
@@ -290,9 +322,9 @@
     if(tool==='Regrow')growAll();
     positionDropButton();
   });
-  root.querySelector('.reset').onclick=()=>{endDrag();init();palette.classList.add('hidden');draw()};root.querySelector('.brush').onclick=e=>{brush=(brush+1)%3;e.currentTarget.textContent='Brush: '+['S','M','L'][brush]};root.querySelector('.pause').onclick=e=>{paused=!paused;if(paused)endDrag();e.currentTarget.textContent=paused?'Resume':'Pause'};
-  document.addEventListener('visibilitychange',()=>{if(document.hidden)endDrag()});window.addEventListener('pagehide',endDrag);
-  window.addEventListener('message',e=>{if(e.source===parent&&e.data?.type==='playable-active'){active=!!e.data.active;if(!active)endDrag();draw()}});init();draw();requestAnimationFrame(tick);
+  root.querySelector('.reset').onclick=()=>{endDrag();init();palette.classList.add('hidden');draw()};root.querySelector('.brush').onclick=e=>{brush=(brush+1)%3;e.currentTarget.textContent='Brush: '+['S','M','L'][brush]};root.querySelector('.pause').onclick=e=>{paused=!paused;if(paused){endDrag();stopScissorSnip();}e.currentTarget.textContent=paused?'Resume':'Pause'};
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){endDrag();stopScissorSnip();}});window.addEventListener('pagehide',endDrag);window.addEventListener('pagehide',()=>{stopScissorSnip();audioContext?.close().catch(()=>{});});
+  window.addEventListener('message',e=>{if(e.source===parent&&e.data?.type==='playable-active'){active=!!e.data.active;if(!active){endDrag();stopScissorSnip();}draw()}});init();draw();requestAnimationFrame(tick);
 })();
 
 // Batch 3 UI refinement — 2026-11-16

@@ -60,20 +60,8 @@
   "images": [
     {
       "id": "BG_IMAGE",
-      "label": "Night Sky",
-      "path": "./assets/art-v3/real-night-sky-v3.webp",
-      "replaceable": true
-    },
-    {
-      "id": "BG_HILLS",
-      "label": "Distant Hill Layer",
-      "path": "./assets/art-v3/real-night-sky-v3.webp",
-      "replaceable": true
-    },
-    {
-      "id": "BG_FOREGROUND",
-      "label": "Foreground Hill and Silhouettes",
-      "path": "./assets/art-v3/real-night-sky-v3.webp",
+      "label": "Photographic open night sky",
+      "path": "./assets/art-v4/open-night-sky.webp",
       "replaceable": true
     }
   ],

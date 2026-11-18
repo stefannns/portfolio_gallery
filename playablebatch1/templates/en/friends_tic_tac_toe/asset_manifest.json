@@ -71,6 +71,13 @@
       "height": 256,
       "source": "procedural",
       "description": "Game 119: seamless flat none print paper with restrained ink dots, fibers and grain; code-native SVG."
+    },
+    {
+      "id": "FRIEND_AVATAR_FALLBACK",
+      "path": "assets/img_user_avatar_default_3x.png",
+      "type": "image",
+      "source": "provided_sdk",
+      "description": "Documented neutral fallback for missing or failed friend avatar; nickname remains paired with the same real friend."
     }
   ]
 }

@@ -47,8 +47,8 @@ async function configure(onChange=()=>{}){
 }
 
 addStyle(`body{background:#291416;color:#f6dbd5}.etch{width:100%;height:100%;position:relative;touch-action:none;overflow:hidden}canvas{width:100%;height:100%;display:block}.etch .guide{top:32%;white-space:pre-line;color:#790d25;text-shadow:0 1px #fff8}.etch .sensor{bottom:18px;background:#59131b;font-family:monospace;font-size:12px}.erase{position:absolute;bottom:19px;right:30px;width:38px;height:38px;border:1px solid #a95058;border-radius:50%;background:#721426;color:#fbd9c9;font-size:23px}.etch .sensor{left:30px;transform:none}`);
-root.innerHTML=`<div class="etch"><canvas aria-label="Etch A Sketch drawing surface"></canvas><div class="guide">Tilt to draw
-Shake to erase</div><button class="sensor">Enable tilt</button><button class="erase" aria-label="Erase drawing">↺</button></div>`;
+root.innerHTML=`<div class="etch"><canvas aria-label="Etch A Sketch drawing surface"></canvas><div class="etch-intro"><div class="guide">Tilt to draw
+Shake to erase</div><button class="sensor">Enable tilt</button></div><button class="erase" aria-label="Erase drawing">↺</button></div>`;
 const canvas=root.querySelector('canvas'),view=canvasSize(canvas),{ctx}=view;
 let points=[],cursor={x:.5,y:.5},drawing=false,erasePulse=0,knob=0;
 
@@ -112,6 +112,9 @@ runLoop((dt)=>{const W=view.W,H=view.H,a=area();const x=motion.state.x+(keys.has
 
 
 configure(()=>{root.querySelector('.guide').textContent=String(setting('GUIDE',"Tilt to draw\nShake to erase"));});
+
+// Keep the real permission control in the drawing frame, immediately under its guide.
+addStyle(`.etch .etch-intro{position:absolute;left:42px;right:42px;top:32%;z-index:10;display:flex;flex-direction:column;align-items:center;gap:12px;pointer-events:none}.etch .etch-intro .guide{position:static;inset:auto;width:100%;margin:0}.etch .etch-intro .sensor{position:static;inset:auto;transform:none;align-self:center;max-width:100%;margin:0;white-space:normal;pointer-events:auto}`);
 
 })();
 

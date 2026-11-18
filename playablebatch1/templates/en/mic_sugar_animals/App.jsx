@@ -58,7 +58,7 @@ function stopMic(){micStream?.getTracks().forEach(t=>t.stop());micStream=null;mi
 async function enableMic(){if(micRequested)return;micRequested=true;try{if(!navigator.mediaDevices?.getUserMedia)throw Error('No microphone');micStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:false}});if(disposed||!active||voiceControlMode==='hold'){stopMic();return;}micContext=new (window.AudioContext||window.webkitAudioContext)();await micContext.resume();const source=micContext.createMediaStreamSource(micStream);micAnalyser=micContext.createAnalyser();micAnalyser.fftSize=1024;source.connect(micAnalyser);micBuffer=new Float32Array(micAnalyser.fftSize);$('.mic-enable').textContent='Mic on';$('.mic-status').textContent='Listening · Space or hold also works';root.dataset.microphone='enabled';}catch(_){micRequested=false;$('.mic-enable').textContent='Enable microphone';$('.mic-status').textContent='Mic unavailable · hold the button to play';root.dataset.microphone='unavailable';}}
 function voice(){if(manualVoice)return .9;if(!micAnalyser||!active)return 0;micAnalyser.getFloatTimeDomainData(micBuffer);let sum=0;for(const n of micBuffer)sum+=n*n;return clamp((Math.sqrt(sum/micBuffer.length)-.012)*14,0,1);}
 function micControls(){on($('.mic-enable'),'click',()=>{unlockAudio();enableMic();});const hold=$('.voice-hold');on(hold,'pointerdown',e=>{e.preventDefault();gesture();selectVoiceControl('hold');manualVoice=true;hold.setPointerCapture(e.pointerId);});for(const type of ['pointerup','pointercancel','lostpointercapture'])on(hold,type,()=>manualVoice=false);on(window,'keydown',e=>{if(e.code==='Space'&&!e.repeat){e.preventDefault();gesture();selectVoiceControl('hold');manualVoice=true;}});on(window,'keyup',e=>{if(e.code==='Space')manualVoice=false;});lifecycle.push(next=>{if(!next){manualVoice=false;micContext?.suspend().catch(()=>{});if(micStream)for(const t of micStream.getTracks())t.enabled=false;}else{micContext?.resume().catch(()=>{});if(micStream)for(const t of micStream.getTracks())t.enabled=true;}});cleanups.push(stopMic);installVoiceControlChoice();}
-function micMarkup(action='Hold to try'){return `<div class="status mic-status">Use your voice · or hold to try</div><div class="bottom"><button class="capability mic-enable">Enable microphone</button><button class="capability voice-hold">${action}</button></div>`;}
+function micMarkup(action='Hold to try'){return `<div class="status mic-status" hidden></div><div class="bottom"><button class="capability mic-enable">Enable microphone</button><button class="capability voice-hold">${action}</button></div>`;}
 
 
 // Keep the chosen input in one centered slot; a failed/stopped microphone restores fallback.
@@ -78,7 +78,7 @@ function installVoiceControlChoice(){
   mic.hidden=voiceControlMode==='hold';hold.hidden=voiceControlMode==='voice';
   bar.classList.toggle('voice-mode-selected',Boolean(voiceControlMode));
   root.dataset.voiceControl=voiceControlMode||'choice';
-  if(voiceControlMode==='hold')status.textContent=italian?'Tieni premuto · o premi Spazio':'Hold the button · or press Space';
+  if(voiceControlMode==='hold'){status.textContent='';status.hidden=true;}
  }
  voiceChoiceRefresh=renderChoice;
  // Runs before the recording controller's capture-phase permission handler.
@@ -100,12 +100,12 @@ function installMicrophoneRecordingControl(){
  const italian=language.toLowerCase().startsWith('it');
  const copy=italian?{
   idle:'Attiva microfono',requesting:'Connessione…',active:'Microfono attivo',paused:'Microfono in pausa',
-  start:'Attiva microfono',stop:'Disattiva microfono',listening:'In ascolto · tocca per disattivare',
-  fallback:'Usa la voce o tieni premuto',unavailable:'Non disponibile · usa il pulsante'
+  start:'Attiva microfono',stop:'Disattiva microfono',listening:'',
+  fallback:'',unavailable:'Non disponibile · usa il pulsante'
  }:{
   idle:'Start microphone',requesting:'Connecting…',active:'Mic on',paused:'Mic paused',
-  start:'Start microphone',stop:'Stop microphone',listening:'Listening · tap to turn off',
-  fallback:'Use your voice · or hold to try',unavailable:'Mic unavailable · hold the button to play'
+  start:'Start microphone',stop:'Stop microphone',listening:'',
+  fallback:'',unavailable:'Mic unavailable · hold the button to play'
  };
  const style=document.createElement('style');
  style.textContent='.bottom .capability.mic-enable{display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;flex:1 1 174px}.mic-enable .mic-icon{width:18px;height:18px;flex:none}.mic-enable .mic-record-dot{width:10px;height:10px;flex:none;background:currentColor;border-radius:50%}.bottom .capability.mic-enable.is-listening{background:#d94646;border-color:#d94646;color:#fff;box-shadow:0 2px 8px #bd333326}.mic-enable .mic-button-label{white-space:nowrap}';
@@ -202,7 +202,31 @@ function installPrintedPaper(){
  observer?.observe(root);cleanups.push(()=>{visibility.disconnect();observer?.disconnect();});
 }
 
-mount(`.fit{background:#f4e8d6}.scene{position:absolute;inset:0}.scene canvas{width:100%;height:100%;display:block}.target{position:absolute;inset:0;width:390px;height:598px;pointer-events:none;z-index:2}.guide{top:93px;font:17px Playful,Arial;color:#a87952}.hud{font-size:18px;gap:13px}.dots{display:flex;gap:9px}.dot{width:7px;height:7px;background:#d5b394;border-radius:50%}.dot.done{background:#a3633c}.meter{position:absolute;left:80px;right:80px;bottom:115px;height:7px;background:#e1cbb0;border-radius:8px;overflow:hidden}.meter div{height:100%;background:#bf8054;width:0}.target-label{position:absolute;top:451px;left:30px;right:30px;text-align:center;font-size:11px;color:#b09270}.stop-sugar{position:absolute;right:29px;top:30px;background:transparent;border:1px solid #b69a73;border-radius:20px;min-height:34px;font-size:13px;padding:5px 14px}.capability{background:#fff9ed;color:#96704f;border-color:#d8c4ac}.result{background:#fff6e8}.pill{background:#b88155}`,`<div class="scene"></div><svg class="target" viewBox="0 0 390 598"><g class="outline" fill="none" stroke="#9b7350" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 5" opacity=".8"><ellipse cx="195" cy="322" rx="66" ry="75"/><circle cx="195" cy="225" r="51"/><ellipse cx="160" cy="177" rx="20" ry="24"/><ellipse cx="230" cy="177" rx="20" ry="24"/></g></svg><div class="hud center"><div class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i></div></div><button class="stop-sugar">Stop</button><div class="guide">Blow to fill · stop at the outline</div><div class="target-label">Warm sugar · a little breath at a time</div><div class="meter"><div></div></div>${micMarkup('Hold to blow')}${resultMarkup()}`,'#f4e8d6');
+// One game-action guide; capability state is text only while permission/error needs it.
+function installSingleGuideStatus(kind){
+ const status=$(kind==='camera'?'.cam-status':'.mic-status');if(!status)return;
+ const italian=(new URLSearchParams(location.search).get('lang')||document.documentElement.lang||'en').toLowerCase().startsWith('it');
+ status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+ function refresh(){
+  let message='';
+  if(kind==='camera'){
+   if(['requesting','unavailable'].includes(root.dataset.camera))message=status.textContent;
+  }else{
+   const state=$('.mic-enable')?.dataset.micState||root.dataset.microphone;
+   if(state==='requesting')message=italian?'Consenti l’accesso al microfono':'Allow microphone access';
+   else if(['unavailable','error'].includes(state))message=italian?'Microfono non disponibile':'Microphone unavailable';
+  }
+  if(status.textContent!==message)status.textContent=message;
+  const hidden=!message.trim();if(status.hidden!==hidden)status.hidden=hidden;
+ }
+ const textObserver=new MutationObserver(refresh);textObserver.observe(status,{childList:true,characterData:true,subtree:true});
+ const stateObserver=new MutationObserver(refresh);stateObserver.observe(root,{attributes:true,attributeFilter:[kind==='camera'?'data-camera':'data-microphone']});
+ const button=$('.mic-enable');if(button)stateObserver.observe(button,{attributes:true,attributeFilter:['data-mic-state']});
+ refresh();cleanups.push(()=>{textObserver.disconnect();stateObserver.disconnect();});
+}
+
+mount(`.fit{background:#f4e8d6}.scene{position:absolute;inset:0}.scene canvas{width:100%;height:100%;display:block}.target{position:absolute;inset:0;width:390px;height:598px;pointer-events:none;z-index:2}.guide{top:93px;font:17px Playful,Arial;color:#a87952}.hud{font-size:18px;gap:13px}.dots{display:flex;gap:9px}.dot{width:7px;height:7px;background:#d5b394;border-radius:50%}.dot.done{background:#a3633c}.meter{position:absolute;left:80px;right:80px;bottom:115px;height:7px;background:#e1cbb0;border-radius:8px;overflow:hidden}.meter div{height:100%;background:#bf8054;width:0}.target-label{position:absolute;top:451px;left:30px;right:30px;text-align:center;font-size:11px;color:#b09270}.stop-sugar{position:absolute;right:29px;top:30px;background:transparent;border:1px solid #b69a73;border-radius:20px;min-height:34px;font-size:13px;padding:5px 14px}.capability{background:#fff9ed;color:#96704f;border-color:#d8c4ac}.result{background:#fff6e8}.pill{background:#b88155}`,`<div class="scene"></div><svg class="target" viewBox="0 0 390 598"><g class="outline" fill="none" stroke="#9b7350" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="3 5" opacity=".8"><ellipse cx="195" cy="322" rx="66" ry="75"/><circle cx="195" cy="225" r="51"/><ellipse cx="160" cy="177" rx="20" ry="24"/><ellipse cx="230" cy="177" rx="20" ry="24"/></g></svg><div class="hud center"><div class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i></div></div><button class="stop-sugar">Stop</button><div class="guide">Blow to fill · stop at the outline</div><div class="target-label"></div><div class="meter"><div></div></div>${micMarkup('Hold to blow')}${resultMarkup()}`,'#f4e8d6');
+installSingleGuideStatus('microphone');
 installPrintedPaper();
 const scene=new THREE.Scene(),cam=new THREE.OrthographicCamera(-1.95,1.95,2.99,-2.99,.1,50),renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power'});renderer.setSize(390,598);renderer.setPixelRatio(Math.min(2,devicePixelRatio||1));renderer.outputColorSpace=THREE.SRGBColorSpace;$('.scene').append(renderer.domElement);cam.position.set(0,0,8);scene.add(new THREE.HemisphereLight(0xfff8e2,0xcda181,1.8));const light=new THREE.DirectionalLight(0xffffff,2.6);light.position.set(-3,5,6);scene.add(light);
 // A small reflected studio gives the sugar bright glints while the paper
@@ -292,7 +316,7 @@ function breathLevel(){
  let sum=0;for(const n of micBuffer)sum+=n*n;
  return clamp((Math.sqrt(sum/micBuffer.length)-.009)*clamp(Number(setting('MIC_SENSITIVITY',18)),12,26),0,1);
 }
-function reset(){growth=.18;roundNo=0;phase='ready';quiet=0;wasBlowing=false;celebrate=0;$('.target-label').textContent='Warm sugar · a little breath at a time';$('.target').style.opacity='1';root.querySelectorAll('.dot').forEach(e=>e.classList.remove('done'));buildAnimal();setOutline();state('ready');}
+function reset(){growth=.18;roundNo=0;phase='ready';quiet=0;wasBlowing=false;celebrate=0;$('.target-label').textContent='';$('.target').style.opacity='1';root.querySelectorAll('.dot').forEach(e=>e.classList.remove('done'));buildAnimal();setOutline();state('ready');}
 function stop(){if(phase!=='playing')return;if(growth>=.9&&growth<=1.13){phase='celebrate';celebrate=1.2;success();root.querySelectorAll('.dot')[roundNo].classList.add('done');$('.target-label').textContent='Just right!';state('matched');}else if(growth>1.13){phase='result';fail();result('Too much air!',roundNo+'/3','Keep a little room for the last breath.',reset);}else{$('.target-label').textContent='A little more air…';}}
 on($('.stop-sugar'),'click',()=>{gesture();stop();});micControls();installMicrophoneRecordingControl();reset();loop((dt,t)=>{const v=breathLevel();if(v>.12&&phase==='ready'){phase='playing';gesture();state('playing');}if(phase==='playing'){if(v>.12){growth+=dt*v*.32;wasBlowing=true;quiet=0;}else if(wasBlowing){quiet+=dt;if(quiet>.55){wasBlowing=false;stop();}}if(growth>1.32){phase='result';fail();result('Pop!',roundNo+'/3','Stop when the sugar meets the outline.',reset);}}if(phase==='celebrate'){celebrate-=dt;if(celebrate<=0){roundNo++;if(roundNo===3){phase='result';result('Sweet little collection','3/3','Three sugar animals, made with a breath.',reset);}else{phase='ready';growth=.18;quiet=0;wasBlowing=false;buildAnimal();setOutline();$('.target-label').textContent='Blow the next little friend';state('ready');}}}const s=Math.min(1.32,growth);animal.scale.set(s,s,s);animal.rotation.y=Math.sin(t*.8)*.07;$('.meter div').style.width=clamp(growth/1.32*100,0,100)+'%';root.dataset.growth=growth.toFixed(3);renderer.render(scene,cam);});cleanups.push(()=>{animal.traverse(o=>{if(o.isMesh){o.geometry.dispose();o.material.dispose();}});renderer.dispose();});
 

@@ -109,7 +109,6 @@ function paintCamera(canvas,background='#f0ede5'){
  const x=canvas.getContext('2d'),w=canvas.width,h=canvas.height;x.fillStyle=background;x.fillRect(0,0,w,h);
  const source=cameraSource();if(source){x.save();if(camFacing==='user'){x.translate(w,0);x.scale(-1,1);}cover(x,source,0,0,w,h);x.restore();return;}
  x.save();x.translate(w/2,h/2-8);const s=Math.min(w,h)/160;x.scale(s,s);x.strokeStyle='#767268';x.lineWidth=3;x.lineJoin='round';x.beginPath();roundPath(x,-29,-19,58,38,6);x.stroke();x.beginPath();x.arc(0,0,10,0,Math.PI*2);x.stroke();x.beginPath();x.moveTo(-17,-19);x.lineTo(-12,-27);x.lineTo(12,-27);x.lineTo(17,-19);x.stroke();x.restore();
- x.fillStyle='#68645b';x.font=`500 ${Math.max(15,w/23)}px UIBody,Arial`;x.textAlign='center';x.textBaseline='middle';x.fillText(camPending?camText('Connecting…','Connessione…'):camText('Your camera image','La tua fotocamera'),w/2,h/2+Math.min(w,h)*.25);
 }
 function cameraControls(){
  $('video.preview')?.setAttribute('aria-hidden','true');
@@ -181,6 +180,29 @@ function printBoothDoodle(ctx,kind,x,y,s=1){
  ctx.restore();
 }
 
+// One game-action guide; capability state is text only while permission/error needs it.
+function installSingleGuideStatus(kind){
+ const status=$(kind==='camera'?'.cam-status':'.mic-status');if(!status)return;
+ const italian=(new URLSearchParams(location.search).get('lang')||document.documentElement.lang||'en').toLowerCase().startsWith('it');
+ status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+ function refresh(){
+  let message='';
+  if(kind==='camera'){
+   if(['requesting','unavailable'].includes(root.dataset.camera))message=status.textContent;
+  }else{
+   const state=$('.mic-enable')?.dataset.micState||root.dataset.microphone;
+   if(state==='requesting')message=italian?'Consenti l’accesso al microfono':'Allow microphone access';
+   else if(['unavailable','error'].includes(state))message=italian?'Microfono non disponibile':'Microphone unavailable';
+  }
+  if(status.textContent!==message)status.textContent=message;
+  const hidden=!message.trim();if(status.hidden!==hidden)status.hidden=hidden;
+ }
+ const textObserver=new MutationObserver(refresh);textObserver.observe(status,{childList:true,characterData:true,subtree:true});
+ const stateObserver=new MutationObserver(refresh);stateObserver.observe(root,{attributes:true,attributeFilter:[kind==='camera'?'data-camera':'data-microphone']});
+ const button=$('.mic-enable');if(button)stateObserver.observe(button,{attributes:true,attributeFilter:['data-mic-state']});
+ refresh();cleanups.push(()=>{textObserver.disconnect();stateObserver.disconnect();});
+}
+
 mount(`#root .booth-label{position:absolute;left:30px;right:30px;top:30px;text-align:center;font:24px/1.3 Playful,UIBody,sans-serif;transform:none}
 #root .doodles{position:absolute;inset:0;width:100%;height:100%;z-index:10;pointer-events:none;opacity:.75}
 #root .live-booth{position:absolute;left:39px;top:118px;width:312px;height:293px;background:#eee9dd;border:4px solid #282723;transform:none;border-radius:10px;overflow:hidden;box-shadow:4px 5px 0 #28272325}
@@ -198,7 +220,8 @@ mount(`#root .booth-label{position:absolute;left:30px;right:30px;top:30px;text-a
 #root .strip-actions .pill{position:static;min-width:0;min-height:48px;margin:0;padding:10px 8px;font:700 14px/1.3 UIBody,system-ui,sans-serif}
 #root .save-status{position:relative;z-index:1;min-height:18px;margin:0;width:100%;color:#625c4b;text-align:center;font:400 12px/1.4 UIBody,system-ui,sans-serif;overflow-wrap:anywhere}
 #root .strip-doodles{position:absolute;inset:0;width:100%;height:100%;z-index:2;opacity:.7;pointer-events:none}
-.preview{display:none}`,`<div class="booth-label">DOODLE BOOTH</div><svg class="doodles" viewBox="0 0 390 598" fill="none" stroke="#282723" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${boothFishSVG(18,215)}${boothFaceSVG(20,342)}${boothFlowerSVG(371,199,.65)}${boothLeafSVG(373,341,.68)}<path d="M4 94q10-2 11-13 2 11 12 14-11 1-13 12-1-11-10-13ZM366 94q9-2 11-13 0 12 10 14-11 1-13 12-1-10-8-13ZM24 467q8-1 9-9 2 8 9 10-8 1-10 9-1-8-8-10ZM358 464l5-8 1 10 10 3-10 3-2 8-2-9-8-4Z"/></svg><div class="live-booth"><canvas width="640" height="600" aria-label="Live camera preview"></canvas></div><video class="preview" playsinline autoplay muted></video><div class="guide">Three poses. One little memory.</div><div class="countdown" aria-live="polite"></div><div class="status cam-status">Enable your camera to take a photo</div><div class="bottom"><button class="capability cam-enable">Enable camera</button><button class="shutter" aria-label="Take photo strip" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 7.5 7 7l1.6-3h6.7L17 7l3.4.4.2 12-17.2.2Z"/><path d="M16.6 12.7c.2 6.1-9.4 6.1-9.2.1-.1-6 9.3-6.2 9.2-.1Z"/></svg><span class="shutter-label">Take photos</span></button></div><div class="strip-view" hidden aria-label="Your photo strip"><svg class="strip-doodles" viewBox="0 0 330 518" fill="none" stroke="#282723" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${boothFishSVG(43,128,1.35)}${boothFaceSVG(285,318,1.3)}${boothFlowerSVG(283,142,.8)}${boothLeafSVG(44,331,.95)}<path d="M23 224q9-1 10-12 2 10 12 13-11 1-13 12-1-10-9-13ZM286 232l5-9 2 10 10 3-10 3-2 10-2-10-9-4Z"/></svg><canvas class="strip" width="720" height="2100" role="img" aria-label="Your three-photo strip"></canvas><div class="strip-actions"><button class="pill save-strip">Save image</button><button class="pill retake">Retake</button></div><p class="save-status" role="status" aria-live="polite"></p></div><div class="flash"></div>`,'#efd77b');
+.preview{display:none}`,`<div class="booth-label">DOODLE BOOTH</div><svg class="doodles" viewBox="0 0 390 598" fill="none" stroke="#282723" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${boothFishSVG(18,215)}${boothFaceSVG(20,342)}${boothFlowerSVG(371,199,.65)}${boothLeafSVG(373,341,.68)}<path d="M4 94q10-2 11-13 2 11 12 14-11 1-13 12-1-11-10-13ZM366 94q9-2 11-13 0 12 10 14-11 1-13 12-1-10-8-13ZM24 467q8-1 9-9 2 8 9 10-8 1-10 9-1-8-8-10ZM358 464l5-8 1 10 10 3-10 3-2 8-2-9-8-4Z"/></svg><div class="live-booth"><canvas width="640" height="600" aria-label="Live camera preview"></canvas></div><video class="preview" playsinline autoplay muted></video><div class="guide">Pose for three photos</div><div class="countdown" aria-live="polite"></div><div class="status cam-status" hidden></div><div class="bottom"><button class="capability cam-enable">Enable camera</button><button class="shutter" aria-label="Take photo strip" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 7.5 7 7l1.6-3h6.7L17 7l3.4.4.2 12-17.2.2Z"/><path d="M16.6 12.7c.2 6.1-9.4 6.1-9.2.1-.1-6 9.3-6.2 9.2-.1Z"/></svg><span class="shutter-label">Take photos</span></button></div><div class="strip-view" hidden aria-label="Your photo strip"><svg class="strip-doodles" viewBox="0 0 330 518" fill="none" stroke="#282723" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${boothFishSVG(43,128,1.35)}${boothFaceSVG(285,318,1.3)}${boothFlowerSVG(283,142,.8)}${boothLeafSVG(44,331,.95)}<path d="M23 224q9-1 10-12 2 10 12 13-11 1-13 12-1-10-9-13ZM286 232l5-9 2 10 10 3-10 3-2 10-2-10-9-4Z"/></svg><canvas class="strip" width="720" height="2100" role="img" aria-label="Your three-photo strip"></canvas><div class="strip-actions"><button class="pill save-strip">Save image</button><button class="pill retake">Retake</button></div><p class="save-status" role="status" aria-live="polite"></p></div><div class="flash"></div>`,'#efd77b');
+installSingleGuideStatus('camera');
 installPrintedPaper();
 let boothPhase='ready',wait=0,shots=[];
 
@@ -251,7 +274,7 @@ function syncBoothCameraAction(){
  shutter.setAttribute('aria-busy',String(shooting));
  $('.shutter-label').textContent=shooting?camText('Taking photos…','Scatto in corso…'):camText('Take photos','Scatta foto');
 }
-cameraControls();syncBoothCameraAction();$('.guide').textContent=camText('Three poses. One little memory.','Tre pose. Un piccolo ricordo.');on($('.shutter'),'click',()=>{if(boothPhase!=='ready'||!cameraSource())return;gesture();shots=[];wait=3;boothPhase='shooting';syncBoothCameraAction();state('shooting');});
+cameraControls();syncBoothCameraAction();$('.guide').textContent=camText('Pose for three photos','Mettiti in posa per tre foto');on($('.shutter'),'click',()=>{if(boothPhase!=='ready'||!cameraSource())return;gesture();shots=[];wait=3;boothPhase='shooting';syncBoothCameraAction();state('shooting');});
 on($('.retake'),'click',()=>{resetSaveState();gesture();$('.strip-view').hidden=true;boothPhase='ready';state('ready');});
 function finishStrip(){const c=$('.strip'),x=c.getContext('2d');x.setTransform(2,0,0,2,0,0);x.fillStyle='#fffdf3';x.fillRect(0,0,360,1050);shots.forEach((p,i)=>{x.save();x.filter='grayscale(1) contrast(1.1)';x.drawImage(p,20,20+i*316,320,300);x.restore();});x.strokeStyle='#262323';x.lineWidth=2;x.strokeRect(9,9,342,1032);text(x,'GOOD LITTLE MOMENTS',180,989,14,'#292724','UIBody');text(x,new Date().toLocaleDateString(camItalian?'it-IT':'en-US',{month:'short',day:'numeric',year:'numeric'}),180,1015,11,'#666','UIBody');printBoothDoodle(x,'fish',42,991,1.2);printBoothDoodle(x,'face',321,996,1.05);resetSaveState();$('.strip-view').hidden=false;boothPhase='result';state('result');success();}
 loop(dt=>{
@@ -264,7 +287,7 @@ loop(dt=>{
  }
 });state('ready');
 
-configure(()=>{paintPaperBackdrop();if($('.guide')){const copy=String(setting('GUIDE',"Three poses. One little memory."));$('.guide').textContent=copy==='Three poses. One little memory.'?camText(copy,'Tre pose. Un piccolo ricordo.'):copy;}});
+configure(()=>{paintPaperBackdrop();if($('.guide')){const copy=String(setting('GUIDE',"Pose for three photos"));$('.guide').textContent=copy==='Pose for three photos'?camText(copy,'Mettiti in posa per tre foto'):copy;}});
 })();
 
 // Batch 3 UI refinement — 2026-11-16

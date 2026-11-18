@@ -9,27 +9,6 @@
       "max_length": 35
     },
     {
-      "id": "START_BTN",
-      "label": "Start Button",
-      "value": "Start together",
-      "default": "Start together",
-      "max_length": 34
-    },
-    {
-      "id": "HUD_QUESTION",
-      "label": "HUD Question Label",
-      "value": "Round",
-      "default": "Round",
-      "max_length": 25
-    },
-    {
-      "id": "HUD_SCORE",
-      "label": "HUD Score Label",
-      "value": "Matches",
-      "default": "Matches",
-      "max_length": 27
-    },
-    {
       "id": "Q1_TEXT",
       "label": "Q1 Text",
       "value": "Your ideal Friday night together?",
@@ -63,13 +42,6 @@
       "value": "Surprise me",
       "default": "Surprise me",
       "max_length": 31
-    },
-    {
-      "id": "Q1_EXP",
-      "label": "Q1 Explanation",
-      "value": "Your next date could borrow a little from both picks.",
-      "default": "Your next date could borrow a little from both picks.",
-      "max_length": 100
     },
     {
       "id": "Q2_TEXT",
@@ -107,13 +79,6 @@
       "max_length": 30
     },
     {
-      "id": "Q2_EXP",
-      "label": "Q2 Explanation",
-      "value": "There is always room for two favorite snacks.",
-      "default": "There is always room for two favorite snacks.",
-      "max_length": 100
-    },
-    {
       "id": "Q3_TEXT",
       "label": "Q3 Text",
       "value": "A little love looks like…",
@@ -147,13 +112,6 @@
       "value": "Time together",
       "default": "Time together",
       "max_length": 33
-    },
-    {
-      "id": "Q3_EXP",
-      "label": "Q3 Explanation",
-      "value": "Different ways of caring can make a lovely team.",
-      "default": "Different ways of caring can make a lovely team.",
-      "max_length": 100
     },
     {
       "id": "Q4_TEXT",
@@ -191,179 +149,193 @@
       "max_length": 35
     },
     {
-      "id": "Q4_EXP",
-      "label": "Q4 Explanation",
-      "value": "Keep both ideas. You have two adventures to look forward to.",
-      "default": "Keep both ideas. You have two adventures to look forward to.",
-      "max_length": 100
+      "id": "PROGRESS_LABEL",
+      "label": "Progress Label",
+      "value": "Question",
+      "default": "Question",
+      "max_length": 80
     },
     {
-      "id": "FB_CORRECT",
-      "label": "Feedback Correct Text",
-      "value": "Same wavelength!",
-      "default": "Same wavelength!",
-      "max_length": 36
+      "id": "Q1_LABEL",
+      "label": "Q1 Label",
+      "value": "Friday",
+      "default": "Friday",
+      "max_length": 80
     },
     {
-      "id": "FB_WRONG",
-      "label": "Feedback Wrong Text",
-      "value": "Two good tastes!",
-      "default": "Two good tastes!",
-      "max_length": 36
+      "id": "Q2_LABEL",
+      "label": "Q2 Label",
+      "value": "Snack",
+      "default": "Snack",
+      "max_length": 80
     },
     {
-      "id": "BTN_NEXT",
-      "label": "Next Button",
-      "value": "Next question",
-      "default": "Next question",
-      "max_length": 33
+      "id": "Q3_LABEL",
+      "label": "Q3 Label",
+      "value": "Little love",
+      "default": "Little love",
+      "max_length": 80
+    },
+    {
+      "id": "Q4_LABEL",
+      "label": "Q4 Label",
+      "value": "Adventure",
+      "default": "Adventure",
+      "max_length": 80
     },
     {
       "id": "RES_TITLE",
-      "label": "Result Title",
-      "value": "Your couple mix",
-      "default": "Your couple mix",
-      "max_length": 35
-    },
-    {
-      "id": "RES_PERFECT",
-      "label": "Result Perfect Comment",
-      "value": "Two minds, one wavelength.",
-      "default": "Two minds, one wavelength.",
-      "max_length": 50
-    },
-    {
-      "id": "RES_NORMAL",
-      "label": "Result Normal Comment",
-      "value": "Different tastes. Still a good team.",
-      "default": "Different tastes. Still a good team.",
-      "max_length": 56
+      "label": "Res Title",
+      "value": "My date style",
+      "default": "My date style",
+      "max_length": 80
     },
     {
       "id": "RESTART_BTN",
-      "label": "Restart Button",
-      "value": "Play together again",
-      "default": "Play together again",
-      "max_length": 39
+      "label": "Restart Btn",
+      "value": "Try again",
+      "default": "Try again",
+      "max_length": 80
     },
     {
-      "id": "POST_BTN",
-      "label": "Post My Play Button",
-      "value": "Post My Play",
-      "default": "Post My Play",
-      "max_length": 32
+      "id": "PROFILE0_TITLE",
+      "label": "Profile0 Title",
+      "value": "Cozy Romantic",
+      "default": "Cozy Romantic",
+      "max_length": 80
     },
     {
-      "id": "TURN_ONE",
-      "label": "Turn One",
-      "max_length": 120,
-      "value": "Partner 1 · choose secretly",
-      "default": "Partner 1 · choose secretly"
+      "id": "PROFILE0_DESC",
+      "label": "Profile0 Desc",
+      "value": "Good food, soft plans, and time for two.",
+      "default": "Good food, soft plans, and time for two.",
+      "max_length": 80
     },
     {
-      "id": "TURN_TWO",
-      "label": "Turn Two",
-      "max_length": 120,
-      "value": "Partner 2 · your turn",
-      "default": "Partner 2 · your turn"
+      "id": "PROFILE1_TITLE",
+      "label": "Profile1 Title",
+      "value": "Playful Adventurer",
+      "default": "Playful Adventurer",
+      "max_length": 80
     },
     {
-      "id": "TURN_GUIDE",
-      "label": "Turn Guide",
-      "max_length": 120,
-      "value": "Pick one, then pass the phone",
-      "default": "Pick one, then pass the phone"
+      "id": "PROFILE1_DESC",
+      "label": "Profile1 Desc",
+      "value": "A little laughter turns any plan into a date.",
+      "default": "A little laughter turns any plan into a date.",
+      "max_length": 80
     },
     {
-      "id": "TURN_TWO_GUIDE",
-      "label": "Turn Two Guide",
-      "max_length": 120,
-      "value": "Pick what feels most like you",
-      "default": "Pick what feels most like you"
+      "id": "PROFILE2_TITLE",
+      "label": "Profile2 Title",
+      "value": "Thoughtful Explorer",
+      "default": "Thoughtful Explorer",
+      "max_length": 80
     },
     {
-      "id": "HANDOFF_TITLE",
-      "label": "Handoff Title",
-      "max_length": 120,
-      "value": "Pass the phone",
-      "default": "Pass the phone"
+      "id": "PROFILE2_DESC",
+      "label": "Profile2 Desc",
+      "value": "Meaningful little moments are your kind of magic.",
+      "default": "Meaningful little moments are your kind of magic.",
+      "max_length": 80
     },
     {
-      "id": "HANDOFF_COPY",
-      "label": "Handoff Copy",
-      "max_length": 120,
-      "value": "Your partner picks next. Keep your answer a secret.",
-      "default": "Your partner picks next. Keep your answer a secret."
+      "id": "PROFILE3_TITLE",
+      "label": "Profile3 Title",
+      "value": "Spontaneous Spark",
+      "default": "Spontaneous Spark",
+      "max_length": 80
     },
     {
-      "id": "HANDOFF_BTN",
-      "label": "Handoff Btn",
-      "max_length": 120,
-      "value": "Partner 2 is ready",
-      "default": "Partner 2 is ready"
+      "id": "PROFILE3_DESC",
+      "label": "Profile3 Desc",
+      "value": "Leave room for an unexpected little adventure.",
+      "default": "Leave room for an unexpected little adventure.",
+      "max_length": 80
     },
     {
-      "id": "FIRST_PICK",
-      "label": "First Pick",
-      "max_length": 120,
-      "value": "Partner 1",
-      "default": "Partner 1"
+      "id": "SHARE_BTN",
+      "label": "Share Btn",
+      "value": "Share result",
+      "default": "Share result",
+      "max_length": 80
     },
     {
-      "id": "SECOND_PICK",
-      "label": "Second Pick",
-      "max_length": 120,
-      "value": "Partner 2",
-      "default": "Partner 2"
+      "id": "SHARE_INVITE",
+      "label": "Share Invite",
+      "value": "Your turn—what would you choose?",
+      "default": "Your turn—what would you choose?",
+      "max_length": 80
     },
     {
-      "id": "RESULT_SAME",
-      "label": "Result Same",
-      "max_length": 120,
-      "value": "Same wavelength",
-      "default": "Same wavelength"
+      "id": "SHARE_FALLBACK",
+      "label": "Share Fallback",
+      "value": "Copy your result or save a card to send.",
+      "default": "Copy your result or save a card to send.",
+      "max_length": 80
     },
     {
-      "id": "RESULT_MIX",
-      "label": "Result Mix",
-      "max_length": 120,
-      "value": "A lovely mix",
-      "default": "A lovely mix"
+      "id": "SHARE_SUCCESS",
+      "label": "Share Success",
+      "value": "Shared. Your partner gets the next pick.",
+      "default": "Shared. Your partner gets the next pick.",
+      "max_length": 80
     },
     {
-      "id": "RESULT_DIFFERENT",
-      "label": "Result Different",
-      "max_length": 120,
-      "value": "Opposites attract",
-      "default": "Opposites attract"
+      "id": "COPY_BTN",
+      "label": "Copy Btn",
+      "value": "Copy result",
+      "default": "Copy result",
+      "max_length": 80
     },
     {
-      "id": "RESULT_GUIDE",
-      "label": "Result Guide",
-      "max_length": 120,
-      "value": "A playful conversation starter, made for two.",
-      "default": "A playful conversation starter, made for two."
+      "id": "COPY_SUCCESS",
+      "label": "Copy Success",
+      "value": "Copied. Send it to your partner.",
+      "default": "Copied. Send it to your partner.",
+      "max_length": 80
     },
     {
-      "id": "FINISH_BTN",
-      "label": "Finish Btn",
-      "max_length": 120,
-      "value": "See your couple mix",
-      "default": "See your couple mix"
+      "id": "COPY_MANUAL",
+      "label": "Copy Manual",
+      "value": "Select and copy your result below.",
+      "default": "Select and copy your result below.",
+      "max_length": 80
     },
     {
-      "id": "RECAP_LABEL",
-      "label": "Recap Label",
-      "max_length": 120,
-      "value": "Your shared picks",
-      "default": "Your shared picks"
+      "id": "SAVE_BTN",
+      "label": "Save Btn",
+      "value": "Save card",
+      "default": "Save card",
+      "max_length": 80
     },
     {
-      "id": "FB_SHARED_DETAIL",
-      "label": "Matching picks feedback",
-      "value": "You already have your next date idea.",
-      "default": "You already have your next date idea.",
-      "max_length": 100
+      "id": "SAVE_BUSY",
+      "label": "Save Busy",
+      "value": "Saving…",
+      "default": "Saving…",
+      "max_length": 80
+    },
+    {
+      "id": "SAVE_SUCCESS",
+      "label": "Save Success",
+      "value": "Card saved to your photos.",
+      "default": "Card saved to your photos.",
+      "max_length": 80
+    },
+    {
+      "id": "SAVE_FAILURE",
+      "label": "Save Failure",
+      "value": "Could not save. You can still copy your result.",
+      "default": "Could not save. You can still copy your result.",
+      "max_length": 80
+    },
+    {
+      "id": "SAVE_DOWNLOAD",
+      "label": "Save Download",
+      "value": "Card download started.",
+      "default": "Card download started.",
+      "max_length": 80
     }
   ],
   "images": [],
@@ -373,8 +345,8 @@
     "h5_playstyle_type": "general_game",
     "content_locale": "en",
     "min_capability_level": 1,
-    "full_capability_level": 1,
+    "full_capability_level": 3,
     "title": "Better Together",
-    "name": "Couple Compatibility Test"
+    "name": "Better Together"
   }
 }

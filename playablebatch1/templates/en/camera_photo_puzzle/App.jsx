@@ -50,12 +50,13 @@ const configValues={};
 function setting(id,fallback){return configValues[id]??fallback;}
 async function configure(callback=()=>{}){const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),1600);try{const r=await fetch('./game.config.json',{signal:ctl.signal});if(!r.ok)throw Error('Config unavailable');const c=await r.json();for(const group of ['texts','tweaks','images'])for(const v of c[group]||[])configValues[v.id]=group==='images'?v.path:v.value;for(const binding of assetImages){const path=assetPath(binding.path);if(binding.im.getAttribute('src')!==path)binding.im.src=path;}for(const im of root.querySelectorAll('img[src^="./assets/"]'))im.src=assetPath(im.getAttribute('src'));callback();root.dataset.config='loaded';}catch(_){root.dataset.config='defaults';}finally{clearTimeout(timer);}}
 
-mount(`.fit{background:#fff}.blob{position:absolute;width:230px;height:230px;border-radius:50%;background:#f9de83;right:-85px;top:-85px}.lavender{position:absolute;width:230px;height:220px;border-radius:50%;background:#e5ddf5;left:-100px;bottom:-100px}.guide{top:85px;font-family:Playful,Arial;font-size:18px}.capability{padding:10px 12px;font-size:14px}.puzzle{position:absolute;left:55px;top:146px;width:280px;height:280px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:4px;touch-action:none}.puzzle.is-loading{pointer-events:none}.puzzle-placeholder{grid-area:1/1/4/4;display:grid;place-items:center;text-align:center;padding:24px;background:#f3f0f7;border-radius:12px;font-size:15px;line-height:1.5;color:#655d70}.tile{padding:0;position:relative;overflow:hidden;border-radius:9px;box-shadow:0 2px 2px #25252a18;background:#f0ece1;min-height:0}.tile canvas{display:block;width:100%;height:100%;pointer-events:none}.tile.selected{outline:3px solid #6464c8;z-index:2}.tile.dragging{opacity:.6;transform:scale(.96)}.hud{font-size:28px;color:#514b5b;top:30px}.photo-status{top:432px;bottom:auto;font-size:12px;color:#655d70;line-height:1.4}.bottom{bottom:50px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.result{background:#f3f0fb}.result button{background:#4c497b}`,`<div class="hud"><span class="moves">0 moves</span><span class="time">0s</span></div><div class="guide">Swap pieces to solve your photo</div><div class="puzzle" aria-label="Photo puzzle"></div><div class="status photo-status" role="status" aria-live="polite">Loading the cat photo…</div><input id="puzzle-photo-input" type="file" accept="image/*" hidden><div class="bottom"><button class="capability photo-upload" aria-controls="puzzle-photo-input">Upload photo</button><button class="capability shuffle" aria-label="Shuffle pieces" disabled>↻ Shuffle</button></div>${resultMarkup()}`,'#fff');
+mount(`.fit{background:#fff}.blob{position:absolute;width:230px;height:230px;border-radius:50%;background:#f9de83;right:-85px;top:-85px}.lavender{position:absolute;width:230px;height:220px;border-radius:50%;background:#e5ddf5;left:-100px;bottom:-100px}.guide{top:85px;font-family:Playful,Arial;font-size:18px}.capability{padding:10px 12px;font-size:14px}.puzzle{position:absolute;left:55px;top:146px;width:280px;height:280px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:4px;touch-action:none}.puzzle.is-loading{pointer-events:none}.puzzle-placeholder{grid-area:1/1/4/4;display:grid;place-items:center;text-align:center;padding:24px;background:#f3f0f7;border-radius:12px;font-size:15px;line-height:1.5;color:#655d70}.tile{padding:0;position:relative;overflow:hidden;border-radius:9px;box-shadow:0 2px 2px #25252a18;background:#f0ece1;min-height:0}.tile canvas{display:block;width:100%;height:100%;pointer-events:none}.tile.selected{outline:3px solid #6464c8;z-index:2}.tile.dragging{opacity:.6;transform:scale(.96)}.hud{font-size:28px;color:#514b5b;top:30px}.photo-status{top:432px;bottom:auto;font-size:12px;color:#655d70;line-height:1.4}.bottom{bottom:50px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.result{background:#f3f0fb}.result button{background:#4c497b}`,`<div class="hud"><span class="moves">0 moves</span><span class="time">0s</span></div><div class="guide">Swap pieces to solve your photo</div><div class="puzzle" aria-label="Photo puzzle"></div><div class="status photo-status" role="status" aria-live="polite" hidden></div><input id="puzzle-photo-input" type="file" accept="image/*" hidden><div class="bottom"><button class="capability photo-upload" aria-controls="puzzle-photo-input">Upload photo</button><button class="capability shuffle" aria-label="Shuffle pieces" disabled>↻ Shuffle</button></div>${resultMarkup()}`,'#fff');
 let puzzlePhoto=null,hasUploadedPhoto=false,uploading=false,uploadRequest=0;
 let pieces=shuffle([...Array(9).keys()]),selected=-1,moves=0,seconds=0,started=false,done=false,pointerStart=null;
 const photoInput=$('#puzzle-photo-input'),uploadButton=$('.photo-upload'),photoStatus=$('.photo-status'),photoUrls=new Set();
 const puzzleItalian=new URLSearchParams(location.search).get('lang')==='it'||document.documentElement.lang==='it';
 const photoText=(en,it)=>puzzleItalian?it:en;
+function setPhotoStatus(message=''){photoStatus.textContent=message;photoStatus.hidden=!message;}
 uploadButton.textContent=photoText('Upload photo','Carica foto');$('.shuffle').textContent=photoText('↻ Shuffle','↻ Mescola');
 
 function squarePhoto(source){
@@ -71,7 +72,7 @@ function drawTiles(){
  const board=$('.puzzle');board.replaceChildren();
  if(!puzzlePhoto){
   const placeholder=document.createElement('div');placeholder.className='puzzle-placeholder';
-  placeholder.textContent=photoText('Upload a photo to make your puzzle','Carica una foto per creare il puzzle');board.append(placeholder);return;
+  placeholder.innerHTML='<svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="7" width="34" height="30" rx="4"/><circle cx="15" cy="17" r="4"/><path d="m7 33 11-10 6 5 6-8 8 13"/></svg>';placeholder.setAttribute('aria-label',photoText('Photo preview','Anteprima foto'));board.append(placeholder);return;
  }
  pieces.forEach((n,i)=>{
   const button=document.createElement('button');button.className='tile'+(i===selected?' selected':'');
@@ -111,11 +112,11 @@ for(const type of ['pointercancel','lostpointercapture'])on($('.puzzle'),type,()
 async function loadUploadedPhoto(file){
  if(!file)return;
  const imageFile=file.type.startsWith('image/')||(!file.type&&/\.(jpe?g|png|webp|gif|avif|heic|heif|bmp)$/i.test(file.name));
- if(!imageFile||!file.size){photoStatus.textContent=photoText('Choose an image file. Your current puzzle is unchanged.','Scegli un file immagine. Il puzzle attuale non cambia.');return;}
- if(file.size>30*1024*1024){photoStatus.textContent=photoText('This photo is too large. Choose a smaller image.','La foto è troppo grande. Scegli un’immagine più piccola.');return;}
+ if(!imageFile||!file.size){setPhotoStatus(photoText('Choose an image file. Your current puzzle is unchanged.','Scegli un file immagine. Il puzzle attuale non cambia.'));return;}
+ if(file.size>30*1024*1024){setPhotoStatus(photoText('This photo is too large. Choose a smaller image.','La foto è troppo grande. Scegli un’immagine più piccola.'));return;}
  const request=++uploadRequest;uploading=true;pointerStart=null;selected=-1;
  uploadButton.disabled=true;$('.shuffle').disabled=true;$('.puzzle').classList.add('is-loading');
- photoStatus.textContent=photoText('Opening your photo…','Apertura della foto…');
+ setPhotoStatus(photoText('Opening your photo…','Apertura della foto…'));
  const url=URL.createObjectURL(file);photoUrls.add(url);
  try{
   const image=new Image();image.decoding='async';
@@ -123,9 +124,9 @@ async function loadUploadedPhoto(file){
   if(disposed||request!==uploadRequest)return;
   const photo=squarePhoto(image);hasUploadedPhoto=true;uploading=false;
   $('.modal').hidden=true;newPuzzle(photo);root.dataset.photoSource='uploaded';
-  photoStatus.textContent=photoText('Your photo is ready. Swap two pieces to solve it.','La tua foto è pronta. Scambia due tessere per risolverla.');
+  setPhotoStatus();
  }catch(_){
-  if(!disposed&&request===uploadRequest)photoStatus.textContent=photoText('Could not open that photo. Try a JPG, PNG or WebP.','Impossibile aprire la foto. Prova un file JPG, PNG o WebP.');
+  if(!disposed&&request===uploadRequest)setPhotoStatus(photoText('Could not open that photo. Try a JPG, PNG or WebP.','Impossibile aprire la foto. Prova un file JPG, PNG o WebP.'));
  }finally{
   URL.revokeObjectURL(url);photoUrls.delete(url);
   if(!disposed&&request===uploadRequest){uploading=false;uploadButton.disabled=false;$('.shuffle').disabled=!puzzlePhoto;$('.puzzle').classList.remove('is-loading');drawTiles();}
@@ -139,10 +140,10 @@ cleanups.push(()=>{uploadRequest++;for(const url of photoUrls)URL.revokeObjectUR
 const defaultPhoto=image('./assets/sample-photo.webp');
 on(defaultPhoto,'load',()=>{
  if(disposed||hasUploadedPhoto||uploading)return;
- try{newPuzzle(squarePhoto(defaultPhoto));root.dataset.photoSource='default';photoStatus.textContent=photoText('Cat photo ready · upload your own photo anytime','Foto del gatto pronta · puoi caricare la tua foto');}
- catch(_){photoStatus.textContent=photoText('Upload a photo to start','Carica una foto per iniziare');}
+ try{newPuzzle(squarePhoto(defaultPhoto));root.dataset.photoSource='default';setPhotoStatus();}
+ catch(_){setPhotoStatus(photoText('Photo unavailable','Foto non disponibile'));}
 });
-on(defaultPhoto,'error',()=>{if(!puzzlePhoto)photoStatus.textContent=photoText('Upload a photo to start','Carica una foto per iniziare');});
+on(defaultPhoto,'error',()=>{if(!puzzlePhoto)setPhotoStatus(photoText('Photo unavailable','Foto non disponibile'));});
 drawTiles();state('loading');
 loop(dt=>{if(started&&!done&&!uploading){seconds+=dt;$('.time').textContent=Math.floor(seconds)+'s';}});
 
