@@ -102,6 +102,12 @@
       "status": "success",
       "provider": "Tripo",
       "task_id": "613718af-f79d-48dc-9920-554028c54831"
+    },
+    "discovery-pixel-racer-v1": {
+      "url": "/models/tripo/pixel-racer-toy-car-v1.glb",
+      "status": "success",
+      "provider": "Tripo",
+      "task_id": "11ef2936-82e4-41f1-a74c-cabd9060bb49"
     }
   }
 }

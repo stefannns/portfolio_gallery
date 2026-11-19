@@ -6,7 +6,7 @@ export const projects = [
     image: '/images/projects/dao-arena/gameplay.webp', color: '#91b4aa', recent: true,
     presentation: 'landscape',
     previewAlt: 'A glowing Impact talisman in the foreground of Dao Arena’s lantern-lit palace courtyard, with the gameplay HUD.',
-    url: 'https://daoarena.vercel.app/',
+    url: 'https://deadonpaper.vercel.app/',
     description: 'A browser FPS set in a Daoist palace, built around throwing fulu talismans. Dash and jump through the courtyard, survive enemy waves, and shape your build with new weapons, abilities and augments.',
     design: 'Five talisman weapons cover distinct combat roles: Flow, Cloud Pierce, Petal, Blast and Impact. Raised terraces and connected routes keep movement central, while rewards between waves let the player adapt their loadout.',
     processTitle: 'AI production and development tools',
@@ -171,7 +171,7 @@ export const projects = [
   },
   {
     id: 'smarttester', title: 'Smarttester', type: 'AI playtest workspace', collection: 'other',
-    image: '/images/projects/smarttester-playtest.png', color: '#9fbedc', recent: true,
+    image: '/images/projects/smarttester-playtest.png', color: '#9fbedc', recent: false,
     url: 'https://smarttester.vercel.app/',
     previewUrl: 'https://smarttester.vercel.app/how-it-works#workflow',
     workflowEmbedUrl: '/workflows/smarttester-api-map.html',
@@ -235,17 +235,27 @@ export const projects = [
     processTitle: 'AI animation',
     process: 'I used MiniMax H3 to create the character and spell animations in Skybridge Siege.',
   },
+  {
+    id: 'pixel-racer', title: 'Pixel Racer', type: 'AI video to real time 3D playable world', showSubtitle: true, collection: 'games',
+    image: '/images/projects/pixel-racer/gameplay.webp', color: '#df9684', recent: true,
+    video: '/videos/pixel-racer-demo.mp4', videoAspectRatio: '16 / 9',
+    previewAlt: 'A red toy car racing through a colorful candy world generated with Seedance.',
+    description: 'What if a generated video could be a game map? Pixel Racer is a one-day experiment in racing through AI video. Seedance creates the road and scenery; a locally rendered car turns that footage into a responsive driving game.',
+    design: 'A road-detection neural network analyzes each video frame in real time and maps the road into 3D space to position the car. A separate system estimates the scene’s lighting and applies matching light and shadow to the car. Steering responds immediately because the car is rendered over the video, rather than generated with it.',
+    processTitle: 'One day, and what comes next',
+    process: 'Road detection and lighting are still rough in this one-day prototype. I also tried live MiniMax FastH3 streaming, but it drifted after about 15 seconds because of the single-segment length. If live generation becomes fast and consistent enough, it could support infinite custom maps generated in real time.',
+  },
 ];
 
 // The computer has an editorial order independent of the room and older galleries.
 export const computerProjectIds = [
-  'seed-squad', 'smarttester', 'a-bot-can-do-better', 'skybridge-siege', 'h3-otome',
+  'pixel-racer', 'seed-squad', 'smarttester', 'a-bot-can-do-better', 'skybridge-siege', 'h3-otome',
   'recurve', 'assassin', 'niflheim', 'toad-defense',
 ];
 
 // Dao Arena belongs to the original kitchen; the pond test keeps its own set.
 export const originalKitchenProjectIds = [
-  'seed-squad', 'smarttester', 'a-bot-can-do-better', 'dao-arena', 'skybridge-siege', 'h3-otome',
+  'pixel-racer', 'seed-squad', 'smarttester', 'a-bot-can-do-better', 'dao-arena', 'skybridge-siege', 'h3-otome',
   'recurve', 'assassin', 'niflheim', 'toad-defense',
 ];
 

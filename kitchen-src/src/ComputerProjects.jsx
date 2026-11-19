@@ -169,6 +169,7 @@ export default function ComputerProjects({onClose, projectId, projectIds, title,
       <header className="computer-projects__header">
         <div className="computer-projects__identity">
           <h1 id={titleId}>{heading}</h1>
+          {single && selected.showSubtitle && <p className="computer-projects__subtitle">{selected.type}</p>}
         </div>
         <button className="computer-projects__close" type="button" ref={closeButton} onClick={() => close.current?.()} aria-label={single ? 'Close project' : 'Close computer'}>Close</button>
       </header>

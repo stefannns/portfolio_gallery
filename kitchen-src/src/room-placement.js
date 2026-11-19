@@ -167,6 +167,7 @@ function createRoomPlacement(surfaceData, version) {
   }
 
   const definitions = version === 10 ? [
+    {id: 'pixel-racer', asset: 'discovery-pixel-racer-v1', label: 'Toy car', width: .78, position: [.16, 1.12, -2.45], rotationY: Math.PI / 4},
     {id: 'dao-arena', asset: 'discovery-dao-arena-v1', label: 'Chef’s knife', width: 1.05, position: [-3.85, 1.102, .1], rotationY: Math.PI / 4, hitSize: [1.12, .25, .32], hitOffset: [0, .12, 0]},
     {id: 'seed-squad', asset: 'discovery-groceries-v2', label: 'Groceries', width: .72, position: [-2.15, ROOM_FLOOR_Y, 3.3], rotationY: 0},
     {id: 'smarttester', asset: 'discovery-smarttester-v2', label: 'Recorder', width: .52, position: [0, 1.12, -.4], rotationY: 0},

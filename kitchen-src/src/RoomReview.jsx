@@ -206,7 +206,8 @@ export default function RoomReview() {
   const [inspectTarget, setInspectTarget] = useState(null);
   const [vegetablesViewed, setVegetablesViewed] = useState(false), [recorderViewed, setRecorderViewed] = useState(false), [computerViewed, setComputerViewed] = useState(false);
   const [knifeViewed, setKnifeViewed] = useState(false);
-  const hasKnifeTask = ROOM_VERSION === 10;
+  const [pixelRacerViewed, setPixelRacerViewed] = useState(false);
+  const hasFeaturedProjects = ROOM_VERSION === 10;
   const controls = useRef(null), rootRef = useRef(null), arrangementActions = useRef(null), titlePhysics = useRef(null);
   const welcomeShownAt = useRef(null);
   const welcomeDismissed = useRef(!INTERACTIVE_ROOM || EDITOR_MODE || LIGHTING_PREVIEW);
@@ -219,8 +220,9 @@ export default function RoomReview() {
   const interactionPaused = modalOpen || !gameReady;
   const objectiveId = !arranging && !modalOpen
     ? !vegetablesViewed ? 'seed-squad'
-      : !recorderViewed ? 'smarttester'
-      : hasKnifeTask && !knifeViewed ? 'dao-arena'
+      : hasFeaturedProjects && !pixelRacerViewed ? 'pixel-racer'
+      : !hasFeaturedProjects && !recorderViewed ? 'smarttester'
+      : hasFeaturedProjects && !knifeViewed ? 'dao-arena'
       : !computerViewed ? 'games-computer'
       : ''
     : '';
@@ -242,7 +244,7 @@ export default function RoomReview() {
   useEffect(() => {if (modalOpen) setTomatoSplat(0);}, [modalOpen]);
   const usedToy = useCallback(() => dismissWelcome({inspection: true}), [dismissWelcome]);
   const openComputer = useCallback(() => {dismissWelcome({inspection: true});setHoveredItem('');setVideoPlaying(false);setActiveProject(null);setComputerOpen(true);setComputerViewed(true);}, [dismissWelcome]);
-  const openProject = useCallback(id => {if (projects.some(project => project.id === id)) {dismissWelcome({inspection: true});setHoveredItem('');setVideoPlaying(false);setComputerOpen(false);setActiveProject(id);if (id === 'seed-squad') setVegetablesViewed(true);if (id === 'smarttester') setRecorderViewed(true);if (id === 'dao-arena') setKnifeViewed(true);}}, [dismissWelcome]);
+  const openProject = useCallback(id => {if (projects.some(project => project.id === id)) {dismissWelcome({inspection: true});setHoveredItem('');setVideoPlaying(false);setComputerOpen(false);setActiveProject(id);if (id === 'seed-squad') setVegetablesViewed(true);if (id === 'smarttester') setRecorderViewed(true);if (id === 'dao-arena') setKnifeViewed(true);if (id === 'pixel-racer') setPixelRacerViewed(true);}}, [dismissWelcome]);
   const closeProject = useCallback(() => {setVideoPlaying(false);setComputerOpen(false);setActiveProject(null);}, []);
   const entry = manifest?.assets?.[ROOM_ID] || manifest?.[ROOM_ID];
   const view = useMemo(() => {
@@ -359,7 +361,7 @@ export default function RoomReview() {
     </nav>}
     {INTERACTIVE_ROOM && <div className="room-hud-layer">
       {gameReady && !arranging && !touchMode && !compactViewport && <KitchenMusicPlayer tracks={kitchenTracks} ducked={videoPlaying}/>}
-      {gameReady && !arranging && !modalOpen && <RoomTasks vegetablesViewed={vegetablesViewed} recorderViewed={recorderViewed} computerViewed={computerViewed} knifeViewed={knifeViewed} includeKnife={hasKnifeTask}/>}
+      {gameReady && !arranging && !modalOpen && <RoomTasks vegetablesViewed={vegetablesViewed} recorderViewed={recorderViewed} computerViewed={computerViewed} knifeViewed={knifeViewed} pixelRacerViewed={pixelRacerViewed} includeFeaturedProjects={hasFeaturedProjects}/>}
       {gameReady && <>
       {!hasMoved && !welcomeVisible && !arranging && !modalOpen && <p className="room-move-hint" role="status"><span className="room-controls--keyboard">WASD or click the floor to move</span><span className="room-controls--touch">Drag the joystick or tap the floor</span></p>}
       {hasMoved && !welcomeVisible && !arranging && !modalOpen && <p className={`room-inspect-hint${inspectTarget ? ' room-inspect-hint--ready' : ''}`} role="status" aria-live="polite">

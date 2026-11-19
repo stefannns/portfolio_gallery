@@ -38,8 +38,8 @@ for (const [name, file] of [['surfaceV7', 'room-v7-surfaces.json'], ['surfaceV10
 const {getRoomPlacement} = await import(`data:text/javascript;base64,${Buffer.from(placementSource).toString('base64')}`);
 const room = getRoomPlacement(10);
 const publishedLayout = JSON.parse(await readFile(new URL('../src/room-v10-layout.json', import.meta.url), 'utf8'));
-const expectedIds = ['dao-arena', 'seed-squad', 'smarttester', 'h3-otome', 'games-computer', 'a-bot-can-do-better'];
-assert.deepEqual(room.ROOM_ITEMS.map(item => item.id), expectedIds, 'The current room contains all six project objects');
+const expectedIds = ['pixel-racer', 'dao-arena', 'seed-squad', 'smarttester', 'h3-otome', 'games-computer', 'a-bot-can-do-better'];
+assert.deepEqual(room.ROOM_ITEMS.map(item => item.id), expectedIds, 'The current room contains all seven project objects');
 assert.equal(publishedLayout.version, 1, 'Published layout uses the supported data version');
 assert.deepEqual(publishedLayout.items.map(item => item.id).sort(), [...expectedIds].sort(), 'Published positions cover every project object');
 for (const expected of publishedLayout.items) {
@@ -53,6 +53,7 @@ assert(Math.abs(room.ROOM_ITEMS.find(item => item.id === 'seed-squad').rotationY
 // An older device can still have the removed tea set in its saved layout.
 const oldTeaSet = {id: 'toad-defense', position: [-3.967614349968157, 1.101999981880188, -2.866209386140361], rotationY: 0};
 for (const legacy of [
+  publishedLayout.items.filter(item => item.id !== 'pixel-racer'),
   [...publishedLayout.items, oldTeaSet],
   Object.fromEntries([...publishedLayout.items, oldTeaSet].map(item => [item.id, item.position])),
 ]) {
