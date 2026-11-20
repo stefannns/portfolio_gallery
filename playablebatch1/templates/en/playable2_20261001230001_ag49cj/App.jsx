@@ -65,7 +65,7 @@ const DEFAULT_CONFIG = {
     {
       "id": "BG_IMAGE",
       "label": "Photographic open night sky",
-      "path": "./assets/art-v4/open-night-sky.webp",
+      "path": "./assets/art-v4/starry-night-sky-v2.webp",
       "replaceable": true
     }
   ],
@@ -116,6 +116,50 @@ function fireworkGlow(color){
   glow.addColorStop(0,'#fff9e7');glow.addColorStop(.1,color);glow.addColorStop(.28,color+'b0');glow.addColorStop(.62,color+'38');glow.addColorStop(1,color+'00');
   ctx.fillStyle=glow;ctx.fillRect(0,0,48,48);fireworkGlowCache.set(color,sprite);return sprite;
 }
+const fireworkIgnitionCache=new Map(),fireworkStreakCache=new Map(),fireworkCoreCache=new Map();
+function fireworkIgnition(color){
+ let sprite=fireworkIgnitionCache.get(color);if(sprite)return sprite;
+ sprite=document.createElement('canvas');sprite.width=sprite.height=96;
+ const ctx=sprite.getContext('2d'),glow=ctx.createRadialGradient(48,48,0,48,48,48);
+ glow.addColorStop(0,'#fff8df');glow.addColorStop(.22,color);glow.addColorStop(1,color+'00');
+ ctx.fillStyle=glow;ctx.fillRect(0,0,96,96);fireworkIgnitionCache.set(color,sprite);return sprite;
+}
+function fireworkCore(color){
+ let sprite=fireworkCoreCache.get(color);if(sprite)return sprite;
+ sprite=document.createElement('canvas');sprite.width=sprite.height=32;
+ const ctx=sprite.getContext('2d');ctx.fillStyle=color;ctx.beginPath();ctx.arc(16,16,15,0,Math.PI*2);ctx.fill();
+ fireworkCoreCache.set(color,sprite);return sprite;
+}
+function fireworkStreak(color){
+ let sprite=fireworkStreakCache.get(color);if(sprite)return sprite;
+ sprite=document.createElement('canvas');sprite.width=256;sprite.height=64;
+ const ctx=sprite.getContext('2d');ctx.strokeStyle=color;ctx.lineWidth=3.5;ctx.shadowColor=color;ctx.shadowBlur=20;
+ ctx.beginPath();ctx.moveTo(32,32);ctx.lineTo(224,32);ctx.stroke();
+ fireworkStreakCache.set(color,sprite);return sprite;
+}
+// Fixed ring storage avoids array shifts/objects. Particle motion is unchanged.
+function appendFireworkTrail(particle){
+ const offset=particle.trailHead*3;
+ particle.trail[offset]=particle.x;particle.trail[offset+1]=particle.y;particle.trail[offset+2]=particle.age;
+ particle.trailHead=(particle.trailHead+1)%particle.trailLength;
+ particle.trailCount=Math.min(particle.trailCount+1,particle.trailLength);
+}
+function traceFireworkTrail(context,particle,width,height){
+ const count=particle.trailCount;if(!count)return;
+ const first=(particle.trailHead-count+particle.trailLength)%particle.trailLength*3;
+ const fx=particle.trail[first],fy=particle.trail[first+1];
+ context.beginPath();context.moveTo(fx*width,fy*height);
+ if(count<2){context.lineTo(particle.x*width,particle.y*height);return;}
+ const middle=((first/3+Math.floor(count/2))%particle.trailLength)*3;
+ const elapsed=particle.age-particle.trail[first+2];
+ const t=elapsed>0?(particle.trail[middle+2]-particle.trail[first+2])/elapsed:0;
+ const one=1-t,denominator=2*one*t;
+ if(denominator<.001){context.lineTo(particle.x*width,particle.y*height);return;}
+ const cx=(particle.trail[middle]-one*one*fx-t*t*particle.x)/denominator;
+ const cy=(particle.trail[middle+1]-one*one*fy-t*t*particle.y)/denominator;
+ context.quadraticCurveTo(cx*width,cy*height,particle.x*width,particle.y*height);
+}
+
 function App() {
   const createElement = React.createElement;
   const [config, setConfig] = React.useState({});
@@ -124,6 +168,7 @@ function App() {
   const [aiming, setAiming] = React.useState(false);
   const canvas = React.useRef(null);
   const wakeDraw=React.useRef(()=>{});
+  const drawActive=React.useRef(!(new URLSearchParams(location.search).get('feedReview')==='1'&&window.parent!==window));
   const start = React.useRef(null);
   const stateRef = React.useRef(null);
   const rockets = React.useRef([]);
@@ -167,21 +212,26 @@ function App() {
       }
       const willow = style === "willow";
       const life = 1 + Math.random() * 0.18;
+      const particleColor=willow?["#ffc95e","#ffe6a0","#ffdc79"][value2%3]:value2%5===0?"#fff5da":color;
+      const trailLength=willow?20:style==="star"?11:14;
       particles.push({
         x,
         y,
         vx: value3 * speed * spread / rect.width,
         vy: value4 * speed * spread / rect.height,
         life,
-        color: willow ? ["#ffc95e", "#ffe6a0", "#ffdc79"][value2 % 3] : value2 % 5 === 0 ? "#fff5da" : color,
+        color:particleColor,
+        sprite:fireworkGlow(particleColor),
         drag: willow ? 0.982 : 0.985,
         gravity: (willow ? 0.065 : 0.025) / rect.height,
         lifeScale: willow ? 2.35 : 1.2,
-        trail: [],
-        trailLength: willow ? 20 : style === "star" ? 11 : 14,
+        trail:new Float64Array(trailLength*3),trailLength,trailHead:0,trailCount:0,age:0,
         size
       });
     }
+    // All rendering is additive: color grouping preserves the image while
+    // avoiding redundant strokeStyle changes for every sparkle.
+    particles.sort((a,b)=>a.color<b.color?-1:a.color>b.color?1:0);
     return particles;
   };
   const getAudio = (unlock = false) => {
@@ -377,13 +427,14 @@ function App() {
   }, []);
   React.useEffect(() => {
     let alive = true;
+    drawActive.current=!document.documentElement.hasAttribute('data-batch3-preview');
     sampleAudio.current.closed = false;
     prepareAudio();
     const element=canvas.current;if(!element)return;
     const context=element.getContext('2d');if(!context)return;
     let width=0,height=0,pixelRatio=1,nextDraw=0;
     const draw = value => {
-      frame.current=0;if(!alive||!width||!height)return;
+      frame.current=0;if(!alive||!drawActive.current||document.hidden||!width||!height)return;
       // ProMotion/high-refresh displays do not need twice as many blur passes.
       if(lastTick.current&&value+.5<nextDraw){requestDraw();return;}
       nextDraw=nextDraw&&value-nextDraw<50?nextDraw+1000/60:value+1000/60;
@@ -422,7 +473,8 @@ function App() {
         context.restore();
       }
       context.save();
-      context.globalCompositeOperation = "lighter";
+      context.globalCompositeOperation = "lighter";context.shadowBlur=0;
+      const particleCore=fireworkCore('#fff9e7'),rocketCore=fireworkCore('#fff');
       for (let value4 = rockets.current.length - 1; value4 >= 0; value4--) {
         const item = rockets.current[value4];
         item.t = Math.min(1, item.t + value3 / item.duration);
@@ -431,18 +483,14 @@ function App() {
         const value7 = (item.y0 + (item.y1 - item.y0) * trailTime) * height;
         const x = (item.x0 + (item.x1 - item.x0) * item.t) * width;
         const y = (item.y0 + (item.y1 - item.y0) * item.t) * height;
-        context.strokeStyle = item.color;
-        context.lineWidth = 3.5;
-        context.shadowColor = item.color;
-        context.shadowBlur = 20;
-        context.beginPath();
-        context.moveTo(value6, value7);
-        context.lineTo(x, y);
-        context.stroke();
-        context.fillStyle = "#fff";
-        context.beginPath();
-        context.arc(x, y, 3.5, 0, Math.PI * 2);
-        context.fill();
+        const dx=x-value6,dy=y-value7,length=Math.hypot(dx,dy),streak=fireworkStreak(item.color);
+        if(length>.01){
+          context.save();context.translate(value6,value7);context.rotate(Math.atan2(dy,dx));
+          context.drawImage(streak,0,0,32,64,-32,-32,32,64);
+          context.drawImage(streak,96,0,64,64,0,-32,length,64);
+          context.drawImage(streak,224,0,32,64,length,-32,32,64);context.restore();
+        }
+        context.drawImage(rocketCore,x-3.7333,y-3.7333,7.4666,7.4666);
         if (item.t >= 1) {
           // Bound density during rapid swipes rather than accumulating effects.
           while (bursts.current.length >= 5 || bursts.current.reduce((total, burst) => total + burst.particles.length, 0) + item.particles.length > 900) bursts.current.shift();
@@ -465,63 +513,42 @@ function App() {
         const item = current[value4];
         item.age += value3 / 1000;
         const flash = Math.max(0, 1 - item.age / 0.24);
-        if (flash > 0) {
-          // A compact ignition core, never a full-screen white flash.
-          const radius = (12 + 18 * item.size) * (1 + item.age * 2);
-          const glow = context.createRadialGradient(item.x * width, item.y * height, 0, item.x * width, item.y * height, radius);
-          glow.addColorStop(0, "#fff8df");
-          glow.addColorStop(0.22, item.color);
-          glow.addColorStop(1, item.color + "00");
-          context.globalAlpha = flash * 0.6;
-          context.shadowBlur = 0;
-          context.fillStyle = glow;
-          context.beginPath();
-          context.arc(item.x * width, item.y * height, radius, 0, Math.PI * 2);
-          context.fill();
+        if(flash>0){
+          const radius=(12+18*item.size)*(1+item.age*2);
+          context.globalAlpha=flash*.6;context.drawImage(fireworkIgnition(item.color),item.x*width-radius,item.y*height-radius,radius*2,radius*2);
         }
-        for (const particle of item.particles) {
-          if (particle.trail && step > 0) {
-            const sample=particle.trail.length>=particle.trailLength?particle.trail.shift():{};
-            sample.x=particle.x;sample.y=particle.y;particle.trail.push(sample);
+        const first=item.particles[0],drag=Math.pow(first.drag,step),decay=.012*step/first.lifeScale;
+        const rootSize=Math.sqrt(item.size),trailOpacity=item.style==='willow'?.58:.66,glowScale=23*rootSize,coreSize=1.92*rootSize;
+        context.lineWidth=1.7*rootSize;let previousColor='',live=0;
+        for(let index=0;index<item.particles.length;index++){
+          const particle=item.particles[index];if(step>0)appendFireworkTrail(particle);
+          particle.x+=particle.vx*step;particle.y+=particle.vy*step;particle.age+=step;
+          particle.vx*=drag;particle.vy=particle.vy*drag+particle.gravity*step;particle.life-=decay;
+          if(particle.life<=0)continue;
+          item.particles[live++]=particle;
+          const alpha=Math.min(1,particle.life);
+          if(particle.trailCount){
+            if(previousColor!==particle.color){context.strokeStyle=particle.color;previousColor=particle.color;}
+            context.globalAlpha=alpha*trailOpacity;traceFireworkTrail(context,particle,width,height);context.stroke();
           }
-          particle.x += particle.vx * step;
-          particle.y += particle.vy * step;
-          const drag = Math.pow(particle.drag, step);
-          particle.vx *= drag;
-          particle.vy = particle.vy * drag + particle.gravity * step;
-          particle.life -= 0.012 * step / particle.lifeScale;
-          context.globalAlpha = Math.min(1, Math.max(0, particle.life));
-          context.fillStyle = particle.color;
-          context.strokeStyle = particle.color;
-          context.shadowBlur=0;
-          if (particle.trail?.length) {
-            context.globalAlpha *= item.style === "willow" ? 0.58 : 0.66;
-            context.lineWidth = 1.7 * Math.sqrt(particle.size);
-            context.beginPath();
-            context.moveTo(particle.trail[0].x * width, particle.trail[0].y * height);
-            for (const point2 of particle.trail) context.lineTo(point2.x * width, point2.y * height);
-            context.lineTo(particle.x * width, particle.y * height);
-            context.stroke();
-            context.globalAlpha = Math.min(1, Math.max(0, particle.life));
-          }
-          const glowSize=Math.max(10,particle.life*23*Math.sqrt(particle.size));
-          context.drawImage(fireworkGlow(particle.color),particle.x*width-glowSize/2,particle.y*height-glowSize/2,glowSize,glowSize);
-          if (particle.life > 0.55) {
-            context.fillStyle = "#fff9e7";
-            context.globalAlpha *= 0.85;
-            context.shadowBlur = 0;
-            context.beginPath();
-            context.arc(particle.x * width, particle.y * height, 0.9 * Math.sqrt(particle.size), 0, Math.PI * 2);
-            context.fill();
-          }
+          const glowSize=Math.max(10,particle.life*glowScale),x=particle.x*width,y=particle.y*height;
+          context.globalAlpha=alpha;context.drawImage(particle.sprite,x-glowSize/2,y-glowSize/2,glowSize,glowSize);
+          if(particle.life>.55){context.globalAlpha=alpha*.85;context.drawImage(particleCore,x-coreSize/2,y-coreSize/2,coreSize,coreSize);}
         }
-        item.particles = item.particles.filter(item2 => item2.life > 0);
+        item.particles.length=live;
         if (!item.particles.length) current.splice(value4, 1);
       }
       context.restore();
       if(rockets.current.length||bursts.current.length)requestDraw();else{lastTick.current=0;nextDraw=0;}
     };
-    function requestDraw(){if(alive&&!frame.current)frame.current=requestAnimationFrame(draw);}
+    function requestDraw(){if(alive&&drawActive.current&&!document.hidden&&!frame.current)frame.current=requestAnimationFrame(draw);}
+    function syncDrawState(){
+      cancelAnimationFrame(frame.current);frame.current=0;lastTick.current=0;nextDraw=0;
+      if(drawActive.current&&!document.hidden){audio.current?.resume().catch(()=>{});requestDraw();}
+      else{start.current=null;stateRef.current=null;setAiming(false);audio.current?.suspend().catch(()=>{});}
+    }
+    function hostMessage(event){if(event.source===parent&&event.data?.type==='playable-active'){drawActive.current=event.data.active===true;syncDrawState();}}
+    window.addEventListener('message',hostMessage);document.addEventListener('visibilitychange',syncDrawState);
     function resize(){
       const rect=element.getBoundingClientRect();width=rect.width;height=rect.height;
       pixelRatio=Math.min(window.devicePixelRatio||1,1.5);
@@ -534,6 +561,7 @@ function App() {
     resizeObserver?.observe(element);window.addEventListener('resize',resize);resize();
     return () => {
       alive = false;wakeDraw.current=()=>{};resizeObserver?.disconnect();window.removeEventListener('resize',resize);
+      window.removeEventListener('message',hostMessage);document.removeEventListener('visibilitychange',syncDrawState);
       cancelAnimationFrame(frame.current);frame.current=0;
       const state = sampleAudio.current;
       state.closed = true;
@@ -568,7 +596,7 @@ function App() {
     };
   };
   const down = event => {
-    if (event.isPrimary === false || event.button > 0) return;
+    if(!drawActive.current||document.hidden||event.isPrimary===false||event.button>0)return;
     prepareAudio(true);
     event.currentTarget.setPointerCapture(event.pointerId);
     const value = point(event);
@@ -634,7 +662,7 @@ function App() {
     height: "100%",
     overflow: "hidden",
     boxSizing: "border-box",
-    background: `#080d2c url(${config.BG_IMAGE || "./assets/art-v4/open-night-sky.webp"}) center/cover`,
+    background: `#080d2c url(${config.BG_IMAGE || "./assets/art-v4/starry-night-sky-v2.webp"}) center/cover`,
     color: "white",
     touchAction: "none",
     userSelect: "none",

@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "audiowide-poppins",
+  "style_anchor": "Retro synthwave pixel-art 3D UFO shooter: indigo/violet nebula sky, magenta and cyan neon trim, faceted low-poly UFOs and floating alien islands, chunky low-res WebGL pixels, Audiowide display type with Poppins micro labels.",
+  "assets": [
+    {
+      "path": "assets/img/sky_neon.png",
+      "produced_by": "image-generate",
+      "produced_prompt": "Retro synthwave pixel-art space sky panorama, 16-bit video game style, seamless spherical backdrop with no focal objects: deep indigo and dark navy nebula at the top blending into violet and magenta cloud bands, soft peach-pink glow along the lower horizon band, scattered crisp white pixel stars, subtle cyan stardust, limited retro palette, clean chunky pixel edges, no text, no planets, no spaceships, no sun, evenly distributed composition for wrapping around a 3D sky dome",
+      "description": "Synthwave pixel nebula panorama mapped on the inverted sky sphere",
+      "aspect_ratio": "16:9",
+      "size_tier": "large",
+      "recommended_size": "1536x864",
+      "width": 1536,
+      "height": 864,
+      "ok": true
+    },
+    {
+      "path": "assets/img/terrain_pixel.png",
+      "produced_by": "image-generate",
+      "produced_prompt": "Seamless tileable top-down pixel-art terrain texture for a floating alien island in a retro synthwave 16-bit game: vibrant teal and cyan grassy surface with darker teal pixel shading and dithering, scattered small magenta and hot-pink alien foliage dots, a few pale glowing blue crystal flecks, limited color palette, crisp square pixels, flat even lighting, no text, no large objects, tileable wrapping edges",
+      "description": "Tileable teal/magenta pixel terrain for floating island tops",
+      "aspect_ratio": "1:1",
+      "size_tier": "small",
+      "recommended_size": "384x384",
+      "width": 384,
+      "height": 384,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/Audiowide-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Audiowide Regular, OFL licensed; display/HUD numeral role",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Poppins Regular, OFL licensed; small label role",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Poppins Bold, OFL licensed; emphasized small label role",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/audio/laser.mp3",
+      "produced_by": "aime-synthesized",
+      "produced_prompt": "Synthesized bright descending twin-saw laser zap, 0.14s, 64kbps mono",
+      "description": "Player UFO laser volley",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/audio/enemy_laser.mp3",
+      "produced_by": "aime-synthesized",
+      "produced_prompt": "Synthesized harsher low-pitch saw zap, 0.12s, 64kbps mono",
+      "description": "Enemy UFO red energy bolt",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/audio/explosion.mp3",
+      "produced_by": "aime-synthesized",
+      "produced_prompt": "Synthesized filtered noise burst with low sine thump, 0.55s, 64kbps mono",
+      "description": "UFO destruction explosion",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/audio/hit.mp3",
+      "produced_by": "aime-synthesized",
+      "produced_prompt": "Synthesized inharmonic metallic clang, 0.28s, 64kbps mono",
+      "description": "Player hull damage feedback",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/audio/alarm.mp3",
+      "produced_by": "aime-synthesized",
+      "produced_prompt": "Synthesized alternating two-tone warning beep, 0.34s, 64kbps mono",
+      "description": "Low hull warning",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/audio/ui.mp3",
+      "produced_by": "aime-synthesized",
+      "produced_prompt": "Synthesized short soft UI click, 0.07s, 64kbps mono",
+      "description": "Button and parachute-open UI cue",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/audio/respawn.mp3",
+      "produced_by": "aime-synthesized",
+      "produced_prompt": "Synthesized rising pentatonic shimmer arpeggio, 0.85s, 64kbps mono",
+      "description": "Pilot rescue and new UFO respawn chime",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}

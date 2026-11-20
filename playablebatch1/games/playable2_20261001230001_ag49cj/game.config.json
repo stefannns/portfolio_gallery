@@ -60,8 +60,8 @@
   "images": [
     {
       "id": "BG_IMAGE",
-      "label": "Photographic open night sky",
-      "path": "./assets/art-v4/open-night-sky.webp",
+      "label": "Photographic star-filled night sky",
+      "path": "./assets/art-v4/starry-night-sky-v2.webp",
       "replaceable": true
     }
   ],

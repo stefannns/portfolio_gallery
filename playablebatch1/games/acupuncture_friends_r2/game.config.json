@@ -1,0 +1,11 @@
+{
+  "config_version": "2.0",
+  "playable": {"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1},
+  "texts": [
+    {"id":"FRIEND_NAME","label":"Friend display name","value":"Buddy","default":"Buddy","max_length":20},
+    {"id":"HINT","label":"Swipe instruction","value":"Swipe up to hit the spot","default":"Swipe up to hit the spot","max_length":40},
+    {"id":"AGAIN","label":"Replay button","value":"Play again","default":"Play again","max_length":24}
+  ],
+  "tweaks":[{"id":"TARGET_RADIUS","kind":"number","label":"Acupoint hit radius","value":0.085,"default":0.085,"min":0.065,"max":0.11,"step":0.005}],
+  "images":[{"id":"FRIEND_AVATAR","label":"Friend avatar (default example)","path":"assets/friend-avatar.webp","replaceable":true}]
+}

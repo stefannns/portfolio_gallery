@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "font_pack_id": "system_safe",
-  "style_anchor": "Photographic deep navy open sky with sparse stars and subtle thin moonlit clouds. No ground or horizon; bright additive fireworks use cached glow sprites.",
+  "style_anchor": "Photographic deep navy night sky with many crisp naturally scattered stars; no clouds, land or horizon. Bright live fireworks remain in front.",
   "assets": [
     {
       "path": "assets/bg_night.webp",
@@ -183,7 +183,7 @@
     {
       "path": "assets/art-v3/real-night-sky-v2.webp",
       "produced_by": "imagegen",
-      "produced_prompt": "Refine the real rural midnight photograph with slightly brighter moonlit hills, layered wooded contours and meadow; preserve the low84\u201387percent horizon, dark spacious starry sky, and no buildings or people.",
+      "produced_prompt": "Refine the real rural midnight photograph with slightly brighter moonlit hills, layered wooded contours and meadow; preserve the low84–87percent horizon, dark spacious starry sky, and no buildings or people.",
       "description": "Second photographic nightscape with more visible hills; shared by background and aligned foreground occlusion masks.",
       "aspect_ratio": "2:3",
       "size_tier": "full",
@@ -195,8 +195,8 @@
     {
       "path": "assets/art-v3/real-night-sky-v3.webp",
       "produced_by": "imagegen",
-      "produced_prompt": "Use case: precise-object-edit.\nAsset type: portrait photographic background for a fireworks game.\nInput image1 is the edit target. Preserve the existing photorealistic dark navy\nnight sky, subtle sparse stars, cool moonlit atmosphere, green wooded rolling\nhills and grassy foreground. Change only the height of the land: raise the\nexisting rolling-hill skyline so the ridge sits around77\u201380percent down from\nthe top of the image, instead of around84\u201387percent. Land should occupy roughly\nthe bottom22percent. Make the hills noticeably a little taller, with gentle\nnatural slopes and modest wooded ridges, not giant mountains. Keep the open\nsky quiet and spacious for interactive fireworks. Keep the same realistic\nphotographic detail, low-key exposure, original colors and2:3 portrait\ncomposition. Hills/meadow remain visibly green in moonlight, not silhouettes.\nNo moon, buildings, people, text, UI or fireworks baked into the image. Do not\nintroduce new objects or change the camera perspective. One refined image.\n",
-      "description": "Third photographic nightscape: taller moonlit green rolling hills, traced78.3\u201382.7percent ridge (~80percent center); identical center-cover photograph in all scenery layers and crop-aware skyline clipping.",
+      "produced_prompt": "Use case: precise-object-edit.\nAsset type: portrait photographic background for a fireworks game.\nInput image1 is the edit target. Preserve the existing photorealistic dark navy\nnight sky, subtle sparse stars, cool moonlit atmosphere, green wooded rolling\nhills and grassy foreground. Change only the height of the land: raise the\nexisting rolling-hill skyline so the ridge sits around77–80percent down from\nthe top of the image, instead of around84–87percent. Land should occupy roughly\nthe bottom22percent. Make the hills noticeably a little taller, with gentle\nnatural slopes and modest wooded ridges, not giant mountains. Keep the open\nsky quiet and spacious for interactive fireworks. Keep the same realistic\nphotographic detail, low-key exposure, original colors and2:3 portrait\ncomposition. Hills/meadow remain visibly green in moonlight, not silhouettes.\nNo moon, buildings, people, text, UI or fireworks baked into the image. Do not\nintroduce new objects or change the camera perspective. One refined image.\n",
+      "description": "Third photographic nightscape: taller moonlit green rolling hills, traced78.3–82.7percent ridge (~80percent center); identical center-cover photograph in all scenery layers and crop-aware skyline clipping.",
       "aspect_ratio": "2:3",
       "size_tier": "full",
       "recommended_size": "768x1152",
@@ -209,6 +209,18 @@
       "produced_by": "imagegen",
       "produced_prompt": "Real photographic night sky only, deep midnight navy and sparse stars with subtle thin moonlit cloud wisps; no ground, hills, horizon, moon, fireworks or UI.",
       "description": "Single full-bleed open night sky backdrop, with no overlapping landscape image layers.",
+      "aspect_ratio": "2:3",
+      "size_tier": "full",
+      "recommended_size": "768x1152",
+      "width": 768,
+      "height": 1152,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v4/starry-night-sky-v2.webp",
+      "produced_by": "imagegen",
+      "produced_prompt": "Use case: photorealistic-natural.\nAsset type: full-screen portrait background photograph for a mobile fireworks game, approximately 2:3 portrait.\nPrimary request: a beautiful, much starrier night sky, photographed looking straight upward, with no land at all. Deep midnight navy-black sky filled with several hundred clearly visible, naturally scattered small stars across the entire frame. Vary star brightness realistically: mostly tiny crisp white and cool blue pinpoints, with a handful of brighter stars. Stars must be visibly present when viewed on a phone, not nearly invisible. Natural astrophotography exposure and detail, restrained contrast; retain dark negative space between the stars so colorful live fireworks remain readable. Gentle dark indigo tonal depth, only a barely perceptible faint star field haze; clear sky with no clouds covering stars. No large glowing blobs, exaggerated cross-shaped starbursts, star trails, illustrations, planets, moon, meteors, aurora, fireworks, ground, trees, mountains, silhouettes, horizon, buildings, text, UI, borders or watermarks. Sky bleeds edge to edge. One high-quality photographic image.",
+      "description": "Star-filled photographic sky that bleeds to every edge, with no ground or horizon.",
       "aspect_ratio": "2:3",
       "size_tier": "full",
       "recommended_size": "768x1152",
