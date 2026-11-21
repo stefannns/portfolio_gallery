@@ -11,7 +11,7 @@
   }
   function reflect(game=window.PlayableReviewLibrary?.getCurrent()){
     for(const control of document.querySelectorAll('[data-game-language]'))control.value=language;
-    for(const note of document.querySelectorAll('[data-language-note]')){note.hidden=language!=='it'||supported(game);note.textContent='English only · outside Batch 1';}
+    for(const note of document.querySelectorAll('[data-language-note]')){note.hidden=language!=='it'||supported(game);note.textContent='Versione italiana non disponibile';}
   }
   function set(next){
     if(!['en','it'].includes(next)||next===language)return;

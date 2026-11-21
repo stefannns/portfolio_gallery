@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "special_elite",
+  "style_anchor": "Single-player date profile; warm blush paper, muted option colors, straight centered type, concise ink result card with own answers. Share poster is composed locally from the same text and paper palette.",
+  "assets": [
+    {
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Poppins-Bold.woff2",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Poppins-Regular.woff2",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/special-elite/SpecialElite-Regular.ttf",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "SpecialElite-Regular.ttf",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/paper-grain.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "paper-grain.svg",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Regular for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Bold for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    }
+  ],
+  "content_locale": "it"
+}

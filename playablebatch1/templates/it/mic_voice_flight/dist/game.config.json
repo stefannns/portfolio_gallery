@@ -1,0 +1,48 @@
+{
+  "config_version": "2.0",
+  "playable": {
+    "name": "mic_voice_flight",
+    "title": "Volo con la voce",
+    "content_locale": "it",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "min_capability_level": 2,
+    "full_capability_level": 2
+  },
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Istruzioni",
+      "value": "Fai un suono per salire · taci per scendere",
+      "default": "Fai un suono per salire · taci per scendere",
+      "max_length": 100
+    }
+  ],
+  "tweaks": [],
+  "images": [
+    {
+      "id": "SKY_HILLS",
+      "label": "Cielo e colline pixel",
+      "path": "./assets/pixel-v2/sky-hills.webp",
+      "replaceable": true
+    },
+    {
+      "id": "GRASS_GROUND",
+      "label": "Erba e terreno pixel",
+      "path": "./assets/pixel-v2/grass-ground.webp",
+      "replaceable": true
+    },
+    {
+      "id": "BIRD_FLAP",
+      "label": "Fotogrammi del battito d’ali pixel",
+      "path": "./assets/pixel-v2/bird-flap.webp",
+      "replaceable": true
+    },
+    {
+      "id": "GARDEN_PIPE",
+      "label": "Tubo del giardino pixel",
+      "path": "./assets/pixel-v2/garden-pipe.webp",
+      "replaceable": true
+    }
+  ]
+}

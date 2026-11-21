@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "Reference-faithful warm tactile Three.js massage room, continuous adult prone anatomy, teal leather table, amber acupoint. Clay-style generated default avatar in an editable photo slot. Poppins Regular/Bold for all game UI.",
+  "assets": [
+    {
+      "path": "assets/friend-avatar.webp",
+      "produced_by": "Aime image-generate",
+      "produced_prompt": "Existing task-generated avatar: friendly clay-style adult portrait, brown sculpted hair, green shirt, warm cream background. Integrated from generated_image_025010_1_1.png; exact upstream prompt retained by primary agent.",
+      "description": "Generated example friend avatar, locally replaceable without upload",
+      "aspect_ratio": "1:1",
+      "size_tier": "small",
+      "recommended_size": "256x256",
+      "width": 256,
+      "height": 256,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Production font pack Poppins Regular (400)",
+      "aspect_ratio": "n/a",
+      "size_tier": "font",
+      "recommended_size": "original",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Production font pack Poppins Bold (700)",
+      "aspect_ratio": "n/a",
+      "size_tier": "font",
+      "recommended_size": "original",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ],
+  "content_locale": "it"
+}

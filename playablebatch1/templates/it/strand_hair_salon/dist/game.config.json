@@ -1,0 +1,13 @@
+{
+  "playable": {
+    "name": "strand_hair_salon",
+    "title": "Salone dei capelli",
+    "content_locale": "it",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  },
+  "tweaks": [],
+  "config_version": "2.0"
+}

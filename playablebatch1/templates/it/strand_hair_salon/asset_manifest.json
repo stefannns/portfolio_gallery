@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {
+      "path": "assets/ui/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Regular for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Bold for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    }
+  ],
+  "content_locale": "it"
+}

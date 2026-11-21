@@ -3,10 +3,20 @@ import { createRoot } from 'react-dom/client';
 import * as THREE from 'three';
 import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
 
+// FYP can activate the frame while React is still loading its configuration.
+// Capture that state at module startup so the later 3D engine cannot miss Play.
+let startupHostActive = null;
+function captureStartupActivation(event) {
+  if (event.source !== window.parent || event.origin !== window.location.origin || event.data?.type !== 'playable-active' || typeof event.data.active !== 'boolean') return;
+  startupHostActive = event.data.active;
+}
+window.addEventListener('message', captureStartupActivation);
+window.addEventListener('pagehide', () => window.removeEventListener('message', captureStartupActivation), { once: true });
+
 // Adapted from the provided Acupuncture Darts reference: continuous torso,
 // prone anatomy, room materials, surface decal, swept-ray needle and Verlet pose.
 // No external runtime, profile API, analytics, advertising or upload service.
-const DEFAULTS = { FRIEND_NAME: 'Buddy', FRIEND_AVATAR: 'assets/friend-avatar.webp', HINT: 'Swipe up to hit the spot', AGAIN: 'Play again', TARGET_RADIUS: 0.085 };
+const DEFAULTS = { FRIEND_NAME: 'Buddy', FRIEND_AVATAR: 'assets/friend-avatar.webp', HINT: 'Tap to throw · drag to aim', AGAIN: 'Play again', TARGET_RADIUS: 0.085 };
 const css = `
 @font-face{font-family:Poppins;src:url('assets/fonts/Poppins-Regular.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
 @font-face{font-family:Poppins;src:url('assets/fonts/Poppins-Bold.woff2') format('woff2');font-style:normal;font-weight:700;font-display:swap}
@@ -14,44 +24,18 @@ const css = `
 .game{position:relative;width:100%;height:100%;overflow:hidden;color:#493625;--font-ui:Poppins,sans-serif;font-family:var(--font-ui);user-select:none;-webkit-user-select:none}
 .stage{position:absolute;inset:0}.stage canvas{display:block;width:100%;height:100%;touch-action:none}
 .score{position:absolute;top:30px;left:50%;transform:translateX(-50%);font-size:28px;font-weight:700;line-height:42px;min-width:64px;text-align:center;color:#493625;background:#fff8eadd;border-radius:18px;padding:0 12px;pointer-events:none;font-variant-numeric:tabular-nums}
-.friend{position:absolute;right:30px;top:84px;width:88px;z-index:3;transform-origin:center;filter:drop-shadow(0 3px 5px #4d362530)}
-.friend button{font:inherit;display:block;width:100%;padding:3px;border:0;border-radius:14px;background:#fff8ed;cursor:pointer;touch-action:manipulation;color:#493625}
-.friend img{display:block;width:82px;height:82px;object-fit:cover;border-radius:11px}
-.friend-name{display:block;padding:4px 2px 2px;font-weight:700;font-size:12px;line-height:17px;overflow-wrap:anywhere;max-height:38px;overflow:hidden}
-.change-mark{position:absolute;right:0;top:64px;width:24px;height:24px;border:2px solid #fff8ed;border-radius:50%;background:#388979;color:#fff;display:grid;place-items:center;font-size:16px;pointer-events:none}
-.reaction{display:block;position:absolute;right:0;top:-18px;font-size:12px;font-weight:700;background:#fff8ed;padding:3px 8px;border-radius:10px;white-space:nowrap;pointer-events:none}
-.friend[data-reaction=ouch]{animation:ouch .45s ease-in-out}.friend[data-reaction=bliss]{animation:relief .7s ease-in-out}.friend[data-reaction=miss]{animation:relief .45s ease-in-out}
-@keyframes ouch{20%,60%{transform:translateX(-4px) rotate(-3deg)}40%,80%{transform:translateX(4px) rotate(3deg)}}
-@keyframes relief{50%{transform:translateY(-5px) scale(1.035)}}
-.hint{position:absolute;left:30px;right:30px;top:32%;text-align:center;pointer-events:none;font-size:18px;line-height:27px;color:#493625;animation:breathe 2.3s ease-in-out infinite}
-.hint span{display:inline-block;background:#fff8eae8;padding:7px 13px;border-radius:24px;box-shadow:0 2px 8px #785a2220}
-@keyframes breathe{50%{transform:translateY(-3px)}}
-.result{position:absolute;bottom:50px;left:30px;right:30px;background:#fff8edf2;border:1px solid #dac9ae;border-radius:22px;padding:12px 16px;text-align:center;box-shadow:0 5px 18px #4d362522;z-index:4}
-.result h2{margin:0 0 8px;font-size:24px;line-height:32px;font-weight:700}.result button{font:700 18px/27px var(--font-ui);border:0;border-radius:14px;min-height:48px;padding:8px 24px;background:#388979;color:white;box-shadow:0 3px 0 #23594f;cursor:pointer;touch-action:manipulation}.result button:active{transform:translateY(2px);box-shadow:none}
-.photo-status{position:absolute;left:30px;right:30px;top:74px;font-size:12px;text-align:center;pointer-events:none;color:#493625}.error{position:absolute;inset:30px;display:grid;place-items:center;text-align:center;font-size:18px}
-@media(max-height:480px){.friend{top:76px;width:72px}.friend img{width:66px;height:66px}.change-mark{top:49px}.hint{top:36%;font-size:16px}.result{bottom:30px;padding:8px}.result h2{font-size:20px;margin-bottom:4px}}
-@media(prefers-reduced-motion:reduce){.hint,.friend{animation:none!important}}
-.game[data-paused=true] .hint,.game[data-paused=true] .friend{animation-play-state:paused}
+.throw-feedback{position:absolute;bottom:50px;left:30px;right:30px;text-align:center;pointer-events:none;font:700 18px/1.4 var(--font-ui);color:#493625;background:#fff8ede8;border-radius:16px;padding:10px 14px;z-index:3}.error{position:absolute;inset:30px;display:grid;place-items:center;text-align:center;font-size:18px}.hint{position:absolute;left:30px;right:30px;top:32%;text-align:center;pointer-events:none;font-size:18px;line-height:27px;color:#493625;animation:breathe 2.3s ease-in-out infinite}
+.hint span{display:inline-block;max-width:100%;overflow-wrap:anywhere;background:#fff8eae8;padding:7px 13px;border-radius:24px;box-shadow:0 2px 8px #785a2220}
+@keyframes breathe{50%{opacity:.66;transform:scale(.98)}}
+@media(prefers-reduced-motion:reduce){.hint{animation:none!important}}
+.game[data-paused=true] .hint{animation-play-state:paused}
 `;
 
-export function FriendAvatar({ src, name, reaction, onChange }) {
-  const input = useRef(null);
-  const words = { bliss: 'So good!', ouch: 'Ouch!', miss: 'Miss!' };
-  return <div className="friend" data-testid="friend-avatar" data-reaction={reaction || 'calm'}>
-    <button type="button" aria-label="Choose local friend photo" onClick={() => input.current?.click()}>
-      <img src={src} alt={`${name}'s avatar`} draggable="false" />
-      <span className="friend-name">{name}</span><span className="change-mark" aria-hidden="true">+</span>
-    </button>
-    {reaction && <span className="reaction" role="status">{words[reaction]}</span>}
-    <input ref={input} data-testid="avatar-input" hidden type="file" accept="image/*" onChange={onChange} />
-  </div>;
-}
-
 function App() {
-  const stage = useRef(null), api = useRef(null), localPhoto = useRef(null);
+  const stage = useRef(null), api = useRef(null);
   const [config, setConfig] = useState(DEFAULTS), [loaded, setLoaded] = useState(false);
-  const [view, setView] = useState({ state: 'ready', score: 0, outcome: null, paused: true });
-  const [photo, setPhoto] = useState(null), [photoStatus, setPhotoStatus] = useState(''), [error, setError] = useState('');
+  const [view, setView] = useState({ state: 'ready', score: 0, outcome: null, paused: true, showHint: true, attempts: 0, lastOutcome: null });
+  const [error, setError] = useState('');
   useEffect(() => {
     let gone = false;
     const controller = new AbortController();
@@ -74,26 +58,11 @@ function App() {
     catch (e) { setError(`3D rendering unavailable. ${e.message}`); }
     return () => { api.current?.dispose(); api.current = null; };
   }, [loaded, config]);
-  useEffect(() => () => { if (localPhoto.current) URL.revokeObjectURL(localPhoto.current); }, []);
-  const changePhoto = e => {
-    const file = e.target.files?.[0]; e.target.value = '';
-    if (!file) return;
-    if (!file.type.startsWith('image/') || file.size > 12 * 1024 * 1024) { setPhotoStatus('Choose an image under 12 MB'); return; }
-    const url = URL.createObjectURL(file), image = new Image();
-    image.onload = () => { if (localPhoto.current) URL.revokeObjectURL(localPhoto.current); localPhoto.current = url; setPhoto(url); setPhotoStatus('Local photo only · not uploaded'); };
-    image.onerror = () => { URL.revokeObjectURL(url); setPhotoStatus('That image could not be opened'); };
-    image.src = url;
-  };
-  return <main className="game" data-testid="game" data-state={view.state} data-score={view.score} data-outcome={view.outcome || ''} data-paused={view.paused}>
+  return <main className="game" data-testid="game" data-state={view.state} data-score={view.score} data-outcome={view.outcome || ''} data-attempts={view.attempts} data-last-outcome={view.lastOutcome || ''} data-paused={view.paused}>
     <style>{css}</style><div className="stage" ref={stage} data-testid="throw-surface" />
     <output className="score" aria-label="Score" data-testid="score">{view.score}</output>
-    <FriendAvatar src={photo || config.FRIEND_AVATAR} name={config.FRIEND_NAME} reaction={view.outcome} onChange={changePhoto} />
-    {photoStatus && <div className="photo-status" role="status">{photoStatus}</div>}
-    {view.state === 'ready' && <div className="hint" data-testid="hint"><span>{config.HINT}</span></div>}
-    {view.state === 'result' && <section className="result" data-testid="result" aria-label="Round result">
-      <h2>{view.outcome === 'bliss' ? 'Sweet relief!' : view.outcome === 'ouch' ? 'Ouch! Try the orange spot' : 'Miss! Try a longer swipe'}</h2>
-      <button type="button" data-testid="replay" onClick={() => api.current?.reset()}>{config.AGAIN}</button>
-    </section>}
+    {view.state === 'ready' && view.showHint && <div className="hint" data-testid="hint"><span>{config.HINT}</span></div>}
+    {view.outcome && <div className="throw-feedback" role="status" data-testid="throw-feedback">{view.outcome === 'bliss' ? 'Sweet relief!' : view.outcome === 'ouch' ? 'Try the orange spot' : 'Miss — try again'}</div>}
     {error && <div className="error" role="alert">{error}</div>}
   </main>;
 }
@@ -103,7 +72,7 @@ function createGame(stage, cfg, onView) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.1;
-  stage.appendChild(renderer.domElement); renderer.domElement.setAttribute('aria-label', 'Swipe upward to throw one needle');
+  stage.appendChild(renderer.domElement); renderer.domElement.setAttribute('aria-label', 'Tap to throw · drag to aim');
   const scene = new THREE.Scene(); scene.background = new THREE.Color('#e9dcc6'); scene.fog = new THREE.Fog('#e9dcc6', 7, 16);
   const camera = new THREE.PerspectiveCamera(40, 1, .05, 60);
   scene.add(new THREE.HemisphereLight('#dfefff', '#8a6a48', 1.1));
@@ -199,7 +168,7 @@ function createGame(stage, cfg, onView) {
     torso.position.y = Y + .07; segs.torso.add(torso);
     for (const s of [-1, 1]) part(SPH, skin, s * .215 * build, Y + .085, -.79, .075, .07, .085, segs.torso);
     limb(V(0, Y + .1, -.86), V(0, Y + .1, -.98), .06, .052, skin, segs.head);
-    // Only the back of the prone head is visible. The reaction window is FriendAvatar.
+    // Only the back of the prone head is visible. Throw feedback appears below the scene.
     part(SPH, skin, 0, Y + .11, -1.08, .08, .1, .11, segs.head); part(SPH, hair, 0, Y + .14, -1.102, .086, .09, .108, segs.head);
     for (const s of [-1, 1]) { const L = s < 0 ? 'L' : 'R', ua = segs['ua' + L], fa = segs['fa' + L], sh = rest['S' + L], el = rest['E' + L], hd = rest['W' + L]; limb(sh, el, .058, .045, skin, ua); part(SPH, skin, s * .29, Y + .075, -.9, .06, .05, .075, ua).rotation.y = s * .6; limb(el, hd, .044, .034, skin, fa); part(SPH, skin, hd.x - s * .04, Y + .035, -1.27, .06, .022, .045, fa).rotation.y = s * .5; part(SPH, skin, hd.x - s * .02, Y + .035, -1.22, .025, .017, .012, fa).rotation.y = s * 1.1; }
     const tw = new THREE.Mesh(bodyGeo(-.06, .62, t => build * curve([[0, .205], [.25, .22], [.6, .2], [1, .17]])(t), curve([[0, .1], [.22, .13], [.45, .1], [1, .075]]), () => .075, (x, t) => -.02 * gauss(x, .03) * curve([[0, .2], [.3, 1], [1, .6]])(t)), towel); tw.position.y = Y + .075; tw.scale.set(1.04, 1.04, 1); segs.pelvis.add(tw);
@@ -251,11 +220,11 @@ function createGame(stage, cfg, onView) {
   part(new THREE.CylinderGeometry(.0028, .001, .22, 10), steel, 0, 0, -.11, 1, 1, 1, needle).rotation.x = Math.PI / 2;
   shade(needle); needle.scale.setScalar(1.95); scene.add(needle);
   const START = V(0, 1.32, 1.75), pos = new THREE.Vector3(), prev = new THREE.Vector3(), vel = new THREE.Vector3(), aimOff = new THREE.Vector3();
-  let state = 'ready', score = 0, outcome = null, clock = 0, flyT = 0, endT = 0, squash = 0, drag = null, disposed = false;
+  let state = 'ready', score = 0, attempts = 0, lastOutcome = null, outcome = null, clock = 0, flyT = 0, endT = 0, squash = 0, drag = null, interacted = false, disposed = false;
   const embedded = window.parent !== window, reviewMode = embedded && new URLSearchParams(window.location.search).get('feedReview') === '1';
-  let active = !reviewMode, everActive = active, visible = !document.hidden, audio = null;
+  let active = typeof startupHostActive === 'boolean' ? startupHostActive : !reviewMode, visible = !document.hidden, audio = null;
   const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-  const notify = () => onView({ state, score, outcome, paused: !active || !visible });
+  const notify = () => onView({ state, score, outcome, paused: !active || !visible, showHint: !interacted, attempts, lastOutcome });
   function unlockAudio() { if (!active || !visible) return; try { audio ||= new (window.AudioContext || window.webkitAudioContext)(); if (audio.state !== 'running') audio.resume().catch(() => {}); } catch { audio = null; } }
   function tone(f0, f1, duration, volume = .08) { if (!active || !visible || !audio || audio.state !== 'running') return; const o = audio.createOscillator(), g = audio.createGain(), now = audio.currentTime; o.type = 'sine'; o.frequency.setValueAtTime(f0, now); o.frequency.exponentialRampToValueAtTime(f1, now + duration); g.gain.setValueAtTime(volume, now); g.gain.exponentialRampToValueAtTime(.001, now + duration); o.connect(g).connect(audio.destination); o.onended = () => { o.disconnect(); g.disconnect(); }; o.start(); o.stop(now + duration + .02); }
   const fx = [], dotG = new THREE.SphereGeometry(1, 8, 6);
@@ -263,42 +232,137 @@ function createGame(stage, cfg, onView) {
   function clearFx() { for (const f of fx) { scene.remove(f.m); f.m.material.dispose(); } fx.length = 0; }
   const ray = new THREE.Raycaster(), dirV = new THREE.Vector3(), tmpV = new THREE.Vector3();
   function stick(hit) {
-    const onBody = patMeshes.includes(hit.object); dirV.copy(vel).normalize(); pos.copy(hit.point).addScaledVector(dirV, onBody ? .035 : .02); needle.position.copy(pos); needle.lookAt(pos.clone().add(dirV)); state = 'stuck'; endT = 0;
-    if (onBody) { breathe.updateMatrixWorld(true); targetWorld.copy(breathe.localToWorld(targetLocal.clone())); const d = hit.point.distanceTo(targetWorld); score = d < TARGET_R ? Math.max(1, Math.round(100 * (1 - d / TARGET_R) ** .8)) : 0;
-      if (score > 0) { outcome = 'bliss'; breathe.attach(needle); squash = .001; burst(hit.point, 20, '#ffd36a'); tone(420, 720, .35); }
+    const onBody = patMeshes.includes(hit.object); dirV.copy(vel).normalize(); pos.copy(hit.point).addScaledVector(dirV, onBody ? .035 : .02); needle.position.copy(pos); needle.lookAt(pos.clone().sub(dirV)); state = 'stuck'; endT = 0;
+    if (onBody) { breathe.updateMatrixWorld(true); targetWorld.copy(breathe.localToWorld(targetLocal.clone())); const d = hit.point.distanceTo(targetWorld), earned = d < TARGET_R ? Math.max(1, Math.round(100 * (1 - d / TARGET_R) ** .8)) : 0;
+      if (earned > 0) { score += earned; outcome = 'bliss'; breathe.attach(needle); squash = .001; burst(hit.point, 20, '#ffd36a'); tone(420, 720, .35); }
       else { outcome = 'ouch'; let seg = hit.object; while (seg && !seg.userData.seg) seg = seg.parent; startRagdoll(hit.point); (seg || breathe).attach(needle); burst(hit.point, 8, '#ff5a4a'); tone(260, 90, .22); }
-    } else { score = 0; outcome = 'miss'; tone(140, 70, .15); burst(hit.point, 6, '#c8b090'); }
-    notify();
+    } else { outcome = 'miss'; tone(140, 70, .15); burst(hit.point, 6, '#c8b090'); }
+    lastOutcome = outcome; notify();
   }
-  function reset() { if (disposed) return; if (needle.parent !== scene) scene.attach(needle); clearFx(); breathe.position.set(0, 0, 0); breathe.scale.set(1, 1, 1); makePatient(); state = 'ready'; score = 0; outcome = null; squash = 0; flyT = 0; endT = 0; drag = null; aimOff.set(0, 0, 0); pos.copy(START); prev.copy(pos); notify(); render(0); }
+  function reset(keepProgress = false) { if (disposed) return; cancel(); if (needle.parent !== scene) scene.attach(needle); clearFx(); breathe.position.set(0, 0, 0); breathe.scale.set(1, 1, 1); makePatient(); state = 'ready'; if (!keepProgress) { score = 0; attempts = 0; lastOutcome = null; interacted = false; } outcome = null; squash = 0; clock = 0; flyT = 0; endT = 0; targetMat.opacity = .95; aimOff.set(0, 0, 0); pos.copy(START); prev.copy(pos); notify(); if (!keepProgress) { render(0); resumeLoop(); } }
+  // Smooth random aiming drift is shared by the visible needle, guide, and release.
+  const sway = {x:0,y:0,vx:0,vy:0,targetX:rnd(-.28,.28),targetY:rnd(-.14,.14),remaining:1};
+  function updateAimSway(dt) {
+    if (state !== 'ready') return;
+    sway.remaining -= dt;
+    if (sway.remaining <= 0) { sway.targetX=rnd(-.28,.28); sway.targetY=rnd(-.14,.14); sway.remaining=rnd(.7,1.3); }
+    const damping=Math.exp(-9*dt);
+    sway.vx=(sway.vx+(sway.targetX-sway.x)*28*dt)*damping;
+    sway.vy=(sway.vy+(sway.targetY-sway.y)*28*dt)*damping;
+    sway.x+=sway.vx*dt; sway.y+=sway.vy*dt;
+  }
+  // One launch model powers both the dotted guide and the actual throw.
+  function launchVelocity(out, dx, length, seconds) {
+    const power = THREE.MathUtils.clamp(2.7 + length * 5.2 + (length / seconds - 1.5) * .26, 2.75, 6.5);
+    return out.set(THREE.MathUtils.clamp(dx / Math.max(length, .08) * power * .58, -3.3, 3.3) + power*sway.x, (.35+sway.y)*power, -power);
+  }
+  function launchOrigin(out, dx, length) {
+    return out.copy(START).add(tmpV.set(THREE.MathUtils.clamp(dx * .15, -.12, .12) + sway.x*.18, THREE.MathUtils.clamp(length * .06, -.06, .06) + sway.y*.18, 0));
+  }
+  const TAP_THROW = {dx:0, length:.24, seconds:.24};
+  const guidePositions = new Float32Array(48 * 3), guideGeometry = new THREE.BufferGeometry();
+  guideGeometry.setAttribute('position', new THREE.BufferAttribute(guidePositions, 3));
+  guideGeometry.setDrawRange(0, 0);
+  const guideDotTexture = tex(32, 32, c => { c.clearRect(0,0,32,32); c.fillStyle='#fff'; c.beginPath(); c.arc(16,16,14,0,Math.PI*2); c.fill(); });
+  textures.push(guideDotTexture);
+  const guideMaterial = new THREE.PointsMaterial({map:guideDotTexture,color:'#fff6cc',size:.045,transparent:true,opacity:1,alphaTest:.1,depthWrite:false,depthTest:false});
+  const guideOutlineMaterial = new THREE.PointsMaterial({map:guideDotTexture,color:'#61371f',size:.068,transparent:true,opacity:.9,alphaTest:.1,depthWrite:false,depthTest:false});
+  const throwGuide = new THREE.Group(), guideOutline = new THREE.Points(guideGeometry, guideOutlineMaterial), guideDots = new THREE.Points(guideGeometry, guideMaterial);
+  guideOutline.frustumCulled = guideDots.frustumCulled = false; guideOutline.renderOrder = 3; guideDots.renderOrder = 4;
+  throwGuide.add(guideOutline, guideDots); throwGuide.visible = false; scene.add(throwGuide);
+  const guideOrigin = new THREE.Vector3(), guideVelocity = new THREE.Vector3(), guidePoint = new THREE.Vector3(), guidePrevious = new THREE.Vector3(), guideDirection = new THREE.Vector3(), guideRay = new THREE.Raycaster();
+  let lastGuideUpdate = -Infinity;
+  function updateThrowGuide() {
+    const H = Math.max(1, stage.clientHeight);
+    if (state !== 'ready' || !visible) { throwGuide.visible = false; return; }
+    const swipeX = drag ? (drag.currentX - drag.x) / H : 0, swipeLength = drag ? (drag.y - drag.currentY) / H : 0;
+    const aiming = drag && swipeLength >= .07 && Math.abs(swipeX) <= swipeLength * 1.6;
+    if (drag && !aiming && Math.hypot(swipeX, swipeLength) > .025) { throwGuide.visible = false; return; }
+    const dx = aiming ? swipeX : TAP_THROW.dx, length = aiming ? swipeLength : TAP_THROW.length;
+    const now = performance.now();
+    const seconds = aiming ? Math.max(.09, (now - drag.t) / 1000) : TAP_THROW.seconds;
+    if (now - lastGuideUpdate < 50 && throwGuide.visible) return;
+    lastGuideUpdate = now;
+    launchOrigin(guideOrigin, dx, length);
+    launchVelocity(guideVelocity, dx, length, seconds);
+    guidePrevious.copy(guideOrigin); scene.updateMatrixWorld(true);
+    let count = 0;
+    for (let index = 1; index <= 48; index++) {
+      const t = index * STEP * 4;
+      guidePoint.copy(guideOrigin).addScaledVector(guideVelocity, t);
+      // Exact positions of the flight's fixed-step, semi-implicit gravity integration.
+      guidePoint.y -= .5 * GRAV * t * (t + STEP);
+      guideDirection.subVectors(guidePoint, guidePrevious); const distance = guideDirection.length();
+      guideRay.set(guidePrevious, guideDirection.normalize()); guideRay.far = distance;
+      const hit = guideRay.intersectObjects(patMeshes.concat(colliders), false)[0];
+      if (hit) guidePoint.copy(hit.point);
+      guidePositions[count * 3] = guidePoint.x; guidePositions[count * 3 + 1] = guidePoint.y; guidePositions[count * 3 + 2] = guidePoint.z; count++;
+      if (hit || guidePoint.y < -.5 || guidePoint.z < -6) break;
+      guidePrevious.copy(guidePoint);
+    }
+    guideGeometry.setDrawRange(0, count); guideGeometry.attributes.position.needsUpdate = true; throwGuide.visible = count > 0;
+  }
   function throwNeedle(dx, length, seconds) {
-    // Length gives a forgiving mobile range; speed remains a real distance influence.
-    const power = THREE.MathUtils.clamp(2.7 + length * 4.8 + (length / seconds - 1.5) * .18, 2.75, 6.5);
-    vel.set(THREE.MathUtils.clamp(dx / Math.max(length, .08) * power * .48, -3, 3), .35 * power, -power);
-    pos.copy(START).add(aimOff); prev.copy(pos); state = 'fly'; flyT = 0; tone(540, 210, .16, .045); notify();
+    launchVelocity(vel, dx, length, seconds);
+    launchOrigin(pos, dx, length); prev.copy(pos); throwGuide.visible = false;
+    interacted = true; attempts++; state = 'fly'; flyT = 0; tone(540, 210, .16, .045); notify(); resumeLoop();
   }
   const cv = renderer.domElement;
-  function down(e) { if (!active || !visible || state !== 'ready' || drag) return; e.preventDefault(); cv.setPointerCapture?.(e.pointerId); drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now() }; unlockAudio(); }
-  function move(e) { if (!drag || e.pointerId !== drag.id) return; const H = stage.clientHeight; aimOff.set(THREE.MathUtils.clamp((e.clientX - drag.x) / H * .15, -.12, .12), THREE.MathUtils.clamp((drag.y - e.clientY) / H * .06, -.06, .06), 0); }
-  function cancel() { drag = null; aimOff.set(0, 0, 0); }
-  function upPointer(e) { if (!drag || e.pointerId !== drag.id) return; const d = drag; cancel(); if (!active || !visible || state !== 'ready') return; const H = stage.clientHeight, dx = (e.clientX - d.x) / H, length = (d.y - e.clientY) / H; if (length < .07 || Math.abs(dx) > length * 1.6) return; unlockAudio(); throwNeedle(dx, length, Math.max(.09, (performance.now() - d.t) / 1000)); }
-  cv.addEventListener('pointerdown', down, { passive: false }); cv.addEventListener('pointermove', move); cv.addEventListener('pointerup', upPointer); cv.addEventListener('pointercancel', cancel); cv.addEventListener('lostpointercapture', cancel);
+  function down(e) {
+    if (!active || !visible || state !== 'ready' || drag || (e.button !== undefined && e.button !== 0)) return;
+    e.preventDefault(); drag = { id: e.pointerId, x: e.clientX, y: e.clientY, currentX: e.clientX, currentY: e.clientY, t: performance.now() };
+    try { cv.setPointerCapture?.(e.pointerId); } catch (_) {}
+    unlockAudio();
+  }
+  function move(e) {
+    if (!drag || e.pointerId !== drag.id || !active || !visible) return;
+    const H = Math.max(1, stage.clientHeight); e.preventDefault();
+    drag.currentX = e.clientX; drag.currentY = e.clientY; lastGuideUpdate = -Infinity;
+    aimOff.set(THREE.MathUtils.clamp((e.clientX - drag.x) / H * .15, -.12, .12), THREE.MathUtils.clamp((drag.y - e.clientY) / H * .06, -.06, .06), 0);
+    if (!interacted && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) >= H * .012) { interacted = true; notify(); resumeLoop(); }
+    else if (!interacted) render(0);
+  }
+  function cancel(e) {
+    if (e?.pointerId !== undefined && drag && e.pointerId !== drag.id) return;
+    const id = drag?.id; drag = null; aimOff.set(0, 0, 0); throwGuide.visible = false; lastGuideUpdate = -Infinity;
+    try { if (id !== undefined && cv.hasPointerCapture?.(id)) cv.releasePointerCapture(id); } catch (_) {}
+  }
+  function upPointer(e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    const d = drag; cancel(e); if (!active || !visible || state !== 'ready') return;
+    const H = Math.max(1, stage.clientHeight), dx = (e.clientX - d.x) / H, length = (d.y - e.clientY) / H;
+    if (Math.hypot(dx, length) <= .025) { e.preventDefault(); unlockAudio(); throwNeedle(TAP_THROW.dx, TAP_THROW.length, TAP_THROW.seconds); return; }
+    if (length < .07 || Math.abs(dx) > length * 1.6) return;
+    e.preventDefault(); unlockAudio(); throwNeedle(dx, length, Math.max(.09, (performance.now() - d.t) / 1000));
+  }
+  // Keep a single owned swipe through an outside release even if a browser denies capture.
+  cv.addEventListener('pointerdown', down, { passive: false });
+  window.addEventListener('pointermove', move, { capture: true, passive: false });
+  window.addEventListener('pointerup', upPointer, { capture: true, passive: false });
+  window.addEventListener('pointercancel', cancel, true); cv.addEventListener('lostpointercapture', cancel);
   function resize() { const W = Math.max(1, stage.clientWidth), H = Math.max(1, stage.clientHeight); renderer.setSize(W, H, false); camera.aspect = W / H; camera.clearViewOffset(); const center = V(0, .75, .05), direction = V(0, 1.05, 1).normalize(); const distance = Math.max(4.3, 4.65 * Math.max(1, (H / W) / (598 / 390))); camera.position.copy(center).addScaledVector(direction, distance); camera.lookAt(center); camera.updateProjectionMatrix(); camera.updateMatrixWorld(); render(0); }
   function step(dt, idle = false) {
-    clock += dt;
+    clock += dt; updateAimSway(dt);
     if (!ragdoll) { const br = reducedMotion ? 0 : Math.sin(clock * 1.7); breathe.scale.y = 1 - squash * .12; breathe.position.y = br * .008 + BED_Y * squash * .12; } else if (!idle) stepRagdoll(dt);
     if (squash > 0 && !idle) squash = Math.min(1, squash + dt * 1.5); targetMat.opacity = reducedMotion ? .9 : .8 + Math.sin(clock * 5) * .15;
     if (idle) return;
     for (let i = fx.length - 1; i >= 0; i--) { const f = fx[i]; f.t += dt; f.v.y -= dt * 1.5; f.m.position.addScaledVector(f.v, dt); f.m.material.opacity = Math.max(0, 1 - f.t); if (f.t >= 1) { scene.remove(f.m); f.m.material.dispose(); fx.splice(i, 1); } }
-    if (state === 'fly') { flyT += dt; prev.copy(pos); vel.y -= GRAV * dt; pos.addScaledVector(vel, dt); dirV.subVectors(pos, prev); const len = dirV.length(); if (len > 0) { ray.set(prev, dirV.normalize()); ray.far = len + .001; scene.updateMatrixWorld(true); const hit = ray.intersectObjects(patMeshes.concat(colliders), false)[0]; if (hit) { stick(hit); return; } } if (pos.y < -.5 || flyT > 4 || Math.abs(pos.x) > 6 || pos.z < -6) { state = 'stuck'; score = 0; outcome = 'miss'; endT = 0; notify(); } }
-    else if (state === 'stuck') { endT += dt; if (endT > (outcome === 'ouch' ? 2.6 : outcome === 'bliss' ? 1.6 : 1.1)) { state = 'result'; notify(); } }
+    if (state === 'fly') { flyT += dt; prev.copy(pos); vel.y -= GRAV * dt; pos.addScaledVector(vel, dt); dirV.subVectors(pos, prev); const len = dirV.length(); if (len > 0) { ray.set(prev, dirV.normalize()); ray.far = len + .001; scene.updateMatrixWorld(true); const hit = ray.intersectObjects(patMeshes.concat(colliders), false)[0]; if (hit) { stick(hit); return; } } if (pos.y < -.5 || flyT > 4 || Math.abs(pos.x) > 6 || pos.z < -6) { state = 'stuck'; outcome = 'miss'; lastOutcome = outcome; endT = 0; notify(); } }
+    else if (state === 'stuck') { endT += dt; if (endT > (outcome === 'ouch' ? 2.6 : outcome === 'bliss' ? 1.6 : 1.1)) { reset(true); } }
   }
-  function render(alpha) { if (state === 'ready') { needle.position.copy(START).add(aimOff); if (!reducedMotion) needle.position.y += Math.sin(clock * 2.2) * .012; needle.lookAt(tmpV.copy(needle.position).add(V(aimOff.x * .6, -.32, -1))); } else if (state === 'fly') { needle.position.lerpVectors(prev, pos, alpha); needle.lookAt(tmpV.copy(needle.position).add(vel)); } if (ragdoll) poseRagdoll(); renderer.render(scene, camera); }
+  function render(alpha) { needle.visible = state !== 'ready'; if (state === 'ready') {
+    const H=Math.max(1,stage.clientHeight), dx=drag?(drag.currentX-drag.x)/H:0, length=drag?(drag.y-drag.currentY)/H:0;
+    const aiming=drag && length>=.07 && Math.abs(dx)<=length*1.6;
+    const x=aiming?dx:TAP_THROW.dx, l=aiming?length:TAP_THROW.length, seconds=aiming?Math.max(.09,(performance.now()-drag.t)/1000):TAP_THROW.seconds;
+    launchOrigin(needle.position,x,l); launchVelocity(dirV,x,l,seconds);
+    // The pointed end is modeled along local -Z, so it faces the shown trajectory.
+    needle.lookAt(tmpV.copy(needle.position).sub(dirV));
+  } else if (state === 'fly') { needle.position.lerpVectors(prev, pos, alpha); needle.lookAt(tmpV.copy(needle.position).sub(vel)); } if (ragdoll) poseRagdoll(); updateThrowGuide(); renderer.render(scene, camera); }
   let frame = 0, last = performance.now(), acc = 0;
-  function shouldRun() { return visible && (active || (!everActive && !reducedMotion)); }
+  function shouldRun() { return visible && active; }
   function loop(now) { frame = 0; if (disposed || !shouldRun()) return; const dt = Math.min(.05, (now - last) / 1000); last = now; acc += dt; while (acc >= STEP) { step(STEP, !active); acc -= STEP; } render(acc / STEP); frame = requestAnimationFrame(loop); }
   function resumeLoop() { cancelAnimationFrame(frame); frame = 0; last = performance.now(); acc = 0; if (shouldRun()) frame = requestAnimationFrame(loop); }
-  function lifecycle(next) { active = next; if (active) everActive = true; if (!active) { cancel(); audio?.suspend().catch(() => {}); } notify(); resumeLoop(); }
+  function lifecycle(next) { active = next; if (!active) { cancel(); audio?.suspend().catch(() => {}); } notify(); resumeLoop(); }
   function message(e) { if (e.source !== window.parent || e.origin !== window.location.origin || e.data?.type !== 'playable-active' || typeof e.data.active !== 'boolean') return; lifecycle(e.data.active); }
   function visibility() { visible = !document.hidden; if (!visible) { cancel(); audio?.suspend().catch(() => {}); } notify(); resumeLoop(); }
   window.addEventListener('message', message); document.addEventListener('visibilitychange', visibility); window.addEventListener('resize', resize);
@@ -306,7 +370,7 @@ function createGame(stage, cfg, onView) {
   reset(); resize(); renderer.compile(scene, camera); resumeLoop();
   // Read-only telemetry supports QA without exposing a fake hit/score shortcut.
   window.__acupuncture = { get state() { return state; }, get score() { return score; }, get outcome() { return outcome; }, get active() { return active; }, get targetScreen() { const q = breathe.localToWorld(targetLocal.clone()).project(camera); return { x: (q.x + 1) * stage.clientWidth / 2, y: (1 - q.y) * stage.clientHeight / 2 }; }, get startScreen() { const q = START.clone().project(camera); return { x: (q.x + 1) * stage.clientWidth / 2, y: (1 - q.y) * stage.clientHeight / 2 }; } };
-  return { reset, dispose() { disposed = true; cancelAnimationFrame(frame); observer?.disconnect(); window.removeEventListener('resize', resize); window.removeEventListener('message', message); document.removeEventListener('visibilitychange', visibility); cv.removeEventListener('pointerdown', down); cv.removeEventListener('pointermove', move); cv.removeEventListener('pointerup', upPointer); cv.removeEventListener('pointercancel', cancel); cv.removeEventListener('lostpointercapture', cancel); audio?.close().catch(() => {}); clearFx(); const gs = new Set(), ms = new Set(), ts = new Set(textures); scene.traverse(o => { if (o.isMesh) { gs.add(o.geometry); for (const m of Array.isArray(o.material) ? o.material : [o.material]) { ms.add(m); if (m.map) ts.add(m.map); } } }); gs.add(dotG); for (const g of gs) g.dispose(); for (const m of ms) m.dispose(); for (const t of ts) t.dispose(); renderer.dispose(); cv.remove(); delete window.__acupuncture; } };
+  return { reset, dispose() { disposed = true; cancel(); cancelAnimationFrame(frame); observer?.disconnect(); window.removeEventListener('resize', resize); window.removeEventListener('message', message); document.removeEventListener('visibilitychange', visibility); cv.removeEventListener('pointerdown', down); window.removeEventListener('pointermove', move, true); window.removeEventListener('pointerup', upPointer, true); window.removeEventListener('pointercancel', cancel, true); cv.removeEventListener('lostpointercapture', cancel); audio?.close().catch(() => {}); clearFx(); const gs = new Set(), ms = new Set(), ts = new Set(textures); scene.traverse(o => { if (o.isMesh) { gs.add(o.geometry); for (const m of Array.isArray(o.material) ? o.material : [o.material]) { ms.add(m); if (m.map) ts.add(m.map); } } }); gs.add(dotG); gs.add(guideGeometry); ms.add(guideMaterial); ms.add(guideOutlineMaterial); for (const g of gs) g.dispose(); for (const m of ms) m.dispose(); for (const t of ts) t.dispose(); renderer.dispose(); cv.remove(); delete window.__acupuncture; } };
 }
 
 createRoot(document.getElementById('root')).render(<App />);

@@ -1,0 +1,352 @@
+{
+  "tweaks": [],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Meglio insieme",
+      "value": "Meglio insieme",
+      "default": "Meglio insieme",
+      "max_length": 35
+    },
+    {
+      "id": "Q1_TEXT",
+      "label": "Il venerdì sera ideale insieme?",
+      "value": "Il venerdì sera ideale insieme?",
+      "default": "Il venerdì sera ideale insieme?",
+      "max_length": 150
+    },
+    {
+      "id": "Q1_O0",
+      "label": "A casa a cucinare",
+      "value": "A casa a cucinare",
+      "default": "A casa a cucinare",
+      "max_length": 34
+    },
+    {
+      "id": "Q1_O1",
+      "label": "A ballare",
+      "value": "A ballare",
+      "default": "A ballare",
+      "max_length": 30
+    },
+    {
+      "id": "Q1_O2",
+      "label": "Una lunga passeggiata",
+      "value": "Una lunga passeggiata",
+      "default": "Una lunga passeggiata",
+      "max_length": 31
+    },
+    {
+      "id": "Q1_O3",
+      "label": "Sorprendimi",
+      "value": "Sorprendimi",
+      "default": "Sorprendimi",
+      "max_length": 31
+    },
+    {
+      "id": "Q2_TEXT",
+      "label": "Cosa condividete a un appuntamento?",
+      "value": "Cosa condividete a un appuntamento?",
+      "default": "Cosa condividete a un appuntamento?",
+      "max_length": 150
+    },
+    {
+      "id": "Q2_O0",
+      "label": "Pizza",
+      "value": "Pizza",
+      "default": "Pizza",
+      "max_length": 30
+    },
+    {
+      "id": "Q2_O1",
+      "label": "Gelato",
+      "value": "Gelato",
+      "default": "Gelato",
+      "max_length": 30
+    },
+    {
+      "id": "Q2_O2",
+      "label": "Sushi",
+      "value": "Sushi",
+      "default": "Sushi",
+      "max_length": 30
+    },
+    {
+      "id": "Q2_O3",
+      "label": "Popcorn",
+      "value": "Popcorn",
+      "default": "Popcorn",
+      "max_length": 30
+    },
+    {
+      "id": "Q3_TEXT",
+      "label": "Un piccolo gesto d’amore è…",
+      "value": "Un piccolo gesto d’amore è…",
+      "default": "Un piccolo gesto d’amore è…",
+      "max_length": 150
+    },
+    {
+      "id": "Q3_O0",
+      "label": "Una mano quando serve",
+      "value": "Una mano quando serve",
+      "default": "Una mano quando serve",
+      "max_length": 34
+    },
+    {
+      "id": "Q3_O1",
+      "label": "Un biglietto scritto a mano",
+      "value": "Un biglietto scritto a mano",
+      "default": "Un biglietto scritto a mano",
+      "max_length": 38
+    },
+    {
+      "id": "Q3_O2",
+      "label": "Un lungo abbraccio",
+      "value": "Un lungo abbraccio",
+      "default": "Un lungo abbraccio",
+      "max_length": 30
+    },
+    {
+      "id": "Q3_O3",
+      "label": "Tempo insieme",
+      "value": "Tempo insieme",
+      "default": "Tempo insieme",
+      "max_length": 33
+    },
+    {
+      "id": "Q4_TEXT",
+      "label": "Scegli la prossima piccola avventura.",
+      "value": "Scegli la prossima piccola avventura.",
+      "default": "Scegli la prossima piccola avventura.",
+      "max_length": 150
+    },
+    {
+      "id": "Q4_O0",
+      "label": "Un viaggio in auto",
+      "value": "Un viaggio in auto",
+      "default": "Un viaggio in auto",
+      "max_length": 31
+    },
+    {
+      "id": "Q4_O1",
+      "label": "Un pomeriggio al mare",
+      "value": "Un pomeriggio al mare",
+      "default": "Un pomeriggio al mare",
+      "max_length": 37
+    },
+    {
+      "id": "Q4_O2",
+      "label": "Musei e caffè",
+      "value": "Musei e caffè",
+      "default": "Musei e caffè",
+      "max_length": 36
+    },
+    {
+      "id": "Q4_O3",
+      "label": "Una fuga in baita",
+      "value": "Una fuga in baita",
+      "default": "Una fuga in baita",
+      "max_length": 35
+    },
+    {
+      "id": "PROGRESS_LABEL",
+      "label": "Domanda",
+      "value": "Domanda",
+      "default": "Domanda",
+      "max_length": 80
+    },
+    {
+      "id": "Q1_LABEL",
+      "label": "Venerdì",
+      "value": "Venerdì",
+      "default": "Venerdì",
+      "max_length": 80
+    },
+    {
+      "id": "Q2_LABEL",
+      "label": "Spuntino",
+      "value": "Spuntino",
+      "default": "Spuntino",
+      "max_length": 80
+    },
+    {
+      "id": "Q3_LABEL",
+      "label": "Piccoli gesti",
+      "value": "Piccoli gesti",
+      "default": "Piccoli gesti",
+      "max_length": 80
+    },
+    {
+      "id": "Q4_LABEL",
+      "label": "Avventura",
+      "value": "Avventura",
+      "default": "Avventura",
+      "max_length": 80
+    },
+    {
+      "id": "RES_TITLE",
+      "label": "Il mio appuntamento ideale",
+      "value": "Il mio appuntamento ideale",
+      "default": "Il mio appuntamento ideale",
+      "max_length": 80
+    },
+    {
+      "id": "RESTART_BTN",
+      "label": "Riprova",
+      "value": "Riprova",
+      "default": "Riprova",
+      "max_length": 80
+    },
+    {
+      "id": "PROFILE0_TITLE",
+      "label": "Cuore romantico",
+      "value": "Cuore romantico",
+      "default": "Cuore romantico",
+      "max_length": 80
+    },
+    {
+      "id": "PROFILE0_DESC",
+      "label": "Buon cibo, ritmi lenti e tempo per due.",
+      "value": "Buon cibo, ritmi lenti e tempo per due.",
+      "default": "Buon cibo, ritmi lenti e tempo per due.",
+      "max_length": 80
+    },
+    {
+      "id": "PROFILE1_TITLE",
+      "label": "Spirito giocoso",
+      "value": "Spirito giocoso",
+      "default": "Spirito giocoso",
+      "max_length": 80
+    },
+    {
+      "id": "PROFILE1_DESC",
+      "label": "Un po’ di allegria rende speciale ogni appuntamento.",
+      "value": "Un po’ di allegria rende speciale ogni appuntamento.",
+      "default": "Un po’ di allegria rende speciale ogni appuntamento.",
+      "max_length": 80
+    },
+    {
+      "id": "PROFILE2_TITLE",
+      "label": "Animo curioso",
+      "value": "Animo curioso",
+      "default": "Animo curioso",
+      "max_length": 80
+    },
+    {
+      "id": "PROFILE2_DESC",
+      "label": "I piccoli momenti che contano sono la tua magia.",
+      "value": "I piccoli momenti che contano sono la tua magia.",
+      "default": "I piccoli momenti che contano sono la tua magia.",
+      "max_length": 80
+    },
+    {
+      "id": "PROFILE3_TITLE",
+      "label": "Scintilla spontanea",
+      "value": "Scintilla spontanea",
+      "default": "Scintilla spontanea",
+      "max_length": 80
+    },
+    {
+      "id": "PROFILE3_DESC",
+      "label": "Lascia spazio a una piccola avventura inattesa.",
+      "value": "Lascia spazio a una piccola avventura inattesa.",
+      "default": "Lascia spazio a una piccola avventura inattesa.",
+      "max_length": 80
+    },
+    {
+      "id": "SHARE_BTN",
+      "label": "Condividi risultato",
+      "value": "Condividi risultato",
+      "default": "Condividi risultato",
+      "max_length": 80
+    },
+    {
+      "id": "SHARE_INVITE",
+      "label": "Tocca a te: cosa sceglieresti?",
+      "value": "Tocca a te: cosa sceglieresti?",
+      "default": "Tocca a te: cosa sceglieresti?",
+      "max_length": 80
+    },
+    {
+      "id": "SHARE_FALLBACK",
+      "label": "Copia il risultato o salva una cartolina da inviare.",
+      "value": "Copia il risultato o salva una cartolina da inviare.",
+      "default": "Copia il risultato o salva una cartolina da inviare.",
+      "max_length": 80
+    },
+    {
+      "id": "SHARE_SUCCESS",
+      "label": "Condiviso. Ora tocca alla tua dolce metà.",
+      "value": "Condiviso. Ora tocca alla tua dolce metà.",
+      "default": "Condiviso. Ora tocca alla tua dolce metà.",
+      "max_length": 80
+    },
+    {
+      "id": "COPY_BTN",
+      "label": "Copia risultato",
+      "value": "Copia risultato",
+      "default": "Copia risultato",
+      "max_length": 80
+    },
+    {
+      "id": "COPY_SUCCESS",
+      "label": "Copiato. Invialo alla tua dolce metà.",
+      "value": "Copiato. Invialo alla tua dolce metà.",
+      "default": "Copiato. Invialo alla tua dolce metà.",
+      "max_length": 80
+    },
+    {
+      "id": "COPY_MANUAL",
+      "label": "Seleziona e copia il risultato qui sotto.",
+      "value": "Seleziona e copia il risultato qui sotto.",
+      "default": "Seleziona e copia il risultato qui sotto.",
+      "max_length": 80
+    },
+    {
+      "id": "SAVE_BTN",
+      "label": "Salva cartolina",
+      "value": "Salva cartolina",
+      "default": "Salva cartolina",
+      "max_length": 80
+    },
+    {
+      "id": "SAVE_BUSY",
+      "label": "Salvataggio…",
+      "value": "Salvataggio…",
+      "default": "Salvataggio…",
+      "max_length": 80
+    },
+    {
+      "id": "SAVE_SUCCESS",
+      "label": "Cartolina salvata nelle foto.",
+      "value": "Cartolina salvata nelle foto.",
+      "default": "Cartolina salvata nelle foto.",
+      "max_length": 80
+    },
+    {
+      "id": "SAVE_FAILURE",
+      "label": "Salvataggio non riuscito. Puoi comunque copiare il risultato.",
+      "value": "Salvataggio non riuscito. Puoi comunque copiare il risultato.",
+      "default": "Salvataggio non riuscito. Puoi comunque copiare il risultato.",
+      "max_length": 80
+    },
+    {
+      "id": "SAVE_DOWNLOAD",
+      "label": "Download della cartolina avviato.",
+      "value": "Download della cartolina avviato.",
+      "default": "Download della cartolina avviato.",
+      "max_length": 80
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 3,
+    "title": "Meglio insieme",
+    "name": "Better Together"
+  }
+}

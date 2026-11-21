@@ -1,0 +1,42 @@
+{
+  "config_version": "2.0",
+  "playable": {
+    "name": "mic_karate_shout",
+    "title": "Karate a voce",
+    "content_locale": "it",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "min_capability_level": 2,
+    "full_capability_level": 2
+  },
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Istruzioni",
+      "value": "Grida al momento giusto",
+      "default": "Grida al momento giusto",
+      "max_length": 100
+    }
+  ],
+  "tweaks": [],
+  "images": [
+    {
+      "id": "KARATE_CHOP",
+      "label": "Colpo di karate",
+      "path": "./assets/karate-chop.webp",
+      "replaceable": true
+    },
+    {
+      "id": "KARATE_READY",
+      "label": "Posa pronta del karate",
+      "path": "./assets/karate-ready.webp",
+      "replaceable": true
+    },
+    {
+      "id": "DOJO_INTERIOR_V1",
+      "label": "Sfondo del dojo",
+      "path": "./assets/dojo-interior-v1.webp",
+      "replaceable": true
+    }
+  ]
+}

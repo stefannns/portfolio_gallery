@@ -146,6 +146,15 @@
       "width": 0,
       "height": 0,
       "ok": true
+    },
+    {
+      "path": "assets/fonts/Silkscreen-Regular.ttf",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled OFL Silkscreen pixel font for readable game UI",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
   ]
 }

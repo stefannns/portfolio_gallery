@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "dynapuff",
+  "style_anchor": "Bright rounded cartoon cars with thick navy outlines, on dark slate asphalt with restrained drawn texture and a clear light-gray concrete pavement border. White parking lines and arrows; bright mint target.",
+  "assets": [
+    {
+      "path": "assets/bg_cartoon_parking.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Cartoon Parking Lot artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "2:3",
+      "size_tier": "full",
+      "recommended_size": "800x1200",
+      "width": 800,
+      "height": 1200,
+      "ok": true
+    },
+    {
+      "path": "assets/car_parked.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Parked Car artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "50:89",
+      "size_tier": "medium",
+      "recommended_size": "1600x2848",
+      "width": 1600,
+      "height": 2848,
+      "ok": true
+    },
+    {
+      "path": "assets/car_player.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Player Car artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "50:89",
+      "size_tier": "medium",
+      "recommended_size": "1600x2848",
+      "width": 1600,
+      "height": 2848,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v3/parked.svg",
+      "produced_by": "imagegen",
+      "produced_prompt": "Original cartoon overhead parking artwork",
+      "description": "parked",
+      "aspect_ratio": "",
+      "size_tier": "medium",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v3/player.svg",
+      "produced_by": "imagegen",
+      "produced_prompt": "Original cartoon overhead parking artwork",
+      "description": "player",
+      "aspect_ratio": "",
+      "size_tier": "medium",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/art-v3/parking-lot.png",
+      "produced_by": "imagegen",
+      "produced_prompt": "Original cartoon overhead parking artwork",
+      "description": "parking-lot",
+      "aspect_ratio": "",
+      "size_tier": "medium",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/cartoon-v4/player-coral.webp",
+      "produced_by": "imagegen",
+      "produced_prompt": "Create one isolated overhead car sprite for a bright, rounded cartoon parking game. Use the attached picture only as a STYLE reference: chunky rounded shapes, very thick smooth dark navy ink outlines, cheerful saturated pastel colors, simple two-tone cel shading and a few broad white glints. The sprite must be a TRUE 90-degree bird's-eye view looking straight down, with the front of the car pointing directly toward the TOP of the image. No isometric view, no perspective, no visible front grille face. Entire vehicle including all four side tires visible. Height approximately twice the width, centered with a generous transparent margin. Rounded black tires, pale blue front windshield, darker rear window, clearly readable headlights at the TOP and tiny red tail lights at the BOTTOM. No lettering, no brand, no face, no labels, no scene, no floor or cast shadow outside the body. Fully transparent background. Polished mobile game art that stays clear at a 35 by 65 pixel display size. A plump coral-red compact hatchback, slightly wide rounded roof, creamy pink highlights, small square sunroof, cute chunky bumpers.",
+      "description": "player coral overhead transparent car sprite",
+      "aspect_ratio": "208:440",
+      "size_tier": "small",
+      "recommended_size": "208x440",
+      "width": 208,
+      "height": 440,
+      "ok": true
+    },
+    {
+      "path": "assets/cartoon-v4/car-lavender.webp",
+      "produced_by": "imagegen",
+      "produced_prompt": "Create one isolated overhead car sprite for a bright, rounded cartoon parking game. Use the attached picture only as a STYLE reference: chunky rounded shapes, very thick smooth dark navy ink outlines, cheerful saturated pastel colors, simple two-tone cel shading and a few broad white glints. The sprite must be a TRUE 90-degree bird's-eye view looking straight down, with the front of the car pointing directly toward the TOP of the image. No isometric view, no perspective, no visible front grille face. Entire vehicle including all four side tires visible. Height approximately twice the width, centered with a generous transparent margin. Rounded black tires, pale blue front windshield, darker rear window, clearly readable headlights at the TOP and tiny red tail lights at the BOTTOM. No lettering, no brand, no face, no labels, no scene, no floor or cast shadow outside the body. Fully transparent background. Polished mobile game art that stays clear at a 35 by 65 pixel display size. A lavender-purple rounded compact coupe with a pill-shaped roof and white roof highlight, slightly shorter than a normal sedan.",
+      "description": "car lavender overhead transparent car sprite",
+      "aspect_ratio": "215:440",
+      "size_tier": "small",
+      "recommended_size": "215x440",
+      "width": 215,
+      "height": 440,
+      "ok": true
+    },
+    {
+      "path": "assets/cartoon-v4/van-sky.webp",
+      "produced_by": "imagegen",
+      "produced_prompt": "Create one isolated overhead car sprite for a bright, rounded cartoon parking game. Use the attached picture only as a STYLE reference: chunky rounded shapes, very thick smooth dark navy ink outlines, cheerful saturated pastel colors, simple two-tone cel shading and a few broad white glints. The sprite must be a TRUE 90-degree bird's-eye view looking straight down, with the front of the car pointing directly toward the TOP of the image. No isometric view, no perspective, no visible front grille face. Entire vehicle including all four side tires visible. Height approximately twice the width, centered with a generous transparent margin. Rounded black tires, pale blue front windshield, darker rear window, clearly readable headlights at the TOP and tiny red tail lights at the BOTTOM. No lettering, no brand, no face, no labels, no scene, no floor or cast shadow outside the body. Fully transparent background. Polished mobile game art that stays clear at a 35 by 65 pixel display size. A cheerful sky-blue mini van, round corners but a recognizable longer boxy body, broad rectangular pale roof, two blue roof windows.",
+      "description": "van sky overhead transparent car sprite",
+      "aspect_ratio": "216:440",
+      "size_tier": "small",
+      "recommended_size": "216x440",
+      "width": 216,
+      "height": 440,
+      "ok": true
+    },
+    {
+      "path": "assets/cartoon-v4/suv-yellow.webp",
+      "produced_by": "imagegen",
+      "produced_prompt": "Create one isolated overhead car sprite for a bright, rounded cartoon parking game. Use the attached picture only as a STYLE reference: chunky rounded shapes, very thick smooth dark navy ink outlines, cheerful saturated pastel colors, simple two-tone cel shading and a few broad white glints. The sprite must be a TRUE 90-degree bird's-eye view looking straight down, with the front of the car pointing directly toward the TOP of the image. No isometric view, no perspective, no visible front grille face. Entire vehicle including all four side tires visible. Height approximately twice the width, centered with a generous transparent margin. Rounded black tires, pale blue front windshield, darker rear window, clearly readable headlights at the TOP and tiny red tail lights at the BOTTOM. No lettering, no brand, no face, no labels, no scene, no floor or cast shadow outside the body. Fully transparent background. Polished mobile game art that stays clear at a 35 by 65 pixel display size. A sunshine-yellow chunky small SUV, rounded-square roof, two subtle dark navy roof rails, slightly broad bumpers and pale cream body highlights.",
+      "description": "suv yellow overhead transparent car sprite",
+      "aspect_ratio": "210:440",
+      "size_tier": "small",
+      "recommended_size": "210x440",
+      "width": 210,
+      "height": 440,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Existing local bundled DynaPuff font",
+      "description": "Rounded display typeface",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Regular for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Bold for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/cartoon-v4/asphalt-lot.svg",
+      "produced_by": "code_generated",
+      "produced_prompt": "Code-native flat cartoon parking surface: charcoal slate asphalt with sparse hand-drawn flecks and subtle broad repairs; clear continuous gray concrete pavement and raised curb border with joint lines. Keep the central aisle and existing bays clear. No shrubs, trees or cropped green decoration.",
+      "description": "Full parking-lot background. SVG is rasterized and cached once at runtime.",
+      "aspect_ratio": "2:3",
+      "size_tier": "full",
+      "recommended_size": "800x1200",
+      "width": 800,
+      "height": 1200,
+      "ok": true
+    }
+  ],
+  "content_locale": "it"
+}

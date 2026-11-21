@@ -1,0 +1,41 @@
+{
+  "config_version": "2.0",
+  "playable": {
+    "name": "mic_sugar_animals",
+    "title": "Animaletti di zucchero",
+    "content_locale": "it",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "min_capability_level": 2,
+    "full_capability_level": 2
+  },
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Istruzioni",
+      "value": "Soffia e fermati al contorno",
+      "default": "Soffia e fermati al contorno",
+      "max_length": 100
+    }
+  ],
+  "tweaks": [
+    {
+      "id": "MIC_SENSITIVITY",
+      "kind": "number",
+      "label": "Sensibilità del microfono",
+      "value": 18,
+      "default": 18,
+      "min": 12,
+      "max": 26,
+      "step": 1
+    }
+  ],
+  "images": [
+    {
+      "id": "PAPER_BACKDROP",
+      "label": "Sfondo di carta stampata",
+      "path": "./assets/paper-print-v1.svg",
+      "replaceable": true
+    }
+  ]
+}

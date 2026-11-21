@@ -1,0 +1,79 @@
+{
+  "tweaks": [
+    {
+      "id": "GRAVITY",
+      "kind": "number",
+      "label": "Gravità",
+      "value": 0.0015,
+      "default": 0.0015,
+      "min": 0.0005,
+      "max": 0.005,
+      "step": 0.0001
+    },
+    {
+      "id": "PARTICLE_COUNT",
+      "kind": "number",
+      "label": "Particelle dell’esplosione",
+      "value": 90,
+      "default": 90,
+      "min": 40,
+      "max": 180,
+      "step": 5
+    },
+    {
+      "id": "LAUNCH_SPEED",
+      "kind": "number",
+      "label": "Velocità di lancio",
+      "value": 1.2,
+      "default": 1.2,
+      "min": 0.5,
+      "max": 2.5,
+      "step": 0.1
+    },
+    {
+      "id": "EXPLOSION_FORCE",
+      "kind": "number",
+      "label": "Forza dell’esplosione",
+      "value": 0.4,
+      "default": 0.4,
+      "min": 0.1,
+      "max": 1,
+      "step": 0.05
+    }
+  ],
+  "texts": [
+    {
+      "id": "TITLE",
+      "label": "Collina stellata",
+      "value": "Collina stellata",
+      "default": "Collina stellata",
+      "max_length": 30
+    },
+    {
+      "id": "DESC",
+      "label": "Scorri verso l’alto e rilascia per lanciare un fuoco d’artificio nel cielo notturno.",
+      "value": "Scorri verso l’alto e rilascia per lanciare un fuoco d’artificio nel cielo notturno.",
+      "default": "Scorri verso l’alto e rilascia per lanciare un fuoco d’artificio nel cielo notturno.",
+      "max_length": 150
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_IMAGE",
+      "label": "Cielo notturno stellato fotografico",
+      "path": "./assets/art-v4/starry-night-sky-v2.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99279183230167264",
+    "version_id": "99279183230149284",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1,
+    "title": "Collina stellata"
+  }
+}

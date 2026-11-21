@@ -103,6 +103,9 @@
     'friends_crystal_fortune',
     'friends_personality_quiz',
     'meme_klondike',
+    'acupuncture_friends_r2',
+    'neon_ufo_runner_r1',
+    'orbit_switch_r1',
   ]);
   const membership = new Set(batch1TaskIds);
   const batch2Membership = new Set(batch2TaskIds);

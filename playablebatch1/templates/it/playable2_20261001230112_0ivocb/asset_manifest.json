@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "Fairy-tale woodland background and two-green wheel, original transparent crests. Results use code-native ivory/sage paper, subtle print dots, compact overview and permanently visible four-stat grid; details/story scroll separately from the two44px actions. Saved PNG uses the same native paper palette and margin leaf accents, without a certificate bitmap.",
+  "assets": [
+    {
+      "path": "assets/destiny_clean.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing Main Background artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "130:231",
+      "size_tier": "medium",
+      "recommended_size": "390x693",
+      "width": 390,
+      "height": 693,
+      "ok": true
+    },
+    {
+      "path": "assets/destiny_emblem.svg",
+      "produced_by": "code_generated",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Monochrome black/white compass emblem on pure green; configurable legacy image slot.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "88x88",
+      "width": 88,
+      "height": 88,
+      "ok": true
+    },
+    {
+      "path": "assets/destiny_title.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing destiny title artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "3:1",
+      "size_tier": "medium",
+      "recommended_size": "300x100",
+      "width": 300,
+      "height": 100,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Bundled Bangers Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/image_1.png",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing image 1 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "59:128",
+      "size_tier": "full",
+      "recommended_size": "590x1280",
+      "width": 590,
+      "height": 1280,
+      "ok": true
+    },
+    {
+      "path": "assets/title.png",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Original creation prompt unavailable; preserved from the supplied game.",
+      "description": "Existing title artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1598:2309",
+      "size_tier": "medium",
+      "recommended_size": "1598x2309",
+      "width": 1598,
+      "height": 2309,
+      "ok": true
+    },
+    {
+      "path": "assets/blue-paper-dots-v1.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Adapted from the approved game 28 visual system.",
+      "description": "Blue version of the approved game 28 dotted paper texture.",
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Adapted from the approved game 28 visual system.",
+      "description": "Bundled DynaPuff SemiBold, matching game 28.",
+      "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Regular for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Bold for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/blue-paper-dots-v2.svg",
+      "produced_by": "code",
+      "type": "image",
+      "width": 400,
+      "height": 650,
+      "description": "Existing vector paper pattern recolored for the muted blue and warm wheel palette",
+      "ok": true
+    },
+    {
+      "path": "assets/emerald-dots.svg",
+      "type": "image",
+      "produced_by": "code_generated",
+      "description": "Flat pure green background, no texture or gradients.",
+      "width": 390,
+      "height": 598,
+      "ok": true
+    },
+    {
+      "id": "BG_MAIN",
+      "path": "assets/fantasy-v1/forest-paper.webp",
+      "type": "image",
+      "produced_by": "imagegen",
+      "description": "Quiet mint fairy-tale woodland edges with an open paper center; full-host center-cover background.",
+      "width": 768,
+      "height": 1152,
+      "aspect_ratio": "2:3",
+      "ok": true
+    },
+    {
+      "id": "CREST_SHIELD",
+      "path": "assets/fantasy-v1/crest-shield.webp",
+      "type": "image",
+      "produced_by": "imagegen",
+      "description": "Fine textured emerald, mint and cream shield crest; transparent sprite cropped from the approved eight-emblem atlas. Main result emblem only.",
+      "width": 256,
+      "height": 256,
+      "aspect_ratio": "1:1",
+      "ok": true
+    },
+    {
+      "id": "CREST_AXE",
+      "path": "assets/fantasy-v1/crest-axe.webp",
+      "type": "image",
+      "produced_by": "imagegen",
+      "description": "Fine textured emerald, mint and cream axe crest; transparent sprite cropped from the approved eight-emblem atlas. Main result emblem only.",
+      "width": 256,
+      "height": 256,
+      "aspect_ratio": "1:1",
+      "ok": true
+    },
+    {
+      "id": "CREST_WAND",
+      "path": "assets/fantasy-v1/crest-wand.webp",
+      "type": "image",
+      "produced_by": "imagegen",
+      "description": "Fine textured emerald, mint and cream wand crest; transparent sprite cropped from the approved eight-emblem atlas. Main result emblem only.",
+      "width": 256,
+      "height": 256,
+      "aspect_ratio": "1:1",
+      "ok": true
+    },
+    {
+      "id": "CREST_MASK",
+      "path": "assets/fantasy-v1/crest-mask.webp",
+      "type": "image",
+      "produced_by": "imagegen",
+      "description": "Fine textured emerald, mint and cream mask crest; transparent sprite cropped from the approved eight-emblem atlas. Main result emblem only.",
+      "width": 256,
+      "height": 256,
+      "aspect_ratio": "1:1",
+      "ok": true
+    },
+    {
+      "id": "CREST_BOW",
+      "path": "assets/fantasy-v1/crest-bow.webp",
+      "type": "image",
+      "produced_by": "imagegen",
+      "description": "Fine textured emerald, mint and cream bow crest; transparent sprite cropped from the approved eight-emblem atlas. Main result emblem only.",
+      "width": 256,
+      "height": 256,
+      "aspect_ratio": "1:1",
+      "ok": true
+    },
+    {
+      "id": "CREST_EYE",
+      "path": "assets/fantasy-v1/crest-eye.webp",
+      "type": "image",
+      "produced_by": "imagegen",
+      "description": "Fine textured emerald, mint and cream eye crest; transparent sprite cropped from the approved eight-emblem atlas. Main result emblem only.",
+      "width": 256,
+      "height": 256,
+      "aspect_ratio": "1:1",
+      "ok": true
+    },
+    {
+      "id": "CREST_COMPASS",
+      "path": "assets/fantasy-v1/crest-compass.webp",
+      "type": "image",
+      "produced_by": "imagegen",
+      "description": "Fine textured emerald, mint and cream compass crest; transparent sprite cropped from the approved eight-emblem atlas. Main result emblem only.",
+      "width": 256,
+      "height": 256,
+      "aspect_ratio": "1:1",
+      "ok": true
+    },
+    {
+      "id": "CREST_CROWN",
+      "path": "assets/fantasy-v1/crest-crown.webp",
+      "type": "image",
+      "produced_by": "imagegen",
+      "description": "Fine textured emerald, mint and cream crown crest; transparent sprite cropped from the approved eight-emblem atlas. Main result emblem only.",
+      "width": 256,
+      "height": 256,
+      "aspect_ratio": "1:1",
+      "ok": true
+    }
+  ],
+  "content_locale": "it"
+}

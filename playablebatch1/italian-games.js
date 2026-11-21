@@ -226,5 +226,221 @@ window.PlayableItalianGames = {
     "name": "Prendi la parrucca",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/eh_catch_the_hair_20261020/italian-fixed/game.it.html",
     "revision": "7d58387d91c0"
+  },
+  "tilt_fortune_sticks": {
+    "number": 103,
+    "name": "Bastoncini della fortuna",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/tilt_fortune_sticks/italian-fixed/game.it.html",
+    "revision": "4db671361ec1"
+  },
+  "tilt_christmas_cabin": {
+    "number": 104,
+    "name": "Baita di Natale",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/tilt_christmas_cabin/italian-fixed/game.it.html",
+    "revision": "596ca5cc9182"
+  },
+  "camera_meme_face": {
+    "number": 105,
+    "name": "Sfida delle espressioni",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/camera_meme_face/italian-fixed/game.it.html",
+    "revision": "c97442d0a7db"
+  },
+  "camera_photo_puzzle": {
+    "number": 106,
+    "name": "Puzzle fotografico",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/camera_photo_puzzle/italian-fixed/game.it.html",
+    "revision": "203fb025bdaa"
+  },
+  "camera_doodle_booth": {
+    "number": 107,
+    "name": "Foto e scarabocchi",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/camera_doodle_booth/italian-fixed/game.it.html",
+    "revision": "0bc88027625a"
+  },
+  "mic_voice_flight": {
+    "number": 108,
+    "name": "Volo con la voce",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/mic_voice_flight/italian-fixed/game.it.html",
+    "revision": "aa4c91180367"
+  },
+  "mic_karate_shout": {
+    "number": 109,
+    "name": "Karate a voce",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/mic_karate_shout/italian-fixed/game.it.html",
+    "revision": "7bae74a3fc3c"
+  },
+  "mic_wake_puppy": {
+    "number": 110,
+    "name": "Sveglia il cucciolo",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/mic_wake_puppy/italian-fixed/game.it.html",
+    "revision": "5f2c06aeac45"
+  },
+  "mic_sugar_animals": {
+    "number": 111,
+    "name": "Animaletti di zucchero",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/mic_sugar_animals/italian-fixed/game.it.html",
+    "revision": "ee0992b87b72"
+  },
+  "mic_pixel_dino": {
+    "number": 112,
+    "name": "Dinosauro a voce",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/mic_pixel_dino/italian-fixed/game.it.html",
+    "revision": "504e1e299198"
+  },
+  "friends_avatar_merge": {
+    "number": 113,
+    "name": "Unisci gli amici",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_avatar_merge/italian-fixed/game.it.html",
+    "revision": "752ccc0dc90a"
+  },
+  "friends_bubble_shooter": {
+    "number": 114,
+    "name": "Bolle degli amici",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_bubble_shooter/italian-fixed/game.it.html",
+    "revision": "bb2222d336e3"
+  },
+  "playable2_20260927021659_jfkvov": {
+    "number": 11,
+    "name": "Meglio insieme",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/playable2_20260927021659_jfkvov/italian-fixed/game.it.html",
+    "revision": "c5dbe5a8cb57"
+  },
+  "playable2_20261001230001_ag49cj": {
+    "number": 50,
+    "name": "Collina stellata",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/playable2_20261001230001_ag49cj/italian-fixed/game.it.html",
+    "revision": "dbfc1eecf248"
+  },
+  "playable2_20261001230112_0ivocb": {
+    "number": 52,
+    "name": "Il tuo destino fantastico",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/playable2_20261001230112_0ivocb/italian-fixed/game.it.html",
+    "revision": "d09308941116"
+  },
+  "playable2_20261013020814_b973b1": {
+    "number": 60,
+    "name": "Parcheggio perfetto",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/playable2_20261013020814_b973b1/italian-fixed/game.it.html",
+    "revision": "5a4b66c122f4"
+  },
+  "playable2_20261106233254_un2vyl": {
+    "number": 92,
+    "name": "Discesa alpina",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/playable2_20261106233254_un2vyl/italian-fixed/game.it.html",
+    "revision": "f53bba2885ea"
+  },
+  "strand_hair_salon": {
+    "number": 97,
+    "name": "Salone dei capelli",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/strand_hair_salon/italian-fixed/game.it.html",
+    "revision": "384c2d17e7c4"
+  },
+  "multi_sport_reflex": {
+    "number": 98,
+    "name": "Riflessi multisport",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/multi_sport_reflex/italian-fixed/game.it.html",
+    "revision": "234f812682c0"
+  },
+  "neon_dash": {
+    "number": 99,
+    "name": "Scatto neon",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/neon_dash/italian-fixed/game.it.html",
+    "revision": "db6072f2d797"
+  },
+  "tilt_etch_sketch": {
+    "number": 100,
+    "name": "Lavagna magica",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/tilt_etch_sketch/italian-fixed/game.it.html",
+    "revision": "0bcccac44bc7"
+  },
+  "tilt_magic_eight": {
+    "number": 101,
+    "name": "La sfera delle risposte",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/tilt_magic_eight/italian-fixed/game.it.html",
+    "revision": "455b625ef5da"
+  },
+  "tilt_cat_jump": {
+    "number": 102,
+    "name": "Il gatto salterino",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/tilt_cat_jump/italian-fixed/game.it.html",
+    "revision": "b7919c2eb65e"
+  },
+  "friends_billiards": {
+    "number": 115,
+    "name": "Biliardo tra amici",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_billiards/italian-fixed/game.it.html",
+    "revision": "9125fe095305"
+  },
+  "friends_bowling": {
+    "number": 116,
+    "name": "Bowling tra amici",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_bowling/italian-fixed/game.it.html",
+    "revision": "eb54d605cb7a"
+  },
+  "friends_whack_a_mole": {
+    "number": 117,
+    "name": "Acchiappa gli amici",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_whack_a_mole/italian-fixed/game.it.html",
+    "revision": "bdd7888d064c"
+  },
+  "friends_connect_four": {
+    "number": 118,
+    "name": "Forza quattro tra amici",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_connect_four/italian-fixed/game.it.html",
+    "revision": "17e091b62740"
+  },
+  "friends_tic_tac_toe": {
+    "number": 119,
+    "name": "Tris tra amici",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_tic_tac_toe/italian-fixed/game.it.html",
+    "revision": "4d559013111d"
+  },
+  "friends_award_scratch": {
+    "number": 120,
+    "name": "Premi tra amici",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_award_scratch/italian-fixed/game.it.html",
+    "revision": "54931660ead6"
+  },
+  "friends_tilt_pick": {
+    "number": 121,
+    "name": "Scegli inclinando",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_tilt_pick/italian-fixed/game.it.html",
+    "revision": "ecaca18b2732"
+  },
+  "friends_crystal_fortune": {
+    "number": 122,
+    "name": "La sfera degli amici",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_crystal_fortune/italian-fixed/game.it.html",
+    "revision": "1289ebb12092"
+  },
+  "friends_personality_quiz": {
+    "number": 123,
+    "name": "Che tipo è il tuo amico?",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_personality_quiz/italian-fixed/game.it.html",
+    "revision": "0f8731ecd9d3"
+  },
+  "acupuncture_friends_r2": {
+    "number": 125,
+    "name": "Centra il punto",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/acupuncture_friends_r2/italian-fixed/game.it.html",
+    "revision": "23e129ad04e0"
+  },
+  "meme_klondike": {
+    "number": 124,
+    "name": "Solitario dei meme",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/meme_klondike/italian-fixed/game.it.html",
+    "revision": "89a1ec68cac8"
+  },
+  "neon_ufo_runner_r1": {
+    "number": 126,
+    "name": "UFO al neon",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/neon_ufo_runner_r1/italian-fixed/game.it.html",
+    "revision": "b786c16712da"
+  },
+  "orbit_switch_r1": {
+    "number": 127,
+    "name": "Cambio di orbita",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/orbit_switch_r1/italian-fixed/game.it.html",
+    "revision": "4678ca5aa10c"
   }
 };

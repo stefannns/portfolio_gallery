@@ -1,1 +1,14 @@
-{"schema_version":1,"font_pack_id":"system-arial","style_anchor":"Faithful flat 2D reference: warm pale-yellow/tan/rose fields, black circular rail and three inward pins, white ball, small white square pickups, white short trail and expanding thin pulse rings. Arial/Helvetica normal weight in all text roles; black score at upper right retained from reference. Geometry is code-native; no illustrated, photographic or complex assets required.","assets":[]}
+{
+  "schema_version": 1,
+  "font_pack_id": "dynapuff-semibold",
+  "style_anchor": "Flat warm-yellow orbit game; local DynaPuff type, red spikes, black rail. Finish: large white circular score seal with black outline and black replay button.",
+  "assets": [
+    {
+      "path": "assets/fonts/DynaPuff-SemiBold.woff2",
+      "type": "font",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled DynaPuff SemiBold; SIL OFL notice in App.jsx source comments.",
+      "ok": true
+    }
+  ]
+}

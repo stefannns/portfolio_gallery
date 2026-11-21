@@ -1,1 +1,46 @@
-{"config_version":"2.0","playable":{"runtime_target":"h5","h5_playstyle_type":"general_game","content_locale":"en","min_capability_level":1,"full_capability_level":1},"texts":[{"id":"guide","label":"First action hint","value":"Tap to switch sides","default":"Tap to switch sides","max_length":60},{"id":"high","label":"Best score label","value":"High score:","default":"High score:","max_length":40},{"id":"lost","label":"Failure message","value":"YOU LOST","default":"YOU LOST","max_length":40},{"id":"replay","label":"Replay hint","value":"Tap to start","default":"Tap to start","max_length":40}],"tweaks":[{"id":"speed","kind":"number","label":"Orbit speed (radians/second)","value":1.72,"default":1.72,"min":0.8,"max":3,"step":0.05}],"images":[]}
+{
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "en",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  },
+  "texts": [
+    {
+      "id": "guide",
+      "label": "First action hint",
+      "value": "Tap to switch sides",
+      "default": "Tap to switch sides",
+      "max_length": 60
+    },
+    {
+      "id": "lost",
+      "label": "Failure message",
+      "value": "Run over",
+      "default": "Run over",
+      "max_length": 40
+    },
+    {
+      "id": "replay",
+      "label": "Replay hint",
+      "value": "Play again",
+      "default": "Play again",
+      "max_length": 40
+    }
+  ],
+  "tweaks": [
+    {
+      "id": "speed",
+      "kind": "number",
+      "label": "Orbit speed (radians/second)",
+      "value": 1.72,
+      "default": 1.72,
+      "min": 0.8,
+      "max": 3,
+      "step": 0.05
+    }
+  ],
+  "images": []
+}

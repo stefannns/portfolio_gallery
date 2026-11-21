@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "style": {
+    "profile": "Source-reference recreation; portrait FYP 390x598 baseline",
+    "font": "Bangers, Arial",
+    "reference_provenance": "User-authorized video reference; source recordings kept outside package"
+  },
+  "assets": [
+    {
+      "id": "Bangers-Regular",
+      "path": "assets/Bangers-Regular.woff2",
+      "type": "font",
+      "source": "provided_existing_collection",
+      "description": "Bangers display font from existing game font collection"
+    },
+    {
+      "id": "leaping-tabby",
+      "path": "assets/leaping-tabby.webp",
+      "type": "image",
+      "width": 768,
+      "height": 512,
+      "source": "generated",
+      "generator": "built-in ImageGen",
+      "description": "Orange tabby reaching for laser, transparent watercolor and ink sprite"
+    },
+    {
+      "path": "assets/ui/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Regular for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Bold for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "id": "cozy-wall-storybook-v2",
+      "path": "assets/storybook-v2/cozy-wall.webp",
+      "type": "image",
+      "width": 768,
+      "height": 1152,
+      "source": "generated",
+      "generator": "built-in ImageGen",
+      "description": "Warm cream storybook wall with upright edge cat pictures, leafy plants and honey wood trim; central gameplay stays airy. Fixed full-bleed background, no painted landing platforms.",
+      "produced_prompt": "Use case: illustration-story. Asset type: portrait seamless-vertical background for a polished 2D cat jumping mobile game. A cozy sunlit apartment wall illustrated in warm children's-book watercolor and fine brown colored-pencil ink, to match a cheerful orange tabby sprite. Cream plaster with delicate paper grain, honey-colored wood trim at the extreme sides, softly painted little framed cat art and a hint of leafy greenery restricted to the outer edges. Tasteful detailed material textures, soft amber daylight, warm ivory/beige with restrained sage accents. Central 75 percent and upper HUD area airy, low contrast and open for live gameplay. Straight-on wall view, no floor, no ceiling or hard horizontal horizon; this wall scrolls upward indefinitely. Top and bottom edges must meet as an unobtrusive repeat with same quiet cream wall and continuous vertical edge trim. Portrait 2:3 composition, full bleed. Environment only: no animals, no people, no wooden jumping shelves/platforms, no text, labels, lettering, UI, logos, watermarks, or baked cast shadows from live game objects. More detailed and crafted than a flat vector drawing, still clean and readable."
+    },
+    {
+      "id": "honey-shelf-front-storybook-v3",
+      "path": "assets/storybook-v3/honey-shelf-front.webp",
+      "type": "image",
+      "width": 1024,
+      "height": 67,
+      "source": "generated",
+      "generator": "built-in ImageGen",
+      "description": "Strict orthographic front-only watercolor wood face, with no visible top or side plane. Transparent alpha; straight landing line at row3 of67 aligns to physics p.y.",
+      "produced_prompt": "Use case: precise-object-edit.\nAsset type: transparent 2D platform-game wooden shelf sprite.\nInput image: edit target; preserve its warm honey wood color, watercolor/colored-pencil material, horizontal wood grain, subtle knots, thin brown outline and softly rounded outside corners.\nPrimary request: replace the perspective shelf with a STRICT ORTHOGRAPHIC FRONT ELEVATION. The camera is exactly level with the center of its single broad vertical front face. Show ONLY that rectangular front face. The top landing boundary must be one perfectly horizontal straight line from left to right, with no visible top surface, no narrow upper plane, no ledge viewed from above, no trapezoid, no end/side faces and no bottom plane. Delete the current visible top-face band entirely; carry the vertical front wood-grain material continuously up to the top boundary. A tiny drawn edge highlight may trace the boundary but must not read as another surface.\nComposition: one long low horizontal board, approximately 8:1 width-to-height silhouette, centered and fully visible with transparent margins. Flat squared top line across almost the entire width; corners only subtly rounded. This is for a side-view cat jumping game; the cat lands precisely on the board's upper line.\nConstraints: genuine transparent alpha background, no ground, no wall, no support brackets, no objects, no cast shadow outside the sprite, no text, no logos or watermark. Preserve the hand-painted cozy storybook style. No glossy 3D look or perspective."
+    },
+    {
+      "id": "CAT_IDLE",
+      "path": "assets/idle-tabby-v1.webp",
+      "type": "image",
+      "width": 570,
+      "height": 454,
+      "source": "generated",
+      "generator": "built-in ImageGen edit",
+      "description": "Matching orange watercolor tabby in a calm grounded standing pose; transparent alpha. Normalized paw anchor293.5/570,451.5/454 aligns with the unchanged landing plane.",
+      "produced_prompt": "Use case: precise-object-edit. Edit target: the attached cheerful orange tabby kitten sprite. Create ONE matching GROUNDED IDLE POSE of this exact same cat, replacing only the leaping pose. Preserve its orange fur, copper tabby stripes, cream chest/belly/muzzle, pink ears/nose, large warm brown eyes, fluffy curved tail, fine brown colored-pencil outlines and softly textured watercolor storybook illustration. Full-body strict side view facing LEFT, head gently raised toward an imaginary laser above-left. The cat stands calmly and alertly on all four paws with a level relaxed body and paws planted on one common horizontal baseline. Hind legs and front legs are naturally beneath the body, never stretched in midair; tail curves up behind the rump at the right. A small friendly expression, no wide jumping mouth. Keep the entire cat visible, no cropped ears/tail/paws. One isolated production game sprite on genuine transparent alpha; no ground, no shelf, no floor, no drop shadow, no paper rectangle, no props or extra cats, no text/UI. The same identity, same left-facing orientation and same illustration technique as the input; change only the pose to standing at rest. Landscape3:2 framing with transparent margins."
+    }
+  ],
+  "content_locale": "it"
+}

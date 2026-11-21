@@ -42,21 +42,21 @@ function watchGameSize(container, resize) {
   return () => window.removeEventListener('resize', resize);
 }
 
-/* The feed cover animates silently; only playable-active starts a real run. */
-let inFeedCover = window.parent !== window &&
-  new URLSearchParams(location.search).get('feedReview') === '1';
-if (inFeedCover) {
-  document.documentElement.dataset.feedCover = 'true';
-  window.addEventListener('message', event => {
-    if (event.source !== window.parent || event.origin !== location.origin ||
-        event.data?.type !== 'playable-active') return;
-    inFeedCover = event.data.active !== true;
-    document.documentElement.dataset.feedCover = String(inFeedCover);
-    if (!inFeedCover && navigator.userActivation?.hasBeenActive) window.SFX?.unlock();
-  });
+/* Covers show the live, still first frame; only a real drag starts a run. */
+let hostActive = !(window.parent !== window &&
+  new URLSearchParams(location.search).get('feedReview') === '1');
+document.documentElement.dataset.feedCover = String(!hostActive);
+// Install before React effects so an early host activation cannot be missed.
+function receiveHostState(event) {
+  if (event.source !== window.parent || event.data?.type !== 'playable-active') return;
+  hostActive = event.data.active === true;
+  document.documentElement.dataset.feedCover = String(!hostActive);
 }
-
-const play = name => { try { window.SFX?.play(name); } catch (error) { /* no audio */ } };
+window.addEventListener('message', receiveHostState);
+const play = name => {
+  if (!hostActive || document.hidden) return;
+  try { window.SFX?.play(name, {minGapMs: name === 'laser' ? 200 : 140}); } catch (_) { /* audio is optional */ }
+};
 
 /* ------------------------------------------------------------------ */
 /* Tunable defaults (overridable through game.config.json tweaks/texts) */
@@ -159,12 +159,39 @@ button{font-family:var(--font-ui);cursor:pointer}
 .score-box{flex:1;background:rgba(13,10,36,.6);border:1px solid rgba(122,75,255,.4);border-radius:12px;padding:10px 4px;}
 .score-box .k{display:block;font-size:9px;letter-spacing:1.5px;color:#8fa7d8;font-weight:700;}
 .score-box .v{display:block;font-family:var(--font-display);font-size:20px;color:#fff;margin-top:4px;}
-.score-box .v.gold{color:var(--yellow);text-shadow:0 0 10px rgba(255,217,90,.6);}
 .replay{width:100%;border:0;border-radius:12px;padding:13px 0;font-family:var(--font-display);
   font-size:16px;letter-spacing:3px;color:#0d0a24;
   background:linear-gradient(90deg,#37e6ff,#7af0ff);box-shadow:0 0 20px rgba(55,230,255,.55);}
 .replay:active{transform:scale(.97);}
 [data-feed-cover="true"] .hud{visibility:hidden;}
+/* Readable pixel UI; all live controls remain inside the collection safe area. */
+@font-face{font-family:UFOPixel;src:url('./assets/fonts/Silkscreen-Regular.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+html,body,#root{width:100%;height:100%;margin:0;overflow:hidden;background:#171233}
+.app{--ui-scale:1;--font-display:UFOPixel,Audiowide,monospace;--font-ui:UFOPixel,Poppins,sans-serif}
+button{min-height:44px;touch-action:manipulation}
+button:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.hud-top{top:calc(30px * var(--ui-scale));left:calc(30px * var(--ui-scale));right:calc(30px * var(--ui-scale));gap:calc(12px * var(--ui-scale))}
+.stat{padding:calc(9px * var(--ui-scale)) calc(10px * var(--ui-scale));border-radius:3px;backdrop-filter:none;min-width:0;max-width:60%}
+.stat .label{font-size:calc(12px * var(--ui-scale));letter-spacing:0;line-height:1.3;color:#bed0ef}
+.stat .value{font-size:calc(28px * var(--ui-scale));line-height:1.15;overflow-wrap:anywhere;letter-spacing:-1px}
+.hull{gap:calc(5px * var(--ui-scale));margin-top:calc(7px * var(--ui-scale))}
+.pip{width:calc(15px * var(--ui-scale));height:calc(11px * var(--ui-scale))}
+.heat{left:calc(30px * var(--ui-scale));bottom:calc(50px * var(--ui-scale));width:calc(160px * var(--ui-scale))}
+.heat .label{font-size:calc(12px * var(--ui-scale));letter-spacing:0;color:#bed0ef;line-height:1.4}
+.bar,.bar i{border-radius:1px}
+.guide{top:32%;left:calc(30px * var(--ui-scale));right:calc(30px * var(--ui-scale));font-size:calc(18px * var(--ui-scale));line-height:1.5;letter-spacing:0;text-wrap:balance;overflow-wrap:anywhere}
+@keyframes breathe{50%{opacity:.64;transform:scale(.985)}}
+.banner{left:calc(30px * var(--ui-scale));right:calc(30px * var(--ui-scale));font-size:calc(18px * var(--ui-scale));letter-spacing:0;line-height:1.4}
+.result{z-index:20;padding:calc(30px * var(--ui-scale)) calc(30px * var(--ui-scale)) calc(50px * var(--ui-scale))}
+.panel{width:calc(330px * var(--ui-scale));max-width:100%;max-height:100%;overflow-y:auto;border-radius:5px;padding:calc(24px * var(--ui-scale)) calc(18px * var(--ui-scale));box-shadow:4px 5px 0 #09051d}
+.panel h2{font-size:calc(24px * var(--ui-scale));letter-spacing:0;line-height:1.3;overflow-wrap:anywhere;margin-bottom:calc(20px * var(--ui-scale))}
+.scores{display:grid;grid-template-columns:minmax(0,1fr);gap:calc(8px * var(--ui-scale));margin-bottom:calc(20px * var(--ui-scale))}
+.score-box{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:calc(12px * var(--ui-scale));min-width:0;border-radius:2px;padding:calc(10px * var(--ui-scale)) calc(12px * var(--ui-scale))}
+.score-box .k{min-width:0;text-align:left;white-space:normal;overflow-wrap:anywhere;font-size:calc(12px * var(--ui-scale));letter-spacing:0;line-height:1.4}
+.score-box .v{min-width:0;margin-top:0;text-align:right;font-size:calc(28px * var(--ui-scale));line-height:1.2;overflow-wrap:anywhere}
+.panel h2,.replay{white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+.replay{min-height:max(44px,calc(48px * var(--ui-scale)));font-size:calc(16px * var(--ui-scale));border-radius:3px;letter-spacing:0;line-height:1.3}
+
 `;
 
 /* ------------------------------------------------------------------ */
@@ -285,6 +312,22 @@ function buildUfo(theme, glowCyan, glowMagenta, glowWhite) {
   halo.scale.setScalar(3.5);
   halo.position.y = -0.1;
   group.add(halo);
+  if (enemy) {
+    // A narrow back-face shell follows the real hull, instead of a screen-space glow.
+    // Reuse hull geometry; the tracked material is released with the other model assets.
+    const outlineMat = track(new THREE.MeshBasicMaterial({
+      color: 0xffe5a0, side: THREE.BackSide, transparent: true,
+      opacity: 0.58, depthWrite: false, toneMapped: false,
+    }), mats);
+    const solidParts = group.children.filter(part => part.isMesh);
+    for (const part of solidParts) {
+      const outline = new THREE.Mesh(part.geometry, outlineMat);
+      outline.position.copy(part.position);
+      outline.rotation.copy(part.rotation);
+      outline.scale.copy(part.scale).multiplyScalar(1.045);
+      group.add(outline);
+    }
+  }
   group.userData.dispose = () => {
     geos.forEach(g => g.dispose());
     mats.forEach(m => m.dispose());
@@ -308,10 +351,6 @@ function buildIsland(terrainTexture, glowCyan, rng) {
   const base = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 0.82, depth, 12), rockMat);
   geos.push(base.geometry);
   group.add(base);
-  const cone = new THREE.Mesh(new THREE.ConeGeometry(r * 0.82, 2.1, 12), rockMat);
-  cone.position.y = -depth / 2 - 0.95;
-  geos.push(cone.geometry);
-  group.add(cone);
   const topMat = new THREE.MeshStandardMaterial({ map: terrainTexture, roughness: 0.95, flatShading: true });
   mats.push(topMat);
   const top = new THREE.Mesh(new THREE.CircleGeometry(r * 0.97, 14), topMat);
@@ -548,9 +587,10 @@ function createEffects(scene, glowWhite, glowCyan, glowMagenta) {
 function App() {
   const hostRef = useRef(null);
   const engineRef = useRef(null);
+  const [hint, setHint] = useState(DEFAULTS.HINT);
   const [ui, setUi] = useState({
-    phase: 'idle', hull: DEFAULTS.HULL_MAX, kills: 0, distance: 0,
-    heat: 0, overheat: false, best: 0, showResult: false,
+    phase: 'idle', hull: DEFAULTS.HULL_MAX, hullMax: DEFAULTS.HULL_MAX, kills: 0, distance: 0,
+    heat: 0, overheat: false, showResult: false,
     banner: '', flashKey: 0, score: 0, shots: 0,
   });
 
@@ -578,6 +618,7 @@ function App() {
     scene.fog = new THREE.Fog(COLORS.fog, 38, 125);
     const camera = new THREE.PerspectiveCamera(64, 1, 0.1, 400);
     camera.position.set(0, 2.7, 8.4);
+    camera.lookAt(0, 0.2, -8);
     const renderer = new THREE.WebGLRenderer({antialias: false, powerPreference: 'high-performance'});
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2) * 0.6);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -587,6 +628,7 @@ function App() {
     const resize = () => {
       const w = host.clientWidth, h = host.clientHeight;
       if (!w || !h) return;
+      host.style.setProperty('--ui-scale', String(Math.min(w / 390, h / 598)));
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
@@ -669,20 +711,34 @@ function App() {
     /* Island pool, pre-spread along the whole flight corridor. */
     const rng = Math.random;
     const islands = [];
+    let routeSide = -1, routeRemaining = 0;
+    const ISLAND_GAP = 22, SAFE_LANE_X = 2.7, ROUTE_RADIUS = 2.15;
     const placeIsland = (island, z) => {
-      if (rng() > 0.87) {
-        island.position.x = (rng() - 0.5) * 7;
-        island.position.y = rng() > 0.5 ? 4.8 + rng() * 1.6 : -4 - rng() * 1.4;
+      if (island.userData.inFlightPath) {
+        // Reserve a full ship-width lane; hold its side for three obstacles.
+        if (routeRemaining === 0) { routeSide *= -1; routeRemaining = 3; }
+        routeRemaining--;
+        const scale = Math.min(1, ROUTE_RADIUS / island.userData.radius);
+        island.scale.setScalar(scale);
+        island.userData.safeLaneX = routeSide * SAFE_LANE_X;
+        island.position.x = -routeSide * (1.7 + rng());
+        island.position.y = -.4 + (rng() - .5) * 1.5;
       } else {
-        island.position.x = (rng() > 0.5 ? 1 : -1) * (6.4 + rng() * 5.2);
+        island.scale.setScalar(1);
+        island.userData.safeLaneX = null;
+        island.position.x = (rng() > 0.5 ? 1 : -1) * (9 + rng() * 4);
         island.position.y = -2.2 + rng() * 4.6;
       }
+      island.userData.worldRadius = island.userData.radius * island.scale.x;
       island.position.z = z;
       island.rotation.y = rng() * Math.PI * 2;
     };
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 14; i++) {
       const island = buildIsland(terrainTexture, glowCyan, rng);
-      placeIsland(island, 8 - i * 19);
+      // The two foreground islands are scenery; the first dodge has a clear run-up.
+      // Eight pooled islands occupy the route; scenery breaks up successive dodges.
+      island.userData.inFlightPath = i >= 2 && i % 3 !== 1;
+      placeIsland(island, 8 - i * ISLAND_GAP);
       scene.add(island);
       islands.push(island);
     }
@@ -730,15 +786,14 @@ function App() {
       respawnsLeft: 1, cut: null,
     };
     let flashKey = 0;
-    let best = 0;
-    try { best = Number(localStorage.getItem('neon-ufo-run-best')) || 0; } catch (e) { /* no storage */ }
-    setUi(u => ({...u, best}));
+    let resultTimer = null;
 
     function syncUi(extra) {
       setUi(u => ({
         ...u,
         phase: G.phase,
         hull: G.hull,
+        hullMax: cfg.HULL_MAX,
         kills: G.kills,
         distance: Math.floor(G.distance),
         heat: G.heat,
@@ -750,16 +805,21 @@ function App() {
     }
 
     function resetRun() {
+      clearTimeout(resultTimer); resultTimer = null;
+      window.SFX?.reset();
       G.hull = cfg.HULL_MAX; G.kills = 0; G.distance = 0; G.heat = 0; G.overheat = false;
       G.invuln = 0; G.shots = 0; G.elapsed = 0; G.speed = cfg.BASE_SPEED;
       G.target.set(0, -0.4); G.vel.set(0, 0);
-      G.enemies.forEach(e => scene.remove(e.mesh));
+      G.enemies.forEach(e => { scene.remove(e.mesh); e.mesh.userData.dispose(); });
       G.enemies.length = 0;
       lasers.forEach(l => { l.active = false; l.group.visible = false; });
       bolts.forEach(b => { b.active = false; b.group.visible = false; });
       G.enemyTimer = 1.2; G.fireTimer = 0; G.respawnsLeft = 1; G.cut = null;
       player.visible = true;
       player.position.set(0, -0.4, 1.2);
+      routeSide = -1; routeRemaining = 0;
+      islands.forEach((island, index) => { placeIsland(island, 8 - index * ISLAND_GAP); island.visible = true; });
+      G.islandTimer = 0;
       pilot.visible = false;
       reserveUfo.visible = false;
       G.phase = 'play';
@@ -776,17 +836,20 @@ function App() {
     function spawnIsland() {
       const slot = islands.find(i => i.position.z > 18);
       if (!slot) return;
-      placeIsland(slot, -132 - rng() * 12);
+      // Rejoin behind the last island, so recycling never creates overlapping barriers.
+      const farthest = Math.min(...islands.map(island => island.position.z));
+      placeIsland(slot, Math.min(-132, farthest) - ISLAND_GAP);
     }
     function spawnEnemy() {
       if (G.enemies.length >= 6) return;
       const big = rng() > 0.82;
       const mesh = buildUfo('enemy', glowCyan, glowMagenta, glowWhite);
-      mesh.scale.setScalar(big ? 1.32 : 1.0);
+      mesh.scale.setScalar(big ? 1.75 : 1.4);
       mesh.position.set((rng() - 0.5) * 9.6, -1.8 + rng() * 4.8, -95);
       scene.add(mesh);
       G.enemies.push({
-        mesh, hp: big ? 2 : 1, fireIn: 0.8 + rng() * 1.2,
+        mesh, hitRadius: 1.25 * mesh.scale.x,
+        hp: big ? 2 : 1, fireIn: 0.8 + rng() * 1.2,
         bob: rng() * Math.PI * 2, big,
       });
     }
@@ -857,18 +920,17 @@ function App() {
       } else {
         G.phase = 'over';
         player.visible = false;
-        const score = G.kills * 100 + Math.floor(G.distance);
-        if (score > best) {
-          best = score;
-          try { localStorage.setItem('neon-ufo-run-best', String(best)); } catch (e) { /* no storage */ }
-        }
-        window.setTimeout(() => syncUi({showResult: true, best, banner: ''}), 900);
+        resultTimer = window.setTimeout(() => {
+          resultTimer = null;
+          if (!disposed && G.phase === 'over') syncUi({showResult: true, banner: ''});
+        }, 900);
         syncUi({banner: ''});
       }
     }
 
     /* ----------------------------- input ----------------------------- */
     let dragging = false;
+    let dragPointer = null;
     const dragStart = new THREE.Vector2();
     const targetStart = new THREE.Vector2();
     function pointerPos(e) {
@@ -879,7 +941,9 @@ function App() {
       );
     }
     function onDown(e) {
-      if (e.button > 0 || e.isPrimary === false) return;
+      if (!hostActive || document.hidden || e.button > 0 || e.isPrimary === false ||
+          dragPointer !== null || !['idle', 'play'].includes(G.phase)) return;
+      dragPointer = e.pointerId;
       try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* capture is best effort */ }
       dragging = true;
       if (G.phase === 'idle') resetRun();
@@ -890,7 +954,7 @@ function App() {
       e.preventDefault();
     }
     function onMove(e) {
-      if (!dragging) return;
+      if (!dragging || e.pointerId !== dragPointer || !hostActive) return;
       const p = pointerPos(e);
       const dx = (p.x - dragStart.x) * 11;
       const dy = -(p.y - dragStart.y) * 8.5;
@@ -899,6 +963,8 @@ function App() {
       e.preventDefault();
     }
     function onUp(e) {
+      if (e.pointerId !== dragPointer) return;
+      dragPointer = null;
       dragging = false;
       try { canvas.releasePointerCapture(e.pointerId); } catch (err) { /* already released */ }
     }
@@ -907,13 +973,31 @@ function App() {
     canvas.addEventListener('pointerup', onUp);
     canvas.addEventListener('pointercancel', onUp);
     canvas.addEventListener('lostpointercapture', onUp);
-    canvas.addEventListener('contextmenu', e => e.preventDefault());
+    const preventMenu = e => e.preventDefault();
+    canvas.addEventListener('contextmenu', preventMenu);
+    function suspendInput() {
+      const pointer = dragPointer; dragPointer = null; dragging = false;
+      if (pointer !== null) { try { canvas.releasePointerCapture(pointer); } catch (_) { /* released */ } }
+      window.SFX?.stopAll();
+    }
+    function onHostActivity(event) {
+      if (event.source !== window.parent || event.data?.type !== 'playable-active') return;
+      hostActive = event.data.active === true;
+      document.documentElement.dataset.feedCover = String(!hostActive);
+      if (!hostActive) suspendInput();
+    }
+    const onVisibility = () => { if (document.hidden) suspendInput(); };
+    const onPageHide = () => { hostActive = false; suspendInput(); cancelAnimationFrame(raf); };
+    window.addEventListener('message', onHostActivity);
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pagehide', onPageHide);
 
     /* ----------------------------- loop ----------------------------- */
     const clock = new THREE.Clock();
     const camTarget = new THREE.Vector3();
     const camLook = new THREE.Vector3(0, 0.2, -8);
     let uiTimer = 0;
+    let gameTime = 0;
 
     function updateStars(dt, flow) {
       for (const layer of starLayers) {
@@ -1003,7 +1087,7 @@ function App() {
         if (!laser.active) continue;
         for (let i = G.enemies.length - 1; i >= 0; i--) {
           const enemy = G.enemies[i];
-          if (laser.group.position.distanceTo(enemy.mesh.position) < 1.25) {
+          if (laser.group.position.distanceTo(enemy.mesh.position) < enemy.hitRadius) {
             laser.active = false; laser.group.visible = false;
             enemy.hp -= 1;
             effects.spawn(laser.group.position, COLORS.cyan, 0.55);
@@ -1031,7 +1115,7 @@ function App() {
       }
       /* enemies vs player */
       for (const enemy of G.enemies) {
-        if (enemy.mesh.position.distanceTo(player.position) < 1.35) {
+        if (enemy.mesh.position.distanceTo(player.position) < enemy.hitRadius + 0.1) {
           effects.spawn(enemy.mesh.position, COLORS.danger, 1.1);
           scene.remove(enemy.mesh);
           enemy.mesh.userData.dispose();
@@ -1042,10 +1126,10 @@ function App() {
       }
       /* islands vs player */
       for (const island of islands) {
-        if (Math.abs(island.position.z - player.position.z) > island.userData.radius) continue;
+        if (Math.abs(island.position.z - player.position.z) > island.userData.worldRadius) continue;
         const dx = player.position.x - island.position.x;
         const dy = player.position.y - island.position.y;
-        if (Math.hypot(dx, dy) < island.userData.radius * 0.82) {
+        if (Math.hypot(dx, dy) < island.userData.worldRadius * 0.82) {
           damage(player.position.clone());
           G.target.x = THREE.MathUtils.clamp(player.position.x + Math.sign(dx || 1) * 2.4, -4.6, 4.6);
           G.target.y = THREE.MathUtils.clamp(player.position.y + Math.sign(dy || 1) * 1.8, -2.9, 3.4);
@@ -1115,8 +1199,10 @@ function App() {
     function loop() {
       raf = requestAnimationFrame(loop);
       const dt = Math.min(clock.getDelta(), 0.05);
-      const time = clock.elapsedTime;
       if (document.hidden || disposed) return;
+      if (!hostActive || G.phase === 'idle') { renderer.render(scene, camera); return; }
+      gameTime += dt;
+      const time = gameTime;
       const active = G.phase === 'play' || G.phase === 'respawn';
       const flow = G.phase === 'idle' ? cfg.BASE_SPEED * 0.55
         : G.phase === 'respawn' ? G.speed * 0.45 : G.speed;
@@ -1128,11 +1214,7 @@ function App() {
         if (island.position.z > 18) spawnIsland();
       }
 
-      if (G.phase === 'idle') {
-        /* Silent autopilot demo: no enemies, no weapons, no score. */
-        G.target.set(Math.sin(time * 0.55) * 2.4, Math.sin(time * 0.85) * 0.9 - 0.4);
-        updatePlayer(dt, time);
-      } else if (G.phase === 'play') {
+      if (G.phase === 'play') {
         G.elapsed += dt;
         G.speed = Math.min(cfg.MAX_SPEED, cfg.BASE_SPEED + G.elapsed * 0.055);
         G.distance += G.speed * dt;
@@ -1206,11 +1288,20 @@ function App() {
       for (const item of [...(config.tweaks || []), ...(config.texts || [])]) {
         if (item && item.id in cfg) cfg[item.id] = item.value;
       }
+      setHint(String(cfg.HINT));
+      if (G.phase === 'idle') { G.hull = cfg.HULL_MAX; syncUi(); }
     });
 
     return () => {
       disposed = true;
       cancelAnimationFrame(raf);
+      clearTimeout(resultTimer);
+      suspendInput();
+      window.removeEventListener('message', onHostActivity);
+      window.removeEventListener('message', receiveHostState);
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('pagehide', onPageHide);
+      canvas.removeEventListener('contextmenu', preventMenu);
       unwatch();
       canvas.removeEventListener('pointerdown', onDown);
       canvas.removeEventListener('pointermove', onMove);
@@ -1257,14 +1348,14 @@ function App() {
             <span className="label">KILLS</span>
             <span className="value">{String(ui.kills).padStart(2, '0')}</span>
             <div className="hull">
-              {Array.from({length: DEFAULTS.HULL_MAX}).map((_, i) => (
+              {Array.from({length: ui.hullMax}).map((_, i) => (
                 <span key={i} className={`pip ${i < ui.hull ? 'on' : ''}`} />
               ))}
             </div>
           </div>
           <div className="stat" style={{textAlign: 'right'}}>
             <span className="label">DIST</span>
-            <span className="value">{ui.distance}<small style={{fontSize: 11}}>m</small></span>
+            <span className="value">{ui.distance}<small style={{fontSize: 'calc(12px * var(--ui-scale))'}}>m</small></span>
           </div>
         </div>
         <div className={`heat ${ui.overheat ? 'over' : ''}`}>
@@ -1274,22 +1365,22 @@ function App() {
         {ui.banner ? <div className="banner">{ui.banner}</div> : null}
       </div>
       {ui.phase === 'idle' && (
-        <div className="guide">DRAG TO FLY<small>Steer your UFO · shoot on sight</small></div>
+        <div className="guide">{hint}</div>
       )}
       <div key={ui.flashKey} className={`vignette ${ui.flashKey ? 'flash' : ''}`} />
       {ui.showResult && (
-        <div className="result">
+        <div className="result" role="dialog" aria-modal="true" aria-labelledby="mission-result">
           <div className="panel">
-            <h2>MISSION END</h2>
-            <div className="sub">YOUR UFO WENT DOWN IN NEON SKIES</div>
+            <h2 id="mission-result">MISSION END</h2>
             <div className="scores">
               <div className="score-box"><span className="k">KILLS</span><span className="v">{ui.kills}</span></div>
               <div className="score-box"><span className="k">DISTANCE</span><span className="v">{ui.distance}m</span></div>
-              <div className="score-box"><span className="k">BEST</span><span className="v gold">{ui.best}</span></div>
+
             </div>
             <button
               className="replay"
               onClick={() => {
+                window.SFX?.unlock();
                 play('ui');
                 engineRef.current?.reset();
               }}

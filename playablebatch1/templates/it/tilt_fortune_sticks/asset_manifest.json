@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "style": {
+    "profile": "Source-reference recreation; portrait FYP 390x598 baseline",
+    "font": "Georgia, Arial",
+    "reference_provenance": "User-authorized video reference; source recordings kept outside package"
+  },
+  "assets": [
+    {
+      "id": "lacquer-tube",
+      "path": "assets/lacquer-tube.webp",
+      "type": "image",
+      "width": 793,
+      "height": 1983,
+      "source": "generated",
+      "generator": "built-in ImageGen",
+      "description": "Photorealistic burgundy lacquer fortune tube with golden cloud motifs, transparent"
+    },
+    {
+      "id": "shrine",
+      "path": "assets/shrine.webp",
+      "type": "image",
+      "width": 1024,
+      "height": 1536,
+      "source": "generated",
+      "generator": "built-in ImageGen",
+      "description": "Photorealistic dark wood shrine with table, empty foreground"
+    },
+    {
+      "path": "assets/ui/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Regular for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/ui/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "description": "Locally bundled Poppins-Bold for consistent, readable UI typography.",
+      "type": "font",
+      "ok": true
+    },
+    {
+      "path": "assets/physical-v2/cylinder.webp",
+      "type": "image",
+      "width": 369,
+      "height": 1100,
+      "produced_by": "imagegen",
+      "generator": "built-in ImageGen",
+      "produced_prompt": "Use case: product-mockup. Asset type: transparent game prop for an interactive Chinese fortune-stick shaker. Make ONE empty upright red lacquer fortune cylinder, richly tactile aged burgundy lacquer and fine restrained gold cloud motifs, warm soft light from upper left, realistic dark reddish bamboo/wood rims and base. Use the reference only for material and style. Improve its silhouette into a clean straight cylinder approximately 2.4 times as tall as wide. Camera at a very slight elevated front angle; both the FULL ellipse of the mouth and its dark hollow EMPTY interior must be clearly readable. The top opening's oval height is about one third its width, with a clearly defined back rim and front lip. Full cylinder including its base visible. Center it straight vertical with a small even transparent margin, not tilted, no crop. ABSOLUTELY NO sticks or rods inside or outside, no baked-in shadows of sticks. Transparent background, no floor, no external cast shadow, no text, no hands. Photographic material quality, quiet traditional shrine aesthetic, no cartoon styling.",
+      "description": "Separate photographic cylinder sprite for layered fortune-stick physics",
+      "ok": true
+    },
+    {
+      "path": "assets/physical-v2/stick1.webp",
+      "type": "image",
+      "width": 32,
+      "height": 850,
+      "produced_by": "imagegen",
+      "generator": "built-in ImageGen",
+      "produced_prompt": "Use case: product-mockup. Asset type: ONE separate transparent fortune-stick game sprite. A SINGLE long thin straight rectangular bamboo fortune stick, upright vertical and seen from the front. Honey gold bamboo, subtly visible longitudinal wood fibers, slightly rounded blunt top and bottom, narrow dark right edge for real thickness, soft warm light from upper left. One discreet faded dark-red painted dash near its upper third. No letters or numbers. A rigid narrow slat, uniform width, approximately 24 times taller than it is wide. Entire individual stick isolated and completely visible, centered on a transparent background with generous transparent space on either side. No cylinder, no bundle, no extra sticks, no floor, no external shadow, no border. Photorealistic prop to be duplicated and animated as individual sticks in a burgundy lacquer fortune cylinder.",
+      "description": "Separate photographic stick1 sprite for layered fortune-stick physics",
+      "ok": true
+    },
+    {
+      "path": "assets/physical-v2/stick2.webp",
+      "type": "image",
+      "width": 35,
+      "height": 850,
+      "produced_by": "imagegen",
+      "generator": "built-in ImageGen",
+      "produced_prompt": "Use case: product-mockup. Asset type: ONE separate transparent fortune-stick game sprite. A SINGLE long thin straight rectangular bamboo fortune stick, upright vertical front view. Pale straw colored bamboo with warmer golden edges, delicate natural longitudinal fibers, lightly worn rounded blunt ends, a narrow shaded brown right side showing slim real thickness, soft warm upper-left lighting. Two tiny faded cinnabar-red marks near the upper third, no writing or numbers. Uniform narrow slat, approximately 24 times taller than it is wide. Entire individual stick isolated and completely visible, centered on a transparent background with generous transparent space on either side. No cylinder, no bundle, no extra sticks, no floor, no external shadow, no border. Quiet photorealistic traditional game prop.",
+      "description": "Separate photographic stick2 sprite for layered fortune-stick physics",
+      "ok": true
+    },
+    {
+      "path": "assets/physical-v2/stick3.webp",
+      "type": "image",
+      "width": 42,
+      "height": 850,
+      "produced_by": "imagegen",
+      "generator": "built-in ImageGen",
+      "produced_prompt": "Use case: product-mockup. Asset type: ONE separate transparent fortune-stick game sprite. A SINGLE long thin rigid rectangular bamboo fortune stick, upright vertical front view. Rich amber-gold bamboo with naturally irregular fine vertical wood grain, worn rounded blunt ends, small darker edge on right to indicate thickness, softly lit from upper left. One small faded cinnabar-red block at the upper third, no writing or numbers. Uniform narrow slat approximately 24 times taller than it is wide. The entire individual stick including both ends is isolated and completely visible in the center of a transparent canvas with generous transparent space on each side. No cylinder, no extra sticks or bundle, no floor, no external shadow, no border. Realistic traditional fortune-shaker prop.",
+      "description": "Separate photographic stick3 sprite for layered fortune-stick physics",
+      "ok": true
+    }
+  ]
+}

@@ -151,7 +151,7 @@ function liveFirstFrame(){
   try{
     const path=new URLSearchParams(location.search).get('__game');
     const source=new URL(path||'',location.origin);
-    if(!path||source.origin!==location.origin||!/^\/resource\/playable-batch\/[\w-]+\/(?:dist\/)?game\.html$/.test(source.pathname))throw new Error('Unsupported game source');
+    if(!path||source.origin!==location.origin||!/^\/resource\/playable-batch\/[\w-]+\/(?:(?:dist\/)?game\.html|italian-fixed\/game\.it\.html)$/.test(source.pathname))throw new Error('Unsupported game source');
     const response=await fetch(source.href,{cache:'no-store'});if(!response.ok)throw new Error('Game source unavailable');
     const html=await response.text();
     const base=source.href.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');

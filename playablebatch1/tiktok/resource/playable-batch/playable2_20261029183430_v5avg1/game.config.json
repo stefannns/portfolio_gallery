@@ -3,7 +3,7 @@
     {
       "id": "GRID_COLS",
       "kind": "number",
-      "label": "\u6e05\u6d01\u7f51\u683c\u5217\u6570",
+      "label": "清洁网格列数",
       "value": 14,
       "default": 14,
       "min": 8,
@@ -13,7 +13,7 @@
     {
       "id": "GRID_ROWS",
       "kind": "number",
-      "label": "\u6e05\u6d01\u7f51\u683c\u884c\u6570",
+      "label": "清洁网格行数",
       "value": 20,
       "default": 20,
       "min": 12,
@@ -23,7 +23,7 @@
     {
       "id": "CLEAN_GOAL",
       "kind": "number",
-      "label": "\u6e05\u6d01\u5b8c\u6210\u9608\u503c",
+      "label": "清洁完成阈值",
       "value": 0.92,
       "default": 0.92,
       "min": 0.8,
@@ -33,7 +33,7 @@
     {
       "id": "BRUSH_POWER",
       "kind": "number",
-      "label": "\u5237\u6d17\u529b\u5ea6",
+      "label": "刷洗力度",
       "value": 0.22,
       "default": 0.22,
       "min": 0.08,
@@ -43,7 +43,7 @@
     {
       "id": "RINSE_POWER",
       "kind": "number",
-      "label": "\u51b2\u6d17\u529b\u5ea6",
+      "label": "冲洗力度",
       "value": 0.3,
       "default": 0.3,
       "min": 0.1,
@@ -53,7 +53,7 @@
     {
       "id": "VACUUM_POWER",
       "kind": "number",
-      "label": "\u5438\u6c34\u529b\u5ea6",
+      "label": "吸水力度",
       "value": 0.32,
       "default": 0.32,
       "min": 0.12,
@@ -64,63 +64,63 @@
   "texts": [
     {
       "id": "GAME_TITLE",
-      "label": "\u6e38\u620f\u6807\u9898",
+      "label": "游戏标题",
       "value": "Rug Restore",
       "default": "Rug Restore",
       "max_length": 20
     },
     {
       "id": "GUIDE",
-      "label": "\u73a9\u6cd5\u5f15\u5bfc",
-      "value": "Spray \u2192 Scrub \u2192 Rinse \u2192 Dry",
-      "default": "Spray \u2192 Scrub \u2192 Rinse \u2192 Dry",
+      "label": "玩法引导",
+      "value": "Spray → Scrub → Rinse → Dry",
+      "default": "Spray → Scrub → Rinse → Dry",
       "max_length": 32
     },
     {
       "id": "COMPLETE",
-      "label": "\u5b8c\u6210\u6587\u6848",
+      "label": "完成文案",
       "value": "Satisfyingly clean!",
       "default": "Satisfyingly clean!",
       "max_length": 28
     },
     {
       "id": "NEXT_ITEM",
-      "label": "\u4e0b\u4e00\u4ef6\u6309\u94ae",
+      "label": "下一件按钮",
       "value": "Next item",
       "default": "Next item",
       "max_length": 20
     },
     {
       "id": "SPRAY",
-      "label": "\u55b7\u96fe\u74f6",
+      "label": "喷雾瓶",
       "value": "Spray",
       "default": "Spray",
       "max_length": 12
     },
     {
       "id": "BRUSH",
-      "label": "\u624b\u5237",
+      "label": "手刷",
       "value": "Scrub",
       "default": "Scrub",
       "max_length": 12
     },
     {
       "id": "RINSE",
-      "label": "\u6c34\u67aa",
+      "label": "水枪",
       "value": "Rinse",
       "default": "Rinse",
       "max_length": 12
     },
     {
       "id": "VACUUM",
-      "label": "\u5438\u5c18\u5668",
+      "label": "吸尘器",
       "value": "Dry",
       "default": "Dry",
       "max_length": 12
     },
     {
       "id": "CLEANED",
-      "label": "\u8fdb\u5ea6\u6807\u7b7e",
+      "label": "进度标签",
       "value": "CLEANED",
       "default": "CLEANED",
       "max_length": 12

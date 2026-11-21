@@ -1,0 +1,30 @@
+{
+  "config_version": "2.0",
+  "playable": {
+    "name": "camera_doodle_booth",
+    "title": "Foto e scarabocchi",
+    "content_locale": "it",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "min_capability_level": 2,
+    "full_capability_level": 2
+  },
+  "texts": [
+    {
+      "id": "GUIDE",
+      "label": "Istruzioni",
+      "value": "Mettiti in posa per tre foto",
+      "default": "Mettiti in posa per tre foto",
+      "max_length": 100
+    }
+  ],
+  "tweaks": [],
+  "images": [
+    {
+      "id": "PAPER_BACKDROP",
+      "label": "Sfondo di carta stampata",
+      "path": "./assets/paper-print-v1.svg",
+      "replaceable": true
+    }
+  ]
+}
