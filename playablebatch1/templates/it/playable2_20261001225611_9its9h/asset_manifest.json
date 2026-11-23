@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "dynapuff",
+  "style_anchor": "Hand-drawn blade and line-art fighters on a light purple dotted paper surface with blue player and yellow enemies.",
+  "assets": [
+    {
+      "path": "assets/bg-paper-lilac-v6.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Lilac paper background",
+      "aspect_ratio": "2:3",
+      "size_tier": "small",
+      "recommended_size": "400x600",
+      "width": 400,
+      "height": 600,
+      "ok": true
+    },
+    {
+      "path": "assets/bg_blueprint.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "bg blueprint",
+      "aspect_ratio": "50:89",
+      "size_tier": "medium",
+      "recommended_size": "1600x2848",
+      "width": 1600,
+      "height": 2848,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: Audiowide-Regular",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: Bangers-Regular",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: DynaPuff-SemiBold",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/obj-enemy-yellow-v5.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Obstacle Target",
+      "aspect_ratio": "1:1",
+      "size_tier": "small",
+      "recommended_size": "64x64",
+      "width": 64,
+      "height": 64,
+      "ok": true
+    },
+    {
+      "path": "assets/obj_target.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "obj target",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "2048x2048",
+      "width": 2048,
+      "height": 2048,
+      "ok": true
+    }
+  ]
+}

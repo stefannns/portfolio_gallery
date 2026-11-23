@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "dynapuff",
+  "style_anchor": "Simple overhead army dots with green player troops, coral enemies and a pale green field. DynaPuff interface.",
+  "assets": [
+    {
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: Bangers-Regular",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: DynaPuff-SemiBold",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sand-rocks-shells-v2.png",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "sand rocks shells v2",
+      "aspect_ratio": "2:3",
+      "size_tier": "medium",
+      "recommended_size": "1024x1536",
+      "width": 1024,
+      "height": 1536,
+      "ok": true
+    },
+    {
+      "path": "assets/ui_defeat_panel.png",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Defeat Panel",
+      "aspect_ratio": "494:463",
+      "size_tier": "small",
+      "recommended_size": "988x926",
+      "width": 988,
+      "height": 926,
+      "ok": true
+    }
+  ]
+}

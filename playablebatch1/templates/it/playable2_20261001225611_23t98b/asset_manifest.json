@@ -1,25 +1,43 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20261001225611_23t98b",
-  "number": 41,
-  "name": "Text Your Ex",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "system_safe",
+  "style_anchor": "A text effects toy with a large visual output area and a compact typing field. Preserve the current backdrop, effect typography and full-height composition without exposed background bands.",
   "assets": [
     {
-      "path": "dist/assets/text_ex_backdrop.svg",
-      "ids": [
-        "START_BG"
-      ],
-      "bytes": 685,
-      "sha256": "d5a0557258b9b4b91753627a0317a4aa07a68010022441776d0e8a8a79bf1aa6"
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/text_ex_backdrop.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A text effects toy with a large visual output area and a compact typing field. Preserve the current backdrop, effect typography and full-height composition without exposed background bands. Asset requirement: Existing Start Background artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Start Background artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "130:231",
+      "size_tier": "full",
+      "recommended_size": "390x693",
+      "width": 390,
+      "height": 693,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "9ce2d2f949be1280b61e359c12d498f873bf1d8d16fcca0e579932828fbabc03",
-    "dist/bundle.js": "9ce2d2f949be1280b61e359c12d498f873bf1d8d16fcca0e579932828fbabc03",
-    "dist/game.html": "5165848eb207036bf0ea2570853a6abe34c1bbc3b3269a07a6b44b769db4f7df",
-    "dist/game.config.json": "4f698a91f356a27b943fc3d0333cfe54c8aff7b5831ee705ed8a94be61d7d36f"
-  }
+  ]
 }

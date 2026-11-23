@@ -15,43 +15,43 @@
     {
       "id": "INSTRUCTION_MAIN",
       "label": "Instruction Title",
-      "value": "Hold to dive",
-      "default": "Hold to dive",
+      "value": "Tieni premuto per immergerti",
+      "default": "Tieni premuto per immergerti",
       "max_length": 30
     },
     {
       "id": "INSTRUCTION_SUB",
       "label": "Instruction Subtitle",
-      "value": "Take a deep breath first",
-      "default": "Take a deep breath first",
+      "value": "Fai un bel respiro",
+      "default": "Fai un bel respiro",
       "max_length": 50
     },
     {
       "id": "RESULT_TITLE",
       "label": "Result Title",
-      "value": "Breath Hold Time",
-      "default": "Breath Hold Time",
+      "value": "Tempo in immersione",
+      "default": "Tempo in immersione",
       "max_length": 30
     },
     {
       "id": "RESULT_DESC_NORMAL",
       "label": "Result Desc (Normal)",
-      "value": "You surfaced for air!",
-      "default": "You surfaced for air!",
+      "value": "Sei tornato a respirare!",
+      "default": "Sei tornato a respirare!",
       "max_length": 40
     },
     {
       "id": "RESULT_DESC_O2",
       "label": "Result Desc (Out of O2)",
-      "value": "Out of oxygen!",
-      "default": "Out of oxygen!",
+      "value": "Ossigeno esaurito!",
+      "default": "Ossigeno esaurito!",
       "max_length": 40
     },
     {
       "id": "BTN_REPLAY",
       "label": "Replay Button",
-      "value": "Try Again",
-      "default": "Try Again",
+      "value": "Riprova",
+      "default": "Riprova",
       "max_length": 20
     }
   ],
@@ -67,7 +67,7 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

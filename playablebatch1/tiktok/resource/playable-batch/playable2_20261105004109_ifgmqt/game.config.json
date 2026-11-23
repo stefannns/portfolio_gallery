@@ -165,15 +165,15 @@
     {
       "id": "GAME_TITLE",
       "label": "Game title",
-      "value": "Neon Dodge",
-      "default": "Neon Dodge",
+      "value": "Schiva al neon",
+      "default": "Schiva al neon",
       "max_length": 20
     },
     {
       "id": "GUIDE_TEXT",
       "label": "Play guide",
-      "value": "Drag to dodge",
-      "default": "Drag to dodge",
+      "value": "Trascina per schivare",
+      "default": "Trascina per schivare",
       "max_length": 24
     }
   ],
@@ -184,7 +184,7 @@
     "version_id": "111625820254335772",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

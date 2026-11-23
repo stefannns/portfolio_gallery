@@ -1,29 +1,31 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20260927020828_5pmrhn",
-  "number": 3,
-  "name": "One Stroke",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "A single-stroke node puzzle with clean connecting lines and clearly separated nodes. Preserve the current board spacing, node states, line weight and compact puzzle controls.",
   "assets": [
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
-      "ids": [],
-      "bytes": 50616,
-      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
-      "ids": [],
-      "bytes": 51212,
-      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "35076925b02b2facbdb301521a3e766a57eafa8b6d84d1d08b52c1122a0a131e",
-    "dist/bundle.js": "35076925b02b2facbdb301521a3e766a57eafa8b6d84d1d08b52c1122a0a131e",
-    "dist/game.html": "4e109a85b92d336d84839346a14e9d7218c26da881a9211f2f2b1e9ea382e2b1",
-    "dist/game.config.json": "2ed925aa5c58300deda68d4f909d1c5a9c26f28685c6ab1eec2f92f373768171"
-  }
+  ]
 }

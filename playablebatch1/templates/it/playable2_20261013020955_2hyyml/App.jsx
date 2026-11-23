@@ -334,91 +334,126 @@ function deviceForYear(value) {
   let value2 = Number.isFinite(value) ? Math.min(value, 2026) : 2026;
   return CAMERA_DEVICES.find(item => value2 < item.before);
 }
-function useCameraStream(facingMode, otherValue) {
-  let videoRef = React.useRef(null);
-  let stateRef = React.useRef(null);
-  let stateRef2 = React.useRef(0);
-  let [ready, setReady] = React.useState(false);
-  let [error, setError] = React.useState(null);
-  let callback = React.useCallback(() => {
-    stateRef2.current++;
-    if (stateRef.current) {
-      stateRef.current.getTracks().forEach(item => item.stop());
-      stateRef.current = null;
+// A resolved play() promise does not guarantee a decoded camera frame.
+function waitForDecodedCamera(video, isCurrent = () => true) {
+  return new Promise((resolve, reject) => {
+    let raf = 0, callback = 0, finished = false, sawFrame = false;
+    const hasFrameCallback = typeof video.requestVideoFrameCallback === 'function';
+    const timer = setTimeout(() => finish(new Error('CameraFrameTimeout')), 10000);
+    function finish(error) {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      cancelAnimationFrame(raf);
+      if (callback && typeof video.cancelVideoFrameCallback === 'function') video.cancelVideoFrameCallback(callback);
+      error ? reject(error) : resolve(video);
     }
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
-    setReady(false);
-  }, []);
-  let attachVideo = React.useCallback(value => {
-    videoRef.current = value;
-    let current = stateRef.current;
-    if (!value || !current) return;
-    let y = stateRef2.current;
-    value.srcObject = current;
-    Promise.resolve(value.play()).then(() => {
-      if (y === stateRef2.current && videoRef.current === value) {
-        setReady(true);
-      }
-    }).catch(error2 => {
-      if (y === stateRef2.current) {
-        console.warn("[camera] Video playback failed", error2);
-        setError("Impossibile avviare la fotocamera.");
-      }
-    });
-  }, []);
-  let restart = React.useCallback(async () => {
-    if (!otherValue) return;
-    callback();
-    let current = stateRef2.current;
-    setError(null);
-    try {
-      let value = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: facingMode
-        }
-      });
-      if (current !== stateRef2.current || document.hidden) {
-        value.getTracks().forEach(y => y.stop());
+    function check() {
+      if (finished) return;
+      if (!isCurrent()) { finish(new Error('CameraRequestCancelled')); return; }
+      if (video.error) { finish(new Error('CameraPlaybackFailed')); return; }
+      if (video.readyState >= 2 && video.videoWidth > 0 && video.videoHeight > 0 && (!hasFrameCallback || sawFrame)) {
+        finish();
         return;
       }
-      stateRef.current = value;
-      attachVideo(videoRef.current);
-    } catch (value) {
-      console.warn("[camera] getUserMedia failed", value);
-      if (current === stateRef2.current) {
-        setError(value?.name === "NotAllowedError"
-          ? "Consenti l’accesso alla fotocamera per continuare."
-          : "Fotocamera non disponibile.");
-      }
+      raf = requestAnimationFrame(check);
     }
-  }, [facingMode, otherValue, callback, attachVideo]);
-  React.useEffect(() => {
-    restart();
-    return () => callback();
-  }, [restart, callback]);
-  React.useEffect(() => {
-    let handleAction = () => {
-      if (document.hidden) {
-        callback();
-      } else {
-        if (otherValue) {
-          restart();
-        }
-      }
-    };
-    document.addEventListener("visibilitychange", handleAction);
-    return () => document.removeEventListener("visibilitychange", handleAction);
-  }, [otherValue, restart, callback]);
-  return {
-    videoRef: videoRef,
-    attachVideo: attachVideo,
-    ready: ready,
-    error: error,
-    restart: restart
-  };
+    if (hasFrameCallback) callback = video.requestVideoFrameCallback(() => { sawFrame = true; });
+    check();
+  });
 }
+
+function prepareInlineCameraVideo(video) {
+  video.playsInline = true;
+  video.muted = true;
+  video.autoplay = true;
+  video.setAttribute('playsinline', '');
+  video.setAttribute('webkit-playsinline', '');
+  video.setAttribute('muted', '');
+  video.setAttribute('autoplay', '');
+}
+
+const CAMERA_COPY = {"denied": "Consenti l’accesso alla fotocamera e riprova.", "unavailable": "Fotocamera non disponibile. Torna indietro e riprova.", "noFrame": "La fotocamera non ha fornito immagini. Torna indietro e riprova.", "stopped": "La fotocamera si è fermata. Torna indietro e riaprila."};
+function useCameraStream(facingMode, enabled) {
+  const videoRef = React.useRef(null), streamRef = React.useRef(null), requestRef = React.useRef(0);
+  const hostActive = React.useRef(true), enabledRef = React.useRef(enabled);
+  enabledRef.current = enabled;
+  const [ready, setReady] = React.useState(false), [error, setError] = React.useState(null);
+  const stop = React.useCallback(() => {
+    requestRef.current++;
+    const stream = streamRef.current;
+    streamRef.current = null;
+    stream?.getTracks().forEach(track => track.stop());
+    const video = videoRef.current;
+    if (video) { video.pause(); video.srcObject = null; }
+    setReady(false);
+  }, []);
+  const play = React.useCallback(async (video, stream, request) => {
+    if (!video || !stream) return;
+    const current = () => request === requestRef.current && stream === streamRef.current && video === videoRef.current && enabledRef.current && hostActive.current && !document.hidden;
+    if (!current()) return;
+    prepareInlineCameraVideo(video);
+    video.srcObject = stream;
+    try {
+      await Promise.all([Promise.resolve(video.play()), waitForDecodedCamera(video, current)]);
+      if (current()) setReady(true);
+    } catch (failure) {
+      if (request !== requestRef.current) return;
+      stop();
+      setError(failure?.message === 'CameraFrameTimeout' ? CAMERA_COPY.noFrame : CAMERA_COPY.unavailable);
+    }
+  }, [stop]);
+  const attachVideo = React.useCallback(video => {
+    videoRef.current = video;
+    if (video && streamRef.current) play(video, streamRef.current, requestRef.current);
+  }, [play]);
+  const restart = React.useCallback(async () => {
+    stop();
+    if (!enabledRef.current || !hostActive.current || document.hidden) return;
+    const request = requestRef.current;
+    setError(null);
+    try {
+      if (!navigator.mediaDevices?.getUserMedia) throw new Error('CameraUnsupported');
+      const stream = await navigator.mediaDevices.getUserMedia({video: {facingMode: {ideal: facingMode}}, audio: false});
+      if (request !== requestRef.current || !enabledRef.current || !hostActive.current || document.hidden) {
+        stream.getTracks().forEach(track => track.stop());
+        return;
+      }
+      streamRef.current = stream;
+      for (const track of stream.getVideoTracks()) track.addEventListener('ended', () => {
+        if (request !== requestRef.current) return;
+        stop();
+        setError(CAMERA_COPY.stopped);
+      }, {once: true});
+      await play(videoRef.current, stream, request);
+    } catch (failure) {
+      if (request !== requestRef.current) return;
+      stop();
+      setError(failure?.name === 'NotAllowedError' ? CAMERA_COPY.denied : CAMERA_COPY.unavailable);
+    }
+  }, [facingMode, enabled, stop, play]);
+  React.useEffect(() => { restart(); return stop; }, [restart, stop]);
+  React.useEffect(() => {
+    const visibility = () => { document.hidden ? stop() : restart(); };
+    const host = event => {
+      if (event.source !== parent || event.data?.type !== 'playable-active') return;
+      const wasActive = hostActive.current;
+      hostActive.current = event.data.active === true;
+      if (!hostActive.current) stop();
+      else if (!wasActive) restart();
+    };
+    document.addEventListener('visibilitychange', visibility);
+    window.addEventListener('message', host);
+    window.addEventListener('pagehide', stop);
+    return () => {
+      document.removeEventListener('visibilitychange', visibility);
+      window.removeEventListener('message', host);
+      window.removeEventListener('pagehide', stop);
+    };
+  }, [restart, stop]);
+  return {videoRef, attachVideo, ready, error, restart};
+}
+
 function seededRandom(value) {
   let value2 = value >>> 0;
   return () => {
@@ -800,76 +835,65 @@ function YearDial({
       zIndex: 3
     }} />}</div>;
 }
-function CameraPreview({
-  videoRef: e,
-  year: t,
-  facing: n,
-  ready: r,
-  onRendered: o
-}) {
-  let elementRef = React.useRef(null);
+function drawRealCameraFrame(effects, context, video, width, height, options) {
+  if (!video || video.readyState < 2 || !video.videoWidth || !video.videoHeight || !width || !height) return false;
+  try { return effects.draw(context, video, width, height, options); }
+  catch { return false; }
+}
+
+function CameraPreview({videoRef, year, facing, ready, onRendered}) {
+  const canvasRef = React.useRef(null);
+  const [painted, setPainted] = React.useState(false);
   React.useEffect(() => {
-    let dimensions = elementRef.current;
-    if (!dimensions || !r) return;
-    let context = dimensions.getContext("2d");
-    let cameraEffects = createCameraEffects();
-    if (!context) return;
-    let value = 0;
-    let value2 = -1 / 0;
-    let enabled = false;
-    let enabled2 = false;
-    let value3 = window.matchMedia("(prefers-reduced-motion: reduce)");
-    function y() {
-      let dimensions2 = dimensions.parentElement.getBoundingClientRect();
-      let value4 = Math.min(window.devicePixelRatio || 1, 1.5);
-      dimensions.width = Math.max(1, Math.min(720, Math.round(dimensions2.width * value4)));
-      dimensions.height = Math.max(1, Math.round(dimensions.width * dimensions2.height / Math.max(1, dimensions2.width)));
-    }
-    function v(time) {
-      if (!(enabled || document.hidden)) {
-        if (time - value2 >= 1000 / eraForYear(t).fps) {
-          value2 = time;
-          if (e.current?.readyState >= 2 && cameraEffects.draw(context, e.current, dimensions.width, dimensions.height, {
-            year: t,
-            mirror: n === "user",
-            time: time,
-            reducedMotion: value3.matches
-          }) && !enabled2) {
-            enabled2 = true;
-            o();
-          }
-        }
-        value = requestAnimationFrame(v);
+    setPainted(false);
+    const canvas = canvasRef.current;
+    if (!canvas || !ready) return;
+    const context = canvas.getContext('2d');
+    const buffer = document.createElement('canvas'), bufferContext = buffer.getContext('2d');
+    if (!context || !bufferContext) return;
+    const effects = createCameraEffects();
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let raf = 0, previous = -Infinity, stopped = false, first = true;
+    const resize = () => {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const density = Math.min(window.devicePixelRatio || 1, 1.5);
+      const width = Math.max(1, Math.min(720, Math.round(rect.width * density)));
+      const height = Math.max(1, Math.round(width * rect.height / Math.max(1, rect.width)));
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = buffer.width = width;
+        canvas.height = buffer.height = height;
       }
-    }
-    function w() {
-      cancelAnimationFrame(value);
-      if (!document.hidden) {
-        value2 = -1 / 0;
-        value = requestAnimationFrame(v);
-      }
-    }
-    y();
-    let resizeObserver = observeGameSize(y);
-    resizeObserver.observe(dimensions.parentElement);
-    document.addEventListener("visibilitychange", w);
-    value = requestAnimationFrame(v);
-    return () => {
-      enabled = true;
-      cancelAnimationFrame(value);
-      resizeObserver.disconnect();
-      document.removeEventListener("visibilitychange", w);
     };
-  }, [t, n, r, e, o]);
-  return <canvas ref={elementRef} aria-label={`${eraForYear(t).name} camera viewfinder`} style={{
-    position: "absolute",
-    inset: 0,
-    width: "100%",
-    height: "100%",
-    pointerEvents: "none",
-    opacity: r ? 1 : 0
+    const paint = timestamp => {
+      if (stopped) return;
+      // Schedule first, so a transient camera frame cannot kill the loop.
+      raf = requestAnimationFrame(paint);
+      if (document.hidden || timestamp - previous < 1000 / eraForYear(year).fps) return;
+      previous = timestamp;
+      if (!drawRealCameraFrame(effects, bufferContext, videoRef.current, buffer.width, buffer.height,
+        {year, mirror: facing === 'user', time: timestamp, reducedMotion: reduced.matches})) return;
+      // Publish only a complete real frame; keep the last valid picture on interruption.
+      context.setTransform(1, 0, 0, 1, 0, 0);
+      context.drawImage(buffer, 0, 0);
+      if (first) { first = false; setPainted(true); onRendered(); }
+    };
+    resize();
+    const observer = typeof ResizeObserver === 'function' ? new ResizeObserver(resize) : null;
+    observer?.observe(canvas.parentElement);
+    window.addEventListener('resize', resize);
+    raf = requestAnimationFrame(paint);
+    return () => {
+      stopped = true;
+      cancelAnimationFrame(raf);
+      observer?.disconnect();
+      window.removeEventListener('resize', resize);
+    };
+  }, [year, facing, ready, videoRef, onRendered]);
+  return <canvas ref={canvasRef} aria-label={`${eraForYear(year).name} camera viewfinder`} style={{
+    position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', opacity: ready && painted ? 1 : 0
   }} />;
 }
+
 function App() {
   let [config, setConfig] = React.useState(null);
   let [screen, setScreen] = React.useState("setup");
@@ -958,7 +982,7 @@ function App() {
     }
   };
   let capturePhoto = () => {
-    if (!cameraReady || !videoRef.current || capturing) return;
+    if (!cameraReady || !frameReady || !videoRef.current || videoRef.current.readyState < 2 || !videoRef.current.videoWidth || !videoRef.current.videoHeight || capturing) return;
     setCapturing(true);
     let element = document.createElement("div");
     element.style.cssText = "position:fixed; inset:0; background:#fff; z-index:9999; opacity:1; transition:opacity 0.3s; pointer-events:none;";
@@ -971,11 +995,11 @@ function App() {
     setTimeout(() => element.remove(), 300);
     let current = videoRef.current;
     let z = document.createElement("canvas");
-    z.width = current.videoWidth || 720;
-    z.height = current.videoHeight || 1280;
+    z.width = current.videoWidth;
+    z.height = current.videoHeight;
     let context = z.getContext("2d");
     let dimensions = current.parentElement.getBoundingClientRect();
-    if (z.width = Math.min(1600, Math.max(current.videoWidth, current.videoHeight)), z.height = Math.round(z.width * dimensions.height / Math.max(1, dimensions.width)), !createCameraEffects().draw(context, current, z.width, z.height, {
+    if (z.width = Math.min(1600, Math.max(current.videoWidth, current.videoHeight)), z.height = Math.round(z.width * dimensions.height / Math.max(1, dimensions.width)), !drawRealCameraFrame(createCameraEffects(), context, current, z.width, z.height, {
       year: year,
       mirror: facingMode === "user",
       time: performance.now(),
@@ -1205,7 +1229,7 @@ function App() {
           gap: "40px"
         }}>{<div style={{
             width: "48px"
-          }} />}{<button type={"button"} aria-label={"Scatta"} onClick={capturePhoto} disabled={capturing || !cameraReady} style={{
+          }} />}{<button type={"button"} aria-label={"Scatta"} onClick={capturePhoto} disabled={capturing || !cameraReady || !frameReady} style={{
             width: "72px",
             height: "72px",
             borderRadius: "50%",
@@ -1216,7 +1240,7 @@ function App() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            opacity: capturing || !cameraReady ? 0.5 : 1
+            opacity: capturing || !cameraReady || !frameReady ? 0.5 : 1
           }}>{<div style={{
               width: "60px",
               height: "60px",

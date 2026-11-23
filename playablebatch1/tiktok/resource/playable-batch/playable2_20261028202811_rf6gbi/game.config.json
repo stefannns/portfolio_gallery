@@ -65,8 +65,8 @@
     {
       "id": "DRAW_HINT",
       "label": "Drawing hint",
-      "value": "Draw a closed shape",
-      "default": "Draw a closed shape",
+      "value": "Disegna forma chiusa",
+      "default": "Disegna forma chiusa",
       "max_length": 20
     }
   ],
@@ -98,7 +98,7 @@
     "version_id": "109025442472120588",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

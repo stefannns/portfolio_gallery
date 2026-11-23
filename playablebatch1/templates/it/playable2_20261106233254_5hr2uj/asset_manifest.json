@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "bangers",
+  "style_anchor": "Colored hand-drawn player fighter translated into rounded 3D form, a neat cat opponent and cartoon impact stars.",
+  "assets": [
+    {
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: Bangers-Regular",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_block.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx block",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_click.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx click",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_draw.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx draw",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_footstep.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx footstep",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_guard.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx guard",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_hit.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx hit",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_punch.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx punch",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_result.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx result",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_step.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx step",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_swoosh.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx swoosh",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}

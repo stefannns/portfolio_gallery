@@ -1,45 +1,55 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20261001225821_af5uee",
-  "number": 45,
-  "name": "Draw a Star",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "A star drawing challenge on a beach and coconut scene. Preserve the current sand texture, coconut image, high-contrast drawing marks and readable guide capsule.",
   "assets": [
     {
-      "path": "dist/assets/beach-sand-v1.webp",
-      "ids": [
-        "BG_MAIN"
-      ],
-      "bytes": 476536,
-      "sha256": "24ac6b8262b33f53f4ebfb5ae2a38ffbf23d23d5edda54b8ab11ee1c0410bc9c"
+      "path": "assets/beach-sand-v1.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A star drawing challenge on a beach and coconut scene. Preserve the current sand texture, coconut image, high-contrast drawing marks and readable guide capsule. Asset requirement: Existing Main Background artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Main Background artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "2:3",
+      "size_tier": "full",
+      "recommended_size": "780x1170",
+      "width": 780,
+      "height": 1170,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
-      "ids": [],
-      "bytes": 50616,
-      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
-      "ids": [],
-      "bytes": 51212,
-      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/img_coconut_uncarved.webp",
-      "ids": [
-        "IMG_COCONUT"
-      ],
-      "bytes": 434748,
-      "sha256": "e931c64b676849049ee7139fa6c833e1f26010c5bf98585dbe2f6884ec8e343c"
+      "path": "assets/img_coconut_uncarved.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A star drawing challenge on a beach and coconut scene. Preserve the current sand texture, coconut image, high-contrast drawing marks and readable guide capsule. Asset requirement: Existing Coconut Object artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Coconut Object artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "128:119",
+      "size_tier": "medium",
+      "recommended_size": "640x595",
+      "width": 640,
+      "height": 595,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "3411d4ac7699055d641c7859eb213d4afe1d07e0cc9cc3b983122d85ed619fb2",
-    "dist/bundle.js": "3411d4ac7699055d641c7859eb213d4afe1d07e0cc9cc3b983122d85ed619fb2",
-    "dist/game.html": "78684307d5bb7ec3ca5dd3621c4a36794b4dd89e6d7b1367426df8f480d8aba4",
-    "dist/game.config.json": "6ea0a6d5358145b60494201986a74fafe9c6f04ef4552b2e97633c46f740cb9e"
-  }
+  ]
 }

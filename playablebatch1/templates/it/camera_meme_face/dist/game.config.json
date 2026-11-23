@@ -43,6 +43,12 @@
       "label": "Sfondo di carta stampata",
       "path": "./assets/paper-print-v1.svg",
       "replaceable": true
+    },
+    {
+      "id": "MEME_4",
+      "label": "Espressione del gattino bagnato",
+      "path": "./assets/meme-4.png",
+      "replaceable": true
     }
   ]
 }

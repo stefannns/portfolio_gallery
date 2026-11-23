@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "dynapuff",
+  "style_anchor": "Warm yellow dotted paper, dark orbital rings, white planet centers and a muted green launch-range highlight.",
+  "assets": [
+    {
+      "path": "assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: DynaPuff-SemiBold",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: Poppins-Bold",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: Poppins-Regular",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/yellow-paper-dots-v3.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Yellow paper with faint printed dots",
+      "aspect_ratio": "8:13",
+      "size_tier": "small",
+      "recommended_size": "400x650",
+      "width": 400,
+      "height": 650,
+      "ok": true
+    }
+  ]
+}

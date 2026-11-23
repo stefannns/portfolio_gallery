@@ -1,37 +1,43 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20260928031559_rckaf4",
-  "number": 35,
-  "name": "Piano Tiles Rhythm Game",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "A piano interaction with a clear keyboard and blue numerical feedback. Preserve the current key proportions, musical feedback, restrained interface and blue result numerals.",
   "assets": [
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
-      "ids": [],
-      "bytes": 50616,
-      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
-      "ids": [],
-      "bytes": 51212,
-      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/ui_piano_keyboard.webp",
-      "ids": [
-        "UI_KEYBOARD"
-      ],
-      "bytes": 123580,
-      "sha256": "33d23e25978e3570d6e1fc0d71b6d394ef0fce6f484a64575055b96df427f496"
+      "path": "assets/ui_piano_keyboard.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A piano interaction with a clear keyboard and blue numerical feedback. Preserve the current key proportions, musical feedback, restrained interface and blue result numerals. Asset requirement: Existing Keyboard Watermark artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Keyboard Watermark artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "227:241",
+      "size_tier": "large",
+      "recommended_size": "1816x1928",
+      "width": 1816,
+      "height": 1928,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "396ac26a96b047156faa9e50b9cbafc74ca3c7ecbdc230cd4648b82e0396579e",
-    "dist/bundle.js": "396ac26a96b047156faa9e50b9cbafc74ca3c7ecbdc230cd4648b82e0396579e",
-    "dist/game.html": "b3a77f6c18c1f4cfdd8631663a563a139fa2fb73757748afaadfa75e87c23ba7",
-    "dist/game.config.json": "b2c33c814af58833fef440043f492cde24acf0e9470c89f33f4ef988567dfc57"
-  }
+  ]
 }

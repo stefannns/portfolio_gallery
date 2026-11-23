@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "Three-dimensional fluted vanilla soft serve, hollow waffle cone, metal dispenser and a warm cream background.",
+  "assets": [
+    {
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: Poppins-Bold",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: Poppins-Regular",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_reset.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx reset",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_result.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx result",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}

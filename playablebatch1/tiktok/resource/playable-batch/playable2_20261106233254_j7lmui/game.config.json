@@ -45,29 +45,29 @@
     {
       "id": "GUIDE",
       "label": "Guide",
-      "value": "Drag to dodge!",
-      "default": "Drag to dodge!",
+      "value": "Trascina per schivare!",
+      "default": "Trascina per schivare!",
       "max_length": 30
     },
     {
       "id": "CAUGHT",
       "label": "Result",
-      "value": "Caught!",
-      "default": "Caught!",
+      "value": "Preso!",
+      "default": "Preso!",
       "max_length": 20
     },
     {
       "id": "BEST",
       "label": "Best label",
-      "value": "BEST",
-      "default": "BEST",
+      "value": "RECORD",
+      "default": "RECORD",
       "max_length": 20
     },
     {
       "id": "AGAIN",
       "label": "Replay",
-      "value": "Play again",
-      "default": "Play again",
+      "value": "Rigioca",
+      "default": "Rigioca",
       "max_length": 20
     }
   ],
@@ -78,7 +78,7 @@
     "version_id": "112333418888785867",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

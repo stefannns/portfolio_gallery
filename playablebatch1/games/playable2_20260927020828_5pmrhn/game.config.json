@@ -35,78 +35,78 @@
     {
       "id": "GAME_TITLE",
       "label": "Game Title",
-      "value": "One Stroke",
-      "default": "One Stroke",
+      "value": "Un solo tratto",
+      "default": "Un solo tratto",
       "max_length": 20
     },
     {
       "id": "TEXT_LEVEL_PREFIX",
       "label": "Level Prefix",
-      "value": "Level",
-      "default": "Level",
+      "value": "Livello",
+      "default": "Livello",
       "max_length": 10
     },
     {
       "id": "BTN_HINT",
       "label": "Hint Button",
-      "value": "Hint",
-      "default": "Hint",
+      "value": "Aiuto",
+      "default": "Aiuto",
       "max_length": 10
     },
     {
       "id": "BTN_RESET",
       "label": "Reset Button",
-      "value": "Reset",
-      "default": "Reset",
+      "value": "Ricomincia",
+      "default": "Ricomincia",
       "max_length": 10
     },
     {
       "id": "TEXT_CONNECT",
       "label": "Instruction",
-      "value": "Connect all nodes in one stroke",
-      "default": "Connect all nodes in one stroke",
+      "value": "Unisci i punti senza staccare",
+      "default": "Unisci i punti senza staccare",
       "max_length": 50
     },
     {
       "id": "TEXT_NO_LIFT",
       "label": "Sub Instruction",
-      "value": "Don't lift your finger!",
-      "default": "Don't lift your finger!",
+      "value": "Non staccare il dito!",
+      "default": "Non staccare il dito!",
       "max_length": 40
     },
     {
       "id": "TEXT_DEAD_END",
       "label": "Dead End Toast",
-      "value": "Dead end. Draw again.",
-      "default": "Dead end! Try resetting.",
+      "value": "Vicolo cieco. Ridisegna.",
+      "default": "Vicolo cieco. Ricomincia.",
       "max_length": 30
     },
     {
       "id": "TEXT_ALL_CLEAR",
       "label": "All Clear Title",
-      "value": "You Did It!",
-      "default": "You Did It!",
+      "value": "Ce l’hai fatta!",
+      "default": "Ce l’hai fatta!",
       "max_length": 20
     },
     {
       "id": "TEXT_ALL_CLEAR_SUB",
       "label": "All Clear Subtitle",
-      "value": "All 4 puzzles solved.",
-      "default": "All 4 puzzles solved.",
+      "value": "Hai risolto tutti e 4 gli schemi.",
+      "default": "Hai risolto tutti e 4 gli schemi.",
       "max_length": 40
     },
     {
       "id": "BTN_PLAY_AGAIN",
       "label": "Play Again Button",
-      "value": "Play Again",
-      "default": "Play Again",
+      "value": "Rigioca",
+      "default": "Rigioca",
       "max_length": 15
     },
     {
       "id": "BTN_POST_PLAY",
       "label": "Post My Play Button",
-      "value": "Post My Play",
-      "default": "Post My Play",
+      "value": "Condividi",
+      "default": "Condividi",
       "max_length": 20
     }
   ],
@@ -115,7 +115,7 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

@@ -1,75 +1,91 @@
 {
-  "manifest_version": 1,
-  "task_id": "01_petme_9gw00a_game",
-  "number": 63,
-  "name": "Pet Me",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "dynapuff",
+  "style_anchor": "A photographic pet grooming interaction with smooth changes between animal expressions. Preserve the current animal images, comb, gentle fur particles and bold guide above the animal.",
   "assets": [
     {
-      "path": "dist/assets/comb.webp",
-      "ids": [
-        "COMB"
-      ],
-      "bytes": 80622,
-      "sha256": "31aace0587b7b99457b65864a3e77e440d4638846e700573b5a2bbfa64d7dece"
+      "path": "assets/comb.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A photographic pet grooming interaction with smooth changes between animal expressions. Preserve the current animal images, comb, gentle fur particles and bold guide above the animal. Asset requirement: Existing comb artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing comb artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "191:658",
+      "size_tier": "medium",
+      "recommended_size": "382x1316",
+      "width": 382,
+      "height": 1316,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
-      "ids": [],
-      "bytes": 37464,
-      "sha256": "487694c955a01a6b9e0985b4839ebe6f5406770db551ea163799ee02deb7d3a4"
+      "path": "assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled DynaPuff SemiBold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/ui/NunitoSans.woff",
-      "ids": [],
-      "bytes": 261628,
-      "sha256": "e9456519e92dcb6c5857cad504f67c93203e86e81714510f341c72ace8e2313f"
+      "path": "assets/fonts/ui/NunitoSans.woff",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled NunitoSans font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/ui/OFL.txt",
-      "ids": [],
-      "bytes": 4393,
-      "sha256": "efbb0c9e864cef973982d9a17567e6be5c3d1759695574586f3f18c7ecca064b"
+      "path": "assets/pet_base.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A photographic pet grooming interaction with smooth changes between animal expressions. Preserve the current animal images, comb, gentle fur particles and bold guide above the animal. Asset requirement: Existing pet base artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing pet base artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "67:89",
+      "size_tier": "full",
+      "recommended_size": "1206x1602",
+      "width": 1206,
+      "height": 1602,
+      "ok": true
     },
     {
-      "path": "dist/assets/pet_base.webp",
-      "ids": [
-        "PET_BASE"
-      ],
-      "bytes": 282438,
-      "sha256": "ee2b2d8f1e218204cb5b07e4254f726023a1ae98467782a45311e0db3dbcb847"
+      "path": "assets/pet_finish.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A photographic pet grooming interaction with smooth changes between animal expressions. Preserve the current animal images, comb, gentle fur particles and bold guide above the animal. Asset requirement: Existing pet finish artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing pet finish artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "28:37",
+      "size_tier": "full",
+      "recommended_size": "896x1184",
+      "width": 896,
+      "height": 1184,
+      "ok": true
     },
     {
-      "path": "dist/assets/pet_finish.webp",
-      "ids": [
-        "PET_FINISH"
-      ],
-      "bytes": 1048462,
-      "sha256": "f1273b6e8aad04cc5895838cdaaa2b33b7fcfc1c2e555d1d7382d8f976df9b68"
+      "path": "assets/pet_happy.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A photographic pet grooming interaction with smooth changes between animal expressions. Preserve the current animal images, comb, gentle fur particles and bold guide above the animal. Asset requirement: Existing pet happy artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing pet happy artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "28:37",
+      "size_tier": "full",
+      "recommended_size": "896x1184",
+      "width": 896,
+      "height": 1184,
+      "ok": true
     },
     {
-      "path": "dist/assets/pet_happy.webp",
-      "ids": [
-        "PET_HAPPY"
-      ],
-      "bytes": 1047336,
-      "sha256": "663ba5dff9d401faf6220dab06c1aeb8a7d5d93190d71cb4e531943eb322c962"
-    },
-    {
-      "path": "dist/assets/pet_resist.webp",
-      "ids": [
-        "PET_RESIST"
-      ],
-      "bytes": 1040438,
-      "sha256": "9fc05611880ae6a1ad8937514de1d34028e490f868ef429e125eecc5d24ed559"
+      "path": "assets/pet_resist.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A photographic pet grooming interaction with smooth changes between animal expressions. Preserve the current animal images, comb, gentle fur particles and bold guide above the animal. Asset requirement: Existing pet resist artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing pet resist artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "28:37",
+      "size_tier": "full",
+      "recommended_size": "896x1184",
+      "width": 896,
+      "height": 1184,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "4c955c6ecef46ec91457d712ce9509a06d4ed9c879353c6ef52cf7d45b8e13f1",
-    "dist/bundle.js": "4c955c6ecef46ec91457d712ce9509a06d4ed9c879353c6ef52cf7d45b8e13f1",
-    "dist/game.html": "894d9604fad74f6bda31bed6533c9273572e2773dd95abb109a95dfbdca31f35",
-    "dist/game.config.json": "da406bc072eb93389ee5e9df6efc360f1d51f383d3e0c71e5482695e8cafc535"
-  }
+  ]
 }

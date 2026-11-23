@@ -2,8 +2,8 @@
   "config_version": "2.0",
   "playable": {
     "name": "friends_billiards",
-    "title": "Friend Billiards",
-    "content_locale": "en",
+    "title": "Biliardo tra amici",
+    "content_locale": "it",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
     "min_capability_level": 2,
@@ -12,9 +12,9 @@
   "texts": [
     {
       "id": "GUIDE",
-      "label": "Interaction guide",
-      "value": "Pull back · release to shoot",
-      "default": "Pull back · release to shoot",
+      "label": "Guida all’interazione",
+      "value": "Trascina indietro e rilascia",
+      "default": "Trascina indietro e rilascia",
       "max_length": 100
     }
   ],
@@ -22,25 +22,25 @@
   "images": [
     {
       "id": "FRIEND_BEAN",
-      "label": "Friend Bean",
+      "label": "Avatar di Bean",
       "path": "./assets/friend-bean.webp",
       "replaceable": false
     },
     {
       "id": "FRIEND_CLOUDY",
-      "label": "Friend Cloudy",
+      "label": "Avatar di Cloudy",
       "path": "./assets/friend-cloudy.webp",
       "replaceable": false
     },
     {
       "id": "FRIEND_KITTY",
-      "label": "Friend Kitty",
+      "label": "Avatar di Kitty",
       "path": "./assets/friend-kitty.webp",
       "replaceable": false
     },
     {
       "id": "FRIEND_STARRY",
-      "label": "Friend Starry",
+      "label": "Avatar di Starry",
       "path": "./assets/friend-starry.webp",
       "replaceable": false
     }

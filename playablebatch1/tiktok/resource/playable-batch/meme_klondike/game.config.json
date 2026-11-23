@@ -2,8 +2,8 @@
   "config_version": "2.0",
   "playable": {
     "name": "meme_klondike",
-    "title": "Meme Klondike",
-    "content_locale": "en",
+    "title": "Solitario dei meme",
+    "content_locale": "it",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
     "min_capability_level": 2,
@@ -12,9 +12,9 @@
   "texts": [
     {
       "id": "GUIDE",
-      "label": "Interaction guide",
-      "value": "Alternate colors \u00b7 aces go home",
-      "default": "Alternate colors \u00b7 aces go home",
+      "label": "Guida all’interazione",
+      "value": "Alterna i colori · ordina gli assi",
+      "default": "Alterna i colori · ordina gli assi",
       "max_length": 100
     }
   ],
@@ -22,19 +22,19 @@
   "images": [
     {
       "id": "MEME_1",
-      "label": "Grumpy Cat card back",
+      "label": "Dorso con Grumpy Cat",
       "path": "./assets/meme-1.webp",
       "replaceable": true
     },
     {
       "id": "MEME_2",
-      "label": "Sleepy tongue-out cat card back",
+      "label": "Dorso con gatto assonnato e linguetta",
       "path": "./assets/meme-2.webp",
       "replaceable": true
     },
     {
       "id": "MEME_3",
-      "label": "Wide-eyed surprised cat card back",
+      "label": "Dorso con gatto sorpreso",
       "path": "./assets/meme-3.webp",
       "replaceable": true
     }

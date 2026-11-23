@@ -5,10 +5,17 @@
     {
       "id": "HINT_TEXT",
       "label": "Camera guide",
-      "value": "Drag or pinch to explore",
-      "default": "Drag or pinch to explore",
+      "value": "Ruota trascinando, zoom con due dita",
+      "default": "Ruota trascinando, zoom con due dita",
       "max_length": 42
     }
   ],
-  "images": []
+  "images": [],
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
 }

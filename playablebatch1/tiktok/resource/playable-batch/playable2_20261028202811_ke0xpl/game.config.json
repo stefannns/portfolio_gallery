@@ -65,50 +65,50 @@
     {
       "id": "GUIDE_TEXT",
       "label": "Trace guide",
-      "value": "Trace around the cat",
-      "default": "Trace around the cat",
+      "value": "Ricalca il contorno del gatto",
+      "default": "Ricalca il contorno del gatto",
       "max_length": 80
     },
     {
       "id": "RESET_LABEL",
       "label": "Reset button",
-      "value": "Reset",
-      "default": "Reset",
+      "value": "Ricomincia",
+      "default": "Ricomincia",
       "max_length": 20
     },
     {
       "id": "CONFIRM_LABEL",
       "label": "Confirm button",
-      "value": "Make squishy",
-      "default": "Make squishy",
+      "value": "Crea lo squishy",
+      "default": "Crea lo squishy",
       "max_length": 20
     },
     {
       "id": "RESET_SHAPE_LABEL",
       "label": "Compact reset shape button",
-      "value": "Reset shape",
-      "default": "Reset shape",
+      "value": "Rifai la forma",
+      "default": "Rifai la forma",
       "max_length": 30
     },
     {
       "id": "CHOOSE_LABEL",
       "label": "Choose image button",
-      "value": "Choose image",
-      "default": "Choose image",
+      "value": "Scegli foto",
+      "default": "Scegli foto",
       "max_length": 30
     },
     {
       "id": "PICKER_TITLE",
       "label": "Picker title",
-      "value": "Choose an image",
-      "default": "Choose an image",
+      "value": "Scegli una foto",
+      "default": "Scegli una foto",
       "max_length": 30
     },
     {
       "id": "BACK_LABEL",
       "label": "Picker back button",
-      "value": "Back",
-      "default": "Back",
+      "value": "Indietro",
+      "default": "Indietro",
       "max_length": 20
     }
   ],
@@ -137,8 +137,8 @@
     "post_id": "109025442509735103",
     "version_id": "109025442509759752",
     "runtime_target": "h5",
-    "h5_playstyle_type": "image_expression",
-    "content_locale": "en",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

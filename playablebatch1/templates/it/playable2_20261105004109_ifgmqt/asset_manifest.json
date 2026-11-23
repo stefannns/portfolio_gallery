@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "audiowide",
+  "style_anchor": "Near-black neon grid, cyan glowing orb, solid red falling obstacles and bright laser hazards.",
+  "assets": [
+    {
+      "path": "assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: Audiowide-Regular",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/music_neon_dodge.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: music neon dodge",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_collision.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx collision",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_near_miss.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx near miss",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_replay.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx replay",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}

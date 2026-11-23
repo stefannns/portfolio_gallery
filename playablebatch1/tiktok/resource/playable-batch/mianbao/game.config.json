@@ -15,8 +15,8 @@
     {
       "id": "RESULT_TEXT",
       "label": "结果文案",
-      "value": "Burnt!",
-      "default": "Burnt!",
+      "value": "Bruciato!",
+      "default": "Bruciato!",
       "max_length": 20
     }
   ],
@@ -49,6 +49,9 @@
   "config_version": "2.0",
   "playable": {
     "runtime_target": "h5",
-    "h5_playstyle_type": "general_game"
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
   }
 }

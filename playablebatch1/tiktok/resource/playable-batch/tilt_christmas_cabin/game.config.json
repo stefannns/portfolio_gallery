@@ -2,8 +2,8 @@
   "config_version": "2.0",
   "playable": {
     "name": "tilt_christmas_cabin",
-    "title": "Christmas Cabin 360",
-    "content_locale": "en",
+    "title": "Baita di Natale",
+    "content_locale": "it",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
     "min_capability_level": 2,
@@ -12,9 +12,9 @@
   "texts": [
     {
       "id": "GUIDE",
-      "label": "Interaction guide",
-      "value": "Turn your phone to look around",
-      "default": "Turn your phone to look around",
+      "label": "Istruzioni",
+      "value": "Gira il telefono per guardarti intorno",
+      "default": "Gira il telefono per guardarti intorno",
       "max_length": 60
     }
   ],
@@ -22,7 +22,7 @@
   "images": [
     {
       "id": "PANORAMA",
-      "label": "Christmas cabin panorama",
+      "label": "Panorama della baita di Natale",
       "path": "./assets/christmas-panorama.webp",
       "replaceable": true
     }

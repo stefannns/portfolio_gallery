@@ -3,7 +3,7 @@
     {
       "id": "RUN_LENGTH",
       "kind": "number",
-      "label": "Run length (world units)",
+      "label": "Lunghezza della discesa (unità di gioco)",
       "value": 435,
       "default": 435,
       "min": 100,
@@ -13,7 +13,7 @@
     {
       "id": "CRUISE_SPEED",
       "kind": "number",
-      "label": "Speed (world units per second)",
+      "label": "Velocità (unità di gioco al secondo)",
       "value": 28,
       "default": 28,
       "min": 10,
@@ -23,7 +23,7 @@
     {
       "id": "BRAKE_SPEED",
       "kind": "number",
-      "label": "Braking speed (world units per second)",
+      "label": "Velocità in frenata (unità di gioco al secondo)",
       "value": 9,
       "default": 9,
       "min": 5,
@@ -33,7 +33,7 @@
     {
       "id": "GATE_POINTS",
       "kind": "number",
-      "label": "Clean gate points",
+      "label": "Punti per passaggio perfetto",
       "value": 100,
       "default": 100,
       "min": 10,
@@ -43,7 +43,7 @@
     {
       "id": "MISS_PENALTY",
       "kind": "number",
-      "label": "Missed gate penalty",
+      "label": "Penalità per porta mancata",
       "value": 30,
       "default": 30,
       "min": 0,
@@ -54,79 +54,79 @@
   "texts": [
     {
       "id": "GUIDE",
-      "label": "Opening guide",
-      "value": "Drag to carve",
-      "default": "Drag to carve",
+      "label": "Trascina per curvare",
+      "value": "Trascina per curvare",
+      "default": "Trascina per curvare",
       "max_length": 30
     },
     {
       "id": "BRAKE",
-      "label": "Brake button",
-      "value": "Brake",
-      "default": "Brake",
+      "label": "Frena",
+      "value": "Frena",
+      "default": "Frena",
       "max_length": 12
     },
     {
       "id": "FINISH",
-      "label": "Finish heading",
-      "value": "Run complete",
-      "default": "Run complete",
+      "label": "Discesa completata",
+      "value": "Discesa completata",
+      "default": "Discesa completata",
       "max_length": 25
     },
     {
       "id": "TIME",
-      "label": "Result time",
-      "value": "Time",
-      "default": "Time",
+      "label": "Tempo",
+      "value": "Tempo",
+      "default": "Tempo",
       "max_length": 12
     },
     {
       "id": "POINTS",
-      "label": "Result points",
-      "value": "Points",
-      "default": "Points",
+      "label": "Punti",
+      "value": "Punti",
+      "default": "Punti",
       "max_length": 12
     },
     {
       "id": "BEST",
-      "label": "Best times",
-      "value": "Personal best",
-      "default": "Personal best",
+      "label": "Record personale",
+      "value": "Record personale",
+      "default": "Record personale",
       "max_length": 25
     },
     {
       "id": "REPLAY",
-      "label": "Replay",
-      "value": "Run again",
-      "default": "Run again",
+      "label": "Un’altra discesa",
+      "value": "Un’altra discesa",
+      "default": "Un’altra discesa",
       "max_length": 20
     },
     {
       "id": "BLUE",
-      "label": "Blue route",
-      "value": "Blue Run",
-      "default": "Blue Run",
+      "label": "Pista blu",
+      "value": "Pista blu",
+      "default": "Pista blu",
       "max_length": 15
     },
     {
       "id": "BLACK",
-      "label": "Black route",
-      "value": "Black Run",
-      "default": "Black Run",
+      "label": "Pista nera",
+      "value": "Pista nera",
+      "default": "Pista nera",
       "max_length": 15
     },
     {
       "id": "CLEAN",
-      "label": "Clean gate",
-      "value": "Clean!",
-      "default": "Clean!",
+      "label": "Perfetto!",
+      "value": "Perfetto!",
+      "default": "Perfetto!",
       "max_length": 15
     },
     {
       "id": "MISSED",
-      "label": "Missed gate",
-      "value": "Missed",
-      "default": "Missed",
+      "label": "Mancata",
+      "value": "Mancata",
+      "default": "Mancata",
       "max_length": 15
     }
   ],
@@ -137,8 +137,9 @@
     "version_id": "112333418863563862",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
-    "full_capability_level": 1
+    "full_capability_level": 1,
+    "title": "Discesa alpina"
   }
 }

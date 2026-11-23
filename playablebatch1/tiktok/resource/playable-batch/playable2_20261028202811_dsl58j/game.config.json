@@ -65,8 +65,8 @@
     {
       "id": "GAME_HINT",
       "label": "开始提示",
-      "value": "Hold and swirl",
-      "default": "Hold and swirl",
+      "value": "Tieni premuto e gira",
+      "default": "Tieni premuto e gira",
       "max_length": 28
     },
     {
@@ -79,57 +79,57 @@
     {
       "id": "VANILLA",
       "label": "香草",
-      "value": "Vanilla",
-      "default": "Vanilla",
+      "value": "Vaniglia",
+      "default": "Vaniglia",
       "max_length": 12
     },
     {
       "id": "CHOCOLATE",
       "label": "巧克力",
-      "value": "Chocolate",
-      "default": "Chocolate",
+      "value": "Cioccolato",
+      "default": "Cioccolato",
       "max_length": 12
     },
     {
       "id": "STRAWBERRY",
       "label": "草莓",
-      "value": "Strawberry",
-      "default": "Strawberry",
+      "value": "Fragola",
+      "default": "Fragola",
       "max_length": 12
     },
     {
       "id": "RESULT_TITLE",
       "label": "结算标题",
-      "value": "Complete!",
-      "default": "Complete!",
+      "value": "Fatto!",
+      "default": "Fatto!",
       "max_length": 20
     },
     {
       "id": "RESULT_HEIGHT",
       "label": "结算高度",
-      "value": "Final height",
-      "default": "Final height",
+      "value": "Altezza finale",
+      "default": "Altezza finale",
       "max_length": 20
     },
     {
       "id": "PLAY_AGAIN",
       "label": "再来一次",
-      "value": "Play again",
-      "default": "Play again",
+      "value": "Rigioca",
+      "default": "Rigioca",
       "max_length": 20
     },
     {
       "id": "POST_PLAY",
       "label": "投稿",
-      "value": "Post my play",
-      "default": "Post my play",
+      "value": "Pubblica la partita",
+      "default": "Pubblica la partita",
       "max_length": 20
     },
     {
       "id": "BEST_LABEL",
       "label": "个人最佳文案",
-      "value": "Personal best",
-      "default": "Personal best",
+      "value": "Record personale",
+      "default": "Record personale",
       "max_length": 24
     }
   ],
@@ -140,7 +140,7 @@
     "version_id": "109025442484511583",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

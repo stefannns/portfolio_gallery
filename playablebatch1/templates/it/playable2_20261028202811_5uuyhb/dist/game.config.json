@@ -1,0 +1,195 @@
+{
+  "tweaks": [
+    {
+      "id": "BRUSH_1",
+      "kind": "number",
+      "label": "Brush size one",
+      "value": 7,
+      "default": 7,
+      "min": 4,
+      "max": 32,
+      "step": 1
+    },
+    {
+      "id": "BRUSH_2",
+      "kind": "number",
+      "label": "Brush size two",
+      "value": 10,
+      "default": 10,
+      "min": 4,
+      "max": 32,
+      "step": 1
+    },
+    {
+      "id": "BRUSH_3",
+      "kind": "number",
+      "label": "Brush size three",
+      "value": 14,
+      "default": 14,
+      "min": 4,
+      "max": 32,
+      "step": 1
+    },
+    {
+      "id": "BRUSH_4",
+      "kind": "number",
+      "label": "Brush size four",
+      "value": 20,
+      "default": 20,
+      "min": 4,
+      "max": 32,
+      "step": 1
+    },
+    {
+      "id": "BRUSH_5",
+      "kind": "number",
+      "label": "Brush size five",
+      "value": 27,
+      "default": 27,
+      "min": 4,
+      "max": 32,
+      "step": 1
+    },
+    {
+      "id": "INK_FADE_MS",
+      "kind": "number",
+      "label": "Cover recovery time",
+      "value": 3000,
+      "default": 3000,
+      "min": 2500,
+      "max": 12000,
+      "step": 100
+    },
+    {
+      "id": "INK_STEP",
+      "kind": "number",
+      "label": "Word spacing",
+      "value": 15,
+      "default": 15,
+      "min": 6,
+      "max": 30,
+      "step": 1
+    },
+    {
+      "id": "ACCENT_RATE",
+      "kind": "number",
+      "label": "Accent rhythm",
+      "value": 6,
+      "default": 6,
+      "min": 3,
+      "max": 12,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Title",
+      "value": "Parole sul foglio",
+      "default": "Parole sul foglio",
+      "max_length": 30
+    },
+    {
+      "id": "DRAW_HINT",
+      "label": "Drawing hint",
+      "value": "Passa per svelare le parole",
+      "default": "Passa per svelare le parole",
+      "max_length": 30
+    },
+    {
+      "id": "CLEAR_CANVAS",
+      "label": "Clear canvas label",
+      "value": "Cancella il foglio",
+      "default": "Cancella il foglio",
+      "max_length": 30
+    },
+    {
+      "id": "BRUSH_LABEL_1",
+      "label": "Fine brush label",
+      "value": "Pennello sottile",
+      "default": "Pennello sottile",
+      "max_length": 30
+    },
+    {
+      "id": "BRUSH_LABEL_2",
+      "label": "Small brush label",
+      "value": "Pennello piccolo",
+      "default": "Pennello piccolo",
+      "max_length": 30
+    },
+    {
+      "id": "BRUSH_LABEL_3",
+      "label": "Medium brush label",
+      "value": "Pennello medio",
+      "default": "Pennello medio",
+      "max_length": 30
+    },
+    {
+      "id": "BRUSH_LABEL_4",
+      "label": "Large brush label",
+      "value": "Pennello grande",
+      "default": "Pennello grande",
+      "max_length": 30
+    },
+    {
+      "id": "BRUSH_LABEL_5",
+      "label": "Wide brush label",
+      "value": "Pennello largo",
+      "default": "Pennello largo",
+      "max_length": 30
+    },
+    {
+      "id": "POEM_1",
+      "label": "Poem line one",
+      "value": "fai spazio alla quiete",
+      "default": "fai spazio alla quiete",
+      "max_length": 40
+    },
+    {
+      "id": "POEM_2",
+      "label": "Poem line two",
+      "value": "una piccola luce diventa un sentiero",
+      "default": "una piccola luce diventa un sentiero",
+      "max_length": 40
+    },
+    {
+      "id": "POEM_3",
+      "label": "Poem line three",
+      "value": "custodisci questo istante",
+      "default": "custodisci questo istante",
+      "max_length": 40
+    },
+    {
+      "id": "POEM_4",
+      "label": "Poem line four",
+      "value": "la mano ricorda il cielo",
+      "default": "la mano ricorda il cielo",
+      "max_length": 40
+    },
+    {
+      "id": "POEM_5",
+      "label": "Poem line five",
+      "value": "ricomincia con un gesto lieve",
+      "default": "ricomincia con un gesto lieve",
+      "max_length": 40
+    },
+    {
+      "id": "POEM_6",
+      "label": "Poem line six",
+      "value": "ciò che svanisce lascia una traccia",
+      "default": "ciò che svanisce lascia una traccia",
+      "max_length": 40
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109025442493025995",
+    "version_id": "109025442492874407",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

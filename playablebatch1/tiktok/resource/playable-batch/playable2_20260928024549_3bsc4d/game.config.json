@@ -75,57 +75,57 @@
     {
       "id": "TITLE",
       "label": "Game Title",
-      "value": "Phone Charging Timing Challenge",
-      "default": "Phone Charging Timing Challenge",
+      "value": "Ricarica al momento giusto",
+      "default": "Ricarica al momento giusto",
       "max_length": 40
     },
     {
       "id": "TXT_CHARGING",
       "label": "Charging State Text",
-      "value": "CHARGING",
-      "default": "CHARGING",
+      "value": "IN CARICA",
+      "default": "IN CARICA",
       "max_length": 20
     },
     {
       "id": "TXT_TIMEOUT",
       "label": "Timeout State Text",
-      "value": "CONNECTION TIMEOUT",
-      "default": "CONNECTION TIMEOUT",
+      "value": "TEMPO SCADUTO",
+      "default": "TEMPO SCADUTO",
       "max_length": 25
     },
     {
       "id": "TXT_LOW",
       "label": "Low Battery Text",
-      "value": "LOW BATTERY",
-      "default": "LOW BATTERY",
+      "value": "BATTERIA SCARICA",
+      "default": "BATTERIA SCARICA",
       "max_length": 20
     },
     {
       "id": "TXT_RECHARGE",
       "label": "Recharge Text",
-      "value": "RECHARGE",
-      "default": "RECHARGE",
+      "value": "RICARICA",
+      "default": "RICARICA",
       "max_length": 20
     },
     {
       "id": "TXT_FULL",
       "label": "Fully Charged Text",
-      "value": "FULLY CHARGED",
-      "default": "FULLY CHARGED",
+      "value": "CARICA COMPLETA",
+      "default": "CARICA COMPLETA",
       "max_length": 20
     },
     {
       "id": "TXT_DIED",
       "label": "Phone Died Text",
-      "value": "PHONE DIED",
-      "default": "PHONE DIED",
+      "value": "BATTERIA ESAURITA",
+      "default": "BATTERIA ESAURITA",
       "max_length": 20
     },
     {
       "id": "BTN_PLAY_AGAIN",
       "label": "Play Again Button",
-      "value": "Play Again",
-      "default": "Play Again",
+      "value": "Rigioca",
+      "default": "Rigioca",
       "max_length": 20
     }
   ],
@@ -141,7 +141,7 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

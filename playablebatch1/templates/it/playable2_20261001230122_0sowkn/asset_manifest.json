@@ -1,45 +1,55 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20261001230122_0sowkn",
-  "number": 53,
-  "name": "Snake",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "A snake game inside a large yellow handheld console. Preserve the physical device illustration, LCD-style game screen, visible directional controls and guide beneath the score.",
   "assets": [
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
-      "ids": [],
-      "bytes": 50616,
-      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
-      "ids": [],
-      "bytes": 51212,
-      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/motion/reveal.svg",
-      "ids": [
-        "BG_STONE"
-      ],
-      "bytes": 2203,
-      "sha256": "a45ea890c4294ad140ab11ff23dbd9037a88d27deb6577fdae7b733179fb8f1c"
+      "path": "assets/motion/reveal.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A snake game inside a large yellow handheld console. Preserve the physical device illustration, LCD-style game screen, visible directional controls and guide beneath the score. Asset requirement: Existing Stone Tablet artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Stone Tablet artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "130:231",
+      "size_tier": "medium",
+      "recommended_size": "390x693",
+      "width": 390,
+      "height": 693,
+      "ok": true
     },
     {
-      "path": "dist/assets/yellow-handheld-20261021.webp",
-      "ids": [
-        "IMG_CONSOLE"
-      ],
-      "bytes": 79236,
-      "sha256": "35b2fef6e6a7e019b5ee98ece74ad0e55b2ee64bf02e8a7516383c8a087f2d80"
+      "path": "assets/yellow-handheld-20261021.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A snake game inside a large yellow handheld console. Preserve the physical device illustration, LCD-style game screen, visible directional controls and guide beneath the score. Asset requirement: Existing Realistic Console Frame artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Realistic Console Frame artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "2:3",
+      "size_tier": "large",
+      "recommended_size": "780x1170",
+      "width": 780,
+      "height": 1170,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "96c70ec03b7497ab5bdac2c398c70adaa8709007191d146c10ce4a2fbb718c61",
-    "dist/bundle.js": "96c70ec03b7497ab5bdac2c398c70adaa8709007191d146c10ce4a2fbb718c61",
-    "dist/game.html": "7a3cb2792080125b17df266db03639afb23b6c48a53c9878dd73f254d33ec196",
-    "dist/game.config.json": "de3f5f7b84a66335de4a05db63116f507619eb15855a996c6e0fdb233cd0e695"
-  }
+  ]
 }

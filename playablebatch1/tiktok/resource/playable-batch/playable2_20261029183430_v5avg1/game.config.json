@@ -65,64 +65,64 @@
     {
       "id": "GAME_TITLE",
       "label": "游戏标题",
-      "value": "Rug Restore",
-      "default": "Rug Restore",
+      "value": "Rinnova il tappeto",
+      "default": "Rinnova il tappeto",
       "max_length": 20
     },
     {
       "id": "GUIDE",
       "label": "玩法引导",
-      "value": "Spray → Scrub → Rinse → Dry",
-      "default": "Spray → Scrub → Rinse → Dry",
+      "value": "Spruzza, strofina, lava, asciuga",
+      "default": "Spruzza, strofina, lava, asciuga",
       "max_length": 32
     },
     {
       "id": "COMPLETE",
       "label": "完成文案",
-      "value": "Satisfyingly clean!",
-      "default": "Satisfyingly clean!",
+      "value": "Che pulito!",
+      "default": "Che pulito!",
       "max_length": 28
     },
     {
       "id": "NEXT_ITEM",
       "label": "下一件按钮",
-      "value": "Next item",
-      "default": "Next item",
+      "value": "Prossimo oggetto",
+      "default": "Prossimo oggetto",
       "max_length": 20
     },
     {
       "id": "SPRAY",
       "label": "喷雾瓶",
-      "value": "Spray",
-      "default": "Spray",
+      "value": "Spruzza",
+      "default": "Spruzza",
       "max_length": 12
     },
     {
       "id": "BRUSH",
       "label": "手刷",
-      "value": "Scrub",
-      "default": "Scrub",
+      "value": "Strofina",
+      "default": "Strofina",
       "max_length": 12
     },
     {
       "id": "RINSE",
       "label": "水枪",
-      "value": "Rinse",
-      "default": "Rinse",
+      "value": "Sciacqua",
+      "default": "Sciacqua",
       "max_length": 12
     },
     {
       "id": "VACUUM",
       "label": "吸尘器",
-      "value": "Dry",
-      "default": "Dry",
+      "value": "Asciuga",
+      "default": "Asciuga",
       "max_length": 12
     },
     {
       "id": "CLEANED",
       "label": "进度标签",
-      "value": "CLEANED",
-      "default": "CLEANED",
+      "value": "PULITO",
+      "default": "PULITO",
       "max_length": 12
     }
   ],
@@ -170,7 +170,7 @@
     "version_id": "109359222638275435",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

@@ -2,8 +2,8 @@
   "config_version": "2.0",
   "playable": {
     "name": "tilt_cat_jump",
-    "title": "Cat Doodle Jump",
-    "content_locale": "en",
+    "title": "Il gatto salterino",
+    "content_locale": "it",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
     "min_capability_level": 2,
@@ -12,9 +12,9 @@
   "texts": [
     {
       "id": "GUIDE",
-      "label": "Interaction guide",
-      "value": "Tilt to guide the laser",
-      "default": "Tilt to guide the laser",
+      "label": "Guida ai comandi",
+      "value": "Inclina per guidare il laser",
+      "default": "Inclina per guidare il laser",
       "max_length": 60
     }
   ],
@@ -22,7 +22,7 @@
     {
       "id": "ROUND_SECONDS",
       "kind": "number",
-      "label": "Round duration",
+      "label": "Durata della partita",
       "value": 60,
       "default": 60,
       "min": 20,
@@ -33,25 +33,25 @@
   "images": [
     {
       "id": "CAT",
-      "label": "Leaping tabby",
+      "label": "Gatto tigrato in salto",
       "path": "./assets/leaping-tabby.webp",
       "replaceable": true
     },
     {
       "id": "BACKDROP",
-      "label": "Cozy watercolor wall",
+      "label": "Parete accogliente ad acquerello",
       "path": "./assets/storybook-v2/cozy-wall.webp",
       "replaceable": true
     },
     {
       "id": "PLATFORM",
-      "label": "Wooden shelf — front view",
+      "label": "Mensola di legno — vista frontale",
       "path": "./assets/storybook-v3/honey-shelf-front.webp",
       "replaceable": true
     },
     {
       "id": "CAT_IDLE",
-      "label": "Standing tabby — idle pose",
+      "label": "Gatto tigrato fermo",
       "path": "./assets/idle-tabby-v1.webp",
       "replaceable": true
     }

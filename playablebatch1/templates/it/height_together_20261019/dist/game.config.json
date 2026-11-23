@@ -10,5 +10,12 @@
       "max_length": 42
     }
   ],
-  "images": []
+  "images": [],
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
 }

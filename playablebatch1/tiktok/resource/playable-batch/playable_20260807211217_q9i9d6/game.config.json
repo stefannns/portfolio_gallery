@@ -15,15 +15,15 @@
     {
       "id": "GAME_TITLE",
       "label": "标题",
-      "value": "FIND THE VOXEL ITEMS!",
-      "default": "FIND THE VOXEL ITEMS!",
+      "value": "TROVA GLI OGGETTI!",
+      "default": "TROVA GLI OGGETTI!",
       "max_length": 30
     },
     {
       "id": "SUCCESS_MSG",
       "label": "成功提示",
-      "value": "COLLECTION COMPLETE!",
-      "default": "COLLECTION COMPLETE!",
+      "value": "COLLEZIONE COMPLETA!",
+      "default": "COLLEZIONE COMPLETA!",
       "max_length": 30
     }
   ],
@@ -68,6 +68,9 @@
   "config_version": "2.0",
   "playable": {
     "runtime_target": "h5",
-    "h5_playstyle_type": "image_expression"
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
   }
 }

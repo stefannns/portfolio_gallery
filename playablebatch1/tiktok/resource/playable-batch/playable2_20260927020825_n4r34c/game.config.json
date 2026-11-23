@@ -4,50 +4,50 @@
     {
       "id": "TITLE",
       "label": "Game Title",
-      "value": "Orbital Circle",
-      "default": "Orbital Circle",
+      "value": "Cerchio orbitale",
+      "default": "Cerchio orbitale",
       "max_length": 25
     },
     {
       "id": "GUIDE_TEXT",
       "label": "Guide Text",
-      "value": "Tap the canvas and try to draw a perfect circle",
-      "default": "Tap the canvas and try to draw a perfect circle",
+      "value": "Disegna un cerchio perfetto",
+      "default": "Disegna un cerchio perfetto",
       "max_length": 60
     },
     {
       "id": "BTN_RETRY",
       "label": "Retry Button",
-      "value": "Try Again",
-      "default": "Try Again",
+      "value": "Riprova",
+      "default": "Riprova",
       "max_length": 20
     },
     {
       "id": "SCORE_PERFECT",
       "label": "Perfect Comment",
-      "value": "Perfect",
-      "default": "Perfect",
+      "value": "Perfetto",
+      "default": "Perfetto",
       "max_length": 20
     },
     {
       "id": "SCORE_GOOD",
       "label": "Good Comment",
-      "value": "Good",
-      "default": "Good",
+      "value": "Bene",
+      "default": "Bene",
       "max_length": 20
     },
     {
       "id": "SCORE_AGAIN",
       "label": "Try Again Comment",
-      "value": "Try Again",
-      "default": "Try Again",
+      "value": "Riprova",
+      "default": "Riprova",
       "max_length": 20
     },
     {
       "id": "SCORE_SHORT",
       "label": "Too Short Comment",
-      "value": "Too Short",
-      "default": "Too Short",
+      "value": "Troppo breve",
+      "default": "Troppo breve",
       "max_length": 20
     }
   ],
@@ -56,7 +56,7 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

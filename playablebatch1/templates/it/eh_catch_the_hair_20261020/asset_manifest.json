@@ -1,91 +1,115 @@
 {
-  "manifest_version": 1,
-  "task_id": "eh_catch_the_hair_20261020",
-  "number": 77,
-  "name": "Catch the Hair",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "A photographic hair-catching timing game with interchangeable falling hair images. Preserve the current person, background framing, endless falling preview and minimal percentage feedback.",
   "assets": [
     {
-      "path": "dist/assets/background.webp",
-      "ids": [
-        "BACKGROUND"
-      ],
-      "bytes": 66,
-      "sha256": "9b7cd8d1bcc291278a16500a7ccb07d21da96e03442f4aabc19263aecf1ade85"
+      "path": "assets/background.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A photographic hair-catching timing game with interchangeable falling hair images. Preserve the current person, background framing, endless falling preview and minimal percentage feedback. Asset requirement: Existing Yellow background artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Yellow background artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1:1",
+      "size_tier": "full",
+      "recommended_size": "16x16",
+      "width": 16,
+      "height": 16,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/OFL.txt",
-      "ids": [],
-      "bytes": 4385,
-      "sha256": "6be04893d770899a015649c7aa3b582f871b272f8747a92b78b17c3e5c8b2573"
+      "path": "assets/fonts/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/Poppins-Bold.woff2",
-      "ids": [],
-      "bytes": 50616,
-      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+      "path": "assets/fonts/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/Poppins-Regular.woff2",
-      "ids": [],
-      "bytes": 51212,
-      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+      "path": "assets/hair_0.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A photographic hair-catching timing game with interchangeable falling hair images. Preserve the current person, background framing, endless falling preview and minimal percentage feedback. Asset requirement: Existing Hairstyle 1 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Hairstyle 1 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "106:91",
+      "size_tier": "medium",
+      "recommended_size": "424x364",
+      "width": 424,
+      "height": 364,
+      "ok": true
     },
     {
-      "path": "dist/assets/hair_0.webp",
-      "ids": [
-        "HAIR_0"
-      ],
-      "bytes": 36570,
-      "sha256": "0ab726640dc8386fcdd4f41eb4b6905133345e003a477316457ecbbef5a271f8"
+      "path": "assets/hair_1.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A photographic hair-catching timing game with interchangeable falling hair images. Preserve the current person, background framing, endless falling preview and minimal percentage feedback. Asset requirement: Existing Hairstyle 2 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Hairstyle 2 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "439:387",
+      "size_tier": "medium",
+      "recommended_size": "439x387",
+      "width": 439,
+      "height": 387,
+      "ok": true
     },
     {
-      "path": "dist/assets/hair_1.webp",
-      "ids": [
-        "HAIR_1"
-      ],
-      "bytes": 32794,
-      "sha256": "a1cfdd92e97d05fdcd96634c4879e454301191d53f3b5bac56e938080f52aadc"
+      "path": "assets/hair_2.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A photographic hair-catching timing game with interchangeable falling hair images. Preserve the current person, background framing, endless falling preview and minimal percentage feedback. Asset requirement: Existing Hairstyle 3 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Hairstyle 3 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "411:580",
+      "size_tier": "medium",
+      "recommended_size": "411x580",
+      "width": 411,
+      "height": 580,
+      "ok": true
     },
     {
-      "path": "dist/assets/hair_2.webp",
-      "ids": [
-        "HAIR_2"
-      ],
-      "bytes": 34466,
-      "sha256": "07cf1677483c7a5a66e13f4d5eb8be01b6425ef970f97ff8bb1b4746542b5e15"
+      "path": "assets/hair_3.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A photographic hair-catching timing game with interchangeable falling hair images. Preserve the current person, background framing, endless falling preview and minimal percentage feedback. Asset requirement: Existing Hairstyle 4 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Hairstyle 4 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "29:26",
+      "size_tier": "medium",
+      "recommended_size": "522x468",
+      "width": 522,
+      "height": 468,
+      "ok": true
     },
     {
-      "path": "dist/assets/hair_3.webp",
-      "ids": [
-        "HAIR_3"
-      ],
-      "bytes": 50124,
-      "sha256": "522e8810027c7345ed2aca6b9452873221e848e8642739158ecddaa655d39e20"
+      "path": "assets/hair_4.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A photographic hair-catching timing game with interchangeable falling hair images. Preserve the current person, background framing, endless falling preview and minimal percentage feedback. Asset requirement: Existing Hairstyle 5 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Hairstyle 5 artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "413:467",
+      "size_tier": "medium",
+      "recommended_size": "413x467",
+      "width": 413,
+      "height": 467,
+      "ok": true
     },
     {
-      "path": "dist/assets/hair_4.webp",
-      "ids": [
-        "HAIR_4"
-      ],
-      "bytes": 41758,
-      "sha256": "0df4a0e97772218182134b8d78bd84312e2bb93d5af48e928aeef82fed6d2e72"
-    },
-    {
-      "path": "dist/assets/person.webp",
-      "ids": [
-        "PERSON"
-      ],
-      "bytes": 87074,
-      "sha256": "2029c43227de3b0ac9778570177954e4f9dcd66d8fc43cfe4101519afbe2887e"
+      "path": "assets/person.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A photographic hair-catching timing game with interchangeable falling hair images. Preserve the current person, background framing, endless falling preview and minimal percentage feedback. Asset requirement: Existing Reference-inspired bald character artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Reference-inspired bald character artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "300:361",
+      "size_tier": "full",
+      "recommended_size": "900x1083",
+      "width": 900,
+      "height": 1083,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "1a32cb9116c78e84f5d79f562cc512c13880652e95b0b22ea6fc0457875a9823",
-    "dist/bundle.js": "1a32cb9116c78e84f5d79f562cc512c13880652e95b0b22ea6fc0457875a9823",
-    "dist/game.html": "13eca65f9d8cab18ad8f75212170a0b92e6cfecdc020f6b2d63f0f7520be27bd",
-    "dist/game.config.json": "0f49b8069bae79e87819c96217de2006094e61b9832b501fe583d97a48b855c5"
-  }
+  ]
 }

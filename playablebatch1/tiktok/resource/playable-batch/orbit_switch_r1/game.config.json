@@ -3,30 +3,31 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
-    "full_capability_level": 1
+    "full_capability_level": 1,
+    "title": "Cambio di orbita"
   },
   "texts": [
     {
       "id": "guide",
-      "label": "First action hint",
-      "value": "Tap to switch sides",
-      "default": "Tap to switch sides",
+      "label": "Istruzione iniziale",
+      "value": "Tocca per cambiare lato",
+      "default": "Tocca per cambiare lato",
       "max_length": 60
     },
     {
       "id": "lost",
-      "label": "Failure message",
-      "value": "Run over",
-      "default": "Run over",
+      "label": "Messaggio di sconfitta",
+      "value": "Fine corsa",
+      "default": "Fine corsa",
       "max_length": 40
     },
     {
       "id": "replay",
-      "label": "Replay hint",
-      "value": "Play again",
-      "default": "Play again",
+      "label": "Istruzione per riprovare",
+      "value": "Riprova",
+      "default": "Riprova",
       "max_length": 40
     }
   ],
@@ -34,7 +35,7 @@
     {
       "id": "speed",
       "kind": "number",
-      "label": "Orbit speed (radians/second)",
+      "label": "Velocità orbitale (radianti al secondo)",
       "value": 1.72,
       "default": 1.72,
       "min": 0.8,

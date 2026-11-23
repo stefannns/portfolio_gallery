@@ -15,8 +15,8 @@
     {
       "id": "TITLE",
       "label": "标题",
-      "value": "TIME MACHINE",
-      "default": "TIME MACHINE",
+      "value": "MACCHINA DEL TEMPO",
+      "default": "MACCHINA DEL TEMPO",
       "max_length": 20
     }
   ],
@@ -115,6 +115,9 @@
   "config_version": "2.0",
   "playable": {
     "runtime_target": "h5",
-    "h5_playstyle_type": "image_expression"
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
   }
 }

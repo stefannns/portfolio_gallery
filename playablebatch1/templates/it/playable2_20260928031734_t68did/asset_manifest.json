@@ -1,31 +1,31 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20260928031734_t68did",
-  "number": 36,
-  "name": "Underwater Breath Hold",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "system_safe",
+  "style_anchor": "A deliberately coarse pixel-art underwater descent. Preserve the small blocky diver and fish silhouettes, depth-based darkening, vertical depth scale and compact time-and-depth result.",
   "assets": [
     {
-      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
-      "ids": [],
-      "bytes": 37004,
-      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Bangers Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/icon_mask.webp",
-      "ids": [
-        "ICON_MASK"
-      ],
-      "bytes": 50814,
-      "sha256": "af451971b8523564cb69945799f1e566b092dd9b14f0549fa6e89df3267d93e6"
+      "path": "assets/icon_mask.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A deliberately coarse pixel-art underwater descent. Preserve the small blocky diver and fish silhouettes, depth-based darkening, vertical depth scale and compact time-and-depth result. Asset requirement: Existing Snorkel Mask Icon artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Snorkel Mask Icon artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1304:2829",
+      "size_tier": "small",
+      "recommended_size": "1304x2829",
+      "width": 1304,
+      "height": 2829,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "2a6a92f2b1c5a2e2107108eac522e80e1a21a12e933397f8f50de9d13a54486a",
-    "dist/bundle.js": "2a6a92f2b1c5a2e2107108eac522e80e1a21a12e933397f8f50de9d13a54486a",
-    "dist/game.html": "be880f1d643a0a6efa3236993ababf43a1caaa6bdf1df1e61a84aa1c8717e541",
-    "dist/game.config.json": "4ab8c8a8fec5fb61182b36dbe3286a54c4fd3dd90dc9b011c533caf01a661f46"
-  }
+  ]
 }

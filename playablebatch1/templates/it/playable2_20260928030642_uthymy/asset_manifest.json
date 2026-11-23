@@ -1,47 +1,55 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20260928030642_uthymy",
-  "number": 32,
-  "name": "Fruit Peeler Challenge",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "bangers",
+  "style_anchor": "A tactile peeling toy using a potato and peeler illustration. Preserve the current food artwork, exposed peeled areas, tool scale and clear guide above the interaction.",
   "assets": [
     {
-      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
-      "ids": [],
-      "bytes": 37004,
-      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Bangers Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/peeler.webp",
-      "ids": [
-        "PEELER_IMG"
-      ],
-      "bytes": 58178,
-      "sha256": "83180ef3bae800864bb0e2cd64577bbdfb0133469b012aba9f9806ad22505803"
+      "path": "assets/peeler.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A tactile peeling toy using a potato and peeler illustration. Preserve the current food artwork, exposed peeled areas, tool scale and clear guide above the interaction. Asset requirement: Existing Peeler Sprite artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Peeler Sprite artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "501:1268",
+      "size_tier": "medium",
+      "recommended_size": "501x1268",
+      "width": 501,
+      "height": 1268,
+      "ok": true
     },
     {
-      "path": "dist/assets/potato_peeled_v2.webp",
-      "ids": [
-        "POTATO_PEELED"
-      ],
-      "bytes": 29892,
-      "sha256": "8bb53b5c63f430ed6fc418199094eaf854e36621b105dec9cc5e781aeddf7b75"
+      "path": "assets/potato_peeled_v2.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A tactile peeling toy using a potato and peeler illustration. Preserve the current food artwork, exposed peeled areas, tool scale and clear guide above the interaction. Asset requirement: Existing Peeled Potato artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Peeled Potato artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "137:150",
+      "size_tier": "large",
+      "recommended_size": "548x600",
+      "width": 548,
+      "height": 600,
+      "ok": true
     },
     {
-      "path": "dist/assets/potato_unpeeled_v2.webp",
-      "ids": [
-        "POTATO_UNPEELED"
-      ],
-      "bytes": 45572,
-      "sha256": "6f6111820fafc710230dbd67d9198124fe11d5e1e6981dc774d26e3309d2f69c"
+      "path": "assets/potato_unpeeled_v2.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A tactile peeling toy using a potato and peeler illustration. Preserve the current food artwork, exposed peeled areas, tool scale and clear guide above the interaction. Asset requirement: Existing Unpeeled Potato artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Unpeeled Potato artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "137:150",
+      "size_tier": "large",
+      "recommended_size": "548x600",
+      "width": 548,
+      "height": 600,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "ffdacf2e09340536a625f103b3074f0f4609a1df5718c8643a343330310013a5",
-    "dist/bundle.js": "ffdacf2e09340536a625f103b3074f0f4609a1df5718c8643a343330310013a5",
-    "dist/game.html": "71969d76dca5c496cef8e55215f2853a04e5bbb7d551bf8c72768355181f578d",
-    "dist/game.config.json": "47c16ce477bb69c996bd7ecdf4d62aa17ae71e9b7e2b3b3761857dc077327aa7"
-  }
+  ]
 }

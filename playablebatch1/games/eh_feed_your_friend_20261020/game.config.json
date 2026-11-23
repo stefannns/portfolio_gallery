@@ -2,7 +2,10 @@
   "config_version": "2.0",
   "playable": {
     "runtime_target": "h5",
-    "h5_playstyle_type": "general_game"
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
   },
   "tweaks": [
     {
@@ -40,7 +43,7 @@
     {
       "id": "GUIDE",
       "label": "Opening guide",
-      "value": "Tap the plate to feed",
+      "value": "Tocca il piatto per dare da mangiare",
       "max_length": 64
     }
   ],

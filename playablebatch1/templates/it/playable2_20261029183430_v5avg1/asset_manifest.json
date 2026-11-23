@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "White DIY work surface, photographic rug and large realistic tools, dirt, foam, rinse and drying layers.",
+  "assets": [
+    {
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: Poppins-Bold",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: Poppins-Regular",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/rug-overhead.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Overhead patterned rug",
+      "aspect_ratio": "3:4",
+      "size_tier": "medium",
+      "recommended_size": "768x1024",
+      "width": 768,
+      "height": 1024,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_tool_select.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx tool select",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/tool-brush-photo-v1.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Hand brush photo",
+      "aspect_ratio": "1:1",
+      "size_tier": "small",
+      "recommended_size": "288x288",
+      "width": 288,
+      "height": 288,
+      "ok": true
+    },
+    {
+      "path": "assets/tool-dry-photo-v1.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Fabric extractor photo",
+      "aspect_ratio": "1:1",
+      "size_tier": "small",
+      "recommended_size": "288x288",
+      "width": 288,
+      "height": 288,
+      "ok": true
+    },
+    {
+      "path": "assets/tool-rinse-photo-v1.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Rinse nozzle photo",
+      "aspect_ratio": "1:1",
+      "size_tier": "small",
+      "recommended_size": "288x288",
+      "width": 288,
+      "height": 288,
+      "ok": true
+    },
+    {
+      "path": "assets/tool-spray-photo-v1.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Spray bottle photo",
+      "aspect_ratio": "1:1",
+      "size_tier": "small",
+      "recommended_size": "288x288",
+      "width": 288,
+      "height": 288,
+      "ok": true
+    },
+    {
+      "path": "assets/upholstery-overhead.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Overhead woven upholstery",
+      "aspect_ratio": "3:4",
+      "size_tier": "medium",
+      "recommended_size": "768x1024",
+      "width": 768,
+      "height": 1024,
+      "ok": true
+    }
+  ]
+}

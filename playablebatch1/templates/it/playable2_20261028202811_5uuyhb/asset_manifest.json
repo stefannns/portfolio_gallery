@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "Minimal white page with prewritten text revealed by a brush and recovering letter by letter in random order.",
+  "assets": [
+    {
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: Poppins-Bold",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: Poppins-Regular",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_paper_brush.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx paper brush",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_paper_clear.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx paper clear",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_paper_tap.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx paper tap",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}

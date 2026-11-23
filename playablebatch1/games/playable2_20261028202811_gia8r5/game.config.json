@@ -65,15 +65,15 @@
     {
       "id": "HINT_TEXT",
       "label": "Interaction hint",
-      "value": "Pull down to unwind",
-      "default": "Pull down to unwind",
+      "value": "Tira in basso per srotolare",
+      "default": "Tira in basso per srotolare",
       "max_length": 30
     },
     {
       "id": "RESET_LABEL",
       "label": "Reset accessibility label",
-      "value": "Reset",
-      "default": "Reset",
+      "value": "Ricomincia",
+      "default": "Ricomincia",
       "max_length": 12
     }
   ],
@@ -84,7 +84,7 @@
     "version_id": "109025442493101652",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

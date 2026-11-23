@@ -1,290 +1,386 @@
-/* Consolidated CURRENT browser application. Valid JavaScript/JSX-subset source.
- * Rebuild: node check.js --build. No historical authoring version is substituted.
- * External helpers and inline entry code are preserved in their original execution order.
- */
-// TEMPLATE_HTML_BASE64: PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9Iml0Ij4KPGhlYWQ+CgogIDxtZXRhIGNoYXJzZXQ9IlVURi04IiAvPgogIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsIGluaXRpYWwtc2NhbGU9MS4wLCBtYXhpbXVtLXNjYWxlPTEuMCwgdXNlci1zY2FsYWJsZT1ubyIgLz4KICA8dGl0bGU+RnVsbWluaSBhbCBjcmVwdXNjb2xvPC90aXRsZT4KICA8c3R5bGU+CiAgICBodG1sLCBib2R5LCAjcm9vdCB7IHdpZHRoOiAxMDAlOyBoZWlnaHQ6IDEwMCU7IG1hcmdpbjogMDsgcGFkZGluZzogMDsgb3ZlcmZsb3c6IGhpZGRlbjsgfQogICAgYm9keSB7IGJhY2tncm91bmQ6ICMxMTE1MWQ7IC13ZWJraXQtdGFwLWhpZ2hsaWdodC1jb2xvcjogdHJhbnNwYXJlbnQ7IH0KICA8L3N0eWxlPgo8c3R5bGUgaWQ9ImZlZWQtZW50cnktbW90aW9uIj4KQGtleWZyYW1lcyBmZWVkLXByb21wdC1icmVhdGhlezAlLDEwMCV7b3BhY2l0eToxfTUwJXtvcGFjaXR5Oi43OH19Ci5mZWVkLWZpcnN0LWFjdGlvbnthbmltYXRpb246ZmVlZC1wcm9tcHQtYnJlYXRoZSAyLjRzIGVhc2UtaW4tb3V0IGluZmluaXRlfQouZmVlZC1maXJzdC1hY3Rpb25bYXJpYS1oaWRkZW49InRydWUiXXthbmltYXRpb246bm9uZX0KaHRtbFtkYXRhLWZlZWQtYmFja2dyb3VuZF0gLmZlZWQtZmlyc3QtYWN0aW9ue2FuaW1hdGlvbi1wbGF5LXN0YXRlOnBhdXNlZH0KQG1lZGlhKHByZWZlcnMtcmVkdWNlZC1tb3Rpb246cmVkdWNlKXsuZmVlZC1maXJzdC1hY3Rpb257YW5pbWF0aW9uOm5vbmV9fQo8L3N0eWxlPgo8c3R5bGUgZGF0YS1ndWlkZS1jZW50ZXJpbmc9IjIwMjYxMDIxIj4KLyogVXNlciBvdmVycmlkZSAyMDI2LTEwLTIxOiBmYXZvciB2aXN1YWwgY2VudGVyLCBub3QgYSBmaXhlZCB1cHBlciBiYW5kLiAqLwpodG1sOnJvb3Q6cm9vdDpyb290IDppcygjcm9vdCwjZ2FtZSwjc3RhZ2UpOmlzKCNyb290LCNnYW1lLCNzdGFnZSkgcCNndWlkZXtwb3NpdGlvbjpmaXhlZCFpbXBvcnRhbnQ7dG9wOjI2JSFpbXBvcnRhbnQ7Ym90dG9tOmF1dG8haW1wb3J0YW50O2xlZnQ6NTAlIWltcG9ydGFudDtyaWdodDphdXRvIWltcG9ydGFudDt3aWR0aDptYXgtY29udGVudCFpbXBvcnRhbnQ7bWF4LXdpZHRoOmNhbGMoMTAwdncgLSA2MHB4KSFpbXBvcnRhbnQ7bWluLWhlaWdodDowIWltcG9ydGFudDttYXJnaW46MCFpbXBvcnRhbnQ7dGV4dC1hbGlnbjpjZW50ZXIhaW1wb3J0YW50O3RyYW5zbGF0ZTotNTAlIC01MCUhaW1wb3J0YW50O3RyYW5zZm9ybTpub25lIWltcG9ydGFudDtwb2ludGVyLWV2ZW50czpub25lIWltcG9ydGFudDt6LWluZGV4OjI1IWltcG9ydGFudDtvdmVyZmxvdy13cmFwOmFueXdoZXJlfQpodG1sOnJvb3Q6cm9vdDpyb290ICNyb290IC5odWR7ZmlsdGVyOm5vbmUhaW1wb3J0YW50fQpodG1sOnJvb3Q6cm9vdDpyb290ICNyb290IC5jb3VudGVye2ZpbHRlcjpkcm9wLXNoYWRvdygwIDNweCAxMnB4IHJnYmEoMCwwLDAsLjcyKSl9Cmh0bWw6cm9vdDpyb290OnJvb3QgOmlzKCNyb290LCNnYW1lLCNzdGFnZSk6aXMoI3Jvb3QsI2dhbWUsI3N0YWdlKSBwI2d1aWRle2NvbG9yOiNlZWYzZmY7dGV4dC1zaGFkb3c6MCAycHggOHB4ICMwMDBhfQoKPC9zdHlsZT4KPHN0eWxlIGRhdGEtZ3VpZGUtYnJlYXRoaW5nPSIyMDI2MTAyMSI+Ci8qIEV4aXN0aW5nIGd1aWRlIHRleHQgb25seTsgcG9zaXRpb24sIG9wYWNpdHkgbGlmZWN5Y2xlIGFuZCBoaXQgcmVnaW9ucyByZW1haW4gZ2FtZS1vd25lZC4gKi8KQGtleWZyYW1lcyBiYXRjaC1ndWlkZS1icmVhdGhlezAlLDEwMCV7ZmlsdGVyOm9wYWNpdHkoMSl9NTAle2ZpbHRlcjpvcGFjaXR5KC42NSl9fQpodG1sOnJvb3Q6cm9vdCA6aXMocCNndWlkZSl7YW5pbWF0aW9uOmJhdGNoLWd1aWRlLWJyZWF0aGUgMi40cyBlYXNlLWluLW91dCBpbmZpbml0ZSFpbXBvcnRhbnR9Cmh0bWxbZGF0YS1ndWlkZS1icmVhdGhpbmctcGF1c2VkXTpyb290OnJvb3QgOmlzKHAjZ3VpZGUpe2FuaW1hdGlvbi1wbGF5LXN0YXRlOnBhdXNlZCFpbXBvcnRhbnR9CkBtZWRpYShwcmVmZXJzLXJlZHVjZWQtbW90aW9uOnJlZHVjZSl7aHRtbDpyb290OnJvb3QgOmlzKHAjZ3VpZGUpe2FuaW1hdGlvbjpub25lIWltcG9ydGFudH19Cgo8L3N0eWxlPgoKPHN0eWxlIGRhdGEtaXRhbGlhbi1sYXlvdXQ9IiI+Ci8qIEl0YWxpYW4gY29weSBrZWVwcyB0aGUgYXBwcm92ZWQgcm9sZSBzaXplcyBhbmQgbWF5IHdyYXAgaW5zdGVhZCBvZiBjbGlwcGluZy4gKi8KaHRtbFtsYW5nPSJpdCJdIDppcygubWVldGluZy1ndWlkZSwuZmVlZC1maXJzdC1hY3Rpb24sLm1lbG9keS1ndWlkZSwucGFydGljbGUtZ3VpZGUsLmRpdmUtZ3VpZGUsLnNhbmRib3gtZ3VpZGUsLmtvaS1ndWlkZSwudWktZ3VpZGUsLmJlYWQtZ3VpZGUsLmNvbG9yaW5nLWd1aWRlLC5sb29rLWd1aWRlLC50aW1lLXByaW50LWd1aWRlKXt3aGl0ZS1zcGFjZTpub3JtYWw7b3ZlcmZsb3ctd3JhcDpub3JtYWw7d29yZC1icmVhazpub3JtYWw7bGluZS1oZWlnaHQ6MS40fQpodG1sW2xhbmc9Iml0Il0gOmlzKGJ1dHRvbiwuYnRuLC5idG4tbmVvbil7b3ZlcmZsb3ctd3JhcDpub3JtYWw7d29yZC1icmVhazpub3JtYWx9Cmh0bWxbbGFuZz0iaXQiXSAubWVsb2R5LWNvbnRyb2xzIGJ1dHRvbntmb250LXNpemU6MThweDtwYWRkaW5nLWlubGluZToxMnB4fQpodG1sW2xhbmc9Iml0Il0gLm1lZXRpbmctc2FuZC1iYWxsLWNvdW50e2dhcDo2cHghaW1wb3J0YW50fQpodG1sW2xhbmc9Iml0Il0gI3Blb3BsZS1kaWFsb2cgZmllbGRzZXQgbGFiZWx7bWluLXdpZHRoOjB9Cmh0bWxbbGFuZz0iaXQiXSAjcGVvcGxlLWRpYWxvZyBpbnB1dHttYXgtd2lkdGg6MTAwJTttaW4td2lkdGg6MH0KCjwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+CiAgPGRpdiBpZD0icm9vdCI+PC9kaXY+CiAgPHNjcmlwdCBpZD0icGxheWFibGUtY29uZmlnLWlubGluZSIgdHlwZT0iYXBwbGljYXRpb24vanNvbiI+eyJ0d2Vha3MiOlt7ImlkIjoiQ0xPVURfU1BFRUQiLCJraW5kIjoibnVtYmVyIiwibGFiZWwiOiJDbG91ZCBTcGVlZCIsInZhbHVlIjowLjM0LCJkZWZhdWx0IjowLjM0LCJtaW4iOjAuMSwibWF4IjoxLCJzdGVwIjowLjAyfSx7ImlkIjoiQ0xPVURfREVOU0lUWSIsImtpbmQiOiJudW1iZXIiLCJsYWJlbCI6IkNsb3VkIERlbnNpdHkiLCJ2YWx1ZSI6MTgsImRlZmF1bHQiOjE4LCJtaW4iOjgsIm1heCI6MzAsInN0ZXAiOjF9LHsiaWQiOiJMSUdIVE5JTkdfR0xPVyIsImtpbmQiOiJudW1iZXIiLCJsYWJlbCI6IkxpZ2h0bmluZyBHbG93IiwidmFsdWUiOjMwLCJkZWZhdWx0IjozMCwibWluIjoxMCwibWF4Ijo2MCwic3RlcCI6Mn0seyJpZCI6IlRIVU5ERVJfVk9MVU1FIiwia2luZCI6Im51bWJlciIsImxhYmVsIjoiVGh1bmRlciBWb2x1bWUiLCJ2YWx1ZSI6MC4yOCwiZGVmYXVsdCI6MC4yOCwibWluIjowLCJtYXgiOjAuNiwic3RlcCI6MC4wMn1dLCJ0ZXh0cyI6W3siaWQiOiJHQU1FX1RJVExFIiwibGFiZWwiOiJHYW1lIFRpdGxlIiwidmFsdWUiOiJUZW1wb3JhbGUgYWwgY3JlcHVzY29sbyIsImRlZmF1bHQiOiJUZW1wb3JhbGUgYWwgY3JlcHVzY29sbyIsIm1heF9sZW5ndGgiOjMwfSx7ImlkIjoiR1VJREVfVEVYVCIsImxhYmVsIjoiR3VpZGUgVGV4dCIsInZhbHVlIjoiVG9jY2EgbGUgbnV2b2xlIHBlciBzY2F0ZW5hcmUgaSBmdWxtaW5pIiwiZGVmYXVsdCI6IlRvY2NhIGxlIG51dm9sZSBwZXIgc2NhdGVuYXJlIGkgZnVsbWluaSIsIm1heF9sZW5ndGgiOjQ0fV0sImltYWdlcyI6W10sIm1vdGlvbnMiOltdLCJjb25maWdfdmVyc2lvbiI6IjIuMCIsInBsYXlhYmxlIjp7InBvc3RfaWQiOiI5OTI4MDE1MDk2NTIzODU3NSIsInZlcnNpb25faWQiOiI5OTI4MDE1MDk2NTEzNTU0NyIsInJ1bnRpbWVfdGFyZ2V0IjoiaDUiLCJoNV9wbGF5c3R5bGVfdHlwZSI6ImltYWdlX2V4cHJlc3Npb24iLCJjb250ZW50X2xvY2FsZSI6Iml0IiwibWluX2NhcGFiaWxpdHlfbGV2ZWwiOjEsImZ1bGxfY2FwYWJpbGl0eV9sZXZlbCI6MX19PC9zY3JpcHQ+CiAgCiAgCgoKPCEtLSBDVEFfQlJFQVRISU5HX1NUQVJUIC0tPgoKPCEtLSBDVEFfQlJFQVRISU5HX0VORCAtLT4KPHNjcmlwdCBzcmM9Ii4vYnVuZGxlLmpzIj48L3NjcmlwdD4KPC9ib2R5Pgo8L2h0bWw+Cg==
-
-;/* Current runtime segment: inline-0 */
-
-// Active only inside the feed reviewer. Ordinary standalone games are unchanged.
-(() => {
-  if (new URLSearchParams(location.search).get('feedReview') !== '1') return;
-  let active=false,alive=true;
-  const waiting=new Set(),contexts=new Set(),media=new Set(),streams=new Set();
-  const wait=()=>alive ? new Promise((resolve,reject)=>waiting.add({resolve,reject})) : Promise.reject(new DOMException('Feed closed','AbortError'));
-  if(navigator.mediaDevices?.getUserMedia){
-    const native=navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
-    navigator.mediaDevices.getUserMedia=async constraints=>{
-      if(!active)await wait();if(!alive)throw new DOMException('Feed closed','AbortError');
-      const stream=await native(constraints);
-      if(!alive||!active){stream.getTracks().forEach(track=>track.stop());throw new DOMException('Feed inactive','AbortError');}
-      streams.add(stream);return stream;
-    };
+import * as React from 'react';
+import * as ReactDOM from 'react-dom/client';
+// Italian Batch 1. Editable game source; dependency implementations are npm imports.
+// Rebuild with the supplied platform app/h5_build/build.js. No private launcher is needed.
+const DEFAULT_CONFIG = {
+  "tweaks": [{
+    "id": "CLOUD_SPEED",
+    "kind": "number",
+    "label": "Cloud Speed",
+    "value": 0.34,
+    "default": 0.34,
+    "min": 0.1,
+    "max": 1,
+    "step": 0.02
+  }, {
+    "id": "CLOUD_DENSITY",
+    "kind": "number",
+    "label": "Cloud Density",
+    "value": 18,
+    "default": 18,
+    "min": 8,
+    "max": 30,
+    "step": 1
+  }, {
+    "id": "LIGHTNING_GLOW",
+    "kind": "number",
+    "label": "Lightning Glow",
+    "value": 30,
+    "default": 30,
+    "min": 10,
+    "max": 60,
+    "step": 2
+  }, {
+    "id": "THUNDER_VOLUME",
+    "kind": "number",
+    "label": "Thunder Volume",
+    "value": 0.28,
+    "default": 0.28,
+    "min": 0,
+    "max": 0.6,
+    "step": 0.02
+  }],
+  "texts": [{
+    "id": "GAME_TITLE",
+    "label": "Game Title",
+    "value": "Temporale al crepuscolo",
+    "default": "Temporale al crepuscolo",
+    "max_length": 30
+  }, {
+    "id": "GUIDE_TEXT",
+    "label": "Guide Text",
+    "value": "Tocca le nuvole per scatenare i fulmini",
+    "default": "Tocca le nuvole per scatenare i fulmini",
+    "max_length": 44
+  }],
+  "images": [],
+  "motions": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99280150965238575",
+    "version_id": "99280150965135547",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
   }
-  for(const key of ['AudioContext','webkitAudioContext']){
-    const Native=window[key];if(!Native)continue;
-    window[key]=class FeedAudioContext extends Native {
-      constructor(...args){super(...args);contexts.add(this);if(!active)super.suspend().catch(()=>{});}
-      async resume(){if(!active)await wait();if(alive)return super.resume();}
-    };
+};
+let runtimeConfig = DEFAULT_CONFIG;
+async function requestGameConfig() {
+  let deadline;
+  try {
+    const request = fetch('./game.config.json', { cache: 'no-store' }).then(async response => ({
+      ok: response.ok,
+      status: response.status,
+      config: response.ok ? await response.json() : null
+    }));
+    const fallback = new Promise(resolve => {
+      deadline = setTimeout(() => resolve({ ok: false, status: 0, config: null }), 400);
+    });
+    const result = await Promise.race([request, fallback]);
+    if (result.ok) runtimeConfig = result.config;
+    return { ok: result.ok, status: result.status, json: async () => runtimeConfig };
+  } finally {
+    clearTimeout(deadline);
   }
-  const nativePlay=HTMLMediaElement.prototype.play;
-  HTMLMediaElement.prototype.play=async function(...args){media.add(this);if(!active)await wait();if(alive)return nativePlay.apply(this,args);};
-  addEventListener('message',event=>{
-    if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='playable-active')return;
-    active=alive&&event.data.active===true;
-    if(active){for(const job of waiting)job.resolve();waiting.clear();for(const context of contexts)if(context.state!=='closed')context.resume().catch(()=>{});}
-    else {for(const context of contexts)if(context.state!=='closed')context.suspend().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());streams.clear();}
-  });
-  addEventListener('pagehide',()=>{alive=false;active=false;for(const job of waiting)job.reject(new DOMException('Feed closed','AbortError'));waiting.clear();for(const context of contexts)if(context.state!=='closed')context.close().catch(()=>{});for(const item of media)item.pause();for(const stream of streams)stream.getTracks().forEach(track=>track.stop());},{once:true});
-})();
-
-;
-
-;/* Current runtime segment: inline-1 */
-
-    if (location.protocol === "file:") {
-      const config = document.getElementById("playable-config-inline").textContent;
-      const originalFetch = window.fetch.bind(window);
-      window.fetch = function(input, options) {
-        const url = typeof input === "string" ? input : input && input.url;
-        if (url && /(?:^|\/)game\.config\.json(?:[?#]|$)/.test(url)) {
-          return Promise.resolve(new Response(config, {
-            status: 200,
-            headers: { "Content-Type": "application/json" }
-          }));
-        }
-        return originalFetch(input, options);
-      };
-    }
+}
+const GAME_STYLES = `
+    html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    body { background: #11151d; -webkit-tap-highlight-color: transparent; }
   
-;
 
-;/* Current runtime segment: scene-audio.it.js */
-/* Original procedural audio. No third-party recordings or runtime dependencies. */
-(() => {
-  'use strict';
-  const randomFor = seed => () => {
-    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
-    return seed / 4294967296;
-  };
+@keyframes feed-prompt-breathe{0%,100%{opacity:1}50%{opacity:.78}}
+.feed-first-action{animation:feed-prompt-breathe 2.4s ease-in-out infinite}
+.feed-first-action[aria-hidden="true"]{animation:none}
+html[data-feed-background] .feed-first-action{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.feed-first-action{animation:none}}
 
-  class PlayableSceneAudio {
-    constructor({ profile, context = null } = {}) {
-      this.profile = profile;
-      this.context = context;
-      this.ownsContext = !context;
-      this.buffers = new Map();
-      this.voices = new Set();
-      this.loopVoice = null;
-      this.loopWanted = false;
-      this.disposed = false;
-      this.visibility = () => {
-        if (document.hidden) {
+/* User override 2026-10-21: favor visual center, not a fixed upper band. */
+html:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) p#guide{position:fixed!important;top:26%!important;bottom:auto!important;left:50%!important;right:auto!important;width:max-content!important;max-width:calc(100vw - 60px)!important;min-height:0!important;margin:0!important;text-align:center!important;translate:-50% -50%!important;transform:none!important;pointer-events:none!important;z-index:25!important;overflow-wrap:anywhere}
+html:root:root:root #root .hud{filter:none!important}
+html:root:root:root #root .counter{filter:drop-shadow(0 3px 12px rgba(0,0,0,.72))}
+html:root:root:root :is(#root,#game,#stage):is(#root,#game,#stage) p#guide{color:#eef3ff;text-shadow:0 2px 8px #000a}
+
+/* Existing guide text only; position, opacity lifecycle and hit regions remain game-owned. */
+@keyframes batch-guide-breathe{0%,100%{filter:opacity(1)}50%{filter:opacity(.65)}}
+html:root:root :is(p#guide){animation:batch-guide-breathe 2.4s ease-in-out infinite!important}
+html[data-guide-breathing-paused]:root:root :is(p#guide){animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){html:root:root :is(p#guide){animation:none!important}}
+
+/* Italian copy keeps the approved role sizes and may wrap instead of clipping. */
+html[lang="it"] :is(.meeting-guide,.feed-first-action,.melody-guide,.particle-guide,.dive-guide,.sandbox-guide,.koi-guide,.ui-guide,.bead-guide,.coloring-guide,.look-guide,.time-print-guide){white-space:normal;overflow-wrap:normal;word-break:normal;line-height:1.4}
+html[lang="it"] :is(button,.btn,.btn-neon){overflow-wrap:normal;word-break:normal}
+html[lang="it"] .melody-controls button{font-size:18px;padding-inline:12px}
+html[lang="it"] .meeting-sand-ball-count{gap:6px!important}
+html[lang="it"] #people-dialog fieldset label{min-width:0}
+html[lang="it"] #people-dialog input{max-width:100%;min-width:0}
+`;
+const gameStyle = document.createElement('style');
+gameStyle.textContent = GAME_STYLES;
+document.head.append(gameStyle);
+document.documentElement.lang = 'it';
+function startGame() {
+  // ./guide-breathing.js
+  /* Decorative guide visibility only: no inputs, timers, sound or game state. */
+  (() => {
+    const root = document.documentElement;
+    let intersecting = true;
+    const update = () => root.toggleAttribute('data-guide-breathing-paused', document.hidden || !intersecting);
+    const observer = typeof IntersectionObserver === 'function' ? new IntersectionObserver(entries => {
+      intersecting = entries.some(entry => entry.isIntersecting);
+      update();
+    }) : null;
+    if (document.body) observer?.observe(document.body);
+    document.addEventListener('visibilitychange', update);
+    update();
+    window.addEventListener('pagehide', () => {
+      observer?.disconnect();
+      document.removeEventListener('visibilitychange', update);
+    }, {
+      once: true
+    });
+  })();
+
+  // ./scene-audio.js
+  /* Original procedural audio. No third-party recordings or runtime dependencies. */
+  (() => {
+    'use strict';
+
+    const randomFor = seed => () => {
+      seed = Math.imul(seed, 1664525) + 1013904223 >>> 0;
+      return seed / 4294967296;
+    };
+    class PlayableSceneAudio {
+      constructor({
+        profile,
+        context = null
+      } = {}) {
+        this.profile = profile;
+        this.context = context;
+        this.ownsContext = !context;
+        this.buffers = new Map();
+        this.voices = new Set();
+        this.loopVoice = null;
+        this.loopWanted = false;
+        this.disposed = false;
+        this.visibility = () => {
+          if (document.hidden) {
+            this.stopAll();
+            if (this.profile === 'carve') this.loopWanted = false;
+            if (this.ownsContext) this.context?.suspend?.().catch(() => {});
+          } else if (this.profile === 'maze' && this.loopWanted) this.setLoop(true);
+        };
+        this.pageHide = () => {
           this.stopAll();
           if (this.profile === 'carve') this.loopWanted = false;
           if (this.ownsContext) this.context?.suspend?.().catch(() => {});
-        } else if (this.profile === 'maze' && this.loopWanted) this.setLoop(true);
-      };
-      this.pageHide = () => {
-        this.stopAll();
-        if (this.profile === 'carve') this.loopWanted = false;
-        if (this.ownsContext) this.context?.suspend?.().catch(() => {});
-      };
-      this.pageShow = () => {
-        if (this.profile === 'maze' && this.loopWanted && !document.hidden) this.setLoop(true);
-      };
-      document.addEventListener('visibilitychange', this.visibility);
-      window.addEventListener('pagehide', this.pageHide);
-      window.addEventListener('pageshow', this.pageShow);
-    }
-
-    unlock() {
-      if (this.disposed || document.hidden) return null;
-      try {
-        if (!this.context) {
-          const Audio = window.AudioContext || window.webkitAudioContext;
-          if (!Audio) return null;
-          this.context = new Audio();
-        }
-        if (this.context.state === 'closed') return null;
-        if (this.context.state === 'suspended') this.context.resume().catch(() => {});
-        return this.context;
-      } catch (_) { return null; }
-    }
-
-    buffer(kind, variant = 0) {
-      const key = kind + variant;
-      if (this.buffers.has(key)) return this.buffers.get(key);
-      const ctx = this.context;
-      const seconds = { maze: 8, carve: 1.7, thunder: 3.4, step: .09, scare: .3, win: .55 }[kind];
-      const stereo = kind === 'thunder';
-      const buffer = ctx.createBuffer(stereo ? 2 : 1, Math.ceil(seconds * ctx.sampleRate), ctx.sampleRate);
-      for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
-        const samples = buffer.getChannelData(channel);
-        const random = randomFor(4027 + variant * 89 + channel * 193);
-        let low = 0, grain = 0, peak = 0;
-        const smoothing = Math.exp(-2 * Math.PI * (kind === 'maze' ? 140 : 85) / ctx.sampleRate);
-        const highSmoothing = Math.exp(-2 * Math.PI * 420 / ctx.sampleRate);
-        for (let i = 0; i < samples.length; i++) {
-          const t = i / ctx.sampleRate;
-          const white = random() * 2 - 1;
-          low = low * smoothing + white * (1 - smoothing);
-          grain = grain * highSmoothing + white * (1 - highSmoothing);
-          let value;
-          if (kind === 'maze') {
-            // Slow, non-pitched air, deliberately behind footsteps and encounters.
-            value = low * (.68 + .16 * Math.sin(t * Math.PI / 2) + .08 * Math.sin(t * Math.PI));
-          } else if (kind === 'carve') {
-            const stroke = .42 + .26 * Math.sin(t * 18) ** 2 + .16 * Math.sin(t * 31 + .7) ** 2;
-            value = (white - grain) * stroke * .3 + (random() > .997 ? white * .34 : 0);
-          } else if (kind === 'thunder') {
-            const crack = Math.exp(-t * 26) * .65 + Math.exp(-Math.abs(t - .07) * 60) * .2;
-            const rolling = Math.exp(-t * 1.15) * (1 - Math.exp(-t * 24)) *
-              (.65 + .3 * Math.sin(t * 12 + variant) ** 2);
-            const echoes = Math.exp(-Math.abs(t - .28) * 15) * .28 +
-              Math.exp(-Math.abs(t - .64) * 9) * .2 + Math.exp(-Math.abs(t - 1.12) * 7) * .12;
-            value = white * crack + low * 9 * (rolling + echoes);
-            value *= Math.min(1, t / .003, (seconds - t) / .28);
-          } else if (kind === 'win') {
-            value = [261.63, 329.63, 392].reduce((sum, hz) => sum + Math.sin(t * Math.PI * 2 * hz), 0) *
-              Math.min(1, t / .02) * Math.exp(-t / .12) * Math.min(1, (seconds - t) / .05);
-          } else {
-            const length = kind === 'step' ? .03 : .09;
-            value = (low * 3 + white * .08) * Math.exp(-t / length) * Math.min(1, t / .006);
-          }
-          samples[i] = value;
-          peak = Math.max(peak, Math.abs(value));
-        }
-        const scale = .8 / Math.max(.001, peak);
-        for (let i = 0; i < samples.length; i++) samples[i] *= scale;
-        if (kind === 'maze' || kind === 'carve') {
-          // Match loop endpoints to avoid clicks at the buffer boundary.
-          const blend = Math.round(ctx.sampleRate * .02);
-          for (let i = 0; i < blend; i++) {
-            const mix = i / blend;
-            samples[samples.length - blend + i] = samples[samples.length - blend + i] * (1 - mix) + samples[i] * mix;
-          }
-        }
-      }
-      this.buffers.set(key, buffer);
-      return buffer;
-    }
-
-    play(kind, { loop = false, volume = .12, variant = 0 } = {}) {
-      const ctx = this.unlock();
-      if (!ctx) return null;
-      try {
-        // Rapid touches cannot accumulate unbounded audio nodes or excessive level.
-        const limit = kind === 'thunder' ? 3 : 4;
-        const active = [...this.voices].filter(v => !v.stopping);
-        while (active.length >= limit) this.stopVoice(active.shift(), .025);
-        const source = ctx.createBufferSource();
-        const filter = ctx.createBiquadFilter();
-        const gain = ctx.createGain();
-        source.buffer = this.buffer(kind, variant);
-        source.loop = loop;
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(kind === 'maze' ? 500 : kind === 'carve' ? 4600 : kind === 'thunder' ? 3200 : 1700, ctx.currentTime);
-        if (kind === 'thunder') filter.frequency.exponentialRampToValueAtTime(230, ctx.currentTime + 2.9);
-        filter.Q.value = .45;
-        const level = Math.min(.4, Math.max(0, volume)) / Math.sqrt(active.length + 1);
-        const attack = kind === 'maze' ? 1.2 : kind === 'carve' ? .035 : .004;
-        gain.gain.setValueAtTime(.0001, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(Math.max(.0001, level), ctx.currentTime + attack);
-        source.connect(filter).connect(gain).connect(ctx.destination);
-        const voice = { source, filter, gain, stopping: false };
-        this.voices.add(voice);
-        source.onended = () => {
-          source.disconnect(); filter.disconnect(); gain.disconnect();
-          this.voices.delete(voice);
-          if (this.loopVoice === voice) this.loopVoice = null;
         };
-        source.start();
-        if (!loop) source.stop(ctx.currentTime + source.buffer.duration + .02);
-        return voice;
-      } catch (_) { return null; }
-    }
-
-    setLoop(wanted) {
-      this.loopWanted = Boolean(wanted);
-      if (!wanted || document.hidden) {
-        if (this.loopVoice) this.stopVoice(this.loopVoice, .12);
+        this.pageShow = () => {
+          if (this.profile === 'maze' && this.loopWanted && !document.hidden) this.setLoop(true);
+        };
+        document.addEventListener('visibilitychange', this.visibility);
+        window.addEventListener('pagehide', this.pageHide);
+        window.addEventListener('pageshow', this.pageShow);
+      }
+      unlock() {
+        if (this.disposed || document.hidden) return null;
+        try {
+          if (!this.context) {
+            const Audio = window.AudioContext || window.webkitAudioContext;
+            if (!Audio) return null;
+            this.context = new Audio();
+          }
+          if (this.context.state === 'closed') return null;
+          if (this.context.state === 'suspended') this.context.resume().catch(() => {});
+          return this.context;
+        } catch (value) {
+          return null;
+        }
+      }
+      buffer(kind, variant = 0) {
+        const value2 = kind + variant;
+        if (this.buffers.has(value2)) return this.buffers.get(value2);
+        const context = this.context;
+        const seconds = {
+          maze: 8,
+          carve: 1.7,
+          thunder: 3.4,
+          step: 0.09,
+          scare: 0.3,
+          win: 0.55
+        }[kind];
+        const stereo = kind === 'thunder';
+        const buffer = context.createBuffer(stereo ? 2 : 1, Math.ceil(seconds * context.sampleRate), context.sampleRate);
+        for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+          const samples = buffer.getChannelData(channel);
+          const random = randomFor(4027 + variant * 89 + channel * 193);
+          let value3 = 0;
+          let grain = 0;
+          let peak = 0;
+          const smoothing = Math.exp(-2 * Math.PI * (kind === 'maze' ? 140 : 85) / context.sampleRate);
+          const highSmoothing = Math.exp(-2 * Math.PI * 420 / context.sampleRate);
+          for (let value4 = 0; value4 < samples.length; value4++) {
+            const value5 = value4 / context.sampleRate;
+            const white = random() * 2 - 1;
+            value3 = value3 * smoothing + white * (1 - smoothing);
+            grain = grain * highSmoothing + white * (1 - highSmoothing);
+            let value;
+            if (kind === 'maze') {
+              // Slow, non-pitched air, deliberately behind footsteps and encounters.
+              value = value3 * (0.68 + 0.16 * Math.sin(value5 * Math.PI / 2) + 0.08 * Math.sin(value5 * Math.PI));
+            } else if (kind === 'carve') {
+              const stroke = 0.42 + 0.26 * Math.sin(value5 * 18) ** 2 + 0.16 * Math.sin(value5 * 31 + 0.7) ** 2;
+              value = (white - grain) * stroke * 0.3 + (random() > 0.997 ? white * 0.34 : 0);
+            } else if (kind === 'thunder') {
+              const crack = Math.exp(-value5 * 26) * 0.65 + Math.exp(-Math.abs(value5 - 0.07) * 60) * 0.2;
+              const rolling = Math.exp(-value5 * 1.15) * (1 - Math.exp(-value5 * 24)) * (0.65 + 0.3 * Math.sin(value5 * 12 + variant) ** 2);
+              const echoes = Math.exp(-Math.abs(value5 - 0.28) * 15) * 0.28 + Math.exp(-Math.abs(value5 - 0.64) * 9) * 0.2 + Math.exp(-Math.abs(value5 - 1.12) * 7) * 0.12;
+              value = white * crack + value3 * 9 * (rolling + echoes);
+              value *= Math.min(1, value5 / 0.003, (seconds - value5) / 0.28);
+            } else if (kind === 'win') {
+              value = [261.63, 329.63, 392].reduce((total, item) => total + Math.sin(value5 * Math.PI * 2 * item), 0) * Math.min(1, value5 / 0.02) * Math.exp(-value5 / 0.12) * Math.min(1, (seconds - value5) / 0.05);
+            } else {
+              const length = kind === 'step' ? 0.03 : 0.09;
+              value = (value3 * 3 + white * 0.08) * Math.exp(-value5 / length) * Math.min(1, value5 / 0.006);
+            }
+            samples[value4] = value;
+            peak = Math.max(peak, Math.abs(value));
+          }
+          const scale = 0.8 / Math.max(0.001, peak);
+          for (let value = 0; value < samples.length; value++) samples[value] *= scale;
+          if (kind === 'maze' || kind === 'carve') {
+            // Match loop endpoints to avoid clicks at the buffer boundary.
+            const blend = Math.round(context.sampleRate * 0.02);
+            for (let value = 0; value < blend; value++) {
+              const value4 = value / blend;
+              samples[samples.length - blend + value] = samples[samples.length - blend + value] * (1 - value4) + samples[value] * value4;
+            }
+          }
+        }
+        this.buffers.set(value2, buffer);
+        return buffer;
+      }
+      play(kind, {
+        loop = false,
+        volume = 0.12,
+        variant = 0
+      } = {}) {
+        const value = this.unlock();
+        if (!value) return null;
+        try {
+          // Rapid touches cannot accumulate unbounded audio nodes or excessive level.
+          const limit = kind === 'thunder' ? 3 : 4;
+          const active = [...this.voices].filter(item => !item.stopping);
+          while (active.length >= limit) this.stopVoice(active.shift(), 0.025);
+          const source = value.createBufferSource();
+          const filter = value.createBiquadFilter();
+          const gain = value.createGain();
+          source.buffer = this.buffer(kind, variant);
+          source.loop = loop;
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(kind === 'maze' ? 500 : kind === 'carve' ? 4600 : kind === 'thunder' ? 3200 : 1700, value.currentTime);
+          if (kind === 'thunder') filter.frequency.exponentialRampToValueAtTime(230, value.currentTime + 2.9);
+          filter.Q.value = 0.45;
+          const level = Math.min(0.4, Math.max(0, volume)) / Math.sqrt(active.length + 1);
+          const attack = kind === 'maze' ? 1.2 : kind === 'carve' ? 0.035 : 0.004;
+          gain.gain.setValueAtTime(0.0001, value.currentTime);
+          gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, level), value.currentTime + attack);
+          source.connect(filter).connect(gain).connect(value.destination);
+          const voice = {
+            source,
+            filter,
+            gain,
+            stopping: false
+          };
+          this.voices.add(voice);
+          source.onended = () => {
+            source.disconnect();
+            filter.disconnect();
+            gain.disconnect();
+            this.voices.delete(voice);
+            if (this.loopVoice === voice) this.loopVoice = null;
+          };
+          source.start();
+          if (!loop) source.stop(value.currentTime + source.buffer.duration + 0.02);
+          return voice;
+        } catch (value2) {
+          return null;
+        }
+      }
+      setLoop(wanted) {
+        this.loopWanted = Boolean(wanted);
+        if (!wanted || document.hidden) {
+          if (this.loopVoice) this.stopVoice(this.loopVoice, 0.12);
+          this.loopVoice = null;
+          return;
+        }
+        if (!this.loopVoice) this.loopVoice = this.play(this.profile, {
+          loop: true,
+          volume: this.profile === 'maze' ? 0.035 : 0.14
+        });
+      }
+      stopVoice(voice, fade = 0.08) {
+        if (!voice || voice.stopping) return;
+        voice.stopping = true;
+        try {
+          const currentTime = this.context.currentTime;
+          const param = voice.gain.gain;
+          if (param.cancelAndHoldAtTime) param.cancelAndHoldAtTime(currentTime);else {
+            param.cancelScheduledValues(currentTime);
+            param.setValueAtTime(Math.max(0.0001, param.value), currentTime);
+          }
+          param.exponentialRampToValueAtTime(0.0001, currentTime + fade);
+          // A finite source already has a stop scheduled; replace it with the fade's end.
+          voice.source.stop(currentTime + fade + 0.01);
+        } catch (value) {}
+      }
+      stopAll() {
+        for (const voice of this.voices) this.stopVoice(voice);
         this.loopVoice = null;
-        return;
       }
-      if (!this.loopVoice) this.loopVoice = this.play(this.profile, {
-        loop: true, volume: this.profile === 'maze' ? .035 : .14
-      });
+      dispose() {
+        if (this.disposed) return;
+        this.disposed = true;
+        this.loopWanted = false;
+        this.stopAll();
+        document.removeEventListener('visibilitychange', this.visibility);
+        window.removeEventListener('pagehide', this.pageHide);
+        window.removeEventListener('pageshow', this.pageShow);
+        if (this.ownsContext) this.context?.close?.().catch(() => {});
+        this.buffers.clear();
+      }
     }
+    window.PlayableSceneAudio = PlayableSceneAudio;
+  })();
+  (() => {
+    'use strict';
 
-    stopVoice(voice, fade = .08) {
-      if (!voice || voice.stopping) return;
-      voice.stopping = true;
+    const flattenConfig = value => {
+      const options = {};
+      for (const section of ['tweaks', 'texts', 'images', 'motions']) {
+        for (const item of value[section] || []) {
+          if (section === 'motions') {
+            options[item.id + '_BASE'] = item.base_path;
+            options[item.id + '_COUNT'] = item.frame_count;
+          } else options[item.id] = item.value ?? item.path;
+        }
+      }
+      return options;
+    };
+    const loadConfig = async () => {
       try {
-        const at = this.context.currentTime;
-        const param = voice.gain.gain;
-        if (param.cancelAndHoldAtTime) param.cancelAndHoldAtTime(at);
-        else { param.cancelScheduledValues(at); param.setValueAtTime(Math.max(.0001, param.value), at); }
-        param.exponentialRampToValueAtTime(.0001, at + fade);
-        // A finite source already has a stop scheduled; replace it with the fade's end.
-        voice.source.stop(at + fade + .01);
-      } catch (_) {}
-    }
-
-    stopAll() {
-      for (const voice of this.voices) this.stopVoice(voice);
-      this.loopVoice = null;
-    }
-
-    dispose() {
-      if (this.disposed) return;
-      this.disposed = true;
-      this.loopWanted = false;
-      this.stopAll();
-      document.removeEventListener('visibilitychange', this.visibility);
-      window.removeEventListener('pagehide', this.pageHide);
-      window.removeEventListener('pageshow', this.pageShow);
-      if (this.ownsContext) this.context?.close?.().catch(() => {});
-      this.buffers.clear();
-    }
-  }
-  window.PlayableSceneAudio = PlayableSceneAudio;
-})();
-
-;
-
-;/* Current runtime segment: bundle.it.js */
-(()=>{
-  'use strict';
-
-  const flattenConfig = raw => {
-    const out = {};
-    for (const section of ['tweaks', 'texts', 'images', 'motions']) {
-      for (const item of raw[section] || []) {
-        if (section === 'motions') {
-          out[item.id + '_BASE'] = item.base_path;
-          out[item.id + '_COUNT'] = item.frame_count;
-        } else out[item.id] = item.value ?? item.path;
-      }
-    }
-    return out;
-  };
-
-  const loadConfig = async () => {
-    try {
-      const response = await fetch("./game.config.json?l10n=175319106901", { cache: 'no-store' });
-      if (response.ok) return flattenConfig(await response.json());
-    } catch (_) {}
-    const inline = document.getElementById('playable-config-inline');
-    return inline ? flattenConfig(JSON.parse(inline.textContent)) : {};
-  };
-
-  const start = async () => {
-    const cfg = await loadConfig();
-    const root = document.getElementById('root');
-    const style = document.createElement('style');
-    style.textContent = `
+        const response = await requestGameConfig();
+        if (response.ok) return flattenConfig(await response.json());
+      } catch (value) {}
+      const inline = runtimeConfig;
+      return inline ? flattenConfig(runtimeConfig) : {};
+    };
+    const start = async () => {
+      const config = await loadConfig();
+      const root = document.getElementById('game-surface');
+      const style = document.createElement('style');
+      style.textContent = `
       :root { --ui-unit: min(0.2564102564vw, 0.1672240803vh); color-scheme: dark; font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
       * { box-sizing: border-box; }
       html, body, #root { width: 100%; height: 100%; margin: 0; overflow: hidden; }
@@ -342,9 +438,8 @@
         .storm-control { transition-duration: .01ms; }
       }
     `;
-    document.head.appendChild(style);
-
-    root.innerHTML = `
+      document.head.appendChild(style);
+      root.innerHTML = `
       <main class="storm">
         <canvas id="sky" aria-label="Moving storm clouds. Tap anywhere to create lightning."></canvas>
         <header class="hud">
@@ -357,596 +452,727 @@
         </nav>
       </main>
     `;
-
-    const canvas = document.getElementById('sky');
-    const ctx = canvas.getContext('2d', { alpha: false });
-    const guide = document.getElementById('guide');
-    const strikeCount = document.getElementById('strike-count');
-    const strikeCounter = document.getElementById('strike-counter');
-    const colorToggle = document.getElementById('color-toggle');
-    const musicToggle = document.getElementById('music-toggle');
-    const musicLabel = document.getElementById('music-label');
-    guide.textContent = cfg.GUIDE_TEXT || "Tocca le nuvole per scatenare i fulmini";
-    const storm=root.querySelector('.storm');
-    let feedPreview=new URLSearchParams(location.search).has('review')||new URLSearchParams(location.search).get('feedReview')==='1';
-    storm.dataset.feedPreview=String(feedPreview);
-    let previewElapsed=0,previewPlayed=false;
-    let previewVisible=false;
-    const previewObserver=new IntersectionObserver(entries=>{previewVisible=entries.some(entry=>entry.isIntersecting&&entry.intersectionRatio>.1);},{threshold:[0,.1]});
-    previewObserver.observe(storm);
-    addEventListener('pagehide',()=>previewObserver.disconnect(),{once:true});
-    addEventListener('message',e=>{
-      if(e.source!==parent||e.origin!==location.origin||e.data?.type!=='playable-active')return;
-      feedPreview=e.data.active!==true;storm.dataset.feedPreview=String(feedPreview);
-      if(!feedPreview){bolts=[];flash=0;}
-    });
-
-    const cloudSpeed = Math.max(.05, Number(cfg.CLOUD_SPEED) || .34);
-    const cloudDensity = Math.max(8, Math.min(30, Math.round(Number(cfg.CLOUD_DENSITY) || 18)));
-    const lightningGlow = Math.max(8, Number(cfg.LIGHTNING_GLOW) || 30);
-    const configuredThunder = Number(cfg.THUNDER_VOLUME);
-    const thunderVolume = Math.max(0, Math.min(.6, Number.isFinite(configuredThunder) ? configuredThunder : .28));
-    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let width = 1;
-    let height = 1;
-    let dpr = 1;
-    let clouds = [];
-    let bolts = [];
-    let puffSprites = [];
-    let lastFrame = performance.now();
-    let flash = 0;
-    let flashColor = [221, 234, 255];
-    let strikes = 0;
-    let colored = false;
-    const lightningColors = [[161, 196, 255], [202, 149, 255], [255, 145, 217], [138, 232, 238], [255, 202, 125]];
-    let lastColor = -1;
-    const muted = false;
-    let audio = null;
-    let thunderSound = null;
-    let thunderIndex = 0;
-    let rainBuffer = null;
-    let rainSource = null;
-    let rainGain = null;
-    let hasInteracted = false;
-    let rockMusic = null;
-    let musicWanted = false;
-    let musicRevision = 0;
-    let musicFrame = null;
-
-    const seeded = seed => {
-      let value = seed >>> 0;
-      return () => {
-        value = (value * 1664525 + 1013904223) >>> 0;
-        return value / 4294967296;
-      };
-    };
-
-    const makePuffSprite = (depth, shadow = false) => {
-      const sprite = document.createElement('canvas');
-      sprite.width = 768;
-      sprite.height = 768;
-      const g = sprite.getContext('2d');
-      const base = depth === 0 ? 155 : depth === 1 ? 125 : 92;
-      const center = sprite.width / 2;
-      const gradient = g.createRadialGradient(center, center * .86, 5, center, center, center);
-      if (shadow) {
-        const low = Math.max(12, base - 72);
-        gradient.addColorStop(0, 'rgba(' + low + ',' + (low + 6) + ',' + (low + 16) + ',.34)');
-        gradient.addColorStop(.48, 'rgba(' + low + ',' + (low + 6) + ',' + (low + 16) + ',.2)');
-        gradient.addColorStop(.78, 'rgba(' + low + ',' + (low + 6) + ',' + (low + 16) + ',.055)');
-      } else {
-        const lift = Math.min(228, base + 42);
-        gradient.addColorStop(0, 'rgba(' + lift + ',' + (lift + 5) + ',' + Math.min(244, lift + 14) + ',.9)');
-        gradient.addColorStop(.46, 'rgba(' + base + ',' + (base + 5) + ',' + (base + 14) + ',.66)');
-        gradient.addColorStop(.78, 'rgba(' + Math.max(18, base - 55) + ',' + Math.max(22, base - 48) + ',' + Math.max(30, base - 35) + ',.12)');
-      }
-      gradient.addColorStop(1, 'rgba(15,19,28,0)');
-      g.fillStyle = gradient;
-      g.fillRect(0, 0, sprite.width, sprite.height);
-      return sprite;
-    };
-
-    const buildSprites = () => {
-      puffSprites = Array.from({ length: 3 }, (_, depth) => ({
-        light: makePuffSprite(depth, false),
-        shadow: makePuffSprite(depth, true)
-      }));
-    };
-
-    const makeCloudPuffs = seed => {
-      const random = seeded(seed);
-      const puffs = [];
-      for (let i = 0; i < 7; i++) {
-        puffs.push({
-          shadow: true,
-          x: .1 + random() * .8,
-          y: .56 + random() * .22,
-          w: .25 + random() * .2,
-          h: .48 + random() * .24
-        });
-      }
-      for (let i = 0; i < 16; i++) {
-        puffs.push({
-          shadow: false,
-          x: .06 + random() * .88,
-          y: .19 + random() * .5,
-          w: .2 + random() * .24,
-          h: .48 + random() * .4
-        });
-      }
-      return puffs;
-    };
-
-    const createCloud = (index, randomX = true) => {
-      const depth = index % 3;
-      const scale = (.72 + Math.random() * .62) * (depth === 0 ? .8 : depth === 1 ? 1 : 1.2);
-      return {
-        depth,
-        x: randomX ? Math.random() * (width + 500) - 250 : -650,
-        y: height * (.12 + Math.random() * .66),
-        w: 420 * scale,
-        h: 184 * scale,
-        speed: (9 + depth * 7 + Math.random() * 8) * cloudSpeed * (reducedMotion ? .45 : 1),
-        opacity: depth === 0 ? .36 : depth === 1 ? .5 : .66,
-        drift: Math.random() * Math.PI * 2,
-        puffs: makeCloudPuffs(Math.floor(Math.random() * 1000000000))
-      };
-    };
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      width = Math.max(1, rect.width);
-      height = Math.max(1, rect.height);
-      dpr = Math.min(3, window.devicePixelRatio || 1);
-      canvas.width = Math.round(width * dpr);
-      canvas.height = Math.round(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-      if (!puffSprites.length) buildSprites();
-      clouds = Array.from({ length: cloudDensity }, (_, index) => createCloud(index, true));
-      clouds.sort((a, b) => a.depth - b.depth);
-    };
-
-    const drawSky = time => {
-      const sky = ctx.createLinearGradient(0, 0, 0, height);
-      sky.addColorStop(0, '#111723');
-      sky.addColorStop(.42, '#252a35');
-      sky.addColorStop(.72, '#3a3a43');
-      sky.addColorStop(1, '#171a22');
-      ctx.fillStyle = sky;
-      ctx.fillRect(0, 0, width, height);
-
-      const twilight = ctx.createRadialGradient(width * .5, height * .64, 0, width * .5, height * .64, width * .78);
-      twilight.addColorStop(0, 'rgba(198,202,213,.13)');
-      twilight.addColorStop(.48, 'rgba(119,125,140,.07)');
-      twilight.addColorStop(1, 'rgba(20,23,31,0)');
-      ctx.fillStyle = twilight;
-      ctx.fillRect(0, 0, width, height);
-
-      const mist = ctx.createLinearGradient(0, height * .68, 0, height);
-      mist.addColorStop(0, 'rgba(18,22,31,0)');
-      mist.addColorStop(.56, 'rgba(13,17,24,.19)');
-      mist.addColorStop(1, 'rgba(7,10,15,.58)');
-      ctx.fillStyle = mist;
-      ctx.fillRect(0, height * .68, width, height * .32);
-    };
-
-    const drawClouds = (dt, time) => {
-      for (const cloud of clouds) {
-        cloud.x += cloud.speed * dt;
-        if (cloud.x > width + cloud.w * .55) {
-          const fresh = createCloud(cloud.depth, false);
-          Object.assign(cloud, fresh, { depth: cloud.depth, x: -fresh.w * .72 });
+      const canvas = document.getElementById('sky');
+      const context = canvas.getContext('2d', {
+        alpha: false
+      });
+      const guide = document.getElementById('guide');
+      const strikeCount = document.getElementById('strike-count');
+      const strikeCounter = document.getElementById('strike-counter');
+      const colorToggle = document.getElementById('color-toggle');
+      const musicToggle = document.getElementById('music-toggle');
+      const musicLabel = document.getElementById('music-label');
+      guide.textContent = config.GUIDE_TEXT || "Tocca le nuvole per scatenare i fulmini";
+      const storm = root.querySelector('.storm');
+      let feedPreview = new URLSearchParams(location.search).has('review') || new URLSearchParams(location.search).get('feedReview') === '1';
+      storm.dataset.feedPreview = String(feedPreview);
+      let previewElapsed = 0;
+      let previewPlayed = false;
+      let previewVisible = typeof IntersectionObserver !== 'function';
+      const previewObserver = previewVisible ? null : new IntersectionObserver(entries => {
+        previewVisible = entries.some(entry => entry.isIntersecting && entry.intersectionRatio > 0.1);
+      }, {
+        threshold: [0, 0.1]
+      });
+      previewObserver?.observe(storm);
+      addEventListener('pagehide', () => previewObserver?.disconnect(), {
+        once: true
+      });
+      addEventListener('message', value => {
+        if (value.source !== parent || value.origin !== location.origin || value.data?.type !== 'playable-active') return;
+        feedPreview = value.data.active !== true;
+        storm.dataset.feedPreview = String(feedPreview);
+        if (!feedPreview) {
+          bolts = [];
+          flash = 0;
         }
-        const bob = Math.sin(time * .00018 + cloud.drift) * (3 + cloud.depth * 2);
-        ctx.save();
-        ctx.globalAlpha = cloud.opacity;
-        for (const puff of cloud.puffs) {
-          const puffWidth = cloud.w * puff.w;
-          const puffHeight = cloud.h * puff.h;
-          const puffX = cloud.x - cloud.w / 2 + cloud.w * puff.x - puffWidth / 2;
-          const puffY = cloud.y - cloud.h / 2 + bob + cloud.h * puff.y - puffHeight / 2;
-          const sprite = puff.shadow ? puffSprites[cloud.depth].shadow : puffSprites[cloud.depth].light;
-          ctx.drawImage(sprite, puffX, puffY, puffWidth, puffHeight);
+      });
+      const cloudSpeed = Math.max(0.05, Number(config.CLOUD_SPEED) || 0.34);
+      const cloudDensity = Math.max(8, Math.min(30, Math.round(Number(config.CLOUD_DENSITY) || 18)));
+      const lightningGlow = Math.max(8, Number(config.LIGHTNING_GLOW) || 30);
+      const configuredThunder = Number(config.THUNDER_VOLUME);
+      const thunderVolume = Math.max(0, Math.min(0.6, Number.isFinite(configuredThunder) ? configuredThunder : 0.28));
+      const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let width = 1;
+      let height = 1;
+      let value2 = 1;
+      let clouds = [];
+      let bolts = [];
+      let puffSprites = [];
+      let lastFrame = performance.now();
+      let flash = 0;
+      let flashColor = [221, 234, 255];
+      let strikes = 0;
+      let colored = false;
+      const lightningColors = [[161, 196, 255], [202, 149, 255], [255, 145, 217], [138, 232, 238], [255, 202, 125]];
+      let lastColor = -1;
+      const muted = false;
+      let audio = null;
+      let thunderSound = null;
+      let thunderIndex = 0;
+      let rainBuffer = null;
+      let rainSource = null;
+      let rainGain = null;
+      let hasInteracted = false;
+      let rockMusic = null;
+      let musicWanted = false;
+      let musicRevision = 0;
+      let musicFrame = null;
+      const seeded = seed => {
+        let value = seed >>> 0;
+        return () => {
+          value = value * 1664525 + 1013904223 >>> 0;
+          return value / 4294967296;
+        };
+      };
+      const makePuffSprite = (depth, shadow = false) => {
+        const sprite = document.createElement('canvas');
+        sprite.width = 768;
+        sprite.height = 768;
+        const context2 = sprite.getContext('2d');
+        const base = depth === 0 ? 155 : depth === 1 ? 125 : 92;
+        const center = sprite.width / 2;
+        const gradient = context2.createRadialGradient(center, center * 0.86, 5, center, center, center);
+        if (shadow) {
+          const value = Math.max(12, base - 72);
+          gradient.addColorStop(0, 'rgba(' + value + ',' + (value + 6) + ',' + (value + 16) + ',.34)');
+          gradient.addColorStop(0.48, 'rgba(' + value + ',' + (value + 6) + ',' + (value + 16) + ',.2)');
+          gradient.addColorStop(0.78, 'rgba(' + value + ',' + (value + 6) + ',' + (value + 16) + ',.055)');
+        } else {
+          const lift = Math.min(228, base + 42);
+          gradient.addColorStop(0, 'rgba(' + lift + ',' + (lift + 5) + ',' + Math.min(244, lift + 14) + ',.9)');
+          gradient.addColorStop(0.46, 'rgba(' + base + ',' + (base + 5) + ',' + (base + 14) + ',.66)');
+          gradient.addColorStop(0.78, 'rgba(' + Math.max(18, base - 55) + ',' + Math.max(22, base - 48) + ',' + Math.max(30, base - 35) + ',.12)');
         }
-        ctx.restore();
-      }
-    };
-
-    const makePath = (startX, startY, endX, endY, segments, spread) => {
-      const points = [{ x: startX, y: startY }];
-      for (let i = 1; i < segments; i++) {
-        const progress = i / segments;
-        const center = startX + (endX - startX) * progress;
-        const taper = Math.sin(progress * Math.PI);
+        gradient.addColorStop(1, 'rgba(15,19,28,0)');
+        context2.fillStyle = gradient;
+        context2.fillRect(0, 0, sprite.width, sprite.height);
+        return sprite;
+      };
+      const buildSprites = () => {
+        puffSprites = Array.from({
+          length: 3
+        }, (value, depth) => ({
+          light: makePuffSprite(depth, false),
+          shadow: makePuffSprite(depth, true)
+        }));
+      };
+      const makeCloudPuffs = seed => {
+        const random = seeded(seed);
+        const puffs = [];
+        for (let value = 0; value < 7; value++) {
+          puffs.push({
+            shadow: true,
+            x: 0.1 + random() * 0.8,
+            y: 0.56 + random() * 0.22,
+            w: 0.25 + random() * 0.2,
+            h: 0.48 + random() * 0.24
+          });
+        }
+        for (let value = 0; value < 16; value++) {
+          puffs.push({
+            shadow: false,
+            x: 0.06 + random() * 0.88,
+            y: 0.19 + random() * 0.5,
+            w: 0.2 + random() * 0.24,
+            h: 0.48 + random() * 0.4
+          });
+        }
+        return puffs;
+      };
+      const createCloud = (index, randomX = true) => {
+        const depth = index % 3;
+        const scale = (0.72 + Math.random() * 0.62) * (depth === 0 ? 0.8 : depth === 1 ? 1 : 1.2);
+        return {
+          depth,
+          x: randomX ? Math.random() * (width + 500) - 250 : -650,
+          y: height * (0.12 + Math.random() * 0.66),
+          w: 420 * scale,
+          h: 184 * scale,
+          speed: (9 + depth * 7 + Math.random() * 8) * cloudSpeed * (reducedMotion ? 0.45 : 1),
+          opacity: depth === 0 ? 0.36 : depth === 1 ? 0.5 : 0.66,
+          drift: Math.random() * Math.PI * 2,
+          puffs: makeCloudPuffs(Math.floor(Math.random() * 1000000000))
+        };
+      };
+      const resize = () => {
+        const rect = canvas.getBoundingClientRect();
+        width = Math.max(1, rect.width);
+        height = Math.max(1, rect.height);
+        value2 = Math.min(3, window.devicePixelRatio || 1);
+        canvas.width = Math.round(width * value2);
+        canvas.height = Math.round(height * value2);
+        context.setTransform(value2, 0, 0, value2, 0, 0);
+        context.imageSmoothingEnabled = true;
+        context.imageSmoothingQuality = 'high';
+        if (!puffSprites.length) buildSprites();
+        clouds = Array.from({
+          length: cloudDensity
+        }, (value, index) => createCloud(index, true));
+        clouds.sort((leftItem, rightItem) => leftItem.depth - rightItem.depth);
+      };
+      const drawSky = time => {
+        const linearGradient = context.createLinearGradient(0, 0, 0, height);
+        linearGradient.addColorStop(0, '#111723');
+        linearGradient.addColorStop(0.42, '#252a35');
+        linearGradient.addColorStop(0.72, '#3a3a43');
+        linearGradient.addColorStop(1, '#171a22');
+        context.fillStyle = linearGradient;
+        context.fillRect(0, 0, width, height);
+        const twilight = context.createRadialGradient(width * 0.5, height * 0.64, 0, width * 0.5, height * 0.64, width * 0.78);
+        twilight.addColorStop(0, 'rgba(198,202,213,.13)');
+        twilight.addColorStop(0.48, 'rgba(119,125,140,.07)');
+        twilight.addColorStop(1, 'rgba(20,23,31,0)');
+        context.fillStyle = twilight;
+        context.fillRect(0, 0, width, height);
+        const mist = context.createLinearGradient(0, height * 0.68, 0, height);
+        mist.addColorStop(0, 'rgba(18,22,31,0)');
+        mist.addColorStop(0.56, 'rgba(13,17,24,.19)');
+        mist.addColorStop(1, 'rgba(7,10,15,.58)');
+        context.fillStyle = mist;
+        context.fillRect(0, height * 0.68, width, height * 0.32);
+      };
+      const drawClouds = (value, time) => {
+        for (const cloud of clouds) {
+          cloud.x += cloud.speed * value;
+          if (cloud.x > width + cloud.w * 0.55) {
+            const fresh = createCloud(cloud.depth, false);
+            Object.assign(cloud, fresh, {
+              depth: cloud.depth,
+              x: -fresh.w * 0.72
+            });
+          }
+          const value3 = Math.sin(time * 0.00018 + cloud.drift) * (3 + cloud.depth * 2);
+          context.save();
+          context.globalAlpha = cloud.opacity;
+          for (const puff of cloud.puffs) {
+            const puffWidth = cloud.w * puff.w;
+            const puffHeight = cloud.h * puff.h;
+            const puffX = cloud.x - cloud.w / 2 + cloud.w * puff.x - puffWidth / 2;
+            const puffY = cloud.y - cloud.h / 2 + value3 + cloud.h * puff.y - puffHeight / 2;
+            const sprite = puff.shadow ? puffSprites[cloud.depth].shadow : puffSprites[cloud.depth].light;
+            context.drawImage(sprite, puffX, puffY, puffWidth, puffHeight);
+          }
+          context.restore();
+        }
+      };
+      const makePath = (startX, startY, endX, endY, segments, spread) => {
+        const points = [{
+          x: startX,
+          y: startY
+        }];
+        for (let value = 1; value < segments; value++) {
+          const progress = value / segments;
+          const center = startX + (endX - startX) * progress;
+          const taper = Math.sin(progress * Math.PI);
+          points.push({
+            x: center + (Math.random() - 0.5) * spread * taper,
+            y: startY + (endY - startY) * progress
+          });
+        }
         points.push({
-          x: center + (Math.random() - .5) * spread * taper,
-          y: startY + (endY - startY) * progress
+          x: endX,
+          y: endY
         });
-      }
-      points.push({ x: endX, y: endY });
-      return points;
-    };
-
-    const createBolt = (x, y) => {
-      // Crop the bolt at the viewport, not at its visible rounded endpoints.
-      const overflow = Math.max(100, height * .16, lightningGlow * 3);
-      const endY = height + overflow;
-      const startY = -overflow;
-      const startX = Math.max(18, Math.min(width - 18, x + (Math.random() - .5) * 92));
-      const main = makePath(startX, startY, x, endY, 15, Math.min(132, width * .32));
-      const branches = [];
-      for (let i = 2; i < main.length - 2; i += 2) {
-        if (Math.random() < .88) {
-          const point = main[i];
-          const direction = Math.random() < .5 ? -1 : 1;
-          branches.push(makePath(point.x, point.y, point.x + direction * (45 + Math.random() * 100), point.y + 75 + Math.random() * 115, 6, 44));
+        return points;
+      };
+      const createBolt = (x, y) => {
+        // Crop the bolt at the viewport, not at its visible rounded endpoints.
+        const overflow = Math.max(100, height * 0.16, lightningGlow * 3);
+        const endY = height + overflow;
+        const startY = -overflow;
+        const startX = Math.max(18, Math.min(width - 18, x + (Math.random() - 0.5) * 92));
+        const main = makePath(startX, startY, x, endY, 15, Math.min(132, width * 0.32));
+        const branches = [];
+        for (let value = 2; value < main.length - 2; value += 2) {
+          if (Math.random() < 0.88) {
+            const point = main[value];
+            const direction = Math.random() < 0.5 ? -1 : 1;
+            branches.push(makePath(point.x, point.y, point.x + direction * (45 + Math.random() * 100), point.y + 75 + Math.random() * 115, 6, 44));
+          }
         }
-      }
-      let color = [177, 211, 255];
-      if (colored) {
-        // Vary new strikes without recoloring bolts that are already fading.
-        lastColor = (lastColor + 1 + Math.floor(Math.random() * (lightningColors.length - 1))) % lightningColors.length;
-        color = lightningColors[lastColor];
-      }
-      bolts.push({ main, branches, color, colored, born: performance.now(), duration: 620 });
-      flashColor = color.map(channel => Math.round(channel * .45 + 255 * .55));
-      flash = 1;
-    };
-
-    const strokePath = points => {
-      ctx.beginPath();
-      ctx.moveTo(points[0].x, points[0].y);
-      for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
-      ctx.stroke();
-    };
-
-    const drawBolts = now => {
-      bolts = bolts.filter(bolt => now - bolt.born < bolt.duration);
-      for (const bolt of bolts) {
-        const age = now - bolt.born;
-        const fade = Math.max(0, 1 - age / bolt.duration);
-        const flicker = age < 110 ? 1 : .48 + Math.abs(Math.sin(age * .055)) * .45;
-        const alpha = fade * flicker;
-        ctx.save();
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        const tint = bolt.color.join(',');
-        const core = bolt.color.map(channel => Math.round(channel * .3 + 255 * .7)).join(',');
-        ctx.shadowColor = 'rgba(' + tint + ',' + alpha + ')';
-        ctx.shadowBlur = lightningGlow * 1.45;
-        ctx.strokeStyle = 'rgba(' + tint + ',' + (alpha * .42) + ')';
-        ctx.lineWidth = 15;
-        strokePath(bolt.main);
-        ctx.strokeStyle = 'rgba(' + (bolt.colored ? core : '236,246,255') + ',' + alpha + ')';
-        ctx.lineWidth = 4.2;
-        strokePath(bolt.main);
-        for (const branch of bolt.branches) {
-          ctx.strokeStyle = 'rgba(' + core + ',' + (alpha * .72) + ')';
-          ctx.lineWidth = 2.1;
-          strokePath(branch);
+        let color = [177, 211, 255];
+        if (colored) {
+          // Vary new strikes without recoloring bolts that are already fading.
+          lastColor = (lastColor + 1 + Math.floor(Math.random() * (lightningColors.length - 1))) % lightningColors.length;
+          color = lightningColors[lastColor];
         }
-        ctx.restore();
-      }
-    };
-
-    const drawFlash = dt => {
-      if (flash <= .002) return;
-      ctx.fillStyle = 'rgba(' + flashColor.join(',') + ',' + (flash * (reducedMotion ? .09 : .34)) + ')';
-      ctx.fillRect(0, 0, width, height);
-      flash *= Math.pow(.075, dt);
-    };
-
-    const frame = now => {
-      const dt = Math.min(.04, Math.max(0, (now - lastFrame) / 1000));
-      lastFrame = now;
-      if(!document.hidden&&previewVisible&&feedPreview&&!previewPlayed&&!reducedMotion){
-        previewElapsed+=dt*1000;
-        if(previewElapsed>=900){previewPlayed=true;createBolt(width*.48,height*.5);storm.dataset.previewStrikes='1';}
-      }
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      drawSky(now);
-      drawClouds(dt, now);
-      drawBolts(now);
-      drawFlash(dt);
+        bolts.push({
+          main,
+          branches,
+          color,
+          colored,
+          born: performance.now(),
+          duration: 620
+        });
+        flashColor = color.map(channel => Math.round(channel * 0.45 + 255 * 0.55));
+        flash = 1;
+      };
+      const strokePath = points => {
+        context.beginPath();
+        context.moveTo(points[0].x, points[0].y);
+        for (let value = 1; value < points.length; value++) context.lineTo(points[value].x, points[value].y);
+        context.stroke();
+      };
+      const drawBolts = value => {
+        bolts = bolts.filter(bolt => value - bolt.born < bolt.duration);
+        for (const bolt of bolts) {
+          const value3 = value - bolt.born;
+          const fade = Math.max(0, 1 - value3 / bolt.duration);
+          const flicker = value3 < 110 ? 1 : 0.48 + Math.abs(Math.sin(value3 * 0.055)) * 0.45;
+          const alpha = fade * flicker;
+          context.save();
+          context.lineCap = 'round';
+          context.lineJoin = 'round';
+          const tint = bolt.color.join(',');
+          const core = bolt.color.map(channel => Math.round(channel * 0.3 + 255 * 0.7)).join(',');
+          context.shadowColor = 'rgba(' + tint + ',' + alpha + ')';
+          context.shadowBlur = lightningGlow * 1.45;
+          context.strokeStyle = 'rgba(' + tint + ',' + alpha * 0.42 + ')';
+          context.lineWidth = 15;
+          strokePath(bolt.main);
+          context.strokeStyle = 'rgba(' + (bolt.colored ? core : '236,246,255') + ',' + alpha + ')';
+          context.lineWidth = 4.2;
+          strokePath(bolt.main);
+          for (const branch of bolt.branches) {
+            context.strokeStyle = 'rgba(' + core + ',' + alpha * 0.72 + ')';
+            context.lineWidth = 2.1;
+            strokePath(branch);
+          }
+          context.restore();
+        }
+      };
+      const drawFlash = value => {
+        if (flash <= 0.002) return;
+        context.fillStyle = 'rgba(' + flashColor.join(',') + ',' + flash * (reducedMotion ? 0.09 : 0.34) + ')';
+        context.fillRect(0, 0, width, height);
+        flash *= Math.pow(0.075, value);
+      };
+      const frame = value => {
+        const value3 = Math.min(0.04, Math.max(0, (value - lastFrame) / 1000));
+        lastFrame = value;
+        if (!document.hidden && previewVisible && feedPreview && !previewPlayed && !reducedMotion) {
+          previewElapsed += value3 * 1000;
+          if (previewElapsed >= 900) {
+            previewPlayed = true;
+            createBolt(width * 0.48, height * 0.5);
+            storm.dataset.previewStrikes = '1';
+          }
+        }
+        context.setTransform(value2, 0, 0, value2, 0, 0);
+        drawSky(value);
+        drawClouds(value3, value);
+        drawBolts(value);
+        drawFlash(value3);
+        requestAnimationFrame(frame);
+      };
+      const ensureAudio = () => {
+        try {
+          if (!audio) {
+            const AudioCtor = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtor) audio = new AudioCtor();
+          }
+          if (audio && audio.state === 'suspended') audio.resume().catch(() => {});
+        } catch (value) {
+          audio = null;
+        }
+      };
+      const makeRainBuffer = () => {
+        const seconds = 3;
+        const length = Math.round(audio.sampleRate * seconds);
+        const buffer = audio.createBuffer(1, length, audio.sampleRate);
+        const samples = buffer.getChannelData(0);
+        let value = 0;
+        for (let value3 = 0; value3 < length; value3++) {
+          const white = Math.random() * 2 - 1;
+          value = value * 0.985 + white * 0.015;
+          samples[value3] = (white - value) * 0.42 + value * 0.18;
+        }
+        for (let drop = 0; drop < 85; drop++) {
+          const start = Math.floor(Math.random() * (length - audio.sampleRate * 0.04));
+          const frequency = 650 + Math.random() * 850;
+          const duration = Math.floor(audio.sampleRate * 0.035);
+          for (let value3 = 0; value3 < duration; value3++) {
+            samples[start + value3] += Math.sin(2 * Math.PI * frequency * value3 / audio.sampleRate) * Math.exp(-value3 / (audio.sampleRate * 0.007)) * 0.28;
+          }
+        }
+        return buffer;
+      };
+      const stopRain = () => {
+        if (!rainSource || !audio) return;
+        const source = rainSource;
+        const gain = rainGain;
+        const currentTime = audio.currentTime;
+        rainSource = null;
+        rainGain = null;
+        gain.gain.cancelScheduledValues(currentTime);
+        gain.gain.setValueAtTime(Math.max(0.0001, gain.gain.value), currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, currentTime + 0.2);
+        source.stop(currentTime + 0.22);
+      };
+      const startRain = () => {
+        if (muted || !hasInteracted || document.hidden || rainSource) return;
+        ensureAudio();
+        if (!audio) return;
+        try {
+          rainBuffer = rainBuffer || makeRainBuffer();
+          const source = audio.createBufferSource();
+          const highpass = audio.createBiquadFilter();
+          const lowpass = audio.createBiquadFilter();
+          const gain = audio.createGain();
+          source.buffer = rainBuffer;
+          source.loop = true;
+          highpass.type = 'highpass';
+          highpass.frequency.value = 280;
+          lowpass.type = 'lowpass';
+          lowpass.frequency.value = 6200;
+          gain.gain.setValueAtTime(0.0001, audio.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.2, audio.currentTime + 0.45);
+          source.connect(highpass).connect(lowpass).connect(gain).connect(audio.destination);
+          source.onended = () => {
+            source.disconnect();
+            highpass.disconnect();
+            lowpass.disconnect();
+            gain.disconnect();
+          };
+          source.start();
+          rainSource = source;
+          rainGain = gain;
+        } catch (value) {}
+      };
+      const thunder = () => {
+        if (muted || thunderVolume <= 0 || document.hidden) return;
+        ensureAudio();
+        if (!audio || !window.PlayableSceneAudio) return;
+        if (!thunderSound) thunderSound = new window.PlayableSceneAudio({
+          profile: 'thunder',
+          context: audio
+        });
+        thunderSound.play('thunder', {
+          volume: thunderVolume,
+          variant: thunderIndex++ % 2
+        });
+      };
+      const updateMusicControl = (busy = false) => {
+        musicToggle.setAttribute('aria-pressed', String(musicWanted));
+        musicToggle.setAttribute('aria-busy', String(busy));
+        musicLabel.textContent = busy ? "Caricamento…" : musicWanted ? "Musica attiva" : "Musica disattivata";
+      };
+      const cancelMusicFade = () => {
+        if (musicFrame !== null) cancelAnimationFrame(musicFrame);
+        musicFrame = null;
+      };
+      const fadeMusic = (target, finished) => {
+        cancelMusicFade();
+        if (!rockMusic) return;
+        const from = rockMusic.volume;
+        const started = performance.now();
+        const tick = value => {
+          if (!rockMusic) return;
+          const fraction = Math.max(0, Math.min(1, (value - started) / 350));
+          rockMusic.volume = Math.max(0, Math.min(1, from + (target - from) * fraction));
+          if (fraction < 1) musicFrame = requestAnimationFrame(tick);else {
+            musicFrame = null;
+            finished?.();
+          }
+        };
+        musicFrame = requestAnimationFrame(tick);
+      };
+      const pauseMusic = () => {
+        cancelMusicFade();
+        if (rockMusic) {
+          rockMusic.volume = 0;
+          rockMusic.pause();
+        }
+      };
+      const musicFailed = revision => {
+        if (revision !== musicRevision || !musicWanted || document.hidden) return;
+        musicWanted = false;
+        musicRevision++;
+        pauseMusic();
+        updateMusicControl();
+        musicToggle.setAttribute('aria-label', "Musica non disponibile. Tocca per riprovare");
+      };
+      const startMusic = () => {
+        if (!musicWanted || document.hidden) return;
+        const revision = musicRevision;
+        try {
+          if (!rockMusic) {
+            if (!window.Audio) {
+              musicFailed(revision);
+              return;
+            }
+            rockMusic = new window.Audio('./assets/audio/rock-theme-song-loop.mp3');
+            rockMusic.loop = true;
+            rockMusic.preload = 'none';
+            rockMusic.volume = 0;
+            rockMusic.addEventListener('error', () => musicFailed(musicRevision));
+          }
+          if (rockMusic.error) rockMusic.load();
+          updateMusicControl(true);
+          const playing = rockMusic.play();
+          Promise.resolve(playing).then(() => {
+            if (!musicWanted || document.hidden) {
+              pauseMusic();
+              return;
+            }
+            if (revision !== musicRevision) return;
+            musicToggle.setAttribute('aria-label', "Musica rock");
+            updateMusicControl();
+            fadeMusic(0.45);
+          }).catch(() => musicFailed(revision));
+        } catch (value) {
+          musicFailed(revision);
+        }
+      };
+      colorToggle.addEventListener('click', () => {
+        colored = !colored;
+        colorToggle.setAttribute('aria-pressed', String(colored));
+      });
+      musicToggle.addEventListener('click', () => {
+        musicWanted = !musicWanted;
+        musicRevision++;
+        updateMusicControl();
+        if (musicWanted) startMusic();else fadeMusic(0, () => {
+          if (!musicWanted) {
+            rockMusic.pause();
+            rockMusic.currentTime = 0;
+          }
+        });
+      });
+      const ripple = (x, y) => {
+        const element = document.createElement('div');
+        element.className = 'tap-ripple';
+        element.style.left = x + 'px';
+        element.style.top = y + 'px';
+        root.querySelector('.storm').appendChild(element);
+        setTimeout(() => element.remove(), 620);
+      };
+      canvas.addEventListener('pointerdown', event => {
+        if (feedPreview || event.isPrimary === false || event.button > 0) return;
+        hasInteracted = true;
+        startRain();
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        createBolt(x, y);
+        strikes++;
+        strikeCount.textContent = String(strikes);
+        strikeCounter.setAttribute('aria-label', strikes + (strikes === 1 ? " fulmine" : " fulmini"));
+        ripple(x, y);
+        guide.classList.add('hidden');
+        guide.setAttribute('aria-hidden', 'true');
+        thunder();
+        if (navigator.vibrate) navigator.vibrate(22);
+      });
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          stopRain();
+          pauseMusic();
+        } else {
+          startRain();
+          startMusic();
+        }
+      });
+      window.addEventListener('pagehide', stopRain);
+      window.addEventListener('pagehide', pauseMusic);
+      window.addEventListener('pageshow', startRain);
+      window.addEventListener('pageshow', startMusic);
+      window.addEventListener('resize', resize);
+      resize();
       requestAnimationFrame(frame);
     };
+    start();
+  })();
 
-    const ensureAudio = () => {
-      try {
-        if (!audio) {
-          const AudioCtor = window.AudioContext || window.webkitAudioContext;
-          if (AudioCtor) audio = new AudioCtor();
-        }
-        if (audio && audio.state === 'suspended') audio.resume().catch(() => {});
-      } catch (_) { audio = null; }
-    };
+  // ./feed-entry-motion.js
+  /* Decorative entry motion only. No game state, audio, timers or synthetic input. */
+  (function () {
+    'use strict';
 
-    const makeRainBuffer = () => {
-      const seconds = 3;
-      const length = Math.round(audio.sampleRate * seconds);
-      const buffer = audio.createBuffer(1, length, audio.sampleRate);
-      const samples = buffer.getChannelData(0);
-      let low = 0;
-      for (let i = 0; i < length; i++) {
-        const white = Math.random() * 2 - 1;
-        low = low * .985 + white * .015;
-        samples[i] = (white - low) * .42 + low * .18;
+    const script = {
+      getAttribute(name) {
+        return {
+          "data-subject": "#root canvas",
+          "data-game": ""
+        }[name] ?? null;
+      },
+      dataset: {
+        game: ""
       }
-      for (let drop = 0; drop < 85; drop++) {
-        const start = Math.floor(Math.random() * (length - audio.sampleRate * .04));
-        const frequency = 650 + Math.random() * 850;
-        const duration = Math.floor(audio.sampleRate * .035);
-        for (let i = 0; i < duration; i++) {
-          samples[start + i] += Math.sin(2 * Math.PI * frequency * i / audio.sampleRate) * Math.exp(-i / (audio.sampleRate * .007)) * .28;
-        }
+    };
+    const selector = script?.getAttribute('data-subject') || '#root canvas';
+    const media = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    let observer;
+    let animation;
+    let entered = false;
+    function stop() {
+      animation?.cancel();
+      animation = null;
+    }
+    function enter() {
+      if (entered || document.hidden) return;
+      const subject = document.querySelector(selector);
+      if (!subject || subject.closest('[hidden], [aria-hidden="true"]')) return;
+      const computed = window.getComputedStyle(subject);
+      if (computed.display === 'none' || computed.visibility === 'hidden') return;
+      if (subject.tagName === 'IMG' && !subject.complete) {
+        subject.addEventListener('load', enter, {
+          once: true
+        });
+        return;
       }
-      return buffer;
-    };
-
-    const stopRain = () => {
-      if (!rainSource || !audio) return;
-      const source = rainSource, gain = rainGain, at = audio.currentTime;
-      rainSource = null;
-      rainGain = null;
-      gain.gain.cancelScheduledValues(at);
-      gain.gain.setValueAtTime(Math.max(.0001, gain.gain.value), at);
-      gain.gain.exponentialRampToValueAtTime(.0001, at + .2);
-      source.stop(at + .22);
-    };
-
-    const startRain = () => {
-      if (muted || !hasInteracted || document.hidden || rainSource) return;
-      ensureAudio();
-      if (!audio) return;
-      try {
-        rainBuffer = rainBuffer || makeRainBuffer();
-        const source = audio.createBufferSource();
-        const highpass = audio.createBiquadFilter();
-        const lowpass = audio.createBiquadFilter();
-        const gain = audio.createGain();
-        source.buffer = rainBuffer;
-        source.loop = true;
-        highpass.type = 'highpass';
-        highpass.frequency.value = 280;
-        lowpass.type = 'lowpass';
-        lowpass.frequency.value = 6200;
-        gain.gain.setValueAtTime(.0001, audio.currentTime);
-        gain.gain.exponentialRampToValueAtTime(.055, audio.currentTime + .45);
-        source.connect(highpass).connect(lowpass).connect(gain).connect(audio.destination);
-        source.onended = () => { source.disconnect(); highpass.disconnect(); lowpass.disconnect(); gain.disconnect(); };
-        source.start();
-        rainSource = source;
-        rainGain = gain;
-      } catch (_) {}
-    };
-
-    const thunder = () => {
-      if (muted || thunderVolume <= 0 || document.hidden) return;
-      ensureAudio();
-      if (!audio || !window.PlayableSceneAudio) return;
-      if (!thunderSound) thunderSound = new window.PlayableSceneAudio({ profile: 'thunder', context: audio });
-      thunderSound.play('thunder', { volume: thunderVolume, variant: thunderIndex++ % 2 });
-    };
-
-    const updateMusicControl = (busy = false) => {
-      musicToggle.setAttribute('aria-pressed', String(musicWanted));
-      musicToggle.setAttribute('aria-busy', String(busy));
-      musicLabel.textContent = busy ? "Caricamento…" : musicWanted ? "Musica attiva" : "Musica disattivata";
-    };
-
-    const cancelMusicFade = () => {
-      if (musicFrame !== null) cancelAnimationFrame(musicFrame);
-      musicFrame = null;
-    };
-
-    const fadeMusic = (target, finished) => {
-      cancelMusicFade();
-      if (!rockMusic) return;
-      const from = rockMusic.volume, started = performance.now();
-      const tick = now => {
-        if (!rockMusic) return;
-        const fraction = Math.max(0, Math.min(1, (now - started) / 350));
-        rockMusic.volume = Math.max(0, Math.min(1, from + (target - from) * fraction));
-        if (fraction < 1) musicFrame = requestAnimationFrame(tick);
-        else { musicFrame = null; finished?.(); }
-      };
-      musicFrame = requestAnimationFrame(tick);
-    };
-
-    const pauseMusic = () => {
-      cancelMusicFade();
-      if (rockMusic) { rockMusic.volume = 0; rockMusic.pause(); }
-    };
-
-    const musicFailed = revision => {
-      if (revision !== musicRevision || !musicWanted || document.hidden) return;
-      musicWanted = false;
-      musicRevision++;
-      pauseMusic();
-      updateMusicControl();
-      musicToggle.setAttribute('aria-label', "Musica non disponibile. Tocca per riprovare");
-    };
-
-    const startMusic = () => {
-      if (!musicWanted || document.hidden) return;
-      const revision = musicRevision;
-      try {
-        if (!rockMusic) {
-          if (!window.Audio) { musicFailed(revision); return; }
-          rockMusic = new window.Audio('./assets/audio/rock-theme-song-loop.mp3');
-          rockMusic.loop = true;
-          rockMusic.preload = 'none';
-          rockMusic.volume = 0;
-          rockMusic.addEventListener('error', () => musicFailed(musicRevision));
-        }
-        if (rockMusic.error) rockMusic.load();
-        updateMusicControl(true);
-        const playing = rockMusic.play();
-        Promise.resolve(playing).then(() => {
-          if (!musicWanted || document.hidden) { pauseMusic(); return; }
-          if (revision !== musicRevision) return;
-          musicToggle.setAttribute('aria-label', "Musica rock");
-          updateMusicControl();
-          fadeMusic(.3);
-        }).catch(() => musicFailed(revision));
-      } catch (_) { musicFailed(revision); }
-    };
-
-    colorToggle.addEventListener('click', () => {
-      colored = !colored;
-      colorToggle.setAttribute('aria-pressed', String(colored));
-    });
-    musicToggle.addEventListener('click', () => {
-      musicWanted = !musicWanted;
-      musicRevision++;
-      updateMusicControl();
-      if (musicWanted) startMusic();
-      else fadeMusic(0, () => { if (!musicWanted) { rockMusic.pause(); rockMusic.currentTime = 0; } });
-    });
-
-    const ripple = (x, y) => {
-      const el = document.createElement('div');
-      el.className = 'tap-ripple';
-      el.style.left = x + 'px';
-      el.style.top = y + 'px';
-      root.querySelector('.storm').appendChild(el);
-      setTimeout(() => el.remove(), 620);
-    };
-
-    canvas.addEventListener('pointerdown', event => {
-      if (feedPreview || event.isPrimary === false || event.button > 0) return;
-      hasInteracted = true;
-      startRain();
-      const rect = canvas.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      createBolt(x, y);
-      strikes++;
-      strikeCount.textContent = String(strikes);
-      strikeCounter.setAttribute('aria-label', strikes + (strikes === 1 ? " fulmine" : " fulmini"));
-      ripple(x, y);
-      guide.classList.add('hidden');
-      guide.setAttribute('aria-hidden', 'true');
-      thunder();
-      if (navigator.vibrate) navigator.vibrate(22);
-    });
-
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) { stopRain(); pauseMusic(); }
-      else { startRain(); startMusic(); }
-    });
-
-    window.addEventListener('pagehide', stopRain);
-    window.addEventListener('pagehide', pauseMusic);
-    window.addEventListener('pageshow', startRain);
-    window.addEventListener('pageshow', startMusic);
-    window.addEventListener('resize', resize);
-    resize();
-    requestAnimationFrame(frame);
-  };
-
-  start();
-})();
-
-;
-
-;/* Current runtime segment: inline-4 */
-
-/* Decorative CTA breathing only. No positions, inputs, clocks or game state. */
-(()=>{
- const selectors=["p#guide"],copy=new Set(["Tocca le nuvole per scatenare i fulmini"].map(s=>s.replace(/\s+/g,' ').trim().toLowerCase()));
- const motion=window.matchMedia('(prefers-reduced-motion: reduce)'),running=new Map();let queued=false,visible=true;
- const action=/^(?:(?:tap|drag|hold|swipe|draw|use|press|click|release|brush|pull|touch|pinch|rub|move|trace)\b|spray\s*[→-]|tocca\b|trascina\b|tieni\b|scorri\b|disegna\b|premi\b|点击|轻触|滑动|按住|拖动|长按|双击)/i;
- function scan(){
-  queued=false;for(const [el,a]of running)if(!el.isConnected){a.cancel();running.delete(el);}
-  if(motion.matches){for(const a of running.values())a.cancel();running.clear();return;}
-  const targets=new Set();for(const selector of selectors){try{document.querySelectorAll(selector).forEach(el=>targets.add(el));}catch{}}
-  for(const el of document.querySelectorAll('p,span,div,label,text')){
-   if(el.children.length||el.closest('button,a,input,select,textarea,[role="button"]'))continue;
-   const text=(el.textContent||'').replace(/\s+/g,' ').trim();
-   if(text.length>=5&&text.length<=140&&(copy.has(text.toLowerCase())||(!selectors.length&&action.test(text))))targets.add(el);
-  }
-  for(const el of targets){
-   if(running.has(el)||typeof el.animate!=='function')continue;
-   if([...targets].some(child=>child!==el&&el.contains(child)))continue;
-   const style=getComputedStyle(el);if(/breath/i.test(style.animationName))continue;
-   const base=style.filter.replace(/opacity\([^)]*\)/g,'').replace(/^none$/,'').trim(),filter=v=>(base?base+' ':'')+'opacity('+v+')';
-   const a=el.animate([{filter:filter(1)},{filter:filter(.65)},{filter:filter(1)}],{duration:2400,iterations:Infinity,easing:'ease-in-out'});running.set(el,a);if(document.hidden||!visible)a.pause();
-  }
- }
- const schedule=()=>{if(!queued){queued=true;requestAnimationFrame(scan);}};
- const pause=()=>{for(const a of running.values())document.hidden||!visible?a.pause():a.play();};
- const observer=new MutationObserver(schedule);observer.observe(document.documentElement,{childList:true,subtree:true,characterData:true});
- const intersection=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{visible=entries.some(e=>e.isIntersecting);pause();}):null;
- if(document.body)intersection?.observe(document.body);else document.addEventListener('DOMContentLoaded',()=>intersection?.observe(document.body),{once:true});
- document.addEventListener('visibilitychange',pause);motion.addEventListener?.('change',schedule);schedule();
- window.addEventListener('pagehide',()=>{observer.disconnect();intersection?.disconnect();for(const a of running.values())a.cancel();running.clear();},{once:true});
-})();
-
-
-;
-
-;/* Current runtime segment: guide-breathing.it.js */
-/* Decorative guide visibility only: no inputs, timers, sound or game state. */
-(() => {
-  const root=document.documentElement;
-  let intersecting=true;
-  const update=()=>root.toggleAttribute('data-guide-breathing-paused',document.hidden||!intersecting);
-  const observer=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{
-    intersecting=entries.some(entry=>entry.isIntersecting);update();
-  }):null;
-  if(document.body)observer?.observe(document.body);
-  document.addEventListener('visibilitychange',update);update();
-  window.addEventListener('pagehide',()=>{observer?.disconnect();document.removeEventListener('visibilitychange',update);},{once:true});
-})();
-
-;
-
-;/* Current runtime segment: feed-entry-motion.it.js */
-var __PLAYABLE_TEMPLATE_SCRIPT_6=(()=>{var node=document.createElement("script");for(var entry of Object.entries({"defer":"","src":"./feed-entry-motion.it.js?l10n=175319106901&v=feed-first-20261008-1","data-subject":"#root canvas"}))node.setAttribute(entry[0],entry[1]);return node;})();
-/* Decorative entry motion only. No game state, audio, timers or synthetic input. */
-(function () {
-  'use strict';
-  const script = __PLAYABLE_TEMPLATE_SCRIPT_6;
-  const selector = script?.getAttribute('data-subject') || '#root canvas';
-  const media = window.matchMedia?.('(prefers-reduced-motion: reduce)');
-  let observer, animation, entered = false;
-  function stop() { animation?.cancel(); animation = null; }
-  function enter() {
-    if (entered || document.hidden) return;
-    const subject = document.querySelector(selector);
-    if (!subject || subject.closest('[hidden], [aria-hidden="true"]')) return;
-    const computed = window.getComputedStyle(subject);
-    if (computed.display === 'none' || computed.visibility === 'hidden') return;
-    if (subject.tagName === 'IMG' && !subject.complete) {
-      subject.addEventListener('load', enter, { once: true });
-      return;
+      entered = true;
+      observer?.disconnect();
+      if (media?.matches) return;
+      const opacity = Number(window.getComputedStyle(subject).opacity) || 1;
+      if (typeof subject.animate === 'function') {
+        animation = subject.animate([{
+          opacity: opacity * 0.76
+        }, {
+          opacity
+        }], {
+          duration: 650,
+          easing: 'ease-out'
+        });
+        animation.onfinish = () => {
+          animation = null;
+        };
+      }
     }
-    entered = true;
-    observer?.disconnect();
-    if (media?.matches) return;
-    const opacity = Number(window.getComputedStyle(subject).opacity) || 1;
-    if (typeof subject.animate === 'function') {
-      animation = subject.animate([{ opacity: opacity * .76 }, { opacity }], { duration: 650, easing: 'ease-out' });
-      animation.onfinish = () => { animation = null; };
-    }
-  }
-  observer = new MutationObserver(enter);
-  observer.observe(document.body, { childList: true, subtree: true });
-  enter();
-  document.addEventListener('visibilitychange', () => {
-    document.documentElement.toggleAttribute('data-feed-background', document.hidden);
-    if (document.hidden) stop(); else enter();
-  });
-  window.addEventListener('pagehide', () => { observer.disconnect(); stop(); });
-  window.addEventListener('pageshow', () => {
-    if (!entered) observer.observe(document.body, { childList: true, subtree: true });
+    observer = new MutationObserver(enter);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
     enter();
-  });
-  document.addEventListener('pointerdown', stop, { capture: true, passive: true });
-  media?.addEventListener?.('change', () => { if (media.matches) stop(); });
-})();
+    document.addEventListener('visibilitychange', () => {
+      document.documentElement.toggleAttribute('data-feed-background', document.hidden);
+      if (document.hidden) stop();else enter();
+    });
+    window.addEventListener('pagehide', () => {
+      observer.disconnect();
+      stop();
+    });
+    window.addEventListener('pageshow', () => {
+      if (!entered) observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+      enter();
+    });
+    document.addEventListener('pointerdown', stop, {
+      capture: true,
+      passive: true
+    });
+    media?.addEventListener?.('change', () => {
+      if (media.matches) stop();
+    });
+  })();
 
-;
+  // playable-cta-breathing-20261030
+
+  /* Decorative CTA breathing only. No positions, inputs, clocks or game state. */
+  (() => {
+    const selectors = ["p#guide"];
+    const copy = new Set(["Tocca le nuvole per scatenare i fulmini"].map(item => item.replace(/\s+/g, ' ').trim().toLowerCase()));
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const running = new Map();
+    let queued = false;
+    let visible = true;
+    const action = /^(?:(?:tap|drag|hold|swipe|draw|use|press|click|release|brush|pull|touch|pinch|rub|move|trace)\b|spray\s*[→-]|tocca\b|trascina\b|tieni\b|scorri\b|disegna\b|premi\b|点击|轻触|滑动|按住|拖动|长按|双击)/i;
+    function scan() {
+      queued = false;
+      for (const [el, a] of running) if (!el.isConnected) {
+        a.cancel();
+        running.delete(el);
+      }
+      if (motion.matches) {
+        for (const value of running.values()) value.cancel();
+        running.clear();
+        return;
+      }
+      const targets = new Set();
+      for (const selector of selectors) {
+        try {
+          document.querySelectorAll(selector).forEach(item => targets.add(item));
+        } catch {}
+      }
+      for (const value of document.querySelectorAll('p,span,div,label,text')) {
+        if (value.children.length || value.closest('button,a,input,select,textarea,[role="button"]')) continue;
+        const text = (value.textContent || '').replace(/\s+/g, ' ').trim();
+        if (text.length >= 5 && text.length <= 140 && (copy.has(text.toLowerCase()) || !selectors.length && action.test(text))) targets.add(value);
+      }
+      for (const value of targets) {
+        if (running.has(value) || typeof value.animate !== 'function') continue;
+        if ([...targets].some(child => child !== value && value.contains(child))) continue;
+        const style = getComputedStyle(value);
+        if (/breath/i.test(style.animationName)) continue;
+        const base = style.filter.replace(/opacity\([^)]*\)/g, '').replace(/^none$/, '').trim();
+        const filter = value3 => (base ? base + ' ' : '') + 'opacity(' + value3 + ')';
+        const value2 = value.animate([{
+          filter: filter(1)
+        }, {
+          filter: filter(0.65)
+        }, {
+          filter: filter(1)
+        }], {
+          duration: 2400,
+          iterations: Infinity,
+          easing: 'ease-in-out'
+        });
+        running.set(value, value2);
+        if (document.hidden || !visible) value2.pause();
+      }
+    }
+    const schedule = () => {
+      if (!queued) {
+        queued = true;
+        requestAnimationFrame(scan);
+      }
+    };
+    const pause = () => {
+      for (const value of running.values()) {
+        if (document.hidden || !visible) {
+          value.pause();
+        } else {
+          value.play();
+        }
+      }
+    };
+    const observer = new MutationObserver(schedule);
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+    const intersection = typeof IntersectionObserver === 'function' ? new IntersectionObserver(entries => {
+      visible = entries.some(item => item.isIntersecting);
+      pause();
+    }) : null;
+    if (document.body) intersection?.observe(document.body);else document.addEventListener('DOMContentLoaded', () => intersection?.observe(document.body), {
+      once: true
+    });
+    document.addEventListener('visibilitychange', pause);
+    motion.addEventListener?.('change', schedule);
+    schedule();
+    window.addEventListener('pagehide', () => {
+      observer.disconnect();
+      intersection?.disconnect();
+      for (const value of running.values()) value.cancel();
+      running.clear();
+    }, {
+      once: true
+    });
+  })();
+}
+function App() {
+  React.useEffect(() => {
+    startGame();
+  }, []);
+  return <><div id="game-surface" style={{
+      width: "100%",
+      height: "100%"
+    }} /></>;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);

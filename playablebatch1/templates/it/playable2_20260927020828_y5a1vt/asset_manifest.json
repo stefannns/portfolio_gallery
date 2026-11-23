@@ -1,39 +1,43 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20260927020828_y5a1vt",
-  "number": 10,
-  "name": "Color Wheel",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "audiowide",
+  "style_anchor": "A color-wheel timing game with a large circular wheel and a needle. Preserve the color-coded target text, wheel artwork, technical display lettering and clear timing feedback.",
   "assets": [
     {
-      "path": "dist/assets/bg_wheel.webp",
-      "ids": [
-        "BG_WHEEL"
-      ],
-      "bytes": 12362,
-      "sha256": "6ec4831c5867ecc084d3bdff4439c8eb1b7dbcbbaa0cf38a9048d3a75d78a5be"
+      "path": "assets/bg_wheel.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A color-wheel timing game with a large circular wheel and a needle. Preserve the color-coded target text, wheel artwork, technical display lettering and clear timing feedback. Asset requirement: Existing Color Wheel artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Color Wheel artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "497:506",
+      "size_tier": "full",
+      "recommended_size": "497x506",
+      "width": 497,
+      "height": 506,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/audiowide/Audiowide-Regular.woff2",
-      "ids": [],
-      "bytes": 18880,
-      "sha256": "4650e661683335ff42987353137525ee47444acff82525f647beb9d82b534216"
+      "path": "assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Audiowide Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/icon_needle.webp",
-      "ids": [
-        "ICON_NEEDLE"
-      ],
-      "bytes": 4968,
-      "sha256": "270af6c2692c04fddbda5888fca01d3df62942d06ec057c168d1811dd840bea6"
+      "path": "assets/icon_needle.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A color-wheel timing game with a large circular wheel and a needle. Preserve the color-coded target text, wheel artwork, technical display lettering and clear timing feedback. Asset requirement: Existing Needle Indicator artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Needle Indicator artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "37:633",
+      "size_tier": "small",
+      "recommended_size": "37x633",
+      "width": 37,
+      "height": 633,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "d9239fa8f8de2f1e352b72184657612009faf0973c7f1d3ccf6c14ed54759d2b",
-    "dist/bundle.js": "d9239fa8f8de2f1e352b72184657612009faf0973c7f1d3ccf6c14ed54759d2b",
-    "dist/game.html": "cc58d97cf5def6a7335c8638ec24bf251e61cf191fe18ec579ed66c0510dd545",
-    "dist/game.config.json": "fb34b691f65e269aaeb5f17cbba92d127052df70f894b8a7dbd37f04e47705f0"
-  }
+  ]
 }

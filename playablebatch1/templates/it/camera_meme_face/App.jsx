@@ -168,7 +168,7 @@ function installPrintedPaper(){
  observer?.observe(root);cleanups.push(()=>{visibility.disconnect();observer?.disconnect();});
 }
 
-mount(`body{color:#292922}.fit{background:#e6e4dc}.eyebrow{position:absolute;top:58px;width:100%;text-align:center;letter-spacing:2.5px;font-size:10px}.meme-reference{position:absolute;left:78px;top:95px;width:234px;height:165px;object-fit:cover;border:8px solid #faf9f1;box-shadow:0 2px 7px #4442;transform:rotate(-3deg)}.live{position:absolute;left:78px;top:294px;width:234px;height:160px;border:8px solid #faf9f1;box-shadow:0 2px 7px #4442;transform:rotate(2deg);background:#d2cfc4;overflow:hidden}.live canvas{width:100%;height:100%;object-fit:cover}.preview{display:none}.guide{top:272px;font-size:16px}.shutter{position:absolute;left:168px;top:480px;border:3px solid #292922;background:#fff;width:54px;height:54px;border-radius:50%;box-shadow:inset 0 0 0 5px #e6e4dc}.cam-status{bottom:122px;font-size:11px}.bottom{bottom:18px}.comparison{position:absolute;inset:80px 30px 105px;z-index:15;background:#f9f7ef;padding:22px 14px;box-shadow:0 4px 20px #0002;text-align:center}.comparison[hidden]{display:none}.comparison h2{font-size:24px;margin:12px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:24px 0}.pair canvas,.pair img{width:100%;height:205px;object-fit:cover}.pair small{display:block;text-transform:uppercase;letter-spacing:2px;font-size:9px;margin:8px}.countdown{position:absolute;top:350px;width:100%;text-align:center;z-index:12;font-size:60px;font-weight:800;color:white;text-shadow:0 2px 5px #0008}`,`<div class="guide">Imita l’espressione</div><div class="pose-pair"><img class="meme-reference" alt="Espressione da imitare" src="./assets/meme-1.webp"><div class="live"><canvas class="selfie" width="400" height="400"></canvas><div class="countdown"></div></div></div><video class="preview" playsinline autoplay muted></video><div class="status cam-status" role="status" aria-live="polite" hidden></div><div class="bottom"><button class="capability cam-enable">Attiva fotocamera</button><button class="shutter" aria-label="Scatta foto" hidden disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h4l2-3h6l2 3h4v13H3Z"/><circle cx="12" cy="13" r="4"/></svg><span class="shutter-label">Scatta foto</span></button></div><section class="comparison" hidden aria-labelledby="meme-result-title"><header><div class="smallcaps">Sfida completata</div><h2 id="meme-result-title">La tua imitazione</h2></header><div class="match-summary"><div class="match-value" data-ready="false" aria-live="polite" aria-atomic="true"><strong class="match-number">—</strong><span class="match-percent-sign">%</span></div><div class="match-label">Somiglianza visiva</div></div><div class="pair"><div><small>Originale</small><img alt="Espressione originale"></div><div><small>Tu</small><canvas width="320" height="320" aria-label="La foto che hai scattato"></canvas></div></div><p class="match-method">Colore · contrasto · forma</p><button class="pill next">Avanti</button></section><div class="flash"></div>`,'#e6e4dc');
+mount(`body{color:#292922}.fit{background:#e6e4dc}.eyebrow{position:absolute;top:58px;width:100%;text-align:center;letter-spacing:2.5px;font-size:10px}.meme-reference{position:absolute;left:78px;top:95px;width:234px;height:165px;object-fit:cover;border:8px solid #faf9f1;box-shadow:0 2px 7px #4442;transform:rotate(-3deg)}.live{position:absolute;left:78px;top:294px;width:234px;height:160px;border:8px solid #faf9f1;box-shadow:0 2px 7px #4442;transform:rotate(2deg);background:#d2cfc4;overflow:hidden}.live canvas{width:100%;height:100%;object-fit:cover}.preview{display:none}.guide{top:272px;font-size:16px}.shutter{position:absolute;left:168px;top:480px;border:3px solid #292922;background:#fff;width:54px;height:54px;border-radius:50%;box-shadow:inset 0 0 0 5px #e6e4dc}.cam-status{bottom:122px;font-size:11px}.bottom{bottom:18px}.comparison{position:absolute;inset:80px 30px 105px;z-index:15;background:#f9f7ef;padding:22px 14px;box-shadow:0 4px 20px #0002;text-align:center}.comparison[hidden]{display:none}.comparison h2{font-size:24px;margin:12px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:24px 0}.pair canvas,.pair img{width:100%;height:205px;object-fit:cover}.pair small{display:block;text-transform:uppercase;letter-spacing:2px;font-size:9px;margin:8px}.countdown{position:absolute;top:350px;width:100%;text-align:center;z-index:12;font-size:60px;font-weight:800;color:white;text-shadow:0 2px 5px #0008}`,`<div class="guide">Imita l’espressione</div><div class="pose-pair"><div class="meme-photo-frame meme-reference-frame" data-focal="wet-kitty"><img class="meme-reference" alt="Espressione da imitare" src="./assets/meme-4.png"></div><div class="live"><canvas class="selfie" width="400" height="400"></canvas><div class="countdown"></div></div></div><video class="preview" playsinline autoplay muted></video><div class="status cam-status" role="status" aria-live="polite" hidden></div><div class="bottom"><button class="capability cam-enable">Attiva fotocamera</button><button class="shutter" aria-label="Scatta foto" hidden disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h4l2-3h6l2 3h4v13H3Z"/><circle cx="12" cy="13" r="4"/></svg><span class="shutter-label">Scatta foto</span></button></div><section class="comparison" hidden aria-labelledby="meme-result-title"><header><div class="smallcaps">Sfida completata</div><h2 id="meme-result-title">La tua imitazione</h2></header><div class="match-summary"><div class="match-value" data-ready="false" aria-live="polite" aria-atomic="true"><strong class="match-number">—</strong><span class="match-percent-sign">%</span></div><div class="match-label">Somiglianza visiva</div></div><div class="pair"><div><small>Originale</small><div class="meme-photo-frame meme-result-frame" data-focal="wet-kitty"><img alt="Espressione originale"></div></div><div><small>Tu</small><canvas width="320" height="320" aria-label="La foto che hai scattato"></canvas></div></div><p class="match-method">Colore · contrasto · forma</p><button class="pill next">Avanti</button></section><div class="flash"></div>`,'#e6e4dc');
 installPrintedPaper();
 // A playful pixel-based comparison, not face identification or emotion recognition.
 function memeImageFeatures(data,width=32,height=32){
@@ -204,7 +204,11 @@ function memeVisualSimilarity(a,b){
 function analyseMemeImage(source){
  const canvas=document.createElement('canvas');canvas.width=canvas.height=32;
  const context=canvas.getContext('2d',{willReadFrequently:true});
- if(!cover(context,source,0,0,32,32))throw Error("Immagine non pronta");
+ if(source.dataset?.memeFocal==='wet-kitty'){
+  const width=source.naturalWidth||source.width,height=source.naturalHeight||source.height;
+  if(!width||!height)throw Error('Image not ready');
+  context.drawImage(source,0,height*25/640,width*360/594,height*360/640,0,0,32,32);
+ }else if(!cover(context,source,0,0,32,32))throw Error('Image not ready');
  return memeImageFeatures(context.getImageData(0,0,32,32).data);
 }
 let memeMatchRequest=0;
@@ -268,10 +272,19 @@ function syncMemeCameraControls(){
  if(copy&&copy.textContent!==label)copy.textContent=label;
  if(shutter.getAttribute('aria-label')!==label)shutter.setAttribute('aria-label',label);
 }
-const portraits=[image('./assets/meme-1.webp'),image('./assets/meme-2.webp'),image('./assets/meme-3.webp')];
+const memeTargets=['./assets/meme-4.png','./assets/meme-1.webp','./assets/meme-2.webp','./assets/meme-3.webp'];
+const portraits=memeTargets.map(path=>image(path));
+portraits[0].dataset.memeFocal='wet-kitty';
+function syncMemeReference(){
+ const focal=expression===0?'wet-kitty':'none',reference=$('.meme-reference'),resultReference=$('.pair img');
+ reference.src=portraits[expression].src;resultReference.src=portraits[expression].src;
+ for(const frame of root.querySelectorAll('.meme-photo-frame'))frame.dataset.focal=focal;
+ root.dataset.expression=memeTargets[expression];root.dataset.expressionCount=String(portraits.length);
+}
+syncMemeReference();
 cameraControls();
 on($('.shutter'),'click',()=>{if(taken||countdown>=0||!cameraSource())return;gesture();countdown=3;syncMemeCameraControls();state('countdown');sound(550,.06,.12);});
-on($('.next'),'click',()=>{gesture();memeMatchRequest++;expression=(expression+1)%3;taken=false;$('.comparison').hidden=true;$('.meme-reference').src=assetPath(`./assets/meme-${expression+1}.webp`);syncMemeCameraControls();state('ready');});
+on($('.next'),'click',()=>{gesture();memeMatchRequest++;expression=(expression+1)%portraits.length;taken=false;$('.comparison').hidden=true;syncMemeReference();syncMemeCameraControls();state('ready');});
 loop(dt=>{
  syncMemeCameraControls();
  paintCamera($('.selfie'),'#f0ede5');
@@ -279,11 +292,11 @@ loop(dt=>{
   if(!cameraSource()){countdown=-1;$('.countdown').textContent='';state('ready');return;}
   const old=Math.ceil(countdown);countdown-=dt;$('.countdown').textContent=countdown>0?Math.ceil(countdown):'';
   if(Math.ceil(countdown)<old&&countdown>0)sound(550,.05,.1);
-  if(countdown<=0){countdown=-1;const photo=takePhoto(320,320);if(!photo)return;taken=true;flash();sound(120,.08,.18,'triangle',70);$('.pair canvas').getContext('2d').drawImage(photo,0,0);$('.pair img').src=portraits[expression].src;$('.comparison').hidden=false;showMemeMatch(photo,portraits[expression]);$('.next').focus({preventScroll:true});state('comparison');}
+  if(countdown<=0){countdown=-1;const photo=takePhoto(320,320);if(!photo)return;taken=true;flash();sound(120,.08,.18,'triangle',70);$('.pair canvas').getContext('2d').drawImage(photo,0,0);syncMemeReference();$('.comparison').hidden=false;showMemeMatch(photo,portraits[expression]);$('.next').focus({preventScroll:true});state('comparison');}
  }
 });state('ready');
 
-configure(()=>{paintPaperBackdrop();if($('.guide')){const copy=String(setting('GUIDE',"Imita l’espressione"));$('.guide').textContent=["Imita l’espressione","Imita l’espressione · scatta un selfie","Imita l’espressione · scatta un selfie"].includes(copy)?camText("Imita l’espressione",'Imita l’espressione'):copy;}});
+configure(()=>{paintPaperBackdrop();syncMemeReference();if($('.guide')){const copy=String(setting('GUIDE',"Imita l’espressione"));$('.guide').textContent=["Imita l’espressione","Imita l’espressione · scatta un selfie","Imita l’espressione · scatta un selfie"].includes(copy)?camText("Imita l’espressione",'Imita l’espressione'):copy;}});
 })();
 
 // Batch 3 UI refinement — 2026-11-16
@@ -297,3 +310,18 @@ configure(()=>{paintPaperBackdrop();if($('.guide')){const copy=String(setting('G
 
 // Square reference/camera cards; keep controls in a single non-overlapping row.
 (()=>{const style=document.createElement('style');style.textContent='.pose-pair{position:absolute;left:30px;right:30px;top:88px;bottom:128px;display:grid;grid-template-rows:minmax(0,1fr) auto minmax(0,1fr);justify-items:center;gap:10px}.pose-pair .meme-reference,.pose-pair .live{position:relative;inset:auto;display:block;width:auto;height:100%;max-width:100%;aspect-ratio:1;border:0;border-radius:8px;object-fit:cover;transform:none;box-shadow:0 2px 7px #4442}.pose-pair .live canvas{width:100%;height:100%;object-fit:cover}.pose-pair .guide{position:static;inset:auto;width:100%;margin:0;font-size:17px;line-height:1.35}.live .countdown{position:absolute;inset:0;display:grid;place-items:center;font-size:54px;pointer-events:none}.bottom{bottom:50px;gap:0;min-height:48px;justify-content:center}#root .bottom .shutter,#root .bottom .cam-enable{position:static;inset:auto;flex:0 1 230px;width:230px;max-width:100%;height:auto;min-height:48px;margin:0;padding:10px 18px;font-size:16px;line-height:1.3}#root .bottom .shutter{display:flex;align-items:center;justify-content:center;gap:10px;border:2px solid #282723;border-radius:24px;box-shadow:0 2px 0 #2827231c;background:#fbf7e9;color:#282723}#root .bottom .shutter svg{width:22px;height:22px;flex:none}#root .bottom [hidden]{display:none!important}.cam-status{top:54px;font-size:12px;line-height:1.3}.pair canvas,.pair img{height:auto;aspect-ratio:1;object-fit:cover}';document.head.append(style);})();
+
+// User-supplied fourth expression: keep the original PNG and frame its face in UI.
+// The same normalized source rectangle is used by the reference, result and analysis.
+(() => {
+ const style=document.createElement('style');
+ style.textContent=`
+ #root .pose-pair{grid-template-rows:repeat(2,minmax(0,1fr))}
+ #root .meme-photo-frame{position:relative;overflow:hidden;isolation:isolate;background:#e9e0c7}
+ #root .pose-pair>.meme-reference-frame{display:block;position:relative;inset:auto;width:auto;height:100%;max-width:100%;aspect-ratio:1;border:2px solid #282723;border-radius:7px;box-shadow:3px 4px 0 #2827231e;transform:none}
+ #root .comparison .meme-result-frame{display:block;width:100%;height:auto;aspect-ratio:1;border:1px solid #28272340;border-radius:3px}
+ #root .meme-photo-frame>img{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;max-width:none!important;aspect-ratio:auto!important;border:0!important;border-radius:0!important;box-shadow:none!important;transform:none!important;object-fit:cover!important}
+ #root .meme-photo-frame[data-focal="wet-kitty"]>img{inset:auto!important;left:0!important;top:-6.9444444444%!important;width:165%!important;height:177.7777777778%!important;object-fit:fill!important}
+ `;
+ document.head.append(style);
+})();

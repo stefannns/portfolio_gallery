@@ -3,7 +3,7 @@
     {
       "id": "MAX_SPEED",
       "kind": "number",
-      "label": "Max Speed",
+      "label": "Velocità massima",
       "value": 0.4,
       "default": 0.4,
       "min": 0.2,
@@ -13,7 +13,7 @@
     {
       "id": "ACCELERATION",
       "kind": "number",
-      "label": "Acceleration",
+      "label": "Accelerazione",
       "value": 0.0008,
       "default": 0.0008,
       "min": 0.0002,
@@ -23,7 +23,7 @@
     {
       "id": "STEER_SPEED",
       "kind": "number",
-      "label": "Steering Speed",
+      "label": "Velocità di sterzata",
       "value": 0.003,
       "default": 0.003,
       "min": 0.001,
@@ -34,82 +34,82 @@
   "texts": [
     {
       "id": "TXT_LEVEL_CLEAR",
-      "label": "Level Clear Title",
-      "value": "Level Cleared!",
-      "default": "Level Cleared!",
+      "label": "Parcheggio riuscito!",
+      "value": "Parcheggio riuscito!",
+      "default": "Parcheggio riuscito!",
       "max_length": 20
     },
     {
       "id": "TXT_NEXT_LEVEL",
-      "label": "Next Level Btn",
-      "value": "Next Level",
-      "default": "Next Level",
-      "max_length": 15
+      "label": "Livello successivo",
+      "value": "Livello successivo",
+      "default": "Livello successivo",
+      "max_length": 18
     },
     {
       "id": "TXT_GAME_OVER",
-      "label": "Crash Title",
-      "value": "Crashed!",
-      "default": "Crashed!",
+      "label": "Hai urtato!",
+      "value": "Hai urtato!",
+      "default": "Hai urtato!",
       "max_length": 20
     },
     {
       "id": "TXT_RESTART",
-      "label": "Try Again Btn",
-      "value": "Try Again",
-      "default": "Try Again",
+      "label": "Riprova",
+      "value": "Riprova",
+      "default": "Riprova",
       "max_length": 15
     },
     {
       "id": "TXT_ALL_CLEAR",
-      "label": "All Clear Title",
-      "value": "You are a Parking Master!",
-      "default": "You are a Parking Master!",
+      "label": "Sei un asso del parcheggio!",
+      "value": "Sei un asso del parcheggio!",
+      "default": "Sei un asso del parcheggio!",
       "max_length": 30
     },
     {
       "id": "TXT_RESTART_ALL",
-      "label": "Play Again Btn",
-      "value": "Play Again",
-      "default": "Play Again",
+      "label": "Gioca ancora",
+      "value": "Gioca ancora",
+      "default": "Gioca ancora",
       "max_length": 15
     },
     {
       "id": "TXT_POST_PLAY",
-      "label": "Post Play Btn",
-      "value": "Post My Play",
-      "default": "Post My Play",
+      "label": "Pubblica la partita",
+      "value": "Pubblica la partita",
+      "default": "Pubblica la partita",
       "max_length": 20
     }
   ],
   "images": [
     {
       "id": "IMG_PLAYER",
-      "label": "Player Car",
+      "label": "Auto del giocatore",
       "path": "./assets/cartoon-v4/player-coral.webp",
       "replaceable": true
     },
     {
       "id": "IMG_PARKED",
-      "label": "Parked Car",
+      "label": "Auto parcheggiata",
       "path": "./assets/cartoon-v4/car-lavender.webp",
       "replaceable": true
     },
     {
       "id": "IMG_BG",
-      "label": "Dark Cartoon Asphalt Lot",
+      "label": "Parcheggio illustrato in asfalto scuro",
       "path": "./assets/cartoon-v4/asphalt-lot.svg",
       "replaceable": true
     },
     {
       "id": "IMG_VAN",
-      "label": "Sky Blue Parked Van",
+      "label": "Furgone azzurro parcheggiato",
       "path": "./assets/cartoon-v4/van-sky.webp",
       "replaceable": true
     },
     {
       "id": "IMG_SUV",
-      "label": "Yellow Parked SUV",
+      "label": "SUV giallo parcheggiato",
       "path": "./assets/cartoon-v4/suv-yellow.webp",
       "replaceable": true
     }
@@ -120,8 +120,9 @@
     "version_id": "103312816458754163",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
-    "full_capability_level": 1
+    "full_capability_level": 1,
+    "title": "Parcheggio perfetto"
   }
 }

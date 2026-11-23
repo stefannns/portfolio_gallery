@@ -15,36 +15,36 @@
     {
       "id": "START_TITLE",
       "label": "Start Title",
-      "value": "Hold to guide the knife around the star. Release to cool before the stress bar fills.",
-      "default": "Hold to guide the knife around the star. Release to cool before the stress bar fills.",
+      "value": "Tieni premuto per incidere. Rilascia per raffreddare la lama.",
+      "default": "Tieni premuto per incidere. Rilascia per raffreddare la lama.",
       "max_length": 150
     },
     {
       "id": "BTN_START",
       "label": "Start Button",
-      "value": "Start Carving",
-      "default": "Start Carving",
+      "value": "Inizia a incidere",
+      "default": "Inizia a incidere",
       "max_length": 20
     },
     {
       "id": "BTN_RETRY",
       "label": "Retry Button",
-      "value": "Try Again",
-      "default": "Try Again",
+      "value": "Riprova",
+      "default": "Riprova",
       "max_length": 20
     },
     {
       "id": "MSG_HOLD_CARVE",
       "label": "Hint Text",
-      "value": "Hold to carve · release to cool",
-      "default": "Hold to carve · release to cool",
+      "value": "Incidi e lascia raffreddare",
+      "default": "Incidi e lascia raffreddare",
       "max_length": 30
     },
     {
       "id": "MSG_SCORE",
       "label": "Score Label",
-      "value": "Star Carved",
-      "default": "Star Carved",
+      "value": "Stella incisa",
+      "default": "Stella incisa",
       "max_length": 20
     }
   ],
@@ -68,7 +68,7 @@
     "version_id": "99278764043067602",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

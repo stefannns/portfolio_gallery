@@ -12,22 +12,22 @@
     {
       "id": "GAME_TITLE",
       "label": "Game Title",
-      "value": "Color by Number",
-      "default": "Color by Number",
+      "value": "Colora con i numeri",
+      "default": "Colora con i numeri",
       "max_length": 20
     },
     {
       "id": "TXT_WIN",
       "label": "Win Message",
-      "value": "Beautiful!",
-      "default": "Beautiful!",
+      "value": "Bellissimo!",
+      "default": "Bellissimo!",
       "max_length": 20
     },
     {
       "id": "BTN_PLAY_AGAIN",
       "label": "Play Again Button",
-      "value": "Play Again",
-      "default": "Play Again",
+      "value": "Rigioca",
+      "default": "Rigioca",
       "max_length": 15
     }
   ],
@@ -67,8 +67,8 @@
   "config_version": "2.0",
   "playable": {
     "runtime_target": "h5",
-    "h5_playstyle_type": "image_expression",
-    "content_locale": "en",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

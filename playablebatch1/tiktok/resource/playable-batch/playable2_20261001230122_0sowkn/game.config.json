@@ -32,15 +32,15 @@
     {
       "id": "TXT_TITLE",
       "label": "Main Title",
-      "value": "Snake",
-      "default": "Snake",
+      "value": "Serpente",
+      "default": "Serpente",
       "max_length": 25
     },
     {
       "id": "TXT_HINT",
       "label": "Hint Text",
-      "value": "Use the arrows to eat food and grow.",
-      "default": "Use the arrows to eat food and grow.",
+      "value": "Usa le frecce per giocare",
+      "default": "Usa le frecce per giocare",
       "max_length": 50
     }
   ],
@@ -73,8 +73,8 @@
     "post_id": "99279521022691650",
     "version_id": "99279521022601594",
     "runtime_target": "h5",
-    "h5_playstyle_type": "image_expression",
-    "content_locale": "en",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

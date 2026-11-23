@@ -1,37 +1,43 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20260927020825_hjn7q5",
-  "number": 14,
-  "name": "Melody Canvas",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "A musical drawing surface with a restrained wooden texture and luminous marks. Preserve the current instrument surface, drawing colors, line glow and compact controls.",
   "assets": [
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
-      "ids": [],
-      "bytes": 50616,
-      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
-      "ids": [],
-      "bytes": 51212,
-      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/soundboard-realistic-v1.webp",
-      "ids": [
-        "BG_OVERLAY"
-      ],
-      "bytes": 131636,
-      "sha256": "26090e19277b1c37093b331cc59a8bfbf5e3fbc3c43983c21a86c0f4501b6ff5"
+      "path": "assets/soundboard-realistic-v1.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A musical drawing surface with a restrained wooden texture and luminous marks. Preserve the current instrument surface, drawing colors, line glow and compact controls. Asset requirement: Existing Background Texture artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Background Texture artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "2:3",
+      "size_tier": "full",
+      "recommended_size": "780x1170",
+      "width": 780,
+      "height": 1170,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "0c9711153ef4e6d5a8fe7ce71e8404eaea533908d03411bc71214e1856e94897",
-    "dist/bundle.js": "0c9711153ef4e6d5a8fe7ce71e8404eaea533908d03411bc71214e1856e94897",
-    "dist/game.html": "ec198cc498117b99673701824a041e785d13f413c6e28e50af0247486f48fe8f",
-    "dist/game.config.json": "5e674a9fe95bd8fae5f8bbd01bc6e15370ca21f8b81fdf31b677592e15269807"
-  }
+  ]
 }

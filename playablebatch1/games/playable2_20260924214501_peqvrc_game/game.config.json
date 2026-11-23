@@ -14,20 +14,20 @@
       "id": "MIN_DELAY",
       "kind": "number",
       "label": "Min Delay (s)",
-      "value": 2.0,
-      "default": 2.0,
-      "min": 1.0,
-      "max": 5.0,
+      "value": 2,
+      "default": 2,
+      "min": 1,
+      "max": 5,
       "step": 0.5
     },
     {
       "id": "MAX_DELAY",
       "kind": "number",
       "label": "Max Delay (s)",
-      "value": 5.0,
-      "default": 5.0,
-      "min": 3.0,
-      "max": 10.0,
+      "value": 5,
+      "default": 5,
+      "min": 3,
+      "max": 10,
       "step": 0.5
     }
   ],
@@ -35,50 +35,50 @@
     {
       "id": "GAME_TITLE",
       "label": "Game Title",
-      "value": "DUAL TAP DUEL",
-      "default": "DUAL TAP DUEL",
+      "value": "DUELLO DI TOCCHI",
+      "default": "DUELLO DI TOCCHI",
       "max_length": 20
     },
     {
       "id": "BTN_START",
       "label": "Start Button",
-      "value": "START",
-      "default": "START",
+      "value": "INIZIA",
+      "default": "INIZIA",
       "max_length": 15
     },
     {
       "id": "BTN_RESTART",
       "label": "Restart Button",
-      "value": "PLAY AGAIN",
-      "default": "PLAY AGAIN",
+      "value": "RIGIOCA",
+      "default": "RIGIOCA",
       "max_length": 15
     },
     {
       "id": "TXT_WAIT",
       "label": "Wait Text",
-      "value": "WAIT...",
-      "default": "WAIT...",
+      "value": "ASPETTA…",
+      "default": "ASPETTA…",
       "max_length": 15
     },
     {
       "id": "TXT_FIRE",
       "label": "Fire Text",
-      "value": "TAP TO FIRE!",
-      "default": "TAP TO FIRE!",
+      "value": "TOCCA ORA!",
+      "default": "TOCCA ORA!",
       "max_length": 15
     },
     {
       "id": "TXT_FAULT",
       "label": "Fault Text",
-      "value": "TOO EARLY!",
-      "default": "TOO EARLY!",
+      "value": "TROPPO PRESTO!",
+      "default": "TROPPO PRESTO!",
       "max_length": 15
     },
     {
       "id": "TXT_WIN",
       "label": "Win Text",
-      "value": "NICE SHOT!",
-      "default": "NICE SHOT!",
+      "value": "BEL COLPO!",
+      "default": "BEL COLPO!",
       "max_length": 15
     }
   ],
@@ -87,7 +87,7 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

@@ -1,37 +1,43 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20261001230412_o52e38",
-  "number": 58,
-  "name": "Stack",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "A block stacking timing game with simple geometric surfaces. Preserve the current block colors, readable timing guide, stack proportions and restrained feedback.",
   "assets": [
     {
-      "path": "dist/assets/block_surface.svg",
-      "ids": [
-        "BLOCK_IMG"
-      ],
-      "bytes": 610,
-      "sha256": "9b3d3017d9d8b43e145e87ba0f4d370190f09ba3da50230c6d46fcc7ef0e2020"
+      "path": "assets/block_surface.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A block stacking timing game with simple geometric surfaces. Preserve the current block colors, readable timing guide, stack proportions and restrained feedback. Asset requirement: Existing Block Surface Texture artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Block Surface Texture artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1:1",
+      "size_tier": "medium",
+      "recommended_size": "256x256",
+      "width": 256,
+      "height": 256,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
-      "ids": [],
-      "bytes": 50616,
-      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
-      "ids": [],
-      "bytes": 51212,
-      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "e4a8478b096e74f1dedfe58c8a8962c9f8cb70beb07f44b504902c3da1ddd761",
-    "dist/bundle.js": "e4a8478b096e74f1dedfe58c8a8962c9f8cb70beb07f44b504902c3da1ddd761",
-    "dist/game.html": "506b54ee6ca0490b8afd9c5ba09c865ce7d3810de63dfe6758f93e7bfe272888",
-    "dist/game.config.json": "ccaf57eb503429964bd8f817cb55e7e35137b816545ddf04da64f991be68e49b"
-  }
+  ]
 }

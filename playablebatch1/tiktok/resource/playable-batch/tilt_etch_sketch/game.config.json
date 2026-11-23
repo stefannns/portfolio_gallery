@@ -2,8 +2,8 @@
   "config_version": "2.0",
   "playable": {
     "name": "tilt_etch_sketch",
-    "title": "Etch A Sketch",
-    "content_locale": "en",
+    "title": "Lavagna magica",
+    "content_locale": "it",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
     "min_capability_level": 2,
@@ -12,9 +12,9 @@
   "texts": [
     {
       "id": "GUIDE",
-      "label": "Interaction guide",
-      "value": "Tilt to draw\nShake to erase",
-      "default": "Tilt to draw\nShake to erase",
+      "label": "Guida ai comandi",
+      "value": "Inclina per disegnare\nScuoti per cancellare",
+      "default": "Inclina per disegnare\nScuoti per cancellare",
       "max_length": 60
     }
   ],

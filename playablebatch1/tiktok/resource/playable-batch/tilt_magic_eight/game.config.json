@@ -2,8 +2,8 @@
   "config_version": "2.0",
   "playable": {
     "name": "tilt_magic_eight",
-    "title": "Magic 8 Ball",
-    "content_locale": "en",
+    "title": "La sfera delle risposte",
+    "content_locale": "it",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
     "min_capability_level": 2,
@@ -12,9 +12,9 @@
   "texts": [
     {
       "id": "GUIDE",
-      "label": "Interaction guide",
-      "value": "Shake or tap for an answer",
-      "default": "Shake or tap for an answer",
+      "label": "Guida ai comandi",
+      "value": "Scuoti o tocca per una risposta",
+      "default": "Scuoti o tocca per una risposta",
       "max_length": 60
     }
   ],

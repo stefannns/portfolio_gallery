@@ -15,43 +15,43 @@
     {
       "id": "TXT_LEVEL",
       "label": "关卡文案",
-      "value": "LEVEL",
-      "default": "LEVEL",
+      "value": "LIVELLO",
+      "default": "LIVELLO",
       "max_length": 15
     },
     {
       "id": "TXT_TARGET",
       "label": "目标颜色文案",
-      "value": "Target Color",
-      "default": "Target Color",
+      "value": "Colore da ottenere",
+      "default": "Colore da ottenere",
       "max_length": 25
     },
     {
       "id": "TXT_MATCH",
       "label": "匹配进度文案",
-      "value": "Match",
-      "default": "Match",
+      "value": "Corrispondenza",
+      "default": "Corrispondenza",
       "max_length": 15
     },
     {
       "id": "TXT_SUCCESS_MSG",
       "label": "过关提示语",
-      "value": "Perfect Match!",
-      "default": "Perfect Match!",
+      "value": "Colore perfetto!",
+      "default": "Colore perfetto!",
       "max_length": 30
     },
     {
       "id": "TXT_NEXT",
       "label": "下一关按钮",
-      "value": "Next Level",
-      "default": "Next Level",
+      "value": "Prossimo livello",
+      "default": "Prossimo livello",
       "max_length": 20
     },
     {
       "id": "TXT_POST",
       "label": "投稿按钮",
-      "value": "Post My Play",
-      "default": "Post My Play",
+      "value": "Condividi",
+      "default": "Condividi",
       "max_length": 20
     }
   ],
@@ -91,7 +91,7 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

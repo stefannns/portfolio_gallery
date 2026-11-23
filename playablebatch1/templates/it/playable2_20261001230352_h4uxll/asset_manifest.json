@@ -1,23 +1,43 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20261001230352_h4uxll",
-  "number": 57,
-  "name": "Twilight Grayscale",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "system_safe",
+  "style_anchor": "An interactive lightning scene with clouds and dramatic bolts. Preserve the current cloud composition, storm palette, guide above the action and brief lightning feedback.",
   "assets": [
     {
-      "path": "dist/assets/audio/rock-theme-song-loop.mp3",
-      "ids": [],
-      "bytes": 436614,
-      "sha256": "d9702a6e5e74e6dce7273535d757c08022d273ff6c85e9e7d9a1a8e3ee94ef6f"
+      "path": "assets/audio/rock-theme-song-loop.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing rock theme song loop audio asset. Preserve the current playback role and volume treatment.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "b82ade2fed2b32624ca381fe27590d2b31d1698aaf1ff3377831be189bd12992",
-    "dist/bundle.js": "b82ade2fed2b32624ca381fe27590d2b31d1698aaf1ff3377831be189bd12992",
-    "dist/game.html": "b418dc7e59a5de4c5ee3c436d881b2f7c563208e24d313284e6add80bc153aa3",
-    "dist/game.config.json": "01e0c45d8ffea28b9070bd25ceb055a2fff898b6e3fb050aae3e2e4f4936d886"
-  }
+  ]
 }

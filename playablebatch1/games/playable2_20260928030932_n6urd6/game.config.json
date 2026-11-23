@@ -35,36 +35,36 @@
     {
       "id": "GAME_TITLE",
       "label": "Game Title",
-      "value": "FISHING NET TEAR",
-      "default": "FISHING NET TEAR",
+      "value": "STRAPPA LA RETE",
+      "default": "STRAPPA LA RETE",
       "max_length": 30
     },
     {
       "id": "BTN_START",
       "label": "Start Button",
-      "value": "START",
-      "default": "START",
+      "value": "INIZIA",
+      "default": "INIZIA",
       "max_length": 20
     },
     {
       "id": "BTN_RESTART",
       "label": "Restart Button",
-      "value": "PLAY AGAIN",
-      "default": "PLAY AGAIN",
+      "value": "RIGIOCA",
+      "default": "RIGIOCA",
       "max_length": 20
     },
     {
       "id": "LBL_SCORE",
       "label": "Score Label",
-      "value": "SCORE",
-      "default": "SCORE",
+      "value": "PUNTI",
+      "default": "PUNTI",
       "max_length": 15
     },
     {
       "id": "LBL_TIME",
       "label": "Time Label",
-      "value": "TIME",
-      "default": "TIME",
+      "value": "TEMPO",
+      "default": "TEMPO",
       "max_length": 15
     }
   ],
@@ -80,7 +80,7 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

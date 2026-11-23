@@ -1,37 +1,55 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20260928024549_3bsc4d",
-  "number": 24,
-  "name": "Phone Charging",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "A phone charging interaction with a recognizable phone and cable connector. Preserve the current device scale, connector shape, vertical spacing and bold interaction guide.",
   "assets": [
     {
-      "path": "dist/assets/cable_connector.svg",
-      "ids": [
-        "CABLE_HEAD"
-      ],
-      "bytes": 535,
-      "sha256": "05a6fd6e2a1c36ccdd49836a590a18626b18cd412ba8065aa388804e5720b035"
+      "path": "assets/cable_connector.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A phone charging interaction with a recognizable phone and cable connector. Preserve the current device scale, connector shape, vertical spacing and bold interaction guide. Asset requirement: Existing Cable Head Img artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Cable Head Img artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "7:10",
+      "size_tier": "medium",
+      "recommended_size": "28x40",
+      "width": 28,
+      "height": 40,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
-      "ids": [],
-      "bytes": 50616,
-      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Bangers Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
-      "ids": [],
-      "bytes": 51212,
-      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "b902bf62c52ead06fcf77e1d5079403f09be3fc85009a9e34a2663800cdbabc6",
-    "dist/bundle.js": "b902bf62c52ead06fcf77e1d5079403f09be3fc85009a9e34a2663800cdbabc6",
-    "dist/game.html": "52ac83e4e7aa722202182aae80088b5c37884ec194ad9925d3f935d52ec3e900",
-    "dist/game.config.json": "ac2feb1acaa9536adec36b346cb340a594856235c49cf4bd9732a098104f2ffa"
-  }
+  ]
 }

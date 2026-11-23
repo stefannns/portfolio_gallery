@@ -1,35 +1,19 @@
 {
-  "manifest_version": 1,
-  "task_id": "height_together_20261019",
-  "number": 72,
-  "name": "Height Together",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "system_safe",
+  "style_anchor": "A three-dimensional height comparison using simple rounded-head figures on a light ground. Preserve the current person colors, proportional height scaling, shared scenes and compact controls.",
   "assets": [
     {
-      "path": "dist/assets/fonts/DMSans.woff",
-      "ids": [],
-      "bytes": 109300,
-      "sha256": "28882e64586b903638e580b0782fe44b00ada28963745ea21b0aed4381b4ab1e"
-    },
-    {
-      "path": "dist/assets/fonts/OFL.txt",
-      "ids": [],
-      "bytes": 4482,
-      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1"
-    },
-    {
-      "path": "dist/assets/licenses/THREE-LICENSE.txt",
-      "ids": [],
-      "bytes": 1081,
-      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
+      "path": "assets/fonts/DMSans.woff",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled DMSans font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "a5bfe94ca56f7cbbc229c5cf71274e3cf25e6ac27a16a20d36bcb7c1c842a5db",
-    "dist/bundle.js": "a5bfe94ca56f7cbbc229c5cf71274e3cf25e6ac27a16a20d36bcb7c1c842a5db",
-    "dist/game.html": "e56be23bfb78b3c2d50a8aa620eba35e170fb4267dbd80fe8413666448165fd4",
-    "dist/game.config.json": "f32a246bf41a8973241050cd7795ea369a9bef654de301d0353af3c8a98f57f8"
-  }
+  ]
 }

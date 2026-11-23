@@ -35,43 +35,43 @@
     {
       "id": "TITLE",
       "label": "Game Title",
-      "value": "Stack",
-      "default": "Stack",
+      "value": "Torre",
+      "default": "Torre",
       "max_length": 20
     },
     {
       "id": "SCORE_TXT",
       "label": "Score Label",
-      "value": "SCORE",
-      "default": "SCORE",
+      "value": "PUNTI",
+      "default": "PUNTI",
       "max_length": 15
     },
     {
       "id": "PERFECT_TXT",
       "label": "Perfect Text",
-      "value": "PERFECT!",
-      "default": "PERFECT!",
+      "value": "PERFETTO!",
+      "default": "PERFETTO!",
       "max_length": 20
     },
     {
       "id": "GAMEOVER",
       "label": "Game Over Title",
-      "value": "GAME OVER",
-      "default": "GAME OVER",
+      "value": "PARTITA FINITA",
+      "default": "PARTITA FINITA",
       "max_length": 20
     },
     {
       "id": "BTN_RETRY",
       "label": "Retry Button",
-      "value": "RETRY",
-      "default": "RETRY",
+      "value": "RIPROVA",
+      "default": "RIPROVA",
       "max_length": 15
     },
     {
       "id": "BTN_POST",
       "label": "Post Button",
-      "value": "POST MY PLAY",
-      "default": "POST MY PLAY",
+      "value": "CONDIVIDI",
+      "default": "CONDIVIDI",
       "max_length": 25
     }
   ],
@@ -89,7 +89,7 @@
     "version_id": "99280234071098749",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

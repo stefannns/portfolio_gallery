@@ -127,11 +127,12 @@ html,body,#root{margin:0;width:100%;height:100%;overflow:hidden;background:#efda
 .orbit-game canvas{display:block;width:100%;height:100%;touch-action:none}
 .score{position:absolute;top:calc(30px*var(--u));left:calc(30px*var(--u));right:calc(30px*var(--u));font-size:calc(28px*var(--u));line-height:1.2;text-align:center;pointer-events:none;font-variant-numeric:tabular-nums}
 .guide{position:absolute;left:calc(30px*var(--u));right:calc(30px*var(--u));top:50%;transform:translateY(-50%);margin:0;text-align:center;font-size:calc(18px*var(--u));line-height:1.4;overflow-wrap:anywhere;pointer-events:none;animation:breathe 2.4s ease-in-out infinite}
-.result{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:calc(30px*var(--u)) calc(30px*var(--u)) calc(50px*var(--u));background:#efda96;text-align:center;animation:reveal .2s ease-out both}
+.result{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:calc(30px*var(--u)) calc(30px*var(--u)) calc(50px*var(--u));background-color:#efda96;background-image:radial-gradient(circle,#4b421b0d .8px,transparent 1px);background-size:calc(18px*var(--u)) calc(18px*var(--u));text-align:center;animation:reveal .2s ease-out both}
 .result-card{display:flex;flex-direction:column;align-items:center;gap:calc(20px*var(--u));width:calc(300px*var(--u));max-width:100%;max-height:100%;overflow-y:auto;padding:calc(6px*var(--u)) calc(6px*var(--u)) calc(10px*var(--u));scrollbar-width:thin}
 .lost{margin:0;font-size:calc(24px*var(--u));line-height:1.25;overflow-wrap:anywhere;max-width:100%}
-.result-number{display:grid;place-items:center;flex:none;width:calc(144px*var(--u));height:calc(144px*var(--u));max-width:100%;padding:calc(10px*var(--u));border:calc(5px*var(--u)) solid #111;border-radius:50%;background:#fffdf1;color:#111;line-height:1;font-variant-numeric:tabular-nums;box-shadow:calc(4px*var(--u)) calc(5px*var(--u)) 0 #1112}
-.result-number span{max-width:100%;overflow-wrap:anywhere}
+.result-number{display:flex;align-items:baseline;justify-content:center;flex-wrap:wrap;gap:calc(10px*var(--u));flex:none;width:100%;max-width:100%;padding:calc(10px*var(--u)) 0;color:#111;line-height:1.15;font-variant-numeric:tabular-nums}
+.result-number .score-label{font-size:calc(18px*var(--u));line-height:1.4;max-width:100%;overflow-wrap:anywhere}
+.result-number .score-value{max-width:100%;overflow-wrap:anywhere}
 .replay{font:600 calc(18px*var(--u))/1.4 OrbitPuff,'Trebuchet MS',sans-serif;color:#fffdf1;border:calc(2px*var(--u)) solid #111;border-radius:calc(12px*var(--u));background:#111;min-height:48px;width:100%;max-width:100%;padding:calc(12px*var(--u)) calc(20px*var(--u));box-shadow:0 calc(4px*var(--u)) 0 #1113;cursor:pointer;touch-action:manipulation;white-space:normal;overflow-wrap:anywhere}
 .replay:active{transform:translateY(2px);box-shadow:none}.replay:focus-visible{outline:3px solid #7a3db8;outline-offset:4px}
 @keyframes breathe{0%,100%{opacity:1}50%{opacity:.56}}@keyframes reveal{from{opacity:0}to{opacity:1}}
@@ -239,6 +240,10 @@ function App() {
   },[]);
   useLayoutEffect(()=>{
     const canvas=canvasRef.current, ctx=canvas.getContext('2d');
+    // A tiny reusable ink-dot tile adds paper texture without per-frame dot drawing.
+    const dotTile=document.createElement('canvas');dotTile.width=dotTile.height=18;
+    const dotInk=dotTile.getContext('2d');dotInk.fillStyle='#4b421b0d';dotInk.beginPath();dotInk.arc(9,9,.8,0,TAU);dotInk.fill();
+    const paperDots=ctx.createPattern(dotTile,'repeat');
     let raf=0,last=performance.now(),w=390,h=598;
     function size(){const rect=canvas.getBoundingClientRect();w=rect.width||390;h=rect.height||598;canvas.parentElement.style.setProperty('--u',String(Math.min(w/390,h/598)));const dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);paint();}
     size();const observer=typeof ResizeObserver==='function'?new ResizeObserver(size):null;observer?.observe(canvas);window.addEventListener('resize',size);
@@ -281,6 +286,7 @@ function App() {
     function paint(){const g=gameRef.current, scale=Math.min(w/390,h/598), cx=w/2,cy=h/2;
       const r=Math.min(w*.335,h*.26), line=7*scale, gap=14*scale, ball=BALL_RADIUS*scale;
       ctx.fillStyle=`rgb(${g.bg.map(Math.round).join(',')})`;ctx.fillRect(0,0,w,h);
+      if(paperDots){ctx.save();ctx.scale(scale,scale);ctx.fillStyle=paperDots;ctx.fillRect(0,0,w/scale,h/scale);ctx.restore();}
       ctx.strokeStyle='#080807';ctx.lineWidth=line;ctx.beginPath();ctx.arc(cx,cy,r,0,TAU);ctx.stroke();
       ctx.fillStyle='#e53935';
       function drawSpike(a,lane,progress=1) {
@@ -313,7 +319,7 @@ function App() {
     {view.phase==='lost' && <section className="result" role="dialog" aria-modal="true" aria-labelledby="orbit-result-title">
       <div className="result-card">
         <h2 className="lost" id="orbit-result-title">{config.lost}</h2>
-        <output className="result-number" aria-label="Punteggio finale" style={{fontSize:`calc(${Math.max(24,56-Math.max(0,String(view.score).length-3)*8)}px*var(--u))`}}><span>{view.score}</span></output>
+        <output className="result-number" aria-label="Punteggio finale" style={{fontSize:`calc(${Math.max(24,56-Math.max(0,String(view.score).length-3)*8)}px*var(--u))`}}><span className="score-label">Punteggio:</span><span className="score-value">{view.score}</span></output>
         <button className="replay" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();action();}}>{config.replay}</button>
       </div>
     </section>}

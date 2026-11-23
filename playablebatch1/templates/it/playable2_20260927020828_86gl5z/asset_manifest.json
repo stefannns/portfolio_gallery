@@ -1,63 +1,79 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20260927020828_86gl5z",
-  "number": 9,
-  "name": "Color Match",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "dynapuff",
+  "style_anchor": "A paint mixing toy using colored paint tubes and a central mixing bowl. Keep the playful rounded lettering, distinguishable paint colors and current material illustrations.",
   "assets": [
     {
-      "path": "dist/assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
-      "ids": [],
-      "bytes": 37464,
-      "sha256": "487694c955a01a6b9e0985b4839ebe6f5406770db551ea163799ee02deb7d3a4"
+      "path": "assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled DynaPuff SemiBold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/tube_black.webp",
-      "ids": [
-        "IMG_TUBE_BLACK"
-      ],
-      "bytes": 27138,
-      "sha256": "0baec112da65f30537e77940afda2507c3638672fbd6b6e1008c441f4af39ecc"
+      "path": "assets/tube_black.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A paint mixing toy using colored paint tubes and a central mixing bowl. Keep the playful rounded lettering, distinguishable paint colors and current material illustrations. Asset requirement: Black paint tube illustration used as a draggable pigment source. Preserve its outline and transparent edge.",
+      "description": "Black paint tube illustration used as a draggable pigment source. Preserve its outline and transparent edge.",
+      "aspect_ratio": "512:1739",
+      "size_tier": "small",
+      "recommended_size": "512x1739",
+      "width": 512,
+      "height": 1739,
+      "ok": true
     },
     {
-      "path": "dist/assets/tube_blue.webp",
-      "ids": [
-        "IMG_TUBE_BLUE"
-      ],
-      "bytes": 25398,
-      "sha256": "3328755cd5c5c3d729761636c1de85d2328e1661d0d14fd686478eab359df2ff"
+      "path": "assets/tube_blue.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A paint mixing toy using colored paint tubes and a central mixing bowl. Keep the playful rounded lettering, distinguishable paint colors and current material illustrations. Asset requirement: Blue paint tube illustration used as a draggable pigment source. Preserve its outline and transparent edge.",
+      "description": "Blue paint tube illustration used as a draggable pigment source. Preserve its outline and transparent edge.",
+      "aspect_ratio": "256:797",
+      "size_tier": "small",
+      "recommended_size": "512x1594",
+      "width": 512,
+      "height": 1594,
+      "ok": true
     },
     {
-      "path": "dist/assets/tube_red.webp",
-      "ids": [
-        "IMG_TUBE_RED"
-      ],
-      "bytes": 20316,
-      "sha256": "780577c44a5fb03e7fda1004f404ef1916e3133c8255494f888fed8c6578999d"
+      "path": "assets/tube_red.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A paint mixing toy using colored paint tubes and a central mixing bowl. Keep the playful rounded lettering, distinguishable paint colors and current material illustrations. Asset requirement: Red paint tube illustration used as a draggable pigment source. Preserve its outline and transparent edge.",
+      "description": "Red paint tube illustration used as a draggable pigment source. Preserve its outline and transparent edge.",
+      "aspect_ratio": "449:1761",
+      "size_tier": "small",
+      "recommended_size": "449x1761",
+      "width": 449,
+      "height": 1761,
+      "ok": true
     },
     {
-      "path": "dist/assets/tube_white.webp",
-      "ids": [
-        "IMG_TUBE_WHITE"
-      ],
-      "bytes": 26266,
-      "sha256": "afb9e0c91565ae9c03b16e279f8a0f149c04c79a09f997e9396a57fc0c8c4630"
+      "path": "assets/tube_white.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A paint mixing toy using colored paint tubes and a central mixing bowl. Keep the playful rounded lettering, distinguishable paint colors and current material illustrations. Asset requirement: White paint tube illustration used as a draggable pigment source. Preserve its outline and transparent edge.",
+      "description": "White paint tube illustration used as a draggable pigment source. Preserve its outline and transparent edge.",
+      "aspect_ratio": "453:1948",
+      "size_tier": "small",
+      "recommended_size": "453x1948",
+      "width": 453,
+      "height": 1948,
+      "ok": true
     },
     {
-      "path": "dist/assets/tube_yellow.webp",
-      "ids": [
-        "IMG_TUBE_YELLOW"
-      ],
-      "bytes": 70836,
-      "sha256": "e2c9693a68d8bf72e6f42f6ece56f1149017273edfec71d6030a55210e3d4e3a"
+      "path": "assets/tube_yellow.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A paint mixing toy using colored paint tubes and a central mixing bowl. Keep the playful rounded lettering, distinguishable paint colors and current material illustrations. Asset requirement: Yellow paint tube illustration used as a draggable pigment source. Preserve its outline and transparent edge.",
+      "description": "Yellow paint tube illustration used as a draggable pigment source. Preserve its outline and transparent edge.",
+      "aspect_ratio": "744:1367",
+      "size_tier": "small",
+      "recommended_size": "744x1367",
+      "width": 744,
+      "height": 1367,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "b76ab471e486f5d51310e0cdcfffcc03c31f34d2a4588f452aa7c39af0b85fdd",
-    "dist/bundle.js": "b76ab471e486f5d51310e0cdcfffcc03c31f34d2a4588f452aa7c39af0b85fdd",
-    "dist/game.html": "8cb7b825349e883be769fa11d6d3e3135d1ef66545a03cb961c1563f6e3ecbba",
-    "dist/game.config.json": "6c6844cca9773c8423cb6f6aa0fae59d9e44d9ef8a07c82ee8f1bf9b6d240f3f"
-  }
+  ]
 }

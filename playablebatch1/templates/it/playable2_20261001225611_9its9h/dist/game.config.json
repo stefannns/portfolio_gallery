@@ -1,0 +1,102 @@
+{
+  "tweaks": [
+    {
+      "id": "GRAVITY",
+      "kind": "number",
+      "label": "Gravity",
+      "value": 0.0015,
+      "default": 0.0015,
+      "min": 0.0005,
+      "max": 0.003,
+      "step": 0.0001
+    },
+    {
+      "id": "SPAWN_INTERVAL",
+      "kind": "number",
+      "label": "Spawn Interval (ms)",
+      "value": 1000,
+      "default": 1000,
+      "min": 500,
+      "max": 2000,
+      "step": 100
+    },
+    {
+      "id": "TARGET_BASE_SPEED",
+      "kind": "number",
+      "label": "Target Speed",
+      "value": 0.1,
+      "default": 0.1,
+      "min": 0.05,
+      "max": 0.3,
+      "step": 0.01
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Game Title",
+      "value": "Disegna la tua lama",
+      "default": "Disegna la tua lama",
+      "max_length": 20
+    },
+    {
+      "id": "GAME_DESC",
+      "label": "Description",
+      "value": "Disegna una lama, equipaggiala e trascina il lottatore tra i nemici mentre la lama ruota.",
+      "default": "Disegna una lama, equipaggiala e trascina il lottatore tra i nemici mentre la lama ruota.",
+      "max_length": 150
+    },
+    {
+      "id": "TEXT_DRAW_PROMPT",
+      "label": "Draw Prompt",
+      "value": "DISEGNA UNA LAMA",
+      "default": "DISEGNA UNA LAMA",
+      "max_length": 20
+    },
+    {
+      "id": "TEXT_GAMEOVER",
+      "label": "Game Over Text",
+      "value": "FINE PARTITA",
+      "default": "FINE PARTITA",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_RESTART",
+      "label": "Restart Button",
+      "value": "RIGIOCA",
+      "default": "RIGIOCA",
+      "max_length": 20
+    },
+    {
+      "id": "BTN_POST",
+      "label": "Post Button",
+      "value": "Pubblica la partita",
+      "default": "Pubblica la partita",
+      "max_length": 20
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_MAIN",
+      "label": "Lilac paper background",
+      "path": "./assets/bg-paper-lilac-v6.svg",
+      "replaceable": true
+    },
+    {
+      "id": "TARGET_IMG",
+      "label": "Obstacle Target",
+      "path": "./assets/obj-enemy-yellow-v5.svg",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "99278216799469012",
+    "version_id": "99278216799463098",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

@@ -35,43 +35,43 @@
     {
       "id": "GAME_TITLE",
       "label": "Game Title",
-      "value": "Dig Sand",
-      "default": "Dig Sand",
+      "value": "Scava nella sabbia",
+      "default": "Scava nella sabbia",
       "max_length": 20
     },
     {
       "id": "LEVEL_TEXT",
       "label": "Level Prefix",
-      "value": "LEVEL",
-      "default": "LEVEL",
+      "value": "LIVELLO",
+      "default": "LIVELLO",
       "max_length": 10
     },
     {
       "id": "WIN_TEXT",
       "label": "Win Message",
-      "value": "LEVEL CLEARED!",
-      "default": "LEVEL CLEARED!",
+      "value": "LIVELLO SUPERATO!",
+      "default": "LIVELLO SUPERATO!",
       "max_length": 25
     },
     {
       "id": "BTN_RESET",
       "label": "Reset Button",
-      "value": "RESET",
-      "default": "RESET",
+      "value": "RICOMINCIA",
+      "default": "RICOMINCIA",
       "max_length": 15
     },
     {
       "id": "BTN_PLAY_AGAIN",
       "label": "Play Again Button",
-      "value": "PLAY AGAIN",
-      "default": "PLAY AGAIN",
+      "value": "RIGIOCA",
+      "default": "RIGIOCA",
       "max_length": 20
     },
     {
       "id": "BTN_POST",
       "label": "Post My Play Button",
-      "value": "POST MY PLAY",
-      "default": "POST MY PLAY",
+      "value": "CONDIVIDI",
+      "default": "CONDIVIDI",
       "max_length": 20
     }
   ],
@@ -87,7 +87,7 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

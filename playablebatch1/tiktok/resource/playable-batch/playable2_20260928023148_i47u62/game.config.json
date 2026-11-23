@@ -35,36 +35,36 @@
     {
       "id": "GAME_TITLE",
       "label": "Game Title",
-      "value": "Army Commander",
-      "default": "Army Commander",
+      "value": "Comanda l'esercito",
+      "default": "Comanda l'esercito",
       "max_length": 30
     },
     {
       "id": "TXT_VICTORY",
       "label": "Victory Text",
-      "value": "VICTORY",
-      "default": "VICTORY",
+      "value": "VITTORIA",
+      "default": "VITTORIA",
       "max_length": 20
     },
     {
       "id": "TXT_TRY_AGAIN",
       "label": "Try Again Button",
-      "value": "Try Again",
-      "default": "Try Again",
+      "value": "Riprova",
+      "default": "Riprova",
       "max_length": 20
     },
     {
       "id": "TXT_POST",
       "label": "Post Button",
-      "value": "Post My Play",
-      "default": "Post My Play",
+      "value": "Pubblica la partita",
+      "default": "Pubblica la partita",
       "max_length": 20
     },
     {
       "id": "TXT_ALL_CLEARED",
       "label": "Victory Subtext",
-      "value": "You crushed the enemy!",
-      "default": "You crushed the enemy!",
+      "value": "Nemici sconfitti!",
+      "default": "Nemici sconfitti!",
       "max_length": 50
     }
   ],
@@ -80,7 +80,7 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

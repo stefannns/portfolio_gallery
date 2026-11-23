@@ -80,6 +80,17 @@
       "height": 256,
       "source": "procedural",
       "description": "Game 105: seamless flat #e9e0c7 print paper with restrained ink dots, fibers and grain; code-native SVG."
+    },
+    {
+      "id": "MEME_4",
+      "path": "assets/meme-4.png",
+      "type": "image",
+      "width": 594,
+      "height": 640,
+      "source": "user-provided",
+      "description": "User-supplied wet kitten expression. Original PNG preserved byte-for-byte; native UI frames source rectangle (0,25,360,360), consistently used for main reference, result original and visual-match analysis.",
+      "changes": "No raster edits, redraw, conversion or resampling. Crop and presentation occur only in editable App.jsx.",
+      "sha256": "644fb74e02023b84c1cae78b75719edeb82ecd4d9e9e2975df6ded9dcb2989d1"
     }
   ]
 }

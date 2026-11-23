@@ -3,16 +3,17 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
-    "full_capability_level": 1
+    "full_capability_level": 1,
+    "title": "UFO al neon"
   },
   "texts": [
     {
       "id": "HINT",
-      "label": "Cover instruction",
-      "value": "Drag to fly",
-      "default": "Drag to fly",
+      "label": "Istruzione iniziale",
+      "value": "Trascina per volare",
+      "default": "Trascina per volare",
       "max_length": 30
     }
   ],
@@ -20,7 +21,7 @@
     {
       "id": "FIRE_INTERVAL",
       "kind": "number",
-      "label": "Laser fire interval (seconds)",
+      "label": "Intervallo dei laser (secondi)",
       "value": 0.16,
       "default": 0.16,
       "min": 0.08,
@@ -30,7 +31,7 @@
     {
       "id": "HEAT_PER_SHOT",
       "kind": "number",
-      "label": "Heat added per laser volley",
+      "label": "Calore aggiunto per raffica laser",
       "value": 0.085,
       "default": 0.085,
       "min": 0.04,
@@ -40,7 +41,7 @@
     {
       "id": "ENEMY_INTERVAL",
       "kind": "number",
-      "label": "Enemy spawn interval (seconds)",
+      "label": "Intervallo di comparsa dei nemici (secondi)",
       "value": 1.55,
       "default": 1.55,
       "min": 0.8,
@@ -50,7 +51,7 @@
     {
       "id": "BASE_SPEED",
       "kind": "number",
-      "label": "Base flight speed",
+      "label": "Velocità di volo iniziale",
       "value": 22,
       "default": 22,
       "min": 12,
@@ -60,7 +61,7 @@
     {
       "id": "MAX_SPEED",
       "kind": "number",
-      "label": "Maximum flight speed",
+      "label": "Velocità di volo massima",
       "value": 34,
       "default": 34,
       "min": 24,
@@ -70,7 +71,7 @@
     {
       "id": "HULL_MAX",
       "kind": "number",
-      "label": "Hull pips",
+      "label": "Punti scafo",
       "value": 3,
       "default": 3,
       "min": 1,

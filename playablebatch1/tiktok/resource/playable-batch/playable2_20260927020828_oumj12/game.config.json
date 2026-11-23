@@ -7,7 +7,7 @@
       "value": 0.4,
       "default": 0.4,
       "min": 0.1,
-      "max": 1.0,
+      "max": 1,
       "step": 0.05
     },
     {
@@ -35,36 +35,36 @@
     {
       "id": "TXT_PROMPT",
       "label": "Prompt Text",
-      "value": "Hold to draw string!",
-      "default": "Hold to draw string!",
+      "value": "Tieni premuto e disegna",
+      "default": "Tieni premuto e disegna",
       "max_length": 30
     },
     {
       "id": "TXT_PERFECT",
       "label": "Perfect Text",
-      "value": "Perfect! 🎯",
-      "default": "Perfect! 🎯",
+      "value": "Perfetto! 🎯",
+      "default": "Perfetto! 🎯",
       "max_length": 15
     },
     {
       "id": "TXT_GOOD",
       "label": "Good Text",
-      "value": "Good! 👍",
-      "default": "Good! 👍",
+      "value": "Bene! 👍",
+      "default": "Bene! 👍",
       "max_length": 15
     },
     {
       "id": "TXT_OK",
       "label": "OK Text",
-      "value": "Not Bad 🤔",
-      "default": "Not Bad 🤔",
+      "value": "Non male 🤔",
+      "default": "Non male 🤔",
       "max_length": 15
     },
     {
       "id": "TXT_MISS",
       "label": "Miss Text",
-      "value": "Missed!",
-      "default": "Missed!",
+      "value": "Mancato!",
+      "default": "Mancato!",
       "max_length": 15
     }
   ],
@@ -73,7 +73,7 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

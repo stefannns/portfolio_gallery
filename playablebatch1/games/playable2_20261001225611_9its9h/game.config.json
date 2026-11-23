@@ -35,43 +35,43 @@
     {
       "id": "GAME_TITLE",
       "label": "Game Title",
-      "value": "Draw Your Blade",
-      "default": "Draw Your Blade",
+      "value": "Disegna la tua lama",
+      "default": "Disegna la tua lama",
       "max_length": 20
     },
     {
       "id": "GAME_DESC",
       "label": "Description",
-      "value": "Draw your own blade, equip it to the dot fighter, and drag the fighter through enemies while the blade swings.",
-      "default": "Draw your own blade, equip it to the dot fighter, and drag the fighter through enemies while the blade swings.",
+      "value": "Disegna una lama, equipaggiala e trascina il lottatore tra i nemici mentre la lama ruota.",
+      "default": "Disegna una lama, equipaggiala e trascina il lottatore tra i nemici mentre la lama ruota.",
       "max_length": 150
     },
     {
       "id": "TEXT_DRAW_PROMPT",
       "label": "Draw Prompt",
-      "value": "DRAW A BLADE",
-      "default": "DRAW A BLADE",
+      "value": "DISEGNA UNA LAMA",
+      "default": "DISEGNA UNA LAMA",
       "max_length": 20
     },
     {
       "id": "TEXT_GAMEOVER",
       "label": "Game Over Text",
-      "value": "GAME OVER",
-      "default": "GAME OVER",
+      "value": "FINE PARTITA",
+      "default": "FINE PARTITA",
       "max_length": 20
     },
     {
       "id": "BTN_RESTART",
       "label": "Restart Button",
-      "value": "PLAY AGAIN",
-      "default": "PLAY AGAIN",
+      "value": "RIGIOCA",
+      "default": "RIGIOCA",
       "max_length": 20
     },
     {
       "id": "BTN_POST",
       "label": "Post Button",
-      "value": "Post My Play",
-      "default": "Post My Play",
+      "value": "Pubblica la partita",
+      "default": "Pubblica la partita",
       "max_length": 20
     }
   ],
@@ -95,7 +95,7 @@
     "version_id": "99278216799463098",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

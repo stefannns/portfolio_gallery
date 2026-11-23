@@ -1,73 +1,91 @@
 {
-  "manifest_version": 1,
-  "task_id": "mianbao",
-  "number": 66,
-  "name": "Toaster",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "An illustrated toaster interaction with aligned bread, handle and toaster layers. Preserve the current appliance art, burnt and normal bread variants, restrained controls and guide above the toaster.",
   "assets": [
     {
-      "path": "dist/assets/burnt_bread.webp",
-      "ids": [
-        "BURNT_BREAD_IMG"
-      ],
-      "bytes": 717430,
-      "sha256": "6e9441352e100e6baed08bcfe8a053e115c9dc79990ac9000b06fdc7231caa86"
+      "path": "assets/burnt_bread.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. An illustrated toaster interaction with aligned bread, handle and toaster layers. Preserve the current appliance art, burnt and normal bread variants, restrained controls and guide above the toaster. Asset requirement: Existing burnt bread artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing burnt bread artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "561:701",
+      "size_tier": "large",
+      "recommended_size": "1122x1402",
+      "width": 1122,
+      "height": 1402,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
-      "ids": [],
-      "bytes": 50616,
-      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
-      "ids": [],
-      "bytes": 51212,
-      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/ui/NunitoSans.woff",
-      "ids": [],
-      "bytes": 261628,
-      "sha256": "e9456519e92dcb6c5857cad504f67c93203e86e81714510f341c72ace8e2313f"
+      "path": "assets/fonts/ui/NunitoSans.woff",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled NunitoSans font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/ui/OFL.txt",
-      "ids": [],
-      "bytes": 4393,
-      "sha256": "efbb0c9e864cef973982d9a17567e6be5c3d1759695574586f3f18c7ecca064b"
+      "path": "assets/normal_bread.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. An illustrated toaster interaction with aligned bread, handle and toaster layers. Preserve the current appliance art, burnt and normal bread variants, restrained controls and guide above the toaster. Asset requirement: Existing normal bread artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing normal bread artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "561:701",
+      "size_tier": "large",
+      "recommended_size": "1122x1402",
+      "width": 1122,
+      "height": 1402,
+      "ok": true
     },
     {
-      "path": "dist/assets/normal_bread.webp",
-      "ids": [
-        "NORMAL_BREAD_IMG"
-      ],
-      "bytes": 799418,
-      "sha256": "11130df9aa19389a7856405611469a76da113d4f1e3a944400500d6ff5b1d24b"
+      "path": "assets/toaster.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. An illustrated toaster interaction with aligned bread, handle and toaster layers. Preserve the current appliance art, burnt and normal bread variants, restrained controls and guide above the toaster. Asset requirement: Existing toaster artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing toaster artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "701:561",
+      "size_tier": "large",
+      "recommended_size": "1402x1122",
+      "width": 1402,
+      "height": 1122,
+      "ok": true
     },
     {
-      "path": "dist/assets/toaster.webp",
-      "ids": [
-        "TOASTER_IMG"
-      ],
-      "bytes": 116540,
-      "sha256": "5b8cd17485a5bd2a9a7af11e3c4698f29f10bd9d1274e0c1850ea1ffcf5edecf"
-    },
-    {
-      "path": "dist/assets/toaster_handle.webp",
-      "ids": [
-        "HANDLE_IMG"
-      ],
-      "bytes": 108120,
-      "sha256": "cac259267fdf36342429c5b1d226779068222c2cf3a256d134d5d2da3429ff3a"
+      "path": "assets/toaster_handle.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. An illustrated toaster interaction with aligned bread, handle and toaster layers. Preserve the current appliance art, burnt and normal bread variants, restrained controls and guide above the toaster. Asset requirement: Existing toaster handle artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing toaster handle artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "4:3",
+      "size_tier": "medium",
+      "recommended_size": "1448x1086",
+      "width": 1448,
+      "height": 1086,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "11b7e084cd77496f8a3c2b36395f4028ad036a19a49af84305de2f4279c6367c",
-    "dist/bundle.js": "11b7e084cd77496f8a3c2b36395f4028ad036a19a49af84305de2f4279c6367c",
-    "dist/game.html": "792f82df01945a0dd275141c941b361a18e37323b90a23fa191caa6a07413b9a",
-    "dist/game.config.json": "24d66ee4256ec179b7618d77df58cf0429ccf3d3c18211a9555d62db1fe8adfb"
-  }
+  ]
 }

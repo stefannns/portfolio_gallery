@@ -25,15 +25,15 @@
     {
       "id": "GAME_TITLE",
       "label": "Game Title",
-      "value": "Ironing Fuse Beads",
-      "default": "Ironing Fuse Beads",
+      "value": "Perline da stirare",
+      "default": "Perline da stirare",
       "max_length": 30
     },
     {
       "id": "HINT_TEXT",
       "label": "Hint Text",
-      "value": "Move around to reveal!",
-      "default": "Move around to reveal!",
+      "value": "Trascina per scoprire!",
+      "default": "Trascina per scoprire!",
       "max_length": 50
     }
   ],
@@ -60,8 +60,8 @@
   "config_version": "2.0",
   "playable": {
     "runtime_target": "h5",
-    "h5_playstyle_type": "image_expression",
-    "content_locale": "en",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

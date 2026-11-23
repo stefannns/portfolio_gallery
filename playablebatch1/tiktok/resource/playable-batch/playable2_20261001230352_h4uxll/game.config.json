@@ -45,15 +45,15 @@
     {
       "id": "GAME_TITLE",
       "label": "Game Title",
-      "value": "Twilight Grayscale",
-      "default": "Twilight Grayscale",
+      "value": "Temporale al crepuscolo",
+      "default": "Temporale al crepuscolo",
       "max_length": 30
     },
     {
       "id": "GUIDE_TEXT",
       "label": "Guide Text",
-      "value": "Tap the clouds to call lightning",
-      "default": "Tap the clouds to call lightning",
+      "value": "Tocca le nuvole per scatenare i fulmini",
+      "default": "Tocca le nuvole per scatenare i fulmini",
       "max_length": 44
     }
   ],
@@ -64,10 +64,9 @@
     "post_id": "99280150965238575",
     "version_id": "99280150965135547",
     "runtime_target": "h5",
-    "h5_playstyle_type": "image_expression",
-    "content_locale": "en",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }
 }
-

@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "dynapuff",
+  "style_anchor": "Paper puzzle with cream grain, purple background, identical black ink ants and hand-drawn trap lines. Friendly DynaPuff SemiBold typography.",
+  "assets": [
+    {
+      "path": "assets/ant-ink-v2.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Ant sprite",
+      "aspect_ratio": "1:1",
+      "size_tier": "small",
+      "recommended_size": "64x64",
+      "width": 64,
+      "height": 64,
+      "ok": true
+    },
+    {
+      "path": "assets/bg_paper_clean.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Paper background",
+      "aspect_ratio": "59:128",
+      "size_tier": "small",
+      "recommended_size": "590x1280",
+      "width": 590,
+      "height": 1280,
+      "ok": true
+    },
+    {
+      "path": "assets/paper-grain.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "paper grain",
+      "aspect_ratio": "1:1",
+      "size_tier": "small",
+      "recommended_size": "220x220",
+      "width": 220,
+      "height": 220,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/dynapuff/DynaPuff-SemiBold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "DynaPuff SemiBold locally bundled font. Copyright and full SIL Open Font License are preserved in App.jsx.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "tweaks": [
+    {
+      "id": "MAX_HEALTH",
+      "kind": "number",
+      "label": "Health",
+      "value": 100,
+      "default": 100,
+      "min": 20,
+      "max": 200,
+      "step": 10
+    },
+    {
+      "id": "MAX_STAMINA",
+      "kind": "number",
+      "label": "Stamina",
+      "value": 100,
+      "default": 100,
+      "min": 40,
+      "max": 200,
+      "step": 10
+    },
+    {
+      "id": "PLAYER_DAMAGE",
+      "kind": "number",
+      "label": "Player damage",
+      "value": 25,
+      "default": 25,
+      "min": 5,
+      "max": 100,
+      "step": 5
+    },
+    {
+      "id": "AI_DAMAGE",
+      "kind": "number",
+      "label": "Opponent damage",
+      "value": 34,
+      "default": 34,
+      "min": 5,
+      "max": 100,
+      "step": 5
+    },
+    {
+      "id": "ATTACK_RANGE",
+      "kind": "number",
+      "label": "Attack range",
+      "value": 1.75,
+      "default": 1.75,
+      "min": 1,
+      "max": 3,
+      "step": 0.05
+    },
+    {
+      "id": "MOVE_SPEED",
+      "kind": "number",
+      "label": "Movement speed",
+      "value": 2.8,
+      "default": 2.8,
+      "min": 1,
+      "max": 5,
+      "step": 0.1
+    }
+  ],
+  "texts": [
+    {
+      "id": "DRAW_HINT",
+      "label": "Drawing hint",
+      "value": "Disegna il tuo lottatore",
+      "default": "Disegna il tuo lottatore",
+      "max_length": 30
+    },
+    {
+      "id": "BATTLE_HINT",
+      "label": "Battle hint",
+      "value": "Muoviti, para, attacca",
+      "default": "Muoviti, para, attacca",
+      "max_length": 30
+    },
+    {
+      "id": "UNDO",
+      "label": "Undo",
+      "value": "Annulla",
+      "default": "Annulla",
+      "max_length": 20
+    },
+    {
+      "id": "CLEAR",
+      "label": "Clear",
+      "value": "Cancella",
+      "default": "Cancella",
+      "max_length": 20
+    },
+    {
+      "id": "FIGHT",
+      "label": "Fight",
+      "value": "Combatti",
+      "default": "Combatti",
+      "max_length": 20
+    },
+    {
+      "id": "GUARD",
+      "label": "Guard",
+      "value": "Para",
+      "default": "Para",
+      "max_length": 20
+    },
+    {
+      "id": "ATTACK",
+      "label": "Attack",
+      "value": "Attacca",
+      "default": "Attacca",
+      "max_length": 20
+    },
+    {
+      "id": "WIN",
+      "label": "Win",
+      "value": "Hai vinto",
+      "default": "Hai vinto",
+      "max_length": 25
+    },
+    {
+      "id": "LOSE",
+      "label": "Lose",
+      "value": "Al tappeto",
+      "default": "Al tappeto",
+      "max_length": 25
+    },
+    {
+      "id": "REPLAY",
+      "label": "Replay",
+      "value": "Rigioca",
+      "default": "Rigioca",
+      "max_length": 20
+    },
+    {
+      "id": "EDIT",
+      "label": "Edit",
+      "value": "Modifica lottatore",
+      "default": "Modifica lottatore",
+      "max_length": 20
+    }
+  ],
+  "images": [],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "112333418872032316",
+    "version_id": "112333418871938216",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

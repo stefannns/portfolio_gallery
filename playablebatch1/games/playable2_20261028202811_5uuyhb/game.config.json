@@ -85,99 +85,99 @@
     {
       "id": "GAME_TITLE",
       "label": "Title",
-      "value": "Text Sketchpad",
-      "default": "Text Sketchpad",
+      "value": "Parole sul foglio",
+      "default": "Parole sul foglio",
       "max_length": 30
     },
     {
       "id": "DRAW_HINT",
       "label": "Drawing hint",
-      "value": "Brush to reveal the words",
-      "default": "Brush to reveal the words",
+      "value": "Passa per svelare le parole",
+      "default": "Passa per svelare le parole",
       "max_length": 30
     },
     {
       "id": "CLEAR_CANVAS",
       "label": "Clear canvas label",
-      "value": "Clear canvas",
-      "default": "Clear canvas",
+      "value": "Cancella il foglio",
+      "default": "Cancella il foglio",
       "max_length": 30
     },
     {
       "id": "BRUSH_LABEL_1",
       "label": "Fine brush label",
-      "value": "Fine reveal brush",
-      "default": "Fine reveal brush",
+      "value": "Pennello sottile",
+      "default": "Pennello sottile",
       "max_length": 30
     },
     {
       "id": "BRUSH_LABEL_2",
       "label": "Small brush label",
-      "value": "Small reveal brush",
-      "default": "Small reveal brush",
+      "value": "Pennello piccolo",
+      "default": "Pennello piccolo",
       "max_length": 30
     },
     {
       "id": "BRUSH_LABEL_3",
       "label": "Medium brush label",
-      "value": "Medium reveal brush",
-      "default": "Medium reveal brush",
+      "value": "Pennello medio",
+      "default": "Pennello medio",
       "max_length": 30
     },
     {
       "id": "BRUSH_LABEL_4",
       "label": "Large brush label",
-      "value": "Large reveal brush",
-      "default": "Large reveal brush",
+      "value": "Pennello grande",
+      "default": "Pennello grande",
       "max_length": 30
     },
     {
       "id": "BRUSH_LABEL_5",
       "label": "Wide brush label",
-      "value": "Wide reveal brush",
-      "default": "Wide reveal brush",
+      "value": "Pennello largo",
+      "default": "Pennello largo",
       "max_length": 30
     },
     {
       "id": "POEM_1",
       "label": "Poem line one",
-      "value": "make room for the quiet",
-      "default": "make room for the quiet",
+      "value": "fai spazio alla quiete",
+      "default": "fai spazio alla quiete",
       "max_length": 40
     },
     {
       "id": "POEM_2",
       "label": "Poem line two",
-      "value": "a small light becomes a path",
-      "default": "a small light becomes a path",
+      "value": "una piccola luce diventa un sentiero",
+      "default": "una piccola luce diventa un sentiero",
       "max_length": 40
     },
     {
       "id": "POEM_3",
       "label": "Poem line three",
-      "value": "hold this moment gently",
-      "default": "hold this moment gently",
+      "value": "custodisci questo istante",
+      "default": "custodisci questo istante",
       "max_length": 40
     },
     {
       "id": "POEM_4",
       "label": "Poem line four",
-      "value": "the hand remembers the sky",
-      "default": "the hand remembers the sky",
+      "value": "la mano ricorda il cielo",
+      "default": "la mano ricorda il cielo",
       "max_length": 40
     },
     {
       "id": "POEM_5",
       "label": "Poem line five",
-      "value": "begin again in soft motion",
-      "default": "begin again in soft motion",
+      "value": "ricomincia con un gesto lieve",
+      "default": "ricomincia con un gesto lieve",
       "max_length": 40
     },
     {
       "id": "POEM_6",
       "label": "Poem line six",
-      "value": "what fades still leaves a trace",
-      "default": "what fades still leaves a trace",
+      "value": "ciò che svanisce lascia una traccia",
+      "default": "ciò che svanisce lascia una traccia",
       "max_length": 40
     }
   ],
@@ -188,7 +188,7 @@
     "version_id": "109025442492874407",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

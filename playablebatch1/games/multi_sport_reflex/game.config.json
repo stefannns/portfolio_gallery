@@ -1,6 +1,13 @@
 {
   "playable": {
-    "name": "multi_sport_reflex"
+    "name": "multi_sport_reflex",
+    "title": "Riflessi multisport",
+    "content_locale": "it",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "min_capability_level": 1,
+    "full_capability_level": 1
   },
-  "tweaks": []
+  "tweaks": [],
+  "config_version": "2.0"
 }

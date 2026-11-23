@@ -1,31 +1,31 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20261001225842_2d0kul",
-  "number": 47,
-  "name": "Drag Toy",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "audiowide",
+  "style_anchor": "A thermal interaction with a full-screen background and a heat-colored overlay. Preserve the current thermal colors, photographic texture and input-aligned overlay behavior.",
   "assets": [
     {
-      "path": "dist/assets/bg_main.webp",
-      "ids": [
-        "BG_MAIN"
-      ],
-      "bytes": 3727360,
-      "sha256": "0cc3ec5d5bf32593575939557e1afa46e6c586ed43f61a639638c6916b1821c5"
+      "path": "assets/bg_main.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A thermal interaction with a full-screen background and a heat-colored overlay. Preserve the current thermal colors, photographic texture and input-aligned overlay behavior. Asset requirement: Existing Main Background artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Main Background artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "1304:2829",
+      "size_tier": "full",
+      "recommended_size": "1304x2829",
+      "width": 1304,
+      "height": 2829,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/audiowide/Audiowide-Regular.woff2",
-      "ids": [],
-      "bytes": 18880,
-      "sha256": "4650e661683335ff42987353137525ee47444acff82525f647beb9d82b534216"
+      "path": "assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Audiowide Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "3ab3a98a9de55447d8b7138211db3722f44e5946bb4ec8e79c59f8e1a7b4f9a0",
-    "dist/bundle.js": "3ab3a98a9de55447d8b7138211db3722f44e5946bb4ec8e79c59f8e1a7b4f9a0",
-    "dist/game.html": "5656ce4416d019a14e5769b0931bc71e2618c127fc97d38958ecff9bc1adebb8",
-    "dist/game.config.json": "88f2d4022bd5065e9d35e9fce67ed7e1d0d7b20c9a7364d1a7938d49b71843d1"
-  }
+  ]
 }

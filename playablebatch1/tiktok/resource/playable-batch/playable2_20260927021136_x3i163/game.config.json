@@ -7,7 +7,7 @@
       "value": 1.2,
       "default": 1.2,
       "min": 0.5,
-      "max": 3.0,
+      "max": 3,
       "step": 0.1
     },
     {
@@ -25,15 +25,15 @@
     {
       "id": "GAME_TITLE",
       "label": "Game Title",
-      "value": "CUBE PHYSICS",
-      "default": "CUBE PHYSICS",
+      "value": "CUBI IN MOVIMENTO",
+      "default": "CUBI IN MOVIMENTO",
       "max_length": 20
     },
     {
       "id": "SUBTITLE",
       "label": "Subtitle",
-      "value": "Tap empty space to add cubes.",
-      "default": "Tap the falling cube!",
+      "value": "Tocca uno spazio libero per creare cubi",
+      "default": "Tocca il cubo che cade!",
       "max_length": 40
     }
   ],
@@ -42,7 +42,7 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

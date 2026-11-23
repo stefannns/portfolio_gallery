@@ -85,78 +85,78 @@
     {
       "id": "GAME_TITLE",
       "label": "Title",
-      "value": "Orbit Jump B",
-      "default": "Orbit Jump B",
+      "value": "Salto orbitale B",
+      "default": "Salto orbitale B",
       "max_length": 20
     },
     {
       "id": "GUIDE",
       "label": "Gameplay guide",
-      "value": "Tap to launch, aim at next orbit",
-      "default": "Tap to launch, aim at next orbit",
+      "value": "Tocca e lancia verso la prossima orbita",
+      "default": "Tocca e lancia verso la prossima orbita",
       "max_length": 48
     },
     {
       "id": "SCORE_LABEL",
       "label": "Score label",
-      "value": "Score",
-      "default": "Score",
+      "value": "Punteggio",
+      "default": "Punteggio",
       "max_length": 12
     },
     {
       "id": "BEST_LABEL",
       "label": "Best label",
-      "value": "Best",
-      "default": "Best",
+      "value": "Record",
+      "default": "Record",
       "max_length": 12
     },
     {
       "id": "PERFECT_LABEL",
       "label": "Perfect feedback",
-      "value": "Perfect",
-      "default": "Perfect",
+      "value": "Perfetto",
+      "default": "Perfetto",
       "max_length": 12
     },
     {
       "id": "MISS_LABEL",
       "label": "Miss feedback",
-      "value": "Miss",
-      "default": "Miss",
+      "value": "Mancato",
+      "default": "Mancato",
       "max_length": 12
     },
     {
       "id": "PAUSED_LABEL",
       "label": "Paused label",
-      "value": "Paused",
-      "default": "Paused",
+      "value": "In pausa",
+      "default": "In pausa",
       "max_length": 12
     },
     {
       "id": "PLAY_AGAIN",
       "label": "Retry button",
-      "value": "Play again",
-      "default": "Play again",
+      "value": "Rigioca",
+      "default": "Rigioca",
       "max_length": 20
     },
     {
       "id": "UNLOCKED_LABEL",
       "label": "Unlocks label",
-      "value": "Unlocked",
-      "default": "Unlocked",
+      "value": "Sbloccati",
+      "default": "Sbloccati",
       "max_length": 20
     },
     {
       "id": "PAUSE_LABEL",
       "label": "Pause accessibility label",
-      "value": "Pause",
-      "default": "Pause",
+      "value": "Pausa",
+      "default": "Pausa",
       "max_length": 12
     },
     {
       "id": "RESUME_LABEL",
       "label": "Resume accessibility label",
-      "value": "Resume",
-      "default": "Resume",
+      "value": "Riprendi",
+      "default": "Riprendi",
       "max_length": 12
     }
   ],
@@ -174,7 +174,7 @@
     "version_id": "109359222642525850",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

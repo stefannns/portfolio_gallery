@@ -57,5 +57,12 @@
       "source": "/resource/:path*",
       "destination": "https://lf3-static.bytednsdoc.com/obj/eden-cn/nuhboeh7uhopg/desagent/minitt/v1/:path*"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/playablebatch1/templates/en/:path*",
+      "destination": "/playablebatch1/templates/it/:path*",
+      "permanent": false
+    }
   ]
 }

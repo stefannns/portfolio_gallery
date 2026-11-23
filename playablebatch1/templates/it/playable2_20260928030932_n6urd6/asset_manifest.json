@@ -1,31 +1,31 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20260928030932_n6urd6",
-  "number": 33,
-  "name": "Fishing Net Slice",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "bangers",
+  "style_anchor": "A mesh tearing interaction with a full-screen material background, a compact guide capsule and a centered seconds counter during play. Preserve the current material detail and typography.",
   "assets": [
     {
-      "path": "dist/assets/bg_main.webp",
-      "ids": [
-        "BG_MAIN"
-      ],
-      "bytes": 16714,
-      "sha256": "80a5a70869558462afc73345cba2cf878d80ad5de0a63882e3cf269012994e8a"
+      "path": "assets/bg_main.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A mesh tearing interaction with a full-screen material background, a compact guide capsule and a centered seconds counter during play. Preserve the current material detail and typography. Asset requirement: Existing Background Image artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Background Image artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "24:43",
+      "size_tier": "full",
+      "recommended_size": "768x1376",
+      "width": 768,
+      "height": 1376,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
-      "ids": [],
-      "bytes": 37004,
-      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Bangers Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "dacff26c723412087ef85364356548fe9ea46ed0ae91059e8bb059dec799ba68",
-    "dist/bundle.js": "dacff26c723412087ef85364356548fe9ea46ed0ae91059e8bb059dec799ba68",
-    "dist/game.html": "42fae6120371e112cdc9ce39034a44d1382e90a5a39e7cfbe370da11319bf379",
-    "dist/game.config.json": "e62bcf89e8534e0fb1fba65af2ede818e1872e3dde9e7fa893f2ae7d59b8b7bc"
-  }
+  ]
 }

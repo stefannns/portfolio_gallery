@@ -1,0 +1,181 @@
+{
+  "tweaks": [
+    {
+      "id": "ORBIT_SPEED",
+      "kind": "number",
+      "label": "Orbit speed",
+      "value": 0.0018,
+      "default": 0.0018,
+      "min": 0.0008,
+      "max": 0.004,
+      "step": 0.0001
+    },
+    {
+      "id": "FLIGHT_MS",
+      "kind": "number",
+      "label": "Flight duration",
+      "value": 560,
+      "default": 560,
+      "min": 360,
+      "max": 900,
+      "step": 10
+    },
+    {
+      "id": "TARGET_RADIUS",
+      "kind": "number",
+      "label": "Target orbit radius",
+      "value": 52,
+      "default": 52,
+      "min": 42,
+      "max": 70,
+      "step": 1
+    },
+    {
+      "id": "SCORE_PER_CATCH",
+      "kind": "number",
+      "label": "Catch score",
+      "value": 1,
+      "default": 1,
+      "min": 1,
+      "max": 3,
+      "step": 1
+    },
+    {
+      "id": "SWEET_HALF_ANGLE",
+      "kind": "number",
+      "label": "Sweet range half-width (radians)",
+      "value": 0.42,
+      "default": 0.42,
+      "min": 0.2,
+      "max": 0.75,
+      "step": 0.02
+    },
+    {
+      "id": "FLIGHT_SPEED",
+      "kind": "number",
+      "label": "Free-flight speed",
+      "value": 0.42,
+      "default": 0.42,
+      "min": 0.2,
+      "max": 0.8,
+      "step": 0.01
+    },
+    {
+      "id": "CAPTURE_BAND",
+      "kind": "number",
+      "label": "Orbit ring tolerance",
+      "value": 8,
+      "default": 8,
+      "min": 3,
+      "max": 14,
+      "step": 1
+    },
+    {
+      "id": "SPEED_PER_LAUNCH",
+      "kind": "number",
+      "label": "Speed increase per launch (%)",
+      "value": 15,
+      "default": 15,
+      "min": 0,
+      "max": 50,
+      "step": 1
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "Title",
+      "value": "Salto orbitale B",
+      "default": "Salto orbitale B",
+      "max_length": 20
+    },
+    {
+      "id": "GUIDE",
+      "label": "Gameplay guide",
+      "value": "Tocca e lancia verso la prossima orbita",
+      "default": "Tocca e lancia verso la prossima orbita",
+      "max_length": 48
+    },
+    {
+      "id": "SCORE_LABEL",
+      "label": "Score label",
+      "value": "Punteggio",
+      "default": "Punteggio",
+      "max_length": 12
+    },
+    {
+      "id": "BEST_LABEL",
+      "label": "Best label",
+      "value": "Record",
+      "default": "Record",
+      "max_length": 12
+    },
+    {
+      "id": "PERFECT_LABEL",
+      "label": "Perfect feedback",
+      "value": "Perfetto",
+      "default": "Perfetto",
+      "max_length": 12
+    },
+    {
+      "id": "MISS_LABEL",
+      "label": "Miss feedback",
+      "value": "Mancato",
+      "default": "Mancato",
+      "max_length": 12
+    },
+    {
+      "id": "PAUSED_LABEL",
+      "label": "Paused label",
+      "value": "In pausa",
+      "default": "In pausa",
+      "max_length": 12
+    },
+    {
+      "id": "PLAY_AGAIN",
+      "label": "Retry button",
+      "value": "Rigioca",
+      "default": "Rigioca",
+      "max_length": 20
+    },
+    {
+      "id": "UNLOCKED_LABEL",
+      "label": "Unlocks label",
+      "value": "Sbloccati",
+      "default": "Sbloccati",
+      "max_length": 20
+    },
+    {
+      "id": "PAUSE_LABEL",
+      "label": "Pause accessibility label",
+      "value": "Pausa",
+      "default": "Pausa",
+      "max_length": 12
+    },
+    {
+      "id": "RESUME_LABEL",
+      "label": "Resume accessibility label",
+      "value": "Riprendi",
+      "default": "Riprendi",
+      "max_length": 12
+    }
+  ],
+  "images": [
+    {
+      "id": "BG_PAPER",
+      "label": "Yellow paper with faint printed dots",
+      "path": "./assets/yellow-paper-dots-v3.svg",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109359222642470156",
+    "version_id": "109359222642525850",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

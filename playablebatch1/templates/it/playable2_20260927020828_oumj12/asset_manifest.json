@@ -1,29 +1,31 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20260927020828_oumj12",
-  "number": 6,
-  "name": "String Drawing",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "A compact centered circular guide on a mint background, with a string visible through the full play area, a transparent score row and centered SVG result text.",
   "assets": [
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
-      "ids": [],
-      "bytes": 50616,
-      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
-      "ids": [],
-      "bytes": 51212,
-      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "2c92475cca0759fcf8e8e5bb8b10b5f61c95223f690370e2dfb0d04fea9c4bae",
-    "dist/bundle.js": "2c92475cca0759fcf8e8e5bb8b10b5f61c95223f690370e2dfb0d04fea9c4bae",
-    "dist/game.html": "9a147e1aaaa76bdeb270f081d6b5e7f5045141dcc3993933bf3c9bfe8ea676cc",
-    "dist/game.config.json": "2c02514e24535f51406ec1e16dca5a7e62394ea11692481f71e83f3b66386164"
-  }
+  ]
 }

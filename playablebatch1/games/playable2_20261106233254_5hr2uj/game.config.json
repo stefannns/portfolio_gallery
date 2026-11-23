@@ -65,78 +65,78 @@
     {
       "id": "DRAW_HINT",
       "label": "Drawing hint",
-      "value": "Draw your fighter",
-      "default": "Draw your fighter",
+      "value": "Disegna il tuo lottatore",
+      "default": "Disegna il tuo lottatore",
       "max_length": 30
     },
     {
       "id": "BATTLE_HINT",
       "label": "Battle hint",
-      "value": "Move, guard, attack",
-      "default": "Move, guard, attack",
+      "value": "Muoviti, para, attacca",
+      "default": "Muoviti, para, attacca",
       "max_length": 30
     },
     {
       "id": "UNDO",
       "label": "Undo",
-      "value": "Undo",
-      "default": "Undo",
+      "value": "Annulla",
+      "default": "Annulla",
       "max_length": 20
     },
     {
       "id": "CLEAR",
       "label": "Clear",
-      "value": "Clear",
-      "default": "Clear",
+      "value": "Cancella",
+      "default": "Cancella",
       "max_length": 20
     },
     {
       "id": "FIGHT",
       "label": "Fight",
-      "value": "Fight",
-      "default": "Fight",
+      "value": "Combatti",
+      "default": "Combatti",
       "max_length": 20
     },
     {
       "id": "GUARD",
       "label": "Guard",
-      "value": "Guard",
-      "default": "Guard",
+      "value": "Para",
+      "default": "Para",
       "max_length": 20
     },
     {
       "id": "ATTACK",
       "label": "Attack",
-      "value": "Attack",
-      "default": "Attack",
+      "value": "Attacca",
+      "default": "Attacca",
       "max_length": 20
     },
     {
       "id": "WIN",
       "label": "Win",
-      "value": "You win",
-      "default": "You win",
+      "value": "Hai vinto",
+      "default": "Hai vinto",
       "max_length": 25
     },
     {
       "id": "LOSE",
       "label": "Lose",
-      "value": "Knocked out",
-      "default": "Knocked out",
+      "value": "Al tappeto",
+      "default": "Al tappeto",
       "max_length": 25
     },
     {
       "id": "REPLAY",
       "label": "Replay",
-      "value": "Play again",
-      "default": "Play again",
+      "value": "Rigioca",
+      "default": "Rigioca",
       "max_length": 20
     },
     {
       "id": "EDIT",
       "label": "Edit",
-      "value": "Edit fighter",
-      "default": "Edit fighter",
+      "value": "Modifica lottatore",
+      "default": "Modifica lottatore",
       "max_length": 20
     }
   ],
@@ -147,7 +147,7 @@
     "version_id": "112333418871938216",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

@@ -1,29 +1,31 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable_20260924213804_34rslj",
-  "number": 2,
-  "name": "Draw Face",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "A step-by-step face drawing toy with clear line work, a generous drawing area and compact controls. Preserve the hand-drawn face animation and the current paper and ink palette.",
   "assets": [
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Bold.woff2",
-      "ids": [],
-      "bytes": 50616,
-      "sha256": "b6a12de89021c40c278b9d2ce154faff99a803d87602f051c51e3bd51d6af3df"
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Bold font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/poppins/Poppins-Regular.woff2",
-      "ids": [],
-      "bytes": 51212,
-      "sha256": "d7f6c75a417abbd81f1081ddaa7cd3c3d49e23ca7ed136504dbe7aaf6e8b1811"
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Poppins Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "e8ab7ffacc76827a8dec7c623dd1fda08147d97099ef983f8ac8e2f6cd45eae8",
-    "dist/bundle.js": "e8ab7ffacc76827a8dec7c623dd1fda08147d97099ef983f8ac8e2f6cd45eae8",
-    "dist/game.html": "f888ca89ba570702632eafe21b4548863478d5508395e96b60429d95133597ed",
-    "dist/game.config.json": "11d162d0a5f8f06827587d7f11ddcc79fa7568d8f4ae6854e87dc89b833bc895"
-  }
+  ]
 }

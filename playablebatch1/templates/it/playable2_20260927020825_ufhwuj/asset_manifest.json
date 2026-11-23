@@ -1,43 +1,43 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20260927020825_ufhwuj",
-  "number": 17,
-  "name": "Synthwave Stack",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "audiowide",
+  "style_anchor": "A synthwave tower game with a neon environment and technical display typography. Preserve the current luminous palette, tower composition, background art and sharp score hierarchy.",
   "assets": [
     {
-      "path": "dist/assets/bg_main.webp",
-      "ids": [
-        "BG_MAIN"
-      ],
-      "bytes": 2975602,
-      "sha256": "85cd1cbf9e14ec972167d98b2c24b6e3a6e276ca7bc703b7f45fe01ee458809d"
+      "path": "assets/bg_main.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A synthwave tower game with a neon environment and technical display typography. Preserve the current luminous palette, tower composition, background art and sharp score hierarchy. Asset requirement: Existing Main Background Fallback artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Main Background Fallback artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "50:89",
+      "size_tier": "full",
+      "recommended_size": "1600x2848",
+      "width": 1600,
+      "height": 2848,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/audiowide/Audiowide-Regular.woff2",
-      "ids": [],
-      "bytes": 18880,
-      "sha256": "4650e661683335ff42987353137525ee47444acff82525f647beb9d82b534216"
+      "path": "assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Audiowide Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/exo2/Exo2-Latin.woff",
-      "ids": [],
-      "bytes": 55176,
-      "sha256": "27b4de410dcaaf49fdebc42dee96ff431d5a7d2f759d6a5aea8637e4d1965d88"
-    },
-    {
-      "path": "dist/assets/fonts/exo2/OFL.txt",
-      "ids": [],
-      "bytes": 4386,
-      "sha256": "7f95a8eeecc6904ffc81cd10cc8ebc7fcee72a67922924bf45f02dff03b88127"
+      "path": "assets/fonts/exo2/Exo2-Latin.woff",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Exo2 Latin font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "59ffe69036a8b7f6eadfa0339986562623d93f43ce9a11e97556ea2de1a6f117",
-    "dist/bundle.js": "59ffe69036a8b7f6eadfa0339986562623d93f43ce9a11e97556ea2de1a6f117",
-    "dist/game.html": "cbf4f795b7d5d0fa2ef3969af5cb1f4b359d05ab55deb3ab56e10e9d928f989e",
-    "dist/game.config.json": "15aaf1bddf3ceb514e6230a9811e61dd798bf9638710aba75ed7d0ff2fe1a4a6"
-  }
+  ]
 }

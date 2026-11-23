@@ -1,0 +1,177 @@
+{
+  "tweaks": [
+    {
+      "id": "GRID_COLS",
+      "kind": "number",
+      "label": "清洁网格列数",
+      "value": 14,
+      "default": 14,
+      "min": 8,
+      "max": 20,
+      "step": 1
+    },
+    {
+      "id": "GRID_ROWS",
+      "kind": "number",
+      "label": "清洁网格行数",
+      "value": 20,
+      "default": 20,
+      "min": 12,
+      "max": 28,
+      "step": 1
+    },
+    {
+      "id": "CLEAN_GOAL",
+      "kind": "number",
+      "label": "清洁完成阈值",
+      "value": 0.92,
+      "default": 0.92,
+      "min": 0.8,
+      "max": 1,
+      "step": 0.01
+    },
+    {
+      "id": "BRUSH_POWER",
+      "kind": "number",
+      "label": "刷洗力度",
+      "value": 0.22,
+      "default": 0.22,
+      "min": 0.08,
+      "max": 0.4,
+      "step": 0.01
+    },
+    {
+      "id": "RINSE_POWER",
+      "kind": "number",
+      "label": "冲洗力度",
+      "value": 0.3,
+      "default": 0.3,
+      "min": 0.1,
+      "max": 0.5,
+      "step": 0.01
+    },
+    {
+      "id": "VACUUM_POWER",
+      "kind": "number",
+      "label": "吸水力度",
+      "value": 0.32,
+      "default": 0.32,
+      "min": 0.12,
+      "max": 0.55,
+      "step": 0.01
+    }
+  ],
+  "texts": [
+    {
+      "id": "GAME_TITLE",
+      "label": "游戏标题",
+      "value": "Rinnova il tappeto",
+      "default": "Rinnova il tappeto",
+      "max_length": 20
+    },
+    {
+      "id": "GUIDE",
+      "label": "玩法引导",
+      "value": "Spruzza, strofina, lava, asciuga",
+      "default": "Spruzza, strofina, lava, asciuga",
+      "max_length": 32
+    },
+    {
+      "id": "COMPLETE",
+      "label": "完成文案",
+      "value": "Che pulito!",
+      "default": "Che pulito!",
+      "max_length": 28
+    },
+    {
+      "id": "NEXT_ITEM",
+      "label": "下一件按钮",
+      "value": "Prossimo oggetto",
+      "default": "Prossimo oggetto",
+      "max_length": 20
+    },
+    {
+      "id": "SPRAY",
+      "label": "喷雾瓶",
+      "value": "Spruzza",
+      "default": "Spruzza",
+      "max_length": 12
+    },
+    {
+      "id": "BRUSH",
+      "label": "手刷",
+      "value": "Strofina",
+      "default": "Strofina",
+      "max_length": 12
+    },
+    {
+      "id": "RINSE",
+      "label": "水枪",
+      "value": "Sciacqua",
+      "default": "Sciacqua",
+      "max_length": 12
+    },
+    {
+      "id": "VACUUM",
+      "label": "吸尘器",
+      "value": "Asciuga",
+      "default": "Asciuga",
+      "max_length": 12
+    },
+    {
+      "id": "CLEANED",
+      "label": "进度标签",
+      "value": "PULITO",
+      "default": "PULITO",
+      "max_length": 12
+    }
+  ],
+  "images": [
+    {
+      "id": "RUG_MAIN",
+      "label": "Overhead patterned rug",
+      "path": "./assets/rug-overhead.webp",
+      "replaceable": true
+    },
+    {
+      "id": "UPHOLSTERY_MAIN",
+      "label": "Overhead woven upholstery",
+      "path": "./assets/upholstery-overhead.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_SPRAY",
+      "label": "Spray bottle photo",
+      "path": "./assets/tool-spray-photo-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_BRUSH",
+      "label": "Hand brush photo",
+      "path": "./assets/tool-brush-photo-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_RINSE",
+      "label": "Rinse nozzle photo",
+      "path": "./assets/tool-rinse-photo-v1.webp",
+      "replaceable": true
+    },
+    {
+      "id": "TOOL_DRY",
+      "label": "Fabric extractor photo",
+      "path": "./assets/tool-dry-photo-v1.webp",
+      "replaceable": true
+    }
+  ],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109359222638342475",
+    "version_id": "109359222638275435",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+}

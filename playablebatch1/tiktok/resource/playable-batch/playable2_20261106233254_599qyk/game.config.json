@@ -345,15 +345,15 @@
     {
       "id": "GUIDE",
       "label": "Instruction",
-      "value": "Tap to pin the wheel",
-      "default": "Tap to pin the wheel",
+      "value": "Tocca per infilare gli spilli",
+      "default": "Tocca per infilare gli spilli",
       "max_length": 40
     },
     {
       "id": "LEVELS",
       "label": "Level picker",
-      "value": "Levels",
-      "default": "Levels",
+      "value": "Livelli",
+      "default": "Livelli",
       "max_length": 20
     }
   ],
@@ -364,7 +364,7 @@
     "version_id": "112333418880400029",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

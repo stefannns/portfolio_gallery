@@ -1,7 +1,14 @@
 {
   "playable": {
-    "name": "neon_dash"
+    "name": "neon_dash",
+    "title": "Scatto neon",
+    "content_locale": "it",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "min_capability_level": 1,
+    "full_capability_level": 1
   },
   "tweaks": [],
-  "images": []
+  "images": [],
+  "config_version": "2.0"
 }

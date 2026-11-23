@@ -1,51 +1,55 @@
 {
-  "manifest_version": 1,
-  "task_id": "06a_coloring_game_final",
-  "number": 68,
-  "name": "Color by Number",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "bangers",
+  "style_anchor": "A color-by-number activity with a nearly full-width artwork and one compact row of colors. Preserve the existing line art, numbered regions, color assignments and simple completion text.",
   "assets": [
     {
-      "path": "dist/assets/bg_cartoon_canonical_v5.webp",
-      "ids": [
-        "BG_CARTOON"
-      ],
-      "bytes": 779208,
-      "sha256": "2b8e6c3cf78e8aebc3fd0236eced2676322f75e592aee433ecb5bbe20e99eab3"
+      "path": "assets/bg_cartoon_canonical_v5.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A color-by-number activity with a nearly full-width artwork and one compact row of colors. Preserve the existing line art, numbered regions, color assignments and simple completion text. Asset requirement: Existing Generated Color-by-Number Artwork artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Generated Color-by-Number Artwork artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "561:701",
+      "size_tier": "full",
+      "recommended_size": "1122x1402",
+      "width": 1122,
+      "height": 1402,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/bangers/Bangers-Regular.woff2",
-      "ids": [],
-      "bytes": 37004,
-      "sha256": "50327be584f4c9871e22d1a39f6ca77ca68109148a3f5d72b5e37a8efbfefa34"
+      "path": "assets/fonts/bangers/Bangers-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Bangers Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/ui/NunitoSans.woff",
-      "ids": [],
-      "bytes": 261628,
-      "sha256": "e9456519e92dcb6c5857cad504f67c93203e86e81714510f341c72ace8e2313f"
+      "path": "assets/fonts/ui/NunitoSans.woff",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled NunitoSans font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     },
     {
-      "path": "dist/assets/fonts/ui/OFL.txt",
-      "ids": [],
-      "bytes": 4393,
-      "sha256": "efbb0c9e864cef973982d9a17567e6be5c3d1759695574586f3f18c7ecca064b"
-    },
-    {
-      "path": "dist/assets/source_original.webp",
-      "ids": [
-        "SOURCE_ORIGINAL"
-      ],
-      "bytes": 1274520,
-      "sha256": "0d0769916a2fae483c5d679fb788a1f61f936b26fd17f813927facd8be36f817"
+      "path": "assets/source_original.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "Reference brief for a preserved asset; the original creation prompt is unavailable. A color-by-number activity with a nearly full-width artwork and one compact row of colors. Preserve the existing line art, numbered regions, color assignments and simple completion text. Asset requirement: Existing Original Input Image artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "description": "Existing Original Input Image artwork used by this game. Preserve its current crop, color, transparency and alignment with the interactive scene.",
+      "aspect_ratio": "4:5",
+      "size_tier": "medium",
+      "recommended_size": "1024x1280",
+      "width": 1024,
+      "height": 1280,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "5e831c75d9181114de5a02a8588e7050586e3351527b5001fb062b55f2035452",
-    "dist/bundle.js": "5e831c75d9181114de5a02a8588e7050586e3351527b5001fb062b55f2035452",
-    "dist/game.html": "231651d7d75e18daab7ad9b69d951da5e4eeff588e79a98850fbbb5e823a1711",
-    "dist/game.config.json": "26bd534d16407c9b4be1f202418a2f6d3af30aaa7712cd96f0ebdeb2557e47ed"
-  }
+  ]
 }

@@ -25,36 +25,36 @@
     {
       "id": "TXT_SCORE_LABEL",
       "label": "Score Label",
-      "value": "Score",
-      "default": "Score",
+      "value": "Punti",
+      "default": "Punti",
       "max_length": 10
     },
     {
       "id": "TXT_FOOD_PELLETS",
       "label": "Food Name Pellets",
-      "value": "Pellets",
-      "default": "Pellets",
+      "value": "Mangime",
+      "default": "Mangime",
       "max_length": 15
     },
     {
       "id": "TXT_FOOD_CHILI",
       "label": "Food Name Chili",
-      "value": "Chili",
-      "default": "Chili",
+      "value": "Peperoncino",
+      "default": "Peperoncino",
       "max_length": 15
     },
     {
       "id": "TXT_FOOD_ICE",
       "label": "Food Name Ice",
-      "value": "Ice",
-      "default": "Ice",
+      "value": "Ghiaccio",
+      "default": "Ghiaccio",
       "max_length": 15
     },
     {
       "id": "TXT_FOOD_GHOST",
       "label": "Food Name Ghost",
-      "value": "Ghost",
-      "default": "Ghost",
+      "value": "Fantasma",
+      "default": "Fantasma",
       "max_length": 15
     },
     {
@@ -67,36 +67,36 @@
     {
       "id": "TXT_FOOD_DONUT",
       "label": "Food Name Donut",
-      "value": "Donut",
-      "default": "Donut",
+      "value": "Ciambella",
+      "default": "Ciambella",
       "max_length": 15
     },
     {
       "id": "TXT_FOOD_STAR",
       "label": "Food Name Star",
-      "value": "Star",
-      "default": "Star",
+      "value": "Stella",
+      "default": "Stella",
       "max_length": 15
     },
     {
       "id": "TXT_FOOD_SODA",
       "label": "Food Name Soda",
-      "value": "Soda",
-      "default": "Soda",
+      "value": "Bibita",
+      "default": "Bibita",
       "max_length": 15
     },
     {
       "id": "TXT_FOOD_SOAP",
       "label": "Food Name Soap",
-      "value": "Soap",
-      "default": "Soap",
+      "value": "Sapone",
+      "default": "Sapone",
       "max_length": 15
     },
     {
       "id": "TXT_FOOD_MAGNET",
       "label": "Food Name Magnet",
-      "value": "Magnet",
-      "default": "Magnet",
+      "value": "Magnete",
+      "default": "Magnete",
       "max_length": 15
     },
     {
@@ -211,7 +211,7 @@
     "version_id": "103313693563295272",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

@@ -3,30 +3,31 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
-    "full_capability_level": 1
+    "full_capability_level": 1,
+    "title": "Centra il punto"
   },
   "texts": [
     {
       "id": "FRIEND_NAME",
-      "label": "Friend display name",
-      "value": "Buddy",
-      "default": "Buddy",
+      "label": "Nome dell’amico",
+      "value": "Amico",
+      "default": "Amico",
       "max_length": 20
     },
     {
       "id": "HINT",
-      "label": "Swipe instruction",
-      "value": "Tap to throw · drag to aim",
-      "default": "Tap to throw · drag to aim",
+      "label": "Guida al lancio",
+      "value": "Tocca per lanciare · trascina per mirare",
+      "default": "Tocca per lanciare · trascina per mirare",
       "max_length": 64
     },
     {
       "id": "AGAIN",
-      "label": "Replay button",
-      "value": "Play again",
-      "default": "Play again",
+      "label": "Pulsante per rigiocare",
+      "value": "Gioca ancora",
+      "default": "Gioca ancora",
       "max_length": 24
     }
   ],
@@ -34,7 +35,7 @@
     {
       "id": "TARGET_RADIUS",
       "kind": "number",
-      "label": "Acupoint hit radius",
+      "label": "Raggio del punto da centrare",
       "value": 0.085,
       "default": 0.085,
       "min": 0.065,
@@ -45,7 +46,7 @@
   "images": [
     {
       "id": "FRIEND_AVATAR",
-      "label": "Friend avatar (default example)",
+      "label": "Avatar dell’amico (esempio predefinito)",
       "path": "assets/friend-avatar.webp",
       "replaceable": true
     }

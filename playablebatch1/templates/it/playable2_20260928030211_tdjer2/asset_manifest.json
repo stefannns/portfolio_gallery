@@ -1,23 +1,19 @@
 {
-  "manifest_version": 1,
-  "task_id": "playable2_20260928030211_tdjer2",
-  "number": 31,
-  "name": "Particle Art Creator",
-  "language": "it",
-  "entry": "dist/game.html",
-  "source_kind": "consolidated-current-runtime",
+  "schema_version": 1,
+  "font_pack_id": "audiowide",
+  "style_anchor": "A particle drawing studio with a full-screen canvas and compact color and settings controls. Preserve the current particle motion, technical lettering and in-flow settings layout.",
   "assets": [
     {
-      "path": "dist/assets/fonts/audiowide/Audiowide-Regular.woff2",
-      "ids": [],
-      "bytes": 18880,
-      "sha256": "4650e661683335ff42987353137525ee47444acff82525f647beb9d82b534216"
+      "path": "assets/fonts/audiowide/Audiowide-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Bundled Audiowide Regular font used by the existing interface. Retain its glyph coverage and current weight.",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
     }
-  ],
-  "files": {
-    "App.jsx": "5dd4e4afe8f95f46b784f7ce94909d63a2206017f8c1d4a3e8cbf0e00504ca67",
-    "dist/bundle.js": "5dd4e4afe8f95f46b784f7ce94909d63a2206017f8c1d4a3e8cbf0e00504ca67",
-    "dist/game.html": "88803440e9ec9210f15ff09a89eb34968a34dc51f411514693966418b65a1377",
-    "dist/game.config.json": "0c4f09527a7a33e8734092d53f836bb1fc7b7a46531237e49fd738762ca0b660"
-  }
+  ]
 }

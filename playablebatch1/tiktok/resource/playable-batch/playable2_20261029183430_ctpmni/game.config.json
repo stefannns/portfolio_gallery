@@ -65,71 +65,71 @@
     {
       "id": "GAME_TITLE",
       "label": "Game title",
-      "value": "STICKMAN CLICKER PRO",
-      "default": "STICKMAN CLICKER PRO",
+      "value": "STICKMAN: COLPISCI",
+      "default": "STICKMAN: COLPISCI",
       "max_length": 28
     },
     {
       "id": "GUIDE",
       "label": "First-use guide",
-      "value": "Tap to hit and upgrade",
-      "default": "Tap to hit and upgrade",
+      "value": "Tocca, colpisci e potenzia",
+      "default": "Tocca, colpisci e potenzia",
       "max_length": 32
     },
     {
       "id": "HEALTH_LABEL",
       "label": "Health label",
-      "value": "HP",
-      "default": "HP",
+      "value": "PV",
+      "default": "PV",
       "max_length": 8
     },
     {
       "id": "LEVEL_LABEL",
       "label": "Level label",
-      "value": "LEVEL",
-      "default": "LEVEL",
+      "value": "LIVELLO",
+      "default": "LIVELLO",
       "max_length": 8
     },
     {
       "id": "COINS_LABEL",
       "label": "Coins label",
-      "value": "COINS",
-      "default": "COINS",
+      "value": "MONETE",
+      "default": "MONETE",
       "max_length": 8
     },
     {
       "id": "STORE_LABEL",
       "label": "Store label",
-      "value": "ARSENAL",
-      "default": "ARSENAL",
+      "value": "ARSENALE",
+      "default": "ARSENALE",
       "max_length": 12
     },
     {
       "id": "EQUIPPED",
       "label": "Equipped status",
-      "value": "EQUIPPED",
-      "default": "EQUIPPED",
+      "value": "IN USO",
+      "default": "IN USO",
       "max_length": 12
     },
     {
       "id": "OWNED",
       "label": "Owned status",
-      "value": "OWNED",
-      "default": "OWNED",
+      "value": "ACQUISTATO",
+      "default": "ACQUISTATO",
       "max_length": 12
     },
     {
       "id": "UNAFFORDABLE",
       "label": "Unaffordable status",
-      "value": "LOCKED",
-      "default": "LOCKED",
+      "value": "BLOCCATO",
+      "default": "BLOCCATO",
       "max_length": 12
     },
     {
       "id": "FREE",
       "label": "Free price",
-      "value": "FREE",
-      "default": "FREE",
+      "value": "GRATIS",
+      "default": "GRATIS",
       "max_length": 8
     },
     {
@@ -142,29 +142,29 @@
     {
       "id": "AUTO_ON",
       "label": "Auto enabled",
-      "value": "ON",
-      "default": "ON",
+      "value": "SÌ",
+      "default": "SÌ",
       "max_length": 8
     },
     {
       "id": "AUTO_OFF",
       "label": "Auto disabled",
-      "value": "OFF",
-      "default": "OFF",
+      "value": "NO",
+      "default": "NO",
       "max_length": 8
     },
     {
       "id": "ADMIN_NAME",
       "label": "Admin tool name",
-      "value": "ADMIN HAMMER",
-      "default": "ADMIN HAMMER",
+      "value": "MARTELLO ADMIN",
+      "default": "MARTELLO ADMIN",
       "max_length": 18
     },
     {
       "id": "CLEARED",
       "label": "Level clear feedback",
-      "value": "CLEARED",
-      "default": "CLEARED",
+      "value": "SUPERATO",
+      "default": "SUPERATO",
       "max_length": 12
     },
     {
@@ -177,15 +177,15 @@
     {
       "id": "NEED_MORE",
       "label": "Unaffordable feedback",
-      "value": "Need more coins",
-      "default": "Need more coins",
+      "value": "Servono più monete",
+      "default": "Servono più monete",
       "max_length": 20
     }
   ],
   "tools": [
     {
       "id": "fist",
-      "name": "FIST",
+      "name": "PUGNO",
       "damage": 1,
       "price": 0,
       "sound": "light",
@@ -193,7 +193,7 @@
     },
     {
       "id": "bat",
-      "name": "WOODEN BAT",
+      "name": "MAZZA",
       "damage": 3,
       "price": 50,
       "sound": "light",
@@ -209,7 +209,7 @@
     },
     {
       "id": "sledge",
-      "name": "SLEDGEHAMMER",
+      "name": "MAZZA PESANTE",
       "damage": 20,
       "price": 600,
       "sound": "heavy",
@@ -217,7 +217,7 @@
     },
     {
       "id": "laser",
-      "name": "LASER SWORD",
+      "name": "SPADA LASER",
       "damage": 50,
       "price": 1500,
       "sound": "tech",
@@ -225,7 +225,7 @@
     },
     {
       "id": "chainsaw",
-      "name": "CHAINSAW",
+      "name": "MOTOSEGA",
       "damage": 150,
       "price": 5000,
       "sound": "heavy",
@@ -233,7 +233,7 @@
     },
     {
       "id": "rocket",
-      "name": "ROCKET",
+      "name": "RAZZO",
       "damage": 400,
       "price": 15000,
       "sound": "boom",
@@ -241,7 +241,7 @@
     },
     {
       "id": "axe",
-      "name": "FIRE AXE",
+      "name": "ASCIA",
       "damage": 1200,
       "price": 50000,
       "sound": "heavy",
@@ -249,7 +249,7 @@
     },
     {
       "id": "bomb",
-      "name": "BOMB",
+      "name": "BOMBA",
       "damage": 3500,
       "price": 150000,
       "sound": "boom",
@@ -257,7 +257,7 @@
     },
     {
       "id": "ufo",
-      "name": "UFO BLASTER",
+      "name": "LASER UFO",
       "damage": 10000,
       "price": 500000,
       "sound": "tech",
@@ -265,7 +265,7 @@
     },
     {
       "id": "comet",
-      "name": "COMET",
+      "name": "COMETA",
       "damage": 30000,
       "price": 2000000,
       "sound": "boom",
@@ -273,7 +273,7 @@
     },
     {
       "id": "atomic",
-      "name": "ATOMIC BOMB",
+      "name": "BOMBA ATOMICA",
       "damage": 100000,
       "price": 10000000,
       "sound": "boom",
@@ -281,7 +281,7 @@
     },
     {
       "id": "plasma",
-      "name": "PLASMA CANNON",
+      "name": "CANNONE AL PLASMA",
       "damage": 300000,
       "price": 50000000,
       "sound": "tech",
@@ -289,7 +289,7 @@
     },
     {
       "id": "blackhole",
-      "name": "BLACK HOLE",
+      "name": "BUCO NERO",
       "damage": 1000000,
       "price": 250000000,
       "sound": "boom",
@@ -297,7 +297,7 @@
     },
     {
       "id": "galaxy",
-      "name": "GALAXY",
+      "name": "GALASSIA",
       "damage": 3000000,
       "price": 1000000000,
       "sound": "boom",
@@ -414,7 +414,7 @@
     "version_id": "109359222646851249",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

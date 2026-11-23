@@ -3,7 +3,7 @@
     {
       "id": "TIME_LIMIT",
       "kind": "number",
-      "label": "Questions Per Run",
+      "label": "Domande per partita",
       "value": 5,
       "default": 5,
       "min": 4,
@@ -13,7 +13,7 @@
     {
       "id": "DECAY_RATE",
       "kind": "number",
-      "label": "Fate Variation",
+      "label": "Variazione del destino",
       "value": 1,
       "default": 1,
       "min": 0.1,
@@ -23,7 +23,7 @@
     {
       "id": "CLICK_POWER",
       "kind": "number",
-      "label": "Base Strength Bonus",
+      "label": "Bonus di forza iniziale",
       "value": 5,
       "default": 5,
       "min": 1,
@@ -34,112 +34,112 @@
   "texts": [
     {
       "id": "GAME_TITLE",
-      "label": "Game Title",
-      "value": "How Strong Are You?",
-      "default": "How Strong Are You?",
+      "label": "Il tuo destino fantastico",
+      "value": "Il tuo destino fantastico",
+      "default": "Il tuo destino fantastico",
       "max_length": 30
     },
     {
       "id": "TEXT_WEAK",
-      "label": "Level 1",
-      "value": "Weak",
-      "default": "Weak",
+      "label": "Fragile",
+      "value": "Fragile",
+      "default": "Fragile",
       "max_length": 20
     },
     {
       "id": "TEXT_AVERAGE",
-      "label": "Level 2",
-      "value": "Average",
-      "default": "Average",
+      "label": "Nella media",
+      "value": "Nella media",
+      "default": "Nella media",
       "max_length": 20
     },
     {
       "id": "TEXT_STRONG",
-      "label": "Level 3",
-      "value": "Strong",
-      "default": "Strong",
+      "label": "Forte",
+      "value": "Forte",
+      "default": "Forte",
       "max_length": 20
     },
     {
       "id": "TEXT_SUPER",
-      "label": "Level 4",
-      "value": "Superhuman",
-      "default": "Superhuman",
+      "label": "Sovrumano",
+      "value": "Sovrumano",
+      "default": "Sovrumano",
       "max_length": 20
     },
     {
       "id": "TEXT_ABSURD",
-      "label": "Level 5",
-      "value": "Absurdly Powerful",
-      "default": "Absurdly Powerful",
+      "label": "Potenza leggendaria",
+      "value": "Potenza leggendaria",
+      "default": "Potenza leggendaria",
       "max_length": 20
     },
     {
       "id": "BTN_RETRY",
-      "label": "Retry Button",
-      "value": "Try Again",
-      "default": "Try Again",
+      "label": "Riprova",
+      "value": "Riprova",
+      "default": "Riprova",
       "max_length": 20
     }
   ],
   "images": [
     {
       "id": "BG_MAIN",
-      "label": "Fairy-tale woodland paper",
+      "label": "Carta illustrata del bosco incantato",
       "path": "./assets/fantasy-v1/forest-paper.webp",
       "replaceable": true
     },
     {
       "id": "IMG_TITLE",
-      "label": "Destiny Emblem",
+      "label": "Emblema del destino",
       "path": "./assets/destiny_emblem.svg",
       "replaceable": true
     },
     {
       "id": "CREST_SHIELD",
-      "label": "Shield archetype crest",
+      "label": "Stemma del guardiano",
       "path": "./assets/fantasy-v1/crest-shield.webp",
       "replaceable": true
     },
     {
       "id": "CREST_AXE",
-      "label": "Axe archetype crest",
+      "label": "Stemma del guerriero",
       "path": "./assets/fantasy-v1/crest-axe.webp",
       "replaceable": true
     },
     {
       "id": "CREST_WAND",
-      "label": "Wand archetype crest",
+      "label": "Stemma della magia",
       "path": "./assets/fantasy-v1/crest-wand.webp",
       "replaceable": true
     },
     {
       "id": "CREST_MASK",
-      "label": "Mask archetype crest",
+      "label": "Stemma dell’astuzia",
       "path": "./assets/fantasy-v1/crest-mask.webp",
       "replaceable": true
     },
     {
       "id": "CREST_BOW",
-      "label": "Bow archetype crest",
+      "label": "Stemma dell’esplorazione",
       "path": "./assets/fantasy-v1/crest-bow.webp",
       "replaceable": true
     },
     {
       "id": "CREST_EYE",
-      "label": "Eye archetype crest",
+      "label": "Stemma dell’oracolo",
       "path": "./assets/fantasy-v1/crest-eye.webp",
       "replaceable": true
     },
     {
       "id": "CREST_COMPASS",
-      "label": "Compass archetype crest",
+      "label": "Stemma del viandante",
       "path": "./assets/fantasy-v1/crest-compass.webp",
       "replaceable": true
     },
     {
       "id": "CREST_CROWN",
-      "label": "Crown archetype crest",
+      "label": "Stemma del sovrano",
       "path": "./assets/fantasy-v1/crest-crown.webp",
       "replaceable": true
     }
@@ -150,8 +150,9 @@
     "version_id": "99279478907604667",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
-    "full_capability_level": 1
+    "full_capability_level": 1,
+    "title": "Il tuo destino fantastico"
   }
 }

@@ -55,8 +55,8 @@
     {
       "id": "TEXT_PROMPT",
       "label": "Interaction Prompt",
-      "value": "DRAG BETWEEN TWO POINTS",
-      "default": "DRAG BETWEEN TWO POINTS",
+      "value": "TRASCINA TRA DUE PUNTI",
+      "default": "TRASCINA TRA DUE PUNTI",
       "max_length": 36
     }
   ],
@@ -67,7 +67,7 @@
     "version_id": "99279771737000613",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

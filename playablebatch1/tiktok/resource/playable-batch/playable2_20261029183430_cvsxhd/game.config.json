@@ -115,36 +115,36 @@
     {
       "id": "GUIDE_TEXT",
       "label": "Play guide",
-      "value": "Drag to play against the computer",
-      "default": "Drag to play against the computer",
+      "value": "Trascina e sfida il computer",
+      "default": "Trascina e sfida il computer",
       "max_length": 32
     },
     {
       "id": "YOU_WIN",
       "label": "Red player result",
-      "value": "You win!",
-      "default": "You win!",
+      "value": "Hai vinto!",
+      "default": "Hai vinto!",
       "max_length": 20
     },
     {
       "id": "YOU_LOSE",
       "label": "Blue player result",
-      "value": "Computer wins",
-      "default": "Computer wins",
+      "value": "Vince il computer",
+      "default": "Vince il computer",
       "max_length": 20
     },
     {
       "id": "FINAL_SCORE",
       "label": "Final score label",
-      "value": "Final score",
-      "default": "Final score",
+      "value": "Punteggio finale",
+      "default": "Punteggio finale",
       "max_length": 20
     },
     {
       "id": "PLAY_AGAIN",
       "label": "Replay button",
-      "value": "Play again",
-      "default": "Play again",
+      "value": "Rigioca",
+      "default": "Rigioca",
       "max_length": 20
     }
   ],
@@ -155,7 +155,7 @@
     "version_id": "109359222655234699",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

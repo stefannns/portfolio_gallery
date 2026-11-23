@@ -1,0 +1,1983 @@
+document.documentElement.lang = "it";
+// Editable Batch 2 game. Rebuild using the platform app/h5_build/build.js.
+const PACKAGE_CONFIG_FALLBACK = {
+  "tweaks": [{
+    "id": "TRACE_CLOSE_GAP",
+    "kind": "number",
+    "label": "Trace close gap",
+    "value": 28,
+    "default": 28,
+    "min": 12,
+    "max": 50,
+    "step": 1
+  }, {
+    "id": "TRACE_MIN_LENGTH",
+    "kind": "number",
+    "label": "Minimum trace length",
+    "value": 90,
+    "default": 90,
+    "min": 40,
+    "max": 180,
+    "step": 1
+  }, {
+    "id": "SOFT_BODY_COLUMNS",
+    "kind": "number",
+    "label": "Soft body columns",
+    "value": 9,
+    "default": 9,
+    "min": 7,
+    "max": 11,
+    "step": 1
+  }, {
+    "id": "SOFT_BODY_ROWS",
+    "kind": "number",
+    "label": "Soft body rows",
+    "value": 9,
+    "default": 9,
+    "min": 7,
+    "max": 11,
+    "step": 1
+  }, {
+    "id": "GRAVITY",
+    "kind": "number",
+    "label": "Soft body gravity",
+    "value": 0.7,
+    "default": 0.7,
+    "min": 0.6,
+    "max": 1,
+    "step": 0.05
+  }, {
+    "id": "BODY_WIDTH_RATIO",
+    "kind": "number",
+    "label": "Body width ratio",
+    "value": 0.8,
+    "default": 0.74,
+    "min": 0.55,
+    "max": 0.86,
+    "step": 0.01
+  }],
+  "texts": [{
+    "id": "GUIDE_TEXT",
+    "label": "Trace guide",
+    "value": "Ricalca il contorno del gatto",
+    "default": "Ricalca il contorno del gatto",
+    "max_length": 80
+  }, {
+    "id": "RESET_LABEL",
+    "label": "Reset button",
+    "value": "Ricomincia",
+    "default": "Ricomincia",
+    "max_length": 20
+  }, {
+    "id": "CONFIRM_LABEL",
+    "label": "Confirm button",
+    "value": "Crea lo squishy",
+    "default": "Crea lo squishy",
+    "max_length": 20
+  }, {
+    "id": "RESET_SHAPE_LABEL",
+    "label": "Compact reset shape button",
+    "value": "Rifai la forma",
+    "default": "Rifai la forma",
+    "max_length": 30
+  }, {
+    "id": "CHOOSE_LABEL",
+    "label": "Choose image button",
+    "value": "Scegli foto",
+    "default": "Scegli foto",
+    "max_length": 30
+  }, {
+    "id": "PICKER_TITLE",
+    "label": "Picker title",
+    "value": "Scegli una foto",
+    "default": "Scegli una foto",
+    "max_length": 30
+  }, {
+    "id": "BACK_LABEL",
+    "label": "Picker back button",
+    "value": "Indietro",
+    "default": "Indietro",
+    "max_length": 20
+  }],
+  "images": [{
+    "id": "HAMSTER_HONEY",
+    "label": "Cat on the rug",
+    "path": "./assets/cat-phone-rug.webp",
+    "replaceable": true
+  }, {
+    "id": "HAMSTER_CARAMEL",
+    "label": "Cat on the sofa",
+    "path": "./assets/cat-phone-sofa.webp",
+    "replaceable": true
+  }, {
+    "id": "HAMSTER_SILVER",
+    "label": "Cat by the window",
+    "path": "./assets/cat-phone-window.webp",
+    "replaceable": true
+  }],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109025442509735103",
+    "version_id": "109025442509759752",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+};
+const PACKAGE_HTML_STYLES = "html,body,#root{width:100%;height:100%;margin:0;overflow:hidden}body{background:#050607}";
+
+/* BATCH2_IDLE_20261102 */
+/* Game-owned, silent demonstration clock. Never dispatches gameplay input. */
+(() => {
+  'use strict';
+
+  if (window.PlayableIdlePreview) return;
+  const query = new URLSearchParams(location.search);
+  const hosted = query.get('feedReview') === '1' || query.get('host') === 'fyp';
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  let preview = hosted,
+    elapsed = 0,
+    last = performance.now();
+  const listeners = new Set();
+  const sync = () => {
+    const html = document.documentElement;
+    html.dataset.batch2Idle = String(preview);
+    html.dataset.batch2IdlePaused = String(document.hidden);
+    html.dataset.batch2IdleReduced = String(reduced.matches);
+    if (!preview) for (const node of document.querySelectorAll('[data-idle-preview]')) node.dataset.idlePreview = 'off';
+    last = performance.now();
+    for (const fn of listeners) fn(preview && !document.hidden);
+  };
+  const clock = () => {
+    const now = performance.now();
+    if (preview && !document.hidden && !reduced.matches) elapsed += Math.min(64, Math.max(0, now - last));
+    last = now;
+    return reduced.matches ? 1600 : elapsed;
+  };
+  const clamp = (n, a = 0, b = 1) => Math.max(a, Math.min(b, n));
+  const ease = t => (t = clamp(t), t * t * (3 - 2 * t));
+  const trace = (ctx, points, progress = 1) => {
+    if (!points.length) return;
+    const distances = points.slice(1).map((p, i) => Math.hypot(p.x - points[i].x, p.y - points[i].y));
+    let left = distances.reduce((a, b) => a + b, 0) * clamp(progress);
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+      const p = points[i - 1],
+        q = points[i],
+        d = distances[i - 1];
+      const t = Math.min(1, left / Math.max(.01, d));
+      ctx.lineTo(p.x + (q.x - p.x) * t, p.y + (q.y - p.y) * t);
+      left -= d;
+      if (left <= 0) break;
+    }
+    ctx.stroke();
+  };
+  const onPath = (points, progress) => {
+    const lengths = points.slice(1).map((p, i) => Math.hypot(p.x - points[i].x, p.y - points[i].y));
+    let distance = lengths.reduce((a, b) => a + b, 0) * clamp(progress);
+    for (let i = 1; i < points.length; i++) {
+      const a = points[i - 1],
+        b = points[i],
+        length = lengths[i - 1];
+      if (distance <= length || i === points.length - 1) {
+        const t = clamp(distance / Math.max(.01, length));
+        return {
+          x: a.x + (b.x - a.x) * t,
+          y: a.y + (b.y - a.y) * t
+        };
+      }
+      distance -= length;
+    }
+    return points[0];
+  };
+  const stamp = (canvas, kind, phase = clock()) => {
+    if (!canvas) return;
+    canvas.dataset.idlePreview = preview ? kind : 'off';
+    canvas.dataset.idlePhase = String(Math.round(phase));
+  };
+  function ant(ctx, w, h, image) {
+    const t = clock() / 1000,
+      p = t % 5.4 / 5.4;
+    const cx = w * .5,
+      cy = h * .51,
+      rx = Math.min(w * .29, 105),
+      ry = Math.min(h * .16, 78);
+    const path = Array.from({
+      length: 81
+    }, (_, i) => ({
+      x: cx + Math.cos(i / 80 * Math.PI * 2) * rx,
+      y: cy + Math.sin(i / 80 * Math.PI * 2) * ry
+    }));
+    ctx.save();
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#242322';
+    ctx.globalAlpha = p > .88 ? (1 - p) / .12 : 1;
+    trace(ctx, path, ease(p / .48));
+    const x = cx + Math.sin(t * 2.1) * rx * .63,
+      y = cy + Math.sin(t * 2.8) * ry * .59;
+    ctx.translate(x, y);
+    ctx.rotate(Math.atan2(Math.cos(t * 2.8) * ry, Math.cos(t * 2.1) * rx) + Math.PI / 2);
+    if (image?.complete && image.naturalWidth) ctx.drawImage(image, -17, -17, 34, 34);else {
+      ctx.fillStyle = '#242322';
+      for (const [y, r] of [[-7, 5], [0, 4], [7, 6]]) {
+        ctx.beginPath();
+        ctx.ellipse(0, y, r, r * 1.2, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    ctx.restore();
+    stamp(ctx.canvas, 'ant-loop');
+  }
+  function army(state, w, h) {
+    const t = clock() / 1000;
+    const players = state.entities.filter(e => e.team === 'player'),
+      cx = players.reduce((n, e) => n + e.x, 0) / Math.max(1, players.length),
+      cy = players.reduce((n, e) => n + e.y, 0) / Math.max(1, players.length);
+    return {
+      ...state,
+      particles: [],
+      playerTarget: {
+        x: w * (.5 + Math.sin(t * .8) * .18),
+        y: h * (.43 + Math.cos(t * .8) * .04)
+      },
+      entities: state.entities.map((entity, i) => ({
+        ...entity,
+        x: entity.team === 'player' ? w * (.5 + Math.sin(t * .8) * .14) + (entity.x - cx) * .7 : entity.x + Math.sin(t * 1.5 + i * .7) * 8,
+        y: entity.team === 'player' ? h * (.57 + Math.cos(t * .8) * .04) + (entity.y - cy) * .7 : entity.y + Math.cos(t * 1.5 + i * .7) * 8
+      }))
+    };
+  }
+  function blade(ctx, w, h, top, bottom) {
+    const t = clock() / 1000,
+      p = t % 5.8 / 5.8,
+      cx = w / 2,
+      cy = (top + bottom) / 2;
+    const points = [[-.22, .16], [-.11, .02], [.04, .04], [.17, -.17], [.24, -.11]].map(([x, y]) => ({
+      x: cx + x * w,
+      y: cy + y * (bottom - top)
+    }));
+    ctx.save();
+    ctx.strokeStyle = '#303936';
+    ctx.lineWidth = 6;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.globalAlpha = p > .9 ? (1 - p) / .1 : 1;
+    if (p < .5) trace(ctx, points, ease(p / .45));else {
+      ctx.translate(cx, cy);
+      ctx.rotate((p - .5) * Math.PI * 3.4);
+      trace(ctx, points.map(v => ({
+        x: v.x - cx,
+        y: v.y - cy
+      })));
+      ctx.fillStyle = '#303936';
+      ctx.beginPath();
+      ctx.arc(0, 0, 11, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+    stamp(ctx.canvas, 'draw-and-spin-blade');
+  }
+  function roadPose(key) {
+    const t = clock() / 1000,
+      offset = key === 'player' ? 0 : key === 'copL' ? 1.3 : 2.2;
+    const q = t * .75 - offset,
+      x = 375 + Math.sin(q) * 130,
+      y = key === 'player' ? 800 : 1040 + (key === 'copR' ? 60 : 0);
+    return {
+      x: x + (key === 'copL' ? -85 : key === 'copR' ? 85 : 0),
+      y: y + Math.cos(q) * 28,
+      angle: -Math.PI / 2 + Math.cos(q) * .18
+    };
+  }
+  function road(ctx) {
+    const p = roadPose('player');
+    ctx.save();
+    ctx.strokeStyle = '#ffffff88';
+    ctx.setLineDash([11, 12]);
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.bezierCurveTo(p.x + 100, p.y - 100, 340, p.y - 220, 420, p.y - 340);
+    ctx.stroke();
+    ctx.restore();
+    stamp(ctx.canvas, 'escape-route');
+  }
+  function route(start, end, circles, w) {
+    const nodes = [start, end];
+    for (const circle of circles) for (let i = 0; i < 12; i++) {
+      const a = i * Math.PI / 6,
+        r = circle.circleRadius + 16;
+      const p = {
+        x: circle.position.x + Math.cos(a) * r,
+        y: circle.position.y + Math.sin(a) * r
+      };
+      if (p.x > 15 && p.x < w - 15) nodes.push(p);
+    }
+    const distance = nodes.map(() => Infinity),
+      previous = nodes.map(() => -1),
+      visited = new Set();
+    distance[0] = 0;
+    const clear = (a, b) => circles.every(c => {
+      const dx = b.x - a.x,
+        dy = b.y - a.y,
+        t = clamp(((c.position.x - a.x) * dx + (c.position.y - a.y) * dy) / Math.max(.01, dx * dx + dy * dy));
+      return Math.hypot(a.x + dx * t - c.position.x, a.y + dy * t - c.position.y) > c.circleRadius + 7;
+    });
+    for (let pass = 0; pass < nodes.length; pass++) {
+      let k = -1;
+      for (let j = 0; j < nodes.length; j++) if (!visited.has(j) && (k < 0 || distance[j] < distance[k])) k = j;
+      if (k < 0 || !Number.isFinite(distance[k])) break;
+      if (k === 1) break;
+      visited.add(k);
+      for (let j = 0; j < nodes.length; j++) {
+        if (visited.has(j) || !clear(nodes[k], nodes[j])) continue;
+        const d = distance[k] + Math.hypot(nodes[k].x - nodes[j].x, nodes[k].y - nodes[j].y);
+        if (d < distance[j]) {
+          distance[j] = d;
+          previous[j] = k;
+        }
+      }
+    }
+    if (previous[1] < 0) return [start, {
+      x: 20,
+      y: start.y + 24
+    }, {
+      x: 20,
+      y: end.y - 28
+    }, end];
+    const path = [];
+    for (let k = 1; k >= 0; k = previous[k]) {
+      path.unshift(nodes[k]);
+      if (k === 0) break;
+    }
+    return path;
+  }
+  let sodaCache = null;
+  function soda(ctx, source, cup, cupW, cupH, bodies, w) {
+    if (!source || !cup) return;
+    const t = clock() / 1000,
+      p = t % 5.6;
+    const circles = bodies.filter(b => b.label === 'obstacle'),
+      key = JSON.stringify([source, cup, w, circles.map(c => [c.position.x, c.position.y, c.circleRadius])]);
+    if (sodaCache?.key !== key) sodaCache = {
+      key,
+      points: route({
+        x: source.x,
+        y: source.y + 21
+      }, {
+        x: cup.x,
+        y: cup.y - cupH * .42
+      }, circles, w)
+    };
+    const points = sodaCache.points;
+    ctx.save();
+    ctx.strokeStyle = '#242322';
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.globalAlpha = p > 5 ? (5.6 - p) / .6 : 1;
+    trace(ctx, points, ease(p / 1.7));
+    if (p > 1.4 && p < 5) {
+      for (let i = 0; i < 15; i++) {
+        const q = (p - 1.4) * .65 - i * .067;
+        if (q < 0 || q > 1) continue;
+        const at = onPath(points, q);
+        ctx.fillStyle = '#59c6b1';
+        ctx.strokeStyle = '#242322';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(at.x, at.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+    stamp(ctx.canvas, 'guided-soda-route');
+  }
+  const style = document.createElement('style');
+  style.dataset.batch2IdleStyle = '';
+  style.textContent = `
+    html[data-batch2-idle=true] .idle-memory-deck{display:block}
+    .idle-memory-deck{position:absolute;inset:0;display:none;overflow:hidden;pointer-events:none}
+    .idle-memory-deck img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;animation:idle-memory-photo 7.2s linear infinite}
+    .idle-memory-deck img:nth-child(2){animation-delay:-4.8s}.idle-memory-deck img:nth-child(3){animation-delay:-2.4s}
+    .idle-clean-tool{display:none;position:absolute;z-index:5;left:var(--idle-clean-x,25%);top:var(--idle-clean-y,54%);width:76px;height:95px;pointer-events:none;transform:translate(-50%,-35%)}
+    .idle-clean-tool>span{display:none;width:100%;height:100%}.idle-clean-tool img{width:100%;height:100%;object-fit:contain}
+    html[data-batch2-idle=true] .idle-clean-tool{display:block}
+    [data-idle-clean-tool=spray] .idle-clean-spray,[data-idle-clean-tool=brush] .idle-clean-brush,[data-idle-clean-tool=rinse] .idle-clean-rinse{display:block}
+    html[data-batch2-idle=true] .video-window>img{visibility:hidden}
+    @keyframes idle-memory-photo{0%,29%{opacity:1;transform:scale(1)}33%,96%{opacity:0;transform:scale(1.035)}100%{opacity:1;transform:scale(1)}}
+    html[data-batch2-idle=true] .tool-swing{animation:idle-tool-hit 2.6s ease-in-out infinite!important;transform-origin:70% 75%}
+    html[data-batch2-idle=true] .target-art{animation:idle-stick-react 2.6s ease-in-out infinite!important;transform-origin:50% 75%}
+    @keyframes idle-tool-hit{0%,32%,100%{transform:translate(10px,5px) rotate(-25deg)}46%{transform:translate(-30px,-8px) rotate(-64deg)}55%,70%{transform:translate(6px,7px) rotate(-20deg)}}
+    @keyframes idle-stick-react{0%,45%,72%,100%{transform:rotate(0) scale(1)}50%{transform:translate(-4px,2px) rotate(-3deg) scale(1.025,.97)}60%{transform:rotate(1.5deg) scale(.99,1.01)}}
+    html[data-batch2-idle-paused=true] :is(.idle-memory-deck img,.tool-swing,.target-art){animation-play-state:paused!important}
+    html[data-batch2-idle-reduced=true] :is(.idle-memory-deck img,.tool-swing,.target-art){animation:none!important}
+    html[data-batch2-idle-reduced=true] .idle-memory-deck img:first-child{opacity:1}
+  `;
+  document.head.append(style);
+  window.PlayableIdlePreview = Object.freeze({
+    get active() {
+      return preview && !document.hidden;
+    },
+    get preview() {
+      return preview;
+    },
+    get reduced() {
+      return reduced.matches;
+    },
+    get seconds() {
+      return clock() / 1000;
+    },
+    clock,
+    ease,
+    clamp,
+    stamp,
+    trace,
+    onPath,
+    ant,
+    army,
+    blade,
+    road,
+    roadPose,
+    soda,
+    subscribe(fn) {
+      listeners.add(fn);
+      return () => listeners.delete(fn);
+    }
+  });
+  addEventListener('message', event => {
+    if (parent === window || event.source !== parent || event.origin !== location.origin || event.data?.type !== 'playable-active') return;
+    const next = event.data.active !== true;
+    if (next !== preview) {
+      preview = next;
+      elapsed = 0;
+    }
+    sync();
+  });
+  document.addEventListener('visibilitychange', sync);
+  reduced.addEventListener?.('change', sync);
+  addEventListener('pagehide', () => {
+    preview = false;
+    sync();
+    listeners.clear();
+  }, {
+    once: true
+  });
+  sync();
+})();
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import Matter from 'matter-js';
+import * as THREE from 'three';
+import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
+
+// This bridge belongs to the game; it does not reproduce host UI or gradients.
+const feedSession = (() => {
+  const embedded = window.parent !== window && new URLSearchParams(location.search).get('feedReview') === '1';
+  let active = !embedded;
+  const listeners = new Set();
+  const update = () => {
+    document.documentElement.dataset.feedPreview = String(!active);
+    for (const callback of listeners) callback(active && !document.hidden);
+  };
+  window.addEventListener('message', event => {
+    if (!embedded || event.source !== parent || event.origin !== location.origin || event.data?.type !== 'playable-active') return;
+    active = event.data.active === true;
+    update();
+  });
+  document.addEventListener('visibilitychange', update);
+  update();
+  return {
+    get active() {
+      return active && !document.hidden;
+    },
+    subscribe(fn) {
+      listeners.add(fn);
+      return () => listeners.delete(fn);
+    }
+  };
+})();
+const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+function useFeedActive() {
+  const [active, setActive] = React.useState(feedSession.active);
+  React.useEffect(() => feedSession.subscribe(setActive), []);
+  return active;
+}
+function BatchPolish() {
+  const active = useFeedActive();
+  return <>
+    <style>{POLISH_CSS}</style>
+    {!active && [80, 81, 84].includes(GAME_NUMBER) && <div className={'preview-example example-' + GAME_NUMBER} aria-hidden="true">
+      {GAME_NUMBER === 80 && <svg viewBox="0 0 320 220"><defs><radialGradient id="soft-example" cx=".35" cy=".2" r=".9"><stop stopColor="#ffe4bd" /><stop offset="1" stopColor="#f3ad97" /></radialGradient></defs><path className="example-blob" d="M78 61C112 16 184 23 192 66C206 88 248 75 249 113C251 162 200 176 165 166C117 195 69 166 80 124C40 101 47 78 78 61Z" fill="url(#soft-example)" stroke="#d99485" strokeWidth="2" /><g className="example-eyes"><ellipse cx="136" cy="91" rx="11" ry="14" fill="white" /><ellipse cx="168" cy="91" rx="11" ry="14" fill="white" /><circle cx="139" cy="94" r="5" fill="#443c39" /><circle cx="171" cy="94" r="5" fill="#443c39" /></g></svg>}
+      {GAME_NUMBER === 81 && <svg viewBox="0 0 320 220"><path className="example-noodle" d="M65 145C44 109 84 61 115 88S139 171 187 151S250 80 263 126" fill="none" stroke="#e4d3ed" strokeWidth="29" strokeLinecap="round" /><path className="example-noodle" d="M65 145C44 109 84 61 115 88S139 171 187 151S250 80 263 126" fill="none" stroke="#3e3b42" strokeWidth="13" strokeLinecap="round" /><circle cx="129" cy="103" r="6" fill="white" /><circle cx="144" cy="111" r="6" fill="white" /><circle cx="130" cy="104" r="2.4" /><circle cx="145" cy="112" r="2.4" /><path d="M115 151q-5 17-15 11M186 160q5 18 15 9" fill="none" stroke="#3e3b42" strokeWidth="3" strokeLinecap="round" /></svg>}
+      {GAME_NUMBER === 84 && <div className="example-poem">una piccola linea diventa un pensiero<br />le parole vagano sul foglio<br /><em>piano</em> si apre un piccolo mondo<br />ogni segno è un momento<br />e ogni momento può ricominciare</div>}
+    </div>}
+  </>;
+}
+const BASE_CSS = `
+button { touch-action: manipulation; }
+button:focus-visible { outline: 3px solid #3c8ddd; outline-offset: 3px; }
+@keyframes batchBreathe { 0%,100% { opacity:.72; } 50% { opacity:1; } }
+.preview-example { position:fixed; z-index:2; pointer-events:none; width:min(80%,340px); left:50%; top:35%; transform:translateX(-50%); }
+.preview-example svg { width:100%; height:auto; overflow:visible; }
+.example-blob { transform-origin:50% 60%; animation:exampleSquish 3.8s ease-in-out infinite; }
+.example-noodle { transform-origin:50% 70%; animation:exampleWiggle 3.6s ease-in-out infinite; }
+.example-poem { padding:20px; color:#44444c; font:15px/1.8 ui-monospace,monospace; clip-path:ellipse(49% 47% at 50% 50%); animation:exampleInk 5s ease-in-out infinite; }
+.example-poem em { color:#ad7397; font-style:normal; }
+@keyframes exampleSquish { 0%,100% {transform:scale(1,1) rotate(-3deg)} 40% {transform:scale(1.06,.94) rotate(2deg)} 70% {transform:scale(.96,1.04) rotate(-1deg)} }
+@keyframes exampleWiggle { 0%,100% { transform:rotate(-3deg) translateY(0); } 50% { transform:rotate(3deg) translateY(-5px); } }
+@keyframes exampleInk { 0%,100% {opacity:.25;clip-path:ellipse(23% 35% at 32% 50%)} 45%,70% {opacity:.9;clip-path:ellipse(49% 47% at 50% 50%)} }
+@media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; } }
+`;
+const GAME_NUMBER = 86;
+const POLISH_CSS = "";
+const DEFAULTS = {
+  TRACE_CLOSE_GAP: 28,
+  TRACE_MIN_LENGTH: 90,
+  SOFT_BODY_COLUMNS: 9,
+  SOFT_BODY_ROWS: 9,
+  GRAVITY: .7,
+  BODY_WIDTH_RATIO: .8,
+  GUIDE_TEXT: "Ricalca il contorno del gatto",
+  RESET_LABEL: "Ricomincia",
+  CONFIRM_LABEL: "Crea lo squishy",
+  RESET_SHAPE_LABEL: "Rifai la forma",
+  CHOOSE_LABEL: "Scegli foto",
+  PICKER_TITLE: "Scegli una foto",
+  BACK_LABEL: "Indietro",
+  HAMSTER_HONEY: './assets/cat-phone-rug.webp',
+  HAMSTER_CARAMEL: './assets/cat-phone-sofa.webp',
+  HAMSTER_SILVER: './assets/cat-phone-window.webp'
+};
+const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+const polygonArea = points => Math.abs(points.reduce((sum, p, i) => {
+  const q = points[(i + 1) % points.length];
+  return sum + p.u * q.v - q.u * p.v;
+}, 0)) / 2;
+function imageFit(width, height, image, focusX = .5) {
+  const scale = Math.max(width / image.width, height / image.height);
+  const w = image.width * scale;
+  const h = image.height * scale;
+  return {
+    x: clamp(width / 2 - w * focusX, width - w, 0),
+    y: (height - h) / 2,
+    width: w,
+    height: h
+  };
+}
+
+// Follow the default photo's ears, rounded body, paws and tail in photo space.
+// These points are only an idle demonstration, never a player's cut selection.
+const CAT_PREVIEW_CONTOUR = [[.363, .055], [.358, .104], [.36, .153], [.347, .196], [.325, .236], [.31, .28], [.305, .321], [.272, .367], [.24, .431], [.218, .51], [.215, .602], [.23, .674], [.269, .736], [.3, .771], [.293, .793], [.295, .818], [.309, .835], [.337, .839], [.357, .833], [.369, .813], [.381, .79], [.43, .802], [.482, .807], [.519, .811], [.516, .839], [.53, .855], [.557, .858], [.575, .844], [.584, .816], [.609, .798], [.637, .795], [.659, .776], [.679, .749], [.735, .715], [.769, .67], [.806, .664], [.853, .675], [.885, .682], [.907, .681], [.924, .67], [.928, .652], [.917, .631], [.891, .614], [.852, .603], [.813, .597], [.779, .598], [.777, .529], [.762, .46], [.737, .392], [.702, .341], [.655, .31], [.633, .288], [.644, .242], [.645, .202], [.642, .172], [.657, .127], [.655, .108], [.645, .097], [.625, .103], [.596, .121], [.567, .147], [.53, .137], [.491, .126], [.455, .131], [.427, .118], [.399, .082], [.377, .062], [.363, .055]];
+const catPreviewOutline = fit => CAT_PREVIEW_CONTOUR.map(([u, v]) => ({
+  x: fit.x + u * fit.width,
+  y: fit.y + v * fit.height
+}));
+function cleanOutline(points) {
+  const clean = points.filter((p, i) => !i || Math.hypot(p.u - points[i - 1].u, p.v - points[i - 1].v) > .0015).map(p => ({
+    ...p
+  }));
+  if (clean.length > 2 && Math.hypot(clean[0].u - clean.at(-1).u, clean[0].v - clean.at(-1).v) < .003) clean.pop();
+  if (clean.length > 180) return Array.from({
+    length: 180
+  }, (_, i) => clean[Math.floor(i * clean.length / 180)]);
+  return clean;
+}
+function outlineIntersection(a, b, c, d) {
+  const x = b.u - a.u,
+    y = b.v - a.v,
+    sx = d.u - c.u,
+    sy = d.v - c.v,
+    rx = c.u - a.u,
+    ry = c.v - a.v;
+  const denominator = x * sy - y * sx,
+    epsilon = 1e-10;
+  if (Math.abs(denominator) < epsilon) {
+    if (Math.abs(rx * y - ry * x) > epsilon) return null;
+    const length = x * x + y * y;
+    if (length < epsilon) return null;
+    const t0 = (rx * x + ry * y) / length,
+      t1 = ((d.u - a.u) * x + (d.v - a.v) * y) / length;
+    const start = Math.max(0, Math.min(t0, t1)),
+      end = Math.min(1, Math.max(t0, t1));
+    if (start > end + epsilon) return null;
+    return {
+      u: a.u + x * start,
+      v: a.v + y * start
+    };
+  }
+  const t = (rx * sy - ry * sx) / denominator,
+    s = (rx * y - ry * x) / denominator;
+  if (t < -epsilon || t > 1 + epsilon || s < -epsilon || s > 1 + epsilon) return null;
+  return {
+    u: a.u + x * clamp(t, 0, 1),
+    v: a.v + y * clamp(t, 0, 1)
+  };
+}
+function firstOutlineCrossing(points) {
+  for (let i = 0; i < points.length; i++) for (let j = i + 2; j < points.length; j++) {
+    if (i === 0 && j === points.length - 1) continue;
+    const point = outlineIntersection(points[i], points[(i + 1) % points.length], points[j], points[(j + 1) % points.length]);
+    if (point) return {
+      i,
+      j,
+      point
+    };
+  }
+  return null;
+}
+function selfIntersects(points) {
+  return !!firstOutlineCrossing(points);
+}
+function closeOutline(raw) {
+  let outline = cleanOutline(raw);
+  // A release joins the endpoints. If that join or an overshooting end crosses
+  // the outline, keep the larger enclosed loop and discard its extra tail.
+  // This preserves concave contours rather than replacing them with a hull.
+  for (let pass = 0; pass < 180 && outline.length > 2; pass++) {
+    const crossing = firstOutlineCrossing(outline);
+    if (!crossing) break;
+    const {
+      i,
+      j,
+      point
+    } = crossing;
+    const a = cleanOutline([point, ...outline.slice(i + 1, j + 1)]);
+    const b = cleanOutline([point, ...outline.slice(j + 1), ...outline.slice(0, i + 1)]);
+    const next = polygonArea(a) >= polygonArea(b) ? a : b;
+    if (next.length >= outline.length) return [];
+    outline = next;
+  }
+  return selfIntersects(outline) ? [] : outline;
+}
+function cutPhoto(photo, outline) {
+  const minX = Math.max(0, Math.floor(Math.min(...outline.map(p => p.u)) * photo.width));
+  const minY = Math.max(0, Math.floor(Math.min(...outline.map(p => p.v)) * photo.height));
+  const maxX = Math.min(photo.width, Math.ceil(Math.max(...outline.map(p => p.u)) * photo.width));
+  const maxY = Math.min(photo.height, Math.ceil(Math.max(...outline.map(p => p.v)) * photo.height));
+  const w = maxX - minX,
+    h = maxY - minY,
+    scale = Math.min(1, 1024 / Math.max(w, h));
+  if (w < 8 || h < 8) throw Error("Ricalca un'area più grande della foto.");
+  const texture = document.createElement('canvas');
+  texture.width = Math.max(1, Math.round(w * scale));
+  texture.height = Math.max(1, Math.round(h * scale));
+  const ctx = texture.getContext('2d');
+  ctx.save();
+  ctx.scale(scale, scale);
+  ctx.translate(-minX, -minY);
+  ctx.beginPath();
+  outline.forEach((p, i) => i ? ctx.lineTo(p.u * photo.width, p.v * photo.height) : ctx.moveTo(p.u * photo.width, p.v * photo.height));
+  ctx.closePath();
+  ctx.clip();
+  ctx.drawImage(photo, 0, 0);
+  ctx.restore();
+  const pixels = ctx.getImageData(0, 0, texture.width, texture.height).data;
+  let opaque = 0,
+    r = 0,
+    g = 0,
+    b = 0;
+  for (let i = 0; i < pixels.length; i += 4) if (pixels[i + 3] > 100) {
+    opaque++;
+    r += pixels[i];
+    g += pixels[i + 1];
+    b += pixels[i + 2];
+  }
+  if (opaque < 100) throw Error("Mantieni il contorno all'interno della foto.");
+  const unit = 3 / Math.max(w, h);
+  const contour = outline.map(p => new THREE.Vector2((p.u * photo.width - minX - w / 2) * unit, (h / 2 - (p.v * photo.height - minY)) * unit));
+  // Geometry supplies the silhouette. An opaque crop lets the same photograph
+  // continue over the curved rim and back without an alpha fringe or side band.
+  const wrapTexture = document.createElement('canvas');
+  wrapTexture.width = texture.width;
+  wrapTexture.height = texture.height;
+  const wrap = wrapTexture.getContext('2d');
+  wrap.fillStyle = `rgb(${Math.round(r / opaque)},${Math.round(g / opaque)},${Math.round(b / opaque)})`;
+  wrap.fillRect(0, 0, wrapTexture.width, wrapTexture.height);
+  wrap.drawImage(photo, minX, minY, w, h, 0, 0, wrapTexture.width, wrapTexture.height);
+  return {
+    texture,
+    wrapTexture,
+    contour,
+    width: w * unit,
+    height: h * unit,
+    opaque,
+    sourceWidth: photo.width,
+    sourceHeight: photo.height
+  };
+}
+function edgeDistance(x, y, contour) {
+  let best = Infinity;
+  for (let i = 0; i < contour.length; i++) {
+    const a = contour[i],
+      b = contour[(i + 1) % contour.length],
+      dx = b.x - a.x,
+      dy = b.y - a.y;
+    const t = clamp(((x - a.x) * dx + (y - a.y) * dy) / (dx * dx + dy * dy || 1), 0, 1);
+    best = Math.min(best, Math.hypot(x - a.x - t * dx, y - a.y - t * dy));
+  }
+  return best;
+}
+function roundedContour(input) {
+  let contour = input.map(p => p.clone());
+  for (let pass = 0; pass < 3; pass++) {
+    const next = [];
+    contour.forEach((a, i) => {
+      const b = contour[(i + 1) % contour.length];
+      next.push(a.clone().lerp(b, .2), a.clone().lerp(b, .8));
+    });
+    contour = next;
+  }
+  const lengths = contour.map((p, i) => p.distanceTo(contour[(i + 1) % contour.length]));
+  const perimeter = lengths.reduce((a, b) => a + b, 0),
+    result = [];
+  let edge = 0,
+    offset = 0;
+  for (let i = 0; i < 128; i++) {
+    const target = i / 128 * perimeter;
+    while (edge < contour.length - 1 && offset + lengths[edge] < target) {
+      offset += lengths[edge];
+      edge++;
+    }
+    result.push(contour[edge].clone().lerp(contour[(edge + 1) % contour.length], (target - offset) / (lengths[edge] || 1)));
+  }
+  // Remove collinear boundary samples before triangulation. Otherwise tiny
+  // floating-point slivers can collapse into overlapping faces at the rim.
+  return result.filter((p, i) => {
+    const a = result[(i + result.length - 1) % result.length],
+      b = result[(i + 1) % result.length];
+    return Math.abs((p.x - a.x) * (b.y - p.y) - (p.y - a.y) * (b.x - p.x)) > 1e-8;
+  });
+}
+function triangulatedPlane(shape) {
+  const raw = new THREE.ShapeGeometry(shape),
+    src = raw.toNonIndexed(),
+    position = src.getAttribute('position');
+  const plane = [];
+  // Uniform subdivision keeps shared edges identical: the inflated shell has
+  // no T-junctions and can join smoothly all the way around its equator.
+  const subdivide = (a, b, c, level) => {
+    if (level) {
+      const ab = a.clone().add(b).multiplyScalar(.5),
+        bc = b.clone().add(c).multiplyScalar(.5),
+        ca = c.clone().add(a).multiplyScalar(.5);
+      subdivide(a, ab, ca, level - 1);
+      subdivide(ab, b, bc, level - 1);
+      subdivide(ca, bc, c, level - 1);
+      subdivide(ab, bc, ca, level - 1);
+    } else plane.push(a, b, c);
+  };
+  for (let i = 0; i < position.count; i += 3) {
+    const a = new THREE.Vector2(position.getX(i), position.getY(i)),
+      b = new THREE.Vector2(position.getX(i + 1), position.getY(i + 1)),
+      c = new THREE.Vector2(position.getX(i + 2), position.getY(i + 2));
+    const ab = a.clone().add(b).multiplyScalar(.5),
+      bc = b.clone().add(c).multiplyScalar(.5),
+      ca = c.clone().add(a).multiplyScalar(.5),
+      center = a.clone().add(b).add(c).multiplyScalar(1 / 3);
+    // Give every original face an interior point and split every shared edge.
+    // Boundary-only ear triangles would otherwise make front/back touch inside.
+    subdivide(a, ab, center, 2);
+    subdivide(ab, b, center, 2);
+    subdivide(b, bc, center, 2);
+    subdivide(bc, c, center, 2);
+    subdivide(c, ca, center, 2);
+    subdivide(ca, a, center, 2);
+  }
+  raw.dispose();
+  src.dispose();
+  return plane;
+}
+function pillowGeometry(cut) {
+  const contour = roundedContour(cut.contour).map(p => new THREE.Vector2(Math.fround(p.x), Math.fround(p.y))),
+    plane = triangulatedPlane(new THREE.Shape(contour));
+  const distances = plane.map(p => edgeDistance(p.x, p.y, contour)),
+    maxDistance = Math.max(...distances, .001),
+    roundness = Math.min(cut.width, cut.height) * .37;
+  const out = [],
+    uvs = [];
+  const emit = (i, side) => {
+    const p = plane[i],
+      d = distances[i] < 1e-10 ? 0 : clamp(distances[i] / maxDistance, 0, 1);
+    const z = side * roundness * Math.sqrt(d * (2 - d));
+    out.push(p.x, p.y, z);
+    uvs.push(clamp(p.x / cut.width + .5, 0, 1), clamp(p.y / cut.height + .5, 0, 1));
+  };
+  for (let i = 0; i < plane.length; i += 3) {
+    emit(i, 1);
+    emit(i + 1, 1);
+    emit(i + 2, 1);
+    emit(i + 2, -1);
+    emit(i + 1, -1);
+    emit(i, -1);
+  }
+  const base = new THREE.BufferGeometry();
+  base.setAttribute('position', new THREE.Float32BufferAttribute(out, 3));
+  base.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+  const geometry = mergeVertices(base, .00003);
+  base.dispose();
+  geometry.computeVertexNormals();
+  geometry.addGroup(0, geometry.index.count, 0);
+  // Fill the space outside the silhouette for the safety calculation only.
+  // Together these triangles cover a convex rectangle, so a bound on the
+  // displacement gradient prevents distant parts from crossing as well.
+  const w = cut.width / 2 + .1,
+    h = cut.height / 2 + .1;
+  const surround = new THREE.Shape([new THREE.Vector2(-w, -h), new THREE.Vector2(w, -h), new THREE.Vector2(w, h), new THREE.Vector2(-w, h)]);
+  surround.holes.push(new THREE.Path(contour));
+  const safety = plane.concat(triangulatedPlane(surround));
+  geometry.userData.safetyPlane = new Float32Array(safety.flatMap(p => [p.x, p.y]));
+  return geometry;
+}
+function softDragOffset(x, y, limit = 300) {
+  const length = Math.hypot(x, y);
+  if (length < 1e-8) return {
+    x: 0,
+    y: 0
+  };
+  // Follow the pointer directly through the normal range; soften only the far edge.
+  const free = limit * .6,
+    reach = length <= free ? length : free + (limit - free) * Math.tanh((length - free) / (limit - free));
+  const scale = reach / length;
+  return {
+    x: x * scale,
+    y: y * scale
+  };
+}
+function advanceDrag(cage, drag, dt, pinching) {
+  const alpha = 1 - Math.exp(-dt / 4);
+  drag.offset.x += (drag.target.x - drag.offset.x) * alpha;
+  drag.offset.y += (drag.target.y - drag.offset.y) * alpha;
+  // Let the whole toy travel separately so a hard pull can't collapse the cage.
+  const localOffset = softDragOffset(drag.offset.x, drag.offset.y, Math.min(cage.width, cage.height) * (pinching ? .08 : .16));
+  drag.joints.forEach((joint, i) => {
+    const start = drag.starts[i];
+    // Pull the contact points inward around the grip, even on a stationary press.
+    joint.pointA.x = start.x + localOffset.x + (drag.anchor.x - start.x) * .24;
+    joint.pointA.y = start.y + localOffset.y + (drag.anchor.y - start.y) * .24;
+  });
+}
+function stepDragShape(cage, drags, seconds) {
+  let targetXX = 0,
+    targetXY = 0,
+    moveX = 0,
+    moveY = 0;
+  const pinching = drags.size === 2;
+  for (const {
+    offset,
+    anchor
+  } of drags.values()) {
+    moveX += offset.x;
+    moveY += offset.y;
+    if (pinching) continue;
+    const length = Math.hypot(offset.x, offset.y);
+    if (length < 1e-6) continue;
+    // Stretch along a pull. Pushing an edge toward the center compresses
+    // along that same axis and makes the toy bulge across it.
+    const x = offset.x / length,
+      y = -offset.y / length;
+    const gripX = anchor.x * 2 / cage.width,
+      gripY = -anchor.y * 2 / cage.height;
+    const edge = clamp((Math.hypot(gripX, gripY) - .28) / .46, 0, 1);
+    const push = clamp(-(x * gripX + y * gripY) / .55, 0, 1) * edge;
+    const amount = .35 * Math.tanh(length / (Math.max(cage.width, cage.height) * .28)) * (1 - 2 * push);
+    targetXX += amount * (x * x - y * y);
+    targetXY += amount * (2 * x * y);
+  }
+  const grips = Math.max(1, drags.size);
+  if (pinching) {
+    const [first, second] = drags.values();
+    const dx = second.position.x - first.position.x;
+    const dy = first.position.y - second.position.y;
+    const distance = Math.hypot(dx, dy);
+    const {
+      x: startX,
+      y: startY
+    } = second.pinchStart;
+    const startDistance = Math.hypot(startX, startY);
+    const sensitivity = Math.max(startDistance, Math.min(cage.width, cage.height) * .38);
+    const amount = .35 * Math.tanh((distance - startDistance) / (sensitivity * .65));
+    // Keep the original axis when the fingertips are nearly on top of each other.
+    const angle = distance > cage.unit * .08 ? Math.atan2(dy, dx) : Math.atan2(startY, startX);
+    targetXX = amount * Math.cos(2 * angle);
+    targetXY = amount * Math.sin(2 * angle);
+  }
+  const shape = cage.dragShape;
+  const travel = softDragOffset(moveX * .55 / grips, moveY * .55 / grips, Math.min(cage.width, cage.height) * .43);
+  const follow = 1 - Math.exp(-32 * seconds);
+  shape.moveX += (travel.x - shape.moveX) * follow;
+  shape.moveY += (travel.y - shape.moveY) * follow;
+  shape.velocityXX += (480 * (targetXX - shape.xx) - 24 * shape.velocityXX) * seconds;
+  shape.velocityXY += (480 * (targetXY - shape.xy) - 24 * shape.velocityXY) * seconds;
+  shape.xx += shape.velocityXX * seconds;
+  shape.xy += shape.velocityXY * seconds;
+}
+function stepSoftCage(cage, drags) {
+  const step = 1000 / 120;
+  for (const drag of drags.values()) advanceDrag(cage, drag, step, drags.size === 2);
+  stepDragShape(cage, drags, step / 1000);
+  cage.bodies.forEach((body, i) => {
+    const origin = cage.rest[i],
+      dx = origin.x - body.position.x,
+      dy = origin.y - body.position.y,
+      length = Math.hypot(dx, dy),
+      returnForce = .000052 * (1 + Math.max(0, length - 160) ** 2 / 10000);
+    Matter.Body.applyForce(body, body.position, {
+      x: dx * body.mass * returnForce,
+      y: dy * body.mass * returnForce
+    });
+  });
+  Matter.Engine.update(cage.engine, step);
+}
+function makeCage(cut, cfg) {
+  const columns = clamp(Math.round(cfg.SOFT_BODY_COLUMNS), 7, 17),
+    rows = clamp(Math.round(cfg.SOFT_BODY_ROWS), 7, 17),
+    unit = 90;
+  const width = (cut.width + .2) * unit,
+    height = (cut.height + .2) * unit,
+    left = -width / 2,
+    top = -height / 2;
+  const engine = Matter.Engine.create({
+    positionIterations: 6,
+    constraintIterations: 4
+  });
+  engine.gravity.y = cfg.GRAVITY;
+  engine.gravity.scale = .00001;
+  const bodies = [],
+    links = [];
+  for (let y = 0; y < rows; y++) for (let x = 0; x < columns; x++) bodies.push(Matter.Bodies.circle(left + x * width / (columns - 1), top + y * height / (rows - 1), 2, {
+    frictionAir: .014,
+    collisionFilter: {
+      group: -1
+    },
+    inertia: Infinity
+  }));
+  const join = (i, j, stiffness) => links.push(Matter.Constraint.create({
+    bodyA: bodies[i],
+    bodyB: bodies[j],
+    stiffness,
+    damping: .035
+  }));
+  for (let y = 0; y < rows; y++) for (let x = 0; x < columns; x++) {
+    const i = y * columns + x;
+    if (x < columns - 1) join(i, i + 1, .26);
+    if (y < rows - 1) join(i, i + columns, .26);
+    if (x < columns - 1 && y < rows - 1) {
+      join(i, i + columns + 1, .16);
+      join(i + 1, i + columns, .16);
+    }
+  }
+  Matter.Composite.add(engine.world, [...bodies, ...links]);
+  const dragShape = {
+    xx: 0,
+    xy: 0,
+    velocityXX: 0,
+    velocityXY: 0,
+    moveX: 0,
+    moveY: 0
+  };
+  return {
+    engine,
+    bodies,
+    rest: bodies.map(b => ({
+      ...b.position
+    })),
+    columns,
+    rows,
+    width,
+    height,
+    left,
+    top,
+    unit,
+    dragShape
+  };
+}
+function sampleCage(cage, x, y) {
+  const gx = clamp((x * cage.unit - cage.left) / cage.width * (cage.columns - 1), 0, cage.columns - 1 - .00001);
+  const gy = clamp((-y * cage.unit - cage.top) / cage.height * (cage.rows - 1), 0, cage.rows - 1 - .00001);
+  const col = Math.floor(gx),
+    row = Math.floor(gy),
+    tx = gx - col,
+    ty = gy - row;
+  const ids = [row * cage.columns + col, row * cage.columns + col + 1, (row + 1) * cage.columns + col, (row + 1) * cage.columns + col + 1],
+    weights = [(1 - tx) * (1 - ty), tx * (1 - ty), (1 - tx) * ty, tx * ty];
+  let dx = 0,
+    dy = 0;
+  ids.forEach((id, i) => {
+    dx += (cage.bodies[id].position.x - cage.rest[id].x) * weights[i];
+    dy += (cage.bodies[id].position.y - cage.rest[id].y) * weights[i];
+  });
+  return {
+    x: dx / cage.unit,
+    y: -dy / cage.unit
+  };
+}
+function makeSafeDeformer(geometry, cage) {
+  const source = geometry.attributes.position,
+    rest = new Float32Array(source.array),
+    coords = [],
+    lookup = new Map(),
+    faces = [];
+  const vertex = (x, y) => {
+    x = Math.fround(x);
+    y = Math.fround(y);
+    const key = x + ':' + y;
+    if (lookup.has(key)) return lookup.get(key);
+    const i = coords.length / 2;
+    coords.push(x, y);
+    lookup.set(key, i);
+    return i;
+  };
+  const plane = geometry.userData.safetyPlane;
+  for (let i = 0; i < plane.length; i += 6) {
+    const a = vertex(plane[i], plane[i + 1]),
+      b = vertex(plane[i + 2], plane[i + 3]),
+      c = vertex(plane[i + 4], plane[i + 5]);
+    const ax = coords[a * 2],
+      ay = coords[a * 2 + 1],
+      x1 = coords[b * 2] - ax,
+      y1 = coords[b * 2 + 1] - ay,
+      x2 = coords[c * 2] - ax,
+      y2 = coords[c * 2 + 1] - ay,
+      det = x1 * y2 - y1 * x2;
+    if (Math.abs(det) > 1e-14) faces.push(a, b, c, y2 / det, -x2 / det, -y1 / det, x1 / det);
+  }
+  const visible = Array.from({
+    length: source.count
+  }, (_, i) => vertex(rest[i * 3], rest[i * 3 + 1]));
+  const samples = coords.filter((_, i) => i % 2 === 0).map((x, i) => {
+    const y = coords[i * 2 + 1],
+      gx = clamp((x * cage.unit - cage.left) / cage.width * (cage.columns - 1), 0, cage.columns - 1 - .00001),
+      gy = clamp((-y * cage.unit - cage.top) / cage.height * (cage.rows - 1), 0, cage.rows - 1 - .00001),
+      col = Math.floor(gx),
+      row = Math.floor(gy),
+      tx = gx - col,
+      ty = gy - row;
+    return {
+      ids: [row * cage.columns + col, row * cage.columns + col + 1, (row + 1) * cage.columns + col, (row + 1) * cage.columns + col + 1],
+      weights: [(1 - tx) * (1 - ty), tx * (1 - ty), (1 - tx) * ty, tx * ty]
+    };
+  });
+  const residual = new Float64Array(coords.length),
+    base = new Float64Array(coords.length);
+  const x2 = cage.rest.reduce((sum, p) => sum + p.x * p.x, 0),
+    y2 = cage.rest.reduce((sum, p) => sum + p.y * p.y, 0);
+  // Filter the small simulation cage, then reapply the full safety bound.
+  // The rendered vertices are never blended after the non-folding safeguard.
+  const poses = cage.bodies.map(body => ({
+    ...body.position
+  }));
+  const reset = () => {
+    cage.bodies.forEach((body, i) => {
+      poses[i].x = body.position.x;
+      poses[i].y = body.position.y;
+    });
+    Object.assign(cage.dragShape, {
+      xx: 0,
+      xy: 0,
+      velocityXX: 0,
+      velocityXY: 0,
+      moveX: 0,
+      moveY: 0
+    });
+  };
+  return {
+    rest,
+    reset,
+    apply(deltaMs = Infinity) {
+      const alpha = Number.isFinite(deltaMs) ? 1 - Math.exp(-Math.max(0, deltaMs) / 6) : 1;
+      cage.bodies.forEach((body, i) => {
+        poses[i].x += (body.position.x - poses[i].x) * alpha;
+        poses[i].y += (body.position.y - poses[i].y) * alpha;
+      });
+      let tx = 0,
+        ty = 0;
+      for (const p of poses) {
+        tx += p.x;
+        ty += p.y;
+      }
+      tx /= cage.bodies.length;
+      ty /= cage.bodies.length;
+      let a = 0,
+        b = 0,
+        c = 0,
+        d = 0;
+      poses.forEach((position, i) => {
+        const p = cage.rest[i];
+        a += (position.x - tx) * p.x / x2;
+        b += (position.x - tx) * p.y / y2;
+        c += (position.y - ty) * p.x / x2;
+        d += (position.y - ty) * p.y / y2;
+      });
+      // A bounded affine stretch remains perceptibly soft when a violent local
+      // pinch has to be reduced. Both principal stretches stay strictly positive.
+      const angle = clamp(Math.atan2(c - b, a + d), -.28, .28),
+        co = Math.cos(angle),
+        si = Math.sin(angle);
+      const s00 = co * a + si * c,
+        s11 = -si * b + co * d,
+        s01 = (co * b + si * d - si * a + co * c) / 2;
+      const theta = .5 * Math.atan2(2 * s01, s00 - s11),
+        ct = Math.cos(theta),
+        st = Math.sin(theta),
+        disc = Math.hypot(s00 - s11, 2 * s01);
+      const l1 = clamp((s00 + s11 + disc) / 2, .68, 1.35),
+        l2 = clamp((s00 + s11 - disc) / 2, .68, 1.35);
+      const q00 = ct * ct * l1 + st * st * l2,
+        q11 = st * st * l1 + ct * ct * l2,
+        q01 = ct * st * (l1 - l2);
+      a = co * q00 - si * q01;
+      b = co * q01 - si * q11;
+      c = si * q00 + co * q01;
+      d = si * q01 + co * q11;
+      // Give the toy room to travel, with a gradual edge rather than an abrupt stop.
+      const maxMove = Math.min(cage.width, cage.height) * .6;
+      const movement = softDragOffset(tx, ty, maxMove);
+      tx = movement.x;
+      ty = movement.y;
+      samples.forEach((sample, i) => {
+        let px = 0,
+          py = 0;
+        sample.ids.forEach((id, j) => {
+          px += poses[id].x * sample.weights[j];
+          py += poses[id].y * sample.weights[j];
+        });
+        const x = coords[i * 2] * cage.unit,
+          y = -coords[i * 2 + 1] * cage.unit,
+          bx = (a * x + b * y + tx) / cage.unit,
+          by = -(c * x + d * y + ty) / cage.unit;
+        base[i * 2] = bx;
+        base[i * 2 + 1] = by;
+        residual[i * 2] = px / cage.unit - bx;
+        residual[i * 2 + 1] = -py / cage.unit - by;
+      });
+      let gradient = 0;
+      for (let i = 0; i < faces.length; i += 7) {
+        const p = faces[i] * 2,
+          q = faces[i + 1] * 2,
+          r = faces[i + 2] * 2,
+          ux = residual[q] - residual[p],
+          uy = residual[r] - residual[p],
+          vx = residual[q + 1] - residual[p + 1],
+          vy = residual[r + 1] - residual[p + 1];
+        gradient = Math.max(gradient, Math.hypot(ux * faces[i + 3] + uy * faces[i + 5], ux * faces[i + 4] + uy * faces[i + 6], vx * faces[i + 3] + vy * faces[i + 5], vx * faces[i + 4] + vy * faces[i + 6]));
+      }
+      const minStretch = Math.min(l1, l2),
+        limit = .48 * minStretch,
+        blend = Math.min(1, limit / Math.max(gradient, 1e-12));
+      const shape = cage.dragShape,
+        magnitude = Math.hypot(shape.xx, shape.xy);
+      const strength = Math.min(.38, magnitude);
+      const gain = magnitude > 0 ? strength / magnitude : 0;
+      const xx = shape.xx * gain,
+        xy = shape.xy * gain;
+      const centerX = tx / cage.unit,
+        centerY = -ty / cage.unit;
+      const moveX = shape.moveX / cage.unit,
+        moveY = -shape.moveY / cage.unit;
+      const depthScale = clamp(1 / (l1 * l2 * (1 - strength * strength)), .85, 1.55);
+      let maximum = 0;
+      visible.forEach((id, i) => {
+        const x = base[id * 2] + residual[id * 2] * blend,
+          y = base[id * 2 + 1] + residual[id * 2 + 1] * blend;
+        // Stretch the vertices around the moving center after the cage safety
+        // pass. The added transform has positive scales (1 ± strength).
+        const dx = x - centerX,
+          dy = y - centerY;
+        const stretchedX = x + xx * dx + xy * dy + moveX,
+          stretchedY = y + xy * dx - xx * dy + moveY;
+        maximum = Math.max(maximum, Math.hypot(stretchedX - rest[i * 3], stretchedY - rest[i * 3 + 1]));
+        source.setXYZ(i, stretchedX, stretchedY, rest[i * 3 + 2] * depthScale);
+      });
+      source.needsUpdate = true;
+      return {
+        maximum,
+        blend,
+        gradientBound: gradient * blend,
+        minStretch,
+        depthScale
+      };
+    }
+  };
+}
+function App() {
+  const feedActive = useFeedActive(),
+    [cfg, setCfg] = useState(DEFAULTS),
+    [phase, setPhase] = useState('trace'),
+    [photoVersion, setPhotoVersion] = useState(0),
+    [canMake, setCanMake] = useState(false),
+    [guide, setGuide] = useState(true),
+    [uploaded, setUploaded] = useState(false),
+    [error, setError] = useState(''),
+    [loading, setLoading] = useState(false),
+    [cut, setCut] = useState(null);
+  const fileRef = useRef(null),
+    photoRef = useRef(null),
+    traceRef = useRef(null),
+    canvasRef = useRef(null),
+    points = useRef([]),
+    closed = useRef(false),
+    traceDrag = useRef(null),
+    world = useRef(null),
+    loadJob = useRef(0),
+    activeRef = useRef(feedActive),
+    audioRef = useRef(null),
+    buffers = useRef(new Map());
+  activeRef.current = feedActive;
+  useEffect(() => {
+    fetch('./game.config.json').then(r => r.json()).then(raw => setCfg({
+      ...DEFAULTS,
+      ...Object.fromEntries([...raw.tweaks, ...raw.texts].map(x => [x.id, x.value])),
+      ...Object.fromEntries(raw.images.map(x => [x.id, x.path]))
+    })).catch(() => {});
+  }, []);
+  const sound = kind => {
+    if (!activeRef.current) return;
+    playPackageSound('photo-' + kind, kind === 'squish' ? './assets/sfx_squish.mp3' : './assets/sfx_click_soft.mp3');
+  };
+  const clearTrace = () => {
+    points.current = [];
+    closed.current = false;
+    traceDrag.current = null;
+    setCanMake(false);
+    setGuide(true);
+    setError('');
+  };
+  const loadPhoto = useCallback(async (url, isUpload) => {
+    const job = ++loadJob.current;
+    setLoading(true);
+    setError('');
+    try {
+      const image = new Image();
+      image.src = url;
+      await image.decode();
+      if (job !== loadJob.current) return;
+      const factor = Math.min(1, 1600 / Math.max(image.naturalWidth, image.naturalHeight));
+      const decoded = document.createElement('canvas');
+      decoded.width = Math.max(1, Math.round(image.naturalWidth * factor));
+      decoded.height = Math.max(1, Math.round(image.naturalHeight * factor));
+      decoded.getContext('2d').drawImage(image, 0, 0, decoded.width, decoded.height);
+      photoRef.current = decoded;
+      points.current = [];
+      closed.current = false;
+      traceDrag.current = null;
+      setCanMake(false);
+      setGuide(true);
+      setUploaded(isUpload);
+      setCut(null);
+      setPhase('trace');
+      setPhotoVersion(v => v + 1);
+    } catch {
+      if (job === loadJob.current) setError("Prova una foto JPG, PNG o WebP.");
+    } finally {
+      if (job === loadJob.current) setLoading(false);
+    }
+  }, []);
+  useEffect(() => {
+    if (!photoRef.current) loadPhoto(cfg.HAMSTER_HONEY, false);
+  }, [cfg.HAMSTER_HONEY, loadPhoto]);
+  useEffect(() => () => {
+    loadJob.current++;
+    try {
+      audioRef.current?.close();
+    } catch {}
+  }, []);
+  const chooseFile = () => {
+    if (loading) return;
+    sound('tap');
+    fileRef.current.value = '';
+    fileRef.current.click();
+  };
+  const receiveFile = async event => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setError("Scegli un file immagine.");
+      return;
+    }
+    if (file.size > 25 * 1024 * 1024) {
+      setError("Scegli una foto inferiore a 25 MB.");
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    try {
+      await loadPhoto(url, true);
+    } finally {
+      URL.revokeObjectURL(url);
+    }
+  };
+  const redraw = useCallback(() => {
+    const canvas = traceRef.current,
+      photo = photoRef.current;
+    if (!canvas || !photo) return;
+    const rect = canvas.getBoundingClientRect(),
+      dpr = Math.min(devicePixelRatio || 1, 2),
+      width = rect.width,
+      height = rect.height;
+    canvas.width = Math.max(1, Math.round(width * dpr));
+    canvas.height = Math.max(1, Math.round(height * dpr));
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, width, height);
+    const fit = imageFit(width, height, photo, uploaded ? .5 : .57);
+    ctx.drawImage(photo, fit.x, fit.y, fit.width, fit.height);
+    if (window.PlayableIdlePreview.active) {
+      const idle = window.PlayableIdlePreview,
+        p = idle.seconds % 5.3,
+        outline = catPreviewOutline(fit);
+      ctx.save();
+      ctx.strokeStyle = '#d5f8ba';
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.shadowColor = '#0008';
+      ctx.shadowBlur = 4;
+      ctx.globalAlpha = p > 4.5 ? (5.3 - p) / .8 : 1;
+      idle.trace(ctx, outline, idle.ease(p / 3.1));
+      ctx.restore();
+      idle.stamp(canvas, 'trace-cat-silhouette');
+      return;
+    }
+    const list = points.current;
+    canvas.dataset.traceClosed = String(closed.current);
+    canvas.dataset.tracePoints = String(list.length);
+    canvas.dataset.traceArea = polygonArea(list).toFixed(5);
+    canvas.dataset.traceCrossings = String(selfIntersects(list));
+    if (!list.length) return;
+    const mapped = list.map(p => ({
+      x: fit.x + p.u * fit.width,
+      y: fit.y + p.v * fit.height
+    }));
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = closed.current ? '#d5f8ba' : '#f3d292';
+    ctx.shadowColor = '#0009';
+    ctx.shadowBlur = 5;
+    ctx.beginPath();
+    mapped.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
+    if (closed.current) ctx.closePath();
+    ctx.stroke();
+    if (mapped.length > 2) {
+      ctx.closePath();
+      ctx.fillStyle = '#f3d29222';
+      ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = closed.current ? '#d5f8ba' : '#f3d292';
+    ctx.beginPath();
+    ctx.arc(mapped[0].x, mapped[0].y, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }, [photoVersion, uploaded]);
+  useEffect(() => {
+    if (phase !== 'trace' || !traceRef.current) return;
+    const observer = new ResizeObserver(redraw);
+    observer.observe(traceRef.current);
+    redraw();
+    return () => observer.disconnect();
+  }, [phase, redraw]);
+  useEffect(() => {
+    if (phase !== 'trace' || feedActive) return;
+    let frame,
+      last = 0;
+    const draw = now => {
+      if (window.PlayableIdlePreview.active && now - last >= 33) {
+        redraw();
+        last = now;
+      }
+      frame = requestAnimationFrame(draw);
+    };
+    frame = requestAnimationFrame(draw);
+    return () => {
+      cancelAnimationFrame(frame);
+      redraw();
+    };
+  }, [phase, feedActive, redraw]);
+  const localPhotoPoint = event => {
+    const canvas = traceRef.current,
+      photo = photoRef.current;
+    if (!canvas || !photo) return null;
+    const rect = canvas.getBoundingClientRect();
+    const fit = imageFit(rect.width, rect.height, photo, uploaded ? .5 : .57);
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    return {
+      u: clamp((clamp(x, 0, rect.width) - fit.x) / fit.width, 0, 1),
+      v: clamp((clamp(y, 0, rect.height) - fit.y) / fit.height, 0, 1),
+      inside: x >= 0 && x <= rect.width && y >= 0 && y <= rect.height,
+      fit
+    };
+  };
+  const traceValid = (outline = points.current) => {
+    const list = cleanOutline(outline);
+    if (list.length < 3 || polygonArea(list) < .004) return false;
+    const rect = traceRef.current?.getBoundingClientRect(),
+      photo = photoRef.current;
+    if (!rect || !photo) return false;
+    const fit = imageFit(rect.width, rect.height, photo, uploaded ? .5 : .57),
+      length = list.slice(1).reduce((sum, p, i) => sum + Math.hypot((p.u - list[i].u) * fit.width, (p.v - list[i].v) * fit.height), 0);
+    return length >= cfg.TRACE_MIN_LENGTH;
+  };
+  const finishOutline = () => {
+    const outline = closeOutline(points.current);
+    if (!traceValid(outline)) return false;
+    points.current = outline;
+    closed.current = true;
+    setCanMake(true);
+    setError('');
+    redraw();
+    return true;
+  };
+  const traceDown = event => {
+    if (!activeRef.current || loading || event.isPrimary === false || event.pointerType === 'mouse' && event.button !== 0) return;
+    const p = localPhotoPoint(event);
+    if (!p?.inside) return;
+    if (closed.current) {
+      points.current = [];
+      closed.current = false;
+    }
+    if (points.current.length > 2 && Math.hypot((p.u - points.current[0].u) * p.fit.width, (p.v - points.current[0].v) * p.fit.height) <= cfg.TRACE_CLOSE_GAP && traceValid()) {
+      finishOutline();
+      setGuide(false);
+      return;
+    }
+    points.current.push({
+      u: p.u,
+      v: p.v
+    });
+    traceDrag.current = {
+      id: event.pointerId,
+      start: {
+        x: event.clientX,
+        y: event.clientY
+      },
+      moved: false
+    };
+    setGuide(false);
+    setError('');
+    event.currentTarget.setPointerCapture(event.pointerId);
+    redraw();
+    setCanMake(traceValid());
+  };
+  const traceMove = event => {
+    const drag = traceDrag.current;
+    if (!drag || drag.id !== event.pointerId) return;
+    const p = localPhotoPoint(event);
+    if (!p) return;
+    const last = points.current.at(-1);
+    if (Math.hypot((last.u - p.u) * p.fit.width, (last.v - p.v) * p.fit.height) < 2) return;
+    drag.moved = true;
+    points.current.push({
+      u: p.u,
+      v: p.v
+    });
+    redraw();
+    setCanMake(traceValid());
+  };
+  const traceEnd = event => {
+    const drag = traceDrag.current;
+    if (!drag || drag.id !== event.pointerId) return;
+    traceDrag.current = null;
+    if (event.type === 'pointerup' && drag.moved) {
+      const p = localPhotoPoint(event),
+        last = points.current.at(-1);
+      if (p && last && Math.hypot((p.u - last.u) * p.fit.width, (p.v - last.v) * p.fit.height) >= 2) points.current.push({
+        u: p.u,
+        v: p.v
+      });
+      finishOutline();
+    }
+    try {
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    } catch {}
+    setCanMake(traceValid());
+    redraw();
+  };
+  const makeToy = () => {
+    if (!finishOutline()) return;
+    const contour = points.current;
+    try {
+      const result = cutPhoto(photoRef.current, contour);
+      setCut(result);
+      setError('');
+      setGuide(true);
+      setPhase('active');
+      sound('tap');
+    } catch (e) {
+      setError(e.message || "Prova a ricalcare di nuovo la forma.");
+    }
+  };
+  useEffect(() => {
+    if (phase !== 'active' || !cut || !canvasRef.current) return;
+    const canvas = canvasRef.current;
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
+    } catch {
+      setError("Questo browser non riesce ad aprire la vista 3D.");
+      return;
+    }
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.setClearColor(0x000000, 0);
+    const scene = new THREE.Scene(),
+      camera = new THREE.OrthographicCamera(-2, 2, 2, -2, .1, 40);
+    camera.position.set(0, .15, 8);
+    camera.lookAt(0, 0, 0);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x6a6b72, 2.2);
+    scene.add(hemi);
+    const key = new THREE.DirectionalLight(0xffffff, 2.6);
+    key.position.set(-3, 5, 7);
+    key.castShadow = true;
+    key.shadow.mapSize.set(1024, 1024);
+    key.shadow.camera.left = -5;
+    key.shadow.camera.right = 5;
+    key.shadow.camera.top = 5;
+    key.shadow.camera.bottom = -5;
+    key.shadow.normalBias = .03;
+    scene.add(key);
+    const rim = new THREE.DirectionalLight(0xc8d8ff, 1.2);
+    rim.position.set(4, 1, -2);
+    scene.add(rim);
+    const texture = new THREE.CanvasTexture(cut.wrapTexture);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
+    const surface = new THREE.MeshStandardMaterial({
+      map: texture,
+      roughness: .64,
+      metalness: 0
+    });
+    const geometry = pillowGeometry(cut);
+    geometry.computeBoundingBox();
+    const thickness = geometry.boundingBox.max.z - geometry.boundingBox.min.z;
+    geometry.boundingBox = null;
+    geometry.computeBoundingSphere();
+    geometry.boundingSphere.radius *= 3;
+    const mesh = new THREE.Mesh(geometry, surface);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    mesh.frustumCulled = false;
+    const group = new THREE.Group();
+    group.add(mesh);
+    group.rotation.set(-.08, .22, -.015);
+    scene.add(group);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({
+      opacity: .3
+    }));
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = -cut.height / 2 - .22;
+    floor.receiveShadow = true;
+    scene.add(floor);
+    const cage = makeCage(cut, cfg),
+      deformer = makeSafeDeformer(geometry, cage),
+      rest = deformer.rest,
+      drags = new Map();
+    const state = {
+      scene,
+      camera,
+      renderer,
+      mesh,
+      group,
+      cage,
+      rest,
+      drags,
+      cut,
+      lastTime: performance.now(),
+      accumulator: 0,
+      normalsElapsed: Infinity,
+      rendered: false,
+      maxDisplacement: 0,
+      peakDisplacement: 0,
+      dragCount: 0,
+      reset() {
+        const held = [...drags.keys()];
+        for (const drag of drags.values()) drag.joints.forEach(j => Matter.Composite.remove(cage.engine.world, j));
+        drags.clear();
+        for (const id of held) {
+          try {
+            if (canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id);
+          } catch {}
+        }
+        cage.bodies.forEach((body, i) => {
+          Matter.Body.setPosition(body, cage.rest[i]);
+          Matter.Body.setVelocity(body, {
+            x: 0,
+            y: 0
+          });
+          body.force.x = 0;
+          body.force.y = 0;
+        });
+        deformer.reset();
+        this.peakDisplacement = 0;
+        this.dragCount = 0;
+        this.accumulator = 0;
+        this.lastTime = performance.now();
+        this.normalsElapsed = Infinity;
+      }
+    };
+    world.current = state;
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      renderer.setSize(rect.width, rect.height, false);
+      const aspect = rect.width / Math.max(1, rect.height),
+        usableHeight = Math.max(rect.height * .5, rect.height - 196);
+      const h = Math.max((cut.height + 1.0) * rect.height / usableHeight, (cut.width + .2) / (aspect * clamp(cfg.BODY_WIDTH_RATIO, .55, .86)));
+      camera.left = -h * aspect / 2;
+      camera.right = h * aspect / 2;
+      camera.top = h / 2;
+      camera.bottom = -h / 2;
+      camera.updateProjectionMatrix();
+    };
+    const observer = new ResizeObserver(resize);
+    observer.observe(canvas);
+    resize();
+    let raf = 0;
+    const frame = time => {
+      raf = requestAnimationFrame(frame);
+      const frameMs = clamp(time - state.lastTime, 0, 50);
+      state.lastTime = time;
+      if (!activeRef.current || document.hidden) {
+        if (drags.size) {
+          for (const drag of drags.values()) drag.joints.forEach(j => Matter.Composite.remove(cage.engine.world, j));
+          drags.clear();
+        }
+        state.accumulator = 0;
+        if (state.rendered) return;
+      } else {
+        state.accumulator = Math.min(state.accumulator + frameMs, 50);
+        while (state.accumulator + 1e-6 >= 1000 / 120) {
+          stepSoftCage(cage, drags);
+          state.accumulator = Math.max(0, state.accumulator - 1000 / 120);
+        }
+      }
+      const safe = deformer.apply(frameMs),
+        positions = geometry.attributes.position,
+        max = safe.maximum;
+      state.normalsElapsed += frameMs;
+      if (state.normalsElapsed >= 1000 / 30) {
+        geometry.computeVertexNormals();
+        state.normalsElapsed = 0;
+      }
+      state.maxDisplacement = max;
+      state.peakDisplacement = Math.max(state.peakDisplacement, max);
+      renderer.render(scene, camera);
+      state.rendered = true;
+      canvas.dataset.deformation = max.toFixed(3);
+      canvas.dataset.vertices = String(positions.count);
+      canvas.dataset.depth = (thickness * safe.depthScale).toFixed(3);
+      canvas.dataset.safeGradient = safe.gradientBound.toFixed(3);
+      canvas.dataset.minStretch = safe.minStretch.toFixed(3);
+      canvas.dataset.activeDrags = String(drags.size);
+      canvas.dataset.peakDeformation = state.peakDisplacement.toFixed(3);
+      canvas.dataset.completedDrags = String(state.dragCount);
+    };
+    raf = requestAnimationFrame(frame);
+    const lost = event => {
+      event.preventDefault();
+      setError("La vista 3D si è interrotta. Tocca Ricalca di nuovo per ricrearla.");
+    };
+    canvas.addEventListener('webglcontextlost', lost);
+    return () => {
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+      canvas.removeEventListener('webglcontextlost', lost);
+      state.reset();
+      Matter.Composite.clear(cage.engine.world, false);
+      Matter.Engine.clear(cage.engine);
+      geometry.dispose();
+      surface.dispose();
+      texture.dispose();
+      floor.geometry.dispose();
+      floor.material.dispose();
+      renderer.dispose();
+      if (world.current === state) world.current = null;
+    };
+  }, [phase, cut, cfg]);
+  const rayFor = event => {
+    const w = world.current;
+    if (!w) return null;
+    const rect = canvasRef.current.getBoundingClientRect(),
+      pointer = new THREE.Vector2((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1),
+      ray = new THREE.Raycaster();
+    ray.setFromCamera(pointer, w.camera);
+    return {
+      w,
+      ray
+    };
+  };
+  const squishDown = event => {
+    if (!activeRef.current || event.pointerType === 'mouse' && event.button !== 0) return;
+    const hit = rayFor(event);
+    if (!hit) return;
+    const {
+      w,
+      ray
+    } = hit;
+    if (w.drags.has(event.pointerId) || w.drags.size >= 2) return;
+    const first = w.drags.values().next().value;
+    if (first && (event.pointerType !== 'touch' || first.pointerType !== 'touch')) return;
+    const worldPoint = ray.intersectObject(w.mesh)[0]?.point;
+    if (!worldPoint && !first) return;
+    // Project both contacts onto the first grip's plane for a shared distance.
+    const plane = first?.plane ?? new THREE.Plane().setFromNormalAndCoplanarPoint(w.camera.getWorldDirection(new THREE.Vector3()), worldPoint);
+    const point = ray.ray.intersectPlane(plane, new THREE.Vector3());
+    if (!point) return;
+    event.preventDefault();
+    event.stopPropagation();
+    w.group.updateMatrixWorld(true);
+    const inverse = w.group.matrixWorld.clone().invert();
+    point.applyMatrix4(inverse);
+    const origin = {
+      x: point.x * w.cage.unit,
+      y: -point.y * w.cage.unit
+    };
+    const anchor = {
+      x: origin.x - w.cage.dragShape.moveX,
+      y: origin.y - w.cage.dragShape.moveY
+    };
+    const closest = worldPoint ? w.cage.bodies.map(body => ({
+      body,
+      d: distance(body.position, anchor)
+    })).sort((a, b) => a.d - b.d).slice(0, 4) : [];
+    const joints = closest.map(({
+      body
+    }) => Matter.Constraint.create({
+      bodyB: body,
+      pointA: {
+        ...body.position
+      },
+      stiffness: .42,
+      damping: .1
+    }));
+    Matter.Composite.add(w.cage.engine.world, joints);
+    w.drags.set(event.pointerId, {
+      joints,
+      anchor,
+      origin,
+      plane,
+      inverse,
+      pointerType: event.pointerType,
+      position: origin,
+      pinchStart: first ? {
+        x: origin.x - first.position.x,
+        y: first.position.y - origin.y
+      } : null,
+      starts: closest.map(({
+        body
+      }) => ({
+        ...body.position
+      })),
+      target: {
+        x: 0,
+        y: 0
+      },
+      offset: {
+        x: 0,
+        y: 0
+      },
+      start: {
+        x: event.clientX,
+        y: event.clientY
+      },
+      moved: false
+    });
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {}
+    setGuide(false);
+    setError('');
+  };
+  const squishMove = event => {
+    const hit = rayFor(event),
+      drag = hit?.w.drags.get(event.pointerId);
+    if (!drag) return;
+    const point = hit.ray.ray.intersectPlane(drag.plane, new THREE.Vector3());
+    if (!point) return;
+    event.preventDefault();
+    event.stopPropagation();
+    point.applyMatrix4(drag.inverse);
+    drag.position = {
+      x: point.x * hit.w.cage.unit,
+      y: -point.y * hit.w.cage.unit
+    };
+    drag.target = softDragOffset(drag.position.x - drag.origin.x, drag.position.y - drag.origin.y);
+    if (Math.hypot(event.clientX - drag.start.x, event.clientY - drag.start.y) > 6) drag.moved = true;
+  };
+  const squishEnd = event => {
+    const w = world.current;
+    const drag = w?.drags.get(event.pointerId);
+    if (!drag) return;
+    const released = event.type === 'pointerup';
+    const recoil = softDragOffset(-drag.offset.x * .09, -drag.offset.y * .09, 10);
+    for (const joint of drag.joints) {
+      Matter.Composite.remove(w.cage.engine.world, joint);
+      if (released && drag.moved) {
+        const body = joint.bodyB;
+        Matter.Body.setVelocity(body, {
+          x: recoil.x + body.velocity.x * .25,
+          y: recoil.y + body.velocity.y * .25
+        });
+      }
+    }
+    w.drags.delete(event.pointerId);
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    if (released) {
+      w.dragCount++;
+      if (!w.drags.size) sound('squish');
+    }
+  };
+  const reset = () => {
+    sound('tap');
+    if (phase === 'active') world.current?.reset();else {
+      clearTrace();
+      redraw();
+    }
+  };
+  const traceAgain = () => {
+    sound('tap');
+    setPhase('trace');
+    clearTrace();
+  };
+  const resetIcon = <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8a7 7 0 1 1-1 7M5 4v4h4" /></svg>;
+  const uploadIcon = <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15v5h14v-5M12 16V4m-4 4 4-4 4 4" /></svg>;
+  return <main className={'photo-toy phase-' + phase} data-stage={phase} data-photo-source={uploaded ? 'uploaded' : 'sample'}>
+    <input ref={fileRef} className="file-input" tabIndex={-1} aria-hidden="true" type="file" accept="image/*" aria-label="Carica una foto" onChange={receiveFile} />
+    {guide && <div className="toy-guide">{phase === 'active' ? "Trascina o pizzica per deformare" : uploaded ? "Ricalca il contorno del soggetto" : cfg.GUIDE_TEXT}</div>}
+    <div className="photo-zone">
+      {phase === 'trace' ? <canvas key="trace" ref={traceRef} aria-label="Disegna o tocca per tracciare il contorno del soggetto" onPointerDown={traceDown} onPointerMove={traceMove} onPointerUp={traceEnd} onPointerCancel={traceEnd} onLostPointerCapture={traceEnd} /> : <canvas key="3d" ref={canvasRef} aria-label="Squishy fotografico in 3D. Trascina, pizzica o allarga due dita per deformarlo." onPointerDown={squishDown} onPointerMove={squishMove} onPointerUp={squishEnd} onPointerCancel={squishEnd} onLostPointerCapture={squishEnd} />}
+      {loading && <span className="load-state" role="status">Apertura della foto…</span>}
+    </div>
+    {error && <div className="toy-error" role="alert">{error}</div>}
+    <div className="toy-controls">
+      <button className="utility" aria-label={phase === 'active' ? cfg.RESET_SHAPE_LABEL : cfg.RESET_LABEL} onClick={reset}>{resetIcon}<span>{phase === 'active' ? cfg.RESET_SHAPE_LABEL : cfg.RESET_LABEL}</span></button>
+      <button className="utility" aria-label={cfg.CHOOSE_LABEL} onClick={chooseFile} disabled={loading}>{uploadIcon}<span>{cfg.CHOOSE_LABEL}</span></button>
+      {phase === 'trace' ? <button className="make-button" disabled={!canMake || loading} onClick={makeToy}>{cfg.CONFIRM_LABEL}</button> : <button className="make-button" onClick={traceAgain}>Ricalca di nuovo</button>}
+    </div>
+    <style>{BASE_CSS + CSS}</style>
+  </main>;
+}
+const CSS = `
+@font-face{font-family:Poppins;src:url('./assets/fonts/poppins/Poppins-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Poppins;src:url('./assets/fonts/poppins/Poppins-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+*{box-sizing:border-box}html,body,#root{margin:0;width:100%;height:100%;overflow:hidden}body{background:#050607;color:#faf7ef;font-family:Poppins,system-ui,sans-serif;-webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer;border:0;touch-action:manipulation}button:disabled{cursor:default}
+.photo-toy{position:relative;width:100%;height:100%;overflow:hidden;background:#050607;container-type:size}.file-input{display:none}
+.toy-guide{position:absolute;z-index:3;left:30px;right:30px;top:12%;transform:translateY(-50%);text-align:center;font-size:18px;line-height:1.3;font-weight:700;pointer-events:none;animation:batchBreathe 2.6s ease-in-out infinite}.photo-zone{position:absolute;inset:0}.photo-zone canvas{display:block;width:100%;height:100%;touch-action:none;user-select:none}.phase-active .photo-zone{inset:0;background:radial-gradient(ellipse at 50% 70%,#1e2026 0%,#0d0f13 45%,#050607 76%)}.phase-trace .toy-guide{color:#fff;text-shadow:0 1px 3px #000,0 2px 12px #000}.phase-active .toy-guide{top:62px}
+.toy-controls{position:absolute;z-index:4;display:flex;align-items:center;justify-content:center;gap:8px;left:30px;right:30px;bottom:50px;min-height:46px}.utility{display:flex;align-items:center;justify-content:center;gap:5px;min-height:46px;padding:0 10px;border-radius:24px;background:#191b1f;color:#eeeae2;border:1px solid #37383c;font-size:12px;white-space:nowrap}.utility svg{width:18px;height:18px;stroke:#f4d292;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.make-button{min-height:46px;min-width:94px;padding:0 17px;border-radius:24px;background:#f3d292;color:#27231c;font-size:14px;font-weight:700;white-space:nowrap}.make-button:disabled{opacity:.35}.phase-active .utility{width:46px;min-width:46px;padding:0}.phase-active .utility span{display:none}.phase-active .make-button{flex:1;min-width:120px}.utility:active,.make-button:not(:disabled):active{transform:scale(.96)}.toy-error{position:absolute;z-index:4;left:30px;right:30px;bottom:106px;text-align:center;color:#ffd9b0;font-size:14px;line-height:1.35;background:#101216e8;padding:8px 10px;border-radius:10px}.load-state{position:absolute;inset:0;display:grid;place-items:center;background:#080a0de8;font-size:15px}
+[data-feed-preview=true] .toy-controls{visibility:hidden}[data-feed-preview=true] .toy-guide{top:17%}@media(max-width:440px){.utility{width:46px;min-width:46px;padding:0}.utility span{display:none}.toy-controls{gap:12px}.make-button{flex:1;min-width:90px}}@media(max-height:520px){.phase-active .photo-zone{inset:0}.phase-active .toy-guide{top:53px}}`;
+createRoot(document.getElementById('root')).render(<><style>{PACKAGE_HTML_STYLES}</style>{<App />}</>);
+
+/* Decorative CTA breathing only. No positions, inputs, clocks or game state. */
+(() => {
+  const selectors = [".toy-guide"],
+    copy = new Set(["Ricalca il contorno del gatto"].map(s => s.replace(/\s+/g, ' ').trim().toLowerCase()));
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)'),
+    running = new Map();
+  let queued = false,
+    visible = true;
+  const action = /^(?:(?:tap|drag|hold|swipe|draw|use|press|click|release|brush|pull|touch|pinch|rub|move|trace)\b|spray\s*[→-]|tocca\b|trascina\b|tieni\b|scorri\b|disegna\b|premi\b|点击|轻触|滑动|按住|拖动|长按|双击)/i;
+  function scan() {
+    queued = false;
+    for (const [el, a] of running) if (!el.isConnected) {
+      a.cancel();
+      running.delete(el);
+    }
+    if (motion.matches) {
+      for (const a of running.values()) a.cancel();
+      running.clear();
+      return;
+    }
+    const targets = new Set();
+    for (const selector of selectors) {
+      try {
+        document.querySelectorAll(selector).forEach(el => targets.add(el));
+      } catch {}
+    }
+    for (const el of document.querySelectorAll('p,span,div,label,text')) {
+      if (el.children.length || el.closest('button,a,input,select,textarea,[role="button"]')) continue;
+      const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+      if (text.length >= 5 && text.length <= 140 && (copy.has(text.toLowerCase()) || !selectors.length && action.test(text))) targets.add(el);
+    }
+    for (const el of targets) {
+      if (running.has(el) || typeof el.animate !== 'function') continue;
+      if ([...targets].some(child => child !== el && el.contains(child))) continue;
+      const style = getComputedStyle(el);
+      if (/breath/i.test(style.animationName)) continue;
+      const base = style.filter.replace(/opacity\([^)]*\)/g, '').replace(/^none$/, '').trim(),
+        filter = v => (base ? base + ' ' : '') + 'opacity(' + v + ')';
+      const a = el.animate([{
+        filter: filter(1)
+      }, {
+        filter: filter(.65)
+      }, {
+        filter: filter(1)
+      }], {
+        duration: 2400,
+        iterations: Infinity,
+        easing: 'ease-in-out'
+      });
+      running.set(el, a);
+      if (document.hidden || !visible) a.pause();
+    }
+  }
+  const schedule = () => {
+    if (!queued) {
+      queued = true;
+      requestAnimationFrame(scan);
+    }
+  };
+  const pause = () => {
+    for (const a of running.values()) document.hidden || !visible ? a.pause() : a.play();
+  };
+  const observer = new MutationObserver(schedule);
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+  const intersection = typeof IntersectionObserver === 'function' ? new IntersectionObserver(entries => {
+    visible = entries.some(e => e.isIntersecting);
+    pause();
+  }) : null;
+  if (document.body) intersection?.observe(document.body);else document.addEventListener('DOMContentLoaded', () => intersection?.observe(document.body), {
+    once: true
+  });
+  document.addEventListener('visibilitychange', pause);
+  motion.addEventListener?.('change', schedule);
+  schedule();
+  window.addEventListener('pagehide', () => {
+    observer.disconnect();
+    intersection?.disconnect();
+    for (const a of running.values()) a.cancel();
+    running.clear();
+  }, {
+    once: true
+  });
+})();
+function playPackageSound(key, soundPath, minGapMs = 90) {
+  if (!soundPath || document.hidden || !window.SFX) return;
+  window.SFX.register({
+    [key]: soundPath
+  });
+  window.SFX.unlock();
+  window.SFX.play(key, {
+    minGapMs
+  });
+}

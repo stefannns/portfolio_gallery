@@ -1,0 +1,2351 @@
+/* Font redistribution notices, preserved in the editable source.
+Font license notice: special-elite
+
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+*/
+document.documentElement.lang = "it";
+// Editable Batch 2 game. Rebuild using the platform app/h5_build/build.js.
+const PACKAGE_CONFIG_FALLBACK = {
+  "tweaks": [{
+    "id": "MAX_SHAPES",
+    "kind": "number",
+    "label": "Maximum soft shapes",
+    "value": 9,
+    "default": 9,
+    "min": 3,
+    "max": 14,
+    "step": 1
+  }, {
+    "id": "CALM_GRAVITY",
+    "kind": "number",
+    "label": "Calm gravity",
+    "value": 0.04,
+    "default": 0.04,
+    "min": 0,
+    "max": 0.3,
+    "step": 0.01
+  }, {
+    "id": "SETTLE_GRAVITY",
+    "kind": "number",
+    "label": "Settling gravity",
+    "value": 1,
+    "default": 1,
+    "min": 0.5,
+    "max": 1.5,
+    "step": 0.1
+  }, {
+    "id": "MIN_POINTS",
+    "kind": "number",
+    "label": "Minimum drawing points",
+    "value": 14,
+    "default": 14,
+    "min": 8,
+    "max": 30,
+    "step": 1
+  }, {
+    "id": "CLOSE_DISTANCE",
+    "kind": "number",
+    "label": "Shape close distance",
+    "value": 42,
+    "default": 42,
+    "min": 20,
+    "max": 70,
+    "step": 1
+  }, {
+    "id": "MAX_POINT_DISTANCE",
+    "kind": "number",
+    "label": "Maximum point spacing",
+    "value": 18,
+    "default": 18,
+    "min": 8,
+    "max": 30,
+    "step": 1
+  }],
+  "texts": [{
+    "id": "DRAW_HINT",
+    "label": "Drawing hint",
+    "value": "Disegna forma chiusa",
+    "default": "Disegna forma chiusa",
+    "max_length": 20
+  }],
+  "images": [{
+    "id": "EYES_CLASSIC",
+    "label": "Classic eyes",
+    "path": "./assets/eyes-frame-classic.webp"
+  }, {
+    "id": "EYES_SLEEPY",
+    "label": "Sleepy eyes",
+    "path": "./assets/eyes-frame-sleepy.webp"
+  }, {
+    "id": "EYES_GOOGLY",
+    "label": "Googly eyes",
+    "path": "./assets/eyes-frame-googly.webp"
+  }, {
+    "id": "EYES_HAPPY",
+    "label": "Happy eyes",
+    "path": "./assets/eyes-frame-happy.webp"
+  }],
+  "config_version": "2.0",
+  "playable": {
+    "post_id": "109025442472006054",
+    "version_id": "109025442472120588",
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1
+  }
+};
+const PACKAGE_HTML_STYLES = "html,body,#root{width:100%;height:100%;margin:0;overflow:hidden}body{background:#f39a61}";
+
+/* BATCH2_IDLE_20261102 */
+/* Game-owned, silent demonstration clock. Never dispatches gameplay input. */
+(() => {
+  'use strict';
+
+  if (window.PlayableIdlePreview) return;
+  const query = new URLSearchParams(location.search);
+  const hosted = query.get('feedReview') === '1' || query.get('host') === 'fyp';
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  let preview = hosted,
+    elapsed = 0,
+    last = performance.now();
+  const listeners = new Set();
+  const sync = () => {
+    const html = document.documentElement;
+    html.dataset.batch2Idle = String(preview);
+    html.dataset.batch2IdlePaused = String(document.hidden);
+    html.dataset.batch2IdleReduced = String(reduced.matches);
+    if (!preview) for (const node of document.querySelectorAll('[data-idle-preview]')) node.dataset.idlePreview = 'off';
+    last = performance.now();
+    for (const fn of listeners) fn(preview && !document.hidden);
+  };
+  const clock = () => {
+    const now = performance.now();
+    if (preview && !document.hidden && !reduced.matches) elapsed += Math.min(64, Math.max(0, now - last));
+    last = now;
+    return reduced.matches ? 1600 : elapsed;
+  };
+  const clamp = (n, a = 0, b = 1) => Math.max(a, Math.min(b, n));
+  const ease = t => (t = clamp(t), t * t * (3 - 2 * t));
+  const trace = (ctx, points, progress = 1) => {
+    if (!points.length) return;
+    const distances = points.slice(1).map((p, i) => Math.hypot(p.x - points[i].x, p.y - points[i].y));
+    let left = distances.reduce((a, b) => a + b, 0) * clamp(progress);
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+      const p = points[i - 1],
+        q = points[i],
+        d = distances[i - 1];
+      const t = Math.min(1, left / Math.max(.01, d));
+      ctx.lineTo(p.x + (q.x - p.x) * t, p.y + (q.y - p.y) * t);
+      left -= d;
+      if (left <= 0) break;
+    }
+    ctx.stroke();
+  };
+  const onPath = (points, progress) => {
+    const lengths = points.slice(1).map((p, i) => Math.hypot(p.x - points[i].x, p.y - points[i].y));
+    let distance = lengths.reduce((a, b) => a + b, 0) * clamp(progress);
+    for (let i = 1; i < points.length; i++) {
+      const a = points[i - 1],
+        b = points[i],
+        length = lengths[i - 1];
+      if (distance <= length || i === points.length - 1) {
+        const t = clamp(distance / Math.max(.01, length));
+        return {
+          x: a.x + (b.x - a.x) * t,
+          y: a.y + (b.y - a.y) * t
+        };
+      }
+      distance -= length;
+    }
+    return points[0];
+  };
+  const stamp = (canvas, kind, phase = clock()) => {
+    if (!canvas) return;
+    canvas.dataset.idlePreview = preview ? kind : 'off';
+    canvas.dataset.idlePhase = String(Math.round(phase));
+  };
+  function ant(ctx, w, h, image) {
+    const t = clock() / 1000,
+      p = t % 5.4 / 5.4;
+    const cx = w * .5,
+      cy = h * .51,
+      rx = Math.min(w * .29, 105),
+      ry = Math.min(h * .16, 78);
+    const path = Array.from({
+      length: 81
+    }, (_, i) => ({
+      x: cx + Math.cos(i / 80 * Math.PI * 2) * rx,
+      y: cy + Math.sin(i / 80 * Math.PI * 2) * ry
+    }));
+    ctx.save();
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#242322';
+    ctx.globalAlpha = p > .88 ? (1 - p) / .12 : 1;
+    trace(ctx, path, ease(p / .48));
+    const x = cx + Math.sin(t * 2.1) * rx * .63,
+      y = cy + Math.sin(t * 2.8) * ry * .59;
+    ctx.translate(x, y);
+    ctx.rotate(Math.atan2(Math.cos(t * 2.8) * ry, Math.cos(t * 2.1) * rx) + Math.PI / 2);
+    if (image?.complete && image.naturalWidth) ctx.drawImage(image, -17, -17, 34, 34);else {
+      ctx.fillStyle = '#242322';
+      for (const [y, r] of [[-7, 5], [0, 4], [7, 6]]) {
+        ctx.beginPath();
+        ctx.ellipse(0, y, r, r * 1.2, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    ctx.restore();
+    stamp(ctx.canvas, 'ant-loop');
+  }
+  function army(state, w, h) {
+    const t = clock() / 1000;
+    const players = state.entities.filter(e => e.team === 'player'),
+      cx = players.reduce((n, e) => n + e.x, 0) / Math.max(1, players.length),
+      cy = players.reduce((n, e) => n + e.y, 0) / Math.max(1, players.length);
+    return {
+      ...state,
+      particles: [],
+      playerTarget: {
+        x: w * (.5 + Math.sin(t * .8) * .18),
+        y: h * (.43 + Math.cos(t * .8) * .04)
+      },
+      entities: state.entities.map((entity, i) => ({
+        ...entity,
+        x: entity.team === 'player' ? w * (.5 + Math.sin(t * .8) * .14) + (entity.x - cx) * .7 : entity.x + Math.sin(t * 1.5 + i * .7) * 8,
+        y: entity.team === 'player' ? h * (.57 + Math.cos(t * .8) * .04) + (entity.y - cy) * .7 : entity.y + Math.cos(t * 1.5 + i * .7) * 8
+      }))
+    };
+  }
+  function blade(ctx, w, h, top, bottom) {
+    const t = clock() / 1000,
+      p = t % 5.8 / 5.8,
+      cx = w / 2,
+      cy = (top + bottom) / 2;
+    const points = [[-.22, .16], [-.11, .02], [.04, .04], [.17, -.17], [.24, -.11]].map(([x, y]) => ({
+      x: cx + x * w,
+      y: cy + y * (bottom - top)
+    }));
+    ctx.save();
+    ctx.strokeStyle = '#303936';
+    ctx.lineWidth = 6;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.globalAlpha = p > .9 ? (1 - p) / .1 : 1;
+    if (p < .5) trace(ctx, points, ease(p / .45));else {
+      ctx.translate(cx, cy);
+      ctx.rotate((p - .5) * Math.PI * 3.4);
+      trace(ctx, points.map(v => ({
+        x: v.x - cx,
+        y: v.y - cy
+      })));
+      ctx.fillStyle = '#303936';
+      ctx.beginPath();
+      ctx.arc(0, 0, 11, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+    stamp(ctx.canvas, 'draw-and-spin-blade');
+  }
+  function roadPose(key) {
+    const t = clock() / 1000,
+      offset = key === 'player' ? 0 : key === 'copL' ? 1.3 : 2.2;
+    const q = t * .75 - offset,
+      x = 375 + Math.sin(q) * 130,
+      y = key === 'player' ? 800 : 1040 + (key === 'copR' ? 60 : 0);
+    return {
+      x: x + (key === 'copL' ? -85 : key === 'copR' ? 85 : 0),
+      y: y + Math.cos(q) * 28,
+      angle: -Math.PI / 2 + Math.cos(q) * .18
+    };
+  }
+  function road(ctx) {
+    const p = roadPose('player');
+    ctx.save();
+    ctx.strokeStyle = '#ffffff88';
+    ctx.setLineDash([11, 12]);
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.bezierCurveTo(p.x + 100, p.y - 100, 340, p.y - 220, 420, p.y - 340);
+    ctx.stroke();
+    ctx.restore();
+    stamp(ctx.canvas, 'escape-route');
+  }
+  function route(start, end, circles, w) {
+    const nodes = [start, end];
+    for (const circle of circles) for (let i = 0; i < 12; i++) {
+      const a = i * Math.PI / 6,
+        r = circle.circleRadius + 16;
+      const p = {
+        x: circle.position.x + Math.cos(a) * r,
+        y: circle.position.y + Math.sin(a) * r
+      };
+      if (p.x > 15 && p.x < w - 15) nodes.push(p);
+    }
+    const distance = nodes.map(() => Infinity),
+      previous = nodes.map(() => -1),
+      visited = new Set();
+    distance[0] = 0;
+    const clear = (a, b) => circles.every(c => {
+      const dx = b.x - a.x,
+        dy = b.y - a.y,
+        t = clamp(((c.position.x - a.x) * dx + (c.position.y - a.y) * dy) / Math.max(.01, dx * dx + dy * dy));
+      return Math.hypot(a.x + dx * t - c.position.x, a.y + dy * t - c.position.y) > c.circleRadius + 7;
+    });
+    for (let pass = 0; pass < nodes.length; pass++) {
+      let k = -1;
+      for (let j = 0; j < nodes.length; j++) if (!visited.has(j) && (k < 0 || distance[j] < distance[k])) k = j;
+      if (k < 0 || !Number.isFinite(distance[k])) break;
+      if (k === 1) break;
+      visited.add(k);
+      for (let j = 0; j < nodes.length; j++) {
+        if (visited.has(j) || !clear(nodes[k], nodes[j])) continue;
+        const d = distance[k] + Math.hypot(nodes[k].x - nodes[j].x, nodes[k].y - nodes[j].y);
+        if (d < distance[j]) {
+          distance[j] = d;
+          previous[j] = k;
+        }
+      }
+    }
+    if (previous[1] < 0) return [start, {
+      x: 20,
+      y: start.y + 24
+    }, {
+      x: 20,
+      y: end.y - 28
+    }, end];
+    const path = [];
+    for (let k = 1; k >= 0; k = previous[k]) {
+      path.unshift(nodes[k]);
+      if (k === 0) break;
+    }
+    return path;
+  }
+  let sodaCache = null;
+  function soda(ctx, source, cup, cupW, cupH, bodies, w) {
+    if (!source || !cup) return;
+    const t = clock() / 1000,
+      p = t % 5.6;
+    const circles = bodies.filter(b => b.label === 'obstacle'),
+      key = JSON.stringify([source, cup, w, circles.map(c => [c.position.x, c.position.y, c.circleRadius])]);
+    if (sodaCache?.key !== key) sodaCache = {
+      key,
+      points: route({
+        x: source.x,
+        y: source.y + 21
+      }, {
+        x: cup.x,
+        y: cup.y - cupH * .42
+      }, circles, w)
+    };
+    const points = sodaCache.points;
+    ctx.save();
+    ctx.strokeStyle = '#242322';
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.globalAlpha = p > 5 ? (5.6 - p) / .6 : 1;
+    trace(ctx, points, ease(p / 1.7));
+    if (p > 1.4 && p < 5) {
+      for (let i = 0; i < 15; i++) {
+        const q = (p - 1.4) * .65 - i * .067;
+        if (q < 0 || q > 1) continue;
+        const at = onPath(points, q);
+        ctx.fillStyle = '#59c6b1';
+        ctx.strokeStyle = '#242322';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(at.x, at.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+    stamp(ctx.canvas, 'guided-soda-route');
+  }
+  const style = document.createElement('style');
+  style.dataset.batch2IdleStyle = '';
+  style.textContent = `
+    html[data-batch2-idle=true] .idle-memory-deck{display:block}
+    .idle-memory-deck{position:absolute;inset:0;display:none;overflow:hidden;pointer-events:none}
+    .idle-memory-deck img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;animation:idle-memory-photo 7.2s linear infinite}
+    .idle-memory-deck img:nth-child(2){animation-delay:-4.8s}.idle-memory-deck img:nth-child(3){animation-delay:-2.4s}
+    .idle-clean-tool{display:none;position:absolute;z-index:5;left:var(--idle-clean-x,25%);top:var(--idle-clean-y,54%);width:76px;height:95px;pointer-events:none;transform:translate(-50%,-35%)}
+    .idle-clean-tool>span{display:none;width:100%;height:100%}.idle-clean-tool img{width:100%;height:100%;object-fit:contain}
+    html[data-batch2-idle=true] .idle-clean-tool{display:block}
+    [data-idle-clean-tool=spray] .idle-clean-spray,[data-idle-clean-tool=brush] .idle-clean-brush,[data-idle-clean-tool=rinse] .idle-clean-rinse{display:block}
+    html[data-batch2-idle=true] .video-window>img{visibility:hidden}
+    @keyframes idle-memory-photo{0%,29%{opacity:1;transform:scale(1)}33%,96%{opacity:0;transform:scale(1.035)}100%{opacity:1;transform:scale(1)}}
+    html[data-batch2-idle=true] .tool-swing{animation:idle-tool-hit 2.6s ease-in-out infinite!important;transform-origin:70% 75%}
+    html[data-batch2-idle=true] .target-art{animation:idle-stick-react 2.6s ease-in-out infinite!important;transform-origin:50% 75%}
+    @keyframes idle-tool-hit{0%,32%,100%{transform:translate(10px,5px) rotate(-25deg)}46%{transform:translate(-30px,-8px) rotate(-64deg)}55%,70%{transform:translate(6px,7px) rotate(-20deg)}}
+    @keyframes idle-stick-react{0%,45%,72%,100%{transform:rotate(0) scale(1)}50%{transform:translate(-4px,2px) rotate(-3deg) scale(1.025,.97)}60%{transform:rotate(1.5deg) scale(.99,1.01)}}
+    html[data-batch2-idle-paused=true] :is(.idle-memory-deck img,.tool-swing,.target-art){animation-play-state:paused!important}
+    html[data-batch2-idle-reduced=true] :is(.idle-memory-deck img,.tool-swing,.target-art){animation:none!important}
+    html[data-batch2-idle-reduced=true] .idle-memory-deck img:first-child{opacity:1}
+  `;
+  document.head.append(style);
+  window.PlayableIdlePreview = Object.freeze({
+    get active() {
+      return preview && !document.hidden;
+    },
+    get preview() {
+      return preview;
+    },
+    get reduced() {
+      return reduced.matches;
+    },
+    get seconds() {
+      return clock() / 1000;
+    },
+    clock,
+    ease,
+    clamp,
+    stamp,
+    trace,
+    onPath,
+    ant,
+    army,
+    blade,
+    road,
+    roadPose,
+    soda,
+    subscribe(fn) {
+      listeners.add(fn);
+      return () => listeners.delete(fn);
+    }
+  });
+  addEventListener('message', event => {
+    if (parent === window || event.source !== parent || event.origin !== location.origin || event.data?.type !== 'playable-active') return;
+    const next = event.data.active !== true;
+    if (next !== preview) {
+      preview = next;
+      elapsed = 0;
+    }
+    sync();
+  });
+  document.addEventListener('visibilitychange', sync);
+  reduced.addEventListener?.('change', sync);
+  addEventListener('pagehide', () => {
+    preview = false;
+    sync();
+    listeners.clear();
+  }, {
+    once: true
+  });
+  sync();
+})();
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import Matter from 'matter-js';
+
+// This bridge belongs to the game; it does not reproduce host UI or gradients.
+const feedSession = (() => {
+  const embedded = window.parent !== window && new URLSearchParams(location.search).get('feedReview') === '1';
+  let active = !embedded;
+  const listeners = new Set();
+  const update = () => {
+    document.documentElement.dataset.feedPreview = String(!active);
+    for (const callback of listeners) callback(active && !document.hidden);
+  };
+  window.addEventListener('message', event => {
+    if (window.parent === window || event.source !== parent || event.origin !== location.origin || event.data?.type !== 'playable-active') return;
+    active = event.data.active === true;
+    update();
+  });
+  document.addEventListener('visibilitychange', update);
+  update();
+  return {
+    get active() {
+      return active && !document.hidden;
+    },
+    subscribe(fn) {
+      listeners.add(fn);
+      return () => listeners.delete(fn);
+    }
+  };
+})();
+const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+function useFeedActive() {
+  const [active, setActive] = React.useState(feedSession.active);
+  React.useEffect(() => feedSession.subscribe(setActive), []);
+  return active;
+}
+function BatchPolish() {
+  const active = useFeedActive();
+  const demoPaletteRef = useRef(null);
+  if (!demoPaletteRef.current) demoPaletteRef.current = PALETTES[chooseShapeColor()];
+  const demoPalette = demoPaletteRef.current;
+  return <>
+    <style>{POLISH_CSS}</style>
+    {!active && [81, 84].includes(GAME_NUMBER) && <div className={'preview-example example-' + GAME_NUMBER} aria-hidden="true">
+      {GAME_NUMBER === 80 && <svg viewBox="0 0 320 220"><defs><pattern id="paper80-preview" width="220" height="220" patternUnits="userSpaceOnUse"><image href="./assets/paper-grain.svg" width="220" height="220" /></pattern></defs><g className="example-blob"><path d="M78 61C112 16 184 23 192 66C206 88 248 75 249 113C251 162 200 176 165 166C117 195 69 166 80 124C40 101 47 78 78 61Z" fill={demoPalette.fill} stroke={demoPalette.stroke} strokeWidth="1.8" /><path d="M78 61C112 16 184 23 192 66C206 88 248 75 249 113C251 162 200 176 165 166C117 195 69 166 80 124C40 101 47 78 78 61Z" fill="url(#paper80-preview)" style={{
+            mixBlendMode: 'multiply',
+            opacity: .74
+          }} /><PreviewSquishyEyes /></g></svg>}
+      {GAME_NUMBER === 81 && <svg viewBox="0 0 320 220"><path className="example-noodle" d="M65 145C44 109 84 61 115 88S139 171 187 151S250 80 263 126" fill="none" stroke="#e4d3ed" strokeWidth="29" strokeLinecap="round" /><path className="example-noodle" d="M65 145C44 109 84 61 115 88S139 171 187 151S250 80 263 126" fill="none" stroke="#3e3b42" strokeWidth="13" strokeLinecap="round" /><circle cx="129" cy="103" r="6" fill="white" /><circle cx="144" cy="111" r="6" fill="white" /><circle cx="130" cy="104" r="2.4" /><circle cx="145" cy="112" r="2.4" /><path d="M115 151q-5 17-15 11M186 160q5 18 15 9" fill="none" stroke="#3e3b42" strokeWidth="3" strokeLinecap="round" /></svg>}
+      {GAME_NUMBER === 84 && <div className="example-poem">una piccola linea diventa un pensiero<br />le parole vagano sul foglio<br /><em>piano</em> si apre un piccolo mondo<br />ogni segno è un momento<br />e ogni momento può ricominciare</div>}
+    </div>}
+  </>;
+}
+const BASE_CSS = `
+button { touch-action: manipulation; }
+button:focus-visible { outline: 3px solid #3c8ddd; outline-offset: 3px; }
+@keyframes batchBreathe { 0%,100% { opacity:.72; } 50% { opacity:1; } }
+.preview-example { position:fixed; z-index:2; pointer-events:none; width:min(80%,340px); left:50%; top:35%; transform:translateX(-50%); }
+.preview-example svg { width:100%; height:auto; overflow:visible; }
+
+.example-blob { transform-origin:50% 60%; animation:exampleSquish 3.8s ease-in-out infinite; }
+.example-noodle { transform-origin:50% 70%; animation:exampleWiggle 3.6s ease-in-out infinite; }
+.example-poem { padding:20px; color:#44444c; font:15px/1.8 ui-monospace,monospace; clip-path:ellipse(49% 47% at 50% 50%); animation:exampleInk 5s ease-in-out infinite; }
+.example-poem em { color:#ad7397; font-style:normal; }
+@keyframes exampleSquish { 0%,100% {transform:scale(1,1) rotate(-3deg)} 40% {transform:scale(1.06,.94) rotate(2deg)} 70% {transform:scale(.96,1.04) rotate(-1deg)} }
+@keyframes exampleWiggle { 0%,100% { transform:rotate(-3deg) translateY(0); } 50% { transform:rotate(3deg) translateY(-5px); } }
+@keyframes exampleInk { 0%,100% {opacity:.25;clip-path:ellipse(23% 35% at 32% 50%)} 45%,70% {opacity:.9;clip-path:ellipse(49% 47% at 50% 50%)} }
+@media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; } }
+`;
+const GAME_NUMBER = 80;
+const POLISH_CSS = BASE_CSS + ".hint{top:24%;left:30px;right:30px;transform:translateY(-50%);font-size:18px;line-height:1.3;text-align:center;white-space:normal;color:#242322;-webkit-text-stroke:.15px currentColor;animation:batchBreathe 2.6s ease-in-out infinite}.controls{left:50%;right:auto;bottom:50px;transform:translateX(-50%);gap:12px}.tool-button{width:48px;height:48px;border:1.6px solid #242322;box-shadow:2px 3px 0 #242322}[data-feed-preview=true] .controls{visibility:hidden}";
+const DEFAULT_CFG = {
+  DRAW_HINT: "Disegna una forma",
+  MAX_SHAPES: 9,
+  CALM_GRAVITY: 0.04,
+  SETTLE_GRAVITY: 1,
+  MIN_POINTS: 14,
+  CLOSE_DISTANCE: 42,
+  MAX_POINT_DISTANCE: 18
+};
+const COLOR_SETS = [{
+  name: "Stampa",
+  colors: ['#d8eb61', '#59c6b1', '#ee94ac']
+}, {
+  name: "Costa",
+  colors: ['#7e9ee6', '#9fd7e1', '#b5a3dc']
+}, {
+  name: "Giardino",
+  colors: ['#b9cf78', '#f1d878', '#e99b9d']
+}, {
+  name: "Pastello",
+  colors: ['#eaa6c1', '#a6b6ec', '#a9d4b7']
+}];
+const PALETTES = COLOR_SETS.flatMap(set => set.colors.map(fill => ({
+  fill,
+  hi: fill,
+  stroke: '#242322',
+  eye: '#242322'
+})));
+const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+const EYE_FILES = ['classic', 'sleepy', 'googly', 'happy'].map(name => './assets/eyes-frame-' + name + '.webp');
+let eyeBag = [];
+function chooseEyeStyle() {
+  if (!eyeBag.length) {
+    eyeBag = [0, 1, 2, 3];
+    for (let i = 3; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [eyeBag[i], eyeBag[j]] = [eyeBag[j], eyeBag[i]];
+    }
+  }
+  return eyeBag.pop();
+}
+function closedOutline(rawPoints) {
+  const points = [];
+  for (const p of rawPoints) {
+    if (!points.length || Math.hypot(p.x - points.at(-1).x, p.y - points.at(-1).y) >= 5) points.push({
+      x: p.x,
+      y: p.y
+    });
+  }
+  if (points.length > 3 && Math.hypot(points[0].x - points.at(-1).x, points[0].y - points.at(-1).y) < 6) points.pop();
+  if (points.length < 3) return null;
+  let area = 0,
+    length = 0;
+  const edges = [];
+  points.forEach((p, i) => {
+    const q = points[(i + 1) % points.length],
+      d = Math.hypot(q.x - p.x, q.y - p.y);
+    area += p.x * q.y - q.x * p.y;
+    edges.push(d);
+    length += d;
+  });
+  if (Math.abs(area) / 2 < 250 || length < 65) return null;
+  const ring = [];
+  let edge = 0,
+    used = 0;
+  for (let i = 0; i < 24; i++) {
+    const d = i * length / 24;
+    while (edge < points.length - 1 && used + edges[edge] < d) {
+      used += edges[edge++];
+    }
+    const a = points[edge],
+      b = points[(edge + 1) % points.length],
+      t = (d - used) / (edges[edge] || 1);
+    ring.push({
+      x: a.x + (b.x - a.x) * t,
+      y: a.y + (b.y - a.y) * t
+    });
+  }
+  return ring;
+}
+const colorBags = COLOR_SETS.map(() => []),
+  lastSetColors = COLOR_SETS.map(() => -1);
+function chooseShapeColor(setIndex = 0) {
+  const set = (setIndex % COLOR_SETS.length + COLOR_SETS.length) % COLOR_SETS.length;
+  if (!colorBags[set].length) {
+    const bag = [set * 3, set * 3 + 1, set * 3 + 2];
+    for (let i = bag.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [bag[i], bag[j]] = [bag[j], bag[i]];
+    }
+    if (bag.at(-1) === lastSetColors[set]) [bag[0], bag[bag.length - 1]] = [bag.at(-1), bag[0]];
+    colorBags[set] = bag;
+  }
+  return lastSetColors[set] = colorBags[set].pop();
+}
+function analyzeEyeWhites(pixels, width, height) {
+  const size = width * height,
+    white = new Uint8Array(size),
+    mask = new Uint8ClampedArray(size * 4),
+    dist = new Float32Array(size),
+    seen = new Uint8Array(size),
+    queue = new Int32Array(size),
+    components = [];
+  for (let i = 0; i < size; i++) {
+    const j = i * 4,
+      min = Math.min(pixels[j], pixels[j + 1], pixels[j + 2]),
+      max = Math.max(pixels[j], pixels[j + 1], pixels[j + 2]);
+    if (pixels[j + 3] > 127 && min > 224 && max - min < 24) {
+      white[i] = 1;
+      dist[i] = 1e6;
+      mask.set([255, 255, 255, 255], j);
+    }
+  }
+  const diagonal = Math.SQRT2;
+  for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
+    const i = y * width + x;
+    if (!white[i]) continue;
+    let d = dist[i];
+    if (!x || !y || x === width - 1 || y === height - 1) d = 1;else d = Math.min(d, dist[i - 1] + 1, dist[i - width] + 1, dist[i - width - 1] + diagonal, dist[i - width + 1] + diagonal);
+    dist[i] = d;
+  }
+  for (let y = height - 1; y >= 0; y--) for (let x = width - 1; x >= 0; x--) {
+    const i = y * width + x;
+    if (!white[i]) continue;
+    if (x < width - 1 && y < height - 1 && x > 0) dist[i] = Math.min(dist[i], dist[i + 1] + 1, dist[i + width] + 1, dist[i + width + 1] + diagonal, dist[i + width - 1] + diagonal);
+  }
+  for (let start = 0; start < size; start++) {
+    if (!white[start] || seen[start]) continue;
+    let head = 0,
+      tail = 1,
+      best = start;
+    queue[0] = start;
+    seen[start] = 1;
+    while (head < tail) {
+      const i = queue[head++],
+        x = i % width,
+        y = i / width | 0;
+      if (dist[i] > dist[best]) best = i;
+      const neighbors = [];
+      if (x) neighbors.push(i - 1);
+      if (x < width - 1) neighbors.push(i + 1);
+      if (y) neighbors.push(i - width);
+      if (y < height - 1) neighbors.push(i + width);
+      for (const j of neighbors) if (white[j] && !seen[j]) {
+        seen[j] = 1;
+        queue[tail++] = j;
+      }
+    }
+    if (tail > 30) {
+      const room = dist[best] * .92;
+      components.push({
+        area: tail,
+        cx: best % width,
+        cy: best / width | 0,
+        radius: room * .62,
+        travelX: room * .25,
+        travelY: room * .18,
+        room
+      });
+    }
+  }
+  const pupils = components.sort((a, b) => b.area - a.area).slice(0, 2).sort((a, b) => a.cx - b.cx);
+  return {
+    mask,
+    pupils
+  };
+}
+function createEyeFrame(src) {
+  const image = new Image(),
+    frame = {
+      image,
+      mask: null,
+      layer: document.createElement('canvas'),
+      pupils: []
+    };
+  image.onload = () => {
+    try {
+      const w = image.naturalWidth,
+        h = image.naturalHeight,
+        sample = document.createElement('canvas');
+      sample.width = w;
+      sample.height = h;
+      const sampleCtx = sample.getContext('2d', {
+        willReadFrequently: true
+      });
+      sampleCtx.drawImage(image, 0, 0);
+      const analysis = analyzeEyeWhites(sampleCtx.getImageData(0, 0, w, h).data, w, h);
+      if (analysis.pupils.length !== 2) return;
+      const mask = document.createElement('canvas');
+      mask.width = w;
+      mask.height = h;
+      mask.getContext('2d').putImageData(new ImageData(analysis.mask, w, h), 0, 0);
+      frame.layer.width = w;
+      frame.layer.height = h;
+      frame.mask = mask;
+      frame.pupils = analysis.pupils;
+    } catch {}
+  };
+  image.src = src;
+  return frame;
+}
+function pupilTarget(time, seed, pointer, cx, cy, reduced = false) {
+  if (reduced) return {
+    x: 0,
+    y: 0
+  };
+  let x, y;
+  if (pointer?.at > 0 && time - pointer.at < 1700) {
+    x = (pointer.x - cx) / 145;
+    y = (pointer.y - cy) / 145;
+  } else {
+    x = Math.sin(time * .00105 + seed) * .76;
+    y = Math.sin(time * .00074 + seed * 1.7) * .48;
+  }
+  const length = Math.max(1, Math.hypot(x, y));
+  return {
+    x: x / length,
+    y: y / length
+  };
+}
+function paintPupilEyes(ctx, frame, width, gaze) {
+  if (!frame?.mask) return false;
+  const image = frame.image,
+    h = width * image.naturalHeight / image.naturalWidth,
+    layer = frame.layer,
+    p = layer.getContext('2d');
+  ctx.drawImage(image, -width / 2, -h / 2, width, h);
+  p.globalCompositeOperation = 'source-over';
+  p.clearRect(0, 0, layer.width, layer.height);
+  p.fillStyle = '#201d23';
+  for (const eye of frame.pupils) {
+    p.beginPath();
+    p.arc(eye.cx + gaze.x * eye.travelX, eye.cy + gaze.y * eye.travelY, eye.radius, 0, Math.PI * 2);
+    p.fill();
+  }
+  // The white openings mask only the moving black centers. The original
+  // outlines, lids and whites are painted once in a stationary frame.
+  p.globalCompositeOperation = 'destination-in';
+  p.drawImage(frame.mask, 0, 0);
+  p.globalCompositeOperation = 'source-over';
+  ctx.drawImage(layer, -width / 2, -h / 2, width, h);
+  return true;
+}
+function PreviewSquishyEyes() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const canvas = ref.current,
+      ctx = canvas.getContext('2d'),
+      frame = createEyeFrame(EYE_FILES[0]);
+    canvas.width = 280;
+    canvas.height = 160;
+    let raf;
+    const draw = time => {
+      raf = requestAnimationFrame(draw);
+      if (document.hidden) return;
+      ctx.clearRect(0, 0, 280, 160);
+      ctx.save();
+      ctx.translate(140, 80);
+      paintPupilEyes(ctx, frame, 280, pupilTarget(time, 0, null, 0, 0, reducedMotionQuery.matches));
+      ctx.restore();
+    };
+    raf = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  return <foreignObject x="116" y="71" width="75" height="43"><canvas ref={ref} style={{
+      width: '100%',
+      height: '100%',
+      display: 'block'
+    }} /></foreignObject>;
+}
+function vibrate(style = 'light') {
+  try {
+    if (typeof tt !== 'undefined' && tt.vibrate) tt.vibrate({
+      style
+    });
+  } catch (_) {}
+}
+const CONTACT_REARM_MS = 300,
+  CONTACT_MIN_SPEED = .35,
+  CONTACT_SOUND_GAP_MS = 340;
+function noteShapeContacts(contacts, pairs, now, allowImpact = true) {
+  const grouped = new Map();
+  for (const pair of pairs || []) {
+    const a = pair.bodyA,
+      b = pair.bodyB,
+      aid = (a?.label || '').split(':')[0],
+      bid = (b?.label || '').split(':')[0];
+    if (!aid.startsWith('doodle-') || !bid.startsWith('doodle-') || aid === bid) continue;
+    const key = aid < bid ? aid + '|' + bid : bid + '|' + aid,
+      n = pair.collision?.normal;
+    const vx = (a.velocity?.x || 0) - (b.velocity?.x || 0),
+      vy = (a.velocity?.y || 0) - (b.velocity?.y || 0),
+      speed = n ? Math.abs(vx * n.x + vy * n.y) : Math.hypot(vx, vy);
+    grouped.set(key, Math.max(grouped.get(key) || 0, speed));
+  }
+  let impact = false;
+  for (const [key, speed] of grouped) {
+    const seen = contacts.get(key);
+    contacts.set(key, now);
+    if (allowImpact && (seen === undefined || now - seen >= CONTACT_REARM_MS) && speed >= CONTACT_MIN_SPEED) impact = true;
+  }
+  for (const [key, seen] of contacts) if (now - seen > 4000) contacts.delete(key);
+  return impact;
+}
+function makeAudioController() {
+  let disposed = false,
+    lastContact = -Infinity;
+  const files = {
+    tap: './assets/sfx_tap.mp3',
+    contact: './assets/sfx_contact.mp3',
+    plop: './assets/sfx_plop.mp3'
+  };
+  const stats = {
+    contactPlays: 0,
+    contactSuppressed: 0
+  };
+  const play = kind => {
+    if (disposed || !feedSession.active || document.hidden) return;
+    const now = performance.now();
+    if (kind === 'contact') {
+      if (now - lastContact < CONTACT_SOUND_GAP_MS) {
+        stats.contactSuppressed++;
+        return;
+      }
+      lastContact = now;
+      stats.contactPlays++;
+    }
+    playPackageSound('blob-' + kind, files[kind] || files.contact, kind === 'contact' ? CONTACT_SOUND_GAP_MS : 90);
+  };
+  return {
+    play,
+    unlock: () => window.SFX?.unlock?.(),
+    stop: () => window.SFX?.stopAll?.(),
+    dispose: () => {
+      disposed = true;
+      window.SFX?.stopAll?.();
+    },
+    stats
+  };
+}
+
+/* FILLED_SOFT_PHYSICS_START */
+function softArea(points) {
+  return points.reduce((sum, p, i) => {
+    const q = points[(i + 1) % points.length];
+    return sum + p.x * q.y - q.x * p.y;
+  }, 0) * .5;
+}
+function createSoftShape(ringPoints, id, color) {
+  const minDimension = Math.max(18, Math.min(Math.max(...ringPoints.map(p => p.x)) - Math.min(...ringPoints.map(p => p.x)), Math.max(...ringPoints.map(p => p.y)) - Math.min(...ringPoints.map(p => p.y))));
+  const radius = clamp(minDimension * .045, 5, 10),
+    group = Matter.Body.nextGroup(true);
+  // Nodes still collide with the walls. Filled outlines handle inter-blob contact.
+  const filter = {
+    group,
+    category: 0x0002,
+    mask: 0x0001
+  };
+  const ring = ringPoints.map(p => Matter.Bodies.circle(p.x, p.y, radius, {
+    label: id + ':ring',
+    collisionFilter: {
+      ...filter
+    },
+    friction: .62,
+    frictionAir: .018,
+    restitution: .62,
+    density: .0014
+  }));
+  const centerPoint = ringPoints.reduce((c, p) => ({
+    x: c.x + p.x / ringPoints.length,
+    y: c.y + p.y / ringPoints.length
+  }), {
+    x: 0,
+    y: 0
+  });
+  const center = Matter.Bodies.circle(centerPoint.x, centerPoint.y, Math.max(9, radius * .9), {
+    label: id + ':center',
+    collisionFilter: {
+      ...filter
+    },
+    friction: .62,
+    frictionAir: .024,
+    restitution: .48,
+    density: .0011
+  });
+  const constraints = [];
+  ring.forEach((body, i) => {
+    constraints.push(Matter.Constraint.create({
+      bodyA: body,
+      bodyB: ring[(i + 1) % ring.length],
+      length: distance(ringPoints[i], ringPoints[(i + 1) % ring.length]),
+      stiffness: .205,
+      damping: .055
+    }));
+    constraints.push(Matter.Constraint.create({
+      bodyA: center,
+      bodyB: body,
+      length: distance(centerPoint, ringPoints[i]),
+      stiffness: .09,
+      damping: .045
+    }));
+  });
+  const bodies = [...ring, center],
+    composite = Matter.Composite.create({
+      label: 'softbody:' + id
+    });
+  Matter.Composite.add(composite, [...bodies, ...constraints]);
+  return {
+    composite,
+    bodies,
+    ring,
+    center,
+    softContacts: new WeakMap(),
+    contactClock: 0,
+    restArea: softArea(ringPoints),
+    restOffsets: ringPoints.map(p => ({
+      x: p.x - centerPoint.x,
+      y: p.y - centerPoint.y
+    })),
+    mass: bodies.reduce((n, b) => n + b.mass, 0),
+    color,
+    eyeStyle: chooseEyeStyle(),
+    gaze: {
+      x: 0,
+      y: 0,
+      seed: Math.random() * Math.PI * 2
+    },
+    createdAt: performance.now()
+  };
+}
+function softOutline(shape) {
+  const ring = shape.ring,
+    points = [];
+  ring.forEach((body, i) => {
+    const p = body.position,
+      a = ring[(i + ring.length - 1) % ring.length].position,
+      b = ring[(i + 1) % ring.length].position;
+    points.push({
+      x: (a.x + p.x) * .5,
+      y: (a.y + p.y) * .5
+    }, {
+      x: a.x * .125 + p.x * .75 + b.x * .125,
+      y: a.y * .125 + p.y * .75 + b.y * .125
+    });
+  });
+  return points;
+}
+function softBounds(points) {
+  let minX = Infinity,
+    minY = Infinity,
+    maxX = -Infinity,
+    maxY = -Infinity;
+  for (const p of points) {
+    minX = Math.min(minX, p.x);
+    minY = Math.min(minY, p.y);
+    maxX = Math.max(maxX, p.x);
+    maxY = Math.max(maxY, p.y);
+  }
+  return {
+    minX,
+    minY,
+    maxX,
+    maxY
+  };
+}
+function softPointInside(p, polygon, dx = 0, dy = 0) {
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const a = polygon[i],
+      b = polygon[j];
+    if (a.y > p.y - dy !== b.y > p.y - dy && p.x - dx < (b.x - a.x) * (p.y - dy - a.y) / (b.y - a.y) + a.x) inside = !inside;
+  }
+  return inside;
+}
+function softPolygonsOverlap(a, b, dx = 0, dy = 0) {
+  const aa = softBounds(a),
+    bb = softBounds(b);
+  if (aa.maxX + dx <= bb.minX || bb.maxX <= aa.minX + dx || aa.maxY + dy <= bb.minY || bb.maxY <= aa.minY + dy) return false;
+  if (softPointInside({
+    x: a[0].x + dx,
+    y: a[0].y + dy
+  }, b) || softPointInside(b[0], a, dx, dy)) return true;
+  const cross = (ax, ay, bx, by, cx, cy) => (bx - ax) * (cy - ay) - (by - ay) * (cx - ax);
+  for (let i = 0; i < a.length; i++) {
+    const p = a[i],
+      q = a[(i + 1) % a.length],
+      px = p.x + dx,
+      py = p.y + dy,
+      qx = q.x + dx,
+      qy = q.y + dy;
+    for (let j = 0; j < b.length; j++) {
+      const r = b[j],
+        s = b[(j + 1) % b.length];
+      if (Math.max(px, qx) <= Math.min(r.x, s.x) || Math.max(r.x, s.x) <= Math.min(px, qx) || Math.max(py, qy) <= Math.min(r.y, s.y) || Math.max(r.y, s.y) <= Math.min(py, qy)) continue;
+      if (cross(px, py, qx, qy, r.x, r.y) * cross(px, py, qx, qy, s.x, s.y) < -1e-8 && cross(r.x, r.y, s.x, s.y, px, py) * cross(r.x, r.y, s.x, s.y, qx, qy) < -1e-8) return true;
+    }
+  }
+  return false;
+}
+function softHull(points) {
+  const p = points.slice().sort((a, b) => a.x - b.x || a.y - b.y),
+    cross = (a, b, c) => (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x),
+    lower = [],
+    upper = [];
+  for (const v of p) {
+    while (lower.length > 1 && cross(lower.at(-2), lower.at(-1), v) <= 0) lower.pop();
+    lower.push(v);
+  }
+  for (let i = p.length - 1; i >= 0; i--) {
+    const v = p[i];
+    while (upper.length > 1 && cross(upper.at(-2), upper.at(-1), v) <= 0) upper.pop();
+    upper.push(v);
+  }
+  lower.pop();
+  upper.pop();
+  return lower.concat(upper);
+}
+function softSeparation(a, b) {
+  if (!softPolygonsOverlap(a, b)) return null;
+  const ah = softHull(a),
+    bh = softHull(b),
+    axes = [{
+      x: 0,
+      y: 1
+    }, {
+      x: 1,
+      y: 0
+    }];
+  for (const polygon of [ah, bh]) for (let i = 0; i < polygon.length; i++) {
+    const p = polygon[i],
+      q = polygon[(i + 1) % polygon.length],
+      dx = q.x - p.x,
+      dy = q.y - p.y,
+      len = Math.hypot(dx, dy);
+    if (len > 1e-6) axes.push({
+      x: -dy / len,
+      y: dx / len
+    });
+  }
+  let best = null;
+  for (const axis of axes) {
+    let amin = Infinity,
+      amax = -Infinity,
+      bmin = Infinity,
+      bmax = -Infinity;
+    for (const p of ah) {
+      const d = p.x * axis.x + p.y * axis.y;
+      amin = Math.min(amin, d);
+      amax = Math.max(amax, d);
+    }
+    for (const p of bh) {
+      const d = p.x * axis.x + p.y * axis.y;
+      bmin = Math.min(bmin, d);
+      bmax = Math.max(bmax, d);
+    }
+    const negative = amax - bmin,
+      positive = bmax - amin;
+    if (negative <= 0 || positive <= 0) return null;
+    const depth = Math.min(negative, positive);
+    if (!best || depth < best.depth - .1) {
+      const sign = positive <= negative ? 1 : -1;
+      best = {
+        x: axis.x * sign,
+        y: axis.y * sign,
+        depth
+      };
+    }
+  }
+  if (!best) return null;
+  if (best.depth < 1.5) {
+    best.depth += .08;
+    return best;
+  }
+  // Use the actual filled outline, so concave lobes can touch without a hull gap.
+  let low = 0,
+    high = best.depth + .25;
+  for (let i = 0; i < 9; i++) {
+    const mid = (low + high) * .5;
+    if (softPolygonsOverlap(a, b, best.x * mid, best.y * mid)) low = mid;else high = mid;
+  }
+  best.depth = high + .08;
+  return best;
+}
+function softMotion(shape) {
+  const mass = shape.mass || shape.bodies.reduce((n, b) => n + b.mass, 0);
+  return shape.bodies.reduce((v, b) => ({
+    x: v.x + b.velocity.x * b.mass / mass,
+    y: v.y + b.velocity.y * b.mass / mass
+  }), {
+    x: 0,
+    y: 0
+  });
+}
+function moveSoftShape(shape, x, y) {
+  for (const b of shape.bodies) Matter.Body.translate(b, {
+    x,
+    y
+  });
+}
+function addSoftVelocity(shape, x, y) {
+  for (const b of shape.bodies) Matter.Body.setVelocity(b, {
+    x: b.velocity.x + x,
+    y: b.velocity.y + y
+  });
+}
+// Apply a collision impulse through the touching side, so the spring ring can
+// compress and wobble rather than receiving only a rigid whole-blob rebound.
+function addSoftContactVelocity(shape, normal, amount) {
+  const center = shape.center.position;
+  const reach = Math.max(12, ...shape.ring.map(b => Math.abs((b.position.x - center.x) * normal.x + (b.position.y - center.y) * normal.y)));
+  const weights = shape.bodies.map(b => b === shape.center ? .85 : .8 - clamp(((b.position.x - center.x) * normal.x + (b.position.y - center.y) * normal.y) / reach, -1, 1) * .55);
+  const mean = shape.bodies.reduce((sum, b, i) => sum + weights[i] * b.mass / shape.mass, 0);
+  shape.bodies.forEach((b, i) => {
+    const impulse = amount * weights[i] / mean;
+    Matter.Body.setVelocity(b, {
+      x: b.velocity.x + normal.x * impulse,
+      y: b.velocity.y + normal.y * impulse
+    });
+  });
+}
+function softNodeBounds(shape) {
+  return softBounds(shape.bodies.flatMap(b => [{
+    x: b.position.x - b.circleRadius,
+    y: b.position.y - b.circleRadius
+  }, {
+    x: b.position.x + b.circleRadius,
+    y: b.position.y + b.circleRadius
+  }]));
+}
+function confineSoftShape(shape, bounds) {
+  for (const body of shape.bodies) {
+    const r = body.circleRadius,
+      p = body.position;
+    let x = 0,
+      y = 0;
+    if (p.x - r < 0) x = r - p.x;else if (p.x + r > bounds.width) x = bounds.width - r - p.x;
+    if (p.y - r < 0) y = r - p.y;else if (p.y + r > bounds.floor) y = bounds.floor - r - p.y;
+    if (x || y) {
+      const v = {
+        ...body.velocity
+      };
+      Matter.Body.translate(body, {
+        x,
+        y
+      });
+      Matter.Body.setVelocity(body, {
+        x: x * v.x < 0 ? Math.abs(v.x) > .7 ? -v.x * .58 : 0 : v.x,
+        y: y * v.y < 0 ? Math.abs(v.y) > .7 ? -v.y * .58 : 0 : v.y
+      });
+    }
+  }
+}
+// A weak, rotation-aware memory restores the drawn outline after a hard fling.
+function recoverSoftOutline(shape, delta = 8.333) {
+  let dot = 0,
+    cross = 0;
+  const origin = shape.center.position;
+  shape.ring.forEach((body, i) => {
+    const rest = shape.restOffsets[i],
+      x = body.position.x - origin.x,
+      y = body.position.y - origin.y;
+    dot += rest.x * x + rest.y * y;
+    cross += rest.x * y - rest.y * x;
+  });
+  const angle = Math.atan2(cross, dot),
+    c = Math.cos(angle),
+    s = Math.sin(angle),
+    recovery = softArea(shape.ring.map(b => b.position)) / shape.restArea < .55 ? .12 : .018;
+  shape.ring.forEach((body, i) => {
+    const rest = shape.restOffsets[i],
+      dx = origin.x + rest.x * c - rest.y * s - body.position.x,
+      dy = origin.y + rest.x * s + rest.y * c - body.position.y,
+      blend = Math.min(recovery * delta / 8.333, 2 / Math.max(1, Math.hypot(dx, dy)));
+    Matter.Body.translate(body, {
+      x: dx * blend,
+      y: dy * blend
+    });
+  });
+}
+// Gentle area pressure keeps a stretched blob full while its outline flexes.
+function recoverSoftVolume(shape) {
+  const points = shape.ring.map(body => body.position),
+    area = softArea(points),
+    error = shape.restArea - area;
+  if (Math.abs(error) < Math.abs(shape.restArea) * .015) return;
+  const gradients = points.map((p, i) => {
+    const before = points[(i + points.length - 1) % points.length],
+      after = points[(i + 1) % points.length];
+    return {
+      x: (after.y - before.y) * .5,
+      y: (before.x - after.x) * .5
+    };
+  });
+  const norm = gradients.reduce((sum, g) => sum + g.x * g.x + g.y * g.y, 0);
+  if (norm < 1) return;
+  const scale = error / norm * .20;
+  shape.ring.forEach((body, i) => {
+    const g = gradients[i],
+      length = Math.hypot(g.x, g.y),
+      step = length ? Math.min(1, 3 / (Math.abs(scale) * length)) : 0;
+    Matter.Body.translate(body, {
+      x: g.x * scale * step,
+      y: g.y * scale * step
+    });
+  });
+}
+function softSupported(shape, normal, bounds) {
+  const b = softNodeBounds(shape);
+  return normal.y > .5 && b.maxY >= bounds.floor - .6 || normal.y < -.5 && b.minY <= .6 || normal.x > .5 && b.maxX >= bounds.width - .6 || normal.x < -.5 && b.minX <= .6;
+}
+// Resting support propagates upward through touching blobs, so landing on a
+// stack cannot push its middle layers down through the ones below.
+function softSupportSet(shapes, bounds, dragged) {
+  const supported = new Set(),
+    outlines = new Map(shapes.map(shape => [shape, softOutline(shape)]));
+  for (const shape of shapes) if (shape !== dragged && softNodeBounds(shape).maxY >= bounds.floor - 1 && softMotion(shape).y > -.35) supported.add(shape);
+  for (let pass = 0; pass < shapes.length; pass++) {
+    let changed = false;
+    for (const upper of shapes) {
+      if (supported.has(upper) || upper === dragged) continue;
+      const speed = softMotion(upper).y;
+      if (speed < -.35 || speed > 1.3) continue;
+      for (const lower of supported) if (upper.center.position.y < lower.center.position.y && softPolygonsOverlap(outlines.get(upper), outlines.get(lower), 0, 1.6)) {
+        supported.add(upper);
+        changed = true;
+        break;
+      }
+    }
+    if (!changed) break;
+  }
+  return supported;
+}
+function resolveFilledSoftContacts(shapes, bounds, dragged = null, delta = 8.333) {
+  const contacts = new Map();
+  for (const shape of shapes) {
+    recoverSoftOutline(shape, delta);
+    shape.contactClock += delta;
+    shape.floorImpactCooldown = Math.max(0, (shape.floorImpactCooldown || 0) - delta);
+    const velocity = softMotion(shape);
+    if (shape !== dragged && !shape.floorImpactCooldown && velocity.y > 1.2 && softNodeBounds(shape).maxY >= bounds.floor - .8) {
+      addSoftContactVelocity(shape, {
+        x: 0,
+        y: -1
+      }, velocity.y * 1.58);
+      shape.floorImpactCooldown = 100;
+    }
+  }
+  const ordered = shapes.slice().sort((a, b) => b.center.position.y - a.center.position.y),
+    supported = softSupportSet(ordered, bounds, dragged);
+  for (let pass = 0; pass < 10; pass++) {
+    // Shape recovery runs once; later passes only finish contact separation.
+    // This avoids expanding a settled blob back inside its neighbour each pass.
+    for (const shape of ordered) {
+      if (pass < 3) recoverSoftVolume(shape);
+      confineSoftShape(shape, bounds);
+    }
+    let corrected = false;
+    for (let i = 0; i < ordered.length; i++) for (let j = i + 1; j < ordered.length; j++) {
+      const a = ordered[i],
+        b = ordered[j],
+        hit = softSeparation(softOutline(a), softOutline(b));
+      if (!hit) continue;
+      const va = softMotion(a),
+        vb = softMotion(b),
+        key = i + ':' + j,
+        now = Math.max(a.contactClock, b.contactClock);
+      let state = a.softContacts.get(b);
+      if (!state) {
+        state = {
+          lastTouch: -Infinity,
+          lastBounce: -Infinity
+        };
+        a.softContacts.set(b, state);
+        b.softContacts.set(a, state);
+      }
+      const first = !contacts.has(key),
+        fresh = now - state.lastTouch > 65;
+      if (first) {
+        contacts.set(key, {
+          bodyA: {
+            label: a.center.label,
+            velocity: {
+              ...va
+            }
+          },
+          bodyB: {
+            label: b.center.label,
+            velocity: {
+              ...vb
+            }
+          },
+          collision: {
+            normal: {
+              x: hit.x,
+              y: hit.y
+            }
+          }
+        });
+        state.lastTouch = now;
+      }
+      let ia = a === dragged || softSupported(a, hit, bounds) || supported.has(a) && hit.y > .5 ? 0 : 1 / a.mass;
+      let ib = b === dragged || softSupported(b, {
+        x: -hit.x,
+        y: -hit.y
+      }, bounds) || supported.has(b) && hit.y < -.5 ? 0 : 1 / b.mass;
+      if (ia + ib === 0) {
+        ia = 1 / a.mass;
+        ib = 1 / b.mass;
+      }
+      const wa = ia / (ia + ib),
+        wb = ib / (ia + ib);
+      moveSoftShape(a, hit.x * hit.depth * wa, hit.y * hit.depth * wa);
+      moveSoftShape(b, -hit.x * hit.depth * wb, -hit.y * hit.depth * wb);
+      corrected = true;
+      const approach = (va.x - vb.x) * hit.x + (va.y - vb.y) * hit.y,
+        tangent = {
+          x: -hit.y,
+          y: hit.x
+        },
+        slide = (va.x - vb.x) * tangent.x + (va.y - vb.y) * tangent.y;
+      if (approach < 0) {
+        const bounce = first && approach < -.7 && (fresh || approach < -3 && now - state.lastBounce > 90) ? .64 : 0,
+          impulse = -approach * (1 + bounce);
+        if (bounce) {
+          state.lastBounce = now;
+          addSoftContactVelocity(a, hit, impulse * wa);
+          addSoftContactVelocity(b, {
+            x: -hit.x,
+            y: -hit.y
+          }, impulse * wb);
+        } else {
+          addSoftVelocity(a, hit.x * impulse * wa, hit.y * impulse * wa);
+          addSoftVelocity(b, -hit.x * impulse * wb, -hit.y * impulse * wb);
+        }
+        const friction = clamp(slide, -impulse * .3, impulse * .3);
+        addSoftVelocity(a, -tangent.x * friction * wa, -tangent.y * friction * wa);
+        addSoftVelocity(b, tangent.x * friction * wb, tangent.y * friction * wb);
+      }
+      if (first && Math.abs(approach) < .45 && Math.abs(slide) < .55) {
+        addSoftVelocity(a, -tangent.x * slide * .28 * wa, -tangent.y * slide * .28 * wa);
+        addSoftVelocity(b, tangent.x * slide * .28 * wb, tangent.y * slide * .28 * wb);
+      }
+    }
+    if (!corrected) break;
+  }
+  return [...contacts.values()];
+}
+// Keep fast flicks from stepping across small blobs in one collision update.
+function stepSoftWorld(engine, shapes, bounds, dragged = null) {
+  let speed = 0;
+  for (const shape of shapes) for (const body of shape.bodies) {
+    const v = body.velocity,
+      length = Math.hypot(v.x, v.y);
+    if (length > 70) Matter.Body.setVelocity(body, {
+      x: v.x * 70 / length,
+      y: v.y * 70 / length
+    });
+    speed = Math.max(speed, Math.min(length, 70));
+  }
+  const count = clamp(Math.ceil(speed / 4), 2, 8),
+    delta = 16.666 / count,
+    contacts = [];
+  for (let step = 0; step < count; step++) {
+    Matter.Engine.update(engine, delta);
+    contacts.push(...resolveFilledSoftContacts(shapes, bounds, dragged, delta));
+  }
+  return contacts;
+}
+/* FILLED_SOFT_PHYSICS_END */
+
+function App() {
+  const canvasRef = useRef(null);
+  const hostRef = useRef(null);
+  const engineRef = useRef(null);
+  const shapesRef = useRef([]);
+  const rafRef = useRef(0);
+  const resizeObserverRef = useRef(null);
+  const cfgRef = useRef(DEFAULT_CFG);
+  const paletteRef = useRef(0);
+  const colorSetRef = useRef(0);
+  const gravityModeRef = useRef('calm');
+  const hintRef = useRef(true);
+  const pointerRef = useRef({
+    x: 0,
+    y: 0,
+    at: 0
+  });
+  const drawingRef = useRef([]);
+  const activePointerRef = useRef(null);
+  const dragRef = useRef(null);
+  const gyroRef = useRef({
+    pitch: 0,
+    roll: 0
+  });
+  const gyroStartedRef = useRef(false);
+  const gyroHandlerRef = useRef(null);
+  const tiltWantedRef = useRef(false);
+  const contactsRef = useRef(new Map());
+  const audioRef = useRef(null);
+  const [cfg, setCfg] = useState(DEFAULT_CFG);
+  const [colorSetIndex, setColorSetIndex] = useState(0);
+  const [gravityMode, setGravityMode] = useState('calm');
+  const [hintVisible, setHintVisible] = useState(true);
+  const [shapeCount, setShapeCount] = useState(0);
+  const [dragCount, setDragCount] = useState(0);
+  cfgRef.current = cfg;
+  colorSetRef.current = colorSetIndex;
+  gravityModeRef.current = gravityMode;
+  hintRef.current = hintVisible;
+  useEffect(() => {
+    let cancelled = false;
+    fetch('./game.config.json').then(response => response.json()).then(raw => {
+      if (cancelled) return;
+      const next = {
+        ...DEFAULT_CFG
+      };
+      [...(raw.tweaks || []), ...(raw.texts || [])].forEach(item => {
+        next[item.id] = item.value;
+      });
+      setCfg(next);
+    }).catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  const getPoint = useCallback(event => {
+    const rect = canvasRef.current.getBoundingClientRect();
+    return {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top
+    };
+  }, []);
+  const stopTilt = useCallback(() => {
+    const started = gyroStartedRef.current;
+    gyroStartedRef.current = false;
+    gyroHandlerRef.current = null;
+    gyroRef.current = {pitch: 0, roll: 0};
+    if (canvasRef.current) {
+      canvasRef.current.dataset.nativeTilt = 'false';
+      canvasRef.current.dataset.tiltPitch = '0';
+      canvasRef.current.dataset.tiltRoll = '0';
+    }
+    if (started && typeof tt !== 'undefined' && typeof tt.stopGyroscope === 'function') {
+      try { tt.stopGyroscope({fail() {}}); } catch (_) {}
+    }
+  }, []);
+  const startTilt = useCallback(() => {
+    tiltWantedRef.current = true;
+    if (gyroStartedRef.current || !feedSession.active || document.hidden) return;
+    if (typeof tt === 'undefined' || typeof tt.startGyroscope !== 'function' || typeof tt.onGyroscopeChange !== 'function' || typeof tt.stopGyroscope !== 'function') return;
+    const clean = value => Number.isFinite(value) && Math.abs(value) >= .01 ? clamp(value, -Math.PI, Math.PI) : 0;
+    const handler = payload => {
+      if (!gyroStartedRef.current || !feedSession.active || document.hidden || !payload || payload.result === -1) return;
+      const pitch = clean(typeof payload.pitch === 'number' ? payload.pitch : payload.x);
+      const roll = clean(typeof payload.roll === 'number' ? payload.roll : payload.z);
+      gyroRef.current.pitch += (pitch - gyroRef.current.pitch) * .24;
+      gyroRef.current.roll += (roll - gyroRef.current.roll) * .24;
+    };
+    gyroRef.current = {pitch: 0, roll: 0};
+    gyroHandlerRef.current = handler;
+    gyroStartedRef.current = true;
+    try {
+      tt.onGyroscopeChange(handler);
+      tt.startGyroscope({interval: 50, fail: stopTilt});
+      if (canvasRef.current) canvasRef.current.dataset.nativeTilt = String(gyroStartedRef.current);
+    } catch (_) { stopTilt(); }
+  }, [stopTilt]);
+  const pointHitsShape = useCallback(point => {
+    for (let i = shapesRef.current.length - 1; i >= 0; i -= 1) {
+      const shape = shapesRef.current[i];
+      const hits = Matter.Query.point(shape.bodies, point);
+      if (hits.length) return {
+        shape,
+        body: hits[0]
+      };
+      let inside = false;
+      const vertices = shape.ring.map(body => body.position);
+      for (let a = 0, b = vertices.length - 1; a < vertices.length; b = a, a += 1) {
+        const crosses = vertices[a].y > point.y !== vertices[b].y > point.y && point.x < (vertices[b].x - vertices[a].x) * (point.y - vertices[a].y) / (vertices[b].y - vertices[a].y) + vertices[a].x;
+        if (crosses) inside = !inside;
+      }
+      if (inside) return {
+        shape,
+        body: shape.center
+      };
+    }
+    return null;
+  }, []);
+  const addShape = useCallback(rawPoints => {
+    const currentCfg = cfgRef.current;
+    // Release joins the outline back to its beginning. A straight stroke has
+    // no enclosed area and is not inflated into a narrow path-shaped ribbon.
+    const ringPoints = closedOutline(rawPoints);
+    if (!ringPoints) return false;
+    const id = `doodle-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    const shape = createSoftShape(ringPoints, id, paletteRef.current);
+    Matter.Composite.add(engineRef.current.world, shape.composite);
+    shapesRef.current.push(shape);
+    if (shapesRef.current.length > currentCfg.MAX_SHAPES) {
+      const oldest = shapesRef.current.shift();
+      Matter.Composite.remove(engineRef.current.world, oldest.composite);
+    }
+    setShapeCount(shapesRef.current.length);
+    if (hintRef.current) {
+      hintRef.current = false;
+      setHintVisible(false);
+    }
+    audioRef.current?.play('plop');
+    vibrate('medium');
+    console.info('[doodle] created', {
+      count: shapesRef.current.length,
+      points: ringPoints.length
+    });
+    return true;
+  }, []);
+  const clearShapes = useCallback(() => {
+    if (!engineRef.current) return;
+    if (dragRef.current) {
+      Matter.Composite.remove(engineRef.current.world, dragRef.current.constraint);
+      dragRef.current = null;
+    }
+    shapesRef.current.forEach(shape => Matter.Composite.remove(engineRef.current.world, shape.composite));
+    shapesRef.current = [];
+    contactsRef.current.clear();
+    drawingRef.current = [];
+    hintRef.current = true;
+    setHintVisible(true);
+    setShapeCount(0);
+    audioRef.current?.stop();
+    audioRef.current?.play('tap');
+    vibrate('light');
+    console.info('[doodle] cleared');
+  }, []);
+  const handlePointerDown = useCallback(event => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    if (event.isPrimary === false) return;
+    event.preventDefault();
+    audioRef.current?.unlock();
+    startTilt();
+    const point = getPoint(event);
+    pointerRef.current = {
+      ...point,
+      at: performance.now()
+    };
+    activePointerRef.current = event.pointerId;
+    try {
+      canvasRef.current.setPointerCapture?.(event.pointerId);
+    } catch {}
+    const hit = pointHitsShape(point);
+    if (hit) {
+      const constraint = Matter.Constraint.create({
+        pointA: point,
+        bodyB: hit.body,
+        stiffness: 0.16,
+        damping: 0.12
+      });
+      Matter.Composite.add(engineRef.current.world, constraint);
+      dragRef.current = {
+        constraint,
+        shape: hit.shape
+      };
+    } else {
+      paletteRef.current = chooseShapeColor(colorSetRef.current);
+      drawingRef.current = [point];
+    }
+  }, [getPoint, pointHitsShape, startTilt]);
+  const handlePointerMove = useCallback(event => {
+    const point = getPoint(event);
+    pointerRef.current = {
+      ...point,
+      at: performance.now()
+    };
+    if (activePointerRef.current !== event.pointerId) return;
+    event.preventDefault();
+    if (dragRef.current) {
+      dragRef.current.constraint.pointA.x = point.x;
+      dragRef.current.constraint.pointA.y = point.y;
+      return;
+    }
+    const points = drawingRef.current;
+    const previous = points[points.length - 1];
+    if (!previous || distance(previous, point) >= 4) points.push(point);
+  }, [getPoint]);
+  const handlePointerUp = useCallback(event => {
+    if (activePointerRef.current !== event.pointerId) return;
+    event.preventDefault();
+    const point = getPoint(event);
+    pointerRef.current = {
+      ...point,
+      at: performance.now()
+    };
+    if (dragRef.current) {
+      Matter.Composite.remove(engineRef.current.world, dragRef.current.constraint);
+      dragRef.current = null;
+      setDragCount(count => count + 1);
+      audioRef.current?.play('contact');
+      vibrate('medium');
+    } else {
+      addShape(drawingRef.current);
+      drawingRef.current = [];
+    }
+    activePointerRef.current = null;
+    try {
+      canvasRef.current.releasePointerCapture?.(event.pointerId);
+    } catch (_) {}
+  }, [addShape, getPoint]);
+  useEffect(() => {
+    audioRef.current = makeAudioController();
+    const syncActivity = active => {
+      if (!active || document.hidden) { audioRef.current?.stop(); stopTilt(); }
+      else if (tiltWantedRef.current) startTilt();
+    };
+    const unsubscribeAudio = feedSession.subscribe(syncActivity);
+    const onVisibility = () => syncActivity(feedSession.active);
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pagehide', stopTilt);
+    const canvas = canvasRef.current;
+    const host = hostRef.current;
+    const engine = Matter.Engine.create({
+      positionIterations: 8,
+      constraintIterations: 4
+    });
+    engine.gravity.y = DEFAULT_CFG.CALM_GRAVITY;
+    engine.gravity.scale = 0.001;
+    engineRef.current = engine;
+    const addBounds = () => {
+      const width = canvas.clientWidth || 320;
+      const height = canvas.clientHeight || 640;
+      const oldBounds = engine.__doodleBounds || [];
+      oldBounds.forEach(body => Matter.Composite.remove(engine.world, body));
+      const thickness = 70;
+      const bounds = [Matter.Bodies.rectangle(width / 2, -thickness / 2, width + thickness * 2, thickness, {
+        isStatic: true,
+        label: 'doodle:bound'
+      }), Matter.Bodies.rectangle(width / 2, height - 112 + thickness / 2, width + thickness * 2, thickness, {
+        isStatic: true,
+        label: 'doodle:bound'
+      }), Matter.Bodies.rectangle(-thickness / 2, height / 2, thickness, height + thickness * 2, {
+        isStatic: true,
+        label: 'doodle:bound'
+      }), Matter.Bodies.rectangle(width + thickness / 2, height / 2, thickness, height + thickness * 2, {
+        isStatic: true,
+        label: 'doodle:bound'
+      })];
+      engine.__doodleBounds = bounds;
+      Matter.Composite.add(engine.world, bounds);
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.max(1, Math.floor(width * dpr));
+      canvas.height = Math.max(1, Math.floor(height * dpr));
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+    };
+    addBounds();
+    resizeObserverRef.current = new ResizeObserver(addBounds);
+    resizeObserverRef.current.observe(host);
+    const onCollision = event => {
+      if (!feedSession.active || document.hidden) return;
+      if (noteShapeContacts(contactsRef.current, event.pairs, performance.now())) {
+        audioRef.current?.play('contact');
+        vibrate('light');
+      }
+    };
+    const onContactActive = event => {
+      noteShapeContacts(contactsRef.current, event.pairs, performance.now(), false);
+    };
+    const eyeFrames = EYE_FILES.map(createEyeFrame);
+    const ctx = canvas.getContext('2d');
+    const paperImage = new Image();
+    let paperPattern = null;
+    paperImage.onload = () => {
+      paperPattern = ctx.createPattern(paperImage, 'repeat');
+    };
+    paperImage.src = './assets/paper-grain.svg';
+    const drawShape = (shape, context, time, elapsed) => {
+      const ring = shape.ring;
+      if (!ring.length) return;
+      const points = ring.map(body => body.position);
+      let cx = 0;
+      let cy = 0;
+      points.forEach(point => {
+        cx += point.x;
+        cy += point.y;
+      });
+      cx /= points.length;
+      cy /= points.length;
+      const palette = PALETTES[shape.color % PALETTES.length];
+      context.save();
+      context.fillStyle = palette.fill;
+      context.strokeStyle = palette.stroke;
+      context.lineWidth = 1.8;
+      context.lineJoin = 'round';
+      const first = points[0];
+      const last = points[points.length - 1];
+      context.beginPath();
+      context.moveTo((last.x + first.x) / 2, (last.y + first.y) / 2);
+      points.forEach((point, index) => {
+        const next = points[(index + 1) % points.length];
+        context.quadraticCurveTo(point.x, point.y, (point.x + next.x) / 2, (point.y + next.y) / 2);
+      });
+      context.closePath();
+      context.fill();
+      context.stroke();
+      context.restore();
+      const eyeGap = clamp(Math.min(34, Math.max(21, points.length ? (Math.max(...points.map(p => p.x)) - Math.min(...points.map(p => p.x))) * 0.22 : 24)), 18, 34);
+      const eyeRadius = clamp(eyeGap * 0.45, 9, 16);
+      context.save();
+      context.translate(cx, cy - eyeRadius * 0.2);
+      const eyeWidth = clamp(eyeGap * 2.25, 40, 79),
+        gaze = shape.gaze,
+        target = pupilTarget(time, gaze.seed, pointerRef.current, cx, cy, reducedMotionQuery.matches),
+        follow = reducedMotionQuery.matches ? 1 : 1 - Math.exp(-elapsed / 90);
+      gaze.x += (target.x - gaze.x) * follow;
+      gaze.y += (target.y - gaze.y) * follow;
+      if (!paintPupilEyes(context, eyeFrames[shape.eyeStyle], eyeWidth, gaze)) for (const side of [-1, 1]) {
+        context.fillStyle = '#fff';
+        context.beginPath();
+        context.ellipse(side * eyeGap * .52, 0, eyeRadius, eyeRadius * 1.16, 0, 0, Math.PI * 2);
+        context.fill();
+        context.fillStyle = '#25232b';
+        context.beginPath();
+        context.arc(side * eyeGap * .52 + gaze.x * eyeRadius * .22, gaze.y * eyeRadius * .18, eyeRadius * .47, 0, Math.PI * 2);
+        context.fill();
+      }
+      context.restore();
+    };
+    let lastRender = 0,
+      demoShapes = [],
+      demoWidth = 0,
+      demoHeight = 0,
+      demoCycle = -1,
+      demoAccumulator = 0;
+    const demoEngine = Matter.Engine.create();
+    demoEngine.gravity.y = .75;
+    const render = time => {
+      const elapsed = Math.min(50, Math.max(0, time - (lastRender || time - 16.667)));
+      lastRender = time;
+      if (document.hidden) {
+        rafRef.current = requestAnimationFrame(render);
+        return;
+      }
+      const width = canvas.clientWidth || 320;
+      const height = canvas.clientHeight || 640;
+      const dpr = window.devicePixelRatio || 1;
+      if (feedSession.active) {
+        const contacts = stepSoftWorld(engine, shapesRef.current, {
+          width,
+          height,
+          floor: height - 112
+        }, dragRef.current?.shape);
+        onCollision({
+          pairs: contacts
+        });
+      }
+      const gyro = gyroRef.current;
+      canvas.dataset.nativeTilt = String(gyroStartedRef.current);
+      canvas.dataset.tiltPitch = gyro.pitch.toFixed(5);
+      canvas.dataset.tiltRoll = gyro.roll.toFixed(5);
+      const baseGravity = gravityModeRef.current === 'calm' ? cfgRef.current.CALM_GRAVITY : cfgRef.current.SETTLE_GRAVITY;
+      engine.gravity.y = baseGravity + clamp(gyro.pitch * 0.035, -0.12, 0.12);
+      engine.gravity.x = clamp(gyro.roll * 0.5, -0.7, 0.7);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = '#f39a61';
+      ctx.fillRect(0, 0, width, height);
+      // Faint printed guide dots belong to the paper, beneath every shape.
+      ctx.save();
+      ctx.fillStyle = '#242322';
+      ctx.globalAlpha = .12;
+      ctx.beginPath();
+      for (let x = 16; x < width; x += 32) for (let y = 16; y < height; y += 32) {
+        ctx.moveTo(x + 1.1, y);
+        ctx.arc(x, y, 1.1, 0, Math.PI * 2);
+      }
+      ctx.fill();
+      ctx.restore();
+      if (window.PlayableIdlePreview.active) {
+        const cycle = Math.floor(window.PlayableIdlePreview.seconds / 8.5);
+        if (demoWidth !== width || demoHeight !== height || cycle !== demoCycle) {
+          demoWidth = width;
+          demoHeight = height;
+          demoCycle = cycle;
+          Matter.Composite.clear(demoEngine.world, false);
+          demoShapes = [0, 1, 2].map(i => {
+            const cx = width * (.42 + i % 2 * .17),
+              cy = height * (.36 - i * .13),
+              rx = Math.min(width * .17, 60),
+              ry = rx * (.85 + i * .1);
+            const ring = Array.from({
+              length: 24
+            }, (_, j) => {
+              const a = j / 24 * Math.PI * 2,
+                k = 1 + .10 * Math.sin(a * 3 + i);
+              return {
+                x: cx + Math.cos(a) * rx * k,
+                y: cy + Math.sin(a) * ry * k
+              };
+            });
+            const shape = createSoftShape(ring, 'idle-' + i, chooseShapeColor());
+            shape.eyeStyle = i % eyeFrames.length;
+            Matter.Composite.add(demoEngine.world, shape.composite);
+            return shape;
+          });
+        }
+        if (!window.PlayableIdlePreview.reduced) {
+          demoAccumulator = Math.min(64, demoAccumulator + elapsed);
+          while (demoAccumulator >= 1000 / 60) {
+            stepSoftWorld(demoEngine, demoShapes, {
+              width,
+              height,
+              floor: height * .69
+            }, null);
+            demoAccumulator -= 1000 / 60;
+          }
+        }
+        demoShapes.forEach(shape => drawShape(shape, ctx, window.PlayableIdlePreview.clock(), elapsed));
+        window.PlayableIdlePreview.stamp(canvas, 'elastic-blob-stack');
+      } else {
+        shapesRef.current.forEach(shape => drawShape(shape, ctx, time, elapsed));
+      }
+      if (paperPattern) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'multiply';
+        ctx.globalAlpha = .74;
+        ctx.fillStyle = paperPattern;
+        ctx.fillRect(0, 0, width, height);
+        ctx.restore();
+      }
+      canvas.dataset.shapeColors = shapesRef.current.map(s => PALETTES[s.color].fill).join(",");
+      canvas.dataset.pupilGlances = JSON.stringify(shapesRef.current.map(s => ({
+        style: s.eyeStyle,
+        x: +s.gaze.x.toFixed(3),
+        y: +s.gaze.y.toFixed(3)
+      })));
+      canvas.dataset.eyeFrameReady = String(eyeFrames.filter(frame => frame.mask).length);
+      canvas.dataset.contactSounds = String(audioRef.current?.stats.contactPlays || 0);
+      const draft = drawingRef.current;
+      if (draft.length > 1) {
+        ctx.save();
+        ctx.strokeStyle = PALETTES[paletteRef.current].stroke;
+        ctx.globalAlpha = 0.72;
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.setLineDash([7, 8]);
+        ctx.beginPath();
+        ctx.moveTo(draft[0].x, draft[0].y);
+        draft.slice(1).forEach(point => ctx.lineTo(point.x, point.y));
+        ctx.closePath();
+        ctx.fillStyle = PALETTES[paletteRef.current].fill;
+        ctx.globalAlpha = .22;
+        ctx.fill();
+        ctx.globalAlpha = .8;
+        ctx.stroke();
+        ctx.restore();
+      }
+      rafRef.current = requestAnimationFrame(render);
+    };
+    rafRef.current = requestAnimationFrame(render);
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      Matter.Engine.clear(demoEngine);
+      unsubscribeAudio();
+      resizeObserverRef.current?.disconnect();
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('pagehide', stopTilt);
+      stopTilt();
+      audioRef.current?.dispose();
+      Matter.Composite.clear(engine.world, false);
+      engineRef.current = null;
+    };
+  }, [startTilt, stopTilt]);
+  const togglePalette = () => {
+    const next = (colorSetRef.current + 1) % COLOR_SETS.length;
+    colorSetRef.current = next;
+    setColorSetIndex(next);
+    audioRef.current?.play('tap');
+    vibrate('light');
+  };
+  const toggleGravity = () => {
+    const next = gravityMode === 'calm' ? 'settle' : 'calm';
+    setGravityMode(next);
+    gravityModeRef.current = next;
+    audioRef.current?.play('tap');
+    vibrate('light');
+  };
+  return <div ref={hostRef} className="doodle-app" data-color-set={COLOR_SETS[colorSetIndex].name} data-shape-count={shapeCount} data-shape-colors={shapesRef.current.map(s => PALETTES[s.color].fill).join(",")} data-random-colors="true" data-eye-styles={shapesRef.current.map(s => s.eyeStyle).join(",")} data-closed-shapes="true" data-drag-count={dragCount} data-gravity-mode={gravityMode}>
+      <canvas ref={canvasRef} className="doodle-canvas" aria-label="Foglio da disegno interattivo" onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={event => {
+      drawingRef.current = [];
+      handlePointerUp(event);
+    }} />
+      {hintVisible && <div className="hint" data-testid="draw-hint">{cfg.DRAW_HINT}</div>}
+      <div className="controls" aria-label="Comandi di disegno">
+        <button type="button" className="tool-button color-set-button" aria-label={"Cambia palette: " + COLOR_SETS[colorSetIndex].name} title="Tocca per la prossima palette di tre colori" data-testid="palette-button" onClick={togglePalette}>
+          <span className="color-set-swatches" aria-hidden="true">{COLOR_SETS[colorSetIndex].colors.map(color => <span key={color} style={{
+            background: color
+          }} />)}</span>
+        </button>
+        <button type="button" className="tool-button" aria-label="Attiva o disattiva la gravità" data-testid="gravity-button" onClick={toggleGravity}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v14M7 12l5 5 5-5M5 6h14" /></svg>
+        </button>
+        <button type="button" className="tool-button" aria-label="Cancella il foglio" data-testid="clear-button" onClick={clearShapes}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M9 7V5h6v2m-8 0 1 13h8l1-13M10 10v7m4-7v7" /></svg>
+        </button>
+      </div>
+      <style>{`
+@font-face {
+  font-family: 'Special Elite';
+  src: url('./assets/fonts/special-elite/SpecialElite-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-display: "Special Elite", Georgia, serif;
+  --font-body:    "Special Elite", Georgia, serif;
+  --font-mono:   ui-monospace, Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; }
+body { background: #f39a61; -webkit-tap-highlight-color: transparent; }
+button { font: inherit; }
+.doodle-app { position: relative; width: 100%; height: 100%; min-height: 0; overflow: clip; background: #f39a61; }
+.doodle-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
+.hint { position: absolute; top: max(26px, env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); color: #242322; font-family: var(--font-body); font-size: 17px; line-height: 1.2; white-space: nowrap; letter-spacing: .01em; pointer-events: none; }
+.controls { position: absolute; right: 16px; bottom: max(18px, env(safe-area-inset-bottom, 0px)); display: flex; gap: 10px; align-items: center; }
+.tool-button { position: relative; display: grid; place-items: center; width: 46px; height: 46px; padding: 0; border: 1.6px solid #242322; border-radius: 50%; color: #242322; background: #fff8df url('./assets/paper-grain.svg') repeat; box-shadow: 2px 3px 0 #242322; cursor: pointer; transition: transform .16s ease, box-shadow .16s ease; }
+.tool-button:active { transform: translateY(2px) scale(.96); box-shadow: 1px 1px 0 #242322; }
+.tool-button svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+ .tool-button.color-set-button { width:90px; min-width:90px; border-radius:999px; }
+.color-set-swatches { display:flex; gap:4px; align-items:center; }
+.color-set-swatches>span { width:18px; height:18px; border:1px solid #242322; border-radius:50%; }
+@media (max-width: 360px) { .controls { right: 12px; gap: 7px; } .tool-button { width: 42px; height: 42px; } }
+      `}</style>
+    </div>;
+}
+createRoot(document.getElementById('root')).render(<><style>{PACKAGE_HTML_STYLES}</style>{<><App /><BatchPolish /></>}</>);
+
+/* Current FYP palette adapter; no host UI is drawn into the game. */
+(() => {
+  if (parent === window) return;
+  // Feed palette: post a 32×12 RGBA band from the top and the bottom of the first screen. The feed
+  // keeps the first valid post, so sample fast until one lands, then settle to once a second.
+  const BAND = {
+    w: 32,
+    h: 12
+  };
+  const post = (top, bottom) => parent.postMessage({
+    type: 'playable-palette',
+    top,
+    bottom
+  }, '*');
+  /** The game's main canvas: the largest one, if it covers a good part of the screen. */
+  function mainCanvas() {
+    const canvases = [...document.querySelectorAll('canvas')].filter(c => c.width && c.height);
+    const source = canvases.sort((a, b) => b.clientWidth * b.clientHeight - a.clientWidth * a.clientHeight)[0];
+    return source && source.clientWidth * source.clientHeight >= innerWidth * innerHeight * 0.3 ? source : null;
+  }
+  function sampleCanvas(source) {
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = BAND.w;
+      canvas.height = 48;
+      const ctx = canvas.getContext('2d', {
+        willReadFrequently: true
+      });
+      // Transparent canvas games paint their scene over a CSS background. Include that visible surface
+      // rather than rejecting empty bands and leaving the generic blue/green fallback over dark games.
+      for (let node = source; node && node.nodeType === 1; node = node.parentElement) {
+        const color = getComputedStyle(node).backgroundColor;
+        const channels = color.match(/[\d.]+/g);
+        if (channels && (channels[3] === undefined || Number(channels[3]) > .5)) {
+          ctx.fillStyle = color;
+          ctx.fillRect(0, 0, BAND.w, 48);
+          break;
+        }
+      }
+      ctx.drawImage(source, 0, 0, BAND.w, 48);
+      const top = Array.from(ctx.getImageData(0, 0, BAND.w, BAND.h).data);
+      const bottom = Array.from(ctx.getImageData(0, 48 - BAND.h, BAND.w, BAND.h).data);
+      return top.some((v, i) => i % 4 === 3 && v > 0) ? [top, bottom] : null;
+    } catch {
+      return null;
+    }
+  }
+  /** DOM games: the painted background under a grid of points (images can't be read cross-origin). */
+  function sampleDom() {
+    const rgba = el => {
+      for (let node = el; node && node.nodeType === 1; node = node.parentElement) {
+        const match = getComputedStyle(node).backgroundColor.match(/[\d.]+/g);
+        if (match && (match[3] === undefined || Number(match[3]) > 0.5)) return [+match[0], +match[1], +match[2], 255];
+      }
+      return null;
+    };
+    const band = y0 => {
+      const out = [];
+      for (let row = 0; row < BAND.h; row++) for (let col = 0; col < BAND.w; col++) {
+        const x = (col + 0.5) / BAND.w * innerWidth,
+          y = y0 + (row + 0.5) / BAND.h * innerHeight * 0.25;
+        out.push(...(rgba(document.elementFromPoint(x, y)) ?? rgba(document.body) ?? rgba(document.documentElement) ?? [0, 0, 0, 0]));
+      }
+      return out;
+    };
+    const top = band(0),
+      bottom = band(innerHeight * 0.75);
+    return top.some((v, i) => i % 4 === 3 && v > 0) ? [top, bottom] : null;
+  }
+  let sampledOnce = false;
+  function sample() {
+    // Converted photo templates explicitly mark their asynchronous preload. Never lock
+    // the feed palette to an empty canvas or loading veil instead of the actual scene.
+    if (document.documentElement.dataset.playableLoading === 'true') return;
+    const land = found => {
+      if (found) {
+        sampledOnce = true;
+        post(...found);
+      }
+      return !!found;
+    };
+    const source = mainCanvas();
+    if (!source) {
+      if (document.body?.childElementCount) land(sampleDom());
+      return;
+    }
+    // WebGL may clear after compositing; if the direct read is empty, read inside the next frame.
+    if (!land(sampleCanvas(source))) requestAnimationFrame(() => land(sampleCanvas(source)));
+  }
+  const schedule = () => {
+    sample();
+    setTimeout(schedule, sampledOnce ? 1000 : 250);
+  };
+  // Let the app paint its first screen before reading it.
+  if (document.readyState === 'complete') setTimeout(schedule, 300);else window.addEventListener('load', () => setTimeout(schedule, 300), {
+    once: true
+  });
+})();
+
+/* Decorative CTA breathing only. No positions, inputs, clocks or game state. */
+(() => {
+  const selectors = [".hint"],
+    copy = new Set(["Disegna una forma"].map(s => s.replace(/\s+/g, ' ').trim().toLowerCase()));
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)'),
+    running = new Map();
+  let queued = false,
+    visible = true;
+  const action = /^(?:(?:tap|drag|hold|swipe|draw|use|press|click|release|brush|pull|touch|pinch|rub|move|trace)\b|spray\s*[→-]|tocca\b|trascina\b|tieni\b|scorri\b|disegna\b|premi\b|点击|轻触|滑动|按住|拖动|长按|双击)/i;
+  function scan() {
+    queued = false;
+    for (const [el, a] of running) if (!el.isConnected) {
+      a.cancel();
+      running.delete(el);
+    }
+    if (motion.matches) {
+      for (const a of running.values()) a.cancel();
+      running.clear();
+      return;
+    }
+    const targets = new Set();
+    for (const selector of selectors) {
+      try {
+        document.querySelectorAll(selector).forEach(el => targets.add(el));
+      } catch {}
+    }
+    for (const el of document.querySelectorAll('p,span,div,label,text')) {
+      if (el.children.length || el.closest('button,a,input,select,textarea,[role="button"]')) continue;
+      const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+      if (text.length >= 5 && text.length <= 140 && (copy.has(text.toLowerCase()) || !selectors.length && action.test(text))) targets.add(el);
+    }
+    for (const el of targets) {
+      if (running.has(el) || typeof el.animate !== 'function') continue;
+      if ([...targets].some(child => child !== el && el.contains(child))) continue;
+      const style = getComputedStyle(el);
+      if (/breath/i.test(style.animationName)) continue;
+      const base = style.filter.replace(/opacity\([^)]*\)/g, '').replace(/^none$/, '').trim(),
+        filter = v => (base ? base + ' ' : '') + 'opacity(' + v + ')';
+      const a = el.animate([{
+        filter: filter(1)
+      }, {
+        filter: filter(.65)
+      }, {
+        filter: filter(1)
+      }], {
+        duration: 2400,
+        iterations: Infinity,
+        easing: 'ease-in-out'
+      });
+      running.set(el, a);
+      if (document.hidden || !visible) a.pause();
+    }
+  }
+  const schedule = () => {
+    if (!queued) {
+      queued = true;
+      requestAnimationFrame(scan);
+    }
+  };
+  const pause = () => {
+    for (const a of running.values()) document.hidden || !visible ? a.pause() : a.play();
+  };
+  const observer = new MutationObserver(schedule);
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+  const intersection = typeof IntersectionObserver === 'function' ? new IntersectionObserver(entries => {
+    visible = entries.some(e => e.isIntersecting);
+    pause();
+  }) : null;
+  if (document.body) intersection?.observe(document.body);else document.addEventListener('DOMContentLoaded', () => intersection?.observe(document.body), {
+    once: true
+  });
+  document.addEventListener('visibilitychange', pause);
+  motion.addEventListener?.('change', schedule);
+  schedule();
+  window.addEventListener('pagehide', () => {
+    observer.disconnect();
+    intersection?.disconnect();
+    for (const a of running.values()) a.cancel();
+    running.clear();
+  }, {
+    once: true
+  });
+})();
+function playPackageSound(key, soundPath, minGapMs = 90) {
+  if (!soundPath || document.hidden || !window.SFX) return;
+  window.SFX.register({
+    [key]: soundPath
+  });
+  window.SFX.unlock();
+  window.SFX.play(key, {
+    minGapMs
+  });
+}

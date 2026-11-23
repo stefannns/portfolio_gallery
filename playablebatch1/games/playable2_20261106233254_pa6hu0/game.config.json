@@ -35,8 +35,8 @@
     {
       "id": "HINT",
       "label": "Instruction",
-      "value": "Drag to build land",
-      "default": "Drag to build land",
+      "value": "Trascina per creare terra",
+      "default": "Trascina per creare terra",
       "max_length": 30
     }
   ],
@@ -47,7 +47,7 @@
     "version_id": "112333418880449376",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

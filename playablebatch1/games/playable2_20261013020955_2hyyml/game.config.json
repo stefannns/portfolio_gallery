@@ -35,29 +35,29 @@
     {
       "id": "TITLE_MAIN",
       "label": "Main Title",
-      "value": "TIME CAMERA",
-      "default": "TIME CAMERA",
+      "value": "FOTOCAMERA NEL TEMPO",
+      "default": "FOTOCAMERA NEL TEMPO",
       "max_length": 20
     },
     {
       "id": "BTN_RESET",
       "label": "Reset Button Text",
-      "value": "Reset to Current",
-      "default": "Reset to Current",
+      "value": "Torna a oggi",
+      "default": "Torna a oggi",
       "max_length": 20
     },
     {
       "id": "BTN_BUILD",
       "label": "Build Button Text",
-      "value": "BUILD MY CAMERA",
-      "default": "BUILD MY CAMERA",
+      "value": "APRI FOTOCAMERA",
+      "default": "APRI FOTOCAMERA",
       "max_length": 20
     },
     {
       "id": "BTN_BACK",
       "label": "Back Button Text",
-      "value": "CHANGE YEAR",
-      "default": "CHANGE YEAR",
+      "value": "CAMBIA ANNO",
+      "default": "CAMBIA ANNO",
       "max_length": 15
     }
   ],
@@ -68,7 +68,7 @@
     "version_id": "103313238082822325",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

@@ -75,29 +75,29 @@
     {
       "id": "TXT_TITLE",
       "label": "App Title",
-      "value": "Particle Studio",
-      "default": "Particle Studio",
+      "value": "Studio di particelle",
+      "default": "Studio di particelle",
       "max_length": 20
     },
     {
       "id": "TXT_SHOW_CTRL",
       "label": "Show Controls Btn",
-      "value": "Controls",
-      "default": "Controls",
+      "value": "Controlli",
+      "default": "Controlli",
       "max_length": 15
     },
     {
       "id": "TXT_HIDE_CTRL",
       "label": "Hide Controls Btn",
-      "value": "Hide",
-      "default": "Hide",
+      "value": "Nascondi",
+      "default": "Nascondi",
       "max_length": 15
     },
     {
       "id": "TXT_TAB_TEXT",
       "label": "Tab Text",
-      "value": "Text",
-      "default": "Text",
+      "value": "Testo",
+      "default": "Testo",
       "max_length": 10
     },
     {
@@ -110,50 +110,50 @@
     {
       "id": "TXT_INPUT_PLACEHOLDER",
       "label": "Input Placeholder",
-      "value": "Type something...",
-      "default": "Type something...",
+      "value": "Scrivi qualcosa…",
+      "default": "Scrivi qualcosa…",
       "max_length": 30
     },
     {
       "id": "TXT_UPLOAD_BTN",
       "label": "Upload Button Text",
-      "value": "Upload Image / Video",
-      "default": "Upload Image / Video",
+      "value": "Carica foto o video",
+      "default": "Carica foto o video",
       "max_length": 30
     },
     {
       "id": "TXT_DEFAULT_INPUT",
       "label": "Default Text Value",
-      "value": "LOOP",
-      "default": "LOOP",
+      "value": "CIAO",
+      "default": "CIAO",
       "max_length": 20
     },
     {
       "id": "TXT_LBL_COLOR",
       "label": "Color Theme Label",
-      "value": "Color Theme",
-      "default": "Color Theme",
+      "value": "Tema colori",
+      "default": "Tema colori",
       "max_length": 20
     },
     {
       "id": "TXT_LBL_SHAPE",
       "label": "Shape Label",
-      "value": "Particle Shape",
-      "default": "Particle Shape",
+      "value": "Forma",
+      "default": "Forma",
       "max_length": 20
     },
     {
       "id": "TXT_LBL_FONT",
       "label": "Font Label",
-      "value": "Font Family",
-      "default": "Font Family",
+      "value": "Carattere",
+      "default": "Carattere",
       "max_length": 20
     },
     {
       "id": "TXT_LBL_FILTER",
       "label": "Filter Label",
-      "value": "Media Filter",
-      "default": "Media Filter",
+      "value": "Filtro",
+      "default": "Filtro",
       "max_length": 20
     }
   ],
@@ -162,7 +162,7 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

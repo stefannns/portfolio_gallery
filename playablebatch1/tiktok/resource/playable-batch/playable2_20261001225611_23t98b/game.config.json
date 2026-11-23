@@ -15,22 +15,22 @@
     {
       "id": "TITLE",
       "label": "Game Title",
-      "value": "Text Your Ex",
-      "default": "Text Your Ex",
+      "value": "Scrivi all’ex",
+      "default": "Scrivi all’ex",
       "max_length": 30
     },
     {
       "id": "BTN_START",
       "label": "Start Button",
-      "value": "Start Game",
-      "default": "Start Game",
+      "value": "Inizia",
+      "default": "Inizia",
       "max_length": 20
     },
     {
       "id": "BTN_RESTART",
       "label": "Restart Button",
-      "value": "Play Again",
-      "default": "Play Again",
+      "value": "Rigioca",
+      "default": "Rigioca",
       "max_length": 20
     }
   ],
@@ -48,7 +48,7 @@
     "version_id": "99278216778593044",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

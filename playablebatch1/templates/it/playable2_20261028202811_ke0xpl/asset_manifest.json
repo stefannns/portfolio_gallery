@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "poppins",
+  "style_anchor": "Full-screen phone-style cat photograph, user-traced silhouette and rounded textured three-dimensional soft-body toy.",
+  "assets": [
+    {
+      "path": "assets/cat-phone-rug.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Cat on the rug",
+      "aspect_ratio": "1:1",
+      "size_tier": "small",
+      "recommended_size": "800x800",
+      "width": 800,
+      "height": 800,
+      "ok": true
+    },
+    {
+      "path": "assets/cat-phone-sofa.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Cat on the sofa",
+      "aspect_ratio": "1:1",
+      "size_tier": "small",
+      "recommended_size": "800x800",
+      "width": 800,
+      "height": 800,
+      "ok": true
+    },
+    {
+      "path": "assets/cat-phone-window.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Cat by the window",
+      "aspect_ratio": "1:1",
+      "size_tier": "small",
+      "recommended_size": "800x800",
+      "width": 800,
+      "height": 800,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Bold.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: Poppins-Bold",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/poppins/Poppins-Regular.woff2",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: Poppins-Regular",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_click_soft.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx click soft",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_squish.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx squish",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}

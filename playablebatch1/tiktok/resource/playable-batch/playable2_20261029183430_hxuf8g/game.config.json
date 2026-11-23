@@ -85,36 +85,36 @@
     {
       "id": "GUIDE",
       "label": "Guide",
-      "value": "Drag to keep it bouncing",
-      "default": "Drag to keep it bouncing",
+      "value": "Trascina e fai rimbalzare",
+      "default": "Trascina e fai rimbalzare",
       "max_length": 30
     },
     {
       "id": "RESULT_TITLE",
       "label": "Result title",
-      "value": "Rally over",
-      "default": "Rally over",
+      "value": "Scambio finito",
+      "default": "Scambio finito",
       "max_length": 20
     },
     {
       "id": "FINAL_SCORE",
       "label": "Final score label",
-      "value": "Final score",
-      "default": "Final score",
+      "value": "Punteggio finale",
+      "default": "Punteggio finale",
       "max_length": 20
     },
     {
       "id": "BEST_SCORE",
       "label": "Best score label",
-      "value": "Best",
-      "default": "Best",
+      "value": "Record",
+      "default": "Record",
       "max_length": 12
     },
     {
       "id": "PLAY_AGAIN",
       "label": "Play again",
-      "value": "Play again",
-      "default": "Play again",
+      "value": "Rigioca",
+      "default": "Rigioca",
       "max_length": 20
     }
   ],
@@ -125,7 +125,7 @@
     "version_id": "109359222634059425",
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

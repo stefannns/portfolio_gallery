@@ -25,43 +25,43 @@
     {
       "id": "TEXT_GUIDE",
       "label": "Guide Text",
-      "value": "DRAW A LINE TO THE GOAL",
-      "default": "DRAW A LINE TO THE GOAL",
+      "value": "DISEGNA LA VIA DI FUGA",
+      "default": "DISEGNA LA VIA DI FUGA",
       "max_length": 30
     },
     {
       "id": "TEXT_WIN",
       "label": "Win Text",
-      "value": "Escaped!",
-      "default": "Escaped!",
+      "value": "In salvo!",
+      "default": "In salvo!",
       "max_length": 20
     },
     {
       "id": "TEXT_LOSE",
       "label": "Lose Text",
-      "value": "Busted!",
-      "default": "Busted!",
+      "value": "Preso!",
+      "default": "Preso!",
       "max_length": 20
     },
     {
       "id": "BTN_RETRY_WIN",
       "label": "Win Retry Button",
-      "value": "PLAY AGAIN",
-      "default": "PLAY AGAIN",
+      "value": "RIGIOCA",
+      "default": "RIGIOCA",
       "max_length": 15
     },
     {
       "id": "BTN_RETRY_LOSE",
       "label": "Lose Retry Button",
-      "value": "TRY AGAIN",
-      "default": "TRY AGAIN",
+      "value": "RIPROVA",
+      "default": "RIPROVA",
       "max_length": 15
     },
     {
       "id": "BTN_POST",
       "label": "Post Button",
-      "value": "Post my play",
-      "default": "Post my play",
+      "value": "Pubblica la partita",
+      "default": "Pubblica la partita",
       "max_length": 20
     }
   ],
@@ -95,7 +95,7 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

@@ -35,29 +35,29 @@
     {
       "id": "TITLE_ANTS",
       "label": "Ant count text",
-      "value": "Ants",
-      "default": "Ants",
+      "value": "Formiche",
+      "default": "Formiche",
       "max_length": 15
     },
     {
       "id": "BTN_ADD_ANT",
       "label": "Add ant button",
-      "value": "Add Ant",
-      "default": "Add Ant",
+      "value": "Aggiungi",
+      "default": "Aggiungi",
       "max_length": 15
     },
     {
       "id": "BTN_CLEAR",
       "label": "Clear all button",
-      "value": "Clear All",
-      "default": "Clear All",
+      "value": "Cancella tutto",
+      "default": "Cancella tutto",
       "max_length": 15
     },
     {
       "id": "HINT_TEXT",
       "label": "Hint text",
-      "value": "Draw lines to trap ants! Earn $10 on hit",
-      "default": "Draw lines to trap ants! Earn $10 on hit",
+      "value": "Intrappola le formiche! +$10 a colpo",
+      "default": "Intrappola le formiche! +$10 a colpo",
       "max_length": 50
     }
   ],
@@ -79,7 +79,7 @@
   "playable": {
     "runtime_target": "h5",
     "h5_playstyle_type": "general_game",
-    "content_locale": "en",
+    "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1
   }

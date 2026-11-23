@@ -64,7 +64,7 @@
     "post_id": "99280150965238575",
     "version_id": "99280150965135547",
     "runtime_target": "h5",
-    "h5_playstyle_type": "image_expression",
+    "h5_playstyle_type": "general_game",
     "content_locale": "it",
     "min_capability_level": 1,
     "full_capability_level": 1

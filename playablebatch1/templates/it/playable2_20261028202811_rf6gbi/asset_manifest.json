@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "font_pack_id": "special_elite",
+  "style_anchor": "Flat colorful soft-body shapes with expressive eyes, dark ink outlines, paper grain and faint dots.",
+  "assets": [
+    {
+      "path": "assets/eyes-frame-classic.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Classic eyes",
+      "aspect_ratio": "28:15",
+      "size_tier": "small",
+      "recommended_size": "280x150",
+      "width": 280,
+      "height": 150,
+      "ok": true
+    },
+    {
+      "path": "assets/eyes-frame-googly.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Googly eyes",
+      "aspect_ratio": "35:19",
+      "size_tier": "small",
+      "recommended_size": "280x152",
+      "width": 280,
+      "height": 152,
+      "ok": true
+    },
+    {
+      "path": "assets/eyes-frame-happy.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Happy eyes",
+      "aspect_ratio": "280:89",
+      "size_tier": "small",
+      "recommended_size": "280x89",
+      "width": 280,
+      "height": 89,
+      "ok": true
+    },
+    {
+      "path": "assets/eyes-frame-sleepy.webp",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Sleepy eyes",
+      "aspect_ratio": "280:113",
+      "size_tier": "small",
+      "recommended_size": "280x113",
+      "width": 280,
+      "height": 113,
+      "ok": true
+    },
+    {
+      "path": "assets/fonts/special-elite/SpecialElite-Regular.ttf",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Locally bundled game font: SpecialElite-Regular",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/paper-grain.svg",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "paper grain",
+      "aspect_ratio": "1:1",
+      "size_tier": "small",
+      "recommended_size": "220x220",
+      "width": 220,
+      "height": 220,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_contact.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx contact",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_plop.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx plop",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    },
+    {
+      "path": "assets/sfx_tap.mp3",
+      "produced_by": "provided_asset",
+      "produced_prompt": "",
+      "description": "Existing game audio: sfx tap",
+      "aspect_ratio": "",
+      "size_tier": "small",
+      "recommended_size": "",
+      "width": 0,
+      "height": 0,
+      "ok": true
+    }
+  ]
+}
