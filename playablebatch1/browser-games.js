@@ -554,7 +554,7 @@ window.PlayableBrowserGames = {
   "friends_tilt_pick": {
     "it": {
       "title": "Scegli inclinando",
-      "src": "/playablebatch1/games/friends_tilt_pick/game.html?lang=it&revision=3484dbf2f915"
+      "src": "/playablebatch1/games/friends_tilt_pick/game.html?lang=it&revision=d9863a21eb4a"
     }
   },
   "friends_crystal_fortune": {

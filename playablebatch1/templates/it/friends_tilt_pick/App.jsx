@@ -103,37 +103,37 @@ function installPrintedPaper(){
  if(typeof ResizeObserver!=='undefined'){const observer=new ResizeObserver(refresh);observer.observe(root);cleanups.push(()=>observer.disconnect());}
  return refresh;
 }
-mount(`.fit{background:transparent}.guide{top:420px;font-size:15px;color:#908576}.question{position:absolute;left:35px;right:35px;top:145px;font-weight:700;font-size:23px;line-height:1.35;text-align:center}.count{position:absolute;top:46px;left:30px;right:30px;text-align:center;font-size:13px;letter-spacing:2px;color:#756e63}.choice{position:absolute;top:264px;width:140px;height:142px;background:transparent;border-radius:80px}.choice.left{left:30px}.choice.right{right:30px}.tilt-enable{font-size:13px;border:1px solid #bbb1a2;background:transparent;border-radius:24px;padding:9px 18px}.result{background:#fffdf8}.result .value{font-size:24px;line-height:1.3;overflow-wrap:anywhere}.winner-avatar{display:block;width:104px;height:104px;margin:14px auto 6px}.result h2{margin:0}.result p{margin:12px 0 22px}.result p{white-space:pre-line;font-size:14px;line-height:1.8}`,`<canvas class="stage" aria-label="Scegli tra gli amici"></canvas><div class="count">1 / 3</div><div class="question"></div><button class="choice left" data-choice="0" aria-label="Scegli l’amico a sinistra"></button><button class="choice right" data-choice="1" aria-label="Scegli l’amico a destra"></button><div class="guide">Inclina il telefono o tocca un amico</div><div class="bottom"><button class="tilt-enable">Attiva inclinazione</button></div>${resultMarkup()}`,'#f1e9d3');
+mount(`.fit{background:transparent}.guide{top:420px;font-size:15px;color:#908576}.question{position:absolute;left:35px;right:35px;top:145px;font-weight:700;font-size:23px;line-height:1.35;text-align:center}.count{position:absolute;top:46px;left:30px;right:30px;text-align:center;font-size:13px;letter-spacing:2px;color:#756e63}.choice{position:absolute;top:264px;width:140px;height:142px;background:transparent;border-radius:80px}.choice.left{left:30px}.choice.right{right:30px}.tilt-enable{font-size:13px;border:1px solid #bbb1a2;background:transparent;border-radius:24px;padding:9px 18px}.result{background:#fffdf8}.result .value{font-size:24px;line-height:1.3;overflow-wrap:anywhere}.winner-avatar{display:block;width:104px;height:104px;margin:14px auto 6px}.result h2{margin:0}.result p:empty{display:none}.result p{margin:12px 0 22px}.result p{white-space:pre-line;font-size:14px;line-height:1.8}`,`<canvas class="stage" aria-label="Scegli tra gli amici"></canvas><div class="count">Domanda 1 / 5</div><div class="question"></div><button class="choice left" data-choice="0" aria-label="Scegli l’amico a sinistra"></button><button class="choice right" data-choice="1" aria-label="Scegli l’amico a destra"></button><div class="guide">Inclina il telefono o tocca un amico</div><div class="bottom"><button class="tilt-enable">Attiva inclinazione</button></div>${resultMarkup()}`,'#f1e9d3');
 const refreshPrintedPaper=installPrintedPaper();
 const {ctx}=stageCanvas(),questions=["Chi ha più probabilità di diventare famoso?","Chi sopravviverebbe su un’isola deserta?","Chi organizzerebbe la sorpresa migliore?","Chi si lancia sempre in un’avventura?","Chi farebbe ridere tutti?"];
-// Each run is one knockout: the chosen friend stays, and each loser leaves.
-let questionIndex=0,roundNo=0,choices=[0,1],challengers=[],champion=-1,participantFriends=friends,tilt=0,baseline=null,dwell=0,waiting=0,phase='ready',chosen=-1,tiltArmed=true,tiltListening=false;
+// Compare the same two friends across all five questions; reveal one overall winner.
+let roundNo=0,choices=[],scores=[0,0],champion=-1,participantFriends=friends,tilt=0,baseline=null,dwell=0,waiting=0,phase='ready',chosen=-1,tiltArmed=true,tiltListening=false;
 const choiceButtons=Array.from(root.querySelectorAll('.choice'));
 const winnerCanvas=document.createElement('canvas');winnerCanvas.className='winner-avatar';winnerCanvas.width=160;winnerCanvas.height=160;winnerCanvas.setAttribute('role','img');winnerCanvas.setAttribute('aria-label',"L’amico scelto");$('.result h2').after(winnerCanvas);
 function drawWinner(){const winnerCtx=winnerCanvas.getContext('2d');winnerCtx.clearRect(0,0,160,160);if(champion>=0)avatar(winnerCtx,champion,80,80,76,'#819a70');}
 function setChoicesEnabled(enabled){for(const button of choiceButtons)button.disabled=!enabled;}
 function nextPair(){
  chosen=-1;dwell=0;setChoicesEnabled(true);
- $('.question').textContent=questions[questionIndex];
- $('.count').textContent=(roundNo+1)+' / '+Math.max(1,participantFriends.length-1);
+ $('.question').textContent=questions[roundNo];
+ $('.count').textContent="Domanda "+(roundNo+1)+' / '+questions.length;
  for(let side=0;side<2;side++)choiceButtons[side].setAttribute('aria-label',friendName(choices[side]));
  state(roundNo?'playing':'ready');
 }
 function finish(){
  phase='result';waiting=0;dwell=0;setChoicesEnabled(false);stopTilt();
- result("La scelta finale",friendName(champion),questions[questionIndex],()=>{questionIndex=(questionIndex+1)%questions.length;reset();});
+ result("La scelta finale",friendName(champion),"",reset);
  drawWinner();if(roundNo>0)success();
 }
 function reset(){
- roundNo=0;participantFriends=friends;challengers=shuffle([...Array(friends.length).keys()]);
- choices=[challengers.shift(),challengers.shift()];champion=-1;phase='ready';waiting=0;tiltArmed=true;dwell=0;chosen=-1;
+ if(participantFriends!==friends||choices.length!==2){choices=shuffle([...Array(friends.length).keys()]).slice(0,2);}
+ roundNo=0;participantFriends=friends;scores=[0,0];champion=-1;phase='ready';waiting=0;tiltArmed=true;dwell=0;chosen=-1;
  $('.modal').hidden=true;
  if(choices[1]===undefined){champion=choices[0];finish();return;}
  nextPair();
 }
 function choose(side){
  if(!active||document.hidden||waiting>0||phase==='result'||(side!==0&&side!==1))return;
- gesture();chosen=side;champion=choices[side];tiltArmed=false;dwell=0;
+ gesture();chosen=side;scores[side]++;tiltArmed=false;dwell=0;
  setChoicesEnabled(false);sound(520,.08,.16);waiting=.65;phase='playing';state('chosen');
 }
 choiceButtons.forEach(b=>on(b,'click',()=>choose(Number(b.dataset.choice))));
@@ -167,9 +167,8 @@ loop(dt=>{
   waiting-=dt;
   if(waiting<=0){
    roundNo++;
-   if(!challengers.length){finish();return;}
-   // Keep the winner on the same side, and replace only the eliminated friend.
-   choices[1-chosen]=challengers.shift();nextPair();
+   if(roundNo===questions.length){champion=choices[scores[0]>scores[1]?0:1];finish();return;}
+   nextPair();
   }
  }else if(Math.abs(tilt)<.25){tiltArmed=true;dwell=0;}
  else if(tiltArmed&&Math.abs(tilt)>.55){dwell+=dt;if(dwell>.3)choose(tilt<0?0:1);}

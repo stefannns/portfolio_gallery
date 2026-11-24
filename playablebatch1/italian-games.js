@@ -555,7 +555,7 @@ window.PlayableItalianGames = {
     "number": 121,
     "name": "Scegli inclinando",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_tilt_pick/game.html",
-    "revision": "3484dbf2f915"
+    "revision": "d9863a21eb4a"
   },
   "friends_crystal_fortune": {
     "number": 122,

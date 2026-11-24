@@ -1664,16 +1664,16 @@ window.PlayableGameDownloads = {
   "friends_tilt_pick": {
     "url": "/playablebatch1/downloads/121-friends_tilt_pick-it.zip",
     "filename": "121-friends_tilt_pick-it.zip",
-    "bytes": 879157,
-    "sha256": "89196e60cf5d344fab5af745161bdb35307b9d3694d36c252682f4c1d5077a65",
+    "bytes": 879123,
+    "sha256": "7c33a7e601549b6aac5c6e3292c1f0df379614ef79c31993684deb3f511d9575",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/121-friends_tilt_pick-it.zip",
         "filename": "121-friends_tilt_pick-it.zip",
-        "bytes": 879157,
-        "sha256": "89196e60cf5d344fab5af745161bdb35307b9d3694d36c252682f4c1d5077a65",
+        "bytes": 879123,
+        "sha256": "7c33a7e601549b6aac5c6e3292c1f0df379614ef79c31993684deb3f511d9575",
         "language": "it",
         "format": "template-v1",
         "files": 15
