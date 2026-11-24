@@ -380,7 +380,7 @@ window.PlayableBrowserGames = {
   "playable2_20260927021659_jfkvov": {
     "it": {
       "title": "Meglio insieme",
-      "src": "/playablebatch1/games/playable2_20260927021659_jfkvov/game.html?lang=it&revision=c5dbe5a8cb57"
+      "src": "/playablebatch1/games/playable2_20260927021659_jfkvov/game.html?lang=it&revision=bbd4c79eb58b"
     }
   },
   "playable2_20261001230001_ag49cj": {
@@ -458,7 +458,7 @@ window.PlayableBrowserGames = {
   "camera_meme_face": {
     "it": {
       "title": "Sfida delle espressioni",
-      "src": "/playablebatch1/games/camera_meme_face/game.html?lang=it&revision=ca6755b5c867"
+      "src": "/playablebatch1/games/camera_meme_face/game.html?lang=it&revision=56e11284c110"
     }
   },
   "camera_photo_puzzle": {
@@ -560,7 +560,7 @@ window.PlayableBrowserGames = {
   "friends_crystal_fortune": {
     "it": {
       "title": "La sfera degli amici",
-      "src": "/playablebatch1/games/friends_crystal_fortune/game.html?lang=it&revision=1289ebb12092"
+      "src": "/playablebatch1/games/friends_crystal_fortune/game.html?lang=it&revision=7dfc7850aa0e"
     }
   },
   "friends_personality_quiz": {

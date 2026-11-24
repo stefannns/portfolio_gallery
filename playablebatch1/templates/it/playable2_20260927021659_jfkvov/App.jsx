@@ -390,6 +390,14 @@ button{font:inherit;cursor:pointer;touch-action:manipulation}button:focus-visibl
 .result-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;width:100%}.result-action{min-height:44px;background:transparent;border:1px solid #28272390;border-radius:4px;padding:7px 3px;font-size:12px;line-height:1.3;color:#282723;white-space:normal;overflow-wrap:anywhere}
 .share-status{font-size:13px!important;line-height:1.4!important;color:#645b50}.copy-text{display:block;width:100%;min-height:130px;padding:10px;border:1px solid #28272370;background:#fffdf1;color:#282723;font:13px/1.5 PaperType,Georgia,serif;user-select:text;-webkit-user-select:text;resize:vertical}
 @media(max-height:620px){.solo-result{padding:16px 14px;gap:10px}.solo-result h2{font-size:23px}.result-picks>div{padding:6px 0}.couple-content.solo-playing{gap:14px}}
+/* Keep the title, question and choices in one vertically centered group. */
+.couple-screen[data-phase="playing"]{padding-top:calc(30px + env(safe-area-inset-top,0px));padding-bottom:calc(30px + env(safe-area-inset-bottom,0px))}
+.couple-screen[data-phase="playing"] .couple-hud{position:absolute;top:calc(30px + env(safe-area-inset-top,0px));left:calc(30px + env(safe-area-inset-left,0px));right:calc(30px + env(safe-area-inset-right,0px))}
+.couple-screen[data-phase="playing"] .couple-main{padding-block:0}
+.couple-content.solo-playing{gap:18px;padding-block:4px}
+.couple-playing-title{margin:0;font-size:24px;line-height:1.25;font-weight:400;text-wrap:balance;overflow-wrap:anywhere;flex:none}
+.solo-playing .couple-question,.solo-playing .couple-options{flex:none}
+
 `;
 const gameStyle = document.createElement('style');
 gameStyle.textContent = GAME_STYLES;
@@ -490,9 +498,9 @@ function App(){
   try{const link=document.createElement('a');link.href=dataURL;link.download='better-together.png';document.body.append(link);link.click();link.remove();setNotice(config.SAVE_DOWNLOAD);}catch(_){setNotice(config.SAVE_FAILURE);}
  }
  return <main className="couple-screen" data-phase={phase}>
-  <header className="couple-hud"><span aria-label={config.PROGRESS_LABEL+' '+(round+1)+' / '+questions.length}>{round+1}/{questions.length}</span><span className="couple-title">{config.GAME_TITLE}</span></header>
+  <header className="couple-hud"><span aria-label={config.PROGRESS_LABEL+' '+(round+1)+' / '+questions.length}>{round+1}/{questions.length}</span>{phase!=='playing'&&<span className="couple-title">{config.GAME_TITLE}</span>}</header>
   <section className="couple-main"><div className={'couple-content'+(phase==='playing'?' solo-playing':'')}>
-   {phase==='playing'&&<><h2 className="couple-question">{questions[round].text}</h2><div className="couple-options">{questions[round].options.map((option,index)=><button key={index} className="btn-option" onClick={()=>choose(index)}>{option}</button>)}</div></>}
+   {phase==='playing'&&<><h1 className="couple-playing-title">{config.GAME_TITLE}</h1><h2 className="couple-question">{questions[round].text}</h2><div className="couple-options">{questions[round].options.map((option,index)=><button key={index} className="btn-option" onClick={()=>choose(index)}>{option}</button>)}</div></>}
    {phase==='result'&&<section className="paper-card solo-result" aria-live="polite">
     <h2>{profile.title}</h2><p className="profile-copy">{profile.detail}</p>
     <dl className="result-picks">{questions.map((question,index)=><div key={index}><dt>{question.label}</dt><dd>{question.options[answers[index]]}</dd></div>)}</dl>

@@ -69,6 +69,19 @@ function drawName(ctx,index,x,y,size=13){text(ctx,Array.from(friendName(index)).
 loadFriends();
 
 mount(`.fit{background:#fff}canvas.stage{position:absolute;z-index:3;pointer-events:none}.vision-copy{position:absolute;left:30px;right:30px;top:90px;z-index:6;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center;pointer-events:none}.question{position:static;margin:0;font-size:20px;line-height:1.4;font-weight:700;color:#55465c}.guide{top:160px;font-size:15px;font-weight:500;color:#aaa0ac}.orb{position:absolute;left:65px;top:218px;width:260px;height:260px;object-fit:contain;pointer-events:none}.fog{position:absolute;left:65px;top:218px;width:260px;height:260px;touch-action:none;z-index:5;opacity:1;transition:opacity .5s ease-out}.fog.revealed{opacity:0;pointer-events:none}.prediction{position:static;margin:0;font-size:14px;line-height:1.4;color:#5d4969;overflow-wrap:anywhere}.prediction:empty{display:none}.next-vision{position:absolute;left:50%;transform:translateX(-50%);bottom:24px;white-space:nowrap;background:#4b4355}.count{position:absolute;right:30px;top:33px;color:#8e8696;font-size:14px}.result{background:#faf7ff}.result .value{font-size:28px}.result p{white-space:pre-line}`,`<canvas class="stage" aria-label="La sfera del futuro"></canvas><div class="count">1 / 3</div><div class="vision-copy"><div class="question">Chi avrà fortuna oggi?</div><div class="prediction" aria-live="polite"></div></div><div class="guide">Strofina e scopri chi c’è</div><img class="orb" src="./assets/crystal.webp" alt="Sfera di cristallo"><canvas class="fog" width="436" height="436" aria-label="Rimuovi la nebbia"></canvas><button class="pill next-vision" disabled>Prossima visione</button>${resultMarkup()}`,'#fff');
+// The result backdrop covers the host viewport; only the card keeps stage scaling.
+function installFullHostResult122(){
+ const modal=$('.modal'),panel=$('.result'),frame=document.createElement('div');
+ frame.className='fortune-result-fit';frame.append(panel);modal.append(frame);modal.classList.add('fortune-overlay');root.append(modal);
+ root.style.position='relative';
+ const style=document.createElement('style');
+ style.textContent='#root>.modal.fortune-overlay{position:absolute;inset:0;width:100%;height:100%;padding:0;overflow:hidden}#root .fortune-result-fit{width:390px;height:598px;display:grid;place-items:center;padding:30px 30px 50px;transform:scale(var(--fortune-result-scale,1));transform-origin:center;pointer-events:auto}';
+ document.head.append(style);
+ function resize(){const r=root.getBoundingClientRect();root.style.setProperty('--fortune-result-scale',String(Math.min(r.width/390,r.height/598)));}
+ resize();on(window,'resize',resize);
+ if(typeof ResizeObserver!=='undefined'){const observer=new ResizeObserver(resize);observer.observe(root);cleanups.push(()=>observer.disconnect());}
+}
+installFullHostResult122();
 const {ctx}=stageCanvas(),fog=$('.fog'),fg=fog.getContext('2d'),FOG_SIZE=fog.width;let roundNo=0,subject=0,prediction='',revealed=false,dragging=false,last=null,fortunes=[],glassCoverage=0,coverageDirty=false,lastCoverageCheck=-1;
 // Circle fitted to the new round glass asset; inset slightly to preserve its clear rim.
 // Artwork coordinates use640px; the image and fog remain260px at65,218.
@@ -114,7 +127,7 @@ function revealVision(){
  // Retain the remaining mist pixels for the existing500ms opacity transition.
  fog.classList.add('revealed');fog.setAttribute('aria-hidden','true');
  $('.prediction').textContent=prediction;$('.next-vision').disabled=false;
- fortunes.push(friendName(subject)+' — '+prediction);sound(640,.3,.1,'sine',900);state('revealed');
+ fortunes.push({friend:friends[subject],prediction,index:subject});sound(640,.3,.1,'sine',900);state('revealed');
 }
 function measureGlassCoverage(){
  if(!coverageDirty||revealed)return;
@@ -152,7 +165,25 @@ on(fog,'pointerdown',e=>{if(revealed||!insideGlass(glassPoint(e)))return;gesture
 on(fog,'pointermove',e=>{if(dragging&&!revealed)wipe(e);});
 for(const ev of ['pointerup','pointercancel','lostpointercapture'])on(fog,ev,()=>{measureGlassCoverage();dragging=false;last=null;});
 lifecycle.push(next=>{if(!next){dragging=false;last=null;}});
-on($('.next-vision'),'click',()=>{gesture();if(roundNo===2){result("Le tue piccole previsioni","3 visioni",fortunes.join('\n\n'),reset);success();}else{roundNo++;prepare();}});
+function showVisions(){
+ result('Le tue visioni','','',reset);
+ const panel=$('.result');panel.classList.add('fortune-summary');
+ let list=panel.querySelector('.fortune-list');
+ if(!list){list=document.createElement('ol');list.className='fortune-list';panel.querySelector('button').before(list);}
+ list.replaceChildren();
+ for(const fortune of fortunes){
+  const row=document.createElement('li');row.className='fortune-row';
+  const portrait=document.createElement('canvas');portrait.className='fortune-avatar';portrait.width=96;portrait.height=96;portrait.setAttribute('role','img');portrait.setAttribute('aria-label',fortune.friend.nickname);
+  const c=portrait.getContext('2d');circle(c,48,48,47,'#e5daed');
+  if(fortune.friend.image)cropCircle(c,fortune.friend.image,48,48,44);
+  else{circle(c,48,48,44,['#efb5a9','#b3d6ce','#e3cb8f','#c6b8df'][fortune.index%4]);text(c,Array.from(fortune.friend.nickname||'?')[0],48,48,32,'#fff');}
+  const copy=document.createElement('div');copy.className='fortune-copy';
+  const name=document.createElement('strong');name.className='fortune-name';name.textContent=fortune.friend.nickname;
+  const detail=document.createElement('p');detail.textContent=fortune.prediction;
+  copy.append(name,detail);row.append(portrait,copy);list.append(row);
+ }
+}
+on($('.next-vision'),'click',()=>{gesture();if(roundNo===2){showVisions();success();}else{roundNo++;prepare();}});
 reset();loop((dt,t)=>{
  if(coverageDirty&&t-lastCoverageCheck>=.05){lastCoverageCheck=t;measureGlassCoverage();}
  ctx.clearRect(0,0,390,598);avatar(ctx,subject,195,304,30,'#fff');drawName(ctx,subject,195,351,14);
@@ -169,3 +200,6 @@ configure(()=>{if($('.guide'))$('.guide').textContent=String(setting('GUIDE',"St
   uiStyle.textContent="\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}\n@font-face{font-family:UIBody;src:url('./assets/ui/Poppins-Bold.woff2') format('woff2');font-weight:600 900;font-style:normal;font-display:swap}\nhtml,body,#root{font-family:UIBody,system-ui,sans-serif;-webkit-text-size-adjust:100%}\nbutton{font-family:UIBody,system-ui,sans-serif;font-size:16px;font-weight:700;line-height:1.3;min-height:44px}\nbutton:focus-visible{outline:3px solid currentColor;outline-offset:4px}\nbutton:disabled{opacity:.55}\n[hidden]{display:none!important}\n.guide{font-size:18px;line-height:1.4;text-wrap:balance}\n.hud{top:30px;left:30px;right:30px;font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums}\n.hud.center{justify-content:center}\n.bottom{bottom:50px;left:30px;right:30px;gap:10px}\n.bottom .capability{min-height:44px;padding:10px 14px;font-size:14px;line-height:1.25;white-space:normal}\n.status{font-size:13px;line-height:1.4;bottom:108px;text-wrap:balance}\n.pill{font-size:16px;line-height:1.3;min-height:44px;padding:11px 22px}\n.modal{padding:30px 30px 50px}\n.result{max-height:100%;overflow-y:auto;padding:28px 22px}\n.result h2{font-family:Playful,UIBody,sans-serif;font-size:24px;line-height:1.25;text-wrap:balance;overflow-wrap:anywhere}\n.result p{font-size:15px;line-height:1.6;overflow-wrap:anywhere}\n.result .value{line-height:1.2;overflow-wrap:anywhere}\n.smallcaps{font-size:12px;letter-spacing:1.4px;line-height:1.4}\n\n.fit{font-family:UIBody,system-ui,sans-serif}\n.guide{font-family:Playful,UIBody,sans-serif;font-weight:600}\n.capability,.pill{font-family:UIBody,system-ui,sans-serif}\n\n.count{top:30px;left:30px;right:30px;text-align:center;font:600 28px/1.2 Playful,UIBody,sans-serif;color:#6e5c7c}\n.question{position:static;font:700 20px/1.4 UIBody,system-ui,sans-serif;color:#55465c}\n.guide{top:157px;font:400 18px/1.4 UIBody,system-ui,sans-serif;color:#746778}\n.orb{left:65px;top:218px;width:260px;height:260px}\n.fog{left:65px;top:218px;width:260px;height:260px}\n.prediction{position:static;font-size:14px;line-height:1.4;color:#5d4969}\n.next-vision{bottom:50px;min-height:44px;font-size:16px}\n";
   document.head.append(uiStyle);
 })();
+
+// Final vision summary layout.
+(()=>{const style=document.createElement('style');style.textContent='\n/* A readable three-row keepsake instead of the generic numeric result. */\n.result.fortune-summary{display:flex;flex-direction:column;gap:18px;width:330px;max-width:100%;max-height:100%;padding:24px 20px;background:#faf7ff;border:2px solid #65566d;border-radius:18px;box-shadow:4px 5px 0 #65566d22;text-align:left;overflow-y:auto}\n.result.fortune-summary h2{margin:0;font:700 24px/1.25 Playful,UIBody,sans-serif;text-align:center;overflow-wrap:anywhere;text-wrap:balance}\n.result.fortune-summary>.value,.result.fortune-summary>p{display:none}\n.fortune-list{display:flex;flex-direction:column;gap:0;margin:0;padding:0;list-style:none}\n.fortune-row{display:grid;grid-template-columns:48px minmax(0,1fr);gap:12px;align-items:start;padding:14px 0;border-bottom:1px solid #65566d26}\n.fortune-row:first-child{padding-top:0}.fortune-row:last-child{padding-bottom:0;border-bottom:0}\n.fortune-avatar{display:block;width:48px;height:48px;margin-top:2px}\n.fortune-copy{min-width:0}.fortune-name{display:block;margin:0 0 4px;font:700 16px/1.3 UIBody,sans-serif;color:#45364e;overflow-wrap:anywhere}\n.result.fortune-summary .fortune-row p{margin:0;font:400 14px/1.5 UIBody,sans-serif;color:#65566d;white-space:normal;overflow-wrap:anywhere}\n.result.fortune-summary>.pill{align-self:center;margin:2px 0 0;min-height:44px;max-width:100%;padding:11px 28px;background:#4b4355;color:#fff;border-radius:10px;font:700 16px/1.3 Playful,UIBody,sans-serif;white-space:normal}\n#root[data-phase="result"] .count,#root[data-phase="result"] .vision-copy,#root[data-phase="result"] .guide,#root[data-phase="result"] .next-vision{visibility:hidden}\n';document.head.append(style);})();

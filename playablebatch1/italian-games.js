@@ -381,7 +381,8 @@ window.PlayableItalianGames = {
     "number": 11,
     "name": "Meglio insieme",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/playable2_20260927021659_jfkvov/game.html",
-    "revision": "c5dbe5a8cb57"
+    "revision": "bbd4c79eb58b",
+    "coverRevision": "a699bfa13956"
   },
   "playable2_20261001230001_ag49cj": {
     "number": 50,
@@ -459,13 +460,15 @@ window.PlayableItalianGames = {
     "number": 105,
     "name": "Sfida delle espressioni",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/camera_meme_face/game.html",
-    "revision": "ca6755b5c867"
+    "revision": "56e11284c110",
+    "coverRevision": "684ea4b5648b"
   },
   "camera_photo_puzzle": {
     "number": 106,
     "name": "Puzzle fotografico",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/camera_photo_puzzle/game.html",
-    "revision": "203fb025bdaa"
+    "revision": "203fb025bdaa",
+    "coverRevision": "e43b99a3557b"
   },
   "camera_doodle_booth": {
     "number": 107,
@@ -561,7 +564,8 @@ window.PlayableItalianGames = {
     "number": 122,
     "name": "La sfera degli amici",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_crystal_fortune/game.html",
-    "revision": "1289ebb12092"
+    "revision": "7dfc7850aa0e",
+    "coverRevision": "471a8ca34fef"
   },
   "friends_personality_quiz": {
     "number": 123,

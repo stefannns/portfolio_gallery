@@ -1136,20 +1136,22 @@ window.PlayableGameDownloads = {
   "playable2_20260927021659_jfkvov": {
     "url": "/playablebatch1/downloads/011-playable2_20260927021659_jfkvov-it.zip",
     "filename": "011-playable2_20260927021659_jfkvov-it.zip",
-    "bytes": 1061584,
-    "sha256": "2872d8d18a32839d54f3d492b9c5bb17e79ed6428dd4bc4d8c3473ac2738ad8c",
+    "bytes": 1177681,
+    "sha256": "14dadcf5d1190e850e0272af03ad0470f3048868ce737959cc1c58a3ebae0ec5",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/011-playable2_20260927021659_jfkvov-it.zip",
         "filename": "011-playable2_20260927021659_jfkvov-it.zip",
-        "bytes": 1061584,
-        "sha256": "2872d8d18a32839d54f3d492b9c5bb17e79ed6428dd4bc4d8c3473ac2738ad8c",
+        "bytes": 1177681,
+        "sha256": "14dadcf5d1190e850e0272af03ad0470f3048868ce737959cc1c58a3ebae0ec5",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 13
       }
-    }
+    },
+    "files": 13
   },
   "playable2_20261001230001_ag49cj": {
     "url": "/playablebatch1/downloads/050-playable2_20261001230001_ag49cj-it.zip",
@@ -1372,38 +1374,42 @@ window.PlayableGameDownloads = {
   "camera_meme_face": {
     "url": "/playablebatch1/downloads/105-camera_meme_face-it.zip",
     "filename": "105-camera_meme_face-it.zip",
-    "bytes": 1248643,
-    "sha256": "8499238a75466d81ce4a23a7ef3c57187828d487f3fdad07345232c06579e014",
+    "bytes": 1248110,
+    "sha256": "216e1549edc14e608ce3e616d638db62dfdcbc7ae501c95c0e0240a93fbe6013",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/105-camera_meme_face-it.zip",
         "filename": "105-camera_meme_face-it.zip",
-        "bytes": 1248643,
-        "sha256": "8499238a75466d81ce4a23a7ef3c57187828d487f3fdad07345232c06579e014",
+        "bytes": 1248110,
+        "sha256": "216e1549edc14e608ce3e616d638db62dfdcbc7ae501c95c0e0240a93fbe6013",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 15
       }
-    }
+    },
+    "files": 15
   },
   "camera_photo_puzzle": {
     "url": "/playablebatch1/downloads/106-camera_photo_puzzle-it.zip",
     "filename": "106-camera_photo_puzzle-it.zip",
-    "bytes": 1185757,
-    "sha256": "d9610dd275016770c7f2df65777def7817ea701f84d97b5a901d09f2ad148d29",
+    "bytes": 830429,
+    "sha256": "24826e489187ff006556943d5fc957da54db7b3b5f969496a513ef881c5a58af",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/106-camera_photo_puzzle-it.zip",
         "filename": "106-camera_photo_puzzle-it.zip",
-        "bytes": 1185757,
-        "sha256": "d9610dd275016770c7f2df65777def7817ea701f84d97b5a901d09f2ad148d29",
+        "bytes": 830429,
+        "sha256": "24826e489187ff006556943d5fc957da54db7b3b5f969496a513ef881c5a58af",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 12
       }
-    }
+    },
+    "files": 12
   },
   "camera_doodle_booth": {
     "url": "/playablebatch1/downloads/107-camera_doodle_booth-it.zip",
@@ -1684,20 +1690,22 @@ window.PlayableGameDownloads = {
   "friends_crystal_fortune": {
     "url": "/playablebatch1/downloads/122-friends_crystal_fortune-it.zip",
     "filename": "122-friends_crystal_fortune-it.zip",
-    "bytes": 431027,
-    "sha256": "b647f714e1d699c1f065ac5fc6de6910814bcc31501964e08d4703920aa6cc01",
+    "bytes": 432910,
+    "sha256": "23f5546e865949f121ae29d389df3c4dc2ef0d4301b0b447ae0dfd109ddf6f8d",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/122-friends_crystal_fortune-it.zip",
         "filename": "122-friends_crystal_fortune-it.zip",
-        "bytes": 431027,
-        "sha256": "b647f714e1d699c1f065ac5fc6de6910814bcc31501964e08d4703920aa6cc01",
+        "bytes": 432910,
+        "sha256": "23f5546e865949f121ae29d389df3c4dc2ef0d4301b0b447ae0dfd109ddf6f8d",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 15
       }
-    }
+    },
+    "files": 15
   },
   "friends_personality_quiz": {
     "url": "/playablebatch1/downloads/123-friends_personality_quiz-it.zip",
