@@ -287,8 +287,8 @@ window.PlayableBatchDownloads = {
       "it": {
         "url": "/playablebatch1/downloads/batch-3-it.zip",
         "filename": "batch-3-it.zip",
-        "bytes": 35386665,
-        "sha256": "48e69014de9e416e9ebe2b007753f4905deb62b175304bee70a20103aa321614",
+        "bytes": 35386560,
+        "sha256": "2a715489b92398e8e5e678df1ac03c5479f627c496e3f333071b2c54f3b6ccfe",
         "language": "it",
         "games": 36,
         "members": [

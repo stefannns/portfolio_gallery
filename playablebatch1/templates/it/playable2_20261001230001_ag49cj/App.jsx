@@ -690,7 +690,7 @@ function App() {
       lineHeight: 1.4,
       fontSize: "calc(18 * min(.2564102564vw,.1672240803vh))",
       pointerEvents: "none",
-      visibility: hint || aiming ? "visible" : "hidden"
+      visibility: hint ? "visible" : "hidden"
     }}>{aiming ? "Rilascia per lanciare" : "Trascina in su per vedere la traiettoria"}</div>}</div>;
 }
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);

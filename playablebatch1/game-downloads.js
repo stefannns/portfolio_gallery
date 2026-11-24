@@ -1154,20 +1154,22 @@ window.PlayableGameDownloads = {
   "playable2_20261001230001_ag49cj": {
     "url": "/playablebatch1/downloads/050-playable2_20261001230001_ag49cj-it.zip",
     "filename": "050-playable2_20261001230001_ag49cj-it.zip",
-    "bytes": 2228099,
-    "sha256": "df0b219353222a2f8c22f81ff9246303c0e83d8d80e890662bb16324e5b9e474",
+    "bytes": 2227994,
+    "sha256": "18dffea391f8116ebc80f8926e429948519899707604139ccfa6cf2b2cb3c7b3",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/050-playable2_20261001230001_ag49cj-it.zip",
         "filename": "050-playable2_20261001230001_ag49cj-it.zip",
-        "bytes": 2228099,
-        "sha256": "df0b219353222a2f8c22f81ff9246303c0e83d8d80e890662bb16324e5b9e474",
+        "bytes": 2227994,
+        "sha256": "18dffea391f8116ebc80f8926e429948519899707604139ccfa6cf2b2cb3c7b3",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 26
       }
-    }
+    },
+    "files": 26
   },
   "playable2_20261001230112_0ivocb": {
     "url": "/playablebatch1/downloads/052-playable2_20261001230112_0ivocb-it.zip",

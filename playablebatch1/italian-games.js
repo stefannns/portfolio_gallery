@@ -387,7 +387,7 @@ window.PlayableItalianGames = {
     "number": 50,
     "name": "Collina stellata",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/playable2_20261001230001_ag49cj/game.html",
-    "revision": "dbfc1eecf248"
+    "revision": "e4c0b9edf077"
   },
   "playable2_20261001230112_0ivocb": {
     "number": 52,
