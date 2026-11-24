@@ -536,13 +536,13 @@ window.PlayableBrowserGames = {
   "friends_connect_four": {
     "it": {
       "title": "Forza quattro tra amici",
-      "src": "/playablebatch1/games/friends_connect_four/game.html?lang=it&revision=17e091b62740"
+      "src": "/playablebatch1/games/friends_connect_four/game.html?lang=it&revision=8bff85c08ff3"
     }
   },
   "friends_tic_tac_toe": {
     "it": {
       "title": "Tris tra amici",
-      "src": "/playablebatch1/games/friends_tic_tac_toe/game.html?lang=it&revision=4d559013111d"
+      "src": "/playablebatch1/games/friends_tic_tac_toe/game.html?lang=it&revision=80c034f41146"
     }
   },
   "friends_award_scratch": {
@@ -554,7 +554,7 @@ window.PlayableBrowserGames = {
   "friends_tilt_pick": {
     "it": {
       "title": "Scegli inclinando",
-      "src": "/playablebatch1/games/friends_tilt_pick/game.html?lang=it&revision=ecaca18b2732"
+      "src": "/playablebatch1/games/friends_tilt_pick/game.html?lang=it&revision=3484dbf2f915"
     }
   },
   "friends_crystal_fortune": {
@@ -590,7 +590,7 @@ window.PlayableBrowserGames = {
   "orbit_switch_r1": {
     "it": {
       "title": "Cambio di orbita",
-      "src": "/playablebatch1/games/orbit_switch_r1/game.html?lang=it&revision=317ce4a656c2"
+      "src": "/playablebatch1/games/orbit_switch_r1/game.html?lang=it&revision=d53a9e8e4b50"
     }
   }
 };

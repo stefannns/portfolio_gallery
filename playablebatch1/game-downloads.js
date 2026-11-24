@@ -1606,38 +1606,42 @@ window.PlayableGameDownloads = {
   "friends_connect_four": {
     "url": "/playablebatch1/downloads/118-friends_connect_four-it.zip",
     "filename": "118-friends_connect_four-it.zip",
-    "bytes": 873850,
-    "sha256": "bd861378447797e6167f0a4b4ea57bc4bc6f0f326565a2bfb091adf4320900e2",
+    "bytes": 873872,
+    "sha256": "198783bd526200587f42bc5bae9a11cc4fc435cdca142ac6cbcaaf849e5d9524",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/118-friends_connect_four-it.zip",
         "filename": "118-friends_connect_four-it.zip",
-        "bytes": 873850,
-        "sha256": "bd861378447797e6167f0a4b4ea57bc4bc6f0f326565a2bfb091adf4320900e2",
+        "bytes": 873872,
+        "sha256": "198783bd526200587f42bc5bae9a11cc4fc435cdca142ac6cbcaaf849e5d9524",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 15
       }
-    }
+    },
+    "files": 15
   },
   "friends_tic_tac_toe": {
     "url": "/playablebatch1/downloads/119-friends_tic_tac_toe-it.zip",
     "filename": "119-friends_tic_tac_toe-it.zip",
-    "bytes": 746950,
-    "sha256": "69bf6321d6a27ac90b4a9db92b71cc28a794c07376ab38ea48454d795e08e6d0",
+    "bytes": 746864,
+    "sha256": "d66e212c6e01c659b4803e6a6ab32ae39f0c2cd0b90d75353d4aaef6eae5982f",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/119-friends_tic_tac_toe-it.zip",
         "filename": "119-friends_tic_tac_toe-it.zip",
-        "bytes": 746950,
-        "sha256": "69bf6321d6a27ac90b4a9db92b71cc28a794c07376ab38ea48454d795e08e6d0",
+        "bytes": 746864,
+        "sha256": "d66e212c6e01c659b4803e6a6ab32ae39f0c2cd0b90d75353d4aaef6eae5982f",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 16
       }
-    }
+    },
+    "files": 16
   },
   "friends_award_scratch": {
     "url": "/playablebatch1/downloads/120-friends_award_scratch-it.zip",
@@ -1660,20 +1664,22 @@ window.PlayableGameDownloads = {
   "friends_tilt_pick": {
     "url": "/playablebatch1/downloads/121-friends_tilt_pick-it.zip",
     "filename": "121-friends_tilt_pick-it.zip",
-    "bytes": 878209,
-    "sha256": "81cefe6d2cc7389ba32d67094257a1bf291a25554fd87e835626b9a7fec33214",
+    "bytes": 879157,
+    "sha256": "89196e60cf5d344fab5af745161bdb35307b9d3694d36c252682f4c1d5077a65",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/121-friends_tilt_pick-it.zip",
         "filename": "121-friends_tilt_pick-it.zip",
-        "bytes": 878209,
-        "sha256": "81cefe6d2cc7389ba32d67094257a1bf291a25554fd87e835626b9a7fec33214",
+        "bytes": 879157,
+        "sha256": "89196e60cf5d344fab5af745161bdb35307b9d3694d36c252682f4c1d5077a65",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 15
       }
-    }
+    },
+    "files": 15
   },
   "friends_crystal_fortune": {
     "url": "/playablebatch1/downloads/122-friends_crystal_fortune-it.zip",
@@ -1768,19 +1774,21 @@ window.PlayableGameDownloads = {
   "orbit_switch_r1": {
     "url": "/playablebatch1/downloads/127-orbit_switch_r1-it.zip",
     "filename": "127-orbit_switch_r1-it.zip",
-    "bytes": 157354,
-    "sha256": "d56efdbbcfae34d7fa4896640dca18a9cec776ea811542936bd6910a688db984",
+    "bytes": 157286,
+    "sha256": "222a2492e0d77518db9e948e2475fe4c424e6cd4ea31aa057265d188f6011c7e",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/127-orbit_switch_r1-it.zip",
         "filename": "127-orbit_switch_r1-it.zip",
-        "bytes": 157354,
-        "sha256": "d56efdbbcfae34d7fa4896640dca18a9cec776ea811542936bd6910a688db984",
+        "bytes": 157286,
+        "sha256": "222a2492e0d77518db9e948e2475fe4c424e6cd4ea31aa057265d188f6011c7e",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 8
       }
-    }
+    },
+    "files": 8
   }
 };

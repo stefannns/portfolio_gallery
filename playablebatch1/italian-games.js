@@ -537,13 +537,13 @@ window.PlayableItalianGames = {
     "number": 118,
     "name": "Forza quattro tra amici",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_connect_four/game.html",
-    "revision": "17e091b62740"
+    "revision": "8bff85c08ff3"
   },
   "friends_tic_tac_toe": {
     "number": 119,
     "name": "Tris tra amici",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_tic_tac_toe/game.html",
-    "revision": "4d559013111d"
+    "revision": "80c034f41146"
   },
   "friends_award_scratch": {
     "number": 120,
@@ -555,7 +555,7 @@ window.PlayableItalianGames = {
     "number": 121,
     "name": "Scegli inclinando",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_tilt_pick/game.html",
-    "revision": "ecaca18b2732"
+    "revision": "3484dbf2f915"
   },
   "friends_crystal_fortune": {
     "number": 122,
@@ -591,6 +591,6 @@ window.PlayableItalianGames = {
     "number": 127,
     "name": "Cambio di orbita",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/orbit_switch_r1/game.html",
-    "revision": "317ce4a656c2"
+    "revision": "d53a9e8e4b50"
   }
 };
