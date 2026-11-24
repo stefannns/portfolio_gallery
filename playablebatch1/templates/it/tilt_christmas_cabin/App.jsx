@@ -1,3 +1,69 @@
+// Mount game-owned markup with DOM nodes. Native hosts do not all implement
+// HTML-string setters; keep mounting synchronous for the gameplay code below.
+function mountPlayableMarkup(target, markup) {
+  if (!target) throw new Error('Game mount target is missing');
+  const source = String(markup ?? '');
+  const decode = value => value.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/gi, (match, entity) => {
+    if (entity[0] === '#') {
+      const hex = entity[1].toLowerCase() === 'x';
+      const code = parseInt(entity.slice(hex ? 2 : 1), hex ? 16 : 10);
+      return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : '\ufffd';
+    }
+    return ({amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nbsp:'\u00a0'})[entity.toLowerCase()] || match;
+  });
+  while (target.firstChild) target.removeChild(target.firstChild);
+  const stack = [{element:target, tag:'', svg:target.namespaceURI === 'http://www.w3.org/2000/svg'}];
+  const voidTags = /^(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)$/i;
+  let position = 0;
+  while (position < source.length) {
+    if (source.startsWith('<!--', position)) {
+      const end = source.indexOf('-->', position + 4);
+      position = end < 0 ? source.length : end + 3;
+      continue;
+    }
+    if (source[position] !== '<') {
+      const next = source.indexOf('<', position);
+      const end = next < 0 ? source.length : next;
+      stack[stack.length - 1].element.appendChild(document.createTextNode(decode(source.slice(position, end))));
+      position = end;
+      continue;
+    }
+    let end = position + 1, quote = '';
+    for (; end < source.length; end++) {
+      const c = source[end];
+      if (quote) { if (c === quote) quote = ''; }
+      else if (c === '"' || c === "'") quote = c;
+      else if (c === '>') break;
+    }
+    if (end >= source.length) throw new Error('Incomplete game markup');
+    const token = source.slice(position + 1, end);
+    position = end + 1;
+    if (/^\s*!/.test(token)) continue;
+    const close = /^\s*\/\s*([\w:-]+)/.exec(token);
+    if (close) {
+      for (let i = stack.length - 1; i > 0; i--) {
+        if (stack[i].tag.toLowerCase() === close[1].toLowerCase()) { stack.length = i; break; }
+      }
+      continue;
+    }
+    const opening = /^\s*([\w:-]+)/.exec(token);
+    if (!opening) throw new Error('Invalid game markup');
+    const tag = opening[1], parent = stack[stack.length - 1];
+    const svg = tag.toLowerCase() === 'svg' || (parent.svg && parent.tag.toLowerCase() !== 'foreignobject');
+    const element = svg ? document.createElementNS('http://www.w3.org/2000/svg', tag) : document.createElement(tag);
+    const attributes = token.slice(opening[0].length).replace(/\/\s*$/, '');
+    const attribute = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
+    let match;
+    while ((match = attribute.exec(attributes))) {
+      const name = match[1], value = decode(match[2] ?? match[3] ?? match[4] ?? '');
+      element.setAttribute(name, value);
+    }
+    parent.element.appendChild(element);
+    if (!voidTags.test(tag) && !/\/\s*$/.test(token)) stack.push({element, tag, svg});
+  }
+  return source;
+}
+
 // Edizione italiana separata: logica, tempistiche e risorse del gioco originali.
 document.documentElement.lang="it";
 import * as THREE from 'three';
@@ -50,7 +116,7 @@ async function configure(onChange=()=>{}){
 }
 
 addStyle(`body{background:#26180f;color:#ffedce}.cabin{position:relative;width:100%;height:100%;touch-action:none;overflow:hidden;background:#24170e url('./assets/christmas-panorama.webp') center/cover}.cabin canvas{display:block;width:100%;height:100%}.cabin .guide{top:33%;font-size:18px;font-weight:500;color:#fff0d8;text-shadow:0 2px 8px #000,0 1px 3px #000;background:#2012083b;border-radius:30px;padding:9px 6px}.cabin .sensor{background:#302116ae;border-color:#f7d9a866;color:#f9e5c8;bottom:26px}.recenter{position:absolute;right:25px;top:27px;width:40px;height:40px;border:1px solid #eadac252;background:#2b21184d;border-radius:50%;color:#fff4dd;font-size:25px;display:grid;place-items:center}.load-error{position:absolute;top:46%;left:30px;right:30px;text-align:center;text-shadow:0 1px 4px #000;font-size:15px}.load-error:empty{display:none}`);
-root.innerHTML=`<div class="cabin"><div class="scene" style="width:100%;height:100%"></div><div class="guide">Gira il telefono per guardarti intorno</div><button class="recenter" aria-label="Centra la visuale">⌖</button><button class="sensor">Attiva movimento</button><div class="load-error" role="status"></div></div>`;
+mountPlayableMarkup(root, `<div class="cabin"><div class="scene" style="width:100%;height:100%"></div><div class="guide">Gira il telefono per guardarti intorno</div><button class="recenter" aria-label="Centra la visuale">⌖</button><button class="sensor">Attiva movimento</button><div class="load-error" role="status"></div></div>`);
 const container=root.querySelector('.scene'),scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(87,1,.1,80),renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'low-power'});
 renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.outputColorSpace=THREE.SRGBColorSpace;container.append(renderer.domElement);renderer.domElement.setAttribute('aria-label',"Vista a 360 gradi della baita di Natale");
 const geometry=new THREE.SphereGeometry(30,64,40),material=new THREE.MeshBasicMaterial({side:THREE.BackSide,color:0xffffff}),sphere=new THREE.Mesh(geometry,material);scene.add(sphere);

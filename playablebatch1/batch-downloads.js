@@ -287,10 +287,10 @@ window.PlayableBatchDownloads = {
       "it": {
         "url": "/playablebatch1/downloads/batch-3-it.zip",
         "filename": "batch-3-it.zip",
-        "bytes": 35149461,
-        "sha256": "5c26771763b91e2372921c72f2287c864adf0f9b9760f632ebe2c5cb735f6e32",
+        "bytes": 36037639,
+        "sha256": "d7e6252c5e826e7cdf2f12db62ab844073b8945dab7b3f3b0360c22404e078e1",
         "language": "it",
-        "games": 36,
+        "games": 37,
         "members": [
           {
             "taskId": "playable2_20260927021659_jfkvov",
@@ -427,6 +427,10 @@ window.PlayableBatchDownloads = {
           {
             "taskId": "acupuncture_friends_r2",
             "number": 125
+          },
+          {
+            "taskId": "acupuncture_flick_125b",
+            "number": "125b"
           },
           {
             "taskId": "neon_ufo_runner_r1",

@@ -1,3 +1,69 @@
+// Mount game-owned markup with DOM nodes. Native hosts do not all implement
+// HTML-string setters; keep mounting synchronous for the gameplay code below.
+function mountPlayableMarkup(target, markup) {
+  if (!target) throw new Error('Game mount target is missing');
+  const source = String(markup ?? '');
+  const decode = value => value.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/gi, (match, entity) => {
+    if (entity[0] === '#') {
+      const hex = entity[1].toLowerCase() === 'x';
+      const code = parseInt(entity.slice(hex ? 2 : 1), hex ? 16 : 10);
+      return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : '\ufffd';
+    }
+    return ({amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nbsp:'\u00a0'})[entity.toLowerCase()] || match;
+  });
+  while (target.firstChild) target.removeChild(target.firstChild);
+  const stack = [{element:target, tag:'', svg:target.namespaceURI === 'http://www.w3.org/2000/svg'}];
+  const voidTags = /^(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)$/i;
+  let position = 0;
+  while (position < source.length) {
+    if (source.startsWith('<!--', position)) {
+      const end = source.indexOf('-->', position + 4);
+      position = end < 0 ? source.length : end + 3;
+      continue;
+    }
+    if (source[position] !== '<') {
+      const next = source.indexOf('<', position);
+      const end = next < 0 ? source.length : next;
+      stack[stack.length - 1].element.appendChild(document.createTextNode(decode(source.slice(position, end))));
+      position = end;
+      continue;
+    }
+    let end = position + 1, quote = '';
+    for (; end < source.length; end++) {
+      const c = source[end];
+      if (quote) { if (c === quote) quote = ''; }
+      else if (c === '"' || c === "'") quote = c;
+      else if (c === '>') break;
+    }
+    if (end >= source.length) throw new Error('Incomplete game markup');
+    const token = source.slice(position + 1, end);
+    position = end + 1;
+    if (/^\s*!/.test(token)) continue;
+    const close = /^\s*\/\s*([\w:-]+)/.exec(token);
+    if (close) {
+      for (let i = stack.length - 1; i > 0; i--) {
+        if (stack[i].tag.toLowerCase() === close[1].toLowerCase()) { stack.length = i; break; }
+      }
+      continue;
+    }
+    const opening = /^\s*([\w:-]+)/.exec(token);
+    if (!opening) throw new Error('Invalid game markup');
+    const tag = opening[1], parent = stack[stack.length - 1];
+    const svg = tag.toLowerCase() === 'svg' || (parent.svg && parent.tag.toLowerCase() !== 'foreignobject');
+    const element = svg ? document.createElementNS('http://www.w3.org/2000/svg', tag) : document.createElement(tag);
+    const attributes = token.slice(opening[0].length).replace(/\/\s*$/, '');
+    const attribute = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
+    let match;
+    while ((match = attribute.exec(attributes))) {
+      const name = match[1], value = decode(match[2] ?? match[3] ?? match[4] ?? '');
+      element.setAttribute(name, value);
+    }
+    parent.element.appendChild(element);
+    if (!voidTags.test(tag) && !/\/\s*$/.test(token)) stack.push({element, tag, svg});
+  }
+  return source;
+}
+
 document.documentElement.lang = 'it';
 (() => {
   'use strict';
@@ -5,7 +71,7 @@ document.documentElement.lang = 'it';
   const style=document.createElement('style');
   style.textContent=`*{box-sizing:border-box}html,body,#root{height:100%;width:100%;margin:0;overflow:hidden;background:#09090b;color:white;font-family:system-ui,sans-serif}button{font:700 13px system-ui;color:white;background:#111;border:2px solid #eee;border-radius:30px;padding:8px 11px;touch-action:manipulation}.scene{height:100%;position:relative;overflow:hidden}canvas{position:absolute;width:100%;height:100%;touch-action:none}.guide{position:absolute;top:15%;width:100%;text-align:center;font-weight:800;font-size:19px;pointer-events:none}.top{position:absolute;top:3%;left:4%;right:4%;display:flex;justify-content:space-between;gap:5px}.reset{border-color:#ff5559;color:#ff6a6c}.tools{position:absolute;bottom:4%;left:3%;right:3%;display:flex;justify-content:center;flex-wrap:wrap;gap:5px}.tools button.active{background:#fff;color:#111}.hold-tool{position:relative;display:flex}.drop{position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);z-index:3;min-height:36px;white-space:nowrap}.palette{position:absolute;z-index:5;top:11%;left:5%;width:min(245px,65%);background:#101010;border:2px solid #eee;border-radius:10px;padding:12px;box-shadow:0 4px 20px #0008}.palette-head{display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:700}.palette .done{font-size:12px;padding:4px 9px}.color-wheel{width:145px;height:145px;max-width:90%;aspect-ratio:1;border-radius:50%;margin:14px auto;touch-action:none;background:radial-gradient(circle,white,transparent 70%),conic-gradient(red,#ff0,lime,cyan,blue,magenta,red);border:2px solid white}.brightness-label{display:flex;justify-content:space-between;font-size:11px;color:#ddd}.brightness{width:100%;accent-color:white;margin:7px 0}.color-preview{height:25px;border:2px solid white;border-radius:5px}.hidden{display:none}`;
   document.head.append(style);
-  root.innerHTML=`<div class="scene"><canvas aria-label="Area per acconciare i capelli"></canvas><div class="guide">Scegli uno strumento</div><div class="top"><button class="reset">Ricomincia</button><button class="brush">Pennello: S</button><button class="pause">Pausa</button></div><div class="palette hidden"></div><div class="tools"></div></div>`;
+  mountPlayableMarkup(root, `<div class="scene"><canvas aria-label="Area per acconciare i capelli"></canvas><div class="guide">Scegli uno strumento</div><div class="top"><button class="reset">Ricomincia</button><button class="brush">Pennello: S</button><button class="pause">Pausa</button></div><div class="palette hidden"></div><div class="tools"></div></div>`);
   const canvas=root.querySelector('canvas'),ctx=canvas.getContext('2d'),guide=root.querySelector('.guide'),palette=root.querySelector('.palette');
   style.textContent+=`#root .top{top:30px;left:30px;right:30px;gap:12px;align-items:center}
 #root .top button{min-height:44px;padding:0 4px;border:0;border-radius:0;background:transparent;box-shadow:none;font:700 14px/1.3 UIBody,system-ui,sans-serif;color:#d3d3d9}
@@ -25,15 +91,15 @@ document.documentElement.lang = 'it';
 `;
   const toolNames={Hand:'Mano',Hold:'Tieni',Scissors:'Forbici',Regrow:'Ricrescita',Colors:'Colori',Wash:'Lava',Blow:'Asciuga'};
   const toolRows=[['Hand','Hold','Scissors','Regrow'],['Colors','Wash','Blow']];let tool='Hand',color='#fafafa',brush=0,paused=false,drag=false,last=null,active=new URLSearchParams(location.search).get('feedReview')!=='1',strands=[],held=[],fragments=[],particles=[],activePointer=null;
-  palette.innerHTML='<div class="palette-head"><span>Scegli il colore</span><button class="done">Fatto</button></div><div class="color-wheel" role="slider" aria-label="Scegli il colore dei capelli" tabindex="0"></div><div class="brightness-label"><span>Scuro</span><span>Chiaro</span></div><input class="brightness" aria-label="Luminosità del colore" type="range" min="0" max="100" value="100"><div class="color-preview"></div>';
+  mountPlayableMarkup(palette, '<div class="palette-head"><span>Scegli il colore</span><button class="done">Fatto</button></div><div class="color-wheel" role="slider" aria-label="Scegli il colore dei capelli" tabindex="0"></div><div class="brightness-label"><span>Scuro</span><span>Chiaro</span></div><input class="brightness" aria-label="Luminosità del colore" type="range" min="0" max="100" value="100"><div class="color-preview"></div>');
   let hue=50,saturation=1,brightness=1;const wheel=palette.querySelector('.color-wheel'),brightnessSlider=palette.querySelector('.brightness'),colorPreview=palette.querySelector('.color-preview');
   function updateColor(){const c=brightness*saturation,x=c*(1-Math.abs((hue/60)%2-1)),m=brightness-c;const rgb=hue<60?[c,x,0]:hue<120?[x,c,0]:hue<180?[0,c,x]:hue<240?[0,x,c]:hue<300?[x,0,c]:[c,0,x];color=`rgb(${rgb.map(v=>Math.round((v+m)*255)).join(',')})`;colorPreview.style.background=color;}
   function chooseColor(e){const r=wheel.getBoundingClientRect(),x=(e.clientX-r.left-r.width/2)/(r.width/2),y=(e.clientY-r.top-r.height/2)/(r.height/2);hue=(Math.atan2(x,-y)*180/Math.PI+360)%360;saturation=Math.min(1,Math.hypot(x,y));updateColor();}
   wheel.addEventListener('pointerdown',e=>{wheel.setPointerCapture(e.pointerId);chooseColor(e)});wheel.addEventListener('pointermove',e=>{if(wheel.hasPointerCapture(e.pointerId))chooseColor(e)});brightnessSlider.addEventListener('input',()=>{brightness=Number(brightnessSlider.value)/100;updateColor()});palette.querySelector('.done').onclick=()=>palette.classList.add('hidden');updateColor();
-  root.querySelector('.tools').innerHTML='<div class="tool-scroll" role="toolbar" aria-label="Strumenti per capelli"><div class="tool-row">'+toolRows.flat().map(t=>{
+  mountPlayableMarkup(root.querySelector('.tools'), '<div class="tool-scroll" role="toolbar" aria-label="Strumenti per capelli"><div class="tool-row">'+toolRows.flat().map(t=>{
     const button=`<button data-tool="${t}" class="${t===tool?'active':''}">${toolNames[t]}</button>`;
     return t==='Hold'?`<span class="hold-tool">${button}<button class="drop hidden" data-action="drop">Lascia</button></span>`:button;
-  }).join('')+'</div></div>';
+  }).join('')+'</div></div>');
   const dropButton=root.querySelector('.drop');
   const tools=root.querySelector('.tools'),toolScroll=root.querySelector('.tool-scroll');
   toolScroll.setAttribute('aria-orientation','horizontal');
@@ -72,7 +138,7 @@ document.documentElement.lang = 'it';
   tools.append(dropButton);
   const toolHint=document.createElement('span'),hintItalian=(new URLSearchParams(location.search).get('lang')||document.documentElement.lang||'en').toLowerCase().startsWith('it');
   toolHint.className='tool-hint';toolHint.setAttribute('aria-label',hintItalian?'Scorri con il dito o trascina gli strumenti':'Swipe or press and drag tools left or right');
-  toolHint.innerHTML='<span>'+(hintItalian?'Scorri / trascina':'Scorri / trascina')+'</span><svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8h20M6 3 2 8l4 5M18 3l4 5-4 5"/></svg>';
+  mountPlayableMarkup(toolHint, '<span>'+(hintItalian?'Scorri / trascina':'Scorri / trascina')+'</span><svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8h20M6 3 2 8l4 5M18 3l4 5-4 5"/></svg>');
   tools.append(toolHint);
   function updateToolScrollHint(){
     toolHint.hidden=toolScroll.scrollWidth<=toolScroll.clientWidth+1;

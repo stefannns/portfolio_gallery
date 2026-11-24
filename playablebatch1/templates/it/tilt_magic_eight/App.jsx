@@ -1,3 +1,69 @@
+// Mount game-owned markup with DOM nodes. Native hosts do not all implement
+// HTML-string setters; keep mounting synchronous for the gameplay code below.
+function mountPlayableMarkup(target, markup) {
+  if (!target) throw new Error('Game mount target is missing');
+  const source = String(markup ?? '');
+  const decode = value => value.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/gi, (match, entity) => {
+    if (entity[0] === '#') {
+      const hex = entity[1].toLowerCase() === 'x';
+      const code = parseInt(entity.slice(hex ? 2 : 1), hex ? 16 : 10);
+      return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : '\ufffd';
+    }
+    return ({amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nbsp:'\u00a0'})[entity.toLowerCase()] || match;
+  });
+  while (target.firstChild) target.removeChild(target.firstChild);
+  const stack = [{element:target, tag:'', svg:target.namespaceURI === 'http://www.w3.org/2000/svg'}];
+  const voidTags = /^(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)$/i;
+  let position = 0;
+  while (position < source.length) {
+    if (source.startsWith('<!--', position)) {
+      const end = source.indexOf('-->', position + 4);
+      position = end < 0 ? source.length : end + 3;
+      continue;
+    }
+    if (source[position] !== '<') {
+      const next = source.indexOf('<', position);
+      const end = next < 0 ? source.length : next;
+      stack[stack.length - 1].element.appendChild(document.createTextNode(decode(source.slice(position, end))));
+      position = end;
+      continue;
+    }
+    let end = position + 1, quote = '';
+    for (; end < source.length; end++) {
+      const c = source[end];
+      if (quote) { if (c === quote) quote = ''; }
+      else if (c === '"' || c === "'") quote = c;
+      else if (c === '>') break;
+    }
+    if (end >= source.length) throw new Error('Incomplete game markup');
+    const token = source.slice(position + 1, end);
+    position = end + 1;
+    if (/^\s*!/.test(token)) continue;
+    const close = /^\s*\/\s*([\w:-]+)/.exec(token);
+    if (close) {
+      for (let i = stack.length - 1; i > 0; i--) {
+        if (stack[i].tag.toLowerCase() === close[1].toLowerCase()) { stack.length = i; break; }
+      }
+      continue;
+    }
+    const opening = /^\s*([\w:-]+)/.exec(token);
+    if (!opening) throw new Error('Invalid game markup');
+    const tag = opening[1], parent = stack[stack.length - 1];
+    const svg = tag.toLowerCase() === 'svg' || (parent.svg && parent.tag.toLowerCase() !== 'foreignobject');
+    const element = svg ? document.createElementNS('http://www.w3.org/2000/svg', tag) : document.createElement(tag);
+    const attributes = token.slice(opening[0].length).replace(/\/\s*$/, '');
+    const attribute = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
+    let match;
+    while ((match = attribute.exec(attributes))) {
+      const name = match[1], value = decode(match[2] ?? match[3] ?? match[4] ?? '');
+      element.setAttribute(name, value);
+    }
+    parent.element.appendChild(element);
+    if (!voidTags.test(tag) && !/\/\s*$/.test(token)) stack.push({element, tag, svg});
+  }
+  return source;
+}
+
 document.documentElement.lang = 'it';
 // Readable pre-compilation source. Game styles, markup and helpers are contained in this file.
 (() => {
@@ -48,7 +114,7 @@ async function configure(onChange=()=>{}){
 }
 
 addStyle(`body{color:#c9cce2;background:#080d1d}.magic{width:100%;height:100%;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 42%,#1a2144 0,#10142c 37%,#080c17 80%)}.stars{position:absolute;inset:0;background-image:radial-gradient(#a9b8e54d .8px,transparent .9px);background-size:91px 83px;opacity:.35}.orb{position:absolute;top:42%;left:50%;width:87%;max-width:440px;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:0;background:radial-gradient(ellipse at 48% 7%,#4e5653 0,transparent 27%),radial-gradient(ellipse at 50% 30%,#1e2527,#080e11 65%,#1a2225 85%,#05080a 100%);box-shadow:inset 3px 1px 4px #afbfbe5c,inset -2px -1px 4px #d1efff3b,0 12px 24px #0009}.orb:before{content:'';position:absolute;inset:2%;border-radius:50%;background:radial-gradient(ellipse at 50% -8%,#edf6e4d9 0,transparent 24%);clip-path:polygon(21% 0,80% 0,72% 11%,28% 11%);filter:blur(1px)}.orb:after{content:'';position:absolute;inset:0;border-radius:50%;box-shadow:inset 7px -1px 7px -5px #399aff,inset -7px -1px 7px -5px #6091ff;pointer-events:none}.seam{position:absolute;top:49%;left:0;right:0;height:2px;background:linear-gradient(90deg,#707c7766,transparent 25%,transparent 75%,#707c7766);box-shadow:0 2px 2px #000}.rim{position:absolute;width:64%;height:64%;left:18%;top:19%;border-radius:50%;padding:8px;background:conic-gradient(from 20deg,#5e696e,#b6c6d2,#596b74,#dce5e9,#4f626b,#d9e8ea,#697578);box-shadow:0 0 0 3px #373f43,0 4px 9px #0008}.window{display:block;height:100%;width:100%;position:relative;border-radius:50%;background:radial-gradient(ellipse at 50% 55%,#111e3d,#080e18 74%);box-shadow:inset 0 3px 10px #000;overflow:hidden}.triangle{position:absolute;left:14%;top:24%;width:72%;height:64%;clip-path:polygon(0 0,100% 0,50% 100%);background:linear-gradient(150deg,#86aaff,#557af5 35%,#263bba);filter:drop-shadow(0 0 3px #527aff);transition:opacity .4s,transform .7s}.triangle:before{content:'';position:absolute;inset:2px;clip-path:polygon(0 0,100% 0,50% 100%);background:linear-gradient(150deg,#7297ff,#4564e0 45%,#253091)}.answer{position:absolute;top:9%;left:13%;width:74%;color:#edf6ff;text-align:center;font:800 clamp(9px,2.8vw,14px)/1.35 Arial,sans-serif;letter-spacing:.5px;text-shadow:0 1px 4px #b3d7ff}.answer.initial{font-size:30px}.magic.thinking .triangle{opacity:.08;transform:translateY(15px) rotate(-20deg)}.magic.thinking .orb{animation:orb-shake .55s ease-in-out 2}.magic .guide{top:75%;font-weight:500;font-size:15px}.magic .sensor{bottom:35px;color:#b3b8d4}.status{position:absolute;top:76%;left:30px;right:30px;text-align:center;font-size:14px;color:#8994b5;pointer-events:none}@keyframes orb-shake{25%{transform:translate(-53%,-52%) rotate(-5deg)}75%{transform:translate(-47%,-48%) rotate(5deg)}}`);
-root.innerHTML=`<div class="magic"><div class="stars"></div><button class="orb" aria-label="Scuoti la sfera delle risposte"><span class="seam"></span><span class="rim"><span class="window"><span class="triangle"><span class="answer initial">?</span></span></span></span></button><div class="guide">Scuoti o tocca per una risposta</div><div class="status" aria-live="polite"></div><button class="sensor">Attiva scuotimento</button></div>`;
+mountPlayableMarkup(root, `<div class="magic"><div class="stars"></div><button class="orb" aria-label="Scuoti la sfera delle risposte"><span class="seam"></span><span class="rim"><span class="window"><span class="triangle"><span class="answer initial">?</span></span></span></span></button><div class="guide">Scuoti o tocca per una risposta</div><div class="status" aria-live="polite"></div><button class="sensor">Attiva scuotimento</button></div>`);
 const answers=["È CERTO", "SENZA DUBBIO", "SÌ, ASSOLUTAMENTE", "PUOI CONTARCI", "DIREI DI SÌ", "MOLTO PROBABILE", "LE PROSPETTIVE SONO BUONE", "SÌ", "TUTTO FA PENSARE DI SÌ", "RIPROVA PIÙ TARDI", "MEGLIO NON DIRTELO ORA", "NON POSSO PREVEDERLO ORA", "CONCENTRATI E CHIEDI DI NUOVO", "NON CONTARCI", "LA MIA RISPOSTA È NO", "LE MIE FONTI DICONO DI NO", "LE PROSPETTIVE NON SONO BUONE", "NE DUBITO MOLTO", "RISPOSTA INCERTA, RIPROVA", "È DECISAMENTE COSÌ"];
 const orb=root.querySelector('.orb'),game=root.querySelector('.magic'),answer=root.querySelector('.answer'),status=root.querySelector('.status');
 // Typeset each response inside the triangle's actual taper, rather than a fixed tiny rectangle.

@@ -386,7 +386,7 @@ window.PlayableBrowserGames = {
   "playable2_20261001230001_ag49cj": {
     "it": {
       "title": "Collina stellata",
-      "src": "/playablebatch1/games/playable2_20261001230001_ag49cj/game.html?lang=it&revision=dbfc1eecf248"
+      "src": "/playablebatch1/games/playable2_20261001230001_ag49cj/game.html?lang=it&revision=e4c0b9edf077"
     }
   },
   "playable2_20261001230112_0ivocb": {
@@ -410,169 +410,169 @@ window.PlayableBrowserGames = {
   "strand_hair_salon": {
     "it": {
       "title": "Salone dei capelli",
-      "src": "/playablebatch1/games/strand_hair_salon/game.html?lang=it&revision=384c2d17e7c4"
+      "src": "/playablebatch1/games/strand_hair_salon/game.html?lang=it&revision=b0dde5d97496"
     }
   },
   "multi_sport_reflex": {
     "it": {
       "title": "Riflessi multisport",
-      "src": "/playablebatch1/games/multi_sport_reflex/game.html?lang=it&revision=234f812682c0"
+      "src": "/playablebatch1/games/multi_sport_reflex/game.html?lang=it&revision=b286de91198a"
     }
   },
   "neon_dash": {
     "it": {
       "title": "Scatto neon",
-      "src": "/playablebatch1/games/neon_dash/game.html?lang=it&revision=db6072f2d797"
+      "src": "/playablebatch1/games/neon_dash/game.html?lang=it&revision=ad6c31bd1146"
     }
   },
   "tilt_etch_sketch": {
     "it": {
       "title": "Lavagna magica",
-      "src": "/playablebatch1/games/tilt_etch_sketch/game.html?lang=it&revision=0bcccac44bc7"
+      "src": "/playablebatch1/games/tilt_etch_sketch/game.html?lang=it&revision=b2f323af53b3"
     }
   },
   "tilt_magic_eight": {
     "it": {
       "title": "La sfera delle risposte",
-      "src": "/playablebatch1/games/tilt_magic_eight/game.html?lang=it&revision=455b625ef5da"
+      "src": "/playablebatch1/games/tilt_magic_eight/game.html?lang=it&revision=7bd0e8bf1b72"
     }
   },
   "tilt_cat_jump": {
     "it": {
       "title": "Il gatto salterino",
-      "src": "/playablebatch1/games/tilt_cat_jump/game.html?lang=it&revision=b7919c2eb65e"
+      "src": "/playablebatch1/games/tilt_cat_jump/game.html?lang=it&revision=77f507303e43"
     }
   },
   "tilt_fortune_sticks": {
     "it": {
       "title": "Bastoncini della fortuna",
-      "src": "/playablebatch1/games/tilt_fortune_sticks/game.html?lang=it&revision=4db671361ec1"
+      "src": "/playablebatch1/games/tilt_fortune_sticks/game.html?lang=it&revision=7a7928736d09"
     }
   },
   "tilt_christmas_cabin": {
     "it": {
       "title": "Baita di Natale",
-      "src": "/playablebatch1/games/tilt_christmas_cabin/game.html?lang=it&revision=596ca5cc9182"
+      "src": "/playablebatch1/games/tilt_christmas_cabin/game.html?lang=it&revision=d1a626dfbc89"
     }
   },
   "camera_meme_face": {
     "it": {
       "title": "Sfida delle espressioni",
-      "src": "/playablebatch1/games/camera_meme_face/game.html?lang=it&revision=56e11284c110"
+      "src": "/playablebatch1/games/camera_meme_face/game.html?lang=it&revision=348cbdad60b8"
     }
   },
   "camera_photo_puzzle": {
     "it": {
       "title": "Puzzle fotografico",
-      "src": "/playablebatch1/games/camera_photo_puzzle/game.html?lang=it&revision=203fb025bdaa"
+      "src": "/playablebatch1/games/camera_photo_puzzle/game.html?lang=it&revision=7e9d0e3dad28"
     }
   },
   "camera_doodle_booth": {
     "it": {
       "title": "Foto e scarabocchi",
-      "src": "/playablebatch1/games/camera_doodle_booth/game.html?lang=it&revision=0bc88027625a"
+      "src": "/playablebatch1/games/camera_doodle_booth/game.html?lang=it&revision=0368e638e297"
     }
   },
   "mic_voice_flight": {
     "it": {
       "title": "Volo con la voce",
-      "src": "/playablebatch1/games/mic_voice_flight/game.html?lang=it&revision=aa4c91180367"
+      "src": "/playablebatch1/games/mic_voice_flight/game.html?lang=it&revision=ecfc07bbb415"
     }
   },
   "mic_karate_shout": {
     "it": {
       "title": "Karate a voce",
-      "src": "/playablebatch1/games/mic_karate_shout/game.html?lang=it&revision=7bae74a3fc3c"
+      "src": "/playablebatch1/games/mic_karate_shout/game.html?lang=it&revision=bfd58f989ccb"
     }
   },
   "mic_wake_puppy": {
     "it": {
       "title": "Sveglia il cucciolo",
-      "src": "/playablebatch1/games/mic_wake_puppy/game.html?lang=it&revision=5f2c06aeac45"
+      "src": "/playablebatch1/games/mic_wake_puppy/game.html?lang=it&revision=9f0f6d711b25"
     }
   },
   "mic_sugar_animals": {
     "it": {
       "title": "Animaletti di zucchero",
-      "src": "/playablebatch1/games/mic_sugar_animals/game.html?lang=it&revision=ee0992b87b72"
+      "src": "/playablebatch1/games/mic_sugar_animals/game.html?lang=it&revision=b0b3e39f5686"
     }
   },
   "mic_pixel_dino": {
     "it": {
       "title": "Dinosauro a voce",
-      "src": "/playablebatch1/games/mic_pixel_dino/game.html?lang=it&revision=504e1e299198"
+      "src": "/playablebatch1/games/mic_pixel_dino/game.html?lang=it&revision=1c34e1133887"
     }
   },
   "friends_avatar_merge": {
     "it": {
       "title": "Unisci gli amici",
-      "src": "/playablebatch1/games/friends_avatar_merge/game.html?lang=it&revision=752ccc0dc90a"
+      "src": "/playablebatch1/games/friends_avatar_merge/game.html?lang=it&revision=f6cf3998ec2d"
     }
   },
   "friends_bubble_shooter": {
     "it": {
       "title": "Bolle degli amici",
-      "src": "/playablebatch1/games/friends_bubble_shooter/game.html?lang=it&revision=bb2222d336e3"
+      "src": "/playablebatch1/games/friends_bubble_shooter/game.html?lang=it&revision=93b2daf4f066"
     }
   },
   "friends_billiards": {
     "it": {
       "title": "Biliardo tra amici",
-      "src": "/playablebatch1/games/friends_billiards/game.html?lang=it&revision=9125fe095305"
+      "src": "/playablebatch1/games/friends_billiards/game.html?lang=it&revision=6ff247e98b1a"
     }
   },
   "friends_bowling": {
     "it": {
       "title": "Bowling tra amici",
-      "src": "/playablebatch1/games/friends_bowling/game.html?lang=it&revision=eb54d605cb7a"
+      "src": "/playablebatch1/games/friends_bowling/game.html?lang=it&revision=ce0416c1ba27"
     }
   },
   "friends_whack_a_mole": {
     "it": {
       "title": "Acchiappa gli amici",
-      "src": "/playablebatch1/games/friends_whack_a_mole/game.html?lang=it&revision=bdd7888d064c"
+      "src": "/playablebatch1/games/friends_whack_a_mole/game.html?lang=it&revision=22cc479122f2"
     }
   },
   "friends_connect_four": {
     "it": {
       "title": "Forza quattro tra amici",
-      "src": "/playablebatch1/games/friends_connect_four/game.html?lang=it&revision=8bff85c08ff3"
+      "src": "/playablebatch1/games/friends_connect_four/game.html?lang=it&revision=8bdf460838cd"
     }
   },
   "friends_tic_tac_toe": {
     "it": {
       "title": "Tris tra amici",
-      "src": "/playablebatch1/games/friends_tic_tac_toe/game.html?lang=it&revision=80c034f41146"
+      "src": "/playablebatch1/games/friends_tic_tac_toe/game.html?lang=it&revision=2afd3b679384"
     }
   },
   "friends_award_scratch": {
     "it": {
       "title": "Premi tra amici",
-      "src": "/playablebatch1/games/friends_award_scratch/game.html?lang=it&revision=54931660ead6"
+      "src": "/playablebatch1/games/friends_award_scratch/game.html?lang=it&revision=6ac445c97c82"
     }
   },
   "friends_tilt_pick": {
     "it": {
       "title": "Scegli inclinando",
-      "src": "/playablebatch1/games/friends_tilt_pick/game.html?lang=it&revision=d9863a21eb4a"
+      "src": "/playablebatch1/games/friends_tilt_pick/game.html?lang=it&revision=22f132ab6de4"
     }
   },
   "friends_crystal_fortune": {
     "it": {
       "title": "La sfera degli amici",
-      "src": "/playablebatch1/games/friends_crystal_fortune/game.html?lang=it&revision=7dfc7850aa0e"
+      "src": "/playablebatch1/games/friends_crystal_fortune/game.html?lang=it&revision=d55569cfcd5f"
     }
   },
   "friends_personality_quiz": {
     "it": {
       "title": "Che tipo è il tuo amico?",
-      "src": "/playablebatch1/games/friends_personality_quiz/game.html?lang=it&revision=0f8731ecd9d3"
+      "src": "/playablebatch1/games/friends_personality_quiz/game.html?lang=it&revision=a8e8e9a36ad7"
     }
   },
   "meme_klondike": {
     "it": {
       "title": "Solitario dei meme",
-      "src": "/playablebatch1/games/meme_klondike/game.html?lang=it&revision=89a1ec68cac8"
+      "src": "/playablebatch1/games/meme_klondike/game.html?lang=it&revision=0a4ca9f5e7fd"
     }
   },
   "acupuncture_friends_r2": {
@@ -591,6 +591,12 @@ window.PlayableBrowserGames = {
     "it": {
       "title": "Cambio di orbita",
       "src": "/playablebatch1/games/orbit_switch_r1/game.html?lang=it&revision=d53a9e8e4b50"
+    }
+  },
+  "acupuncture_flick_125b": {
+    "it": {
+      "title": "Centra il punto — Flick",
+      "src": "/playablebatch1/games/acupuncture_flick_125b/game.html?lang=it&revision=47d4c4a35dd3"
     }
   }
 };

@@ -1,3 +1,69 @@
+// Mount game-owned markup with DOM nodes. Native hosts do not all implement
+// HTML-string setters; keep mounting synchronous for the gameplay code below.
+function mountPlayableMarkup(target, markup) {
+  if (!target) throw new Error('Game mount target is missing');
+  const source = String(markup ?? '');
+  const decode = value => value.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/gi, (match, entity) => {
+    if (entity[0] === '#') {
+      const hex = entity[1].toLowerCase() === 'x';
+      const code = parseInt(entity.slice(hex ? 2 : 1), hex ? 16 : 10);
+      return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : '\ufffd';
+    }
+    return ({amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nbsp:'\u00a0'})[entity.toLowerCase()] || match;
+  });
+  while (target.firstChild) target.removeChild(target.firstChild);
+  const stack = [{element:target, tag:'', svg:target.namespaceURI === 'http://www.w3.org/2000/svg'}];
+  const voidTags = /^(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)$/i;
+  let position = 0;
+  while (position < source.length) {
+    if (source.startsWith('<!--', position)) {
+      const end = source.indexOf('-->', position + 4);
+      position = end < 0 ? source.length : end + 3;
+      continue;
+    }
+    if (source[position] !== '<') {
+      const next = source.indexOf('<', position);
+      const end = next < 0 ? source.length : next;
+      stack[stack.length - 1].element.appendChild(document.createTextNode(decode(source.slice(position, end))));
+      position = end;
+      continue;
+    }
+    let end = position + 1, quote = '';
+    for (; end < source.length; end++) {
+      const c = source[end];
+      if (quote) { if (c === quote) quote = ''; }
+      else if (c === '"' || c === "'") quote = c;
+      else if (c === '>') break;
+    }
+    if (end >= source.length) throw new Error('Incomplete game markup');
+    const token = source.slice(position + 1, end);
+    position = end + 1;
+    if (/^\s*!/.test(token)) continue;
+    const close = /^\s*\/\s*([\w:-]+)/.exec(token);
+    if (close) {
+      for (let i = stack.length - 1; i > 0; i--) {
+        if (stack[i].tag.toLowerCase() === close[1].toLowerCase()) { stack.length = i; break; }
+      }
+      continue;
+    }
+    const opening = /^\s*([\w:-]+)/.exec(token);
+    if (!opening) throw new Error('Invalid game markup');
+    const tag = opening[1], parent = stack[stack.length - 1];
+    const svg = tag.toLowerCase() === 'svg' || (parent.svg && parent.tag.toLowerCase() !== 'foreignobject');
+    const element = svg ? document.createElementNS('http://www.w3.org/2000/svg', tag) : document.createElement(tag);
+    const attributes = token.slice(opening[0].length).replace(/\/\s*$/, '');
+    const attribute = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
+    let match;
+    while ((match = attribute.exec(attributes))) {
+      const name = match[1], value = decode(match[2] ?? match[3] ?? match[4] ?? '');
+      element.setAttribute(name, value);
+    }
+    parent.element.appendChild(element);
+    if (!voidTags.test(tag) && !/\/\s*$/.test(token)) stack.push({element, tag, svg});
+  }
+  return source;
+}
+
 document.documentElement.lang = 'it';
 // Readable pre-compilation source. Game styles, markup and helpers are contained in this file.
 (() => {
@@ -48,7 +114,7 @@ async function configure(onChange=()=>{}){
 }
 
 addStyle(`@font-face{font-family:Bangers;src:url('./assets/Bangers-Regular.woff2')}body{background:#fbf0ce;color:#56341d}.cat-game{position:relative;width:100%;height:100%;overflow:hidden;touch-action:none}canvas{width:100%;height:100%;display:block}.cat-game .guide{color:#69422b;text-shadow:0 1px #fff;font-family:Bangers,Arial,sans-serif;font-size:23px;top:33%}.hud{position:absolute;top:27px;left:30px;right:30px;display:flex;justify-content:space-between;font:28px Bangers,Arial,sans-serif;pointer-events:none}.cat-game .sensor{background:#fff5dfcf;border-color:#c89a6d;color:#69422b;bottom:24px}.result{position:absolute;inset:0;z-index:15;display:grid;place-items:center;background:#57341e36;backdrop-filter:blur(3px)}.result[hidden]{display:none}.card{width:calc(100% - 60px);max-width:330px;text-align:center;background:#fff4d9;border:2px solid #a16a43;border-radius:18px;padding:28px 22px;box-shadow:0 6px 0 #d8b887,0 18px 45px #44281140}.card h1{font:32px Bangers;margin:0 0 12px}.height{font:58px Bangers;color:#b96932}.card p{font-size:14px}.card button{border:2px solid #8d4d29;border-radius:12px;background:#c78b58;color:#fff5de;font:22px Bangers;padding:10px 25px;box-shadow:0 3px 0 #8b4e2c}`);
-root.innerHTML=`<div class="cat-game"><canvas aria-label="Gatto che salta tra mensole di legno"></canvas><div class="hud"><span class="score">0m</span><span class="time">60s</span></div><div class="guide">Inclina per guidare il laser</div><button class="sensor">Attiva inclinazione</button><div class="result" hidden><div class="card"><h1>Che bella scalata!</h1><div class="height">0m</div><p>Proviamo ad arrivare più in alto?</p><button>Riprova</button></div></div></div>`;
+mountPlayableMarkup(root, `<div class="cat-game"><canvas aria-label="Gatto che salta tra mensole di legno"></canvas><div class="hud"><span class="score">0m</span><span class="time">60s</span></div><div class="guide">Inclina per guidare il laser</div><button class="sensor">Attiva inclinazione</button><div class="result" hidden><div class="card"><h1>Che bella scalata!</h1><div class="height">0m</div><p>Proviamo ad arrivare più in alto?</p><button>Riprova</button></div></div></div>`);
 const canvas=root.querySelector('canvas'),view=canvasSize(canvas),{ctx}=view,cat=new Image(),idleCat=new Image();cat.src='./assets/leaping-tabby.webp';idleCat.src='./assets/idle-tabby-v1.webp';
 const backdrop=new Image(),platformArt=new Image(),shelfCache=new Map();
 backdrop.src='./assets/storybook-v2/cozy-wall.webp';platformArt.src='./assets/storybook-v3/honey-shelf-front.webp';

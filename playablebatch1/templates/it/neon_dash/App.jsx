@@ -1,3 +1,69 @@
+// Mount game-owned markup with DOM nodes. Native hosts do not all implement
+// HTML-string setters; keep mounting synchronous for the gameplay code below.
+function mountPlayableMarkup(target, markup) {
+  if (!target) throw new Error('Game mount target is missing');
+  const source = String(markup ?? '');
+  const decode = value => value.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/gi, (match, entity) => {
+    if (entity[0] === '#') {
+      const hex = entity[1].toLowerCase() === 'x';
+      const code = parseInt(entity.slice(hex ? 2 : 1), hex ? 16 : 10);
+      return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : '\ufffd';
+    }
+    return ({amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nbsp:'\u00a0'})[entity.toLowerCase()] || match;
+  });
+  while (target.firstChild) target.removeChild(target.firstChild);
+  const stack = [{element:target, tag:'', svg:target.namespaceURI === 'http://www.w3.org/2000/svg'}];
+  const voidTags = /^(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)$/i;
+  let position = 0;
+  while (position < source.length) {
+    if (source.startsWith('<!--', position)) {
+      const end = source.indexOf('-->', position + 4);
+      position = end < 0 ? source.length : end + 3;
+      continue;
+    }
+    if (source[position] !== '<') {
+      const next = source.indexOf('<', position);
+      const end = next < 0 ? source.length : next;
+      stack[stack.length - 1].element.appendChild(document.createTextNode(decode(source.slice(position, end))));
+      position = end;
+      continue;
+    }
+    let end = position + 1, quote = '';
+    for (; end < source.length; end++) {
+      const c = source[end];
+      if (quote) { if (c === quote) quote = ''; }
+      else if (c === '"' || c === "'") quote = c;
+      else if (c === '>') break;
+    }
+    if (end >= source.length) throw new Error('Incomplete game markup');
+    const token = source.slice(position + 1, end);
+    position = end + 1;
+    if (/^\s*!/.test(token)) continue;
+    const close = /^\s*\/\s*([\w:-]+)/.exec(token);
+    if (close) {
+      for (let i = stack.length - 1; i > 0; i--) {
+        if (stack[i].tag.toLowerCase() === close[1].toLowerCase()) { stack.length = i; break; }
+      }
+      continue;
+    }
+    const opening = /^\s*([\w:-]+)/.exec(token);
+    if (!opening) throw new Error('Invalid game markup');
+    const tag = opening[1], parent = stack[stack.length - 1];
+    const svg = tag.toLowerCase() === 'svg' || (parent.svg && parent.tag.toLowerCase() !== 'foreignobject');
+    const element = svg ? document.createElementNS('http://www.w3.org/2000/svg', tag) : document.createElement(tag);
+    const attributes = token.slice(opening[0].length).replace(/\/\s*$/, '');
+    const attribute = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
+    let match;
+    while ((match = attribute.exec(attributes))) {
+      const name = match[1], value = decode(match[2] ?? match[3] ?? match[4] ?? '');
+      element.setAttribute(name, value);
+    }
+    parent.element.appendChild(element);
+    if (!voidTags.test(tag) && !/\/\s*$/.test(token)) stack.push({element, tag, svg});
+  }
+  return source;
+}
+
 document.documentElement.lang = 'it';
 (() => {
   'use strict';
@@ -24,7 +90,7 @@ document.documentElement.lang = 'it';
     @media(max-height:520px){.hud{top:20px}.levels{top:79px}.levels button{height:34px;width:34px}}
   `;
   document.head.append(style);
-  root.innerHTML = `<div class="dash"><canvas aria-label="Campo di Scatto neon"></canvas><div class="hud"><div class="stats"><span class="best">RECORD 0%</span><span class="progress-label">0%</span></div><div class="track"><div class="fill"></div></div></div><div class="levels" aria-label="Scegli il livello"></div><div class="guide">Tocca per saltare</div><div class="result hidden"><div class="card"><h1>Riprova</h1><p>0%</p><button>Riprova</button></div></div></div>`;
+  mountPlayableMarkup(root, `<div class="dash"><canvas aria-label="Campo di Scatto neon"></canvas><div class="hud"><div class="stats"><span class="best">RECORD 0%</span><span class="progress-label">0%</span></div><div class="track"><div class="fill"></div></div></div><div class="levels" aria-label="Scegli il livello"></div><div class="guide">Tocca per saltare</div><div class="result hidden"><div class="card"><h1>Riprova</h1><p>0%</p><button>Riprova</button></div></div></div>`);
   const game = root.querySelector('.dash'), canvas = root.querySelector('canvas'), ctx = canvas.getContext('2d');
   const progressEl = root.querySelector('.progress-label'), bestEl = root.querySelector('.best'), fill = root.querySelector('.fill');
   const guide = root.querySelector('.guide'), levelsEl = root.querySelector('.levels'), result = root.querySelector('.result');
@@ -123,7 +189,7 @@ document.documentElement.lang = 'it';
   function persist(){try{localStorage.setItem(key,JSON.stringify(saved))}catch(_){}}
   function progress(){return Math.min(100,Math.floor(offset/length*100))}
   function hud(){const p=progress();if(p!==lastHud){progressEl.textContent=p+'%';fill.style.width=p+'%';lastHud=p;}bestEl.textContent='RECORD '+(saved.best[level]||0)+'%';game.dataset.progress=String(p);game.dataset.phase=phase;}
-  function levels(){levelsEl.innerHTML=courses.map((_,i)=>`<button aria-label="Livello ${i+1}${i>=saved.unlocked?' bloccato':''}" ${i>=saved.unlocked?'disabled':''} class="${i===level?'selected':''}" data-level="${i}">${i<saved.unlocked?i+1:'<span class="lock" aria-hidden="true"></span>'}</button>`).join('')}
+  function levels(){mountPlayableMarkup(levelsEl, courses.map((_,i)=>`<button aria-label="Livello ${i+1}${i>=saved.unlocked?' bloccato':''}" ${i>=saved.unlocked?'disabled':''} class="${i===level?'selected':''}" data-level="${i}">${i<saved.unlocked?i+1:'<span class="lock" aria-hidden="true"></span>'}</button>`).join(''))}
   function makeLevel(){
     const course=courses[level];
     obstacles=[];speed=course.speed;length=course.length;

@@ -1,3 +1,69 @@
+// Mount game-owned markup with DOM nodes. Native hosts do not all implement
+// HTML-string setters; keep mounting synchronous for the gameplay code below.
+function mountPlayableMarkup(target, markup) {
+  if (!target) throw new Error('Game mount target is missing');
+  const source = String(markup ?? '');
+  const decode = value => value.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/gi, (match, entity) => {
+    if (entity[0] === '#') {
+      const hex = entity[1].toLowerCase() === 'x';
+      const code = parseInt(entity.slice(hex ? 2 : 1), hex ? 16 : 10);
+      return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : '\ufffd';
+    }
+    return ({amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nbsp:'\u00a0'})[entity.toLowerCase()] || match;
+  });
+  while (target.firstChild) target.removeChild(target.firstChild);
+  const stack = [{element:target, tag:'', svg:target.namespaceURI === 'http://www.w3.org/2000/svg'}];
+  const voidTags = /^(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)$/i;
+  let position = 0;
+  while (position < source.length) {
+    if (source.startsWith('<!--', position)) {
+      const end = source.indexOf('-->', position + 4);
+      position = end < 0 ? source.length : end + 3;
+      continue;
+    }
+    if (source[position] !== '<') {
+      const next = source.indexOf('<', position);
+      const end = next < 0 ? source.length : next;
+      stack[stack.length - 1].element.appendChild(document.createTextNode(decode(source.slice(position, end))));
+      position = end;
+      continue;
+    }
+    let end = position + 1, quote = '';
+    for (; end < source.length; end++) {
+      const c = source[end];
+      if (quote) { if (c === quote) quote = ''; }
+      else if (c === '"' || c === "'") quote = c;
+      else if (c === '>') break;
+    }
+    if (end >= source.length) throw new Error('Incomplete game markup');
+    const token = source.slice(position + 1, end);
+    position = end + 1;
+    if (/^\s*!/.test(token)) continue;
+    const close = /^\s*\/\s*([\w:-]+)/.exec(token);
+    if (close) {
+      for (let i = stack.length - 1; i > 0; i--) {
+        if (stack[i].tag.toLowerCase() === close[1].toLowerCase()) { stack.length = i; break; }
+      }
+      continue;
+    }
+    const opening = /^\s*([\w:-]+)/.exec(token);
+    if (!opening) throw new Error('Invalid game markup');
+    const tag = opening[1], parent = stack[stack.length - 1];
+    const svg = tag.toLowerCase() === 'svg' || (parent.svg && parent.tag.toLowerCase() !== 'foreignobject');
+    const element = svg ? document.createElementNS('http://www.w3.org/2000/svg', tag) : document.createElement(tag);
+    const attributes = token.slice(opening[0].length).replace(/\/\s*$/, '');
+    const attribute = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
+    let match;
+    while ((match = attribute.exec(attributes))) {
+      const name = match[1], value = decode(match[2] ?? match[3] ?? match[4] ?? '');
+      element.setAttribute(name, value);
+    }
+    parent.element.appendChild(element);
+    if (!voidTags.test(tag) && !/\/\s*$/.test(token)) stack.push({element, tag, svg});
+  }
+  return source;
+}
+
 document.documentElement.lang = 'it';
 // Readable pre-compilation source. Game styles, markup and helpers are contained in this file.
 (() => {
@@ -48,8 +114,8 @@ async function configure(onChange=()=>{}){
 }
 
 addStyle(`body{background:#291416;color:#f6dbd5}.etch{width:100%;height:100%;position:relative;touch-action:none;overflow:hidden}canvas{width:100%;height:100%;display:block}.etch .guide{top:32%;white-space:pre-line;color:#790d25;text-shadow:0 1px #fff8}.etch .sensor{bottom:18px;background:#59131b;font-family:monospace;font-size:12px}.erase{position:absolute;bottom:19px;right:30px;width:38px;height:38px;border:1px solid #a95058;border-radius:50%;background:#721426;color:#fbd9c9;font-size:23px}.etch .sensor{left:30px;transform:none}`);
-root.innerHTML=`<div class="etch"><canvas aria-label="Superficie della lavagna magica"></canvas><div class="etch-intro"><div class="guide">Inclina per disegnare
-Scuoti per cancellare</div><button class="sensor">Attiva inclinazione</button></div><button class="erase" aria-label="Cancella il disegno">↺</button></div>`;
+mountPlayableMarkup(root, `<div class="etch"><canvas aria-label="Superficie della lavagna magica"></canvas><div class="etch-intro"><div class="guide">Inclina per disegnare
+Scuoti per cancellare</div><button class="sensor">Attiva inclinazione</button></div><button class="erase" aria-label="Cancella il disegno">↺</button></div>`);
 const canvas=root.querySelector('canvas'),view=canvasSize(canvas),{ctx}=view;
 let points=[],cursor={x:.5,y:.5},drawing=false,erasePulse=0,knob=0;
 

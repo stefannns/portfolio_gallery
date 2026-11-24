@@ -1,3 +1,69 @@
+// Mount game-owned markup with DOM nodes. Native hosts do not all implement
+// HTML-string setters; keep mounting synchronous for the gameplay code below.
+function mountPlayableMarkup(target, markup) {
+  if (!target) throw new Error('Game mount target is missing');
+  const source = String(markup ?? '');
+  const decode = value => value.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/gi, (match, entity) => {
+    if (entity[0] === '#') {
+      const hex = entity[1].toLowerCase() === 'x';
+      const code = parseInt(entity.slice(hex ? 2 : 1), hex ? 16 : 10);
+      return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : '\ufffd';
+    }
+    return ({amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nbsp:'\u00a0'})[entity.toLowerCase()] || match;
+  });
+  while (target.firstChild) target.removeChild(target.firstChild);
+  const stack = [{element:target, tag:'', svg:target.namespaceURI === 'http://www.w3.org/2000/svg'}];
+  const voidTags = /^(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)$/i;
+  let position = 0;
+  while (position < source.length) {
+    if (source.startsWith('<!--', position)) {
+      const end = source.indexOf('-->', position + 4);
+      position = end < 0 ? source.length : end + 3;
+      continue;
+    }
+    if (source[position] !== '<') {
+      const next = source.indexOf('<', position);
+      const end = next < 0 ? source.length : next;
+      stack[stack.length - 1].element.appendChild(document.createTextNode(decode(source.slice(position, end))));
+      position = end;
+      continue;
+    }
+    let end = position + 1, quote = '';
+    for (; end < source.length; end++) {
+      const c = source[end];
+      if (quote) { if (c === quote) quote = ''; }
+      else if (c === '"' || c === "'") quote = c;
+      else if (c === '>') break;
+    }
+    if (end >= source.length) throw new Error('Incomplete game markup');
+    const token = source.slice(position + 1, end);
+    position = end + 1;
+    if (/^\s*!/.test(token)) continue;
+    const close = /^\s*\/\s*([\w:-]+)/.exec(token);
+    if (close) {
+      for (let i = stack.length - 1; i > 0; i--) {
+        if (stack[i].tag.toLowerCase() === close[1].toLowerCase()) { stack.length = i; break; }
+      }
+      continue;
+    }
+    const opening = /^\s*([\w:-]+)/.exec(token);
+    if (!opening) throw new Error('Invalid game markup');
+    const tag = opening[1], parent = stack[stack.length - 1];
+    const svg = tag.toLowerCase() === 'svg' || (parent.svg && parent.tag.toLowerCase() !== 'foreignobject');
+    const element = svg ? document.createElementNS('http://www.w3.org/2000/svg', tag) : document.createElement(tag);
+    const attributes = token.slice(opening[0].length).replace(/\/\s*$/, '');
+    const attribute = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
+    let match;
+    while ((match = attribute.exec(attributes))) {
+      const name = match[1], value = decode(match[2] ?? match[3] ?? match[4] ?? '');
+      element.setAttribute(name, value);
+    }
+    parent.element.appendChild(element);
+    if (!voidTags.test(tag) && !/\/\s*$/.test(token)) stack.push({element, tag, svg});
+  }
+  return source;
+}
+
 document.documentElement.lang = 'it';
 import * as THREE from 'three';
 
@@ -6,7 +72,7 @@ const style = document.createElement('style');
 style.textContent = `*{box-sizing:border-box}html,body,#root{margin:0;width:100%;height:100%;overflow:hidden;font-family:system-ui,sans-serif;background:#9dd0e6}.game{width:100%;height:100%;position:relative;overflow:hidden;touch-action:manipulation}canvas{width:100%;height:100%;display:block}.hud{position:absolute;top:4%;left:6%;right:6%;display:flex;justify-content:space-between;font-weight:900;font-size:22px;color:#fff;text-shadow:0 2px 4px #173f50}.guide{position:absolute;top:11%;width:100%;text-align:center;color:#fff;font-weight:900;text-shadow:0 2px 5px #234;font-size:18px;pointer-events:none}.feedback{position:absolute;top:28%;width:100%;text-align:center;font-size:35px;font-weight:1000;color:white;text-shadow:0 3px 0 #1d4648;pointer-events:none}.buttons{position:absolute;bottom:4%;left:3%;right:3%;display:flex;gap:5px;justify-content:center}.buttons button{flex:1;max-width:60px;aspect-ratio:1;border-radius:50%;background:#ffffffeb;border:0;padding:3px;box-shadow:0 3px 6px #143e5030;touch-action:manipulation}.buttons img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none}.timing-ring{position:absolute;z-index:2;border:3px solid #6dff8e;border-radius:50%;box-shadow:0 0 0 1px #124d2d88,0 0 12px #4dff7966;transform:translate(-50%,-50%);pointer-events:none;display:none}.result{position:absolute;inset:0;background:#122b39aa;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;font-weight:900;font-size:28px}.result button{border:0;border-radius:25px;padding:12px 28px;background:white;color:#174d5c;font-weight:900;font-size:18px}.hidden{display:none}`;
 document.head.append(style);
 style.textContent += `.buttons button[data-kind="0"] img,.buttons button[data-kind="2"] img{width:76%;height:76%;margin:auto}`;
-root.innerHTML=`<div class="game"><canvas aria-label="Campo sportivo 3D"></canvas><div class="timing-ring" aria-hidden="true"></div><div class="hud"><span class="lives"></span><span class="score"></span></div><div class="guide">Tocca la palla corrispondente</div><div class="feedback"></div><div class="buttons"></div><div class="result hidden"><div>Partita finita</div><p></p><button>Gioca ancora</button></div></div>`;
+mountPlayableMarkup(root, `<div class="game"><canvas aria-label="Campo sportivo 3D"></canvas><div class="timing-ring" aria-hidden="true"></div><div class="hud"><span class="lives"></span><span class="score"></span></div><div class="guide">Tocca la palla corrispondente</div><div class="feedback"></div><div class="buttons"></div><div class="result hidden"><div>Partita finita</div><p></p><button>Gioca ancora</button></div></div>`);
 const game=root.querySelector('.game'),timingRing=root.querySelector('.timing-ring');
 const canvas=root.querySelector('canvas'),buttons=root.querySelector('.buttons'),livesEl=root.querySelector('.lives'),scoreEl=root.querySelector('.score'),guide=root.querySelector('.guide'),feedback=root.querySelector('.feedback'),result=root.querySelector('.result');
 // Flat button art is projected from the same texture used by each 3D ball.
@@ -26,7 +92,7 @@ function flatBallIcon(texture){
   }
   context.putImageData(output,0,0);return icon.toDataURL('image/png');
 }
-buttons.innerHTML=kinds.map((k,i)=>`<button aria-label="${k.name}" data-kind="${i}"><img src="${flatBallIcon(ballTextures[i])}" alt="" draggable="false"></button>`).join('');
+mountPlayableMarkup(buttons, kinds.map((k,i)=>`<button aria-label="${k.name}" data-kind="${i}"><img src="${flatBallIcon(ballTextures[i])}" alt="" draggable="false"></button>`).join(''));
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
 renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.outputColorSpace=THREE.SRGBColorSpace;
 const scene=new THREE.Scene();scene.background=new THREE.Color('#9bd5ee');scene.fog=new THREE.Fog('#bde0ed',22,48);

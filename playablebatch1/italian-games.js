@@ -388,213 +388,252 @@ window.PlayableItalianGames = {
     "number": 50,
     "name": "Collina stellata",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/playable2_20261001230001_ag49cj/game.html",
-    "revision": "e4c0b9edf077"
+    "revision": "e4c0b9edf077",
+    "coverRevision": "fb1f619a9876"
   },
   "playable2_20261001230112_0ivocb": {
     "number": 52,
     "name": "Il tuo destino fantastico",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/playable2_20261001230112_0ivocb/game.html",
-    "revision": "d09308941116"
+    "revision": "d09308941116",
+    "coverRevision": "2a244a9e1680"
   },
   "playable2_20261013020814_b973b1": {
     "number": 60,
     "name": "Parcheggio perfetto",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/playable2_20261013020814_b973b1/game.html",
-    "revision": "5a4b66c122f4"
+    "revision": "5a4b66c122f4",
+    "coverRevision": "646c8b32bdb9"
   },
   "playable2_20261106233254_un2vyl": {
     "number": 92,
     "name": "Discesa alpina",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/playable2_20261106233254_un2vyl/game.html",
-    "revision": "f53bba2885ea"
+    "revision": "f53bba2885ea",
+    "coverRevision": "41bb337e6b1c"
   },
   "strand_hair_salon": {
     "number": 97,
     "name": "Salone dei capelli",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/strand_hair_salon/game.html",
-    "revision": "384c2d17e7c4"
+    "revision": "b0dde5d97496",
+    "coverRevision": "28e24c04ce23"
   },
   "multi_sport_reflex": {
     "number": 98,
     "name": "Riflessi multisport",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/multi_sport_reflex/game.html",
-    "revision": "234f812682c0"
+    "revision": "b286de91198a",
+    "coverRevision": "3ff6c7dc0625"
   },
   "neon_dash": {
     "number": 99,
     "name": "Scatto neon",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/neon_dash/game.html",
-    "revision": "db6072f2d797"
+    "revision": "ad6c31bd1146",
+    "coverRevision": "892641efe32c"
   },
   "tilt_etch_sketch": {
     "number": 100,
     "name": "Lavagna magica",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/tilt_etch_sketch/game.html",
-    "revision": "0bcccac44bc7"
+    "revision": "b2f323af53b3",
+    "coverRevision": "c73d111ef2f3"
   },
   "tilt_magic_eight": {
     "number": 101,
     "name": "La sfera delle risposte",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/tilt_magic_eight/game.html",
-    "revision": "455b625ef5da"
+    "revision": "7bd0e8bf1b72",
+    "coverRevision": "82b1cddc059a"
   },
   "tilt_cat_jump": {
     "number": 102,
     "name": "Il gatto salterino",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/tilt_cat_jump/game.html",
-    "revision": "b7919c2eb65e"
+    "revision": "77f507303e43",
+    "coverRevision": "78a82934234e"
   },
   "tilt_fortune_sticks": {
     "number": 103,
     "name": "Bastoncini della fortuna",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/tilt_fortune_sticks/game.html",
-    "revision": "4db671361ec1"
+    "revision": "7a7928736d09",
+    "coverRevision": "8c4e609ca9f8"
   },
   "tilt_christmas_cabin": {
     "number": 104,
     "name": "Baita di Natale",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/tilt_christmas_cabin/game.html",
-    "revision": "596ca5cc9182"
+    "revision": "d1a626dfbc89",
+    "coverRevision": "0259b9bed053"
   },
   "camera_meme_face": {
     "number": 105,
     "name": "Sfida delle espressioni",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/camera_meme_face/game.html",
-    "revision": "56e11284c110",
+    "revision": "348cbdad60b8",
     "coverRevision": "684ea4b5648b"
   },
   "camera_photo_puzzle": {
     "number": 106,
     "name": "Puzzle fotografico",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/camera_photo_puzzle/game.html",
-    "revision": "203fb025bdaa",
+    "revision": "7e9d0e3dad28",
     "coverRevision": "e43b99a3557b"
   },
   "camera_doodle_booth": {
     "number": 107,
     "name": "Foto e scarabocchi",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/camera_doodle_booth/game.html",
-    "revision": "0bc88027625a"
+    "revision": "0368e638e297",
+    "coverRevision": "14898cb9cee1"
   },
   "mic_voice_flight": {
     "number": 108,
     "name": "Volo con la voce",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/mic_voice_flight/game.html",
-    "revision": "aa4c91180367"
+    "revision": "ecfc07bbb415",
+    "coverRevision": "596389fa4176"
   },
   "mic_karate_shout": {
     "number": 109,
     "name": "Karate a voce",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/mic_karate_shout/game.html",
-    "revision": "7bae74a3fc3c"
+    "revision": "bfd58f989ccb",
+    "coverRevision": "9a7b32c80ffa"
   },
   "mic_wake_puppy": {
     "number": 110,
     "name": "Sveglia il cucciolo",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/mic_wake_puppy/game.html",
-    "revision": "5f2c06aeac45"
+    "revision": "9f0f6d711b25",
+    "coverRevision": "5a4b1d3fcb39"
   },
   "mic_sugar_animals": {
     "number": 111,
     "name": "Animaletti di zucchero",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/mic_sugar_animals/game.html",
-    "revision": "ee0992b87b72"
+    "revision": "b0b3e39f5686",
+    "coverRevision": "6b44dc8a07d7"
   },
   "mic_pixel_dino": {
     "number": 112,
     "name": "Dinosauro a voce",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/mic_pixel_dino/game.html",
-    "revision": "504e1e299198"
+    "revision": "1c34e1133887",
+    "coverRevision": "200bb2f161aa"
   },
   "friends_avatar_merge": {
     "number": 113,
     "name": "Unisci gli amici",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_avatar_merge/game.html",
-    "revision": "752ccc0dc90a"
+    "revision": "f6cf3998ec2d",
+    "coverRevision": "d3c8e6792765"
   },
   "friends_bubble_shooter": {
     "number": 114,
     "name": "Bolle degli amici",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_bubble_shooter/game.html",
-    "revision": "bb2222d336e3"
+    "revision": "93b2daf4f066",
+    "coverRevision": "ffa717e6580b"
   },
   "friends_billiards": {
     "number": 115,
     "name": "Biliardo tra amici",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_billiards/game.html",
-    "revision": "9125fe095305"
+    "revision": "6ff247e98b1a",
+    "coverRevision": "b5bdf2bf3069"
   },
   "friends_bowling": {
     "number": 116,
     "name": "Bowling tra amici",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_bowling/game.html",
-    "revision": "eb54d605cb7a"
+    "revision": "ce0416c1ba27",
+    "coverRevision": "6909b1295f1d"
   },
   "friends_whack_a_mole": {
     "number": 117,
     "name": "Acchiappa gli amici",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_whack_a_mole/game.html",
-    "revision": "bdd7888d064c"
+    "revision": "22cc479122f2",
+    "coverRevision": "c9046aa6017f"
   },
   "friends_connect_four": {
     "number": 118,
     "name": "Forza quattro tra amici",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_connect_four/game.html",
-    "revision": "8bff85c08ff3"
+    "revision": "8bdf460838cd",
+    "coverRevision": "58c6253f02c2"
   },
   "friends_tic_tac_toe": {
     "number": 119,
     "name": "Tris tra amici",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_tic_tac_toe/game.html",
-    "revision": "80c034f41146"
+    "revision": "2afd3b679384",
+    "coverRevision": "a40723ba7af5"
   },
   "friends_award_scratch": {
     "number": 120,
     "name": "Premi tra amici",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_award_scratch/game.html",
-    "revision": "54931660ead6"
+    "revision": "6ac445c97c82",
+    "coverRevision": "272c174dddab"
   },
   "friends_tilt_pick": {
     "number": 121,
     "name": "Scegli inclinando",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_tilt_pick/game.html",
-    "revision": "d9863a21eb4a"
+    "revision": "22f132ab6de4",
+    "coverRevision": "3adf2097f59e"
   },
   "friends_crystal_fortune": {
     "number": 122,
     "name": "La sfera degli amici",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_crystal_fortune/game.html",
-    "revision": "7dfc7850aa0e",
+    "revision": "d55569cfcd5f",
     "coverRevision": "471a8ca34fef"
   },
   "friends_personality_quiz": {
     "number": 123,
     "name": "Che tipo è il tuo amico?",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/friends_personality_quiz/game.html",
-    "revision": "0f8731ecd9d3"
+    "revision": "a8e8e9a36ad7",
+    "coverRevision": "24d376b4bc37"
   },
   "meme_klondike": {
     "number": 124,
     "name": "Solitario dei meme",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/meme_klondike/game.html",
-    "revision": "89a1ec68cac8"
+    "revision": "0a4ca9f5e7fd",
+    "coverRevision": "a97ccbf32b21"
   },
   "acupuncture_friends_r2": {
     "number": 125,
     "name": "Centra il punto",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/acupuncture_friends_r2/game.html",
-    "revision": "23e129ad04e0"
+    "revision": "23e129ad04e0",
+    "coverRevision": "403491b8c3f2"
   },
   "neon_ufo_runner_r1": {
     "number": 126,
     "name": "UFO al neon",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/neon_ufo_runner_r1/game.html",
-    "revision": "b786c16712da"
+    "revision": "b786c16712da",
+    "coverRevision": "de2b52d4807a"
   },
   "orbit_switch_r1": {
     "number": 127,
     "name": "Cambio di orbita",
     "entry": "/playablebatch1/tiktok/resource/playable-batch/orbit_switch_r1/game.html",
-    "revision": "d53a9e8e4b50"
+    "revision": "d53a9e8e4b50",
+    "coverRevision": "341925e9de14"
+  },
+  "acupuncture_flick_125b": {
+    "number": "125b",
+    "name": "Centra il punto — Flick",
+    "entry": "/playablebatch1/tiktok/resource/playable-batch/acupuncture_flick_125b/game.html",
+    "revision": "47d4c4a35dd3",
+    "coverRevision": "403491b8c3f2"
   }
 };

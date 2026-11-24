@@ -104,6 +104,7 @@
     'friends_personality_quiz',
     'meme_klondike',
     'acupuncture_friends_r2',
+    'acupuncture_flick_125b',
     'neon_ufo_runner_r1',
     'orbit_switch_r1',
   ]);

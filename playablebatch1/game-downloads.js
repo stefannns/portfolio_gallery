@@ -1176,214 +1176,236 @@ window.PlayableGameDownloads = {
   "playable2_20261001230112_0ivocb": {
     "url": "/playablebatch1/downloads/052-playable2_20261001230112_0ivocb-it.zip",
     "filename": "052-playable2_20261001230112_0ivocb-it.zip",
-    "bytes": 1749724,
-    "sha256": "083d8b5951ed97503d4ad4b7c04d08a57e2e34550d0806c29707b5c019cc7094",
+    "bytes": 1749622,
+    "sha256": "f1f2826983f57ca804d64fe53266898c36b932855b2e1e1a0de219fb95112594",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/052-playable2_20261001230112_0ivocb-it.zip",
         "filename": "052-playable2_20261001230112_0ivocb-it.zip",
-        "bytes": 1749724,
-        "sha256": "083d8b5951ed97503d4ad4b7c04d08a57e2e34550d0806c29707b5c019cc7094",
+        "bytes": 1749622,
+        "sha256": "f1f2826983f57ca804d64fe53266898c36b932855b2e1e1a0de219fb95112594",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 28
       }
-    }
+    },
+    "files": 28
   },
   "playable2_20261013020814_b973b1": {
     "url": "/playablebatch1/downloads/060-playable2_20261013020814_b973b1-it.zip",
     "filename": "060-playable2_20261013020814_b973b1-it.zip",
-    "bytes": 4633487,
-    "sha256": "c30309b042b423718df344b8a95fa517db6e4be078ed7077a5a874599542df74",
+    "bytes": 4633385,
+    "sha256": "b47e5730b038d87fb436838ce87290c1ea63b7d9de91db1c8df4f236caf8a8ec",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/060-playable2_20261013020814_b973b1-it.zip",
         "filename": "060-playable2_20261013020814_b973b1-it.zip",
-        "bytes": 4633487,
-        "sha256": "c30309b042b423718df344b8a95fa517db6e4be078ed7077a5a874599542df74",
+        "bytes": 4633385,
+        "sha256": "b47e5730b038d87fb436838ce87290c1ea63b7d9de91db1c8df4f236caf8a8ec",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 23
       }
-    }
+    },
+    "files": 23
   },
   "playable2_20261106233254_un2vyl": {
     "url": "/playablebatch1/downloads/092-playable2_20261106233254_un2vyl-it.zip",
     "filename": "092-playable2_20261106233254_un2vyl-it.zip",
-    "bytes": 408466,
-    "sha256": "6dce0caa3eeb42bd397ca7f07898ecdd6e6e421225954c1ed14acab56c56f3f3",
+    "bytes": 408364,
+    "sha256": "a0bfa618bdae41e89dc946da9e7127d64d46b7b58aea656faff4717b2ace6b4f",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/092-playable2_20261106233254_un2vyl-it.zip",
         "filename": "092-playable2_20261106233254_un2vyl-it.zip",
-        "bytes": 408466,
-        "sha256": "6dce0caa3eeb42bd397ca7f07898ecdd6e6e421225954c1ed14acab56c56f3f3",
+        "bytes": 408364,
+        "sha256": "a0bfa618bdae41e89dc946da9e7127d64d46b7b58aea656faff4717b2ace6b4f",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 12
       }
-    }
+    },
+    "files": 12
   },
   "strand_hair_salon": {
     "url": "/playablebatch1/downloads/097-strand_hair_salon-it.zip",
     "filename": "097-strand_hair_salon-it.zip",
-    "bytes": 141590,
-    "sha256": "01a1324d9588ea75602f0b7a3519bb834bd5e07acc537899d6badc3dc255fa17",
+    "bytes": 143591,
+    "sha256": "304acc01ca0d2361b0deeb94a376f4acce971069858c562837cb7c15b34188af",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/097-strand_hair_salon-it.zip",
         "filename": "097-strand_hair_salon-it.zip",
-        "bytes": 141590,
-        "sha256": "01a1324d9588ea75602f0b7a3519bb834bd5e07acc537899d6badc3dc255fa17",
+        "bytes": 143591,
+        "sha256": "304acc01ca0d2361b0deeb94a376f4acce971069858c562837cb7c15b34188af",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 9
       }
-    }
+    },
+    "files": 9
   },
   "multi_sport_reflex": {
     "url": "/playablebatch1/downloads/098-multi_sport_reflex-it.zip",
     "filename": "098-multi_sport_reflex-it.zip",
-    "bytes": 514384,
-    "sha256": "6b04c8f28444f271b72ead13dc456b5177c893d417eff86f49f7c0890c5e7078",
+    "bytes": 516402,
+    "sha256": "9eb8e5c8d8412eb71beac968ca14274dbbfbdcbb37c7d22b03d7a9ebc8ec2820",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/098-multi_sport_reflex-it.zip",
         "filename": "098-multi_sport_reflex-it.zip",
-        "bytes": 514384,
-        "sha256": "6b04c8f28444f271b72ead13dc456b5177c893d417eff86f49f7c0890c5e7078",
+        "bytes": 516402,
+        "sha256": "9eb8e5c8d8412eb71beac968ca14274dbbfbdcbb37c7d22b03d7a9ebc8ec2820",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 15
       }
-    }
+    },
+    "files": 15
   },
   "neon_dash": {
     "url": "/playablebatch1/downloads/099-neon_dash-it.zip",
     "filename": "099-neon_dash-it.zip",
-    "bytes": 215011,
-    "sha256": "4f4a7f20dc0ffb2201f0f60080fa73cccc0e98c8b3e16aba26b81d47749cf957",
+    "bytes": 217068,
+    "sha256": "dd383983f06fc7bf0ee0ee2ee99553ba80ecc3e46ab6d3145f256d5657d3e89b",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/099-neon_dash-it.zip",
         "filename": "099-neon_dash-it.zip",
-        "bytes": 215011,
-        "sha256": "4f4a7f20dc0ffb2201f0f60080fa73cccc0e98c8b3e16aba26b81d47749cf957",
+        "bytes": 217068,
+        "sha256": "dd383983f06fc7bf0ee0ee2ee99553ba80ecc3e46ab6d3145f256d5657d3e89b",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 10
       }
-    }
+    },
+    "files": 10
   },
   "tilt_etch_sketch": {
     "url": "/playablebatch1/downloads/100-tilt_etch_sketch-it.zip",
     "filename": "100-tilt_etch_sketch-it.zip",
-    "bytes": 325689,
-    "sha256": "a8b5644e66b7ba0080e9c2dae906415cfdbaff082656dad30784751ae9e16252",
+    "bytes": 327715,
+    "sha256": "f5e6c878fa19168cd3deaa8d285a7143d1000809965eae8cca469ae641f94dc7",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/100-tilt_etch_sketch-it.zip",
         "filename": "100-tilt_etch_sketch-it.zip",
-        "bytes": 325689,
-        "sha256": "a8b5644e66b7ba0080e9c2dae906415cfdbaff082656dad30784751ae9e16252",
+        "bytes": 327715,
+        "sha256": "f5e6c878fa19168cd3deaa8d285a7143d1000809965eae8cca469ae641f94dc7",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 10
       }
-    }
+    },
+    "files": 10
   },
   "tilt_magic_eight": {
     "url": "/playablebatch1/downloads/101-tilt_magic_eight-it.zip",
     "filename": "101-tilt_magic_eight-it.zip",
-    "bytes": 464654,
-    "sha256": "6a3703182ff916d0eb381861412cf661ccd2b6c17a631ce2b1c08c96fa109c32",
+    "bytes": 466610,
+    "sha256": "b8e7ea7374f17731dec485f4faf77a1693996bb74647e3626ed8d804640339d0",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/101-tilt_magic_eight-it.zip",
         "filename": "101-tilt_magic_eight-it.zip",
-        "bytes": 464654,
-        "sha256": "6a3703182ff916d0eb381861412cf661ccd2b6c17a631ce2b1c08c96fa109c32",
+        "bytes": 466610,
+        "sha256": "b8e7ea7374f17731dec485f4faf77a1693996bb74647e3626ed8d804640339d0",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 9
       }
-    }
+    },
+    "files": 9
   },
   "tilt_cat_jump": {
     "url": "/playablebatch1/downloads/102-tilt_cat_jump-it.zip",
     "filename": "102-tilt_cat_jump-it.zip",
-    "bytes": 1709575,
-    "sha256": "952748ae6dfa3afcbde80a8a2a6bf02745b1e26c78c5c87e2a9383bdf4f8cf69",
+    "bytes": 1711586,
+    "sha256": "23fbe9c1cef2134ce3a629706726dbac2bd78bc29c8b045708579bb982989e61",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/102-tilt_cat_jump-it.zip",
         "filename": "102-tilt_cat_jump-it.zip",
-        "bytes": 1709575,
-        "sha256": "952748ae6dfa3afcbde80a8a2a6bf02745b1e26c78c5c87e2a9383bdf4f8cf69",
+        "bytes": 1711586,
+        "sha256": "23fbe9c1cef2134ce3a629706726dbac2bd78bc29c8b045708579bb982989e61",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 15
       }
-    }
+    },
+    "files": 15
   },
   "tilt_fortune_sticks": {
     "url": "/playablebatch1/downloads/103-tilt_fortune_sticks-it.zip",
     "filename": "103-tilt_fortune_sticks-it.zip",
-    "bytes": 2084300,
-    "sha256": "2d810524c2955d9c1936246d15c0312e236d954f1c8b937b9146456baa6abfe7",
+    "bytes": 2087047,
+    "sha256": "3c6e819020961a361e364038fa9fdeb3a1e055bc411d77dec9fff41ea3ec0809",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/103-tilt_fortune_sticks-it.zip",
         "filename": "103-tilt_fortune_sticks-it.zip",
-        "bytes": 2084300,
-        "sha256": "2d810524c2955d9c1936246d15c0312e236d954f1c8b937b9146456baa6abfe7",
+        "bytes": 2087047,
+        "sha256": "3c6e819020961a361e364038fa9fdeb3a1e055bc411d77dec9fff41ea3ec0809",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 15
       }
-    }
+    },
+    "files": 15
   },
   "tilt_christmas_cabin": {
     "url": "/playablebatch1/downloads/104-tilt_christmas_cabin-it.zip",
     "filename": "104-tilt_christmas_cabin-it.zip",
-    "bytes": 2125108,
-    "sha256": "f85267141e71ee608285a9de62b1ceb240e06cb84383fa2957f62c223eeb676c",
+    "bytes": 2127097,
+    "sha256": "fb1d1787d55935a2c0ffa6a5735a56a0faa084d5a57341e2e6540f41fcaf4a15",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/104-tilt_christmas_cabin-it.zip",
         "filename": "104-tilt_christmas_cabin-it.zip",
-        "bytes": 2125108,
-        "sha256": "f85267141e71ee608285a9de62b1ceb240e06cb84383fa2957f62c223eeb676c",
+        "bytes": 2127097,
+        "sha256": "fb1d1787d55935a2c0ffa6a5735a56a0faa084d5a57341e2e6540f41fcaf4a15",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 10
       }
-    }
+    },
+    "files": 10
   },
   "camera_meme_face": {
     "url": "/playablebatch1/downloads/105-camera_meme_face-it.zip",
     "filename": "105-camera_meme_face-it.zip",
-    "bytes": 1248110,
-    "sha256": "216e1549edc14e608ce3e616d638db62dfdcbc7ae501c95c0e0240a93fbe6013",
+    "bytes": 1251133,
+    "sha256": "9d9d498d1b035ac12b782d755f43bc16d9a90823fcf74b635b2659a75b675dbd",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/105-camera_meme_face-it.zip",
         "filename": "105-camera_meme_face-it.zip",
-        "bytes": 1248110,
-        "sha256": "216e1549edc14e608ce3e616d638db62dfdcbc7ae501c95c0e0240a93fbe6013",
+        "bytes": 1251133,
+        "sha256": "9d9d498d1b035ac12b782d755f43bc16d9a90823fcf74b635b2659a75b675dbd",
         "language": "it",
         "format": "template-v1",
         "files": 15
@@ -1394,16 +1416,16 @@ window.PlayableGameDownloads = {
   "camera_photo_puzzle": {
     "url": "/playablebatch1/downloads/106-camera_photo_puzzle-it.zip",
     "filename": "106-camera_photo_puzzle-it.zip",
-    "bytes": 830429,
-    "sha256": "24826e489187ff006556943d5fc957da54db7b3b5f969496a513ef881c5a58af",
+    "bytes": 832492,
+    "sha256": "7f6bc998ecf1898e1ee0dd57c41981d6e091d4af60cb4c61e3b89876ac81bd68",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/106-camera_photo_puzzle-it.zip",
         "filename": "106-camera_photo_puzzle-it.zip",
-        "bytes": 830429,
-        "sha256": "24826e489187ff006556943d5fc957da54db7b3b5f969496a513ef881c5a58af",
+        "bytes": 832492,
+        "sha256": "7f6bc998ecf1898e1ee0dd57c41981d6e091d4af60cb4c61e3b89876ac81bd68",
         "language": "it",
         "format": "template-v1",
         "files": 12
@@ -1414,214 +1436,236 @@ window.PlayableGameDownloads = {
   "camera_doodle_booth": {
     "url": "/playablebatch1/downloads/107-camera_doodle_booth-it.zip",
     "filename": "107-camera_doodle_booth-it.zip",
-    "bytes": 664145,
-    "sha256": "fb1eb55aa1acc71ca24e5a87a365104bec1df3dc0500e66e9c8ebfa38f36cbe9",
+    "bytes": 667056,
+    "sha256": "5a0a5d63a25bbf6523bc395d4bb668c6b86789aad70288c27334637f25d8dd3c",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/107-camera_doodle_booth-it.zip",
         "filename": "107-camera_doodle_booth-it.zip",
-        "bytes": 664145,
-        "sha256": "fb1eb55aa1acc71ca24e5a87a365104bec1df3dc0500e66e9c8ebfa38f36cbe9",
+        "bytes": 667056,
+        "sha256": "5a0a5d63a25bbf6523bc395d4bb668c6b86789aad70288c27334637f25d8dd3c",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 11
       }
-    }
+    },
+    "files": 11
   },
   "mic_voice_flight": {
     "url": "/playablebatch1/downloads/108-mic_voice_flight-it.zip",
     "filename": "108-mic_voice_flight-it.zip",
-    "bytes": 307475,
-    "sha256": "90e7a98f48c93a4c9f85c194af5aa51bd21050ebb2496bbb82a380b0956dbb54",
+    "bytes": 309469,
+    "sha256": "3fa11c5d1019910f41e983fc8031e6c25472ff8e9d09455cf7c8dc50a9d66b2e",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/108-mic_voice_flight-it.zip",
         "filename": "108-mic_voice_flight-it.zip",
-        "bytes": 307475,
-        "sha256": "90e7a98f48c93a4c9f85c194af5aa51bd21050ebb2496bbb82a380b0956dbb54",
+        "bytes": 309469,
+        "sha256": "3fa11c5d1019910f41e983fc8031e6c25472ff8e9d09455cf7c8dc50a9d66b2e",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 15
       }
-    }
+    },
+    "files": 15
   },
   "mic_karate_shout": {
     "url": "/playablebatch1/downloads/109-mic_karate_shout-it.zip",
     "filename": "109-mic_karate_shout-it.zip",
-    "bytes": 1514945,
-    "sha256": "e396f1c8daae7d6033231a7ded7ac53432f2e6d0dc74074b0b237efbe9ab76e9",
+    "bytes": 1516954,
+    "sha256": "e456821b6afef0146ad02cd351c72dd0bb9111711ddb45963936f8728a2d328b",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/109-mic_karate_shout-it.zip",
         "filename": "109-mic_karate_shout-it.zip",
-        "bytes": 1514945,
-        "sha256": "e396f1c8daae7d6033231a7ded7ac53432f2e6d0dc74074b0b237efbe9ab76e9",
+        "bytes": 1516954,
+        "sha256": "e456821b6afef0146ad02cd351c72dd0bb9111711ddb45963936f8728a2d328b",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 13
       }
-    }
+    },
+    "files": 13
   },
   "mic_wake_puppy": {
     "url": "/playablebatch1/downloads/110-mic_wake_puppy-it.zip",
     "filename": "110-mic_wake_puppy-it.zip",
-    "bytes": 505377,
-    "sha256": "7c3511b23732247ed86928d8f28de9319d0754e56c625c046bb55e8a218486c2",
+    "bytes": 507378,
+    "sha256": "6e0f20958fbc6d3dd02edbc397831b08be6cc61cb8589537a05569d6ba2d2772",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/110-mic_wake_puppy-it.zip",
         "filename": "110-mic_wake_puppy-it.zip",
-        "bytes": 505377,
-        "sha256": "7c3511b23732247ed86928d8f28de9319d0754e56c625c046bb55e8a218486c2",
+        "bytes": 507378,
+        "sha256": "6e0f20958fbc6d3dd02edbc397831b08be6cc61cb8589537a05569d6ba2d2772",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 12
       }
-    }
+    },
+    "files": 12
   },
   "mic_sugar_animals": {
     "url": "/playablebatch1/downloads/111-mic_sugar_animals-it.zip",
     "filename": "111-mic_sugar_animals-it.zip",
-    "bytes": 749550,
-    "sha256": "a8858636bc372f9c7c6ad63ea7cfcfe943954348a5b05a2053734658a2b572b1",
+    "bytes": 751572,
+    "sha256": "1f5a9fe993fa393abe29b9780c6b302f43c5c8fcb31a3f2d050af6581ea71b2e",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/111-mic_sugar_animals-it.zip",
         "filename": "111-mic_sugar_animals-it.zip",
-        "bytes": 749550,
-        "sha256": "a8858636bc372f9c7c6ad63ea7cfcfe943954348a5b05a2053734658a2b572b1",
+        "bytes": 751572,
+        "sha256": "1f5a9fe993fa393abe29b9780c6b302f43c5c8fcb31a3f2d050af6581ea71b2e",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 11
       }
-    }
+    },
+    "files": 11
   },
   "mic_pixel_dino": {
     "url": "/playablebatch1/downloads/112-mic_pixel_dino-it.zip",
     "filename": "112-mic_pixel_dino-it.zip",
-    "bytes": 181283,
-    "sha256": "983d521abeacaea2d5ef11a52ff9a20471ddb3b540069cb18d9aaa8246d8422d",
+    "bytes": 183286,
+    "sha256": "09d563ba982a4ab47b78911f6066dce7249a6ec9e4f4271645bf57fdcc627370",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/112-mic_pixel_dino-it.zip",
         "filename": "112-mic_pixel_dino-it.zip",
-        "bytes": 181283,
-        "sha256": "983d521abeacaea2d5ef11a52ff9a20471ddb3b540069cb18d9aaa8246d8422d",
+        "bytes": 183286,
+        "sha256": "09d563ba982a4ab47b78911f6066dce7249a6ec9e4f4271645bf57fdcc627370",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 11
       }
-    }
+    },
+    "files": 11
   },
   "friends_avatar_merge": {
     "url": "/playablebatch1/downloads/113-friends_avatar_merge-it.zip",
     "filename": "113-friends_avatar_merge-it.zip",
-    "bytes": 847342,
-    "sha256": "5518125613ad0acb23433a41e358c2f151ea3388eab8b84da4624e36b2f83766",
+    "bytes": 849246,
+    "sha256": "1974af5505df8ceef4ab9f22a0b49fce00bf40e15e3c15d47573512ef9d1fc26",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/113-friends_avatar_merge-it.zip",
         "filename": "113-friends_avatar_merge-it.zip",
-        "bytes": 847342,
-        "sha256": "5518125613ad0acb23433a41e358c2f151ea3388eab8b84da4624e36b2f83766",
+        "bytes": 849246,
+        "sha256": "1974af5505df8ceef4ab9f22a0b49fce00bf40e15e3c15d47573512ef9d1fc26",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 15
       }
-    }
+    },
+    "files": 15
   },
   "friends_bubble_shooter": {
     "url": "/playablebatch1/downloads/114-friends_bubble_shooter-it.zip",
     "filename": "114-friends_bubble_shooter-it.zip",
-    "bytes": 891263,
-    "sha256": "4a67723130cf9b634cd91e387f3ff9c3eb823314673959d9450d29f77e79fe46",
+    "bytes": 893209,
+    "sha256": "67083836670bf2d3cb5da269714a9f8a097355edf38590c5be30cb3968287b59",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/114-friends_bubble_shooter-it.zip",
         "filename": "114-friends_bubble_shooter-it.zip",
-        "bytes": 891263,
-        "sha256": "4a67723130cf9b634cd91e387f3ff9c3eb823314673959d9450d29f77e79fe46",
+        "bytes": 893209,
+        "sha256": "67083836670bf2d3cb5da269714a9f8a097355edf38590c5be30cb3968287b59",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 15
       }
-    }
+    },
+    "files": 15
   },
   "friends_billiards": {
     "url": "/playablebatch1/downloads/115-friends_billiards-it.zip",
     "filename": "115-friends_billiards-it.zip",
-    "bytes": 477061,
-    "sha256": "56cc80efdb5146e28a7806d6fd46c4e297c3468883e8de218af2bd5d070e059d",
+    "bytes": 478994,
+    "sha256": "231a34be88c6f7e1429fc8da33dcbf235dbda7f199bb9d81345460b749e55f68",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/115-friends_billiards-it.zip",
         "filename": "115-friends_billiards-it.zip",
-        "bytes": 477061,
-        "sha256": "56cc80efdb5146e28a7806d6fd46c4e297c3468883e8de218af2bd5d070e059d",
+        "bytes": 478994,
+        "sha256": "231a34be88c6f7e1429fc8da33dcbf235dbda7f199bb9d81345460b749e55f68",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 14
       }
-    }
+    },
+    "files": 14
   },
   "friends_bowling": {
     "url": "/playablebatch1/downloads/116-friends_bowling-it.zip",
     "filename": "116-friends_bowling-it.zip",
-    "bytes": 615147,
-    "sha256": "f12048a2cac223ceee1c9a2f96bf65b44c02fe05e01208426d908aea605b5e15",
+    "bytes": 617087,
+    "sha256": "fdb9299245eaef005936a458ecf0787ecb43b114edc098dd17f43c279437505b",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/116-friends_bowling-it.zip",
         "filename": "116-friends_bowling-it.zip",
-        "bytes": 615147,
-        "sha256": "f12048a2cac223ceee1c9a2f96bf65b44c02fe05e01208426d908aea605b5e15",
+        "bytes": 617087,
+        "sha256": "fdb9299245eaef005936a458ecf0787ecb43b114edc098dd17f43c279437505b",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 14
       }
-    }
+    },
+    "files": 14
   },
   "friends_whack_a_mole": {
     "url": "/playablebatch1/downloads/117-friends_whack_a_mole-it.zip",
     "filename": "117-friends_whack_a_mole-it.zip",
-    "bytes": 621909,
-    "sha256": "f06cc85d06d3bb1e26a6b93bd5c580d3721f2e1c80351c9604f199302b9f09ea",
+    "bytes": 623863,
+    "sha256": "a3c5384f89d82e6bb7d164cf316e607abe9b70d14caf6f87259ae791a9414995",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/117-friends_whack_a_mole-it.zip",
         "filename": "117-friends_whack_a_mole-it.zip",
-        "bytes": 621909,
-        "sha256": "f06cc85d06d3bb1e26a6b93bd5c580d3721f2e1c80351c9604f199302b9f09ea",
+        "bytes": 623863,
+        "sha256": "a3c5384f89d82e6bb7d164cf316e607abe9b70d14caf6f87259ae791a9414995",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 15
       }
-    }
+    },
+    "files": 15
   },
   "friends_connect_four": {
     "url": "/playablebatch1/downloads/118-friends_connect_four-it.zip",
     "filename": "118-friends_connect_four-it.zip",
-    "bytes": 873872,
-    "sha256": "198783bd526200587f42bc5bae9a11cc4fc435cdca142ac6cbcaaf849e5d9524",
+    "bytes": 875911,
+    "sha256": "fa66ffc7a37661d2290ded1ebe25380cd321e4eeaf3e6e8117e69dccf20c5c8c",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/118-friends_connect_four-it.zip",
         "filename": "118-friends_connect_four-it.zip",
-        "bytes": 873872,
-        "sha256": "198783bd526200587f42bc5bae9a11cc4fc435cdca142ac6cbcaaf849e5d9524",
+        "bytes": 875911,
+        "sha256": "fa66ffc7a37661d2290ded1ebe25380cd321e4eeaf3e6e8117e69dccf20c5c8c",
         "language": "it",
         "format": "template-v1",
         "files": 15
@@ -1632,16 +1676,16 @@ window.PlayableGameDownloads = {
   "friends_tic_tac_toe": {
     "url": "/playablebatch1/downloads/119-friends_tic_tac_toe-it.zip",
     "filename": "119-friends_tic_tac_toe-it.zip",
-    "bytes": 746864,
-    "sha256": "d66e212c6e01c659b4803e6a6ab32ae39f0c2cd0b90d75353d4aaef6eae5982f",
+    "bytes": 748865,
+    "sha256": "7c29c43da9db25fcb419df8ca78d2cbdd3649405546fa9ea6738b7d7e95ea15f",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/119-friends_tic_tac_toe-it.zip",
         "filename": "119-friends_tic_tac_toe-it.zip",
-        "bytes": 746864,
-        "sha256": "d66e212c6e01c659b4803e6a6ab32ae39f0c2cd0b90d75353d4aaef6eae5982f",
+        "bytes": 748865,
+        "sha256": "7c29c43da9db25fcb419df8ca78d2cbdd3649405546fa9ea6738b7d7e95ea15f",
         "language": "it",
         "format": "template-v1",
         "files": 16
@@ -1652,34 +1696,36 @@ window.PlayableGameDownloads = {
   "friends_award_scratch": {
     "url": "/playablebatch1/downloads/120-friends_award_scratch-it.zip",
     "filename": "120-friends_award_scratch-it.zip",
-    "bytes": 754145,
-    "sha256": "72f900dc71fc5dda5565bed10ddabba863d391d18f04d88a41105d637ce75e12",
+    "bytes": 756088,
+    "sha256": "7f7a3879bc3fcd087cd8ac73c38bf08f824a36b3ba1a839a96db50e4ded9ee01",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/120-friends_award_scratch-it.zip",
         "filename": "120-friends_award_scratch-it.zip",
-        "bytes": 754145,
-        "sha256": "72f900dc71fc5dda5565bed10ddabba863d391d18f04d88a41105d637ce75e12",
+        "bytes": 756088,
+        "sha256": "7f7a3879bc3fcd087cd8ac73c38bf08f824a36b3ba1a839a96db50e4ded9ee01",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 15
       }
-    }
+    },
+    "files": 15
   },
   "friends_tilt_pick": {
     "url": "/playablebatch1/downloads/121-friends_tilt_pick-it.zip",
     "filename": "121-friends_tilt_pick-it.zip",
-    "bytes": 879123,
-    "sha256": "7c33a7e601549b6aac5c6e3292c1f0df379614ef79c31993684deb3f511d9575",
+    "bytes": 881754,
+    "sha256": "30bbd9738da3ac4d1c68f2217d9d24721745e24efd4e2dfe02b799f3b1211672",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/121-friends_tilt_pick-it.zip",
         "filename": "121-friends_tilt_pick-it.zip",
-        "bytes": 879123,
-        "sha256": "7c33a7e601549b6aac5c6e3292c1f0df379614ef79c31993684deb3f511d9575",
+        "bytes": 881754,
+        "sha256": "30bbd9738da3ac4d1c68f2217d9d24721745e24efd4e2dfe02b799f3b1211672",
         "language": "it",
         "format": "template-v1",
         "files": 15
@@ -1690,16 +1736,16 @@ window.PlayableGameDownloads = {
   "friends_crystal_fortune": {
     "url": "/playablebatch1/downloads/122-friends_crystal_fortune-it.zip",
     "filename": "122-friends_crystal_fortune-it.zip",
-    "bytes": 432910,
-    "sha256": "23f5546e865949f121ae29d389df3c4dc2ef0d4301b0b447ae0dfd109ddf6f8d",
+    "bytes": 434964,
+    "sha256": "509776cd648b3f50f83c491f76ba6cb107c290a2154a133f33c23fd671fb9f56",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/122-friends_crystal_fortune-it.zip",
         "filename": "122-friends_crystal_fortune-it.zip",
-        "bytes": 432910,
-        "sha256": "23f5546e865949f121ae29d389df3c4dc2ef0d4301b0b447ae0dfd109ddf6f8d",
+        "bytes": 434964,
+        "sha256": "509776cd648b3f50f83c491f76ba6cb107c290a2154a133f33c23fd671fb9f56",
         "language": "it",
         "format": "template-v1",
         "files": 15
@@ -1710,74 +1756,82 @@ window.PlayableGameDownloads = {
   "friends_personality_quiz": {
     "url": "/playablebatch1/downloads/123-friends_personality_quiz-it.zip",
     "filename": "123-friends_personality_quiz-it.zip",
-    "bytes": 752055,
-    "sha256": "d0beac5ed6a9cb38aa73c970b24c1db7bb47f84f876c7d2bda931f4ed5563433",
+    "bytes": 754000,
+    "sha256": "488d896ce23cfec94ce1fbc7842043a1db8235381fbf91330fd760fae07f8ac8",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/123-friends_personality_quiz-it.zip",
         "filename": "123-friends_personality_quiz-it.zip",
-        "bytes": 752055,
-        "sha256": "d0beac5ed6a9cb38aa73c970b24c1db7bb47f84f876c7d2bda931f4ed5563433",
+        "bytes": 754000,
+        "sha256": "488d896ce23cfec94ce1fbc7842043a1db8235381fbf91330fd760fae07f8ac8",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 15
       }
-    }
+    },
+    "files": 15
   },
   "meme_klondike": {
     "url": "/playablebatch1/downloads/124-meme_klondike-it.zip",
     "filename": "124-meme_klondike-it.zip",
-    "bytes": 468835,
-    "sha256": "a8fa1f828c975f08955586a921abc8d86b618c11557694f0da94e0fba94efcba",
+    "bytes": 470818,
+    "sha256": "3e8415fe63380439f5066ccfbe8570df3b6d6ec11013fbfa0ad85fa56ca22eba",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/124-meme_klondike-it.zip",
         "filename": "124-meme_klondike-it.zip",
-        "bytes": 468835,
-        "sha256": "a8fa1f828c975f08955586a921abc8d86b618c11557694f0da94e0fba94efcba",
+        "bytes": 470818,
+        "sha256": "3e8415fe63380439f5066ccfbe8570df3b6d6ec11013fbfa0ad85fa56ca22eba",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 13
       }
-    }
+    },
+    "files": 13
   },
   "acupuncture_friends_r2": {
     "url": "/playablebatch1/downloads/125-acupuncture_friends_r2-it.zip",
     "filename": "125-acupuncture_friends_r2-it.zip",
-    "bytes": 830335,
-    "sha256": "bfa6e48c2f6e0e9dd6fc0d72409d1baa25351ccd8a49f1d97adcc2ddba89f391",
+    "bytes": 830233,
+    "sha256": "cece61a0885603bad10cbda441c06f75f06c923e654f7fe716c85a8598bc6b8f",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/125-acupuncture_friends_r2-it.zip",
         "filename": "125-acupuncture_friends_r2-it.zip",
-        "bytes": 830335,
-        "sha256": "bfa6e48c2f6e0e9dd6fc0d72409d1baa25351ccd8a49f1d97adcc2ddba89f391",
+        "bytes": 830233,
+        "sha256": "cece61a0885603bad10cbda441c06f75f06c923e654f7fe716c85a8598bc6b8f",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 10
       }
-    }
+    },
+    "files": 10
   },
   "neon_ufo_runner_r1": {
     "url": "/playablebatch1/downloads/126-neon_ufo_runner_r1-it.zip",
     "filename": "126-neon_ufo_runner_r1-it.zip",
-    "bytes": 2017387,
-    "sha256": "39d91574e76d0b5194ea129c731438b26c84eb263215afdfbaa5871135eaafc3",
+    "bytes": 2017285,
+    "sha256": "3a12f04035ddf0d49f53b842a65f3ca7e9a8415c6aa59063a75b19ce93940708",
     "language": "it",
     "format": "template-v1",
     "languages": {
       "it": {
         "url": "/playablebatch1/downloads/126-neon_ufo_runner_r1-it.zip",
         "filename": "126-neon_ufo_runner_r1-it.zip",
-        "bytes": 2017387,
-        "sha256": "39d91574e76d0b5194ea129c731438b26c84eb263215afdfbaa5871135eaafc3",
+        "bytes": 2017285,
+        "sha256": "3a12f04035ddf0d49f53b842a65f3ca7e9a8415c6aa59063a75b19ce93940708",
         "language": "it",
-        "format": "template-v1"
+        "format": "template-v1",
+        "files": 20
       }
-    }
+    },
+    "files": 20
   },
   "orbit_switch_r1": {
     "url": "/playablebatch1/downloads/127-orbit_switch_r1-it.zip",
@@ -1798,5 +1852,25 @@ window.PlayableGameDownloads = {
       }
     },
     "files": 8
+  },
+  "acupuncture_flick_125b": {
+    "url": "/playablebatch1/downloads/125b-acupuncture_flick_125b-it.zip",
+    "filename": "125b-acupuncture_flick_125b-it.zip",
+    "bytes": 829440,
+    "sha256": "604f978277b04fd7aaecd44ba852096ee9dca080f6dee13d72ec8d62e09fc495",
+    "language": "it",
+    "format": "template-v1",
+    "files": 10,
+    "languages": {
+      "it": {
+        "url": "/playablebatch1/downloads/125b-acupuncture_flick_125b-it.zip",
+        "filename": "125b-acupuncture_flick_125b-it.zip",
+        "bytes": 829440,
+        "sha256": "604f978277b04fd7aaecd44ba852096ee9dca080f6dee13d72ec8d62e09fc495",
+        "language": "it",
+        "format": "template-v1",
+        "files": 10
+      }
+    }
   }
 };

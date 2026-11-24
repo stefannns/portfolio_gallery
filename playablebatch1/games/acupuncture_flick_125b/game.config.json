@@ -1,0 +1,54 @@
+{
+  "config_version": "2.0",
+  "playable": {
+    "runtime_target": "h5",
+    "h5_playstyle_type": "general_game",
+    "content_locale": "it",
+    "min_capability_level": 1,
+    "full_capability_level": 1,
+    "title": "Centra il punto — Flick"
+  },
+  "texts": [
+    {
+      "id": "FRIEND_NAME",
+      "label": "Nome dell’amico",
+      "value": "Amico",
+      "default": "Amico",
+      "max_length": 20
+    },
+    {
+      "id": "HINT",
+      "label": "Guida al lancio",
+      "value": "Scorri verso l’alto per lanciare",
+      "default": "Scorri verso l’alto per lanciare",
+      "max_length": 64
+    },
+    {
+      "id": "AGAIN",
+      "label": "Pulsante per rigiocare",
+      "value": "Gioca ancora",
+      "default": "Gioca ancora",
+      "max_length": 24
+    }
+  ],
+  "tweaks": [
+    {
+      "id": "TARGET_RADIUS",
+      "kind": "number",
+      "label": "Raggio del punto da centrare",
+      "value": 0.085,
+      "default": 0.085,
+      "min": 0.065,
+      "max": 0.11,
+      "step": 0.005
+    }
+  ],
+  "images": [
+    {
+      "id": "FRIEND_AVATAR",
+      "label": "Avatar dell’amico (esempio predefinito)",
+      "path": "assets/friend-avatar.webp",
+      "replaceable": true
+    }
+  ]
+}
